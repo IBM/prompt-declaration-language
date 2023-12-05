@@ -1,0 +1,27 @@
+{
+    "title": "Earth circumference question",
+    "prompts": [
+        "What is the circumference of the earth? I believe the best person to answer this question is ",
+        {
+            "var": "EXPERT",
+            "constraints": [
+                "STOPS_AT('.')",
+                "len(words(EXPERT)) <= 3"
+            ],
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": "context"
+            }
+        },
+        "Indeed, $EXPERT addressed this question: ",
+        {
+            "var": "ANSWER",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": "context"
+            }
+        }
+    ]
+}

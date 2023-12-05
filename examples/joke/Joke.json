@@ -1,0 +1,46 @@
+{
+    "title": "Joke example",
+    "prompts": [
+        "A list of good dad jokes. A indicates the ",
+        "punchline \n",
+        "Q: How does a penguin build its house? \n",
+        "A: Igloos it together. END \n",
+        "Q: Which knight invented King Arthur's Round",
+        "Table? \n",
+        "A: Sir Cumference. END \n",
+        "Q: ",
+        {
+            "var": "JOKE",
+            "constraints": [
+                "STOPS_AT('?')",
+                "len(words(JOKE)) < 20"
+            ],
+            "lookup": {
+                "model": "granite",
+                "decoding": "beam",
+                "params": {
+                    "n": 3
+                },
+                "input": "context"
+            }
+        },
+        "A: ",
+        {
+            "var": "PUNCHLINE",
+            "constraints": [
+                "STOPS_AT('END')",
+                "len(words(PUNCHLINE)) > 10"
+            ],
+            "lookup": {
+                "model": "granite",
+                "decoding": "beam",
+                "params": {
+                    "n": 3
+                },
+                "input": "context"
+            }
+        },
+        "\n"
+
+    ]
+}

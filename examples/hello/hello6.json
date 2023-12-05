@@ -1,0 +1,20 @@
+{
+    "title": "Hello world showing call out to python code",
+    "prompts": [
+        "Hello, ",
+        {
+            "var": "NAME",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    "import random",
+                    "import string",
+                    
+                    "random.choices(string.ascii_lowercase)"
+                ]
+            }
+        },
+        "!\n"
+    ]
+}
+

@@ -1,0 +1,68 @@
+{
+    "title": "Arithmetic Expressions",
+    "prompts": [
+        "Q: ",
+        {
+            "var": "QUESTION",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "params": {
+                    "distribution_batch_size": 1,
+                    "max_length": 2048
+                },
+                "input": {
+                    "context": true,
+                    "spec": "GraniteQuestionSpec"
+                }
+            }
+        },
+        "\n",
+        "A: Let's think step by step.\n",
+        {
+            "prompts": [
+                {
+                    "var": "REASON_OR_CALC",
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "argmax",
+                        "params": {
+                            "distribution_batch_size": 1,
+                            "max_length": 2048
+                        },
+                        "input": "context"
+                    }
+                },
+                {
+                    "prompts": [
+                        {
+                            "var": "EXPR",
+                            "lookup": {
+                                "model": "granite",
+                                "decoding": "argmax",
+                                "params": {
+                                    "distribution_batch_size": 1,
+                                    "max_length": 2048
+                                },
+                                "input": "context"
+                            }
+                        },
+                        {
+                            "var": "RESULT",
+                            "lookup": {
+                                "lan": "python",
+                                "code": [
+                                    "calculator.run(EXPR)"
+                                ]
+                            }
+                        },
+                        "$RESULT >>\n"
+                    ],
+                    "condition": "REASON_OR_CALC.endswith('<<')"
+                }
+            ],
+            "repeat": "*"
+        },
+        "So the answer is $RESULT"
+    ]
+}

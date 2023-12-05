@@ -1,0 +1,34 @@
+{
+    "title": "Things not to forget",
+    "prompts": [
+        "A list of things not to forget when ",
+        "travelling:\n",
+        {
+            "prompts": [
+                "- ",
+                {
+                    "var": "THING",
+                    "constraints": [
+                        "THING in ['passport', 'phone', 'keys']",
+                        "len(words(THING)) <= 2"
+                    ],
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "argmax"
+                    }
+                },
+                "\n"
+            ],
+            "repeat": 2
+        },
+        "The most important of these is ",
+        {
+            "var": "ITEM",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax"
+            }
+        },
+        "."
+    ]
+}

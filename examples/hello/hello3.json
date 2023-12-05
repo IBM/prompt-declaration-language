@@ -1,0 +1,19 @@
+{
+    "title": "Hello world with a constraint",
+    "prompts": [
+        "Hello, ",
+        {
+            "var": "NAME",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": "context"
+            },
+            "constraints": [
+                "len(words(NAME)) == 1"
+            ]
+        },
+        "!\n"
+    ]
+}
+

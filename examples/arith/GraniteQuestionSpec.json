@@ -1,0 +1,12 @@
+{
+    "title": "GraniteQuestionSpec",
+    "prompts": [
+        "Question: ",
+        {
+            "var": "QUESTION"
+        }
+    ]
+}
+
+
+

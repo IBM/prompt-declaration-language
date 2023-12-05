@@ -1,0 +1,84 @@
+{
+    "title": "Interactive ReAct",
+    "prompts": [
+        "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?",
+        "Tho 1: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...\n",
+        "Act 2: Search 'Colorado orogeny'\n",
+        "Obs 2: The Colorado orogeny was an episode of mountain building (an orogeny) ...\n",
+        "Tho 3: It does not mention the eastern sector. So I need to look up eastern sector.\n",
+        "Tho 4: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.", 
+        "Act 5: Finish '1,800 to 7,000 ft'",
+        "Where is Apple Computers headquartered?\n",
+        {
+            "prompts": [
+                "Tho: ",
+                {
+                    "var": "THOUGHT",
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "sample",
+                        "params": {
+                            "no_repeat_ngram_size": 3
+                        },
+                        "input": "context"
+                    },
+                    "constraints": [
+                        "stops_at('\n')",
+                        "len(words(THOUGHT)) > 2",
+                        "not 'Tho' in THOUGHT"
+                    ]
+                },
+                "\nAct: Search",
+                {
+                    "var": "SUBJECT",
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "sample",
+                        "params": {
+                            "no_repeat_ngram_size": 3
+                        },
+                        "input": "context"
+                    },
+                    "constraints": [
+                        "stops_at('/'')"
+                    ]
+                },
+                "\nObs: ",
+                {
+                    "var": "RESULT",
+                    "lookup": {
+                        "lan": "python",
+                        "code": [
+                            "import wikipedia_utils",
+                            "wikipedia_utils.search($SUBJECT[:-1])"
+                        ]
+                    }
+                }
+            ],
+            "repeat": "*"
+        },
+        {
+            "prompts": [
+                {
+                    "var": "FINAL_THOUGHT",
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "sample",
+                        "params": {
+                            "no_repeat_ngram_size": 3
+                        },
+                        "input": "context"
+                    },
+                    "constraints": [
+                        "stops_at('\n')",
+                        "len(words(FINAL_THOUGHT)) > 2",
+                        "not 'Tho' in FINAL_THOUGHT"
+                    ]
+                },
+                "\nAct: Finish '$SUBJECT"
+            ]
+        }
+        
+
+    ]
+}

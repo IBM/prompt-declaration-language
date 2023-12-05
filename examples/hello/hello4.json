@@ -1,0 +1,17 @@
+{
+    "title": "Hello world with variable use",
+    "prompts": [
+        "Hello, ",
+        {
+            "var": "NAME",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": "context"
+            }
+        },
+        "!\n",
+        "Who is $NAME?\n"
+    ]
+}
+

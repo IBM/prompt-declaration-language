@@ -1,0 +1,30 @@
+{
+    "title": "Odd one out, abstract version",
+    "prompts": [
+        "Pick the odd word out: ",
+        {
+            "var": "OPTIONS",
+            "type": "List(String)",
+            "separator": ", "
+        },
+        ".\n",
+        {
+            "var": "REASONING",
+            "constraints": [
+                "not '\n' in REASONING",
+                "not 'Pick' in REASONING",
+                "len(words(REASONING)) < 40"
+            ]
+        },
+        "\n",
+        "So the odd one is ",
+        {
+            "var": "RESULT",
+            "constraints": [
+                "RESULT in OPTIONS"
+            ]
+        },
+        ".\n\n"
+    ],
+    "repeat": "*"
+}

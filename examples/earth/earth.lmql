@@ -1,0 +1,8 @@
+beam(n=3)
+    "What is the circumference of the earth?" 
+    "I believe the best person to answer this question is [EXPERT]"
+    "Indeed, {EXPERT} addressed this question: [ANSWER]"
+from "gpt2-medium" 
+where
+    len(words(EXPERT)) <= 3 and stop_at(EXPERT, ".")
+

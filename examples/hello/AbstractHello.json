@@ -1,0 +1,11 @@
+{
+    "title": "Abstract Hello World",
+    "prompts": [
+        "Hello, ",
+        {
+            "var": "NAME"
+        },
+        "!\n"
+    ]
+}
+

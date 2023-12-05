@@ -1,0 +1,17 @@
+argmax(distribution_batch_size=1, max_length=2048) 
+    "⟨few-shot examples⟩"
+    "Q: {QUESTION}\n"
+    "A: Let's think step by step.\n"
+    for i in range(1024): 
+        "[REASON_OR_CALC]"
+        if REASON_OR_CALC.endswith("<<"):
+            " [EXPR] "
+            result = calculator.run(EXPR)
+            " {result} >> "
+        elif REASON_OR_CALC.endswith("So the answer"):
+            break
+    " is [RESULT]"
+from "EleutherAI/gpt-j-6B" 
+where
+    int(RESULT) and
+    stops_at(REASON_OR_CALC, "<<") and stops_at(EXPR, "=") and stops_at(REASON_OR_CALC, "So the answer")
