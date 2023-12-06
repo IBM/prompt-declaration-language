@@ -56,7 +56,7 @@
                                 ]
                             }
                         },
-                        "$RESULT >>\n"
+                        " >>\n"
                     ],
                     "condition": "REASON_OR_CALC.endswith('<<')"
                 }
