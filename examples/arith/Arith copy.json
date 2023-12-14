@@ -25,12 +25,29 @@
         "3 small paintings x $10 = << 3*10= 30 >> 30\n",
         "So he sold << 150+30= 180 >> 180 paintings last month.\n",
         "Therefore he sold << 180*3= 540 >> this month.\n",
-        "The answer is $540.\n\n",
+        "The answer is $540.\n",
+        "\n",
+
+ 
+        "Question: ",
+        {
+            "var": "QUESTION",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "params": {
+                    "distribution_batch_size": 1,
+                    "max_length": 2048
+                },
+                "input": "context"
+            }
+        },
+        "\n",
+        "Answer: Let's think step by step.\n",
         {
             "prompts": [
-                "Question: ",
                 {
-                    "var": "QUESTION",
+                    "var": "REASON_OR_CALC",
                     "lookup": {
                         "model": "granite",
                         "decoding": "argmax",
@@ -40,15 +57,15 @@
                         },
                         "input": "context",
                         "stop_sequences": [
-                            "Answer"
+                            "<<",
+                            "So the answer is"
                         ]
                     }
                 },
-                "Answer: Let's think step by step.\n",
                 {
                     "prompts": [
                         {
-                            "var": "REASON_OR_CALC",
+                            "var": "EXPR",
                             "lookup": {
                                 "model": "granite",
                                 "decoding": "argmax",
@@ -58,67 +75,36 @@
                                 },
                                 "input": "context",
                                 "stop_sequences": [
-                                    "<<"
-                                ],
-                                "include_stop_sequences": true
+                                    "="
+                                ]
                             }
                         },
                         {
-                            "prompts": [
-                                {
-                                    "var": "EXPR",
-                                    "lookup": {
-                                        "model": "granite",
-                                        "decoding": "argmax",
-                                        "params": {
-                                            "distribution_batch_size": 1,
-                                            "max_length": 2048
-                                        },
-                                        "input": "context",
-                                        "stop_sequences": [
-                                            "=",
-                                            "\n"
-                                        ]
-                                    }
-                                },
-                                "= ",
-                                {
-                                    "var": "RESULT",
-                                    "lookup": {
-                                        "lan": "python",
-                                        "code": [
-                                            "result = ",
-                                            {
-                                                "value": "EXPR"
-                                            }
-                                        ]
-                                    }
-                                },
-                                " >>"
-                            ],
-                            "condition": {
-                                "ends_with": {
-                                    "arg0": {
-                                        "value": "REASON_OR_CALC"
+                            "var": "RESULT",
+                            "lookup": {
+                                "lan": "python",
+                                "code": [
+                                    "result = exec(",
+                                    {
+                                        "value": "EXPR"
                                     },
-                                    "arg1": "<<"
-                                }
+                                    ")"
+                                ]
                             }
-                        }
-                
+                        },
+                        {
+                            "value": "RESULT"
+                        },
+                        " >>\n"
                     ],
-                    "repeats_until": {
-                        "contains": {
-                            "arg0": {
-                                "value": "REASON_OR_CALC"
-                            },
-                            "arg1": "The answer is"
-                        }
-                    }
-                },
-                "\n\n"
-            ],
-            "repeats": 4
+                    "condition": "REASON_OR_CALC.endswith('<<')"
+                }
+            ]
+        },
+        "So the answer is ",
+        {
+            "value": "RESULT"
         }
     ]
 }
+

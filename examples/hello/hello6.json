@@ -7,10 +7,10 @@
             "lookup": {
                 "lan": "python",
                 "code": [
-                    "import random",
-                    "import string",
+                    "import random\n",
+                    "import string\n",
                     
-                    "random.choices(string.ascii_lowercase)"
+                    "result = random.choices(string.ascii_lowercase)[0]"
                 ]
             }
         },

@@ -7,42 +7,58 @@
         "Pick the odd word out: Spain, France, German, England, Singapore.\n",
         "Spain is a country, France is a country, German is a language, ...\n",
         "So the odd one is German.\n\n",
-        "Pick the odd word out: ",
         {
-            "var": "OPTIONS",
-            "lookup": {
-                "model": "granite",
-                "decoding": "argmax",
-                "input": "context"
-            }
-        },
-        {
-            "var": "REASONING",
-            "constraints": [
-                "not '\n' in REASONING",
-                "not 'Pick' in REASONING",
-                "STOPS_AT('Pick the odd word')",
-                "STOPS_AT('\n')",
-                "STOPS_AT('So the odd one')",
-                "STOPS_AT('.')",
-                "len(words(REASONING)) < 40"
+            "prompts": [
+                "Pick the odd word out: ",
+                {
+                "var": "OPTIONS",
+                "lookup": {
+                    "model": "granite",
+                    "decoding": "argmax",
+                    "input": "context",
+                    "stop_sequences": [
+                        "."
+                    ]
+                }
+                },
+                "\nNow the reasoning:\n",
+                {
+                    "var": "REASONING",
+                    "constraints": [
+                        "not '\n' in REASONING",
+                        "not 'Pick' in REASONING",
+                        "len(words(REASONING)) < 40"
+                    ],
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "argmax",
+                        "input": "context",
+                        "stop_sequences": [
+                            "Pick the odd word",
+                            "\n",
+                            "So the odd one",
+                            "."
+                        ]
+                    }
+                },
+                "\nNow the result:\n",
+                {
+                    "var": "RESULT",
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "argmax",
+                        "input": "context",
+                        "stop_sequences": [
+                            "Pick the odd word"
+                        ]
+                    },
+                    "constraints": [
+                        "RESULT in OPTIONS.split(', ')"
+                    ]
+                },
+                "\n\n"
             ],
-            "lookup": {
-                "model": "granite",
-                "decoding": "argmax",
-                "input": "context"
-            }
-        },
-        {
-            "var": "RESULT",
-            "lookup": {
-                "model": "granite",
-                "decoding": "argmax",
-                "input": "context"
-            },
-            "constraints": [
-                "RESULT in OPTIONS.split(', ')"
-            ]
+            "repeats": 3
         }
     ]
 }

@@ -1,13 +1,14 @@
 {
     "title": "Interactive ReAct",
     "prompts": [
-        "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?",
-        "Tho 1: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...\n",
-        "Act 2: Search 'Colorado orogeny'\n",
-        "Obs 2: The Colorado orogeny was an episode of mountain building (an orogeny) ...\n",
-        "Tho 3: It does not mention the eastern sector. So I need to look up eastern sector.\n",
-        "Tho 4: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.", 
-        "Act 5: Finish '1,800 to 7,000 ft'",
+        "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?\n",
+        "Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...\n",
+        "Act: Search 'Colorado orogeny'\n",
+        "Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...\n",
+        "Tho: It does not mention the eastern sector. So I need to look up eastern sector.\n",
+        "Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.\n", 
+        "Act: Finish '1,800 to 7,000 ft'\n",
+        "\n",
         "Where is Apple Computers headquartered?\n",
         {
             "prompts": [
@@ -20,15 +21,19 @@
                         "params": {
                             "no_repeat_ngram_size": 3
                         },
-                        "input": "context"
+                        "input": "context",
+                        "stop_sequences": [
+                            "\n",
+                            "Act",
+                            "Obs"
+                        ]
                     },
                     "constraints": [
-                        "stops_at('\n')",
                         "len(words(THOUGHT)) > 2",
                         "not 'Tho' in THOUGHT"
                     ]
                 },
-                "\nAct: Search",
+                "\nAct: ",
                 {
                     "var": "SUBJECT",
                     "lookup": {
@@ -37,11 +42,15 @@
                         "params": {
                             "no_repeat_ngram_size": 3
                         },
-                        "input": "context"
-                    },
-                    "constraints": [
-                        "stops_at('/'')"
-                    ]
+                        "input": "context",
+                        "stop_sequences": [
+                            "'",
+                            "\n",
+                            "Tho",
+                            "Act",
+                            "Obs"
+                        ]
+                    }
                 },
                 "\nObs: ",
                 {
@@ -49,36 +58,24 @@
                     "lookup": {
                         "lan": "python",
                         "code": [
-                            "import wikipedia_utils",
-                            "wikipedia_utils.search($SUBJECT[:-1])"
+                            "import wikipedia_utils\n",
+                            "wikipedia_utils.search(",
+                            {
+                                "value": "SUBJECT"
+                            },
+                            ")"
                         ]
                     }
                 }
             ],
-            "repeat": "*"
-        },
-        {
-            "prompts": [
-                {
-                    "var": "FINAL_THOUGHT",
-                    "lookup": {
-                        "model": "granite",
-                        "decoding": "sample",
-                        "params": {
-                            "no_repeat_ngram_size": 3
-                        },
-                        "input": "context"
+            "repeats_until": {
+                "contains": {
+                    "arg0": {
+                        "value": "SUBJECT"
                     },
-                    "constraints": [
-                        "stops_at('\n')",
-                        "len(words(FINAL_THOUGHT)) > 2",
-                        "not 'Tho' in FINAL_THOUGHT"
-                    ]
-                },
-                "\nAct: Finish '$SUBJECT"
-            ]
+                    "arg1": "Finish"
+                }
+            }
         }
-        
-
     ]
 }

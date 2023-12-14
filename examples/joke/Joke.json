@@ -8,39 +8,49 @@
         "Q: Which knight invented King Arthur's Round",
         "Table? \n",
         "A: Sir Cumference. END \n",
-        "Q: ",
         {
-            "var": "JOKE",
-            "constraints": [
-                "STOPS_AT('?')",
-                "len(words(JOKE)) < 20"
-            ],
-            "lookup": {
-                "model": "granite",
-                "decoding": "beam",
-                "params": {
-                    "n": 3
+            "prompts": [
+                "Q: ",
+                {
+                    "var": "JOKE",
+                    "constraints": [
+                        "len(words(JOKE)) < 20"
+                    ],
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "beam",
+                        "params": {
+                            "n": 3
+                        },
+                        "input": "context",
+                        "stop_sequences": [
+                            "?",
+                            "\n"
+                        ]
+                    }
                 },
-                "input": "context"
-            }
-        },
-        "A: ",
-        {
-            "var": "PUNCHLINE",
-            "constraints": [
-                "STOPS_AT('END')",
-                "len(words(PUNCHLINE)) > 10"
-            ],
-            "lookup": {
-                "model": "granite",
-                "decoding": "beam",
-                "params": {
-                    "n": 3
+                "\nA: ",
+                {
+                    "var": "PUNCHLINE",
+                    "constraints": [
+                        "len(words(PUNCHLINE)) > 10"
+                    ],
+                    "lookup": {
+                        "model": "granite",
+                        "decoding": "beam",
+                        "params": {
+                            "n": 3
+                        },
+                        "input": "context",
+                        "stop_sequences": [
+                            "END",
+                            "\n"
+                        ]
+                    }
                 },
-                "input": "context"
-            }
-        },
-        "\n"
-
+                "\n"
+            ],
+            "repeats": 4
+        }
     ]
 }

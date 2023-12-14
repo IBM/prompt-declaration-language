@@ -14,7 +14,8 @@
                     ],
                     "lookup": {
                         "model": "granite",
-                        "decoding": "argmax"
+                        "decoding": "argmax",
+                        "input": "context"
                     }
                 },
                 "\n"
@@ -26,7 +27,8 @@
             "var": "ITEM",
             "lookup": {
                 "model": "granite",
-                "decoding": "argmax"
+                "decoding": "argmax",
+                "input": "context"
             }
         },
         "."

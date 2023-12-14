@@ -1,16 +1,18 @@
 {
     "title": "Hello world with a variable to call into a model",
     "prompts": [
-        "Hello, ",
+        "Hello,",
         {
             "var": "NAME",
             "lookup": {
                 "model": "granite",
                 "decoding": "argmax",
-                "input": "context"
+                "input": "context",
+                "stop_sequences": [
+                    "!"
+                ]
             }
         },
         "!\n"
     ]
 }
-

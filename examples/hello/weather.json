@@ -1,0 +1,73 @@
+{
+    "title": "Using a weather API and LLM to make a small weather app",
+    "prompts": [
+        {
+            "var": "QUERY",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    "result = input('How can I help you?: ')"
+                ],
+                "show_result": false
+            }
+        },
+        {
+            "var": "LOCATION",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": {
+                    "prompts": [
+                        "Question: What is the weather in London?\n",
+                        "London\n",
+                        "Question: What's the weather in Paris?\n",
+                        "Paris\n",
+                        "Question: Tell me the weather in Calcutta?\n",
+                        "Calcutta\n",
+                        "Question: ",
+                        {
+                            "value": "QUERY"
+                        }
+                    ]
+                },
+                "show_result": false,
+                "stop_sequences": [
+                    "What",
+                    "!"
+                ]
+            }
+        },
+        {
+            "var": "WEATHER",
+            "lookup": {
+                "api": "https",
+                "url": "https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=",
+                "input": {
+                    "value": "LOCATION"
+                },
+                "show_result": false
+            }
+        },
+        {
+            "var": "RESULT",
+            "lookup": {
+                "model": "granite",
+                "decoding": "argmax",
+                "input": {
+                    "prompts": [
+                        "Explain what the weather is from the following JSON:\n",
+                        "```\n",
+                        {
+                            "value": "WEATHER"
+                        },
+                        "```\n"
+                    ]
+                },
+                "stop_sequences": [
+                    "What",
+                    "!"
+                ]
+            }
+        }
+    ]
+}

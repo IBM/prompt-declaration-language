@@ -1,25 +1,36 @@
 {
     "title": "Hello world showing model chaining",
     "prompts": [
-        "Hello, ",
+        "Hello,",
         {
             "var": "NAME",
             "lookup": {
                 "model": "granite",
                 "decoding": "argmax",
-                "input": "context"
+                "input": "context",
+                "stop_sequences": [
+                    "!"
+                ]
             }
         },
         "!\n",
-        "Who is $NAME?\n",
+        "Who is",
+        {
+            "value": "NAME"
+        },
+        "?\n",
         {
             "var": "RESULT",
             "lookup": {
-                "model": "llama",
+                "model": "codegen",
                 "decoding": "argmax",
-                "input": "context"
+                "input": "context",
+                "stop_sequences": [
+                    "!"
+                ]
             }
-        }
+        },
+        "\n"
     ]
 }
 

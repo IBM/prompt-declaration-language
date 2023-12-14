@@ -1,13 +1,16 @@
 {
     "title": "Hello world with a constraint",
     "prompts": [
-        "Hello, ",
+        "Hello,",
         {
             "var": "NAME",
             "lookup": {
                 "model": "granite",
                 "decoding": "argmax",
-                "input": "context"
+                "input": "context",
+                "stop_sequences": [
+                    "!"
+                ]
             },
             "constraints": [
                 "len(words(NAME)) == 1"
