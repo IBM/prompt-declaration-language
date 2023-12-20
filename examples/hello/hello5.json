@@ -22,7 +22,7 @@
         {
             "var": "RESULT",
             "lookup": {
-                "model": "salesforce/codegen2-16b",
+                "model": "google/flan-t5-xl",
                 "decoding": "argmax",
                 "input": "context",
                 "stop_sequences": [
