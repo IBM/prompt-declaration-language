@@ -13,7 +13,7 @@
                 {
                 "var": "OPTIONS",
                 "lookup": {
-                    "model": "granite",
+                    "model": "ibm/granite-20b-code-instruct-v1",
                     "decoding": "argmax",
                     "input": "context",
                     "stop_sequences": [
@@ -24,13 +24,8 @@
                 "\nNow the reasoning:\n",
                 {
                     "var": "REASONING",
-                    "constraints": [
-                        "not '\n' in REASONING",
-                        "not 'Pick' in REASONING",
-                        "len(words(REASONING)) < 40"
-                    ],
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "argmax",
                         "input": "context",
                         "stop_sequences": [
@@ -39,13 +34,24 @@
                             "So the odd one",
                             "."
                         ]
-                    }
+                    },
+                    "constraints": [
+                        {
+                            "not_contains": "\n"
+                        },
+                        {
+                            "not_contains": "Pick"
+                        },
+                        {
+                            "words_len": "<40"
+                        }
+                    ]
                 },
                 "\nNow the result:\n",
                 {
                     "var": "RESULT",
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "argmax",
                         "input": "context",
                         "stop_sequences": [
@@ -53,12 +59,14 @@
                         ]
                     },
                     "constraints": [
-                        "RESULT in OPTIONS.split(', ')"
+                        {
+                            "in": "OPTIONS"
+                        }
                     ]
                 },
                 "\n\n"
             ],
-            "repeats": 3
+            "repeats": 2
         }
     ]
 }

@@ -11,9 +11,15 @@
         {
             "var": "REASONING",
             "constraints": [
-                "not '\n' in REASONING",
-                "not 'Pick' in REASONING",
-                "len(words(REASONING)) < 40"
+                {
+                    "not_contains": "\n"
+                },
+                {
+                    "not_contains": "Pick"
+                },
+                {
+                    "words_len": "<40"
+                }
             ]
         },
         "\n",
@@ -21,7 +27,9 @@
         {
             "var": "RESULT",
             "constraints": [
-                "RESULT in OPTIONS"
+                {
+                    "in": "OPTIONS"
+                }
             ]
         },
         ".\n\n"

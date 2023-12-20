@@ -5,8 +5,8 @@
         {
             "var": "NAME",
             "lookup": {
-                "model": "granite",
-                "decoding": "argmax",
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "greedy",
                 "input": "context",
                 "stop_sequences": [
                     "!"

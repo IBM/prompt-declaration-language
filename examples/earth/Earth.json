@@ -4,14 +4,18 @@
         "What is the circumference of the earth? I believe the best person to answer this question is ",
         {
             "var": "EXPERT",
-            "constraints": [
-                "STOPS_AT('.')",
-                "len(words(EXPERT)) <= 3"
-            ],
             "lookup": {
-                "model": "granite",
+                "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
-                "input": "context"
+                "input": "context",
+                "stop_sequences": [
+                    "."
+                ],
+                "constraints": [
+                    {
+                        "words_len": "<=3"
+                    }
+                ]
             }
         },
         "Indeed, ",
@@ -22,7 +26,7 @@
         {
             "var": "ANSWER",
             "lookup": {
-                "model": "granite",
+                "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": "context"
             }

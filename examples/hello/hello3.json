@@ -5,16 +5,18 @@
         {
             "var": "NAME",
             "lookup": {
-                "model": "granite",
+                "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": "context",
                 "stop_sequences": [
                     "!"
+                ],
+                "constraints": [
+                    {
+                        "words_len": 1
+                    }
                 ]
-            },
-            "constraints": [
-                "len(words(NAME)) == 1"
-            ]
+            }
         },
         "!\n"
     ]

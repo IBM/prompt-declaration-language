@@ -17,7 +17,7 @@
                         "len(words(JOKE)) < 20"
                     ],
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "beam",
                         "params": {
                             "n": 3
@@ -32,11 +32,8 @@
                 "\nA: ",
                 {
                     "var": "PUNCHLINE",
-                    "constraints": [
-                        "len(words(PUNCHLINE)) > 10"
-                    ],
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "beam",
                         "params": {
                             "n": 3
@@ -45,12 +42,17 @@
                         "stop_sequences": [
                             "END",
                             "\n"
+                        ],
+                        "constraints": [
+                            {
+                                "words_len": ">10"
+                            }
                         ]
                     }
                 },
                 "\n"
             ],
-            "repeats": 4
+            "repeats": 2
         }
     ]
 }

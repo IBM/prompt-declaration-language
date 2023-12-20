@@ -12,9 +12,7 @@ DEBUG = False
 
 GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
-GRANITE = "ibm/granite-20b-code-instruct-v1"
-CODEGEN = "salesforce/codegen2-16b"
-WEATHER = "cf601276764642cb96224947230712"
+
 
 
 def generate(pdl):
@@ -22,7 +20,7 @@ def generate(pdl):
     with open(pdl, 'r') as infile:
         data = json.load(infile)
         context = []
-        process_prompts(scope, context, data["prompts"])
+        process_block(scope, context, data)
         for prompt in context:
             print(prompt, end="")
     print("\n")
@@ -71,15 +69,17 @@ def process_block(scope, context, block):
             input_str = ''.join(inputs)
             response = requests.get(url + input_str)
             result = response.json()
-            #print(result)
+            debug(result)
             if is_show_result(block):
-                context += [str(result)]
+                context += [result]
             scope[block["var"]] = result
             debug("Storing api result for " + block["var"] + ": " + str(result))
         
         # Determine if we need to stop iterating in this block
         if stop_iterations(scope, context, block, iter):
             break
+
+
 
 def debug(somestring):
     if DEBUG:
@@ -182,13 +182,10 @@ def contains(cond, scope, context):
 
 
 def call_model(scope, context, block):
-    mod = GRANITE
     model_input = ""
     stop_sequences = []
     include_stop_sequences=False
 
-    if block["lookup"]["model"] == "codegen":
-        mod = CODEGEN
     if block["lookup"]["input"] != "context": # If not set to context, then input must be a block
         inputs = []
         process_block(scope, inputs, block["lookup"]["input"])
@@ -227,11 +224,11 @@ def call_model(scope, context, block):
             repetition_penalty=1.07
         )
 
-    #print("model input: " + model_input)
-    model = Model(mod, params=params, credentials=creds)
+    debug("model input: " + model_input)
+    model = Model(block["lookup"]["model"], params=params, credentials=creds)
     response = model.generate([model_input])
     gen = response[0].generated_text
-    #print("mode output: " + gen)
+    debug("model output: " + gen)
     return gen
 
 
@@ -251,7 +248,7 @@ def getCodeString(scope, code):
             codes = []
             process_block(scope, codes, c)
             ret += ''.join(codes)
-    print("code string: " + ret)
+    debug("code string: " + ret)
     return ret
 
 

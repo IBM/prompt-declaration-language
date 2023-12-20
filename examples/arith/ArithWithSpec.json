@@ -5,7 +5,7 @@
         {
             "var": "QUESTION",
             "lookup": {
-                "model": "granite",
+                "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "params": {
                     "distribution_batch_size": 1,
@@ -24,7 +24,7 @@
                 {
                     "var": "REASON_OR_CALC",
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "argmax",
                         "params": {
                             "distribution_batch_size": 1,
@@ -38,7 +38,7 @@
                         {
                             "var": "EXPR",
                             "lookup": {
-                                "model": "granite",
+                                "model": "ibm/granite-20b-code-instruct-v1",
                                 "decoding": "argmax",
                                 "params": {
                                     "distribution_batch_size": 1,

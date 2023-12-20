@@ -12,39 +12,52 @@
         "Where is Apple Computers headquartered?\n",
         {
             "prompts": [
-                "Tho: ",
                 {
-                    "var": "THOUGHT",
-                    "lookup": {
-                        "model": "granite",
-                        "decoding": "sample",
-                        "params": {
-                            "no_repeat_ngram_size": 3
+                    "prompts": [
+                        {
+                        "var": "THOUGHT",
+                        "lookup": {
+                            "model": "ibm/granite-20b-code-instruct-v1",
+                            "decoding": "sample",
+                            "params": {
+                                "no_repeat_ngram_size": 3
+                            },
+                            "input": "context",
+                            "stop_sequences": [
+                                "\n",
+                                "Act:",
+                                "Obs:",
+                                "Tho:"
+                            ],
+                            "include_stop_sequences": true
                         },
-                        "input": "context",
-                        "stop_sequences": [
-                            "\n",
-                            "Act",
-                            "Obs"
+                        "constraints": [
+                            {
+                                "words_len": ">2",
+                                "not_contains": "Tho"
+                            }
                         ]
-                    },
-                    "constraints": [
-                        "len(words(THOUGHT)) > 2",
-                        "not 'Tho' in THOUGHT"
-                    ]
+                        }
+                    ],
+                    "repeats_until": {
+                        "ends_with": {
+                            "arg0": {
+                                "value": "THOUGHT"
+                            },
+                            "arg1": "Act:"
+                        }
+                    }
                 },
-                "\nAct: ",
                 {
                     "var": "SUBJECT",
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "sample",
                         "params": {
                             "no_repeat_ngram_size": 3
                         },
                         "input": "context",
                         "stop_sequences": [
-                            "'",
                             "\n",
                             "Tho",
                             "Act",
@@ -52,18 +65,36 @@
                         ]
                     }
                 },
-                "\nObs: ",
+                "\n",
                 {
                     "var": "RESULT",
                     "lookup": {
                         "lan": "python",
                         "code": [
-                            "import wikipedia_utils\n",
-                            "wikipedia_utils.search(",
+                            "import wikipedia\n",
+                            "res = \"",
                             {
                                 "value": "SUBJECT"
                             },
-                            ")"
+                            "\"\n",
+                            "result = wikipedia.summary(res)\n"
+                        ]
+                    }
+                },
+                {
+                    "var": "OBSERVATION",
+                    "lookup": {
+                        "model": "ibm/granite-20b-code-instruct-v1",
+                        "decoding": "sample",
+                        "params": {
+                            "no_repeat_ngram_size": 3
+                        },
+                        "input": "context",
+                        "stop_sequences": [
+                            "\n",
+                            "Tho",
+                            "Act",
+                            "Obs"
                         ]
                     }
                 }
@@ -71,11 +102,13 @@
             "repeats_until": {
                 "contains": {
                     "arg0": {
-                        "value": "SUBJECT"
+                        "value": "THOUGHT"
                     },
-                    "arg1": "Finish"
+                    "arg1": "headquarters"
                 }
             }
         }
     ]
 }
+
+

@@ -9,11 +9,19 @@
                 {
                     "var": "THING",
                     "constraints": [
-                        "THING in ['passport', 'phone', 'keys']",
-                        "len(words(THING)) <= 2"
+                        {
+                            "in": [
+                                "passport",
+                                "phone",
+                                "keys"
+                            ]
+                        },
+                        {
+                            "words_len": "<=2"
+                        }
                     ],
                     "lookup": {
-                        "model": "granite",
+                        "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "argmax",
                         "input": "context"
                     }
@@ -26,7 +34,7 @@
         {
             "var": "ITEM",
             "lookup": {
-                "model": "granite",
+                "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": "context"
             }
