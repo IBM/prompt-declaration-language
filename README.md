@@ -171,6 +171,7 @@ Who is world?
 
 PDL also allows multiple models to be chained together as in the following example, where 2 different models are called.
 
+```
 {
     "title": "Hello world showing model chaining",
     "prompts": [
@@ -206,6 +207,7 @@ PDL also allows multiple models to be chained together as in the following examp
         "\n"
     ]
 }
+```
 
 This results in the following document:
 
