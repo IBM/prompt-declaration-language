@@ -39,9 +39,13 @@ def process_block(scope, context, block):
         cond = condition(block["condition"], scope, context)
     if not cond:
         return
+    
+    if "repeats" in block and block["repeats"] <= 0:
+        return
 
     while(True):
         debug(context)
+       
         iter += 1
         if "prompts" in block:
             process_prompts(scope, context, block["prompts"])
@@ -74,11 +78,10 @@ def process_block(scope, context, block):
                 context += [result]
             scope[block["var"]] = result
             debug("Storing api result for " + block["var"] + ": " + str(result))
-        
+
         # Determine if we need to stop iterating in this block
         if stop_iterations(scope, context, block, iter):
             break
-
 
 
 def debug(somestring):
