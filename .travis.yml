@@ -6,8 +6,8 @@ python:
 env:
   - SETUP_TARGET=.
 
-# before_script:
-#   - pip install $SETUP_TARGET
+before_script:
+  - pip install -r requirements.txt
 script:
   - >-
     echo -e "${ANSI_GREEN}Running pre-commit...${ANSI_RESET}"
