@@ -1,0 +1,14 @@
+[MAIN]
+
+disable=
+   # Errors
+   import-error,
+   # Warnings
+   exec-used,
+   unused-argument,
+   # Conventions
+   missing-module-docstring,missing-class-docstring,missing-function-docstring,
+   # Refactors
+    too-many-branches,
+
+load-plugins=pylint.extensions.docparams,pylint.extensions.bad_builtin
