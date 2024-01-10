@@ -14,8 +14,8 @@ script:
     && echo -en 'travis_fold:start:precommit\\r'
   - pre-commit run -a
   - echo -en 'travis_fold:end:precommit\\r'
-  # - >-
-  #   echo -e "${ANSI_GREEN}Running Tests...${ANSI_RESET}"
-  #   && echo -en 'travis_fold:start:tests\\r'
-  # - python -m unittest discover
-  # - echo -en 'travis_fold:end:tests\\r'
+  - >-
+    echo -e "${ANSI_GREEN}Running Tests...${ANSI_RESET}"
+    && echo -en 'travis_fold:start:tests\\r'
+  - pytest
+  - echo -en 'travis_fold:end:tests\\r'
