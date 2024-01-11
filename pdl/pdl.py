@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import subprocess
 import types
 
 import requests
@@ -19,7 +18,7 @@ GENAI_API = os.getenv("GENAI_API")
 
 def generate(pdl):
     scope = {}
-    with open(pdl, "r") as infile:
+    with open(pdl, "r", encoding="utf-8") as infile:
         data = json.load(infile)
         context = []
         process_block(scope, context, data)
@@ -30,14 +29,14 @@ def generate(pdl):
 
 def process_prompts(scope, context, prompts):
     for prompt in prompts:
-        if type(prompt) == str:
+        if isinstance(prompt, str):
             context.append(prompt)
         else:
             process_block(scope, context, prompt)
 
 
 def process_block(scope, context, block):
-    iter = 0
+    iteration = 0
     cond = True
     if "condition" in block:
         cond = condition(block["condition"], scope, context)
@@ -50,7 +49,7 @@ def process_block(scope, context, block):
     while True:
         debug(context)
 
-        iter += 1
+        iteration += 1
         if "prompts" in block:
             process_prompts(scope, context, block["prompts"])
         elif is_model_lookup(block):
@@ -61,7 +60,7 @@ def process_block(scope, context, block):
             debug("Storing model result for " + block["var"] + ": " + str(result))
         elif is_python_code(block):
             result = call_python(scope, block["lookup"]["code"])
-            if result != None:
+            if result is not None:
                 if is_show_result(block):
                     context += [result]
                 scope[block["var"]] = result
@@ -84,7 +83,7 @@ def process_block(scope, context, block):
             debug("Storing api result for " + block["var"] + ": " + str(result))
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iter):
+        if stop_iterations(scope, context, block, iteration):
             break
 
 
@@ -99,8 +98,8 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block, iter):
-    if not "repeats" in block and not "repeats_until" in block:
+def stop_iterations(scope, context, block, iteration):
+    if "repeats" not in block and "repeats_until" not in block:
         return True
 
     if "repeats" in block and "repeats_until" in block:
@@ -108,7 +107,7 @@ def stop_iterations(scope, context, block, iter):
         return True
 
     if "repeats" in block:
-        if iter == block["repeats"]:
+        if iteration == block["repeats"]:
             return True
 
     if "repeats_until" in block:
@@ -142,7 +141,7 @@ def is_python_code(block):
 
 
 def is_show_result(block):
-    if "show_result" in block["lookup"] and block["lookup"]["show_result"] == False:
+    if "show_result" in block["lookup"] and block["lookup"]["show_result"] is False:
         return False
     return True
 
@@ -184,7 +183,7 @@ def condition(cond, scope, context):
 def ends_with(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
-        if type(cond["arg0"]) == str:
+        if isinstance(cond["arg0"], str):
             arg0 = cond["arg0"]
         else:  # arg0 is a value block
             if is_value(cond["arg0"]):
@@ -201,7 +200,7 @@ def ends_with(cond, scope, context):
 def contains(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
-        if type(cond["arg0"]) == str:
+        if isinstance(cond["arg0"], str):
             arg0 = cond["arg0"]
         else:  # arg0 is a value block
             if is_value(cond["arg0"]):
@@ -233,10 +232,20 @@ def call_model(scope, context, block):
     if "include_stop_sequences" in block["lookup"]:
         include_stop_sequences = block["lookup"]["include_stop_sequences"]
 
-    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
+    if GENAI_API is None:
+        error("Environment variable GENAI_API must be defined")
+        genai_api = ""
+    else:
+        genai_api = GENAI_API
+    if GENAI_KEY is None:
+        error("Environment variable GENAI_KEY must be defined")
+        genai_key = ""
+    else:
+        genai_key = GENAI_KEY
+    creds = Credentials(genai_key, api_endpoint=genai_api)
     params = None
     if stop_sequences != []:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
@@ -249,7 +258,7 @@ def call_model(scope, context, block):
             stop_sequences=stop_sequences,
         )
     else:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
@@ -269,16 +278,16 @@ def call_model(scope, context, block):
 
 
 def call_python(scope, code):
-    code_str = getCodeString(scope, code)
+    code_str = get_code_string(scope, code)
     my_namespace = types.SimpleNamespace()
     exec(code_str, my_namespace.__dict__)
     return str(my_namespace.result)
 
 
-def getCodeString(scope, code):
+def get_code_string(scope, code):
     ret = ""
     for c in code:
-        if type(c) == str:
+        if isinstance(c, str):
             ret += c
         else:
             codes = []

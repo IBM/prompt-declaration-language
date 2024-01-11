@@ -1,6 +1,7 @@
 import json
-from pdl.pdl.pdl_interpreter import process_block
-from pdl.pdl.pdl_ast import Program
+
+from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 model_data = {
     "title": "Hello world with a variable to call into a model",
@@ -108,5 +109,5 @@ def test_multi_shot():
     context = []
     data = Program.model_validate_json(json.dumps(multi_shot_data))
     process_block(scope, context, data.root)
-    
+
     assert context == ["Armonk, NY\n"]

@@ -1,6 +1,7 @@
 import json
-from pdl.pdl.pdl_interpreter import process_block
-from pdl.pdl.pdl_ast import Program
+
+from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 python_data = {
     "title": "Hello world showing call out to python code",

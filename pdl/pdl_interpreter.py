@@ -1,4 +1,3 @@
-import argparse
 import os
 import types
 
@@ -30,7 +29,7 @@ GENAI_API = os.getenv("GENAI_API")
 
 def generate(pdl):
     scope = {}
-    with open(pdl, "r") as infile:
+    with open(pdl, "r", encoding="utf-8") as infile:
         data = Program.model_validate_json(infile.read())
         # print(json.dumps(Program.model_json_schema(), indent=2))
         # print(data)
@@ -44,14 +43,14 @@ def generate(pdl):
 
 def process_prompts(scope, context, prompts):
     for prompt in prompts:
-        if type(prompt) == str:
+        if isinstance(prompt, str):
             context.append(prompt)
         else:
             process_block(scope, context, prompt)
 
 
-def process_block(scope, context, block: pdl_ast.block):
-    iter = 0
+def process_block(scope, context, block: pdl_ast.BlockType):
+    iteration = 0
     cond = True
     if block.condition is not None:
         cond = condition(block.condition, scope, context)
@@ -63,7 +62,7 @@ def process_block(scope, context, block: pdl_ast.block):
 
     while True:
         debug(context)
-        iter += 1
+        iteration += 1
         match block:
             case PromptsBlock(prompts=prompts):
                 process_prompts(scope, context, prompts)
@@ -75,7 +74,7 @@ def process_block(scope, context, block: pdl_ast.block):
                 debug("Storing model result for " + var + ": " + str(result))
             case LookupBlock(var=var, lookup=CodeLookup(lan="python", code=code)):
                 result = call_python(scope, code)
-                if result != None:
+                if result is not None:
                     if is_show_result(block):
                         context += [result]
                     scope[var] = result
@@ -84,9 +83,9 @@ def process_block(scope, context, block: pdl_ast.block):
                 result = get_value(block, scope)
                 if result != "":
                     context += [result]
-            case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input)):
-                inputs = []
-                process_block(scope, inputs, input)
+            case LookupBlock(var=var, lookup=ApiLookup(url=url, block=block)):
+                inputs: list[str] = []
+                process_block(scope, inputs, block)
                 input_str = "".join(inputs)
                 response = requests.get(url + input_str)
                 result = response.json()
@@ -99,7 +98,7 @@ def process_block(scope, context, block: pdl_ast.block):
                 assert False
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iter):
+        if stop_iterations(scope, context, block, iteration):
             break
 
 
@@ -114,12 +113,12 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block: pdl_ast.block, iter):
+def stop_iterations(scope, context, block: pdl_ast.BlockType, iteration):
     match block:
         case Block(repeats=None, repeats_until=None):
             return True
         case Block(repeats=repeats, repeats_until=None):
-            if iter == repeats:
+            if iteration == repeats:
                 return True
         case Block(repeats=None, repeats_until=repeats_until):
             assert repeats_until is not None
@@ -135,7 +134,7 @@ def is_show_result(block: LookupBlock):
     return block.lookup.show_result
 
 
-def get_value(block: pdl_ast.block, scope) -> str:
+def get_value(block, scope) -> str:
     match block:
         case ValueBlock(value=v):
             return str(scope[v])
@@ -143,7 +142,7 @@ def get_value(block: pdl_ast.block, scope) -> str:
             return ""
 
 
-def condition(cond: pdl_ast.condition_type, scope, context):
+def condition(cond: pdl_ast.ConditionType, scope, context):
     match cond:
         case EndsWithCondition(ends_with=args):
             return ends_with(args, scope, context)
@@ -154,7 +153,7 @@ def condition(cond: pdl_ast.condition_type, scope, context):
 
 def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
     match cond:
-        case EndsWithArgs(arg0=v) if type(v) == str:
+        case EndsWithArgs(arg0=v) if isinstance(v, str):
             x = v
         case EndsWithArgs(arg0=v) if isinstance(v, Block):
             x = get_value(v, scope)
@@ -166,7 +165,7 @@ def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
 
 def contains(cond: pdl_ast.ContainsArgs, scope, context):
     match cond:
-        case EndsWithArgs(arg0=x) if type(x) == str:
+        case EndsWithArgs(arg0=x) if isinstance(x, str):
             arg0 = x
         case EndsWithArgs(arg0=Block()):
             arg0 = get_value(cond.arg0, scope)
@@ -185,7 +184,7 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
     if (
         block.lookup.input != "context"
     ):  # If not set to context, then input must be a block
-        inputs = []
+        inputs: list[str] = []
         process_block(scope, inputs, block.lookup.input)
         model_input = "".join(inputs)
     if model_input == "":
@@ -195,10 +194,20 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
     if block.lookup.include_stop_sequences is not None:
         include_stop_sequences = block.lookup.include_stop_sequences
 
-    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
+    if GENAI_API is None:
+        error("Environment variable GENAI_API must be defined")
+        genai_api = ""
+    else:
+        genai_api = GENAI_API
+    if GENAI_KEY is None:
+        error("Environment variable GENAI_KEY must be defined")
+        genai_key = ""
+    else:
+        genai_key = GENAI_KEY
+    creds = Credentials(genai_key, api_endpoint=genai_api)
     params = None
     if stop_sequences != []:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
@@ -211,7 +220,7 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
             stop_sequences=stop_sequences,
         )
     else:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
@@ -231,16 +240,16 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
 
 
 def call_python(scope, code):
-    code_str = getCodeString(scope, code)
+    code_str = get_code_string(scope, code)
     my_namespace = types.SimpleNamespace()
     exec(code_str, my_namespace.__dict__)
     return str(my_namespace.result)
 
 
-def getCodeString(scope, code):
+def get_code_string(scope, code):
     ret = ""
     for c in code:
-        if type(c) == str:
+        if isinstance(c, str):
             ret += c
         else:
             codes = []
@@ -248,11 +257,3 @@ def getCodeString(scope, code):
             ret += "".join(codes)
     debug("code string: " + ret)
     return ret
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser("")
-    parser.add_argument("pdl", help="pdl file", type=str)
-    args = parser.parse_args()
-
-    generate(args.pdl)

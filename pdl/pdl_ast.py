@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 from pydantic import BaseModel, RootModel
 
@@ -9,7 +9,7 @@ class Lookup(BaseModel):
 
 class ModelLookup(Lookup):
     model: str
-    input: Literal["context"] | "block"
+    input: Union[Literal["context"], "BlockType"]
     decoding: Optional[str] = None
     stop_sequences: Optional[list[str]] = None
     include_stop_sequences: bool = False
@@ -18,16 +18,16 @@ class ModelLookup(Lookup):
 
 class CodeLookup(Lookup):
     lan: str
-    code: list["str_or_block"]
+    code: list["StrOrBlockType"]
 
 
 class ApiLookup(Lookup):
     api: str
     url: str
-    input: "block"
+    input: "BlockType"
 
 
-lookup: TypeAlias = ModelLookup | CodeLookup | ApiLookup
+LookupType: TypeAlias = ModelLookup | CodeLookup | ApiLookup
 
 
 class ConditionExpr(BaseModel):
@@ -35,7 +35,7 @@ class ConditionExpr(BaseModel):
 
 
 class EndsWithArgs(BaseModel):
-    arg0: "str_or_value_block"
+    arg0: "StrOrValueBlockType"
     arg1: str
 
 
@@ -44,7 +44,7 @@ class EndsWithCondition(ConditionExpr):
 
 
 class ContainsArgs(BaseModel):
-    arg0: "str_or_value_block"
+    arg0: "StrOrValueBlockType"
     arg1: str
 
 
@@ -52,33 +52,33 @@ class ContainsCondition(ConditionExpr):
     contains: ContainsArgs
 
 
-condition_type: TypeAlias = str | EndsWithCondition | ContainsCondition
+ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
 
 
 class Block(BaseModel):
     """PDL program block"""
 
-    condition: Optional[condition_type] = None
+    condition: Optional[ConditionType] = None
     repeats: Optional[int] = None
-    repeats_until: Optional[condition_type] = None
+    repeats_until: Optional[ConditionType] = None
 
 
 class PromptsBlock(Block):
-    prompts: list["str_or_block"]
+    prompts: list["StrOrBlockType"]
 
 
 class LookupBlock(Block):
     var: str
-    lookup: lookup
+    lookup: LookupType
 
 
 class ValueBlock(Block):
     value: Any
 
 
-block: TypeAlias = PromptsBlock | LookupBlock | ValueBlock
-str_or_block: TypeAlias = str | block
-str_or_value_block: TypeAlias = str | ValueBlock
+BlockType: TypeAlias = PromptsBlock | LookupBlock | ValueBlock
+StrOrBlockType: TypeAlias = str | BlockType
+StrOrValueBlockType: TypeAlias = str | ValueBlock
 
 
 class Program(RootModel):
@@ -87,4 +87,4 @@ class Program(RootModel):
     """
 
     # title: str
-    root: block
+    root: BlockType

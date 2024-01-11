@@ -1,14 +1,16 @@
 [MAIN]
 
 disable=
-   # Errors
-   import-error,
-   # Warnings
-   exec-used,
-   unused-argument,
-   # Conventions
-   missing-module-docstring,missing-class-docstring,missing-function-docstring,
-   # Refactors
+    # Errors
+    import-error,
+    # Warnings
+    exec-used,
+    unused-argument,
+    # Conventions
+    missing-module-docstring,missing-class-docstring,missing-function-docstring,
+    use-implicit-booleaness-not-comparison,
+    # Refactors
     too-many-branches,
+    too-few-public-methods
 
 load-plugins=pylint.extensions.docparams,pylint.extensions.bad_builtin
