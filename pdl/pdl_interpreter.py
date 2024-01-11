@@ -44,7 +44,7 @@ def generate(pdl):
 
 def process_prompts(scope, context, prompts):
     for prompt in prompts:
-        if type(prompt) == str:
+        if isinstance(prompt, str):
             context.append(prompt)
         else:
             process_block(scope, context, prompt)
@@ -75,7 +75,7 @@ def process_block(scope, context, block: pdl_ast.block):
                 debug("Storing model result for " + var + ": " + str(result))
             case LookupBlock(var=var, lookup=CodeLookup(lan="python", code=code)):
                 result = call_python(scope, code)
-                if result != None:
+                if result is not None:
                     if is_show_result(block):
                         context += [result]
                     scope[var] = result
@@ -85,7 +85,7 @@ def process_block(scope, context, block: pdl_ast.block):
                 if result != "":
                     context += [result]
             case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input)):
-                inputs = []
+                inputs: list[str] = []
                 process_block(scope, inputs, input)
                 input_str = "".join(inputs)
                 response = requests.get(url + input_str)
@@ -135,7 +135,7 @@ def is_show_result(block: LookupBlock):
     return block.lookup.show_result
 
 
-def get_value(block: pdl_ast.block, scope) -> str:
+def get_value(block, scope) -> str:
     match block:
         case ValueBlock(value=v):
             return str(scope[v])
@@ -154,7 +154,7 @@ def condition(cond: pdl_ast.condition_type, scope, context):
 
 def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
     match cond:
-        case EndsWithArgs(arg0=v) if type(v) == str:
+        case EndsWithArgs(arg0=v) if isinstance(v, str):
             x = v
         case EndsWithArgs(arg0=v) if isinstance(v, Block):
             x = get_value(v, scope)
@@ -166,7 +166,7 @@ def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
 
 def contains(cond: pdl_ast.ContainsArgs, scope, context):
     match cond:
-        case EndsWithArgs(arg0=x) if type(x) == str:
+        case EndsWithArgs(arg0=x) if isinstance(x, str):
             arg0 = x
         case EndsWithArgs(arg0=Block()):
             arg0 = get_value(cond.arg0, scope)
@@ -185,7 +185,7 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
     if (
         block.lookup.input != "context"
     ):  # If not set to context, then input must be a block
-        inputs = []
+        inputs: list[str] = []
         process_block(scope, inputs, block.lookup.input)
         model_input = "".join(inputs)
     if model_input == "":
@@ -195,7 +195,17 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
     if block.lookup.include_stop_sequences is not None:
         include_stop_sequences = block.lookup.include_stop_sequences
 
-    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
+    if GENAI_API is None:
+        error("Environment variable GENAI_API must be defined")
+        genai_api = ""
+    else:
+        genai_api = GENAI_API
+    if GENAI_KEY is None:
+        error("Environment variable GENAI_KEY must be defined")
+        genai_key = ""
+    else:
+        genai_key = GENAI_KEY
+    creds = Credentials(genai_key, api_endpoint=genai_api)
     params = None
     if stop_sequences != []:
         params = GenerateParams(
@@ -240,7 +250,7 @@ def call_python(scope, code):
 def getCodeString(scope, code):
     ret = ""
     for c in code:
-        if type(c) == str:
+        if isinstance(c, str):
             ret += c
         else:
             codes = []

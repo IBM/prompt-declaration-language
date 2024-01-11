@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import subprocess
 import types
 
 import requests
@@ -30,7 +29,7 @@ def generate(pdl):
 
 def process_prompts(scope, context, prompts):
     for prompt in prompts:
-        if type(prompt) == str:
+        if isinstance(prompt, str):
             context.append(prompt)
         else:
             process_block(scope, context, prompt)
@@ -61,7 +60,7 @@ def process_block(scope, context, block):
             debug("Storing model result for " + block["var"] + ": " + str(result))
         elif is_python_code(block):
             result = call_python(scope, block["lookup"]["code"])
-            if result != None:
+            if result is not None:
                 if is_show_result(block):
                     context += [result]
                 scope[block["var"]] = result
@@ -100,7 +99,7 @@ def error(somstring):
 
 
 def stop_iterations(scope, context, block, iter):
-    if not "repeats" in block and not "repeats_until" in block:
+    if "repeats" not in block and "repeats_until" not in block:
         return True
 
     if "repeats" in block and "repeats_until" in block:
@@ -142,7 +141,7 @@ def is_python_code(block):
 
 
 def is_show_result(block):
-    if "show_result" in block["lookup"] and block["lookup"]["show_result"] == False:
+    if "show_result" in block["lookup"] and block["lookup"]["show_result"] is False:
         return False
     return True
 
@@ -184,7 +183,7 @@ def condition(cond, scope, context):
 def ends_with(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
-        if type(cond["arg0"]) == str:
+        if isinstance(cond["arg0"], str):
             arg0 = cond["arg0"]
         else:  # arg0 is a value block
             if is_value(cond["arg0"]):
@@ -201,7 +200,7 @@ def ends_with(cond, scope, context):
 def contains(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
-        if type(cond["arg0"]) == str:
+        if isinstance(cond["arg0"], str):
             arg0 = cond["arg0"]
         else:  # arg0 is a value block
             if is_value(cond["arg0"]):
@@ -233,7 +232,17 @@ def call_model(scope, context, block):
     if "include_stop_sequences" in block["lookup"]:
         include_stop_sequences = block["lookup"]["include_stop_sequences"]
 
-    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
+    if GENAI_API is None:
+        error("Environment variable GENAI_API must be defined")
+        genai_api = ""
+    else:
+        genai_api = GENAI_API
+    if GENAI_KEY is None:
+        error("Environment variable GENAI_KEY must be defined")
+        genai_key = ""
+    else:
+        genai_key = GENAI_KEY
+    creds = Credentials(genai_key, api_endpoint=genai_api)
     params = None
     if stop_sequences != []:
         params = GenerateParams(
@@ -278,7 +287,7 @@ def call_python(scope, code):
 def getCodeString(scope, code):
     ret = ""
     for c in code:
-        if type(c) == str:
+        if isinstance(c, str):
             ret += c
         else:
             codes = []

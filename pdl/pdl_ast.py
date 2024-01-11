@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 from pydantic import BaseModel, RootModel
 
@@ -9,7 +9,7 @@ class Lookup(BaseModel):
 
 class ModelLookup(Lookup):
     model: str
-    input: Literal["context"] | "block"
+    input: Union[Literal["context"], "block"]
     decoding: Optional[str] = None
     stop_sequences: Optional[list[str]] = None
     include_stop_sequences: bool = False
