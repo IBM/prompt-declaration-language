@@ -1,13 +1,11 @@
 import json
-from pdl.pdl.pdl_interpreter import process_block
-from pdl.pdl.pdl_ast import Program
+
+from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 hello = {
     "title": "Hello world!",
-    "prompts": [
-        "Hello, world!\n", 
-        "This is your first prompt descriptor!\n"
-    ]
+    "prompts": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
 }
 
 

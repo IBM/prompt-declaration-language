@@ -207,7 +207,7 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
     creds = Credentials(genai_key, api_endpoint=genai_api)
     params = None
     if stop_sequences != []:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
@@ -220,7 +220,7 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
             stop_sequences=stop_sequences,
         )
     else:
-        params = GenerateParams(
+        params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
