@@ -1,4 +1,6 @@
-from pdl.pdl.pdl import process_block
+import json
+from pdl.pdl.pdl_interpreter import process_block
+from pdl.pdl.pdl_ast import Program
 
 var_data = {
     "title": "Hello world with variable use",
@@ -24,5 +26,6 @@ var_data = {
 def test_var():
     scope = {}
     context = []
-    process_block(scope, context, var_data)
+    data = Program.model_validate_json(json.dumps(var_data))
+    process_block(scope, context, data.root)
     assert context == ["Hello,", " world", "!\n", "Who is", " world", "?\n"]

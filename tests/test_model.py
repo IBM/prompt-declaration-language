@@ -1,4 +1,6 @@
-from pdl.pdl.pdl import process_block
+import json
+from pdl.pdl.pdl_interpreter import process_block
+from pdl.pdl.pdl_ast import Program
 
 model_data = {
     "title": "Hello world with a variable to call into a model",
@@ -21,7 +23,8 @@ model_data = {
 def test_model():
     scope = {}
     context = []
-    process_block(scope, context, model_data)
+    data = Program.model_validate_json(json.dumps(model_data))
+    process_block(scope, context, data.root)
     assert context == ["Hello,", " world", "!\n"]
 
 
@@ -59,7 +62,8 @@ model_chain_data = {
 def test_model_chain():
     scope = {}
     context = []
-    process_block(scope, context, model_chain_data)
+    data = Program.model_validate_json(json.dumps(model_chain_data))
+    process_block(scope, context, data.root)
     assert context == [
         "Hello,",
         " world",
@@ -102,5 +106,7 @@ multi_shot_data = {
 def test_multi_shot():
     scope = {}
     context = []
-    process_block(scope, context, multi_shot_data)
+    data = Program.model_validate_json(json.dumps(multi_shot_data))
+    process_block(scope, context, data.root)
+    
     assert context == ["Armonk, NY\n"]

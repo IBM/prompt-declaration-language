@@ -1,8 +1,13 @@
-from pdl.pdl.pdl import process_block
+import json
+from pdl.pdl.pdl_interpreter import process_block
+from pdl.pdl.pdl_ast import Program
 
 hello = {
     "title": "Hello world!",
-    "prompts": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
+    "prompts": [
+        "Hello, world!\n", 
+        "This is your first prompt descriptor!\n"
+    ]
 }
 
 
@@ -31,14 +36,16 @@ def nested_repeat_data(n):
 def test_hello():
     scope = {}
     context = []
-    process_block(scope, context, hello)
+    data = Program.model_validate_json(json.dumps(hello))
+    process_block(scope, context, data.root)
     assert context == ["Hello, world!\n", "This is your first prompt descriptor!\n"]
 
 
 def repeat(n):
     scope = {}
     context = []
-    process_block(scope, context, repeat_data(n))
+    data = Program.model_validate_json(json.dumps(repeat_data(n)))
+    process_block(scope, context, data.root)
     assert_string = []
     for i in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -69,7 +76,8 @@ def test_repeat3():
 def repeat_nested(n):
     scope = {}
     context = []
-    process_block(scope, context, nested_repeat_data(n))
+    data = Program.model_validate_json(json.dumps(nested_repeat_data(n)))
+    process_block(scope, context, data.root)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for i in range(0, n):
         assert_string.append("This sentence repeats!\n")

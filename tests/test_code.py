@@ -1,4 +1,6 @@
-from pdl.pdl.pdl import process_block
+import json
+from pdl.pdl.pdl_interpreter import process_block
+from pdl.pdl.pdl_ast import Program
 
 python_data = {
     "title": "Hello world showing call out to python code",
@@ -19,7 +21,8 @@ python_data = {
 def test_python():
     scope = {}
     context = []
-    process_block(scope, context, python_data)
+    data = Program.model_validate_json(json.dumps(python_data))
+    process_block(scope, context, data.root)
     assert context == ["Hello, ", "Tracy", "!\n"]
 
 
@@ -42,12 +45,14 @@ def show_result_data(show):
 def test_show_result():
     scope = {}
     context = []
-    process_block(scope, context, show_result_data(True))
+    data = Program.model_validate_json(json.dumps(show_result_data(True)))
+    process_block(scope, context, data.root)
     assert context == ["How can I help you?: "]
 
 
 def test_show_result_false():
     scope = {}
     context = []
-    process_block(scope, context, show_result_data(False))
+    data = Program.model_validate_json(json.dumps(show_result_data(False)))
+    process_block(scope, context, data.root)
     assert context == []
