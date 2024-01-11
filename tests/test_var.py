@@ -10,22 +10,19 @@ var_data = {
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
+                "stop_sequences": ["!"],
+            },
         },
         "!\n",
         "Who is",
-        {
-            "value": "NAME"
-        },
-        "?\n"
-    ]
+        {"value": "NAME"},
+        "?\n",
+    ],
 }
+
 
 def test_var():
     scope = {}
     context = []
     process_block(scope, context, var_data)
-    assert context == ['Hello,', ' world', '!\n', 'Who is', ' world', '?\n']
+    assert context == ["Hello,", " world", "!\n", "Who is", " world", "?\n"]

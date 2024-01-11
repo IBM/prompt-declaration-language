@@ -1,12 +1,14 @@
-import subprocess
-import json
 import argparse
+import json
 import os
+import subprocess
 import types
+
 import requests
 from genai.credentials import Credentials
 from genai.model import Model
 from genai.schemas import GenerateParams
+
 from . import pdl_interpreter
 
 DEBUG = False
@@ -15,16 +17,16 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
-
 def generate(pdl):
     scope = {}
-    with open(pdl, 'r') as infile:
+    with open(pdl, "r") as infile:
         data = json.load(infile)
         context = []
         process_block(scope, context, data)
         for prompt in context:
             print(prompt, end="")
     print("\n")
+
 
 def process_prompts(scope, context, prompts):
     for prompt in prompts:
@@ -33,6 +35,7 @@ def process_prompts(scope, context, prompts):
         else:
             process_block(scope, context, prompt)
 
+
 def process_block(scope, context, block):
     iter = 0
     cond = True
@@ -40,13 +43,13 @@ def process_block(scope, context, block):
         cond = condition(block["condition"], scope, context)
     if not cond:
         return
-    
+
     if "repeats" in block and block["repeats"] <= 0:
         return
 
-    while(True):
+    while True:
         debug(context)
-       
+
         iter += 1
         if "prompts" in block:
             process_prompts(scope, context, block["prompts"])
@@ -71,7 +74,7 @@ def process_block(scope, context, block):
             url = block["lookup"]["url"]
             inputs = []
             process_block(scope, inputs, block["lookup"]["input"])
-            input_str = ''.join(inputs)
+            input_str = "".join(inputs)
             response = requests.get(url + input_str)
             result = response.json()
             debug(result)
@@ -91,17 +94,19 @@ def debug(somestring):
         print(somestring)
         print("******")
 
+
 def error(somstring):
     print("***Error: " + somstring)
+
 
 def stop_iterations(scope, context, block, iter):
     if not "repeats" in block and not "repeats_until" in block:
         return True
-    
+
     if "repeats" in block and "repeats_until" in block:
         error("Cannot have both repeats and repeats_until")
         return True
-    
+
     if "repeats" in block:
         if iter == block["repeats"]:
             return True
@@ -114,50 +119,74 @@ def stop_iterations(scope, context, block, iter):
 
 
 def is_model_lookup(block):
-    if "var" in block and "lookup" in block and "model" in block["lookup"] and "input" in block["lookup"]:
+    if (
+        "var" in block
+        and "lookup" in block
+        and "model" in block["lookup"]
+        and "input" in block["lookup"]
+    ):
         return True
     return False
 
+
 def is_python_code(block):
-    if "var" in block and "lookup" in block and "lan" in block["lookup"] and block["lookup"]["lan"] == "python" and "code" in block["lookup"]:
+    if (
+        "var" in block
+        and "lookup" in block
+        and "lan" in block["lookup"]
+        and block["lookup"]["lan"] == "python"
+        and "code" in block["lookup"]
+    ):
         return True
     return False
+
 
 def is_show_result(block):
     if "show_result" in block["lookup"] and block["lookup"]["show_result"] == False:
         return False
     return True
 
+
 def is_value(block):
     if "value" in block:
         return True
     return False
+
 
 def get_value(block, scope):
     if block["value"] in scope:
         return str(scope[block["value"]])
     return ""
 
+
 def is_api(block):
-    if "var" in block and "lookup" in block and "api" in block["lookup"] and "url" in block["lookup"] and "input" in block["lookup"]:
+    if (
+        "var" in block
+        and "lookup" in block
+        and "api" in block["lookup"]
+        and "url" in block["lookup"]
+        and "input" in block["lookup"]
+    ):
         return True
     return False
+
 
 def condition(cond, scope, context):
     if "ends_with" in cond:
         return ends_with(cond["ends_with"], scope, context)
-    
+
     if "contains" in cond:
         return contains(cond["contains"], scope, context)
-    
+
     return False
+
 
 def ends_with(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
         if type(cond["arg0"]) == str:
             arg0 = cond["arg0"]
-        else: # arg0 is a value block
+        else:  # arg0 is a value block
             if is_value(cond["arg0"]):
                 arg0 = get_value(cond["arg0"], scope)
             else:
@@ -168,12 +197,13 @@ def ends_with(cond, scope, context):
     error("Ill-formed ends_with condition")
     return False
 
+
 def contains(cond, scope, context):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
         if type(cond["arg0"]) == str:
             arg0 = cond["arg0"]
-        else: # arg0 is a value block
+        else:  # arg0 is a value block
             if is_value(cond["arg0"]):
                 arg0 = get_value(cond["arg0"], scope)
             else:
@@ -188,14 +218,16 @@ def contains(cond, scope, context):
 def call_model(scope, context, block):
     model_input = ""
     stop_sequences = []
-    include_stop_sequences=False
+    include_stop_sequences = False
 
-    if block["lookup"]["input"] != "context": # If not set to context, then input must be a block
+    if (
+        block["lookup"]["input"] != "context"
+    ):  # If not set to context, then input must be a block
         inputs = []
         process_block(scope, inputs, block["lookup"]["input"])
         model_input = "".join(inputs)
     if model_input == "":
-        model_input = ''.join(context)
+        model_input = "".join(context)
     if "stop_sequences" in block["lookup"]:
         stop_sequences = block["lookup"]["stop_sequences"]
     if "include_stop_sequences" in block["lookup"]:
@@ -208,24 +240,24 @@ def call_model(scope, context, block):
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
-            #stream=False,
-            #temperature=1,
-            #top_k=50,
-            #top_p=1,
+            # stream=False,
+            # temperature=1,
+            # top_k=50,
+            # top_p=1,
             repetition_penalty=1.07,
             include_stop_sequence=include_stop_sequences,
-            stop_sequences=stop_sequences
+            stop_sequences=stop_sequences,
         )
     else:
         params = GenerateParams(
             decoding_method="greedy",
             max_new_tokens=200,
             min_new_tokens=1,
-            #stream=False,
-            #temperature=1,
-            #top_k=50,
-            #top_p=1,
-            repetition_penalty=1.07
+            # stream=False,
+            # temperature=1,
+            # top_k=50,
+            # top_p=1,
+            repetition_penalty=1.07,
         )
 
     debug("model input: " + model_input)
@@ -241,7 +273,7 @@ def call_python(scope, code):
     my_namespace = types.SimpleNamespace()
     exec(code_str, my_namespace.__dict__)
     return str(my_namespace.result)
-    
+
 
 def getCodeString(scope, code):
     ret = ""
@@ -251,7 +283,7 @@ def getCodeString(scope, code):
         else:
             codes = []
             process_block(scope, codes, c)
-            ret += ''.join(codes)
+            ret += "".join(codes)
     debug("code string: " + ret)
     return ret
 
@@ -259,16 +291,17 @@ def getCodeString(scope, code):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("")
     parser.add_argument(
-        "-i", "--interpreter",
-        nargs='?',
+        "-i",
+        "--interpreter",
+        nargs="?",
         choices=["json", "ast"],
         default="json",
         const="json",
-        help="select interpreter"
+        help="select interpreter",
     )
     parser.add_argument("pdl", help="pdl file", type=str)
     args = parser.parse_args()
-    
+
     match args.interpreter:
         case "json":
             generate(args.pdl)

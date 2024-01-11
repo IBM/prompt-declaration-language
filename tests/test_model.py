@@ -10,20 +10,19 @@ model_data = {
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "greedy",
                 "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
+                "stop_sequences": ["!"],
+            },
         },
-        "!\n"
-    ]
+        "!\n",
+    ],
 }
+
 
 def test_model():
     scope = {}
     context = []
     process_block(scope, context, model_data)
-    assert context == ['Hello,', ' world', '!\n']
+    assert context == ["Hello,", " world", "!\n"]
 
 
 model_chain_data = {
@@ -36,16 +35,12 @@ model_chain_data = {
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
+                "stop_sequences": ["!"],
+            },
         },
         "!\n",
         "Who is",
-        {
-            "value": "NAME"
-        },
+        {"value": "NAME"},
         "?\n",
         {
             "var": "RESULT",
@@ -53,20 +48,28 @@ model_chain_data = {
                 "model": "google/flan-t5-xl",
                 "decoding": "argmax",
                 "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
+                "stop_sequences": ["!"],
+            },
         },
-        "\n"
-    ]
+        "\n",
+    ],
 }
+
 
 def test_model_chain():
     scope = {}
     context = []
     process_block(scope, context, model_chain_data)
-    assert context == ['Hello,', ' world', '!\n', 'Who is', ' world', '?\n', 'hello world', '\n']
+    assert context == [
+        "Hello,",
+        " world",
+        "!\n",
+        "Who is",
+        " world",
+        "?\n",
+        "hello world",
+        "\n",
+    ]
 
 
 multi_shot_data = {
@@ -89,16 +92,15 @@ multi_shot_data = {
                     ]
                 },
                 "show_result": True,
-                "stop_sequences": [
-                    "Question"
-                ]
-            }
+                "stop_sequences": ["Question"],
+            },
         }
-    ]
+    ],
 }
+
 
 def test_multi_shot():
     scope = {}
     context = []
     process_block(scope, context, multi_shot_data)
-    assert context == ['Armonk, NY\n']
+    assert context == ["Armonk, NY\n"]
