@@ -7,6 +7,7 @@ import requests
 from genai.credentials import Credentials
 from genai.model import Model
 from genai.schemas import GenerateParams
+from . import pdl_interpreter
 
 DEBUG = False
 
@@ -257,8 +258,21 @@ def getCodeString(scope, code):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("")
+    parser.add_argument(
+        "-i", "--interpreter",
+        nargs='?',
+        choices=["json", "ast"],
+        default="json",
+        const="json",
+        help="select interpreter"
+    )
     parser.add_argument("pdl", help="pdl file", type=str)
     args = parser.parse_args()
     
-    
-    generate(args.pdl)
+    match args.interpreter:
+        case "json":
+            generate(args.pdl)
+        case "ast":
+            pdl_interpreter.generate(args.pdl)
+        case _:
+            error(f"Unknown interpreter: {args.interpreter}")

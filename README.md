@@ -23,7 +23,7 @@ In order to run the examples that use BAM models, you need to set up 2 environme
 To run the interpreter:
 
 ```
-python3 pdl/pdl.py <path/to/example.json>
+python3 -m pdl.pdl <path/to/example.json>
 ```
 
 The folder `examples` contains some examples of PDL scripts. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
@@ -51,8 +51,7 @@ This script has a `title` and specifies the `prompts` of the document. In this c
 To render the script into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-cd pdl
-python3 pdl.py ../examples/hello/hello.json 
+python3 -m pdl.pdl ./examples/hello/hello.json 
 ```
 
 This results in the following output:
