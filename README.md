@@ -314,3 +314,7 @@ In the following example, the variable `NAME` is constrained to consist of a sin
     ]
 }
 ```
+
+## Contributing to the Project
+
+See [Contributing to PDL](docs/contrib.md)
