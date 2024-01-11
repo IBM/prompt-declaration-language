@@ -18,7 +18,7 @@ GENAI_API = os.getenv("GENAI_API")
 
 def generate(pdl):
     scope = {}
-    with open(pdl, "r") as infile:
+    with open(pdl, "r", encoding="utf-8") as infile:
         data = json.load(infile)
         context = []
         process_block(scope, context, data)
@@ -36,7 +36,7 @@ def process_prompts(scope, context, prompts):
 
 
 def process_block(scope, context, block):
-    iter = 0
+    iteration = 0
     cond = True
     if "condition" in block:
         cond = condition(block["condition"], scope, context)
@@ -49,7 +49,7 @@ def process_block(scope, context, block):
     while True:
         debug(context)
 
-        iter += 1
+        iteration += 1
         if "prompts" in block:
             process_prompts(scope, context, block["prompts"])
         elif is_model_lookup(block):
@@ -83,7 +83,7 @@ def process_block(scope, context, block):
             debug("Storing api result for " + block["var"] + ": " + str(result))
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iter):
+        if stop_iterations(scope, context, block, iteration):
             break
 
 
@@ -98,7 +98,7 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block, iter):
+def stop_iterations(scope, context, block, iteration):
     if "repeats" not in block and "repeats_until" not in block:
         return True
 
@@ -107,7 +107,7 @@ def stop_iterations(scope, context, block, iter):
         return True
 
     if "repeats" in block:
-        if iter == block["repeats"]:
+        if iteration == block["repeats"]:
             return True
 
     if "repeats_until" in block:
@@ -278,13 +278,13 @@ def call_model(scope, context, block):
 
 
 def call_python(scope, code):
-    code_str = getCodeString(scope, code)
+    code_str = get_code_string(scope, code)
     my_namespace = types.SimpleNamespace()
     exec(code_str, my_namespace.__dict__)
     return str(my_namespace.result)
 
 
-def getCodeString(scope, code):
+def get_code_string(scope, code):
     ret = ""
     for c in code:
         if isinstance(c, str):

@@ -1,4 +1,3 @@
-import argparse
 import os
 import types
 
@@ -30,7 +29,7 @@ GENAI_API = os.getenv("GENAI_API")
 
 def generate(pdl):
     scope = {}
-    with open(pdl, "r") as infile:
+    with open(pdl, "r", encoding="utf-8") as infile:
         data = Program.model_validate_json(infile.read())
         # print(json.dumps(Program.model_json_schema(), indent=2))
         # print(data)
@@ -50,8 +49,8 @@ def process_prompts(scope, context, prompts):
             process_block(scope, context, prompt)
 
 
-def process_block(scope, context, block: pdl_ast.block):
-    iter = 0
+def process_block(scope, context, block: pdl_ast.BlockType):
+    iteration = 0
     cond = True
     if block.condition is not None:
         cond = condition(block.condition, scope, context)
@@ -63,7 +62,7 @@ def process_block(scope, context, block: pdl_ast.block):
 
     while True:
         debug(context)
-        iter += 1
+        iteration += 1
         match block:
             case PromptsBlock(prompts=prompts):
                 process_prompts(scope, context, prompts)
@@ -84,9 +83,9 @@ def process_block(scope, context, block: pdl_ast.block):
                 result = get_value(block, scope)
                 if result != "":
                     context += [result]
-            case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input)):
+            case LookupBlock(var=var, lookup=ApiLookup(url=url, block=block)):
                 inputs: list[str] = []
-                process_block(scope, inputs, input)
+                process_block(scope, inputs, block)
                 input_str = "".join(inputs)
                 response = requests.get(url + input_str)
                 result = response.json()
@@ -99,7 +98,7 @@ def process_block(scope, context, block: pdl_ast.block):
                 assert False
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iter):
+        if stop_iterations(scope, context, block, iteration):
             break
 
 
@@ -114,12 +113,12 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block: pdl_ast.block, iter):
+def stop_iterations(scope, context, block: pdl_ast.BlockType, iteration):
     match block:
         case Block(repeats=None, repeats_until=None):
             return True
         case Block(repeats=repeats, repeats_until=None):
-            if iter == repeats:
+            if iteration == repeats:
                 return True
         case Block(repeats=None, repeats_until=repeats_until):
             assert repeats_until is not None
@@ -143,7 +142,7 @@ def get_value(block, scope) -> str:
             return ""
 
 
-def condition(cond: pdl_ast.condition_type, scope, context):
+def condition(cond: pdl_ast.ConditionType, scope, context):
     match cond:
         case EndsWithCondition(ends_with=args):
             return ends_with(args, scope, context)
@@ -241,13 +240,13 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
 
 
 def call_python(scope, code):
-    code_str = getCodeString(scope, code)
+    code_str = get_code_string(scope, code)
     my_namespace = types.SimpleNamespace()
     exec(code_str, my_namespace.__dict__)
     return str(my_namespace.result)
 
 
-def getCodeString(scope, code):
+def get_code_string(scope, code):
     ret = ""
     for c in code:
         if isinstance(c, str):
@@ -258,11 +257,3 @@ def getCodeString(scope, code):
             ret += "".join(codes)
     debug("code string: " + ret)
     return ret
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser("")
-    parser.add_argument("pdl", help="pdl file", type=str)
-    args = parser.parse_args()
-
-    generate(args.pdl)

@@ -40,7 +40,7 @@ def repeat(n):
     context = []
     process_block(scope, context, repeat_data(n))
     assert_string = []
-    for i in range(0, n):
+    for _ in range(0, n):
         assert_string.append("Hello, world!\n")
         assert_string.append("This is your first prompt descriptor!\n")
     assert context == assert_string
@@ -71,7 +71,7 @@ def repeat_nested(n):
     context = []
     process_block(scope, context, nested_repeat_data(n))
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
-    for i in range(0, n):
+    for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")
     assert context == assert_string
 
