@@ -15,11 +15,6 @@ issue](https://github.ibm.com/ml4code/pdl/issues/new). Be sure to include any he
 
 To suggest a change to this repository, [submit a pull request](https://github.ibm.com/ml4code/pdl/pulls) with the complete set of changes that you want to suggest. Before creating a PR, make sure that your changes pass all of the tests.
 
-The tests use `pytest`, which can be installed as follows:
-```
-pip install pytest
-```
-
 The test suite can be executed with the following command in the top-level folder:
 ```
 pytest
