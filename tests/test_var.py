@@ -28,3 +28,23 @@ def test_var():
     data = Program.model_validate(var_data)
     process_block(scope, context, data.root)
     assert context == ["Hello,", " world", "!\n", "Who is", " world", "?\n"]
+
+
+code_var_data = {
+    "title": "simple python",
+    "prompts": [
+        {
+            "var": "I",
+            "lookup": {"lan": "python", "code": ["result = 0"], "show_result": True},
+        },
+    ],
+}
+
+
+def test_code_var():
+    scope = {}
+    context = []
+    data = Program.model_validate(code_var_data)
+    process_block(scope, context, data.root)
+    assert scope == {"I": "0"}
+    assert context == ["0"]

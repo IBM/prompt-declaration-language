@@ -1,0 +1,38 @@
+{
+    "title": "Hello world showing call out to python code with condition",
+    "prompts": [
+        {
+            "var": "NAME",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    "import random\n", 
+                    "import string\n", 
+                    "result = 'Tracy'"
+                ],
+                "show_result": false
+            }
+            
+        },
+        {
+            "prompts" :[
+                ", hello there!\n"
+            ],
+            "condition": {
+                "ends_with": {
+                "arg0": {
+                "value": "NAME"
+                },
+                "arg1": "blad"
+                }
+            }
+        }
+    ]
+}
+        
+        
+        
+        
+        
+        
+ 
