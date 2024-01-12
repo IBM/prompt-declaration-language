@@ -11,6 +11,7 @@ from .pdl_ast import (
     ApiLookup,
     Block,
     CodeLookup,
+    ContainsArgs,
     ContainsCondition,
     EndsWithArgs,
     EndsWithCondition,
@@ -83,9 +84,9 @@ def process_block(scope, context, block: pdl_ast.BlockType):
                 result = get_value(block, scope)
                 if result != "":
                     context += [result]
-            case LookupBlock(var=var, lookup=ApiLookup(url=url, block=block)):
+            case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input_block)):
                 inputs: list[str] = []
-                process_block(scope, inputs, block)
+                process_block(scope, inputs, input_block)
                 input_str = "".join(inputs)
                 response = requests.get(url + input_str)
                 result = response.json()
@@ -165,9 +166,9 @@ def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
 
 def contains(cond: pdl_ast.ContainsArgs, scope, context):
     match cond:
-        case EndsWithArgs(arg0=x) if isinstance(x, str):
+        case ContainsArgs(arg0=x) if isinstance(x, str):
             arg0 = x
-        case EndsWithArgs(arg0=Block()):
+        case ContainsArgs(arg0=Block()):
             arg0 = get_value(cond.arg0, scope)
         case _:
             error("Ill-formed contains condition")
