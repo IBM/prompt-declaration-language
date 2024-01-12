@@ -1,5 +1,3 @@
-import json
-
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
@@ -22,7 +20,7 @@ python_data = {
 def test_python():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(python_data))
+    data = Program.model_validate(python_data)
     process_block(scope, context, data.root)
     assert context == ["Hello, ", "Tracy", "!\n"]
 
@@ -46,7 +44,7 @@ def show_result_data(show):
 def test_show_result():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(show_result_data(True)))
+    data = Program.model_validate(show_result_data(True))
     process_block(scope, context, data.root)
     assert context == ["How can I help you?: "]
 
@@ -54,6 +52,6 @@ def test_show_result():
 def test_show_result_false():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(show_result_data(False)))
+    data = Program.model_validate(show_result_data(False))
     process_block(scope, context, data.root)
     assert context == []

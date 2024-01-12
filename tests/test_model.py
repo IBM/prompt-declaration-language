@@ -1,5 +1,3 @@
-import json
-
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
@@ -24,7 +22,7 @@ model_data = {
 def test_model():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(model_data))
+    data = Program.model_validate(model_data)
     process_block(scope, context, data.root)
     assert context == ["Hello,", " world", "!\n"]
 
@@ -63,7 +61,7 @@ model_chain_data = {
 def test_model_chain():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(model_chain_data))
+    data = Program.model_validate(model_chain_data)
     process_block(scope, context, data.root)
     assert context == [
         "Hello,",
@@ -107,7 +105,7 @@ multi_shot_data = {
 def test_multi_shot():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(multi_shot_data))
+    data = Program.model_validate(multi_shot_data)
     process_block(scope, context, data.root)
 
     assert context == ["Armonk, NY\n"]

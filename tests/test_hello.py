@@ -1,5 +1,3 @@
-import json
-
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
@@ -34,7 +32,7 @@ def nested_repeat_data(n):
 def test_hello():
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(hello))
+    data = Program.model_validate(hello)
     process_block(scope, context, data.root)
     assert context == ["Hello, world!\n", "This is your first prompt descriptor!\n"]
 
@@ -42,7 +40,7 @@ def test_hello():
 def repeat(n):
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(repeat_data(n)))
+    data = Program.model_validate(repeat_data(n))
     process_block(scope, context, data.root)
     assert_string = []
     for _ in range(0, n):
@@ -74,7 +72,7 @@ def test_repeat3():
 def repeat_nested(n):
     scope = {}
     context = []
-    data = Program.model_validate_json(json.dumps(nested_repeat_data(n)))
+    data = Program.model_validate(nested_repeat_data(n))
     process_block(scope, context, data.root)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
