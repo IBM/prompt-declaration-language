@@ -146,10 +146,10 @@ assert_data = [
 
 def test_cond():
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(cond_data)
-    process_block(scope, context, data.root)
-    assert context == assert_data
+    process_block(scope, document, data.root)
+    assert document == assert_data
 
 
 def cond_data1(show, name):
@@ -174,18 +174,18 @@ def cond_data1(show, name):
 
 def test_cond1():
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(cond_data1(False, "blah"))
-    process_block(scope, context, data.root)
-    assert context == []
+    process_block(scope, document, data.root)
+    assert document == []
 
 
 def test_cond2():
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(cond_data1(True, "acy"))
-    process_block(scope, context, data.root)
-    assert context == ["Tracy", ", hello there!\n"]
+    process_block(scope, document, data.root)
+    assert document == ["Tracy", ", hello there!\n"]
 
 
 repeat_until_data = {
@@ -216,7 +216,20 @@ repeat_until_data = {
 
 def test_repeat_until():
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(repeat_until_data)
-    process_block(scope, context, data.root)
-    assert context == ["0", "\n", "1", "\n", "2", "\n", "3", "\n", "4", "\n", "5", "\n"]
+    process_block(scope, document, data.root)
+    assert document == [
+        "0",
+        "\n",
+        "1",
+        "\n",
+        "2",
+        "\n",
+        "3",
+        "\n",
+        "4",
+        "\n",
+        "5",
+        "\n",
+    ]

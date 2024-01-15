@@ -20,26 +20,26 @@ def generate(pdl):
     scope = {}
     with open(pdl, "r", encoding="utf-8") as infile:
         data = json.load(infile)
-        context = []
-        process_block(scope, context, data)
-        for prompt in context:
+        document = []
+        process_block(scope, document, data)
+        for prompt in document:
             print(prompt, end="")
     print("\n")
 
 
-def process_prompts(scope, context, prompts):
+def process_prompts(scope, document, prompts):
     for prompt in prompts:
         if isinstance(prompt, str):
-            context.append(prompt)
+            document.append(prompt)
         else:
-            process_block(scope, context, prompt)
+            process_block(scope, document, prompt)
 
 
-def process_block(scope, context, block):
+def process_block(scope, document, block):
     iteration = 0
     cond = True
     if "condition" in block:
-        cond = condition(block["condition"], scope, context)
+        cond = condition(block["condition"], scope, document)
     if not cond:
         return
 
@@ -47,28 +47,28 @@ def process_block(scope, context, block):
         return
 
     while True:
-        debug(context)
+        debug(document)
 
         iteration += 1
         if "prompts" in block:
-            process_prompts(scope, context, block["prompts"])
+            process_prompts(scope, document, block["prompts"])
         elif is_model_lookup(block):
-            result = call_model(scope, context, block)
+            result = call_model(scope, document, block)
             if is_show_result(block):
-                context += [result]
+                document += [result]
             scope[block["var"]] = result
             debug("Storing model result for " + block["var"] + ": " + str(result))
         elif is_python_code(block):
             result = call_python(scope, block["lookup"]["code"])
             if result is not None:
                 if is_show_result(block):
-                    context += [result]
+                    document += [result]
                 scope[block["var"]] = result
                 debug("Storing python result for " + block["var"] + ": " + str(result))
         elif is_value(block):
             result = get_value(block, scope)
             if result != "":
-                context += [result]
+                document += [result]
         elif is_api(block):
             url = block["lookup"]["url"]
             inputs = []
@@ -78,12 +78,12 @@ def process_block(scope, context, block):
             result = response.json()
             debug(result)
             if is_show_result(block):
-                context += [result]
+                document += [result]
             scope[block["var"]] = result
             debug("Storing api result for " + block["var"] + ": " + str(result))
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iteration):
+        if stop_iterations(scope, document, block, iteration):
             break
 
 
@@ -98,7 +98,7 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block, iteration):
+def stop_iterations(scope, document, block, iteration):
     if "repeats" not in block and "repeats_until" not in block:
         return True
 
@@ -111,7 +111,7 @@ def stop_iterations(scope, context, block, iteration):
             return True
 
     if "repeats_until" in block:
-        if condition(block["repeats_until"], scope, context):
+        if condition(block["repeats_until"], scope, document):
             return True
 
     return False
@@ -170,17 +170,17 @@ def is_api(block):
     return False
 
 
-def condition(cond, scope, context):
+def condition(cond, scope, document):
     if "ends_with" in cond:
-        return ends_with(cond["ends_with"], scope, context)
+        return ends_with(cond["ends_with"], scope, document)
 
     if "contains" in cond:
-        return contains(cond["contains"], scope, context)
+        return contains(cond["contains"], scope, document)
 
     return False
 
 
-def ends_with(cond, scope, context):
+def ends_with(cond, scope, document):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
         if isinstance(cond["arg0"], str):
@@ -197,7 +197,7 @@ def ends_with(cond, scope, context):
     return False
 
 
-def contains(cond, scope, context):
+def contains(cond, scope, document):
     if "arg0" in cond and "arg1" in cond:
         arg0 = ""
         if isinstance(cond["arg0"], str):
@@ -214,19 +214,19 @@ def contains(cond, scope, context):
     return False
 
 
-def call_model(scope, context, block):
+def call_model(scope, document, block):
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
 
     if (
         block["lookup"]["input"] != "context"
-    ):  # If not set to context, then input must be a block
+    ):  # If not set to document, then input must be a block
         inputs = []
         process_block(scope, inputs, block["lookup"]["input"])
         model_input = "".join(inputs)
     if model_input == "":
-        model_input = "".join(context)
+        model_input = "".join(document)
     if "stop_sequences" in block["lookup"]:
         stop_sequences = block["lookup"]["stop_sequences"]
     if "include_stop_sequences" in block["lookup"]:

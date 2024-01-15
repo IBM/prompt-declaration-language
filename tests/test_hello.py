@@ -31,22 +31,22 @@ def nested_repeat_data(n):
 
 def test_hello():
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(hello)
-    process_block(scope, context, data.root)
-    assert context == ["Hello, world!\n", "This is your first prompt descriptor!\n"]
+    process_block(scope, document, data.root)
+    assert document == ["Hello, world!\n", "This is your first prompt descriptor!\n"]
 
 
 def repeat(n):
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(repeat_data(n))
-    process_block(scope, context, data.root)
+    process_block(scope, document, data.root)
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
         assert_string.append("This is your first prompt descriptor!\n")
-    assert context == assert_string
+    assert document == assert_string
 
 
 def test_repeat_neg():
@@ -71,13 +71,13 @@ def test_repeat3():
 
 def repeat_nested(n):
     scope = {}
-    context = []
+    document = []
     data = Program.model_validate(nested_repeat_data(n))
-    process_block(scope, context, data.root)
+    process_block(scope, document, data.root)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")
-    assert context == assert_string
+    assert document == assert_string
 
 
 def test_repeat_nested0():

@@ -35,26 +35,26 @@ def generate(pdl):
         # print(json.dumps(Program.model_json_schema(), indent=2))
         # print(data)
         # data = json.load(infile)
-        context = []
-        process_block(scope, context, data.root)
-        for prompt in context:
+        document = []
+        process_block(scope, document, data.root)
+        for prompt in document:
             print(prompt, end="")
     print("\n")
 
 
-def process_prompts(scope, context, prompts):
+def process_prompts(scope, document, prompts):
     for prompt in prompts:
         if isinstance(prompt, str):
-            context.append(prompt)
+            document.append(prompt)
         else:
-            process_block(scope, context, prompt)
+            process_block(scope, document, prompt)
 
 
-def process_block(scope, context, block: pdl_ast.BlockType):
+def process_block(scope, document, block: pdl_ast.BlockType):
     iteration = 0
     cond = True
     if block.condition is not None:
-        cond = condition(block.condition, scope, context)
+        cond = condition(block.condition, scope, document)
     if not cond:
         return
 
@@ -62,28 +62,28 @@ def process_block(scope, context, block: pdl_ast.BlockType):
         return
 
     while True:
-        debug(context)
+        debug(document)
         iteration += 1
         match block:
             case PromptsBlock(prompts=prompts):
-                process_prompts(scope, context, prompts)
+                process_prompts(scope, document, prompts)
             case LookupBlock(var=var, lookup=ModelLookup()):
-                result = call_model(scope, context, block)
+                result = call_model(scope, document, block)
                 if is_show_result(block):
-                    context += [result]
+                    document += [result]
                 scope[var] = result
                 debug("Storing model result for " + var + ": " + str(result))
             case LookupBlock(var=var, lookup=CodeLookup(lan="python", code=code)):
                 result = call_python(scope, code)
                 if result is not None:
                     if is_show_result(block):
-                        context += [result]
+                        document += [result]
                     scope[var] = result
                     debug("Storing python result for " + var + ": " + str(result))
             case ValueBlock():
                 result = get_value(block, scope)
                 if result != "":
-                    context += [result]
+                    document += [result]
             case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input_block)):
                 inputs: list[str] = []
                 process_block(scope, inputs, input_block)
@@ -92,14 +92,14 @@ def process_block(scope, context, block: pdl_ast.BlockType):
                 result = response.json()
                 debug(result)
                 if is_show_result(block):
-                    context += [result]
+                    document += [result]
                 scope[var] = result
                 debug("Storing api result for " + var + ": " + str(result))
             case _:
                 assert False
 
         # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, context, block, iteration):
+        if stop_iterations(scope, document, block, iteration):
             break
 
 
@@ -114,7 +114,7 @@ def error(somstring):
     print("***Error: " + somstring)
 
 
-def stop_iterations(scope, context, block: pdl_ast.BlockType, iteration):
+def stop_iterations(scope, document, block: pdl_ast.BlockType, iteration):
     match block:
         case Block(repeats=None, repeats_until=None):
             return True
@@ -123,7 +123,7 @@ def stop_iterations(scope, context, block: pdl_ast.BlockType, iteration):
                 return True
         case Block(repeats=None, repeats_until=repeats_until):
             assert repeats_until is not None
-            if condition(repeats_until, scope, context):
+            if condition(repeats_until, scope, document):
                 return True
         case _:
             error("Cannot have both repeats and repeats_until")
@@ -143,16 +143,16 @@ def get_value(block, scope) -> str:
             return ""
 
 
-def condition(cond: pdl_ast.ConditionType, scope, context):
+def condition(cond: pdl_ast.ConditionType, scope, document):
     match cond:
         case EndsWithCondition(ends_with=args):
-            return ends_with(args, scope, context)
+            return ends_with(args, scope, document)
         case ContainsCondition(contains=args):
-            return contains(args, scope, context)
+            return contains(args, scope, document)
     return False
 
 
-def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
+def ends_with(cond: pdl_ast.EndsWithArgs, scope, document):
     match cond:
         case EndsWithArgs(arg0=v) if isinstance(v, str):
             x = v
@@ -164,7 +164,7 @@ def ends_with(cond: pdl_ast.EndsWithArgs, scope, context):
     return x.endswith(cond.arg1)
 
 
-def contains(cond: pdl_ast.ContainsArgs, scope, context):
+def contains(cond: pdl_ast.ContainsArgs, scope, document):
     match cond:
         case ContainsArgs(arg0=x) if isinstance(x, str):
             arg0 = x
@@ -176,7 +176,7 @@ def contains(cond: pdl_ast.ContainsArgs, scope, context):
     return cond.arg1 in arg0
 
 
-def call_model(scope, context, block: pdl_ast.LookupBlock):
+def call_model(scope, document, block: pdl_ast.LookupBlock):
     assert isinstance(block.lookup, pdl_ast.ModelLookup)
     model_input = ""
     stop_sequences = []
@@ -184,12 +184,12 @@ def call_model(scope, context, block: pdl_ast.LookupBlock):
 
     if (
         block.lookup.input != "context"
-    ):  # If not set to context, then input must be a block
+    ):  # If not set to document, then input must be a block
         inputs: list[str] = []
         process_block(scope, inputs, block.lookup.input)
         model_input = "".join(inputs)
     if model_input == "":
-        model_input = "".join(context)
+        model_input = "".join(document)
     if block.lookup.stop_sequences is not None:
         stop_sequences = block.lookup.stop_sequences
     if block.lookup.include_stop_sequences is not None:
