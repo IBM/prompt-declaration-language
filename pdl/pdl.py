@@ -308,13 +308,19 @@ if __name__ == "__main__":
         const="json",
         help="select interpreter",
     )
+    parser.add_argument(
+        "-l",
+        "--log",
+        help="log file",
+    )
     parser.add_argument("pdl", help="pdl file", type=str)
+
     args = parser.parse_args()
 
     match args.interpreter:
         case "json":
             generate(args.pdl)
         case "ast":
-            pdl_interpreter.generate(args.pdl)
+            pdl_interpreter.generate(args.pdl, args.log)
         case _:
             error(f"Unknown interpreter: {args.interpreter}")

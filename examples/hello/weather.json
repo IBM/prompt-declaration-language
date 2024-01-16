@@ -14,7 +14,7 @@
         {
             "var": "LOCATION",
             "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
+                "model": "ibm/granite-20b-code-instruct-v1-gptq",
                 "decoding": "argmax",
                 "input": {
                     "prompts": [
@@ -32,6 +32,7 @@
                 },
                 "show_result": false,
                 "stop_sequences": [
+                    "Question",
                     "What",
                     "!"
                 ]
@@ -51,7 +52,7 @@
         {
             "var": "RESULT",
             "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
+                "model": "ibm/granite-20b-code-instruct-v1-gptq",
                 "decoding": "argmax",
                 "input": {
                     "prompts": [

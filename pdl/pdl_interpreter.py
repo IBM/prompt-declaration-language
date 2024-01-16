@@ -28,29 +28,37 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
-def generate(pdl):
+def generate(pdl, logging):
     scope = {}
+    if logging is None:
+        logging = "log.txt"
     with open(pdl, "r", encoding="utf-8") as infile:
-        data = Program.model_validate_json(infile.read())
-        # print(json.dumps(Program.model_json_schema(), indent=2))
-        # print(data)
-        # data = json.load(infile)
-        document = []
-        process_block(scope, document, data.root)
-        for prompt in document:
-            print(prompt, end="")
-    print("\n")
+        with open(logging, "w", encoding="utf-8") as logfile:
+            data = Program.model_validate_json(infile.read())
+            # print(json.dumps(Program.model_json_schema(), indent=2))
+            # print(data)
+            # data = json.load(infile)
+            document = []
+            log = []
+            process_block(log, scope, document, data.root)
+            for prompt in document:
+                print(prompt, end="")
+            print("\n")
+            for prompt in log:
+                logfile.write(prompt)
 
 
-def process_prompts(scope, document, prompts):
+def process_prompts(log, scope, document, prompts):
     for prompt in prompts:
         if isinstance(prompt, str):
             document.append(prompt)
+            append_log(log, "Prompt", True)
+            append_log(log, prompt, False)
         else:
-            process_block(scope, document, prompt)
+            process_block(log, scope, document, prompt)
 
 
-def process_block(scope, document, block: pdl_ast.BlockType):
+def process_block(log, scope, document, block: pdl_ast.BlockType):
     iteration = 0
     cond = True
     if block.condition is not None:
@@ -66,15 +74,15 @@ def process_block(scope, document, block: pdl_ast.BlockType):
         iteration += 1
         match block:
             case PromptsBlock(prompts=prompts):
-                process_prompts(scope, document, prompts)
+                process_prompts(log, scope, document, prompts)
             case LookupBlock(var=var, lookup=ModelLookup()):
-                result = call_model(scope, document, block)
+                result = call_model(log, scope, document, block)
                 if is_show_result(block):
                     document += [result]
                 scope[var] = result
                 debug("Storing model result for " + var + ": " + str(result))
             case LookupBlock(var=var, lookup=CodeLookup(lan="python", code=code)):
-                result = call_python(scope, code)
+                result = call_python(log, scope, code)
                 if result is not None:
                     if is_show_result(block):
                         document += [result]
@@ -86,11 +94,16 @@ def process_block(scope, document, block: pdl_ast.BlockType):
                     document += [result]
             case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input_block)):
                 inputs: list[str] = []
-                process_block(scope, inputs, input_block)
+                process_block(log, scope, inputs, input_block)
                 input_str = "".join(inputs)
-                response = requests.get(url + input_str)
+                input_str = url + input_str
+                append_log(log, "API Input", True)
+                append_log(log, input_str, False)
+                response = requests.get(input_str)
                 result = response.json()
                 debug(result)
+                append_log(log, "API Output", True)
+                append_log(log, str(result), False)
                 if is_show_result(block):
                     document += [result]
                 scope[var] = result
@@ -103,6 +116,12 @@ def process_block(scope, document, block: pdl_ast.BlockType):
             break
 
 
+def append_log(log, somestring, doc):
+    if doc:
+        somestring = "**********  " + somestring + "  **********"
+    log.append(somestring + "\n")
+
+
 def debug(somestring):
     if DEBUG:
         print("******")
@@ -110,8 +129,8 @@ def debug(somestring):
         print("******")
 
 
-def error(somstring):
-    print("***Error: " + somstring)
+def error(somestring):
+    print("***Error: " + somestring)
 
 
 def stop_iterations(scope, document, block: pdl_ast.BlockType, iteration):
@@ -176,7 +195,7 @@ def contains(cond: pdl_ast.ContainsArgs, scope, document):
     return cond.arg1 in arg0
 
 
-def call_model(scope, document, block: pdl_ast.LookupBlock):
+def call_model(log, scope, document, block: pdl_ast.LookupBlock):
     assert isinstance(block.lookup, pdl_ast.ModelLookup)
     model_input = ""
     stop_sequences = []
@@ -186,7 +205,7 @@ def call_model(scope, document, block: pdl_ast.LookupBlock):
         block.lookup.input != "context"
     ):  # If not set to document, then input must be a block
         inputs: list[str] = []
-        process_block(scope, inputs, block.lookup.input)
+        process_block(log, scope, inputs, block.lookup.input)
         model_input = "".join(inputs)
     if model_input == "":
         model_input = "".join(document)
@@ -233,28 +252,37 @@ def call_model(scope, document, block: pdl_ast.LookupBlock):
         )
 
     debug("model input: " + model_input)
+    append_log(log, "Model Input", True)
+    append_log(log, model_input, False)
     model = Model(block.lookup.model, params=params, credentials=creds)
     response = model.generate([model_input])
     gen = response[0].generated_text
     debug("model output: " + gen)
+    append_log(log, "Model Output", True)
+    append_log(log, gen, False)
     return gen
 
 
-def call_python(scope, code):
-    code_str = get_code_string(scope, code)
+def call_python(log, scope, code):
+    code_str = get_code_string(log, scope, code)
     my_namespace = types.SimpleNamespace()
+    append_log(log, "Code Input", True)
+    append_log(log, code_str, False)
     exec(code_str, my_namespace.__dict__)
-    return str(my_namespace.result)
+    result = str(my_namespace.result)
+    append_log(log, "Code Output", True)
+    append_log(log, result, False)
+    return result
 
 
-def get_code_string(scope, code):
+def get_code_string(log, scope, code):
     ret = ""
     for c in code:
         if isinstance(c, str):
             ret += c
         else:
             codes = []
-            process_block(scope, codes, c)
+            process_block(log, scope, codes, c)
             ret += "".join(codes)
     debug("code string: " + ret)
     return ret
