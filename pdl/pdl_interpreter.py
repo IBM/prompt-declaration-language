@@ -35,9 +35,6 @@ def generate(pdl, logging):
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
             data = Program.model_validate_json(infile.read())
-            # print(json.dumps(Program.model_json_schema(), indent=2))
-            # print(data)
-            # data = json.load(infile)
             document = []
             log = []
             process_block(log, scope, document, data.root)

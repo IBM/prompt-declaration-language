@@ -9,6 +9,7 @@ from genai.model import Model
 from genai.schemas import GenerateParams
 
 from . import pdl_interpreter
+from .pdl_ast import Program
 
 DEBUG = False
 
@@ -297,8 +298,13 @@ def get_code_string(scope, code):
     return ret
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser("")
+    parser.add_argument(
+        "--schema",
+        action=argparse.BooleanOptionalAction,
+        help="generate PDL Json Schema",
+    )
     parser.add_argument(
         "-i",
         "--interpreter",
@@ -313,10 +319,13 @@ if __name__ == "__main__":
         "--log",
         help="log file",
     )
-    parser.add_argument("pdl", help="pdl file", type=str)
+    parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
-
+    if args.schema:
+        print(json.dumps(Program.model_json_schema(), indent=2))
+    if args.pdl is None:
+        return
     match args.interpreter:
         case "json":
             generate(args.pdl)
@@ -324,3 +333,7 @@ if __name__ == "__main__":
             pdl_interpreter.generate(args.pdl, args.log)
         case _:
             error(f"Unknown interpreter: {args.interpreter}")
+
+
+if __name__ == "__main__":
+    main()

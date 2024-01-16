@@ -77,7 +77,7 @@ class ValueBlock(Block):
 
 
 BlockType: TypeAlias = PromptsBlock | LookupBlock | ValueBlock
-StrOrBlockType: TypeAlias = str | BlockType
+StrOrBlockType: TypeAlias = str | BlockType  # pyright: ignore
 StrOrValueBlockType: TypeAlias = str | ValueBlock
 
 
