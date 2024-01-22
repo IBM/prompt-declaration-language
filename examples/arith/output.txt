@@ -1,0 +1,67 @@
+Question: Noah charges $60 for a large painting and $30 for a small painting.
+Last month he sold eight large paintings and four small paintings.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 8 large paintings and 4 small paintings last month.
+He sold twice as many this month.
+8 large paintings x $60 = << 8*60= 480 >> 480
+4 small paintings x $30 = << 4*30= 120 >> 120
+So he sold << 480+120= 600 >> 600 paintings last month.
+Therefore he sold << 600*2= 1200 >> this month.
+The answer is $1200.
+
+Question: Noah charges $30 for a large vases and $10 for a small vases.
+Last month he sold five large vases and three small vases.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 5 large vases and 3 small vases last month.
+He sold three times as many this month.
+5 large vases x $30 = << 5*30= 150 >> 150
+3 small vases x $10 = << 3*10= 30 >> 30
+So he sold << 150+30= 180 >> 180 vases last month.
+Therefore he sold << 180*3= 540 >> this month.
+The answer is $540.
+
+Question: 
+Noah charges $10 for a large cups and $5 for a small cups.
+Last month he sold six large cups and two small cups.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 6 large cups and 2 small cups last month.
+He sold twice as many this month.
+6 large cups x $10 = << 6*10= 60 >> 60
+2 small cups x $5 = << 2*5= 10 >> 10
+So he sold << 60+10= 70 >> 70 cups last month.
+Therefore he sold << 70*2= 140 >> this month.
+The answer is $140.
+
+Question: 
+Noah charges $10 for a large boxes and $5 for a small boxes.
+Last month he sold seven large boxes and one small boxes.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 7 large boxes and 1 small boxes last month.
+He sold three times as many this month.
+7 large boxes x $10 = << 7*10= 70 >> 70
+1 small boxes x $5 = << 1*5= 5 >> 5
+So he sold << 70+5= 75 >> 75 boxes last month.
+Therefore he sold << 75*3= 225 >> this month.
+The answer is $225.
+
+Question: 
+Noah charges $10 for a large pens and $5 for a small pens.
+Last month he sold nine large pens and seven small pens.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 9 large pens and 7 small pens last month.
+He sold three times as many this month.
+9 large pens x $10 = << 9*10= 90 >> 90
+7 small pens x $5 = << 7*5= 35 >> 35
+So he sold << 90+35= 125 >> 125 pens last month.
+Therefore he sold << 125*3= 375 >> this month.
+The answer is $375.

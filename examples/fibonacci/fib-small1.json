@@ -1,0 +1,56 @@
+{
+    "title": "Fibonacci",
+    "prompts": [
+        "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n",
+        {
+            "var": "CODE",
+            "lookup": {
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "argmax",
+                "input": "context"
+            }
+        },
+        "What is the name of the function above?\n Do not include 'Answer' in the answer",
+        {
+            "var": "FUNCTION",
+            "lookup": {
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "argmax",
+                "input": "context"
+            }
+        },
+        {
+            "var": "N",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    "import random\n",
+                    "result = random.randint(1, 20)"
+                ],
+                "show_result": false
+            }
+        },
+        "\nfib(",
+        {
+            "value": "N"
+        },
+        ") = ",
+        {
+            "var": "RESULT",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    {
+                        "value": "CODE"
+                    },
+                    "result = fib(",
+                    {
+                        "value": "N"
+                    },
+                    ")"
+                ]
+            }
+        }
+    ]
+}
+

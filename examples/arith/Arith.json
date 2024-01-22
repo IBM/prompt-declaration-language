@@ -14,16 +14,16 @@
         "Therefore he sold << 600*2= 1200 >> this month.\n",
         "The answer is $1200.\n",
         "\n",
-        "Question: Noah charges $30 for a large painting and $10 for a small painting.\n",
-        "Last month he sold five large paintings and three small paintings.\n",
+        "Question: Noah charges $30 for a large vases and $10 for a small vases.\n",
+        "Last month he sold five large vases and three small vases.\n",
         "If he sold three times as much this month, how much is his sales for this month?\n",
         "\n",
         "Answer: Let's think step by step.\n",
-        "He sold 5 large paintings and 3 small paintings last month.\n",
+        "He sold 5 large vases and 3 small vases last month.\n",
         "He sold three times as many this month.\n",
-        "5 large paintings x $30 = << 5*30= 150 >> 150\n",
-        "3 small paintings x $10 = << 3*10= 30 >> 30\n",
-        "So he sold << 150+30= 180 >> 180 paintings last month.\n",
+        "5 large vases x $30 = << 5*30= 150 >> 150\n",
+        "3 small vases x $10 = << 3*10= 30 >> 30\n",
+        "So he sold << 150+30= 180 >> 180 vases last month.\n",
         "Therefore he sold << 180*3= 540 >> this month.\n",
         "The answer is $540.\n\n",
         {
@@ -118,7 +118,7 @@
                 },
                 "\n\n"
             ],
-            "repeats": 2
+            "repeats": 3
         }
     ]
 }

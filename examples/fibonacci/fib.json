@@ -1,0 +1,68 @@
+{
+    "title": "Fibonacci",
+    "prompts": [
+        {
+            "var": "CODE",
+            "lookup": {
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "argmax",
+                "input": {
+                    "prompts": [
+                        "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+                    ]
+                }
+            }
+        },
+        "\nFind a random number between 1 and 20\n",
+        {
+            "var": "N",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    "import random\n",
+                    "result = random.randint(1, 20)"
+                ],
+                "show_result": true
+            }
+        },
+        "\nNow computing fib(",
+        {
+            "value": "N"
+        },
+        ")\n",
+        {
+            "var": "RESULT",
+            "lookup": {
+                "lan": "python",
+                "code": [
+                    {
+                        "value": "CODE"
+                    },
+                    "result = fib(",
+                    {
+                        "value": "N"
+                    },
+                    ")"
+                ],
+                "show_result": false
+            }
+        },
+        "The result is: ",
+        {
+            "value": "RESULT"
+        },
+        "\n\n Explain what the above code does and what the result means\n\n",
+        {
+            "var": "EXPLANATION",
+            "lookup": {
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "argmax",
+                "input": "context",
+                "stop_sequences": [
+                    "Answer"
+                ]
+            }
+        }
+        
+    ]
+}

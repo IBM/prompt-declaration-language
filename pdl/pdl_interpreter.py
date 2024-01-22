@@ -37,12 +37,14 @@ def generate(pdl, logging):
             data = Program.model_validate_json(infile.read())
             document = []
             log = []
-            process_block(log, scope, document, data.root)
-            for prompt in document:
-                print(prompt, end="")
-            print("\n")
-            for prompt in log:
-                logfile.write(prompt)
+            try:
+                process_block(log, scope, document, data.root)
+            finally:
+                for prompt in document:
+                    print(prompt, end="")
+                print("\n")
+                for prompt in log:
+                    logfile.write(prompt)
 
 
 def process_prompts(log, scope, document, prompts):
