@@ -10,9 +10,11 @@
                 "input": "context",
                 "stop_sequences": [
                     "!"
-                ]
+                ],
+                "include_stop_sequences": true
             }
         },
-        "!\n"
+        "\n"
     ]
 }
+

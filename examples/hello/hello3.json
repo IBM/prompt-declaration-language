@@ -11,6 +11,7 @@
                 "stop_sequences": [
                     "!"
                 ],
+                "include_stop_sequences": true,
                 "constraints": [
                     {
                         "words_len": 1
@@ -18,7 +19,7 @@
                 ]
             }
         },
-        "!\n"
+        "\n"
     ]
 }
 

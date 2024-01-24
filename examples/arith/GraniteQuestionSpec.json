@@ -4,6 +4,10 @@
         "Question: ",
         {
             "var": "QUESTION"
+        },
+        "Answer: ",
+        {
+            "var": "ANSWER"
         }
     ]
 }

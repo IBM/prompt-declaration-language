@@ -1,0 +1,15 @@
+{
+    "title": "Granite question",
+    "prompts": [
+        "Q: What is the capital of France?\n",
+        {
+            "var": "CAPITAL",
+            "lookup": {
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "greedy",
+                "input": "context"
+            }
+        }
+    ],
+    "spec" : "GraniteQuestionAnswerSpec"
+}
