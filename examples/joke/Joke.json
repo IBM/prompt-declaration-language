@@ -12,43 +12,36 @@
             "prompts": [
                 "Q: ",
                 {
-                    "var": "JOKE",
+                    "assign": "JOKE",
                     "constraints": [
                         "len(words(JOKE)) < 20"
                     ],
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "beam",
-                        "params": {
-                            "n": 3
-                        },
-                        "input": "context",
-                        "stop_sequences": [
-                            "?",
-                            "\n"
-                        ]
-                    }
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "beam",
+                    "params": {
+                        "n": 3
+                    },
+                    "stop_sequences": [
+                        "?",
+                        "\n"
+                    ]
                 },
                 "\nA: ",
                 {
-                    "var": "PUNCHLINE",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "beam",
-                        "params": {
-                            "n": 3
-                        },
-                        "input": "context",
-                        "stop_sequences": [
-                            "END",
-                            "\n"
-                        ],
-                        "constraints": [
-                            {
-                                "words_len": ">10"
-                            }
-                        ]
-                    }
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "beam",
+                    "params": {
+                        "n": 3
+                    },
+                    "stop_sequences": [
+                        "END",
+                        "\n"
+                    ],
+                    "constraints": [
+                        {
+                            "words_len": ">10"
+                        }
+                    ]
                 },
                 "\n"
             ],

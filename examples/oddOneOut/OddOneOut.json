@@ -11,30 +11,23 @@
             "prompts": [
                 "Pick the odd word out: ",
                 {
-                "var": "OPTIONS",
-                "lookup": {
-                    "model": "ibm/granite-20b-code-instruct-v1",
-                    "decoding": "argmax",
-                    "input": "context",
-                    "stop_sequences": [
-                        "."
-                    ]
-                }
+                "assign": "OPTIONS",
+                "model": "ibm/granite-20b-code-instruct-v1",
+                "decoding": "argmax",
+                "stop_sequences": [
+                    "."
+                ]
                 },
                 "\nNow the reasoning:\n",
                 {
-                    "var": "REASONING",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "argmax",
-                        "input": "context",
-                        "stop_sequences": [
-                            "Pick the odd word",
-                            "\n",
-                            "So the odd one",
-                            "."
-                        ]
-                    },
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax",
+                    "stop_sequences": [
+                        "Pick the odd word",
+                        "\n",
+                        "So the odd one",
+                        "."
+                    ],
                     "constraints": [
                         {
                             "not_contains": "\n"
@@ -49,15 +42,11 @@
                 },
                 "\nNow the result:\n",
                 {
-                    "var": "RESULT",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "argmax",
-                        "input": "context",
-                        "stop_sequences": [
-                            "Pick the odd word"
-                        ]
-                    },
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax",
+                    "stop_sequences": [
+                        "Pick the odd word"
+                    ],
                     "constraints": [
                         {
                             "in": "OPTIONS"

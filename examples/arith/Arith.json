@@ -31,65 +31,57 @@
                 "Question: ",
                 {
                     "assign": "QUESTION",
-                    "prompts": [{
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "argmax",
-                        "params": {
-                            "distribution_batch_size": 1,
-                            "max_length": 2048
-                        },
-                        "stop_sequences": [
-                            "Answer"
-                        ]
-                    }]
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax",
+                    "params": {
+                        "distribution_batch_size": 1,
+                        "max_length": 2048
+                    },
+                    "stop_sequences": [
+                        "Answer"
+                    ]
                 },
                 "Answer: Let's think step by step.\n",
                 {
                     "prompts": [
                         {
                             "assign": "REASON_OR_CALC",
-                            "prompts": [{
-                                "model": "ibm/granite-20b-code-instruct-v1",
-                                "decoding": "argmax",
-                                "params": {
-                                    "distribution_batch_size": 1,
-                                    "max_length": 2048
-                                },
-                                "stop_sequences": [
-                                    "<<"
-                                ],
-                                "include_stop_sequences": true
-                            }]
+                            "model": "ibm/granite-20b-code-instruct-v1",
+                            "decoding": "argmax",
+                            "params": {
+                                "distribution_batch_size": 1,
+                                "max_length": 2048
+                            },
+                            "stop_sequences": [
+                                "<<"
+                            ],
+                            "include_stop_sequences": true
                         },
                         {
                             "prompts": [
                                 {
                                     "assign": "EXPR",
-                                    "prompts": [{
-                                        "model": "ibm/granite-20b-code-instruct-v1",
-                                        "decoding": "argmax",
-                                        "params": {
-                                            "distribution_batch_size": 1,
-                                            "max_length": 2048
-                                        },
-                                        "stop_sequences": [
-                                            "=",
-                                            "\n"
-                                        ]
-                                    }]
+                                    "model": "ibm/granite-20b-code-instruct-v1",
+                                    "decoding": "argmax",
+                                    "params": {
+                                        "distribution_batch_size": 1,
+                                        "max_length": 2048
+                                    },
+                                    "stop_sequences": [
+                                        "=",
+                                        "\n"
+                                    ]
                                 },
                                 "= ",
                                 {
                                     "assign": "RESULT",
-                                    "prompts": [{
-                                        "lan": "python",
-                                        "code": [
-                                            "result = ",
-                                            {
-                                                "var": "EXPR"
-                                            }
-                                        ]
-                                    }]
+                                    "lan": "python",
+                                    "code": [
+                                        "result = ",
+                                        {
+                                            "var": "EXPR"
+                                        }
+                                    ]
                                 },
                                 " >>"
                             ],

@@ -7,7 +7,6 @@
             "prompts": [
                 "- ",
                 {
-                    "var": "THING",
                     "constraints": [
                         {
                             "in": [
@@ -20,11 +19,8 @@
                             "words_len": "<=2"
                         }
                     ],
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "argmax",
-                        "input": "context"
-                    }
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax"
                 },
                 "\n"
             ],
@@ -32,12 +28,9 @@
         },
         "The most important of these is ",
         {
-            "var": "ITEM",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": "context"
-            }
+            "assign": "ITEM",
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax"
         },
         "."
     ]

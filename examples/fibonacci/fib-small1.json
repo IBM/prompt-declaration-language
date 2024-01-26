@@ -4,28 +4,22 @@
         "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n",
         {
             "assign": "CODE",
-            "prompts": [{
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax"
-            }]
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax"
         },
         "What is the name of the function above?\n Do not include 'Answer' in the answer",
         {
             "assign": "FUNCTION",
-            "prompts": [{
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax"
-            }]
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax"
         },
         {
             "assign": "N",
-            "prompts": [{
-                "lan": "python",
-                "code": [
-                    "import random\n",
-                    "result = random.randint(1, 20)"
-                ]
-            }],
+            "lan": "python",
+            "code": [
+                "import random\n",
+                "result = random.randint(1, 20)"
+            ],
             "show_result": false
         },
         "\nfib(",
@@ -34,20 +28,17 @@
         },
         ") = ",
         {
-            "assign": "RESULT",
-            "prompts": [{
-                "lan": "python",
-                "code": [
-                    {
-                        "var": "CODE"
-                    },
-                    "result = fib(",
-                    {
-                        "var": "N"
-                    },
-                    ")"
-                ]
-            }]
+            "lan": "python",
+            "code": [
+                {
+                    "var": "CODE"
+                },
+                "result = fib(",
+                {
+                    "var": "N"
+                },
+                ")"
+            ]
         }
     ]
 }

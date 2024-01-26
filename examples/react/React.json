@@ -15,22 +15,19 @@
                 {
                     "prompts": [
                         {
-                        "var": "THOUGHT",
-                        "lookup": {
-                            "model": "ibm/granite-20b-code-instruct-v1",
-                            "decoding": "sample",
-                            "params": {
-                                "no_repeat_ngram_size": 3
-                            },
-                            "input": "context",
-                            "stop_sequences": [
-                                "\n",
-                                "Act:",
-                                "Obs:",
-                                "Tho:"
-                            ],
-                            "include_stop_sequences": true
+                        "assign": "THOUGHT",
+                        "model": "ibm/granite-20b-code-instruct-v1",
+                        "decoding": "sample",
+                        "params": {
+                            "no_repeat_ngram_size": 3
                         },
+                        "stop_sequences": [
+                            "\n",
+                            "Act:",
+                            "Obs:",
+                            "Tho:"
+                        ],
+                        "include_stop_sequences": true,
                         "constraints": [
                             {
                                 "words_len": ">2",
@@ -42,67 +39,57 @@
                     "repeats_until": {
                         "ends_with": {
                             "arg0": {
-                                "value": "THOUGHT"
+                                "var": "THOUGHT"
                             },
                             "arg1": "Act:"
                         }
                     }
                 },
                 {
-                    "var": "SUBJECT",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "sample",
-                        "params": {
-                            "no_repeat_ngram_size": 3
-                        },
-                        "input": "context",
-                        "stop_sequences": [
-                            "\n",
-                            "Tho",
-                            "Act",
-                            "Obs"
-                        ]
-                    }
+                    "assign": "SUBJECT",
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "sample",
+                    "params": {
+                        "no_repeat_ngram_size": 3
+                    },
+                    "stop_sequences": [
+                        "\n",
+                        "Tho",
+                        "Act",
+                        "Obs"
+                    ]
                 },
                 "\n",
                 {
-                    "var": "RESULT",
-                    "lookup": {
-                        "lan": "python",
-                        "code": [
-                            "import wikipedia\n",
-                            "res = \"",
-                            {
-                                "value": "SUBJECT"
-                            },
-                            "\"\n",
-                            "result = wikipedia.summary(res)\n"
-                        ]
-                    }
+                    "lan": "python",
+                    "code": [
+                        "import wikipedia\n",
+                        "res = \"",
+                        {
+                            "var": "SUBJECT"
+                        },
+                        "\"\n",
+                        "result = wikipedia.summary(res)\n"
+                    ]
                 },
                 {
-                    "var": "OBSERVATION",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "sample",
-                        "params": {
-                            "no_repeat_ngram_size": 3
-                        },
-                        "input": "context",
-                        "stop_sequences": [
-                            "\n",
-                            "Tho",
-                            "Act",
-                            "Obs"
-                        ]
-                    }
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "sample",
+                    "params": {
+                        "no_repeat_ngram_size": 3
+                    },
+                    "stop_sequences": [
+                        "\n",
+                        "Tho",
+                        "Act",
+                        "Obs"
+                    ]
                 }
             ],
             "repeats_until": {
                 "contains": {
                     "arg0": {
-                        "value": "THOUGHT"
+                        "var": "THOUGHT"
                     },
                     "arg1": "headquarters"
                 }
