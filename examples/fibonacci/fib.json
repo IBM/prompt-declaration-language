@@ -2,8 +2,8 @@
     "title": "Fibonacci",
     "prompts": [
         {
-            "var": "CODE",
-            "lookup": {
+            "assign": "CODE",
+            "prompts": [{
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": {
@@ -11,57 +11,56 @@
                         "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
                     ]
                 }
-            }
+            }]
         },
         "\nFind a random number between 1 and 20\n",
         {
-            "var": "N",
-            "lookup": {
+            "assign": "N",
+            "prompts": [{
                 "lan": "python",
                 "code": [
                     "import random\n",
                     "result = random.randint(1, 20)"
-                ],
-                "show_result": true
-            }
+                ]
+            }],
+            "show_result": true
         },
         "\nNow computing fib(",
         {
-            "value": "N"
+            "var": "N"
         },
         ")\n",
         {
-            "var": "RESULT",
-            "lookup": {
+            "assign": "RESULT",
+            "prompts": [{
                 "lan": "python",
                 "code": [
                     {
-                        "value": "CODE"
+                        "var": "CODE"
                     },
                     "result = fib(",
                     {
-                        "value": "N"
+                        "var": "N"
                     },
                     ")"
-                ],
-                "show_result": false
-            }
+                ]
+            }],
+            "show_result": false
         },
         "The result is: ",
         {
-            "value": "RESULT"
+            "var": "RESULT"
         },
         "\n\n Explain what the above code does and what the result means\n\n",
         {
-            "var": "EXPLANATION",
-            "lookup": {
+            "assign": "EXPLANATION",
+            "prompts": [{
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
-                "input": "context",
                 "stop_sequences": [
                     "Answer"
                 ]
-            }
+            }]
         }
         
     ]

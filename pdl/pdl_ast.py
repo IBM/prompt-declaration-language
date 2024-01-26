@@ -1,33 +1,43 @@
-from typing import Any, Literal, Optional, TypeAlias, Union
+from typing import Any, Optional, TypeAlias
 
 from pydantic import BaseModel, RootModel
 
 
-class Lookup(BaseModel):
-    show_result: bool = True
+class BasicBlock(BaseModel):
+    pass
 
 
-class ModelLookup(Lookup):
+class ModelBasicBlock(BasicBlock):
     model: str
-    input: Union[Literal["context"], "BlockType"]
+    input: Optional["PromptType"] = None
     decoding: Optional[str] = None
     stop_sequences: Optional[list[str]] = None
     include_stop_sequences: bool = False
     params: Optional[Any] = None
 
 
-class CodeLookup(Lookup):
+class CodeBasicBlock(BasicBlock):
     lan: str
-    code: list["StrOrBlockType"]
+    code: "PromptsType"
 
 
-class ApiLookup(Lookup):
+class ApiBasicBlock(BasicBlock):
     api: str
     url: str
-    input: "BlockType"
+    input: "PromptType"
 
 
-LookupType: TypeAlias = ModelLookup | CodeLookup | ApiLookup
+class VarBasicBlock(BasicBlock):
+    var: str
+
+
+class ValueBasicBlock(BasicBlock):
+    value: Any
+
+
+BasicBlockType: TypeAlias = (
+    ModelBasicBlock | CodeBasicBlock | ApiBasicBlock | VarBasicBlock | ValueBasicBlock
+)
 
 
 class ConditionExpr(BaseModel):
@@ -35,7 +45,7 @@ class ConditionExpr(BaseModel):
 
 
 class EndsWithArgs(BaseModel):
-    arg0: "StrOrValueBlockType"
+    arg0: "PromptType"
     arg1: str
 
 
@@ -44,7 +54,7 @@ class EndsWithCondition(ConditionExpr):
 
 
 class ContainsArgs(BaseModel):
-    arg0: "StrOrValueBlockType"
+    arg0: "PromptType"
     arg1: str
 
 
@@ -58,27 +68,27 @@ ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
 class Block(BaseModel):
     """PDL program block"""
 
-    condition: Optional[ConditionType] = None
-    repeats: Optional[int] = None
-    repeats_until: Optional[ConditionType] = None
+    title: Optional[str] = None
+    prompts: list["PromptType"]
+    assign: Optional[str] = None
+    show_result: bool = True
 
 
-class PromptsBlock(Block):
-    prompts: list["StrOrBlockType"]
+class IfBlock(Block):
+    condition: ConditionType
 
 
-class LookupBlock(Block):
-    var: str
-    lookup: LookupType
+class RepeatsBlock(Block):
+    repeats: int
 
 
-class ValueBlock(Block):
-    value: Any
+class RepeatsUntilBlock(Block):
+    repeats_until: ConditionType
 
 
-BlockType: TypeAlias = PromptsBlock | LookupBlock | ValueBlock
-StrOrBlockType: TypeAlias = str | BlockType  # pyright: ignore
-StrOrValueBlockType: TypeAlias = str | ValueBlock
+BlockType: TypeAlias = IfBlock | RepeatsBlock | RepeatsUntilBlock | Block
+PromptType: TypeAlias = str | BlockType | BasicBlockType  # pyright: ignore
+PromptsType: TypeAlias = list[PromptType]
 
 
 class Program(RootModel):
@@ -86,5 +96,5 @@ class Program(RootModel):
     Prompt Description Program (PDL)
     """
 
-    # title: str
+    # root: dict[str, BlockType]
     root: BlockType

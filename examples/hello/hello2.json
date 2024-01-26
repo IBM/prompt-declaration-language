@@ -3,16 +3,12 @@
     "prompts": [
         "Hello,",
         {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "greedy",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ],
-                "include_stop_sequences": true
-            }
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "greedy",
+            "stop_sequences": [
+                "!"
+            ],
+            "include_stop_sequences": true
         },
         "\n"
     ]

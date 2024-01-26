@@ -3,16 +3,15 @@
     "prompts": [
         "Hello! ",
         {
-            "var": "QUESTION",
-            "lookup": {
+            "assign": "QUESTION",
+            "prompts": [{
                 "lan": "python",
                 "code": [
                     "import random\n",
                     "result = random.choice([True, False])"
-                ],
-                "show_result": false
-            }
-            
+                ]
+            }],
+            "show_result": false
         },
         {
             "prompts" :[
@@ -21,7 +20,7 @@
             "condition": {
                 "ends_with": {
                     "arg0": {
-                        "value": "QUESTION"
+                        "var": "QUESTION"
                     },
                     "arg1": "True"
                 }
@@ -29,10 +28,3 @@
         }
     ]
 }
-        
-        
-        
-        
-        
-        
- 

@@ -6,11 +6,8 @@ python_data = {
     "prompts": [
         "Hello, ",
         {
-            "var": "NAME",
-            "lookup": {
-                "lan": "python",
-                "code": ["import random\n", "import string\n", "result = 'Tracy'"],
-            },
+            "lan": "python",
+            "code": ["import random\n", "import string\n", "result = 'Tracy'"],
         },
         "!\n",
     ],
@@ -19,10 +16,9 @@ python_data = {
 
 def test_python():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(python_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == ["Hello, ", "Tracy", "!\n"]
 
 
@@ -31,12 +27,11 @@ def show_result_data(show):
         "title": "Using a weather API and LLM to make a small weather app",
         "prompts": [
             {
-                "var": "QUERY",
-                "lookup": {
-                    "lan": "python",
-                    "code": ["result = 'How can I help you?: '"],
-                    "show_result": show,
-                },
+                "assign": "QUERY",
+                "prompts": [
+                    {"lan": "python", "code": ["result = 'How can I help you?: '"]}
+                ],
+                "show_result": show,
             }
         ],
     }
@@ -44,17 +39,15 @@ def show_result_data(show):
 
 def test_show_result():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(show_result_data(True))
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == ["How can I help you?: "]
 
 
 def test_show_result_false():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(show_result_data(False))
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == []

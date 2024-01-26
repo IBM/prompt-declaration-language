@@ -33,60 +33,68 @@ cond_data = {
             "prompts": [
                 "Question: ",
                 {
-                    "var": "QUESTION",
-                    "lookup": {
-                        "model": "ibm/granite-20b-code-instruct-v1",
-                        "decoding": "argmax",
-                        "params": {"distribution_batch_size": 1, "max_length": 2048},
-                        "input": "context",
-                        "stop_sequences": ["Answer"],
-                    },
+                    "assign": "QUESTION",
+                    "prompts": [
+                        {
+                            "model": "ibm/granite-20b-code-instruct-v1",
+                            "decoding": "argmax",
+                            "params": {
+                                "distribution_batch_size": 1,
+                                "max_length": 2048,
+                            },
+                            "stop_sequences": ["Answer"],
+                        }
+                    ],
                 },
                 "Answer: Let's think step by step.\n",
                 {
                     "prompts": [
                         {
-                            "var": "REASON_OR_CALC",
-                            "lookup": {
-                                "model": "ibm/granite-20b-code-instruct-v1",
-                                "decoding": "argmax",
-                                "params": {
-                                    "distribution_batch_size": 1,
-                                    "max_length": 2048,
-                                },
-                                "input": "context",
-                                "stop_sequences": ["<<"],
-                                "include_stop_sequences": True,
-                            },
+                            "assign": "REASON_OR_CALC",
+                            "prompts": [
+                                {
+                                    "model": "ibm/granite-20b-code-instruct-v1",
+                                    "decoding": "argmax",
+                                    "params": {
+                                        "distribution_batch_size": 1,
+                                        "max_length": 2048,
+                                    },
+                                    "stop_sequences": ["<<"],
+                                    "include_stop_sequences": True,
+                                }
+                            ],
                         },
                         {
                             "prompts": [
                                 {
-                                    "var": "EXPR",
-                                    "lookup": {
-                                        "model": "ibm/granite-20b-code-instruct-v1",
-                                        "decoding": "argmax",
-                                        "params": {
-                                            "distribution_batch_size": 1,
-                                            "max_length": 2048,
-                                        },
-                                        "input": "context",
-                                        "stop_sequences": ["=", "\n"],
-                                    },
+                                    "assign": "EXPR",
+                                    "prompts": [
+                                        {
+                                            "model": "ibm/granite-20b-code-instruct-v1",
+                                            "decoding": "argmax",
+                                            "params": {
+                                                "distribution_batch_size": 1,
+                                                "max_length": 2048,
+                                            },
+                                            "stop_sequences": ["=", "\n"],
+                                        }
+                                    ],
                                 },
                                 "= ",
                                 {
-                                    "var": "RESULT",
-                                    "lookup": {
-                                        "lan": "python",
-                                        "code": ["result = ", {"value": "EXPR"}],
-                                    },
+                                    "assign": "RESULT",
+                                    "prompts": [
+                                        {
+                                            "lan": "python",
+                                            "code": ["result = ", {"var": "EXPR"}],
+                                        }
+                                    ],
                                 },
                                 " >>",
                             ],
                             "condition": {
                                 "ends_with": {
-                                    "arg0": {"value": "REASON_OR_CALC"},
+                                    "arg0": {"var": "REASON_OR_CALC"},
                                     "arg1": "<<",
                                 }
                             },
@@ -146,10 +154,9 @@ assert_data = [
 
 def test_cond():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(cond_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == assert_data
 
 
@@ -158,16 +165,22 @@ def cond_data1(show, name):
         "title": "Hello world showing call out to python code with condition",
         "prompts": [
             {
-                "var": "NAME",
-                "lookup": {
-                    "lan": "python",
-                    "code": ["import random\n", "import string\n", "result = 'Tracy'"],
-                    "show_result": show,
-                },
+                "assign": "NAME",
+                "prompts": [
+                    {
+                        "lan": "python",
+                        "code": [
+                            "import random\n",
+                            "import string\n",
+                            "result = 'Tracy'",
+                        ],
+                    }
+                ],
+                "show_result": show,
             },
             {
                 "prompts": [", hello there!\n"],
-                "condition": {"ends_with": {"arg0": {"value": "NAME"}, "arg1": name}},
+                "condition": {"ends_with": {"arg0": {"var": "NAME"}, "arg1": name}},
             },
         ],
     }
@@ -175,19 +188,17 @@ def cond_data1(show, name):
 
 def test_cond1():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(cond_data1(False, "blah"))
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == []
 
 
 def test_cond2():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(cond_data1(True, "acy"))
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == ["Tracy", ", hello there!\n"]
 
 
@@ -195,23 +206,26 @@ repeat_until_data = {
     "title": "Hello world showing call out to python code with condition",
     "prompts": [
         {
-            "var": "I",
-            "lookup": {"lan": "python", "code": ["result = 0"], "show_result": True},
+            "assign": "I",
+            "prompts": [{"lan": "python", "code": ["result = 0"]}],
+            "show_result": True,
         },
         "\n",
         {
             "prompts": [
                 {
-                    "var": "I",
-                    "lookup": {
-                        "lan": "python",
-                        "code": ["result = ", {"value": "I"}, " + 1"],
-                        "show_result": True,
-                    },
+                    "assign": "I",
+                    "prompts": [
+                        {
+                            "lan": "python",
+                            "code": ["result = ", {"var": "I"}, " + 1"],
+                        }
+                    ],
+                    "show_result": True,
                 },
                 "\n",
             ],
-            "repeats_until": {"contains": {"arg0": {"value": "I"}, "arg1": "5"}},
+            "repeats_until": {"contains": {"arg0": {"var": "I"}, "arg1": "5"}},
         },
     ],
 }
@@ -219,10 +233,9 @@ repeat_until_data = {
 
 def test_repeat_until():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(repeat_until_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == [
         "0",
         "\n",

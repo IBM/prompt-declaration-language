@@ -4,33 +4,28 @@
     "prompts": [
         "Hello,",
         {
-            "var": "NAME",
-            "lookup": {
+            "assign": "NAME",
+            "prompts": [{
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
-                "input": "context",
                 "stop_sequences": [
                     "!"
                 ],
                 "include_stop_sequences": true
-            }
+            }]
         },
         "\n",
         "Who is",
         {
-            "value": "NAME"
+            "var": "NAME"
         },
         "?\n",
         {
-            "var": "RESULT",
-            "lookup": {
-                "model": "google/flan-t5-xl",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
+            "model": "google/flan-t5-xl",
+            "decoding": "argmax",
+            "stop_sequences": [
+                "!"
+            ]
         },
         "\n"
     ]

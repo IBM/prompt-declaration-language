@@ -2,38 +2,38 @@
     "title": "Hello world showing call out to python code with condition",
     "prompts": [
         {
-            "var": "I",
-            "lookup": {
+            "assign": "I",
+            "prompts": [{
                 "lan": "python",
                 "code": [
                     "result = 0"
                 ],
                 "show_result": true
-            }
+            }]
         },
         "\n",
         {
             "prompts": [
                 {
-                    "var": "I",
-                    "lookup": {
+                    "assign": "I",
+                    "prompts": [{
                         "lan": "python",
                         "code": [
                             "result = ",
                             {
-                                "value": "I"
+                                "var": "I"
                             },
                             " + 1"
                         ],
                         "show_result": true
-                    }
+                    }]
                 },
                 "\n"
             ],
             "repeats_until": {
                 "contains": {
                     "arg0": {
-                        "value": "I"
+                        "var": "I"
                     },
                     "arg1": "5"
                 }

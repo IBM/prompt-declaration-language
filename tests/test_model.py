@@ -6,13 +6,9 @@ model_data = {
     "prompts": [
         "Hello,",
         {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "greedy",
-                "input": "context",
-                "stop_sequences": ["!"],
-            },
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "greedy",
+            "stop_sequences": ["!"],
         },
         "!\n",
     ],
@@ -21,10 +17,9 @@ model_data = {
 
 def test_model():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(model_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == ["Hello,", " world", "!\n"]
 
 
@@ -33,26 +28,28 @@ model_chain_data = {
     "prompts": [
         "Hello,",
         {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": ["!"],
-            },
+            "assign": "NAME",
+            "prompts": [
+                {
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax",
+                    "stop_sequences": ["!"],
+                }
+            ],
         },
         "!\n",
         "Who is",
-        {"value": "NAME"},
+        {"var": "NAME"},
         "?\n",
         {
-            "var": "RESULT",
-            "lookup": {
-                "model": "google/flan-t5-xl",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": ["!"],
-            },
+            "assign": "RESULT",
+            "prompts": [
+                {
+                    "model": "google/flan-t5-xl",
+                    "decoding": "argmax",
+                    "stop_sequences": ["!"],
+                }
+            ],
         },
         "\n",
     ],
@@ -61,10 +58,9 @@ model_chain_data = {
 
 def test_model_chain():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(model_chain_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == [
         "Hello,",
         " world",
@@ -81,24 +77,26 @@ multi_shot_data = {
     "title": "Hello world showing model chaining",
     "prompts": [
         {
-            "var": "LOCATION",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": {
-                    "prompts": [
-                        "Question: What is the weather in London?\n",
-                        "London\n",
-                        "Question: What's the weather in Paris?\n",
-                        "Paris\n",
-                        "Question: Tell me the weather in Lagos?\n",
-                        "Lagos\n",
-                        "Question: What is the weather in Armonk, NY?\n",
-                    ]
-                },
-                "show_result": True,
-                "stop_sequences": ["Question"],
-            },
+            "assign": "LOCATION",
+            "prompts": [
+                {
+                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "decoding": "argmax",
+                    "input": {
+                        "prompts": [
+                            "Question: What is the weather in London?\n",
+                            "London\n",
+                            "Question: What's the weather in Paris?\n",
+                            "Paris\n",
+                            "Question: Tell me the weather in Lagos?\n",
+                            "Lagos\n",
+                            "Question: What is the weather in Armonk, NY?\n",
+                        ]
+                    },
+                    "stop_sequences": ["Question"],
+                }
+            ],
+            "show_result": True,
         }
     ],
 }
@@ -106,8 +104,7 @@ multi_shot_data = {
 
 def test_multi_shot():
     scope = {}
-    document = []
     log = []
     data = Program.model_validate(multi_shot_data)
-    process_block(log, scope, document, data.root)
+    document = process_block(log, scope, [], data.root)
     assert document == ["Armonk, NY\n"]

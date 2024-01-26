@@ -3,21 +3,17 @@
     "prompts": [
         "Hello,",
         {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ],
-                "include_stop_sequences": true,
-                "constraints": [
-                    {
-                        "words_len": 1
-                    }
-                ]
-            }
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax",
+            "stop_sequences": [
+                "!"
+            ],
+            "include_stop_sequences": true,
+            "constraints": [
+                {
+                    "words_len": 1
+                }
+            ]
         },
         "\n"
     ]

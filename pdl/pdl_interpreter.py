@@ -2,28 +2,31 @@ import os
 import types
 
 import requests
+from dotenv import load_dotenv
 from genai.credentials import Credentials
 from genai.model import Model
 from genai.schemas import GenerateParams
 
 from . import pdl_ast
 from .pdl_ast import (
-    ApiLookup,
+    ApiBasicBlock,
+    BasicBlock,
     Block,
-    CodeLookup,
-    ContainsArgs,
+    CodeBasicBlock,
     ContainsCondition,
-    EndsWithArgs,
     EndsWithCondition,
-    LookupBlock,
-    ModelLookup,
+    IfBlock,
+    ModelBasicBlock,
     Program,
-    PromptsBlock,
-    ValueBlock,
+    RepeatsBlock,
+    RepeatsUntilBlock,
+    ValueBasicBlock,
+    VarBasicBlock,
 )
 
 DEBUG = False
 
+load_dotenv()
 GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
@@ -37,82 +40,95 @@ def generate(pdl, logging):
             data = Program.model_validate_json(infile.read())
             document = []
             log = []
+            result = []
             try:
-                process_block(log, scope, document, data.root)
+                result = process_block(log, scope, document, data.root)
             finally:
-                for prompt in document:
+                for prompt in result:
                     print(prompt, end="")
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
 
 
-def process_prompts(log, scope, document, prompts):
+def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
+    result = []
+    prompts = block.prompts
+    match block:
+        case IfBlock(condition=cond):
+            if condition(log, scope, document, cond):
+                result += process_prompts(log, scope, document, prompts)
+        case RepeatsBlock(repeats=n):
+            for _ in range(n):
+                result += process_prompts(log, scope, document, prompts)
+                document += result
+        case RepeatsUntilBlock(repeats_until=cond):
+            result += process_prompts(log, scope, document, prompts)
+            document += result
+            while not condition(log, scope, document, cond):
+                result += process_prompts(log, scope, document, prompts)
+                document += result
+        case Block():
+            result += process_prompts(log, scope, document, prompts)
+    if block.assign is not None:
+        var = block.assign
+        scope[var] = "".join(result)
+        debug("Storing model result for " + var + ": " + str(result))
+    if block.show_result is False:
+        result = []
+    return result
+
+
+def process_prompts(log, scope, document, prompts) -> list[str]:
+    result: list[str] = []
     for prompt in prompts:
-        if isinstance(prompt, str):
-            document.append(prompt)
-            append_log(log, "Prompt", True)
-            append_log(log, prompt, False)
-        else:
-            process_block(log, scope, document, prompt)
+        result += process_prompt(log, scope, document + result, prompt)
+    return result
 
 
-def process_block(log, scope, document, block: pdl_ast.BlockType):
-    iteration = 0
-    cond = True
-    if block.condition is not None:
-        cond = condition(block.condition, scope, document)
-    if not cond:
-        return
+def process_prompt(log, scope, document, prompt) -> list[str]:
+    if isinstance(prompt, str):
+        result = [prompt]
+        append_log(log, "Prompt", True)
+        append_log(log, prompt, False)
+    elif isinstance(prompt, BasicBlock):
+        result = process_basic_block(log, scope, document, prompt)
+    elif isinstance(prompt, Block):
+        result = process_block(log, scope, document, prompt)
+    else:
+        assert False
+    return result
 
-    if block.repeats is not None and block.repeats <= 0:
-        return
 
-    while True:
-        debug(document)
-        iteration += 1
-        match block:
-            case PromptsBlock(prompts=prompts):
-                process_prompts(log, scope, document, prompts)
-            case LookupBlock(var=var, lookup=ModelLookup()):
-                result = call_model(log, scope, document, block)
-                if is_show_result(block):
-                    document += [result]
-                scope[var] = result
-                debug("Storing model result for " + var + ": " + str(result))
-            case LookupBlock(var=var, lookup=CodeLookup(lan="python", code=code)):
-                result = call_python(log, scope, code)
-                if result is not None:
-                    if is_show_result(block):
-                        document += [result]
-                    scope[var] = result
-                    debug("Storing python result for " + var + ": " + str(result))
-            case ValueBlock():
-                result = get_value(block, scope)
-                if result != "":
-                    document += [result]
-            case LookupBlock(var=var, lookup=ApiLookup(url=url, input=input_block)):
-                inputs: list[str] = []
-                process_block(log, scope, inputs, input_block)
-                input_str = "".join(inputs)
-                input_str = url + input_str
-                append_log(log, "API Input", True)
-                append_log(log, input_str, False)
-                response = requests.get(input_str)
-                result = response.json()
-                debug(result)
-                append_log(log, "API Output", True)
-                append_log(log, str(result), False)
-                if is_show_result(block):
-                    document += [result]
-                scope[var] = result
-                debug("Storing api result for " + var + ": " + str(result))
-            case _:
-                assert False
-
-        # Determine if we need to stop iterating in this block
-        if stop_iterations(scope, document, block, iteration):
-            break
+def process_basic_block(
+    log, scope, document, block: pdl_ast.BasicBlockType | BasicBlock
+) -> list[str]:
+    match block:
+        case ModelBasicBlock():
+            result = [call_model(log, scope, document, block)]
+        case CodeBasicBlock(lan="python", code=code):
+            result = [call_python(log, scope, code)]
+        case CodeBasicBlock(lan=l):
+            error(f"Unsupported language: {l}")
+            result = []
+        case VarBasicBlock():
+            result = [get_var(block, scope)]
+        case ValueBasicBlock(value=v):
+            result = [str(v)]
+        case ApiBasicBlock(url=url, input=input_block):
+            inputs = process_prompt(log, scope, [], input_block)
+            input_str = "".join(inputs)
+            input_str = url + input_str
+            append_log(log, "API Input", True)
+            append_log(log, input_str, False)
+            response = requests.get(input_str)
+            result = [str(response.json())]
+            debug(result)
+            append_log(log, "API Output", True)
+            append_log(log, result[0], False)
+        case BasicBlock():
+            assert False
+    return result
 
 
 def append_log(log, somestring, doc):
@@ -132,86 +148,47 @@ def error(somestring):
     print("***Error: " + somestring)
 
 
-def stop_iterations(scope, document, block: pdl_ast.BlockType, iteration):
+def get_var(block, scope) -> str:
     match block:
-        case Block(repeats=None, repeats_until=None):
-            return True
-        case Block(repeats=repeats, repeats_until=None):
-            if iteration == repeats:
-                return True
-        case Block(repeats=None, repeats_until=repeats_until):
-            assert repeats_until is not None
-            if condition(repeats_until, scope, document):
-                return True
-        case _:
-            error("Cannot have both repeats and repeats_until")
-            return True
-    return False
-
-
-def is_show_result(block: LookupBlock):
-    return block.lookup.show_result
-
-
-def get_value(block, scope) -> str:
-    match block:
-        case ValueBlock(value=v):
+        case VarBasicBlock(var=v):
             return str(scope[v])
         case _:
             return ""
 
 
-def condition(cond: pdl_ast.ConditionType, scope, document):
+def condition(log, scope, document, cond: pdl_ast.ConditionType):
     match cond:
         case EndsWithCondition(ends_with=args):
-            return ends_with(args, scope, document)
+            return ends_with(log, scope, document, args)
         case ContainsCondition(contains=args):
-            return contains(args, scope, document)
+            return contains(log, scope, document, args)
     return False
 
 
-def ends_with(cond: pdl_ast.EndsWithArgs, scope, document):
-    match cond:
-        case EndsWithArgs(arg0=v) if isinstance(v, str):
-            x = v
-        case EndsWithArgs(arg0=v) if isinstance(v, Block):
-            x = get_value(v, scope)
-        case _:
-            error("Ill-formed ends_with condition")
-            return False
-    return x.endswith(cond.arg1)
+def ends_with(log, scope, document, cond: pdl_ast.EndsWithArgs):
+    arg0 = "".join(process_prompt(log, scope, document, cond.arg0))
+    return arg0.endswith(cond.arg1)
 
 
-def contains(cond: pdl_ast.ContainsArgs, scope, document):
-    match cond:
-        case ContainsArgs(arg0=x) if isinstance(x, str):
-            arg0 = x
-        case ContainsArgs(arg0=Block()):
-            arg0 = get_value(cond.arg0, scope)
-        case _:
-            error("Ill-formed contains condition")
-            return False
+def contains(log, scope, document, cond: pdl_ast.ContainsArgs):
+    arg0 = "".join(process_prompt(log, scope, document, cond.arg0))
     return cond.arg1 in arg0
 
 
-def call_model(log, scope, document, block: pdl_ast.LookupBlock):
-    assert isinstance(block.lookup, pdl_ast.ModelLookup)
+def call_model(log, scope, document, block: pdl_ast.ModelBasicBlock):
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
 
-    if (
-        block.lookup.input != "context"
-    ):  # If not set to document, then input must be a block
-        inputs: list[str] = []
-        process_block(log, scope, inputs, block.lookup.input)
+    if block.input is not None:  # If not set to document, then input must be a block
+        inputs = process_prompt(log, scope, [], block.input)
         model_input = "".join(inputs)
     if model_input == "":
         model_input = "".join(document)
-    if block.lookup.stop_sequences is not None:
-        stop_sequences = block.lookup.stop_sequences
-    if block.lookup.include_stop_sequences is not None:
-        include_stop_sequences = block.lookup.include_stop_sequences
+    if block.stop_sequences is not None:
+        stop_sequences = block.stop_sequences
+    if block.include_stop_sequences is not None:
+        include_stop_sequences = block.include_stop_sequences
 
     if GENAI_API is None:
         error("Environment variable GENAI_API must be defined")
@@ -253,7 +230,7 @@ def call_model(log, scope, document, block: pdl_ast.LookupBlock):
     debug("model input: " + model_input)
     append_log(log, "Model Input", True)
     append_log(log, model_input, False)
-    model = Model(block.lookup.model, params=params, credentials=creds)
+    model = Model(block.model, params=params, credentials=creds)
     response = model.generate([model_input])
     gen = response[0].generated_text
     debug("model output: " + gen)
@@ -274,14 +251,8 @@ def call_python(log, scope, code):
     return result
 
 
-def get_code_string(log, scope, code):
-    ret = ""
-    for c in code:
-        if isinstance(c, str):
-            ret += c
-        else:
-            codes = []
-            process_block(log, scope, codes, c)
-            ret += "".join(codes)
-    debug("code string: " + ret)
-    return ret
+def get_code_string(log, scope, code) -> str:
+    code_l = process_prompts(log, scope, [], code)
+    code_s = "".join(code_l)
+    debug("code string: " + code_s)
+    return code_s

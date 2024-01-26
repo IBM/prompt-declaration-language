@@ -1,8 +1,5 @@
 {
     "title": "Arithmetic Expressions",
-    "components": [
-        "Helper"
-    ],
     "prompts": [
         "Question: Noah charges $60 for a large painting and $30 for a small painting.\n",
         "Last month he sold eight large paintings and four small paintings.\n",
@@ -33,76 +30,73 @@
             "prompts": [
                 "Question: ",
                 {
-                    "var": "QUESTION",
-                    "lookup": {
+                    "assign": "QUESTION",
+                    "prompts": [{
                         "model": "ibm/granite-20b-code-instruct-v1",
                         "decoding": "argmax",
                         "params": {
                             "distribution_batch_size": 1,
                             "max_length": 2048
                         },
-                        "input": "context",
                         "stop_sequences": [
                             "Answer"
                         ]
-                    }
+                    }]
                 },
                 "Answer: Let's think step by step.\n",
                 {
                     "prompts": [
                         {
-                            "var": "REASON_OR_CALC",
-                            "lookup": {
+                            "assign": "REASON_OR_CALC",
+                            "prompts": [{
                                 "model": "ibm/granite-20b-code-instruct-v1",
                                 "decoding": "argmax",
                                 "params": {
                                     "distribution_batch_size": 1,
                                     "max_length": 2048
                                 },
-                                "input": "context",
                                 "stop_sequences": [
                                     "<<"
                                 ],
                                 "include_stop_sequences": true
-                            }
+                            }]
                         },
                         {
                             "prompts": [
                                 {
-                                    "var": "EXPR",
-                                    "lookup": {
+                                    "assign": "EXPR",
+                                    "prompts": [{
                                         "model": "ibm/granite-20b-code-instruct-v1",
                                         "decoding": "argmax",
                                         "params": {
                                             "distribution_batch_size": 1,
                                             "max_length": 2048
                                         },
-                                        "input": "context",
                                         "stop_sequences": [
                                             "=",
                                             "\n"
                                         ]
-                                    }
+                                    }]
                                 },
                                 "= ",
                                 {
-                                    "var": "RESULT",
-                                    "lookup": {
+                                    "assign": "RESULT",
+                                    "prompts": [{
                                         "lan": "python",
                                         "code": [
                                             "result = ",
                                             {
-                                                "value": "EXPR"
+                                                "var": "EXPR"
                                             }
                                         ]
-                                    }
+                                    }]
                                 },
                                 " >>"
                             ],
                             "condition": {
                                 "ends_with": {
                                     "arg0": {
-                                        "value": "REASON_OR_CALC"
+                                        "var": "REASON_OR_CALC"
                                     },
                                     "arg1": "<<"
                                 }
@@ -113,7 +107,7 @@
                     "repeats_until": {
                         "contains": {
                             "arg0": {
-                                "value": "REASON_OR_CALC"
+                                "var": "REASON_OR_CALC"
                             },
                             "arg1": "The answer is"
                         }

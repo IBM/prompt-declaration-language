@@ -2,18 +2,18 @@
     "title": "Using a weather API and LLM to make a small weather app",
     "prompts": [
         {
-            "var": "QUERY",
-            "lookup": {
+            "assign": "QUERY",
+            "prompts": [{
                 "lan": "python",
                 "code": [
                     "result = input('How can I help you?: ')"
-                ],
-                "show_result": false
-            }
+                ]
+            }],
+            "show_result": false
         },
         {
-            "var": "LOCATION",
-            "lookup": {
+            "assign": "LOCATION",
+            "prompts": [{
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": {
@@ -26,32 +26,32 @@
                         "Lagos\n",
                         "Question: ",
                         {
-                            "value": "QUERY"
+                            "var": "QUERY"
                         }
                     ]
                 },
-                "show_result": false,
                 "stop_sequences": [
                     "Question",
                     "What",
                     "!"
                 ]
-            }
+            }],
+            "show_result": false
         },
         {
-            "var": "WEATHER",
-            "lookup": {
+            "assign": "WEATHER",
+            "prompts": [{
                 "api": "https",
                 "url": "https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=",
                 "input": {
-                    "value": "LOCATION"
-                },
-                "show_result": false
-            }
+                    "var": "LOCATION"
+                }
+            }],
+            "show_result": false
         },
         {
-            "var": "RESULT",
-            "lookup": {
+            "assign": "RESULT",
+            "prompts": [{
                 "model": "ibm/granite-20b-code-instruct-v1",
                 "decoding": "argmax",
                 "input": {
@@ -59,7 +59,7 @@
                         "Explain what the weather is from the following JSON:\n",
                         "```\n",
                         {
-                            "value": "WEATHER"
+                            "var": "WEATHER"
                         },
                         "```\n"
                     ]
@@ -68,7 +68,7 @@
                     "What",
                     "!"
                 ]
-            }
+            }]
         }
     ]
 }
