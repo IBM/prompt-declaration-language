@@ -3,30 +3,26 @@
     "prompts": [
         {
             "assign": "I",
-            "prompts": [{
-                "lan": "python",
-                "code": [
-                    "result = 0"
-                ],
-                "show_result": true
-            }]
+            "lan": "python",
+            "code": [
+                "result = 0"
+            ],
+            "show_result": true
         },
         "\n",
         {
             "prompts": [
                 {
                     "assign": "I",
-                    "prompts": [{
-                        "lan": "python",
-                        "code": [
-                            "result = ",
-                            {
-                                "var": "I"
-                            },
-                            " + 1"
-                        ],
-                        "show_result": true
-                    }]
+                    "lan": "python",
+                    "code": [
+                        "result = ",
+                        {
+                            "var": "I"
+                        },
+                        " + 1"
+                    ],
+                    "show_result": true
                 },
                 "\n"
             ],

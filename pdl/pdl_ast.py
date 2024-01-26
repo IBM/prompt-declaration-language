@@ -3,43 +3,6 @@ from typing import Any, Optional, TypeAlias
 from pydantic import BaseModel, RootModel
 
 
-class BasicBlock(BaseModel):
-    pass
-
-
-class ModelBasicBlock(BasicBlock):
-    model: str
-    input: Optional["PromptType"] = None
-    decoding: Optional[str] = None
-    stop_sequences: Optional[list[str]] = None
-    include_stop_sequences: bool = False
-    params: Optional[Any] = None
-
-
-class CodeBasicBlock(BasicBlock):
-    lan: str
-    code: "PromptsType"
-
-
-class ApiBasicBlock(BasicBlock):
-    api: str
-    url: str
-    input: "PromptType"
-
-
-class VarBasicBlock(BasicBlock):
-    var: str
-
-
-class ValueBasicBlock(BasicBlock):
-    value: Any
-
-
-BasicBlockType: TypeAlias = (
-    ModelBasicBlock | CodeBasicBlock | ApiBasicBlock | VarBasicBlock | ValueBasicBlock
-)
-
-
 class ConditionExpr(BaseModel):
     pass
 
@@ -69,25 +32,70 @@ class Block(BaseModel):
     """PDL program block"""
 
     title: Optional[str] = None
-    prompts: list["PromptType"]
     assign: Optional[str] = None
     show_result: bool = True
 
 
+class ModelBlock(Block):
+    model: str
+    input: Optional["PromptType"] = None
+    decoding: Optional[str] = None
+    stop_sequences: Optional[list[str]] = None
+    include_stop_sequences: bool = False
+    params: Optional[Any] = None
+
+
+class CodeBlock(Block):
+    lan: str
+    code: "PromptsType"
+
+
+class ApiBlock(Block):
+    api: str
+    url: str
+    input: "PromptType"
+
+
+class VarBlock(Block):
+    var: str
+
+
+class ValueBlock(Block):
+    value: Any
+
+
+class SequenceBlock(Block):
+    prompts: list["PromptType"]
+
+
 class IfBlock(Block):
+    prompts: list["PromptType"]
     condition: ConditionType
 
 
 class RepeatsBlock(Block):
+    prompts: list["PromptType"]
     repeats: int
 
 
 class RepeatsUntilBlock(Block):
+    prompts: list["PromptType"]
     repeats_until: ConditionType
 
 
-BlockType: TypeAlias = IfBlock | RepeatsBlock | RepeatsUntilBlock | Block
-PromptType: TypeAlias = str | BlockType | BasicBlockType  # pyright: ignore
+BlockType: TypeAlias = (
+    ModelBlock
+    | CodeBlock
+    | ApiBlock
+    | VarBlock
+    | ValueBlock
+    | IfBlock
+    | RepeatsBlock
+    | RepeatsUntilBlock
+    | SequenceBlock
+    | Block
+)
+PromptType: TypeAlias = str | BlockType  # pyright: ignore
 PromptsType: TypeAlias = list[PromptType]
 
 

@@ -3,72 +3,63 @@
     "prompts": [
         {
             "assign": "QUERY",
-            "prompts": [{
-                "lan": "python",
-                "code": [
-                    "result = input('How can I help you?: ')"
-                ]
-            }],
+            "lan": "python",
+            "code": [
+                "result = input('How can I help you?: ')"
+            ],
             "show_result": false
         },
         {
             "assign": "LOCATION",
-            "prompts": [{
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": {
-                    "prompts": [
-                        "Question: What is the weather in London?\n",
-                        "London\n",
-                        "Question: What's the weather in Paris?\n",
-                        "Paris\n",
-                        "Question: Tell me the weather in Lagos?\n",
-                        "Lagos\n",
-                        "Question: ",
-                        {
-                            "var": "QUERY"
-                        }
-                    ]
-                },
-                "stop_sequences": [
-                    "Question",
-                    "What",
-                    "!"
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax",
+            "input": {
+                "prompts": [
+                    "Question: What is the weather in London?\n",
+                    "London\n",
+                    "Question: What's the weather in Paris?\n",
+                    "Paris\n",
+                    "Question: Tell me the weather in Lagos?\n",
+                    "Lagos\n",
+                    "Question: ",
+                    {
+                        "var": "QUERY"
+                    }
                 ]
-            }],
+            },
+            "stop_sequences": [
+                "Question",
+                "What",
+                "!"
+            ],
             "show_result": false
         },
         {
             "assign": "WEATHER",
-            "prompts": [{
-                "api": "https",
-                "url": "https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=",
-                "input": {
-                    "var": "LOCATION"
-                }
-            }],
+            "api": "https",
+            "url": "https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=",
+            "input": {
+                "var": "LOCATION"
+            },
             "show_result": false
         },
         {
-            "assign": "RESULT",
-            "prompts": [{
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": {
-                    "prompts": [
-                        "Explain what the weather is from the following JSON:\n",
-                        "```\n",
-                        {
-                            "var": "WEATHER"
-                        },
-                        "```\n"
-                    ]
-                },
-                "stop_sequences": [
-                    "What",
-                    "!"
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax",
+            "input": {
+                "prompts": [
+                    "Explain what the weather is from the following JSON:\n",
+                    "```\n",
+                    {
+                        "var": "WEATHER"
+                    },
+                    "```\n"
                 ]
-            }]
+            },
+            "stop_sequences": [
+                "What",
+                "!"
+            ]
         }
     ]
 }

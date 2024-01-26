@@ -4,14 +4,12 @@
         "Hello,",
         {
             "assign": "NAME",
-            "prompts": [{
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "stop_sequences": [
-                    "!"
-                ],
-                "include_stop_sequences": true
-            }]
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "decoding": "argmax",
+            "stop_sequences": [
+                "!"
+            ],
+            "include_stop_sequences": true
         },
         "\n",
         "Who is",

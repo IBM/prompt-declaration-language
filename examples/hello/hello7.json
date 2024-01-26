@@ -4,13 +4,11 @@
         "Hello! ",
         {
             "assign": "QUESTION",
-            "prompts": [{
-                "lan": "python",
-                "code": [
-                    "import random\n",
-                    "result = random.choice([True, False])"
-                ]
-            }],
+            "lan": "python",
+            "code": [
+                "import random\n",
+                "result = random.choice([True, False])"
+            ],
             "show_result": false
         },
         {

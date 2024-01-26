@@ -9,19 +9,19 @@ from genai.schemas import GenerateParams
 
 from . import pdl_ast
 from .pdl_ast import (
-    ApiBasicBlock,
-    BasicBlock,
+    ApiBlock,
     Block,
-    CodeBasicBlock,
+    CodeBlock,
     ContainsCondition,
     EndsWithCondition,
     IfBlock,
-    ModelBasicBlock,
+    ModelBlock,
     Program,
     RepeatsBlock,
     RepeatsUntilBlock,
-    ValueBasicBlock,
-    VarBasicBlock,
+    SequenceBlock,
+    ValueBlock,
+    VarBlock,
 )
 
 DEBUG = False
@@ -53,29 +53,55 @@ def generate(pdl, logging):
 
 def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
     result = []
-    prompts = block.prompts
     match block:
+        case ModelBlock():
+            result = [call_model(log, scope, document, block)]
+        case CodeBlock(lan="python", code=code):
+            result = [call_python(log, scope, code)]
+        case CodeBlock(lan=l):
+            error(f"Unsupported language: {l}")
+            result = []
+        case VarBlock():
+            result = [get_var(block, scope)]
+        case ValueBlock(value=v):
+            result = [str(v)]
+        case ApiBlock():
+            result = [call_api(log, scope, block)]
+        case SequenceBlock():
+            result += process_prompts(log, scope, document, block.prompts)
         case IfBlock(condition=cond):
             if condition(log, scope, document, cond):
-                result += process_prompts(log, scope, document, prompts)
+                result += process_prompts(log, scope, document, block.prompts)
         case RepeatsBlock(repeats=n):
             for _ in range(n):
-                result += process_prompts(log, scope, document, prompts)
+                result += process_prompts(log, scope, document, block.prompts)
                 document += result
         case RepeatsUntilBlock(repeats_until=cond):
-            result += process_prompts(log, scope, document, prompts)
+            result += process_prompts(log, scope, document, block.prompts)
             document += result
             while not condition(log, scope, document, cond):
-                result += process_prompts(log, scope, document, prompts)
+                result += process_prompts(log, scope, document, block.prompts)
                 document += result
-        case Block():
-            result += process_prompts(log, scope, document, prompts)
     if block.assign is not None:
         var = block.assign
         scope[var] = "".join(result)
         debug("Storing model result for " + var + ": " + str(result))
     if block.show_result is False:
         result = []
+    return result
+
+
+def call_api(log, scope, block: pdl_ast.ApiBlock):
+    inputs = process_prompt(log, scope, [], block.input)
+    input_str = "".join(inputs)
+    input_str = block.url + input_str
+    append_log(log, "API Input", True)
+    append_log(log, input_str, False)
+    response = requests.get(input_str)
+    result = str(response.json())
+    debug(result)
+    append_log(log, "API Output", True)
+    append_log(log, result, False)
     return result
 
 
@@ -91,43 +117,10 @@ def process_prompt(log, scope, document, prompt) -> list[str]:
         result = [prompt]
         append_log(log, "Prompt", True)
         append_log(log, prompt, False)
-    elif isinstance(prompt, BasicBlock):
-        result = process_basic_block(log, scope, document, prompt)
     elif isinstance(prompt, Block):
         result = process_block(log, scope, document, prompt)
     else:
         assert False
-    return result
-
-
-def process_basic_block(
-    log, scope, document, block: pdl_ast.BasicBlockType | BasicBlock
-) -> list[str]:
-    match block:
-        case ModelBasicBlock():
-            result = [call_model(log, scope, document, block)]
-        case CodeBasicBlock(lan="python", code=code):
-            result = [call_python(log, scope, code)]
-        case CodeBasicBlock(lan=l):
-            error(f"Unsupported language: {l}")
-            result = []
-        case VarBasicBlock():
-            result = [get_var(block, scope)]
-        case ValueBasicBlock(value=v):
-            result = [str(v)]
-        case ApiBasicBlock(url=url, input=input_block):
-            inputs = process_prompt(log, scope, [], input_block)
-            input_str = "".join(inputs)
-            input_str = url + input_str
-            append_log(log, "API Input", True)
-            append_log(log, input_str, False)
-            response = requests.get(input_str)
-            result = [str(response.json())]
-            debug(result)
-            append_log(log, "API Output", True)
-            append_log(log, result[0], False)
-        case BasicBlock():
-            assert False
     return result
 
 
@@ -150,7 +143,7 @@ def error(somestring):
 
 def get_var(block, scope) -> str:
     match block:
-        case VarBasicBlock(var=v):
+        case VarBlock(var=v):
             return str(scope[v])
         case _:
             return ""
@@ -175,7 +168,7 @@ def contains(log, scope, document, cond: pdl_ast.ContainsArgs):
     return cond.arg1 in arg0
 
 
-def call_model(log, scope, document, block: pdl_ast.ModelBasicBlock):
+def call_model(log, scope, document, block: pdl_ast.ModelBlock):
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
