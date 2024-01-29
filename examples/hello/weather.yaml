@@ -1,42 +1,46 @@
 title: Using a weather API and LLM to make a small weather app
 prompts:
-- assign: QUERY
-  lan: python
+- lan: python
   code:
-  - 'result = input(''How can I help you?: '')'
-  show_result: false
-- assign: LOCATION
-  model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-  input:
-    prompts:
-    - "Question: What is the weather in London?\n"
-    - "London\n"
-    - "Question: What's the weather in Paris?\n"
-    - "Paris\n"
-    - "Question: Tell me the weather in Lagos?\n"
-    - "Lagos\n"
-    - 'Question: '
-    - var: QUERY
-  stop_sequences:
-  - Question
-  - What
-  - '!'
-  show_result: false
-- assign: WEATHER
-  api: https
-  url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-  input:
-    var: LOCATION
+  - |
+    result = input("How can I help you?: ")
+  assign: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
   input:
     prompts:
-    - "Explain what the weather is from the following JSON:\n"
-    - "```\n"
+    - |-
+      Question: What is the weather in London?
+      London
+      Question: What's the weather in Paris?
+      Paris
+      Question: Tell me the weather in Lagos?
+      Lagos
+      Question: 
+    - var: QUERY
+  stop_sequences:
+  - Question
+  - What
+  - '!'
+  assign: LOCATION
+  show_result: false
+- api: https
+  url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
+  input:
+    var: LOCATION
+  assign: WEATHER
+  show_result: false
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  input:
+    prompts:
+    - |
+      Explain what the weather is from the following JSON:
+      ```
     - var: WEATHER
-    - "```\n"
+    - |
+      ```
   stop_sequences:
   - What
   - '!'

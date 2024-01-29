@@ -1,16 +1,15 @@
 title: Hello world showing call out to python code with condition
 prompts:
 - 'Hello! '
-- assign: QUESTION
-  lan: python
+- lan: python
   code:
-  - "import random\n"
-  - result = random.choice([True, False])
+  - |
+    import random
+    result = random.choice([True, False])
+  assign: QUESTION
   show_result: false
 - prompts:
-  - "How are you?\n"
+  - |
+    How are you?
   condition:
-    ends_with:
-      arg0:
-        var: QUESTION
-      arg1: 'True'
+    ends_with: {'arg0': { 'var': 'QUESTION' }, 'arg1': 'True' }

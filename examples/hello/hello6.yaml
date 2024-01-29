@@ -3,7 +3,8 @@ prompts:
 - 'Hello, '
 - lan: python
   code:
-  - "import random\n"
-  - "import string\n"
-  - result = random.choice(string.ascii_lowercase)
+  - |
+    import random
+    import string
+    result = random.choice(string.ascii_lowercase)
 - "!\n"

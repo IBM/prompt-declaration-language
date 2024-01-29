@@ -1,12 +1,12 @@
 title: Hello world with variable use
 prompts:
 - Hello,
-- assign: NAME
-  model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
   stop_sequences:
   - '!'
   include_stop_sequences: true
+  assign: NAME
 - "\n"
 - Who is
 - var: NAME

@@ -1,7 +1,9 @@
 title: Hello world with a nested block
 prompts:
-- "Hello, world!\n"
-- "This is your first prompt descriptor!\n"
+- |
+  Hello, world!
+  This is your first prompt descriptor!
 - prompts:
-  - "This sentence repeats!\n"
+  - |
+    This sentence repeats!
   repeats: 3
