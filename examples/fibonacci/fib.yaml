@@ -1,0 +1,33 @@
+title: Fibonacci
+prompts:
+- assign: CODE
+  model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  input:
+    prompts:
+    - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+- "\nFind a random number between 1 and 20\n"
+- assign: N
+  lan: python
+  code:
+  - "import random\n"
+  - result = random.randint(1, 20)
+  show_result: true
+- "\nNow computing fib("
+- var: N
+- ")\n"
+- assign: RESULT
+  lan: python
+  code:
+  - var: CODE
+  - result = fib(
+  - var: N
+  - )
+  show_result: false
+- 'The result is: '
+- var: RESULT
+- "\n\n Explain what the above code does and what the result means\n\n"
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  stop_sequences:
+  - Answer

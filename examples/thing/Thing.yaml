@@ -1,0 +1,21 @@
+title: Things not to forget
+prompts:
+- 'A list of things not to forget when '
+- "travelling:\n"
+- prompts:
+  - '- '
+  - constraints:
+    - in:
+      - passport
+      - phone
+      - keys
+    - words_len: <=2
+    model: ibm/granite-20b-code-instruct-v1
+    decoding: argmax
+  - "\n"
+  repeat: 2
+- 'The most important of these is '
+- assign: ITEM
+  model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+- .

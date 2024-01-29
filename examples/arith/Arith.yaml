@@ -1,0 +1,77 @@
+title: Arithmetic Expressions
+prompts:
+- "Question: Noah charges $60 for a large painting and $30 for a small painting.\n"
+- "Last month he sold eight large paintings and four small paintings.\n"
+- "If he sold twice as much this month, how much is his sales for this month?\n"
+- "\n"
+- "Answer: Let's think step by step.\n"
+- "He sold 8 large paintings and 4 small paintings last month.\n"
+- "He sold twice as many this month.\n"
+- "8 large paintings x $60 = << 8*60= 480 >> 480\n"
+- "4 small paintings x $30 = << 4*30= 120 >> 120\n"
+- "So he sold << 480+120= 600 >> 600 paintings last month.\n"
+- "Therefore he sold << 600*2= 1200 >> this month.\n"
+- "The answer is $1200.\n"
+- "\n"
+- "Question: Noah charges $30 for a large vases and $10 for a small vases.\n"
+- "Last month he sold five large vases and three small vases.\n"
+- "If he sold three times as much this month, how much is his sales for this month?\n"
+- "\n"
+- "Answer: Let's think step by step.\n"
+- "He sold 5 large vases and 3 small vases last month.\n"
+- "He sold three times as many this month.\n"
+- "5 large vases x $30 = << 5*30= 150 >> 150\n"
+- "3 small vases x $10 = << 3*10= 30 >> 30\n"
+- "So he sold << 150+30= 180 >> 180 vases last month.\n"
+- "Therefore he sold << 180*3= 540 >> this month.\n"
+- "The answer is $540.\n\n"
+- prompts:
+  - 'Question: '
+  - assign: QUESTION
+    model: ibm/granite-20b-code-instruct-v1
+    decoding: argmax
+    params:
+      distribution_batch_size: 1
+      max_length: 2048
+    stop_sequences:
+    - Answer
+  - "Answer: Let's think step by step.\n"
+  - prompts:
+    - assign: REASON_OR_CALC
+      model: ibm/granite-20b-code-instruct-v1
+      decoding: argmax
+      params:
+        distribution_batch_size: 1
+        max_length: 2048
+      stop_sequences:
+      - '<<'
+      include_stop_sequences: true
+    - prompts:
+      - assign: EXPR
+        model: ibm/granite-20b-code-instruct-v1
+        decoding: argmax
+        params:
+          distribution_batch_size: 1
+          max_length: 2048
+        stop_sequences:
+        - '='
+        - "\n"
+      - '= '
+      - assign: RESULT
+        lan: python
+        code:
+        - 'result = '
+        - var: EXPR
+      - ' >>'
+      condition:
+        ends_with:
+          arg0:
+            var: REASON_OR_CALC
+          arg1: '<<'
+    repeats_until:
+      contains:
+        arg0:
+          var: REASON_OR_CALC
+        arg1: The answer is
+  - "\n\n"
+  repeats: 3

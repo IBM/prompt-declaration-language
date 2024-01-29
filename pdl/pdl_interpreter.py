@@ -2,6 +2,7 @@ import os
 import types
 
 import requests
+import yaml
 from dotenv import load_dotenv
 from genai.credentials import Credentials
 from genai.model import Model
@@ -37,11 +38,12 @@ def generate(pdl, logging):
         logging = "log.txt"
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
-            data = Program.model_validate_json(infile.read())
+            data = yaml.safe_load(infile)
+            prog = Program.model_validate(data)
             log = []
             result = []
             try:
-                result = process_block(log, scope, [], data.root)
+                result = process_block(log, scope, [], prog.root)
             finally:
                 for prompt in result:
                     print(prompt, end="")

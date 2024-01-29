@@ -1,0 +1,22 @@
+title: Hello world showing call out to python code with condition
+prompts:
+- assign: I
+  lan: python
+  code:
+  - result = 0
+  show_result: true
+- "\n"
+- prompts:
+  - assign: I
+    lan: python
+    code:
+    - 'result = '
+    - var: I
+    - ' + 1'
+    show_result: true
+  - "\n"
+  repeats_until:
+    contains:
+      arg0:
+        var: I
+      arg1: '5'
