@@ -38,11 +38,10 @@ def generate(pdl, logging):
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
             data = Program.model_validate_json(infile.read())
-            document = []
             log = []
             result = []
             try:
-                result = process_block(log, scope, document, data.root)
+                result = process_block(log, scope, [], data.root)
             finally:
                 for prompt in result:
                     print(prompt, end="")
@@ -74,14 +73,11 @@ def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
                 result += process_prompts(log, scope, document, block.prompts)
         case RepeatsBlock(repeats=n):
             for _ in range(n):
-                result += process_prompts(log, scope, document, block.prompts)
-                document += result
+                result += process_prompts(log, scope, document + result, block.prompts)
         case RepeatsUntilBlock(repeats_until=cond):
             result += process_prompts(log, scope, document, block.prompts)
-            document += result
             while not condition(log, scope, document, cond):
-                result += process_prompts(log, scope, document, block.prompts)
-                document += result
+                result += process_prompts(log, scope, document + result, block.prompts)
     if block.assign is not None:
         var = block.assign
         scope[var] = "".join(result)
