@@ -39,7 +39,7 @@
                     "repeats_until": {
                         "ends_with": {
                             "arg0": {
-                                "var": "THOUGHT"
+                                "get": "THOUGHT"
                             },
                             "arg1": "Act:"
                         }
@@ -66,7 +66,7 @@
                         "import wikipedia\n",
                         "res = \"",
                         {
-                            "var": "SUBJECT"
+                            "get": "SUBJECT"
                         },
                         "\"\n",
                         "result = wikipedia.summary(res)\n"
@@ -89,7 +89,7 @@
             "repeats_until": {
                 "contains": {
                     "arg0": {
-                        "var": "THOUGHT"
+                        "get": "THOUGHT"
                     },
                     "arg1": "headquarters"
                 }

@@ -18,7 +18,7 @@ prompts:
       Question: Tell me the weather in Lagos?
       Lagos
       Question: 
-    - var: QUERY
+    - get: QUERY
   stop_sequences:
   - Question
   - What
@@ -28,7 +28,7 @@ prompts:
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
   input:
-    var: LOCATION
+    get: LOCATION
   assign: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
@@ -38,7 +38,7 @@ prompts:
     - |
       Explain what the weather is from the following JSON:
       ```
-    - var: WEATHER
+    - get: WEATHER
     - |
       ```
   stop_sequences:

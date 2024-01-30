@@ -9,5 +9,5 @@ prompts:
   assign: NAME
 - "\n"
 - Who is
-- var: NAME
+- get: NAME
 - "?\n"

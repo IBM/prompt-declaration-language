@@ -23,7 +23,7 @@
         },
         "\nNow computing fib(",
         {
-            "var": "N"
+            "get": "N"
         },
         ")\n",
         {
@@ -31,11 +31,11 @@
             "lan": "python",
             "code": [
                 {
-                    "var": "CODE"
+                    "get": "CODE"
                 },
                 "result = fib(",
                 {
-                    "var": "N"
+                    "get": "N"
                 },
                 ")"
             ],
@@ -43,7 +43,7 @@
         },
         "The result is: ",
         {
-            "var": "RESULT"
+            "get": "RESULT"
         },
         "\n\n Explain what the above code does and what the result means\n\n",
         {

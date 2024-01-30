@@ -11,12 +11,12 @@ prompts:
     lan: python
     code:
     - 'result = '
-    - var: I
+    - get: I
     - ' + 1'
     show_result: true
   - "\n"
   repeats_until:
     contains:
       arg0:
-        var: I
+        get: I
       arg1: '5'

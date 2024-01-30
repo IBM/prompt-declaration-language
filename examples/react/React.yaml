@@ -28,7 +28,7 @@ prompts:
     repeats_until:
       ends_with:
         arg0:
-          var: THOUGHT
+          get: THOUGHT
         arg1: 'Act:'
   - assign: SUBJECT
     model: ibm/granite-20b-code-instruct-v1
@@ -45,7 +45,7 @@ prompts:
     code:
     - "import wikipedia\n"
     - res = "
-    - var: SUBJECT
+    - get: SUBJECT
     - "\"\n"
     - "result = wikipedia.summary(res)\n"
   - model: ibm/granite-20b-code-instruct-v1
@@ -60,5 +60,5 @@ prompts:
   repeats_until:
     contains:
       arg0:
-        var: THOUGHT
+        get: THOUGHT
       arg1: headquarters

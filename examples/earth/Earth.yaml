@@ -1,7 +1,7 @@
 title: Earth circumference question
 prompts:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
-- var: EXPERT
+- get: EXPERT
   lookup:
     model: ibm/granite-20b-code-instruct-v1
     decoding: argmax
@@ -13,7 +13,7 @@ prompts:
 - 'Indeed, '
 - value: EXPERT
 - 'addressed this question: '
-- var: ANSWER
+- get: ANSWER
   lookup:
     model: ibm/granite-20b-code-instruct-v1
     decoding: argmax

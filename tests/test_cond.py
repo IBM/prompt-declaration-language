@@ -86,7 +86,7 @@ cond_data = {
                                     "prompts": [
                                         {
                                             "lan": "python",
-                                            "code": ["result = ", {"var": "EXPR"}],
+                                            "code": ["result = ", {"get": "EXPR"}],
                                         }
                                     ],
                                 },
@@ -94,7 +94,7 @@ cond_data = {
                             ],
                             "condition": {
                                 "ends_with": {
-                                    "arg0": {"var": "REASON_OR_CALC"},
+                                    "arg0": {"get": "REASON_OR_CALC"},
                                     "arg1": "<<",
                                 }
                             },
@@ -180,7 +180,7 @@ def cond_data1(show, name):
             },
             {
                 "prompts": [", hello there!\n"],
-                "condition": {"ends_with": {"arg0": {"var": "NAME"}, "arg1": name}},
+                "condition": {"ends_with": {"arg0": {"get": "NAME"}, "arg1": name}},
             },
         ],
     }
@@ -218,14 +218,14 @@ repeat_until_data = {
                     "prompts": [
                         {
                             "lan": "python",
-                            "code": ["result = ", {"var": "I"}, " + 1"],
+                            "code": ["result = ", {"get": "I"}, " + 1"],
                         }
                     ],
                     "show_result": True,
                 },
                 "\n",
             ],
-            "repeats_until": {"contains": {"arg0": {"var": "I"}, "arg1": "5"}},
+            "repeats_until": {"contains": {"arg0": {"get": "I"}, "arg1": "5"}},
         },
     ],
 }

@@ -15,7 +15,7 @@
         "\n",
         "Who is",
         {
-            "var": "NAME"
+            "get": "NAME"
         },
         "?\n",
         {

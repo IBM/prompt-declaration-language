@@ -56,8 +56,8 @@ class ApiBlock(Block):
     input: "PromptType"
 
 
-class VarBlock(Block):
-    var: str
+class GetBlock(Block):
+    get: str
 
 
 class ValueBlock(Block):
@@ -87,7 +87,7 @@ BlockType: TypeAlias = (
     ModelBlock
     | CodeBlock
     | ApiBlock
-    | VarBlock
+    | GetBlock
     | ValueBlock
     | IfBlock
     | RepeatsBlock

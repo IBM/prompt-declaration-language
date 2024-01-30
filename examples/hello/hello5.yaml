@@ -10,7 +10,7 @@ prompts:
   assign: NAME
 - "\n"
 - Who is
-- var: NAME
+- get: NAME
 - "?\n"
 - model: google/flan-t5-xl
   decoding: argmax

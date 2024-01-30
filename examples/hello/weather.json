@@ -23,7 +23,7 @@
                     "Lagos\n",
                     "Question: ",
                     {
-                        "var": "QUERY"
+                        "get": "QUERY"
                     }
                 ]
             },
@@ -39,7 +39,7 @@
             "api": "https",
             "url": "https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=",
             "input": {
-                "var": "LOCATION"
+                "get": "LOCATION"
             },
             "show_result": false
         },
@@ -51,7 +51,7 @@
                     "Explain what the weather is from the following JSON:\n",
                     "```\n",
                     {
-                        "var": "WEATHER"
+                        "get": "WEATHER"
                     },
                     "```\n"
                 ]

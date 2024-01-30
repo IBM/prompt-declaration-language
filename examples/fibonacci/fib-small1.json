@@ -24,18 +24,18 @@
         },
         "\nfib(",
         {
-            "var": "N"
+            "get": "N"
         },
         ") = ",
         {
             "lan": "python",
             "code": [
                 {
-                    "var": "CODE"
+                    "get": "CODE"
                 },
                 "result = fib(",
                 {
-                    "var": "N"
+                    "get": "N"
                 },
                 ")"
             ]

@@ -18,7 +18,7 @@
             "condition": {
                 "ends_with": {
                     "arg0": {
-                        "var": "QUESTION"
+                        "get": "QUESTION"
                     },
                     "arg1": "True"
                 }

@@ -39,7 +39,7 @@ model_chain_data = {
         },
         "!\n",
         "Who is",
-        {"var": "NAME"},
+        {"get": "NAME"},
         "?\n",
         {
             "assign": "RESULT",

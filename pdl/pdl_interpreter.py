@@ -15,6 +15,7 @@ from .pdl_ast import (
     CodeBlock,
     ContainsCondition,
     EndsWithCondition,
+    GetBlock,
     IfBlock,
     ModelBlock,
     Program,
@@ -22,7 +23,6 @@ from .pdl_ast import (
     RepeatsUntilBlock,
     SequenceBlock,
     ValueBlock,
-    VarBlock,
 )
 
 DEBUG = False
@@ -62,7 +62,7 @@ def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
         case CodeBlock(lan=l):
             error(f"Unsupported language: {l}")
             result = []
-        case VarBlock():
+        case GetBlock():
             result = [get_var(block, scope)]
         case ValueBlock(value=v):
             result = [str(v)]
@@ -141,8 +141,8 @@ def error(somestring):
 
 def get_var(block, scope) -> str:
     match block:
-        case VarBlock(var=v):
-            return str(scope[v])
+        case GetBlock(get=var):
+            return str(scope[var])
         case _:
             return ""
 

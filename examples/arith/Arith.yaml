@@ -61,17 +61,17 @@ prompts:
         lan: python
         code:
         - 'result = '
-        - var: EXPR
+        - get: EXPR
       - ' >>'
       condition:
         ends_with:
           arg0:
-            var: REASON_OR_CALC
+            get: REASON_OR_CALC
           arg1: '<<'
     repeats_until:
       contains:
         arg0:
-          var: REASON_OR_CALC
+          get: REASON_OR_CALC
         arg1: The answer is
   - "\n\n"
   repeats: 3

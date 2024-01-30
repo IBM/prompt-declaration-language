@@ -13,11 +13,11 @@ prompts:
   - result = random.randint(1, 20)
   show_result: false
 - "\nfib("
-- var: N
+- get: N
 - ') = '
 - lan: python
   code:
-  - var: CODE
+  - get: CODE
   - result = fib(
-  - var: N
+  - get: N
   - )
