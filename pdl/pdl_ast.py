@@ -34,6 +34,7 @@ class Block(BaseModel):
     title: Optional[str] = None
     assign: Optional[str] = None
     show_result: bool = True
+    result: Optional[str] = None
 
 
 class ModelBlock(Block):

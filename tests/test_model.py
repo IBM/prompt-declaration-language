@@ -19,8 +19,8 @@ def test_model():
     scope = {}
     log = []
     data = Program.model_validate(model_data)
-    document = process_block(log, scope, [], data.root)
-    assert document == ["Hello,", " world", "!\n"]
+    document = process_block(log, scope, "", data.root)
+    assert document == "Hello, world!\n"
 
 
 model_chain_data = {
@@ -60,17 +60,19 @@ def test_model_chain():
     scope = {}
     log = []
     data = Program.model_validate(model_chain_data)
-    document = process_block(log, scope, [], data.root)
-    assert document == [
-        "Hello,",
-        " world",
-        "!\n",
-        "Who is",
-        " world",
-        "?\n",
-        "hello world",
-        "\n",
-    ]
+    document = process_block(log, scope, "", data.root)
+    assert document == "".join(
+        [
+            "Hello,",
+            " world",
+            "!\n",
+            "Who is",
+            " world",
+            "?\n",
+            "hello world",
+            "\n",
+        ]
+    )
 
 
 multi_shot_data = {
@@ -106,5 +108,5 @@ def test_multi_shot():
     scope = {}
     log = []
     data = Program.model_validate(multi_shot_data)
-    document = process_block(log, scope, [], data.root)
-    assert document == ["Armonk, NY\n"]
+    document = process_block(log, scope, "", data.root)
+    assert document == "Armonk, NY\n"

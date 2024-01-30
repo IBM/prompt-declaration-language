@@ -8,7 +8,7 @@ from genai.credentials import Credentials
 from genai.model import Model
 from genai.schemas import GenerateParams
 
-from . import pdl_ast
+from . import pdl_ast, ui
 from .pdl_ast import (
     ApiBlock,
     Block,
@@ -32,7 +32,7 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
-def generate(pdl, logging):
+def generate(pdl, logging, html):
     scope = {}
     if logging is None:
         logging = "log.txt"
@@ -41,33 +41,34 @@ def generate(pdl, logging):
             data = yaml.safe_load(infile)
             prog = Program.model_validate(data)
             log = []
-            result = []
+            result = ""
             try:
-                result = process_block(log, scope, [], prog.root)
+                result = process_block(log, scope, "", prog.root)
             finally:
-                for prompt in result:
-                    print(prompt, end="")
+                print(result)
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
+                if html is not None:
+                    ui.render(prog.root, html)
 
 
-def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
-    result = []
+def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
+    result = ""
     match block:
         case ModelBlock():
-            result = [call_model(log, scope, document, block)]
+            result = call_model(log, scope, document, block)
         case CodeBlock(lan="python", code=code):
-            result = [call_python(log, scope, code)]
+            result = call_python(log, scope, code)
         case CodeBlock(lan=l):
             error(f"Unsupported language: {l}")
-            result = []
+            result = ""
         case GetBlock():
-            result = [get_var(block, scope)]
+            result = get_var(block, scope)
         case ValueBlock(value=v):
-            result = [str(v)]
+            result = str(v)
         case ApiBlock():
-            result = [call_api(log, scope, block)]
+            result = call_api(log, scope, block)
         case SequenceBlock():
             result += process_prompts(log, scope, document, block.prompts)
         case IfBlock(condition=cond):
@@ -82,15 +83,17 @@ def process_block(log, scope, document, block: pdl_ast.BlockType) -> list[str]:
                 result += process_prompts(log, scope, document + result, block.prompts)
     if block.assign is not None:
         var = block.assign
-        scope[var] = "".join(result)
+        # scope[var] = "".join(result)
+        scope[var] = result
         debug("Storing model result for " + var + ": " + str(result))
     if block.show_result is False:
-        result = []
+        result = ""
+    block.result = result
     return result
 
 
-def call_api(log, scope, block: pdl_ast.ApiBlock):
-    inputs = process_prompt(log, scope, [], block.input)
+def call_api(log, scope, block: pdl_ast.ApiBlock) -> str:
+    inputs = process_prompt(log, scope, "", block.input)
     input_str = "".join(inputs)
     input_str = block.url + input_str
     append_log(log, "API Input", True)
@@ -103,16 +106,16 @@ def call_api(log, scope, block: pdl_ast.ApiBlock):
     return result
 
 
-def process_prompts(log, scope, document, prompts) -> list[str]:
-    result: list[str] = []
+def process_prompts(log, scope, document: str, prompts) -> str:
+    result: str = ""
     for prompt in prompts:
         result += process_prompt(log, scope, document + result, prompt)
     return result
 
 
-def process_prompt(log, scope, document, prompt) -> list[str]:
+def process_prompt(log, scope, document, prompt) -> str:
     if isinstance(prompt, str):
-        result = [prompt]
+        result = prompt
         append_log(log, "Prompt", True)
         append_log(log, prompt, False)
     elif isinstance(prompt, Block):
@@ -166,16 +169,17 @@ def contains(log, scope, document, cond: pdl_ast.ContainsArgs):
     return cond.arg1 in arg0
 
 
-def call_model(log, scope, document, block: pdl_ast.ModelBlock):
+def call_model(log, scope, document, block: pdl_ast.ModelBlock) -> str:
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
 
     if block.input is not None:  # If not set to document, then input must be a block
-        inputs = process_prompt(log, scope, [], block.input)
-        model_input = "".join(inputs)
+        model_input = process_prompt(log, scope, "", block.input)
+        # model_input = "".join(inputs)
     if model_input == "":
-        model_input = "".join(document)
+        # model_input = "".join(document)
+        model_input = document
     if block.stop_sequences is not None:
         stop_sequences = block.stop_sequences
     if block.include_stop_sequences is not None:
@@ -230,7 +234,7 @@ def call_model(log, scope, document, block: pdl_ast.ModelBlock):
     return gen
 
 
-def call_python(log, scope, code):
+def call_python(log, scope, code) -> str:
     code_str = get_code_string(log, scope, code)
     my_namespace = types.SimpleNamespace()
     append_log(log, "Code Input", True)
@@ -243,7 +247,7 @@ def call_python(log, scope, code):
 
 
 def get_code_string(log, scope, code) -> str:
-    code_l = process_prompts(log, scope, [], code)
+    code_l = process_prompts(log, scope, "", code)
     code_s = "".join(code_l)
     debug("code string: " + code_s)
     return code_s

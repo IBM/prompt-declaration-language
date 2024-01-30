@@ -4,3 +4,5 @@ wikipedia==1.4.0
 pre-commit
 pytest
 python-dotenv
+jinja2
+

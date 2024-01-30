@@ -17,6 +17,11 @@ def main():
         "--log",
         help="log file",
     )
+    parser.add_argument(
+        "-m",
+        "--html",
+        help="html file",
+    )
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
@@ -24,7 +29,7 @@ def main():
         print(json.dumps(Program.model_json_schema(), indent=2))
     if args.pdl is None:
         return
-    pdl_interpreter.generate(args.pdl, args.log)
+    pdl_interpreter.generate(args.pdl, args.log, args.html)
 
 
 if __name__ == "__main__":
