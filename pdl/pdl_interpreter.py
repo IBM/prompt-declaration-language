@@ -25,6 +25,8 @@ from .pdl_ast import (
     ValueBlock,
 )
 
+# from .pdl_dumper import dump_yaml, dumps_json, program_to_dict
+
 DEBUG = False
 
 load_dotenv()
@@ -51,6 +53,8 @@ def generate(pdl, logging, html):
                     logfile.write(prompt)
                 if html is not None:
                     ui.render(prog.root, html)
+                # print(dump_yaml(program_to_dict(prog)))
+                # print(dumps_json(prog.model_dump()))
 
 
 def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
@@ -81,6 +85,7 @@ def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
             result += process_prompts(log, scope, document, block.prompts)
             while not condition(log, scope, document, cond):
                 result += process_prompts(log, scope, document + result, block.prompts)
+    block.result = result
     if block.assign is not None:
         var = block.assign
         # scope[var] = "".join(result)
@@ -88,7 +93,6 @@ def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
         debug("Storing model result for " + var + ": " + str(result))
     if block.show_result is False:
         result = ""
-    block.result = result
     return result
 
 
