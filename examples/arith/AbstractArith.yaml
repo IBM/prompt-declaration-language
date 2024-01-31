@@ -1,0 +1,40 @@
+title: Abstract Math Problem
+prompts:
+- 'Question: '
+- assign: QUESTION
+  model: ibm/granite-20b-code-instruct-v1
+  stop_sequences:
+  - Answer
+- "Answer: Let's think step by step.\n"
+- prompts:
+  - assign: REASON_OR_CALC
+    model: ibm/granite-20b-code-instruct-v1
+    stop_sequences:
+    - '<<'
+    include_stop_sequences: true
+  - prompts:
+    - assign: EXPR
+      model: ibm/granite-20b-code-instruct-v1
+      stop_sequences:
+      - '='
+      - "\n"
+    - '= '
+    - assign: RESULT
+      lan: python
+      code:
+      - 'result = '
+      - get: EXPR
+    - ' >>'
+    condition:
+      ends_with:
+        arg0:
+          get: REASON_OR_CALC
+        arg1: '<<'
+  repeats_until:
+    contains:
+      arg0:
+        get: REASON_OR_CALC
+      arg1: The answer is
+
+
+

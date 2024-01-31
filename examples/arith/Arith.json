@@ -32,11 +32,6 @@
                 {
                     "assign": "QUESTION",
                     "model": "ibm/granite-20b-code-instruct-v1",
-                    "decoding": "argmax",
-                    "params": {
-                        "distribution_batch_size": 1,
-                        "max_length": 2048
-                    },
                     "stop_sequences": [
                         "Answer"
                     ]
@@ -47,11 +42,6 @@
                         {
                             "assign": "REASON_OR_CALC",
                             "model": "ibm/granite-20b-code-instruct-v1",
-                            "decoding": "argmax",
-                            "params": {
-                                "distribution_batch_size": 1,
-                                "max_length": 2048
-                            },
                             "stop_sequences": [
                                 "<<"
                             ],
@@ -62,11 +52,6 @@
                                 {
                                     "assign": "EXPR",
                                     "model": "ibm/granite-20b-code-instruct-v1",
-                                    "decoding": "argmax",
-                                    "params": {
-                                        "distribution_batch_size": 1,
-                                        "max_length": 2048
-                                    },
                                     "stop_sequences": [
                                         "=",
                                         "\n"
