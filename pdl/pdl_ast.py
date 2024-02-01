@@ -4,7 +4,7 @@ from pydantic import BaseModel, RootModel
 
 
 class ConditionExpr(BaseModel):
-    pass
+    result: Optional[bool] = None
 
 
 class EndsWithArgs(BaseModel):

@@ -28,13 +28,13 @@ export function show_result(data) {
     let div = document.createElement("div");
     div.classList.add("pdl_block")
     if (typeof (data) === "string") {
-        div.innerHTML = data.split('\n').join('<br>')
+        div.innerHTML = htmlize(data)
     } else {
         if (data.hasOwnProperty("show_result") && !data.show_result) {
             div.classList.add("pdl_show_result_false")
             div.innerHTML = "☐"
         } else {
-            div.innerHTML = data.result.split('\n').join('<br>')
+            div.innerHTML = htmlize(data.result)
         }
         // if (data.hasOwnProperty("assign") && data.assign !== null) {
         //     div.innerHTML = `${div.innerHTML}<sup>${data.assign}</sup>`
@@ -50,7 +50,7 @@ export function show_result(data) {
 export function show_block(data) {
     let div = document.createElement("fieldset");
     div.classList.add("pdl_block")
-    div.addEventListener('click', function(e) {
+    div.addEventListener('click', function (e) {
         div.replaceWith(show_result(data));
         if (e.stopPropagation) e.stopPropagation();
     })
@@ -63,30 +63,33 @@ export function show_block(data) {
     })
     if (typeof (data) === "string") {
         div.classList.add("pdl_string")
-        div.innerHTML = data.split('\n').join('<br>')
+        div.innerHTML = htmlize(data)
         return div
     }
     if (data.hasOwnProperty("model")) {
         div.classList.add("pdl_model")
-        div.innerHTML = data.result.split('\n').join('<br>')
+        div.innerHTML = htmlize(data.result)
     } else if (data.hasOwnProperty("code")) {
         div.classList.add("pdl_code")
-        div.innerHTML = data.result.split('\n').join('<br>')
+        div.innerHTML = htmlize(data.result)
     } else if (data.hasOwnProperty("api")) {
         div.classList.add("pdl_api")
-        div.innerHTML = data.result.split('\n').join('<br>')
+        div.innerHTML = htmlize(data.result)
     } else if (data.hasOwnProperty("get")) {
         div.classList.add("pdl_get")
-        div.innerHTML = data.result.split('\n').join('<br>')
+        div.innerHTML = htmlize(data.result)
     } else if (data.hasOwnProperty("value")) {
         div.classList.add("pdl_value")
-        div.innerHTML = data.result.split('\n').join('<br>')
+        div.innerHTML = htmlize(data.result)
     } else if (data.hasOwnProperty("condition")) {
         div.classList.add("pdl_condition")
         // div.appendChild(show_result(data))
         for (const block of data.prompts) {
             let child = show_block(block)
             div.appendChild(child)
+        }
+        if (data.condition.hasOwnProperty("result") && !data["condition"]["result"]) {
+            div.classList.add("pdl_show_result_false")
         }
     } else if (data.hasOwnProperty("repeats")) {
         div.classList.add("pdl_repeats")
@@ -97,7 +100,6 @@ export function show_block(data) {
             let child = show_block(block)
             div.appendChild(child)
         }
-        // div.innerHTML = data.result.split('\n').join('<br>')
     } else if (data.hasOwnProperty("repeats_until")) {
         div.classList.add("pdl_repeats_until")
         let dot_dot_dot = document.createElement("div")
@@ -107,7 +109,6 @@ export function show_block(data) {
             let child = show_block(block)
             div.appendChild(child)
         }
-        // div.innerHTML = data.result.split('\n').join('<br>')
     } else if (data.hasOwnProperty("prompts")) {
         div.classList.add("pdl_sequence")
         for (const block of data.prompts) {
@@ -115,7 +116,7 @@ export function show_block(data) {
             div.appendChild(child)
         }
     }
-    add_assign(div, data) 
+    add_assign(div, data)
     return div
 }
 
@@ -126,7 +127,7 @@ export function add_assign(block_div, data) {
     if (data.assign === null) {
         return block_div
     }
-    let legend =document.createElement("legend")
+    let legend = document.createElement("legend")
     legend.innerHTML = data.assign
     block_div.appendChild(legend)
 }
@@ -168,4 +169,9 @@ export function replace_div(id, elem) {
     div.id = id
     div.appendChild(elem)
     document.getElementById(id).replaceWith(div)
+}
+
+export function htmlize(s) {
+    let html = (s === "") ? "☐" : s.split('\n').join('<br>')
+    return html
 }

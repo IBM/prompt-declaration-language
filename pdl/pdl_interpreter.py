@@ -170,10 +170,14 @@ def get_var(block, scope) -> str:
 def condition(log, scope, document, cond: pdl_ast.ConditionType):
     match cond:
         case EndsWithCondition(ends_with=args):
-            return ends_with(log, scope, document, args)
+            result = ends_with(log, scope, document, args)
+            cond.result = result
         case ContainsCondition(contains=args):
-            return contains(log, scope, document, args)
-    return False
+            result = contains(log, scope, document, args)
+            cond.result = result
+        case _:
+            result = False
+    return result
 
 
 def ends_with(log, scope, document, cond: pdl_ast.EndsWithArgs):
