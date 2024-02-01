@@ -174,29 +174,19 @@ where the last line is the output of the second model `google/flan-t5-xl`, when 
 
 ### Python Code
 
-The following script shows how variable lookup could be done with python code instead. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. For the result of the code to be assigned to variable `NAME`, it must be assigned to a variable `result` internally.
-
+The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
 ```
-{
-    "title": "Hello world showing call out to python code",
-    "prompts": [
-        "Hello, ",
-        {
-            "var": "NAME",
-            "lookup": {
-                "lan": "python",
-                "code": [
-                    "import random\n",
-                    "import string\n",
-                    
-                    "result = random.choices(string.ascii_lowercase)[0]"
-                ]
-            }
-        },
-        "!\n"
-    ]
-}
+title: Hello world showing call out to python code
+prompts:
+- 'Hello, '
+- lan: python
+  code:
+  - |
+    import random
+    import string
+    result = random.choice(string.ascii_lowercase)
+- "!\n"
 ```
 
 This results in the following output:
@@ -209,17 +199,12 @@ Hello, r!
 PDL variables can also be fulfilled by making API calls. Consider a simple weather app (`examples/hello/weather.json`), where the user asks a question about the weather in some location. Then we make one call to an LLM to extract the location entity, use it to make an API call to get real-time weather information for that location, and then make a final call to an LLM to interpret the JSON output and return an English text to the user with the weather information. In this example, the call to the API is made with the following block:
 
 ```
-{
-    "var": "WEATHER",
-    "lookup": {
-        "api": "https",
-        "url": "https://api.weatherapi.com/v1/current.json?key=XXXXXX",
-        "input": {
-            "value": "LOCATION"
-        },
-        "show_result": false
-    }
-},
+- api: https
+  url: https://api.weatherapi.com/v1/current.json?key=XXXXXX
+  input:
+    get: LOCATION
+  assign: WEATHER
+  show_result: false
 ```
 
 Notice that by setting `show_result` to `false`, we exclude the text resulting from this interaction from the final output document. This can be handy to compute intermediate results that can be passed to other calls.
