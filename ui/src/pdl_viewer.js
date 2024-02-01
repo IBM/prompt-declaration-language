@@ -138,11 +138,20 @@ export function code_cleanup(data) {
         data = data.map(code_cleanup)
     }
     else if (typeof (data) === 'object' && data !== null) {
+        // remove result
         if (data.hasOwnProperty("result")) {
             const { result: _, ...new_data } = data
             data = new_data
         }
+        // remove show_result: true
+        if (data.hasOwnProperty("show_result") && data.show_result) {
+            const { show_result: _, ...new_data } = data
+            data = new_data
+        }
+        // remove null
         data = Object.entries(data).reduce((a, [k, v]) => (v === null ? a : (a[k] = v, a)), {})
+        // remove show_result: true
+        // recursive cleanup
         data = Object.fromEntries(Object.entries(data).map(([key, value]) => [key, code_cleanup(value)]))
     }
     return data

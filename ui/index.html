@@ -75,6 +75,21 @@
 
   <div id="mainview">
 
+    <input type="file" name="input_file" id="input_file">
+  <script type="text/javascript">
+        document.getElementById('input_file')
+            .addEventListener('change', function () {
+ 
+                let fr = new FileReader();
+                fr.onload = function () {
+                    data = JSON.parse(fr.result)
+                    pdl_viewer.replace_div('doc', pdl_viewer.show_result(data))
+                }
+ 
+                fr.readAsText(this.files[0]);
+            })
+    </script>
+
     <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_result(pdl_viewer.data))" value="Display">
 
     <!-- <h1>Document</h1>
