@@ -89,7 +89,7 @@ This sentence repeats!
 
 The property `repeats_until` indicates repetition of the block until a condition is satisfied, and `condition` specifies that the block is executed only if the condition is true. Currently, the only supported conditions are `ends_with` and `contains`. See examples of these properties in [`examples/arith/Arith.yaml`](examples/arith/Arith.yaml).
 
-### Variable Definition and LLM Call
+### LLM Call
 
 In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequences` if the string the stopped the generation should be part of the output.
 
@@ -113,35 +113,22 @@ Hello, world!
 
 ### Variable Definition and Value
 
- The `assign` field indicates that we are introducing a variable named
-`NAME`
-
-The value of variables can be recalled after their definition, as in the following example:
+In the following example, we store the result of the LLM call in a variable `NAME` using the `assign` field. Then value of variable is recalled using a `get` block:
 
 ```
-{
-    "title": "Hello world with variable use",
-    "prompts": [
-        "Hello,",
-        {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
-        },
-        "!\n",
-        "Who is",
-        {
-            "value": "NAME"
-        },
-        "?\n"
-    ]
-}
+title: Hello world with variable use
+prompts:
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  stop_sequences:
+  - '!'
+  include_stop_sequences: true
+  assign: NAME
+- "\n"
+- Who is
+- get: NAME
+- "?\n"
 ```
 
 This results in the following document:
@@ -155,41 +142,24 @@ Who is world?
 PDL also allows multiple models to be chained together as in the following example, where 2 different models are called.
 
 ```
-{
-    "title": "Hello world showing model chaining",
-    "prompts": [
-        "Hello,",
-        {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
-        },
-        "!\n",
-        "Who is",
-        {
-            "value": "NAME"
-        },
-        "?\n",
-        {
-            "var": "RESULT",
-            "lookup": {
-                "model": "google/flan-t5-xl",
-                "decoding": "argmax",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
-        },
-        "\n"
-    ]
-}
+title: Hello world showing model chaining
+prompts:
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  stop_sequences:
+  - '!'
+  include_stop_sequences: true
+  assign: NAME
+- "\n"
+- Who is
+- get: NAME
+- "?\n"
+- model: google/flan-t5-xl
+  decoding: argmax
+  stop_sequences:
+  - '!'
+- "\n"
 ```
 
 This results in the following document:
