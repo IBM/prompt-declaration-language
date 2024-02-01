@@ -1,5 +1,7 @@
+import json
 import os
 import types
+from pathlib import Path
 
 import requests
 import yaml
@@ -24,6 +26,7 @@ from .pdl_ast import (
     SequenceBlock,
     ValueBlock,
 )
+from .pdl_dumper import dump_yaml
 
 # from .pdl_dumper import dump_yaml, dumps_json, program_to_dict
 
@@ -34,7 +37,7 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
-def generate(pdl, logging, html):
+def generate(pdl, logging, mode, output):
     scope = {}
     if logging is None:
         logging = "log.txt"
@@ -51,10 +54,20 @@ def generate(pdl, logging, html):
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
-                if html is not None:
-                    ui.render(prog.root, html)
-                # print(dump_yaml(program_to_dict(prog)))
-                # print(dumps_json(prog.model_dump()))
+                if mode == "html":
+                    if output is None:
+                        output = str(Path(pdl).with_suffix("")) + "_result.html"
+                    ui.render(prog.root, output)
+                if mode == "json":
+                    if output is None:
+                        output = str(Path(pdl).with_suffix("")) + "_result.json"
+                    with open(output, "w", encoding="utf-8") as fp:
+                        json.dump(prog.model_dump(), fp)
+                if mode == "yaml":
+                    if output is None:
+                        output = str(Path(pdl).with_suffix("")) + "_result.yaml"
+                    with open(output, "w", encoding="utf-8") as fp:
+                        dump_yaml(prog.model_dump(), stream=fp)
 
 
 def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
