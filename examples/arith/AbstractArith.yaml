@@ -1,4 +1,4 @@
-title: Abstract Math Problem
+title: Math Problem
 prompts:
 - 'Question: '
 - assign: QUESTION
