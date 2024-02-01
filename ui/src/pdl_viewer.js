@@ -90,6 +90,9 @@ export function show_block(data) {
         }
     } else if (data.hasOwnProperty("repeats")) {
         div.classList.add("pdl_repeats")
+        let dot_dot_dot = document.createElement("div")
+        dot_dot_dot.innerHTML = "···"
+        div.appendChild(dot_dot_dot)
         for (const block of data.prompts) {
             let child = show_block(block)
             div.appendChild(child)
@@ -97,6 +100,9 @@ export function show_block(data) {
         // div.innerHTML = data.result.split('\n').join('<br>')
     } else if (data.hasOwnProperty("repeats_until")) {
         div.classList.add("pdl_repeats_until")
+        let dot_dot_dot = document.createElement("div")
+        dot_dot_dot.innerHTML = "···"
+        div.appendChild(dot_dot_dot)
         for (const block of data.prompts) {
             let child = show_block(block)
             div.appendChild(child)
