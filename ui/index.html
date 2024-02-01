@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/index.css">
+
+  <style>
+    .pdl_block {
+      border-radius: 3px;
+      margin: 3px;
+      padding: 5px;
+      margin: 2px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    .pdl_show_result_false {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .pdl_string {
+      background-color: antiquewhite;
+    }
+
+    .pdl_sequence {
+      background-color: rgb(219, 215, 250);
+    }
+
+    .pdl_model {
+      background-color: rgb(215, 250, 224);
+    }
+
+    .pdl_code {
+      background-color: rgb(250, 215, 225);
+    }
+
+    .pdl_api {
+      background-color: rgb(122, 246, 113);
+    }
+
+    .pdl_get {
+      background-color: rgb(125, 229, 243);
+    }
+
+    .pdl_value {
+      background-color: rgb(146, 181, 245);
+    }
+
+    .pdl_condition {
+      background-color: rgb(248, 99, 141);
+    }
+
+    .pdl_repeats {
+      background-color: rgb(251, 201, 86);
+    }
+
+    .pdl_repeats_until {
+      background-color: rgb(243, 209, 77);
+    }
+  </style>
+  <script src="dist/bundle.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css">
+
+  <script type="module"
+    src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/ui-shell.min.js"></script>
+  <link rel="stylesheet" href="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/themes.css" />
+</head>
+
+<body>
+
+  <cds-header id="navbar" aria-label="PDL" class="cds-theme-zone-g90">
+    <cds-header-name>PDL viewer</cds-header-name>
+  </cds-header>
+
+  <div id="mainview">
+
+    <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_result(pdl_viewer.data))" value="Display">
+
+    <!-- <h1>Document</h1>
+    <div id="doc"></div>
+    </div>
+    <h1>Code</h1>
+    <div id="code"></div>
+    </div> -->
+
+    <div id="layout" style="width: 95%; height: 900px;"></div>
+
+    <script type="module">
+      import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+
+      let pstyle = 'border: 1px solid #efefef; padding: 5px'
+      new w2layout({
+        box: '#layout',
+        name: 'layout',
+        panels: [
+          { type: 'left', size: 400, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
+          { type: 'main', style: pstyle, html: '<div id="code"></div>' }
+        ]
+      })
+    </script>
+
+    <!-- <div class="bx--snippet bx--snippet--multi" data-code-snippet>
+  <div class="bx--snippet-container language-html line-numbers">
+    <pre class="line-numbers"><code>&lt;nav class=&quot;bx--breadcrumb&quot; aria-label=&quot;breadcrumb&quot;&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;bx--link&quot;&gt;Breadcrumb 1&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;bx--link&quot;&gt;Breadcrumb 2&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;bx--link&quot;&gt;Breadcrumb 3&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;bx--link&quot;&gt;Breadcrumb 4&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;bx--link&quot;&gt;Breadcrumb 5&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;bx--breadcrumb-item&quot;&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code>
+  </pre>
+  </div>
+</div> -->
+
+  </div>
+
+</body>
+
+</html>
