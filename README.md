@@ -23,7 +23,7 @@ In order to run the examples that use BAM models, you need to set up 2 environme
 To run the interpreter:
 
 ```
-python3 -m pdl.pdl <path/to/example.json>
+python3 -m pdl.pdl <path/to/example.yaml>
 ```
 
 The folder `examples` contains some examples of PDL scripts. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
@@ -33,25 +33,23 @@ The following section is an introduction to PDL.
 
 ## Introduction to PDL
 
-PDL scipts are specified in JSON, which reflects their declarative nature. JSON is also easy to write and to consume by other tools, unlike DSLs that require a suite of tools. Unlike other LLM programming frameworks, PDL is agnostic of any programming language. The user describes the shape of a document, elements of which capture interactions with LLMs and other tools. 
+PDL scipts are specified in YAML, which reflects their declarative nature. YAML is also easy to write and to consume by other tools, unlike DSLs that require a suite of tools. Unlike other LLM programming frameworks, PDL is agnostic of any programming language. The user describes the shape of a document, elements of which capture interactions with LLMs and other tools. 
 
 The following is a simple `hello, world` script:
 
 ```
-{
-    "title": "Hello world!",
-    "prompts": [
-        "Hello, world!\n",
-        "This is your first prompt descriptor!\n"
-    ]
-}
+title: Hello world!
+prompts:
+  - |
+    Hello, world!
+    This is your first prompt descriptor!
 ```
 
 This script has a `title` and specifies the `prompts` of the document. In this case, there are no calls to an LLM or other tools.
 To render the script into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-python3 -m pdl.pdl ./examples/hello/hello.json 
+python3 -m pdl.pdl ./examples/hello/hello.yaml
 ```
 
 This results in the following output:
@@ -63,25 +61,20 @@ This is your first prompt descriptor!
 
 ### Prompt Blocks
 
-PDL scripts can have nested `block`s of prompts indicated with braces `{}`. A block of prompts can have various properties including `repeats`, `repeats_until`, and `condition`.
+PDL scripts can have nested `block`s of prompts. A block of prompts can have various properties including `repeats`, `repeats_until`, and `condition`.
 
 The following example shows a block of prompts that is repeated 3 times.
 
 ```
-{
-    "title": "Hello world with a nested block",
-    "prompts": [
-        "Hello, world!\n",
-        "This is your first prompt descriptor!\n",
-        {
-            "prompts": [
-                "This sentence repeats!\n"
-            ],
-            "repeats": 3
-        }
-    ]
-}
-
+title: Hello world with a nested block
+prompts:
+- |
+  Hello, world!
+  This is your first prompt descriptor!
+- prompts:
+  - |
+    This sentence repeats!
+  repeats: 3
 ```
 
 It results in the following document, when ran through the interpreter:
@@ -94,34 +87,22 @@ This sentence repeats!
 This sentence repeats!
 ```
 
-The property `repeats_until` indicates repetition of the block until a condition is satisfied, and `condition` specifies that the block is executed only if the condition is true. Currently, the only supported conditions are `ends_with` and `contains`. See examples of these properties in `examples/arith/Arith.json`.
+The property `repeats_until` indicates repetition of the block until a condition is satisfied, and `condition` specifies that the block is executed only if the condition is true. Currently, the only supported conditions are `ends_with` and `contains`. See examples of these properties in [`examples/arith/Arith.yaml`](examples/arith/Arith.yaml).
 
 ### Variable Definition and LLM Call
 
-In the next example, a prompt block is used to call into an LLM. The `var` field indicates that we are introducing a variable named
-`NAME` and the `lookup` section indicates how to fill that variable. In this case, we are requesting a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with
-`greedy` decoding scheme. The field `input` indicates what input is to be passed to the model. In this case, the entire context is passed, meaning all the text generated from the start of the script. The field `stop_sequences` indicates strings that cause generation to stop.
+In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequences` if the string the stopped the generation should be part of the output.
 
 ```
-{
-    "title": "Hello world with a variable to call into a model",
-    "prompts": [
-        "Hello,",
-        {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "greedy",
-                "input": "context",
-                "stop_sequences": [
-                    "!"
-                ]
-            }
-        },
-        "!\n"
-    ]
-}
-
+title: Hello world with a call into a model
+prompts:
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: greedy
+  stop_sequences:
+  - '!'
+  include_stop_sequences: true
+- "\n"
 ```
 
 This results in the following document, where the text `world` has been generated by granite. 
@@ -130,7 +111,10 @@ This results in the following document, where the text `world` has been generate
 Hello, world!
 ```
 
-### Variable Value
+### Variable Definition and Value
+
+ The `assign` field indicates that we are introducing a variable named
+`NAME`
 
 The value of variables can be recalled after their definition, as in the following example:
 
