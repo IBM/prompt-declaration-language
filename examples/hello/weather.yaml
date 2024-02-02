@@ -5,7 +5,7 @@ prompts:
   - |
     result = input("How can I help you?: ")
   assign: QUERY
-  show_result: false
+  show_result: true
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
   input:
