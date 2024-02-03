@@ -66,22 +66,29 @@ class ValueBlock(Block):
 
 
 class SequenceBlock(Block):
-    prompts: list["PromptType"]
+    prompts: "PromptsType"
 
 
 class IfBlock(Block):
-    prompts: list["PromptType"]
+    prompts: "PromptsType"
     condition: ConditionType
 
 
 class RepeatsBlock(Block):
-    prompts: list["PromptType"]
+    prompts: "PromptsType"
     repeats: int
+    trace: list["PromptsType"] = []
 
 
 class RepeatsUntilBlock(Block):
-    prompts: list["PromptType"]
+    prompts: "PromptsType"
     repeats_until: ConditionType
+    trace: list["PromptsType"] = []
+
+
+class ErrorBlock(Block):
+    msg: str
+    block: "BlockType"
 
 
 BlockType: TypeAlias = (
@@ -94,6 +101,7 @@ BlockType: TypeAlias = (
     | RepeatsBlock
     | RepeatsUntilBlock
     | SequenceBlock
+    | ErrorBlock
     | Block
 )
 PromptType: TypeAlias = str | BlockType  # pyright: ignore

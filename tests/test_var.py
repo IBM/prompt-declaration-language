@@ -27,7 +27,7 @@ def test_var():
     scope = {}
     log = []
     data = Program.model_validate(var_data)
-    document = process_block(log, scope, "", data.root)
+    document, _ = process_block(log, scope, "", data.root)
     assert document == "Hello, world!\nWho is world?\n"
 
 
@@ -52,6 +52,6 @@ def test_code_var():
     scope = {}
     log = []
     data = Program.model_validate(code_var_data)
-    document = process_block(log, scope, "", data.root)
+    document, _ = process_block(log, scope, "", data.root)
     assert scope == {"I": "0"}
     assert document == "0"

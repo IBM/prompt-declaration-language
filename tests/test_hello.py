@@ -33,7 +33,7 @@ def test_hello():
     scope = {}
     log = []
     data = Program.model_validate(hello)
-    document = process_block(log, scope, "", data.root)
+    document, _ = process_block(log, scope, "", data.root)
     assert document == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
@@ -41,7 +41,7 @@ def repeat(n):
     scope = {}
     log = []
     data = Program.model_validate(repeat_data(n))
-    document = process_block(log, scope, "", data.root)
+    document, _ = process_block(log, scope, "", data.root)
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -73,7 +73,7 @@ def repeat_nested(n):
     scope = {}
     log = []
     data = Program.model_validate(nested_repeat_data(n))
-    document = process_block(log, scope, "", data.root)
+    document, _ = process_block(log, scope, "", data.root)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")

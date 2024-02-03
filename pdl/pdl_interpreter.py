@@ -15,12 +15,18 @@ from .pdl_ast import (
     ApiBlock,
     Block,
     CodeBlock,
+    ConditionType,
+    ContainsArgs,
     ContainsCondition,
+    EndsWithArgs,
     EndsWithCondition,
+    ErrorBlock,
     GetBlock,
     IfBlock,
     ModelBlock,
     Program,
+    PromptsType,
+    PromptType,
     RepeatsBlock,
     RepeatsUntilBlock,
     SequenceBlock,
@@ -47,8 +53,9 @@ def generate(pdl, logging, mode, output):
             prog = Program.model_validate(data)
             log = []
             result = ""
+            trace = prog.root
             try:
-                result = process_block(log, scope, "", prog.root)
+                result, trace = process_block(log, scope, "", prog.root)
             finally:
                 print(result)
                 print("\n")
@@ -57,89 +64,135 @@ def generate(pdl, logging, mode, output):
                 if mode == "html":
                     if output is None:
                         output = str(Path(pdl).with_suffix("")) + "_result.html"
-                    ui.render(prog.root, output)
+                    ui.render(trace, output)
                 if mode == "json":
                     if output is None:
                         output = str(Path(pdl).with_suffix("")) + "_result.json"
                     with open(output, "w", encoding="utf-8") as fp:
-                        json.dump(prog.model_dump(), fp)
+                        json.dump(trace.model_dump(), fp)
                 if mode == "yaml":
                     if output is None:
                         output = str(Path(pdl).with_suffix("")) + "_result.yaml"
                     with open(output, "w", encoding="utf-8") as fp:
-                        dump_yaml(prog.model_dump(), stream=fp)
+                        dump_yaml(trace.model_dump(), stream=fp)
 
 
-def process_block(log, scope, document: str, block: pdl_ast.BlockType) -> str:
-    result = ""
+def process_block(
+    log, scope, document: str, block: pdl_ast.BlockType
+) -> tuple[str, pdl_ast.BlockType]:
+    output: str
+    trace: pdl_ast.BlockType
     match block:
         case ModelBlock():
-            result = call_model(log, scope, document, block)
+            output, trace = call_model(log, scope, document, block)
         case CodeBlock(lan="python", code=code):
-            result = call_python(log, scope, code)
+            output, code_trace = call_python(log, scope, code)
+            trace = block.model_copy(update={"result": output, "code": code_trace})
         case CodeBlock(lan=l):
-            error(f"Unsupported language: {l}")
-            result = ""
+            msg = f"Unsupported language: {l}"
+            error(msg)
+            output = ""
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
         case GetBlock():
-            result = get_var(block, scope)
+            output = get_var(block, scope)
+            trace = block.model_copy(update={"result": output})
         case ValueBlock(value=v):
-            result = str(v)
+            output = str(v)
+            trace = block.model_copy(update={"result": output})
         case ApiBlock():
-            result = call_api(log, scope, block)
+            output, trace = call_api(log, scope, block)
         case SequenceBlock():
-            result += process_prompts(log, scope, document, block.prompts)
-        case IfBlock(condition=cond):
-            if condition(log, scope, document, cond):
-                result += process_prompts(log, scope, document, block.prompts)
+            output, prompts = process_prompts(log, scope, document, block.prompts)
+            trace = block.model_copy(update={"result": output, "prompts": prompts})
+        case IfBlock():
+            b, cond_trace = process_condition(log, scope, document, block.condition)
+            if b:
+                output, prompts = process_prompts(log, scope, document, block.prompts)
+                trace = block.model_copy(
+                    update={
+                        "result": output,
+                        "condition": cond_trace,
+                        "prompts": prompts,
+                    }
+                )
+            else:
+                output = ""
+                trace = block.model_copy(update={"result": "", "condition": cond_trace})
         case RepeatsBlock(repeats=n):
+            output = ""
+            iteration_trace: list[PromptsType] = []
             for _ in range(n):
-                result += process_prompts(log, scope, document + result, block.prompts)
-        case RepeatsUntilBlock(repeats_until=cond):
-            result += process_prompts(log, scope, document, block.prompts)
-            while not condition(log, scope, document, cond):
-                result += process_prompts(log, scope, document + result, block.prompts)
-    block.result = result
+                iteration_output, prompts = process_prompts(
+                    log, scope, document + output, block.prompts
+                )
+                output += iteration_output
+                iteration_trace.append(prompts)
+            trace = block.model_copy(
+                update={"result": output, "trace": iteration_trace}
+            )
+        case RepeatsUntilBlock(repeats_until=cond_trace):
+            stop = False
+            output = ""
+            iteration_trace = []
+            while not stop:
+                iteration_output, prompts = process_prompts(
+                    log, scope, document + output, block.prompts
+                )
+                output += iteration_output
+                iteration_trace.append(prompts)
+                stop, _ = process_condition(log, scope, document, cond_trace)
+            trace = block.model_copy(
+                update={"result": output, "trace": iteration_trace}
+            )
+        case _:
+            assert False
     if block.assign is not None:
         var = block.assign
-        # scope[var] = "".join(result)
-        scope[var] = result
-        debug("Storing model result for " + var + ": " + str(result))
+        scope[var] = trace.result
+        debug("Storing model result for " + var + ": " + str(trace.result))
     if block.show_result is False:
-        result = ""
-    return result
+        output = ""
+    return output, trace
 
 
-def call_api(log, scope, block: pdl_ast.ApiBlock) -> str:
-    inputs = process_prompt(log, scope, "", block.input)
-    input_str = "".join(inputs)
+def call_api(log, scope, block: pdl_ast.ApiBlock) -> tuple[str, pdl_ast.ApiBlock]:
+    input_str, input_trace = process_prompt(log, scope, "", block.input)
     input_str = block.url + input_str
     append_log(log, "API Input", True)
     append_log(log, input_str, False)
     response = requests.get(input_str)
-    result = str(response.json())
-    debug(result)
+    output = str(response.json())
+    debug(output)
     append_log(log, "API Output", True)
-    append_log(log, result, False)
-    return result
+    append_log(log, output, False)
+    trace = block.model_copy(update={"input": input_trace})
+    return output, trace
 
 
-def process_prompts(log, scope, document: str, prompts) -> str:
-    result: str = ""
+def process_prompts(
+    log, scope, document: str, prompts: PromptsType
+) -> tuple[str, PromptsType]:
+    output: str = ""
+    trace: PromptsType = []
     for prompt in prompts:
-        result += process_prompt(log, scope, document + result, prompt)
-    return result
+        o, p = process_prompt(log, scope, document + output, prompt)
+        output += o
+        trace.append(p)
+    return output, trace
 
 
-def process_prompt(log, scope, document, prompt) -> str:
+def process_prompt(log, scope, document, prompt: PromptType) -> tuple[str, PromptType]:
+    output: str = ""
     if isinstance(prompt, str):
-        result = prompt
+        output = prompt
+        trace = prompt
         append_log(log, "Prompt", True)
         append_log(log, prompt, False)
     elif isinstance(prompt, Block):
-        result = process_block(log, scope, document, prompt)
+        output, trace = process_block(log, scope, document, prompt)
     else:
         assert False
-    return result
+    return output, trace
 
 
 def append_log(log, somestring, doc):
@@ -167,39 +220,45 @@ def get_var(block, scope) -> str:
             return ""
 
 
-def condition(log, scope, document, cond: pdl_ast.ConditionType):
+def process_condition(
+    log, scope, document, cond: ConditionType
+) -> tuple[bool, ConditionType]:
+    trace: ConditionType
     match cond:
         case EndsWithCondition(ends_with=args):
-            result = ends_with(log, scope, document, args)
-            cond.result = result
+            result, args_trace = ends_with(log, scope, document, args)
+            trace = cond.model_copy(update={"result": result, "ends_with": args_trace})
         case ContainsCondition(contains=args):
-            result = contains(log, scope, document, args)
-            cond.result = result
+            result, args_trace = contains(log, scope, document, args)
+            trace = cond.model_copy(update={"result": result, "contains": args_trace})
         case _:
             result = False
-    return result
+            trace = cond
+    return result, trace
 
 
-def ends_with(log, scope, document, cond: pdl_ast.EndsWithArgs):
-    arg0 = "".join(process_prompt(log, scope, document, cond.arg0))
-    return arg0.endswith(cond.arg1)
+def ends_with(log, scope, document, cond: EndsWithArgs) -> tuple[bool, EndsWithArgs]:
+    output, arg0_trace = process_prompt(log, scope, document, cond.arg0)
+    result = output.endswith(cond.arg1)
+    return result, cond.model_copy(update={"arg0": arg0_trace})
 
 
-def contains(log, scope, document, cond: pdl_ast.ContainsArgs):
-    arg0 = "".join(process_prompt(log, scope, document, cond.arg0))
-    return cond.arg1 in arg0
+def contains(log, scope, document, cond: ContainsArgs) -> tuple[bool, ContainsArgs]:
+    output, arg0_trace = process_prompt(log, scope, document, cond.arg0)
+    result = cond.arg1 in output
+    return result, cond.model_copy(update={"arg0": arg0_trace})
 
 
-def call_model(log, scope, document, block: pdl_ast.ModelBlock) -> str:
+def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock]:
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
 
     if block.input is not None:  # If not set to document, then input must be a block
-        model_input = process_prompt(log, scope, "", block.input)
-        # model_input = "".join(inputs)
+        model_input, input_trace = process_prompt(log, scope, "", block.input)
+    else:
+        input_trace = None
     if model_input == "":
-        # model_input = "".join(document)
         model_input = document
     if block.stop_sequences is not None:
         stop_sequences = block.stop_sequences
@@ -252,11 +311,12 @@ def call_model(log, scope, document, block: pdl_ast.ModelBlock) -> str:
     debug("model output: " + gen)
     append_log(log, "Model Output", True)
     append_log(log, gen, False)
-    return gen
+    trace = block.model_copy(update={"result": gen, "input": input_trace})
+    return gen, trace
 
 
-def call_python(log, scope, code) -> str:
-    code_str = get_code_string(log, scope, code)
+def call_python(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
+    code_str, code_trace = get_code_string(log, scope, code)
     my_namespace = types.SimpleNamespace()
     append_log(log, "Code Input", True)
     append_log(log, code_str, False)
@@ -264,11 +324,10 @@ def call_python(log, scope, code) -> str:
     result = str(my_namespace.result)
     append_log(log, "Code Output", True)
     append_log(log, result, False)
-    return result
+    return result, code_trace
 
 
-def get_code_string(log, scope, code) -> str:
-    code_l = process_prompts(log, scope, "", code)
-    code_s = "".join(code_l)
+def get_code_string(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
+    code_s, code_trace = process_prompts(log, scope, "", code)
     debug("code string: " + code_s)
-    return code_s
+    return code_s, code_trace

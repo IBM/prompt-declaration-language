@@ -85,9 +85,11 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case RepeatsBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
             d["repeats"] = block.repeats
+            d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
         case RepeatsUntilBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
             d["repeats_until"] = condition_to_dict(block.repeats_until)
+            d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
     if block.assign is not None:
         d["assign"] = block.assign
     if block.show_result is False:
@@ -97,7 +99,11 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
     return d
 
 
-def prompts_to_dict(prompts: list[pdl_ast.PromptType]) -> list[str | dict[str, Any]]:
+def prompts_to_dict(
+    prompts: pdl_ast.PromptsType | None,
+) -> list[str | dict[str, Any]] | None:
+    if prompts is None:
+        return None
     return [prompt_to_dict(p) for p in prompts]
 
 

@@ -93,22 +93,12 @@ export function show_block(data) {
         }
     } else if (data.hasOwnProperty("repeats")) {
         div.classList.add("pdl_repeats")
-        let dot_dot_dot = document.createElement("div")
-        dot_dot_dot.innerHTML = "···"
-        div.appendChild(dot_dot_dot)
-        for (const block of data.prompts) {
-            let child = show_block(block)
-            div.appendChild(child)
-        }
+        let body = show_loop_trace(data.trace)
+        div.appendChild(body)
     } else if (data.hasOwnProperty("repeats_until")) {
         div.classList.add("pdl_repeats_until")
-        let dot_dot_dot = document.createElement("div")
-        dot_dot_dot.innerHTML = "···"
-        div.appendChild(dot_dot_dot)
-        for (const block of data.prompts) {
-            let child = show_block(block)
-            div.appendChild(child)
-        }
+        let body = show_loop_trace(data.trace)
+        div.appendChild(body)
     } else if (data.hasOwnProperty("prompts")) {
         div.classList.add("pdl_sequence")
         for (const block of data.prompts) {
@@ -118,6 +108,36 @@ export function show_block(data) {
     }
     add_assign(div, data)
     return div
+}
+
+export function show_prompts(prompts) {
+    let doc_fragment = document.createDocumentFragment()
+    for (const block of prompts) {
+        let child = show_block(block)
+        doc_fragment.appendChild(child)
+    }
+    return doc_fragment
+}
+
+export function show_loop_trace(trace) {
+    let doc_fragment = document.createDocumentFragment()
+    if (trace.length > 1) {
+        let dot_dot_dot = document.createElement("div")
+        dot_dot_dot.innerHTML = "···"
+        dot_dot_dot.addEventListener('click', function (e) {
+            dot_dot_dot.replaceWith(show_loop_trace(trace.slice(0, -1)));
+            if (e.stopPropagation) e.stopPropagation();
+        })
+        doc_fragment.appendChild(dot_dot_dot)
+    }
+    if (trace.length > 0) {
+        let iteration = document.createElement("div")
+        iteration.classList.add("pdl_block", "pdl_sequence")
+        let child = show_prompts(trace.slice(-1)[0])
+        iteration.appendChild(child)
+        doc_fragment.appendChild(iteration)
+    }
+    return doc_fragment
 }
 
 export function add_assign(block_div, data) {
@@ -172,6 +192,7 @@ export function replace_div(id, elem) {
 }
 
 export function htmlize(s) {
+    s = s || ""
     let html = (s === "") ? "☐" : s.split('\n').join('<br>')
     return html
 }
