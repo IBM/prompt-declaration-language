@@ -165,7 +165,7 @@ def call_api(log, scope, block: pdl_ast.ApiBlock) -> tuple[str, pdl_ast.ApiBlock
     debug(output)
     append_log(log, "API Output", True)
     append_log(log, output, False)
-    trace = block.model_copy(update={"input": input_trace})
+    trace = block.model_copy(update={"result": output, "input": input_trace})
     return output, trace
 
 
