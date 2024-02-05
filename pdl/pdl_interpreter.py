@@ -280,7 +280,7 @@ def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock
     if stop_sequences != []:
         params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
-            max_new_tokens=200,
+            max_new_tokens=1000,
             min_new_tokens=1,
             # stream=False,
             # temperature=1,
@@ -293,7 +293,7 @@ def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock
     else:
         params = GenerateParams(  # pyright: ignore
             decoding_method="greedy",
-            max_new_tokens=200,
+            max_new_tokens=1000,
             min_new_tokens=1,
             # stream=False,
             # temperature=1,
