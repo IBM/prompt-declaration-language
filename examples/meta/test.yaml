@@ -1,0 +1,12 @@
+title: PDL with model call
+prompts:
+- |
+  Hello World
+  This is a great prompt!
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: greedy
+  stop_sequences:
+  - '\n'
+  - '!'
+  - '<<'
+  include_stop_sequences: false
