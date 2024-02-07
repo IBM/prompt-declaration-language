@@ -1,4 +1,4 @@
-title: Earth circumference question
+description: Earth circumference question
 prompts:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
 - get: EXPERT

@@ -51,8 +51,8 @@ def program_to_dict(prog: pdl_ast.Program) -> dict[str, Any]:
 
 def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
     d: dict[str, Any] = {}
-    if block.title is not None:
-        d["title"] = block.title
+    if block.description is not None:
+        d["description"] = block.description
     match block:
         case ModelBlock():
             d["model"] = block.model

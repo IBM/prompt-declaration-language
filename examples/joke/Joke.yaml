@@ -1,4 +1,4 @@
-title: Joke example
+description: Joke example
 prompts:
 - 'A list of good dad jokes. A indicates the '
 - "punchline \n"

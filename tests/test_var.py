@@ -2,7 +2,7 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 var_data = {
-    "title": "Hello world with variable use",
+    "description": "Hello world with variable use",
     "prompts": [
         "Hello,",
         {
@@ -32,7 +32,7 @@ def test_var():
 
 
 code_var_data = {
-    "title": "simple python",
+    "description": "simple python",
     "prompts": [
         {
             "assign": "I",

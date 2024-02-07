@@ -1,5 +1,5 @@
 {
-    "title": "Hello world showing call out to python code",
+    "description": "Hello world showing call out to python code",
     "prompts": [
         "Hello, ",
         {

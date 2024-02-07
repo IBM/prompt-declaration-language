@@ -1,4 +1,4 @@
-title: Teaching PDL
+description: Teaching PDL
 prompts:
 - lan: python
   code:
@@ -62,7 +62,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world!
+      description: Hello world!
       prompts:
       - "Hello, world!\n"
       - "This is your first prompt descriptor!\n"      
@@ -80,7 +80,7 @@ prompts:
 
       Answer:
       ```
-      title: Example of PDL code block
+      description: Example of PDL code block
       prompts:
       - lan: python
         code:
@@ -101,7 +101,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world!
+      description: Hello world!
       prompts:
       - "Hello, world!\n"
       - "This is your "
@@ -116,7 +116,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world!
+      description: Hello world!
       prompts:
       - "What is "
       - lan: python

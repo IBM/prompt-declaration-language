@@ -1,5 +1,5 @@
 {
-    "title": "Abstract hello world",
+    "description": "Abstract hello world",
     "prompts": [
         "Hello, ",
         {

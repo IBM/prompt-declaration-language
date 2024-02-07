@@ -1,4 +1,4 @@
-title: Hello world!
+description: Hello world!
 prompts:
 - "Hello, world!\n"
 - "This is your first prompt descriptor!\n"

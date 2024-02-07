@@ -2,14 +2,14 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 hello = {
-    "title": "Hello world!",
+    "description": "Hello world!",
     "prompts": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
 }
 
 
 def repeat_data(n):
     return {
-        "title": "Hello world with a nested block",
+        "description": "Hello world with a nested block",
         "prompts": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
@@ -20,7 +20,7 @@ def repeat_data(n):
 
 def nested_repeat_data(n):
     return {
-        "title": "Hello world with a nested block",
+        "description": "Hello world with a nested block",
         "prompts": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",

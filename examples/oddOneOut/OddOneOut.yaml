@@ -1,4 +1,4 @@
-title: Odd one out
+description: Odd one out
 prompts:
 - "Pick the odd word out: skirt, dress, pen, jacket.\n"
 - "skirt is clothing, dress is clothing, pen is an object, jacket is clothing.\n"

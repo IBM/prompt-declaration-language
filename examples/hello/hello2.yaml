@@ -1,4 +1,4 @@
-title: Hello world to call into a model
+description: Hello world to call into a model
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1

@@ -1,5 +1,5 @@
 {
-    "title": "Hello world with variable use",
+    "description": "Hello world with variable use",
     "prompts": [
         "Hello,",
         {

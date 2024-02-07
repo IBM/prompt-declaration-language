@@ -2,7 +2,7 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 model_data = {
-    "title": "Hello world with a variable to call into a model",
+    "description": "Hello world with a variable to call into a model",
     "prompts": [
         "Hello,",
         {
@@ -24,7 +24,7 @@ def test_model():
 
 
 model_chain_data = {
-    "title": "Hello world showing model chaining",
+    "description": "Hello world showing model chaining",
     "prompts": [
         "Hello,",
         {
@@ -76,7 +76,7 @@ def test_model_chain():
 
 
 multi_shot_data = {
-    "title": "Hello world showing model chaining",
+    "description": "Hello world showing model chaining",
     "prompts": [
         {
             "assign": "LOCATION",

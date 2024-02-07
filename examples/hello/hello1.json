@@ -1,5 +1,5 @@
 {
-    "title": "Hello world with a nested block",
+    "description": "Hello world with a nested block",
     "prompts": [
         "Hello, world!\n",
         "This is your first prompt descriptor!\n",

@@ -38,14 +38,14 @@ PDL scipts are specified in YAML, which reflects their declarative nature. YAML 
 The following is a simple `hello, world` script:
 
 ```
-title: Hello world!
+description: Hello world!
 prompts:
   - |
     Hello, world!
     This is your first prompt descriptor!
 ```
 
-This script has a `title` and specifies the `prompts` of the document. In this case, there are no calls to an LLM or other tools.
+This script has a `description` and specifies the `prompts` of the document. In this case, there are no calls to an LLM or other tools.
 To render the script into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
@@ -66,7 +66,7 @@ PDL scripts can have nested `block`s of prompts. A block of prompts can have var
 The following example shows a block of prompts that is repeated 3 times.
 
 ```
-title: Hello world with a nested block
+description: Hello world with a nested block
 prompts:
 - |
   Hello, world!
@@ -94,7 +94,7 @@ The property `repeats_until` indicates repetition of the block until a condition
 In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequences` if the string the stopped the generation should be part of the output.
 
 ```
-title: Hello world with a call into a model
+description: Hello world with a call into a model
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
@@ -116,7 +116,7 @@ Hello, world!
 In the following example, we store the result of the LLM call in a variable `NAME` using the `assign` field. Then value of variable is recalled using a `get` block:
 
 ```
-title: Hello world with variable use
+description: Hello world with variable use
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
@@ -142,7 +142,7 @@ Who is world?
 PDL also allows multiple models to be chained together as in the following example, where 2 different models are called.
 
 ```
-title: Hello world showing model chaining
+description: Hello world showing model chaining
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
@@ -177,7 +177,7 @@ where the last line is the output of the second model `google/flan-t5-xl`, when 
 The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
 ```
-title: Hello world showing call out to python code
+description: Hello world showing call out to python code
 prompts:
 - 'Hello, '
 - lan: python
@@ -230,7 +230,7 @@ In the following example, the variable `NAME` is constrained to consist of a sin
 
 ```
 {
-    "title": "Hello world with a constraint",
+    "description": "Hello world with a constraint",
     "prompts": [
         "Hello,",
         {

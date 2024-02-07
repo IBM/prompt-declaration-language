@@ -31,7 +31,7 @@ ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
 class Block(BaseModel):
     """PDL program block"""
 
-    title: Optional[str] = None
+    description: Optional[str] = None
     assign: Optional[str] = None
     show_result: bool = True
     result: Optional[str] = None

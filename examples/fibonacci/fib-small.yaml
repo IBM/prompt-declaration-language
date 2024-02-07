@@ -1,4 +1,4 @@
-title: Fibonacci
+description: Fibonacci
 prompts:
 - assign: CODE
   model: ibm/granite-20b-code-instruct-v1

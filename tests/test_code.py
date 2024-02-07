@@ -2,7 +2,7 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 python_data = {
-    "title": "Hello world showing call out to python code",
+    "description": "Hello world showing call out to python code",
     "prompts": [
         "Hello, ",
         {
@@ -24,7 +24,7 @@ def test_python():
 
 def show_result_data(show):
     return {
-        "title": "Using a weather API and LLM to make a small weather app",
+        "description": "Using a weather API and LLM to make a small weather app",
         "prompts": [
             {
                 "assign": "QUERY",

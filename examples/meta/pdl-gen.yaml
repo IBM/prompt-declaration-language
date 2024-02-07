@@ -1,4 +1,4 @@
-title: Teaching PDL
+description: Teaching PDL
 prompts:
 - lan: python
   code:
@@ -25,7 +25,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world!
+      description: Hello world!
       prompts:
       - "Hello, world!\n"
       - "This is your first prompt descriptor!\n"      
@@ -43,7 +43,7 @@ prompts:
 
       Answer:
       ```
-      title: Example of PDL code block
+      description: Example of PDL code block
       prompts:
       - lan: python
         code:
@@ -67,7 +67,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world with a nested block
+      description: Hello world with a nested block
       prompts:
       - |
         Hello, world!
@@ -87,7 +87,7 @@ prompts:
 
       Answer:
       ```
-      title: Hello world with a nested block
+      description: Hello world with a nested block
       prompts:
       - |
         Hello, world!
@@ -102,7 +102,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
         decoding: greedy
@@ -112,7 +112,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
         decoding: greedy
@@ -126,7 +126,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -136,7 +136,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
         decoding: greedy
@@ -149,7 +149,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -160,7 +160,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -171,7 +171,7 @@ prompts:
 
       Answer:
       ```
-      title: Example of PDL code block
+      description: Example of PDL code block
       prompts:
       - lan: python
         code:
@@ -191,7 +191,7 @@ prompts:
 
       Answer:
       ```
-      title: Example of PDL code block
+      description: Example of PDL code block
       prompts:
       - lan: python
         code:
@@ -213,7 +213,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -231,7 +231,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -250,7 +250,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -271,7 +271,7 @@ prompts:
 
       Answer:
       ```
-      title: PDL with model call
+      description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
@@ -289,7 +289,7 @@ prompts:
 
       Answer:
       ```
-      title: Using a weather API and LLM to make a small weather app
+      description: Using a weather API and LLM to make a small weather app
       prompts:
       - lan: python
         code:

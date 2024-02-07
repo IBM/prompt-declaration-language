@@ -1,5 +1,5 @@
 {
-    "title": "Odd one out, abstract version",
+    "description": "Odd one out, abstract version",
     "prompts": [
         "Pick the odd word out: ",
         {

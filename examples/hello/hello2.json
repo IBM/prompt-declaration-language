@@ -1,5 +1,5 @@
 {
-    "title": "Hello world with a variable to call into a model",
+    "description": "Hello world with a variable to call into a model",
     "prompts": [
         "Hello,",
         {

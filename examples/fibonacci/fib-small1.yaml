@@ -1,4 +1,4 @@
-title: Fibonacci
+description: Fibonacci
 prompts:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - assign: CODE

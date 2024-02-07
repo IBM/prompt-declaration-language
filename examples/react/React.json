@@ -1,5 +1,5 @@
 {
-    "title": "Interactive ReAct",
+    "description": "Interactive ReAct",
     "prompts": [
         "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?\n",
         "Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...\n",

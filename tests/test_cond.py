@@ -2,7 +2,7 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 cond_data = {
-    "title": "Arithmetic Expressions",
+    "description": "Arithmetic Expressions",
     "prompts": [
         "Question: Noah charges $60 for a large painting and $30 for a small painting.\n",
         "Last month he sold eight large paintings and four small paintings.\n",
@@ -162,7 +162,7 @@ def test_cond():
 
 def cond_data1(show, name):
     return {
-        "title": "Hello world showing call out to python code with condition",
+        "description": "Hello world showing call out to python code with condition",
         "prompts": [
             {
                 "assign": "NAME",
@@ -203,7 +203,7 @@ def test_cond2():
 
 
 repeat_until_data = {
-    "title": "Hello world showing call out to python code with condition",
+    "description": "Hello world showing call out to python code with condition",
     "prompts": [
         {
             "assign": "I",

@@ -1,4 +1,4 @@
-title: Hello world with a nested block
+description: Hello world with a nested block
 prompts:
 - |
   Hello, world!

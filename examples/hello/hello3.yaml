@@ -1,4 +1,4 @@
-title: Hello world with a constraint
+description: Hello world with a constraint
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
