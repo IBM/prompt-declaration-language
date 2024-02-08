@@ -158,13 +158,11 @@ def process_block(
 def call_api(log, scope, block: pdl_ast.ApiBlock) -> tuple[str, pdl_ast.ApiBlock]:
     input_str, input_trace = process_prompt(log, scope, "", block.input)
     input_str = block.url + input_str
-    append_log(log, "API Input", True)
-    append_log(log, input_str, False)
+    append_log(log, "API Input", input_str)
     response = requests.get(input_str)
     output = str(response.json())
     debug(output)
-    append_log(log, "API Output", True)
-    append_log(log, output, False)
+    append_log(log, "API Output", output)
     trace = block.model_copy(update={"result": output, "input": input_trace})
     return output, trace
 
@@ -186,8 +184,7 @@ def process_prompt(log, scope, document, prompt: PromptType) -> tuple[str, Promp
     if isinstance(prompt, str):
         output = prompt
         trace = prompt
-        append_log(log, "Prompt", True)
-        append_log(log, prompt, False)
+        append_log(log, "Prompt", prompt)
     elif isinstance(prompt, Block):
         output, trace = process_block(log, scope, document, prompt)
     else:
@@ -195,9 +192,8 @@ def process_prompt(log, scope, document, prompt: PromptType) -> tuple[str, Promp
     return output, trace
 
 
-def append_log(log, somestring, doc):
-    if doc:
-        somestring = "**********  " + somestring + "  **********"
+def append_log(log, title, somestring):
+    log.append("**********  " + title + "  **********\n")
     log.append(somestring + "\n")
 
 
@@ -249,7 +245,9 @@ def contains(log, scope, document, cond: ContainsArgs) -> tuple[bool, ContainsAr
     return result, cond.model_copy(update={"arg0": arg0_trace})
 
 
-def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock]:
+def call_model(
+    log, scope, document, block: ModelBlock
+) -> tuple[str, pdl_ast.BlockType]:
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
@@ -266,16 +264,18 @@ def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock
         include_stop_sequences = block.include_stop_sequences
 
     if GENAI_API is None:
-        error("Environment variable GENAI_API must be defined")
-        genai_api = ""
-    else:
-        genai_api = GENAI_API
+        msg = "Environment variable GENAI_API must be defined"
+        error(msg)
+        trace = ErrorBlock(msg=msg, block=block.model_copy())
+        return "", trace
+
     if GENAI_KEY is None:
-        error("Environment variable GENAI_KEY must be defined")
-        genai_key = ""
-    else:
-        genai_key = GENAI_KEY
-    creds = Credentials(genai_key, api_endpoint=genai_api)
+        msg = "Environment variable GENAI_KEY must be defined"
+        error(msg)
+        trace = ErrorBlock(msg=msg, block=block.model_copy())
+        return "", trace
+
+    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
     params = None
     if stop_sequences != []:
         params = GenerateParams(  # pyright: ignore
@@ -303,14 +303,12 @@ def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock
         )
 
     debug("model input: " + model_input)
-    append_log(log, "Model Input", True)
-    append_log(log, model_input, False)
+    append_log(log, "Model Input", model_input)
     model = Model(block.model, params=params, credentials=creds)
     response = model.generate([model_input])
     gen = response[0].generated_text
     debug("model output: " + gen)
-    append_log(log, "Model Output", True)
-    append_log(log, gen, False)
+    append_log(log, "Model Output", gen)
     trace = block.model_copy(update={"result": gen, "input": input_trace})
     return gen, trace
 
@@ -318,12 +316,10 @@ def call_model(log, scope, document, block: ModelBlock) -> tuple[str, ModelBlock
 def call_python(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
     code_str, code_trace = get_code_string(log, scope, code)
     my_namespace = types.SimpleNamespace()
-    append_log(log, "Code Input", True)
-    append_log(log, code_str, False)
+    append_log(log, "Code Input", code_str)
     exec(code_str, my_namespace.__dict__)
     result = str(my_namespace.result)
-    append_log(log, "Code Output", True)
-    append_log(log, result, False)
+    append_log(log, "Code Output", result)
     return result, code_trace
 
 
