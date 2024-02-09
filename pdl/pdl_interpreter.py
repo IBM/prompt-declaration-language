@@ -23,6 +23,7 @@ from .pdl_ast import (
     ErrorBlock,
     GetBlock,
     IfBlock,
+    InputBlock,
     ModelBlock,
     Program,
     PromptsType,
@@ -144,6 +145,8 @@ def process_block(
             trace = block.model_copy(
                 update={"result": output, "trace": iteration_trace}
             )
+        case InputBlock():
+            output, trace = process_input(log, block)
         case _:
             assert False
     if block.assign is not None:
@@ -327,3 +330,47 @@ def get_code_string(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
     code_s, code_trace = process_prompts(log, scope, "", code)
     debug("code string: " + code_s)
     return code_s, code_trace
+
+
+def process_input(log, block) -> tuple[str, pdl_ast.BlockType]:
+    if (block.filename is None and block.stdin is False) or (
+        block.filename is not None and block.stdin is True
+    ):
+        msg = "Input block must have either a filename or stdin and not both"
+        error(msg)
+        output = ""
+        trace = ErrorBlock(msg=msg, block=block.model_copy())
+        return output, trace
+
+    if block.filename is not None:
+        with open(block.filename, encoding="utf-8") as f:
+            s = f.read()
+            append_log(log, "Input from File: " + block.filename, s)
+            trace = block.model_copy(update={"result": s})
+            return s, trace
+    # block.stdin == True
+    message = ""
+    if block.message is not None:
+        message = block.message
+    elif block.multiline is False:
+        message = "How can I help you?: "
+    else:
+        message = "Enter/Paste your content. Ctrl-D to save it."
+    if block.multiline is False:
+        s = input(message)
+        append_log(log, "Input from stdin: ", s)
+        trace = block.model_copy(update={"result": s})
+        return s, trace
+    # multiline
+    print(message)
+    contents = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+        contents.append(line + "\n")
+    s = "".join(contents)
+    append_log(log, "Input from stdin: ", s)
+    trace = block.model_copy(update={"result": s})
+    return s, trace

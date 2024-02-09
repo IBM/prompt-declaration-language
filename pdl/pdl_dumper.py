@@ -11,6 +11,7 @@ from .pdl_ast import (
     ConditionExpr,
     GetBlock,
     IfBlock,
+    InputBlock,
     ModelBlock,
     RepeatsBlock,
     RepeatsUntilBlock,
@@ -79,6 +80,11 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["input"] = prompt_to_dict(block.input)
         case SequenceBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
+        case InputBlock():
+            d["filename"] = block.filename
+            d["stdin"] = block.stdin
+            d["message"] = block.message
+            d["multiline"] = block.multiline
         case IfBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
             d["condition"] = condition_to_dict(block.condition)

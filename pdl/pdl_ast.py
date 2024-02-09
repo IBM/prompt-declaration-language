@@ -91,6 +91,13 @@ class ErrorBlock(Block):
     block: "BlockType"
 
 
+class InputBlock(Block):
+    filename: Optional[str] = None
+    stdin: bool = False
+    message: Optional[str] = None
+    multiline: bool = False
+
+
 BlockType: TypeAlias = (
     ModelBlock
     | CodeBlock
@@ -102,6 +109,7 @@ BlockType: TypeAlias = (
     | RepeatsUntilBlock
     | SequenceBlock
     | ErrorBlock
+    | InputBlock
     | Block
 )
 PromptType: TypeAlias = str | BlockType  # pyright: ignore

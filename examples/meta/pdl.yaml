@@ -1,17 +1,7 @@
 description: Teaching PDL
 prompts:
-- lan: python
-  code:
-  - |
-    print("Enter/Paste your content. Ctrl-D to save it.")
-    contents = []
-    while True:
-      try:
-        line = input()
-      except EOFError:
-        break
-      contents.append(line + "\n")
-    result = ''.join(contents)
+- stdin: True
+  multiline: True
   assign: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
@@ -149,9 +139,9 @@ prompts:
     scope = {}
     log = []
     data = Program.model_validate(obj)
-    result = process_block(log, scope, "", data.root)
+    result, _ = process_block(log, scope, "", data.root)
   assign: RESULT
-  show_result: false
+  show_result: true
 
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax

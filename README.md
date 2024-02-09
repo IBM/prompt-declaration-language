@@ -211,6 +211,42 @@ Notice that by setting `show_result` to `false`, we exclude the text resulting f
 
 See a [demo](https://ibm.box.com/s/g3x5zbd7b56o223mtqte3sr5e0xkttnl) video of this example.
 
+### Input Blocks
+
+PDL can accept textual input from a file or stdin. In the following example, the contents of the file `examples/input/data.txt` are read by PDL and incorporated as a prompt. In this case, the result is assigned to a variable `HELLO`, which is immediately used.
+
+```
+description: PDL code with input block
+prompts:
+- filename: examples/input/data.txt
+  assign: HELLO
+  show_result: False
+- get: HELLO
+```
+
+In the next example, prompts are obtained from stdin.
+```
+description: PDL code with input block
+prompts:
+- "The following will prompt the user on stdin.\n"
+- stdin: True
+  message: "Please provide an input: "
+  assign: STDIN
+```
+
+Notice that when executing this program, the stdin input is obtained first and then the entire document is printed. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
+
+Finally, the following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
+```
+description: PDL code with input block
+prompts:
+- "A multiline stdin input.\n"
+- stdin: True
+  multiline: True
+```
+
+
+
 
 
 ## Additional Notes and Future Work

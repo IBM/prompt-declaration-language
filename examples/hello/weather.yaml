@@ -1,10 +1,8 @@
 description: Using a weather API and LLM to make a small weather app
 prompts:
-- lan: python
-  code:
-  - |
-    result = input("How can I help you?: ")
+- stdin: True
   assign: QUERY
+  message: "Ask a query: "
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax

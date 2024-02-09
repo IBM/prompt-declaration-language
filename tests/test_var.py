@@ -16,7 +16,7 @@ var_data = {
             ],
         },
         "!\n",
-        "Who is",
+        "Tell me about",
         {"get": "NAME"},
         "?\n",
     ],
@@ -28,7 +28,7 @@ def test_var():
     log = []
     data = Program.model_validate(var_data)
     document, _ = process_block(log, scope, "", data.root)
-    assert document == "Hello, world!\nWho is world?\n"
+    assert document == "Hello, world!\nTell me about world?\n"
 
 
 code_var_data = {

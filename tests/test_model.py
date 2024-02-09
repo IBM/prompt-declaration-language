@@ -7,7 +7,6 @@ model_data = {
         "Hello,",
         {
             "model": "ibm/granite-20b-code-instruct-v1",
-            "decoding": "greedy",
             "stop_sequences": ["!"],
         },
         "!\n",
@@ -28,18 +27,18 @@ model_chain_data = {
     "prompts": [
         "Hello,",
         {
-            "assign": "NAME",
+            "assign": "SOMEONE",
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
-                    "decoding": "argmax",
                     "stop_sequences": ["!"],
+                    "include_stop_sequences": False,
                 }
             ],
         },
         "!\n",
         "Who is",
-        {"get": "NAME"},
+        {"get": "SOMEONE"},
         "?\n",
         {
             "assign": "RESULT",
