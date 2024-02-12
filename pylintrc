@@ -6,6 +6,7 @@ disable=
     # Warnings
     exec-used,
     unused-argument,
+    broad-exception-caught,
     # Conventions
     missing-module-docstring,missing-class-docstring,missing-function-docstring,
     use-implicit-booleaness-not-comparison,

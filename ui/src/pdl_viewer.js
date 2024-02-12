@@ -34,9 +34,6 @@ export function show_result(data) {
         } else {
             div.innerHTML = htmlize(data.result)
         }
-        // if (data.hasOwnProperty("assign") && data.assign !== null) {
-        //     div.innerHTML = `${div.innerHTML}<sup>${data.assign}</sup>`
-        // }
     }
     div.addEventListener('click', function (e) {
         div.replaceWith(show_block(data));

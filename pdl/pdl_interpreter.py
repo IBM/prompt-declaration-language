@@ -158,18 +158,6 @@ def process_block(
     return output, trace
 
 
-def call_api(log, scope, block: pdl_ast.ApiBlock) -> tuple[str, pdl_ast.ApiBlock]:
-    input_str, input_trace = process_prompt(log, scope, "", block.input)
-    input_str = block.url + input_str
-    append_log(log, "API Input", input_str)
-    response = requests.get(input_str)
-    output = str(response.json())
-    debug(output)
-    append_log(log, "API Output", output)
-    trace = block.model_copy(update={"result": output, "input": input_trace})
-    return output, trace
-
-
 def process_prompts(
     log, scope, document: str, prompts: PromptsType
 ) -> tuple[str, PromptsType]:
@@ -193,30 +181,6 @@ def process_prompt(log, scope, document, prompt: PromptType) -> tuple[str, Promp
     else:
         assert False
     return output, trace
-
-
-def append_log(log, title, somestring):
-    log.append("**********  " + title + "  **********\n")
-    log.append(somestring + "\n")
-
-
-def debug(somestring):
-    if DEBUG:
-        print("******")
-        print(somestring)
-        print("******")
-
-
-def error(somestring):
-    print("***Error: " + somestring)
-
-
-def get_var(block, scope) -> str:
-    match block:
-        case GetBlock(get=var):
-            return str(scope[var])
-        case _:
-            return ""
 
 
 def process_condition(
@@ -250,7 +214,7 @@ def contains(log, scope, document, cond: ContainsArgs) -> tuple[bool, ContainsAr
 
 def call_model(
     log, scope, document, block: ModelBlock
-) -> tuple[str, pdl_ast.BlockType]:
+) -> tuple[str, ModelBlock | ErrorBlock]:
     model_input = ""
     stop_sequences = []
     include_stop_sequences = False
@@ -304,16 +268,44 @@ def call_model(
             # top_p=1,
             repetition_penalty=1.07,
         )
+    try:
+        debug("model input: " + model_input)
+        append_log(log, "Model Input", model_input)
+        model = Model(block.model, params=params, credentials=creds)
+        response = model.generate([model_input])
+        gen = response[0].generated_text
+        debug("model output: " + gen)
+        append_log(log, "Model Output", gen)
+        trace = block.model_copy(update={"result": gen, "input": input_trace})
+        return gen, trace
+    except Exception as e:
+        msg = f"Model error: {e}"
+        error(msg)
+        output = ""
+        trace = ErrorBlock(
+            msg=msg, block=block.model_copy(update={"input": input_trace})
+        )
+    return output, trace
 
-    debug("model input: " + model_input)
-    append_log(log, "Model Input", model_input)
-    model = Model(block.model, params=params, credentials=creds)
-    response = model.generate([model_input])
-    gen = response[0].generated_text
-    debug("model output: " + gen)
-    append_log(log, "Model Output", gen)
-    trace = block.model_copy(update={"result": gen, "input": input_trace})
-    return gen, trace
+
+def call_api(log, scope, block: ApiBlock) -> tuple[str, ApiBlock | ErrorBlock]:
+    input_str, input_trace = process_prompt(log, scope, "", block.input)
+    input_str = block.url + input_str
+    try:
+        append_log(log, "API Input", input_str)
+        response = requests.get(input_str)
+        output = str(response.json())
+        debug(output)
+        append_log(log, "API Output", output)
+        trace = block.model_copy(update={"result": output, "input": input_trace})
+    except Exception as e:
+        msg = f"API error: {e}"
+        error(msg)
+        output = ""
+        trace = ErrorBlock(
+            msg=msg, block=block.model_copy(update={"input": input_trace})
+        )
+    return output, trace
 
 
 def call_python(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
@@ -332,7 +324,7 @@ def get_code_string(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
     return code_s, code_trace
 
 
-def process_input(log, block) -> tuple[str, pdl_ast.BlockType]:
+def process_input(log, block) -> tuple[str, InputBlock | ErrorBlock]:
     if (block.filename is None and block.stdin is False) or (
         block.filename is not None and block.stdin is True
     ):
@@ -374,3 +366,27 @@ def process_input(log, block) -> tuple[str, pdl_ast.BlockType]:
     append_log(log, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
     return s, trace
+
+
+def get_var(block, scope) -> str:
+    match block:
+        case GetBlock(get=var):
+            return str(scope[var])
+        case _:
+            return ""
+
+
+def append_log(log, title, somestring):
+    log.append("**********  " + title + "  **********\n")
+    log.append(somestring + "\n")
+
+
+def debug(somestring):
+    if DEBUG:
+        print("******")
+        print(somestring)
+        print("******")
+
+
+def error(somestring):
+    print("***Error: " + somestring)
