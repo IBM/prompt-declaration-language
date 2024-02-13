@@ -9,12 +9,15 @@ prompts:
   input:
     prompts:
     - |
-      Given the location of the folling code in the repo.
+      Here is some info about the location of the function in the repo.
       repo: 
     - get: CODE.repo_info.repo
     - "\npath: "
     - get: CODE.repo_info.path
     - "\nFunction_name: "
     - get: CODE.repo_info.function_name
-    - "\n\nExplain the following code:\n"
+    - "\n\n\n"
+    - "Explain the following code:\n"
+    - "```\n"
     - get: CODE.source_code
+    - "```\n"
