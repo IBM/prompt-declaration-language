@@ -1,0 +1,16 @@
+description: Code explanation example
+prompts:
+- filename: examples/code/data.json
+  json_content: true
+  assign: CODE
+  show_result: False
+- model: ibm/granite-20b-code-instruct-v1
+  decoding: argmax
+  input:
+    prompts:
+    - |
+      Explain the following code:
+      ```
+    - get: CODE
+    - |
+      ```
