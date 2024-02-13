@@ -1,4 +1,5 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 python_data = {
@@ -15,10 +16,9 @@ python_data = {
 
 
 def test_python():
-    scope = {}
     log = []
     data = Program.model_validate(python_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello, Tracy!\n"
 
 
@@ -38,16 +38,14 @@ def show_result_data(show):
 
 
 def test_show_result():
-    scope = {}
     log = []
     data = Program.model_validate(show_result_data(True))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "How can I help you?: "
 
 
 def test_show_result_false():
-    scope = {}
     log = []
     data = Program.model_validate(show_result_data(False))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""

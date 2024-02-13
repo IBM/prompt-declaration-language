@@ -13,6 +13,7 @@ disable=
     # Refactors
     too-many-locals,
     too-many-branches,
+    too-many-statements,
     too-few-public-methods
 
 load-plugins=pylint.extensions.docparams,pylint.extensions.bad_builtin

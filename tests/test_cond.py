@@ -1,4 +1,5 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 cond_data = {
@@ -153,10 +154,9 @@ assert_data = [
 
 
 def test_cond():
-    scope = {}
     log = []
     data = Program.model_validate(cond_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(assert_data)
 
 
@@ -187,18 +187,16 @@ def cond_data1(show, name):
 
 
 def test_cond1():
-    scope = {}
     log = []
     data = Program.model_validate(cond_data1(False, "blah"))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""
 
 
 def test_cond2():
-    scope = {}
     log = []
     data = Program.model_validate(cond_data1(True, "acy"))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Tracy, hello there!\n"
 
 
@@ -232,10 +230,9 @@ repeat_until_data = {
 
 
 def test_repeat_until():
-    scope = {}
     log = []
     data = Program.model_validate(repeat_until_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(
         [
             "0",

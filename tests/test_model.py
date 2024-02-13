@@ -1,4 +1,5 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 model_data = {
@@ -15,10 +16,9 @@ model_data = {
 
 
 def test_model():
-    scope = {}
     log = []
     data = Program.model_validate(model_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello, world!\n"
 
 
@@ -56,10 +56,9 @@ model_chain_data = {
 
 
 def test_model_chain():
-    scope = {}
     log = []
     data = Program.model_validate(model_chain_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(
         [
             "Hello,",
@@ -104,8 +103,7 @@ multi_shot_data = {
 
 
 def test_multi_shot():
-    scope = {}
     log = []
     data = Program.model_validate(multi_shot_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Armonk, NY\n"

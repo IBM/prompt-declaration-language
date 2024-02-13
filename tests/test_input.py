@@ -1,5 +1,6 @@
 from pdl.pdl.pdl_ast import ErrorBlock  # pyright: ignore
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 input_data = {
@@ -9,10 +10,9 @@ input_data = {
 
 
 def test_input_filename():
-    scope = {}
     log = []
     data = Program.model_validate(input_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"
 
 
@@ -23,10 +23,9 @@ input_data_error = {
 
 
 def test_input_error():
-    scope = {}
     log = []
     data = Program.model_validate(input_data_error)
-    _, trace = process_block(log, scope, "", data.root)
+    _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)
 
 
@@ -37,10 +36,9 @@ input_data_error1 = {
 
 
 def test_input_error1():
-    scope = {}
     log = []
     data = Program.model_validate(input_data_error1)
-    _, trace = process_block(log, scope, "", data.root)
+    _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)
 
 
@@ -67,10 +65,9 @@ input_json_data = {
 
 
 def test_input_json():
-    scope = {}
     log = []
     data = Program.model_validate(input_json_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert (
         document
         == "Bob lives at the following address:\n87 Smith Road in the town of Armonk NY"
@@ -90,8 +87,7 @@ input_json_data_error = {
 
 
 def test_input_json_error():
-    scope = {}
     log = []
     data = Program.model_validate(input_json_data_error)
-    _, trace = process_block(log, scope, "", data.root)
+    _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)

@@ -1,4 +1,5 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 hello = {
@@ -30,18 +31,16 @@ def nested_repeat_data(n):
 
 
 def test_hello():
-    scope = {}
     log = []
     data = Program.model_validate(hello)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
 def repeat(n):
-    scope = {}
     log = []
     data = Program.model_validate(repeat_data(n))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -70,10 +69,9 @@ def test_repeat3():
 
 
 def repeat_nested(n):
-    scope = {}
     log = []
     data = Program.model_validate(nested_repeat_data(n))
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")

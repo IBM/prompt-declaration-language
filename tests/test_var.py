@@ -1,4 +1,5 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 var_data = {
@@ -24,10 +25,9 @@ var_data = {
 
 
 def test_var():
-    scope = {}
     log = []
     data = Program.model_validate(var_data)
-    document, _ = process_block(log, scope, "", data.root)
+    document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello, world!\nTell me about world?\n"
 
 
@@ -49,9 +49,8 @@ code_var_data = {
 
 
 def test_code_var():
-    scope = {}
     log = []
     data = Program.model_validate(code_var_data)
-    document, _ = process_block(log, scope, "", data.root)
-    assert scope == {"I": "0"}
+    document, scope, _ = process_block(log, empty_scope, data.root)
+    assert scope == {"context": document, "I": "0"}
     assert document == "0"
