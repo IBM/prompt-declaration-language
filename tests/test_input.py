@@ -42,3 +42,56 @@ def test_input_error1():
     data = Program.model_validate(input_data_error1)
     _, trace = process_block(log, scope, "", data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)
+
+
+input_json_data = {
+    "description": "Input block example with json input",
+    "prompts": [
+        {
+            "filename": "tests/data/input.json",
+            "json_content": True,
+            "assign": "PERSON",
+            "show_result": False,
+        },
+        {"get": "PERSON.name"},
+        " lives at the following address:\n",
+        {"get": "PERSON.address.number"},
+        " ",
+        {"get": "PERSON.address.street"},
+        " in the town of ",
+        {"get": "PERSON.address.town"},
+        " ",
+        {"get": "PERSON.address.state"},
+    ],
+}
+
+
+def test_input_json():
+    scope = {}
+    log = []
+    data = Program.model_validate(input_json_data)
+    document, _ = process_block(log, scope, "", data.root)
+    assert (
+        document
+        == "Bob lives at the following address:\n87 Smith Road in the town of Armonk NY"
+    )
+
+
+input_json_data_error = {
+    "description": "Input block example with json input",
+    "prompts": [
+        {
+            "filename": "tests/data/input1.json",
+            "json_content": True,
+            "show_result": False,
+        }
+    ],
+}
+
+
+def test_input_json_error():
+    scope = {}
+    log = []
+    data = Program.model_validate(input_json_data_error)
+    _, trace = process_block(log, scope, "", data.root)
+    assert isinstance(trace.prompts[0], ErrorBlock)

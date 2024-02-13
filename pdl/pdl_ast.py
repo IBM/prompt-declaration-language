@@ -34,7 +34,7 @@ class Block(BaseModel):
     description: Optional[str] = None
     assign: Optional[str] = None
     show_result: bool = True
-    result: Optional[str] = None
+    result: Optional[Any] = None
 
 
 class ModelBlock(Block):
@@ -96,6 +96,7 @@ class InputBlock(Block):
     stdin: bool = False
     message: Optional[str] = None
     multiline: bool = False
+    json_content: bool = False
 
 
 BlockType: TypeAlias = (

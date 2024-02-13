@@ -146,7 +146,7 @@ def process_block(
                 update={"result": output, "trace": iteration_trace}
             )
         case InputBlock():
-            output, trace = process_input(log, block)
+            output, trace = process_input(log, scope, block)
         case _:
             assert False
     if block.assign is not None:
@@ -324,7 +324,7 @@ def get_code_string(log, scope, code: PromptsType) -> tuple[str, PromptsType]:
     return code_s, code_trace
 
 
-def process_input(log, block) -> tuple[str, InputBlock | ErrorBlock]:
+def process_input(log, scope, block) -> tuple[str, InputBlock | ErrorBlock]:
     if (block.filename is None and block.stdin is False) or (
         block.filename is not None and block.stdin is True
     ):
@@ -334,36 +334,44 @@ def process_input(log, block) -> tuple[str, InputBlock | ErrorBlock]:
         trace = ErrorBlock(msg=msg, block=block.model_copy())
         return output, trace
 
+    if block.json_content and block.assign is None:
+        msg = "If json_content is True in input block, then there must be assign field"
+        error(msg)
+        output = ""
+        trace = ErrorBlock(msg=msg, block=block.model_copy())
+        return output, trace
+
     if block.filename is not None:
         with open(block.filename, encoding="utf-8") as f:
             s = f.read()
             append_log(log, "Input from File: " + block.filename, s)
-            trace = block.model_copy(update={"result": s})
-            return s, trace
-    # block.stdin == True
-    message = ""
-    if block.message is not None:
-        message = block.message
-    elif block.multiline is False:
-        message = "How can I help you?: "
-    else:
-        message = "Enter/Paste your content. Ctrl-D to save it."
-    if block.multiline is False:
-        s = input(message)
-        append_log(log, "Input from stdin: ", s)
-        trace = block.model_copy(update={"result": s})
-        return s, trace
-    # multiline
-    print(message)
-    contents = []
-    while True:
-        try:
-            line = input()
-        except EOFError:
-            break
-        contents.append(line + "\n")
-    s = "".join(contents)
-    append_log(log, "Input from stdin: ", s)
+    else:  # block.stdin == True
+        message = ""
+        if block.message is not None:
+            message = block.message
+        elif block.multiline is False:
+            message = "How can I help you?: "
+        else:
+            message = "Enter/Paste your content. Ctrl-D to save it."
+        if block.multiline is False:
+            s = input(message)
+            append_log(log, "Input from stdin: ", s)
+        else:  # multiline
+            print(message)
+            contents = []
+            while True:
+                try:
+                    line = input()
+                except EOFError:
+                    break
+                contents.append(line + "\n")
+            s = "".join(contents)
+            append_log(log, "Input from stdin: ", s)
+
+    if block.json_content:
+        s = json.loads(s)
+        scope[block.assign] = s
+
     trace = block.model_copy(update={"result": s})
     return s, trace
 
@@ -371,7 +379,12 @@ def process_input(log, block) -> tuple[str, InputBlock | ErrorBlock]:
 def get_var(block, scope) -> str:
     match block:
         case GetBlock(get=var):
-            return str(scope[var])
+            segs = var.split(".")
+            res = scope[segs[0]]
+            if len(segs) > 1:
+                for v in segs[1:]:
+                    res = res[v]
+            return str(res)
         case _:
             return ""
 

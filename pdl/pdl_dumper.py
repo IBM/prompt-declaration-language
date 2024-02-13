@@ -85,6 +85,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["stdin"] = block.stdin
             d["message"] = block.message
             d["multiline"] = block.multiline
+            d["json_content"] = block.json_content
         case IfBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
             d["condition"] = condition_to_dict(block.condition)

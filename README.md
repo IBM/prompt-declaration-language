@@ -236,7 +236,7 @@ prompts:
 
 Notice that when executing this program, the stdin input is obtained first and then the entire document is printed. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
 
-Finally, the following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
+The following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
 ```
 description: PDL code with input block
 prompts:
@@ -245,6 +245,57 @@ prompts:
   multiline: True
 ```
 
+Finally, the following example shows reading content in JSON format. In this case the block's `assign` field must be defined since the block adds the JSON content in that format to the scope, assigning this content to the named variable.
+
+Consider the JSON content in file `tests/data/input.json`:
+```
+{
+    "name": "Bob",
+    "address": {
+        "number": 87,
+        "street": "Smith Road",
+        "town": "Armonk", 
+        "state": "NY",
+        "zip": 10504
+    }
+}
+```
+
+The following PDL program reads this content and assigns it to variable `PERSON` in JSON format. The reference `PERSON.address.street` then refers
+to that field inside the JSON object.
+
+```
+{
+    "description": "Input block example with json input",
+    "prompts": [
+        {
+            "filename": "tests/data/input.json", 
+            "json_content": true, 
+            "assign": "PERSON",
+            "show_result": false
+        }, 
+        {
+            "get": "PERSON.name"
+        },
+        " lives at the following address:\n",
+        {
+            "get": "PERSON.address.number"
+        },
+        " ",
+        {
+            "get": "PERSON.address.street"
+        },
+        " in the town of ",
+        {
+            "get": "PERSON.address.town"
+        },
+        " ",
+        {
+            "get": "PERSON.address.state"
+        }
+    ]
+}
+```
 
 
 

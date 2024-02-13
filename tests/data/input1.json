@@ -1,0 +1,10 @@
+{
+    "name": "Carol",
+    "address": {
+        "number": 99,
+        "street": "Miller Road",
+        "town": "Armonk", 
+        "state": "NY",
+        "zip": 10504
+    }
+}
