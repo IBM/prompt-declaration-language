@@ -7,8 +7,10 @@ from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
     Block,
+    CallBlock,
     CodeBlock,
     ConditionExpr,
+    FunctionBlock,
     GetBlock,
     IfBlock,
     InputBlock,
@@ -97,6 +99,16 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["prompts"] = prompts_to_dict(block.prompts)
             d["repeats_until"] = condition_to_dict(block.repeats_until)
             d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
+        case FunctionBlock():
+            d["function"] = block.function
+            d["params"] = block.params
+            if block.body is not None:
+                body = block_to_dict(block.body)
+                for k, v in body.items():
+                    d[k] = v
+        case CallBlock():
+            d["call"] = block.call
+            d["args"] = block.args
     if block.assign is not None:
         d["assign"] = block.assign
     if block.show_result is False:

@@ -1,0 +1,12 @@
+description: Hello function
+prompts:
+  - function: hello
+    params:
+      name: str
+    prompts:
+      - 'Hello '
+      - get: name
+      - '!'
+  - call: hello
+    args:
+      name: World

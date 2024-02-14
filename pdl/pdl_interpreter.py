@@ -2,7 +2,7 @@ import json
 import os
 import types
 from pathlib import Path
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional
 
 import requests
 import yaml
@@ -16,6 +16,7 @@ from .pdl_ast import (
     ApiBlock,
     Block,
     BlockType,
+    CallBlock,
     CodeBlock,
     ConditionType,
     ContainsArgs,
@@ -23,6 +24,7 @@ from .pdl_ast import (
     EndsWithArgs,
     EndsWithCondition,
     ErrorBlock,
+    FunctionBlock,
     GetBlock,
     IfBlock,
     InputBlock,
@@ -32,10 +34,11 @@ from .pdl_ast import (
     PromptType,
     RepeatsBlock,
     RepeatsUntilBlock,
+    ScopeType,
     SequenceBlock,
     ValueBlock,
 )
-from .pdl_dumper import dump_yaml
+from .pdl_dumper import block_to_dict, dump_yaml
 
 # from .pdl_dumper import dump_yaml, dumps_json, program_to_dict
 
@@ -44,9 +47,6 @@ DEBUG = False
 load_dotenv()
 GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
-
-
-ScopeType: TypeAlias = dict[str, Any]
 
 
 empty_scope: ScopeType = {"context": ""}
@@ -83,12 +83,12 @@ def generate(
                     if output is None:
                         output = str(Path(pdl).with_suffix("")) + "_result.json"
                     with open(output, "w", encoding="utf-8") as fp:
-                        json.dump(trace.model_dump(), fp)
+                        json.dump(block_to_dict(trace), fp)
                 if mode == "yaml":
                     if output is None:
                         output = str(Path(pdl).with_suffix("")) + "_result.yaml"
                     with open(output, "w", encoding="utf-8") as fp:
-                        dump_yaml(trace.model_dump(), stream=fp)
+                        dump_yaml(block_to_dict(trace), stream=fp)
 
 
 def process_block(
@@ -108,8 +108,8 @@ def process_block(
             error(msg)
             output = ""
             trace = ErrorBlock(msg=msg, block=block.model_copy())
-        case GetBlock():
-            output = get_var(block, scope)
+        case GetBlock(get=var):
+            output = str(get_var(var, scope))
             trace = block.model_copy(update={"result": output})
         case ValueBlock(value=v):
             output = str(v)
@@ -168,6 +168,19 @@ def process_block(
             )
         case InputBlock():
             output, scope, trace = process_input(log, scope, block)
+        case FunctionBlock(function=name):
+            _ = block.body  # Parse the body of the function
+            closure = block.model_copy()
+            scope = scope | {name: closure}
+            closure.scope = scope
+            output = ""
+            trace = closure.model_copy(update={"result": output})
+        case CallBlock(call=f):
+            closure = get_var(f, scope)
+            f_body = closure.body
+            f_scope = closure.scope | {"context": scope["context"]} | block.args
+            output, _, f_trace = process_block(log, f_scope, f_body)
+            trace = block.model_copy(update={"trace": f_trace})
         case _:
             assert False
     if block.assign is not None:
@@ -423,17 +436,12 @@ def process_input(
     return s, scope, trace
 
 
-def get_var(block, scope) -> str:
-    match block:
-        case GetBlock(get=var):
-            segs = var.split(".")
-            res = scope[segs[0]]
-            if len(segs) > 1:
-                for v in segs[1:]:
-                    res = res[v]
-            return str(res)
-        case _:
-            return ""
+def get_var(var: str, scope: ScopeType) -> Any:
+    segs = var.split(".")
+    res = scope[segs[0]]
+    for v in segs[1:]:
+        res = res[v]
+    return res
 
 
 def append_log(log, title, somestring):
