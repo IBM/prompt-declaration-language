@@ -1,10 +1,14 @@
 # Prompt Description Language
 
-Prompt Decription Language (PDL) is a language to specify interactions between a user (prompts) and LLMs, and to compose their use with other tools. It is a declarative language to describe the shape of interactions and provide a way to specify constraints that must be satisfied. PDL scripts can be used for inference, LLM chaining, as well as composition with other tools such as code and APIs. Currently, PDL has an interpreter (`pdl/pdl.py`) that can be used for inference and to render scripts into documents. 
+The Prompt Decription Language (PDL) is a language to specify interactions between a user (prompts) and LLMs, and to compose their use with other tools. It is a declarative language to describe the shape of interactions and provide a way to specify constraints that must be satisfied. PDL scripts can be used for inference, LLM chaining, as well as composition with other tools such as code and APIs. PDL has an interpreter (`pdl/pdl.py`) that can be used for inference and to render programs into documents that capture the result of LLMs and tools interactions.
+
+
 
 In the future, we plan to provide checking and validation, as well as code generation (e.g., data synthesis, data processing pipelines) since PDL scripts can serve as a single-source of truth. The specified constraints can further be used for constrained decoding when using an LLM.
 
 You can find a demo video of PDL [here](https://ibm.box.com/s/g3x5zbd7b56o223mtqte3sr5e0xkttnl).
+
+## Overview
 
 ## Interpreter Installation
 

@@ -4,6 +4,12 @@ prompts:
   json_content: true
   assign: CODE
   show_result: False
+- filename: examples/code/ground_truth.txt
+  assign: TRUTH
+  show_result: False
+- "\n"
+- get: CODE.source_code
+- "\n"
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
   input:
@@ -21,3 +27,21 @@ prompts:
     - "```\n"
     - get: CODE.source_code
     - "```\n"
+  assign: EXPLANATION
+- "\n\n\nEVALUATION:"
+- "\nThe similarity (Levenshtein) between this answer and the ground truth is: "
+- assign: EVAL
+  lan: python
+  code:
+  - |
+    import textdistance
+    expl = """
+  - get: EXPLANATION
+  - |
+    """
+    truth = """
+  - get: TRUTH
+  - |
+    """
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)
+

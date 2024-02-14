@@ -5,4 +5,5 @@ pre-commit
 pytest
 python-dotenv
 jinja2
+textdistance
 
