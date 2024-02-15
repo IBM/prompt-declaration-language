@@ -97,6 +97,9 @@ def process_block(
     output: str
     trace: pdl_ast.BlockType
     scope_init = scope
+    if len(block.defs) > 0:
+        scope, defs_trace = process_defs(log, scope, block.defs)
+        block = block.model_copy(update={"defs": defs_trace})
     match block:
         case ModelBlock():
             output, scope, trace = call_model(log, scope, block)
@@ -191,6 +194,16 @@ def process_block(
         output = ""
     scope = scope | {"context": output}
     return output, scope, trace
+
+
+def process_defs(
+    log, scope: ScopeType, defs: list[BlockType]
+) -> tuple[ScopeType, list[BlockType]]:
+    defs_trace: list[Block] = []
+    for b in defs:
+        _, scope, b_trace = process_block(log, scope, b)
+        defs_trace.append(b_trace)
+    return scope, defs_trace
 
 
 def process_prompts(

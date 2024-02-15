@@ -1,0 +1,14 @@
+description: Hello function
+defs:
+  - function: hello
+    params:
+      name: str
+    prompts:
+      - 'Hello '
+      - get: name
+        def: x
+      - '!'
+prompts:
+  - call: hello
+    args:
+      name: World

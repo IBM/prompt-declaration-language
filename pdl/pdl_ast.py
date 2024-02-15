@@ -34,6 +34,7 @@ class Block(BaseModel):
     """PDL program block"""
 
     description: Optional[str] = None
+    defs: list["BlockType"] = []
     assign: Optional[str] = None
     show_result: bool = True
     result: Optional[Any] = None
