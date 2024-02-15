@@ -131,3 +131,7 @@ dmypy.json
 log.txt
 ui/node_modules/
 ui/package-lock.json
+
+# PDL trace
+*_result.json
+*_result.yaml
