@@ -27,7 +27,7 @@ def show_result_data(show):
         "description": "Using a weather API and LLM to make a small weather app",
         "prompts": [
             {
-                "assign": "QUERY",
+                "def": "QUERY",
                 "prompts": [
                     {"lan": "python", "code": ["result = 'How can I help you?: '"]}
                 ],

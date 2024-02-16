@@ -15,7 +15,7 @@ prompts:
   - "\n"
   repeat: 2
 - 'The most important of these is '
-- assign: ITEM
+- def: ITEM
   model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
 - .

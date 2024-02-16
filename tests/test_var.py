@@ -7,7 +7,7 @@ var_data = {
     "prompts": [
         "Hello,",
         {
-            "assign": "NAME",
+            "def": "NAME",
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
@@ -35,7 +35,7 @@ code_var_data = {
     "description": "simple python",
     "prompts": [
         {
-            "assign": "I",
+            "def": "I",
             "prompts": [
                 {
                     "lan": "python",

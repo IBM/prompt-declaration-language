@@ -110,7 +110,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["call"] = block.call
             d["args"] = block.args
     if block.assign is not None:
-        d["assign"] = block.assign
+        d["def"] = block.assign
     if block.show_result is False:
         d["show_result"] = block.show_result
     if block.result is not None:

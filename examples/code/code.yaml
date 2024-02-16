@@ -2,10 +2,10 @@ description: Code explanation example
 prompts:
 - filename: examples/code/data.json
   json_content: true
-  assign: CODE
+  def: CODE
   show_result: False
 - filename: examples/code/ground_truth.txt
-  assign: TRUTH
+  def: TRUTH
   show_result: False
 - "\n"
 - get: CODE.source_code
@@ -27,10 +27,10 @@ prompts:
     - "```\n"
     - get: CODE.source_code
     - "```\n"
-  assign: EXPLANATION
+  def: EXPLANATION
 - "\n\n\nEVALUATION:"
 - "\nThe similarity (Levenshtein) between this answer and the ground truth is: "
-- assign: EVAL
+- def: EVAL
   lan: python
   code:
   - |

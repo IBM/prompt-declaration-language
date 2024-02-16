@@ -1,6 +1,6 @@
 description: Hello world!
 prompts:
 - filename: examples/input/data.txt
-  assign: HELLO
+  def: HELLO
   show_result: False
 - get: HELLO

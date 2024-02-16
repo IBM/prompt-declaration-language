@@ -2,7 +2,7 @@ description: Teaching PDL
 prompts:
 - stdin: True
   multiline: True
-  assign: QUERY
+  def: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
@@ -37,7 +37,7 @@ prompts:
 
     - get: QUERY
     - "\n\n"
-  assign: QUERY1
+  def: QUERY1
   show_result: false
 
 
@@ -119,7 +119,7 @@ prompts:
       Question: Write the following in PDL with parts << >> written in Python
     - get: QUERY1
     - "\n\n"
-  assign: PDL
+  def: PDL
   show_result: false
 
 - lan: python
@@ -140,7 +140,7 @@ prompts:
     log = []
     data = Program.model_validate(obj)
     result, _ = process_block(log, scope, "", data.root)
-  assign: RESULT
+  def: RESULT
   show_result: true
 
 - model: ibm/granite-20b-code-instruct-v1

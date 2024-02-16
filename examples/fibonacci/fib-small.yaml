@@ -1,12 +1,12 @@
 description: Fibonacci
 prompts:
-- assign: CODE
+- def: CODE
   model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
   input:
     prompts:
     - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
-- assign: N
+- def: N
   lan: python
   code:
   - | 

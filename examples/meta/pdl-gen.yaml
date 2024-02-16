@@ -12,7 +12,7 @@ prompts:
         break
       contents.append(line + "\n")
     result = ''.join(contents)
-  assign: QUERY
+  def: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
@@ -153,7 +153,7 @@ prompts:
       prompts:
       - model: "google/flan-t5-xl"
         decoding: greedy
-        assign: NAME
+        def: NAME
       ```
 
       Question: Write a PDL program with a block that has show results false
@@ -204,7 +204,7 @@ prompts:
             break
           contents.append(line + "\n")
           result = ''.join(contents)
-        assign: QUERY
+        def: QUERY
       ```
 
       Question: Write a PDL program that calls into a model with the following few-shot examples:
@@ -295,11 +295,11 @@ prompts:
         code:
         - |
           result = input("How can I help you?: ")
-        assign: QUERY
+        def: QUERY
         show_result: true
       ```
 
       Question:
     - get: QUERY
     - "\n\n"
-  assign: PDL
+  def: PDL

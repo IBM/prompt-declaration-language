@@ -8,7 +8,7 @@ prompts:
 - "So the odd one is German.\n\n"
 - prompts:
   - 'Pick the odd word out: '
-  - assign: OPTIONS
+  - def: OPTIONS
     model: ibm/granite-20b-code-instruct-v1
     decoding: argmax
     stop_sequences:

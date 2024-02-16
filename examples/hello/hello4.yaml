@@ -6,7 +6,7 @@ prompts:
   stop_sequences:
   - '!'
   include_stop_sequences: true
-  assign: NAME
+  def: NAME
 - "\n"
 - Who is
 - get: NAME

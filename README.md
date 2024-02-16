@@ -117,7 +117,7 @@ Hello, world!
 
 ### Variable Definition and Value
 
-In the following example, we store the result of the LLM call in a variable `NAME` using the `assign` field. Then value of variable is recalled using a `get` block:
+In the following example, we store the result of the LLM call in a variable `NAME` using the `def` field. Then value of variable is recalled using a `get` block:
 
 ```
 description: Hello world with variable use
@@ -128,7 +128,7 @@ prompts:
   stop_sequences:
   - '!'
   include_stop_sequences: true
-  assign: NAME
+  def: NAME
 - "\n"
 - Who is
 - get: NAME
@@ -154,7 +154,7 @@ prompts:
   stop_sequences:
   - '!'
   include_stop_sequences: true
-  assign: NAME
+  def: NAME
 - "\n"
 - Who is
 - get: NAME
@@ -207,7 +207,7 @@ PDL variables can also be fulfilled by making API calls. Consider a simple weath
   url: https://api.weatherapi.com/v1/current.json?key=XXXXXX
   input:
     get: LOCATION
-  assign: WEATHER
+  def: WEATHER
   show_result: false
 ```
 
@@ -223,7 +223,7 @@ PDL can accept textual input from a file or stdin. In the following example, the
 description: PDL code with input block
 prompts:
 - filename: examples/input/data.txt
-  assign: HELLO
+  def: HELLO
   show_result: False
 - get: HELLO
 ```
@@ -235,7 +235,7 @@ prompts:
 - "The following will prompt the user on stdin.\n"
 - stdin: True
   message: "Please provide an input: "
-  assign: STDIN
+  def: STDIN
 ```
 
 Notice that when executing this program, the stdin input is obtained first and then the entire document is printed. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
@@ -275,7 +275,7 @@ to that field inside the JSON object.
         {
             "filename": "tests/data/input.json", 
             "json_content": true, 
-            "assign": "PERSON",
+            "def": "PERSON",
             "show_result": false
         }, 
         {

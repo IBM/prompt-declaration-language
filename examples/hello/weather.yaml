@@ -1,7 +1,7 @@
 description: Using a weather API and LLM to make a small weather app
 prompts:
 - stdin: True
-  assign: QUERY
+  def: QUERY
   message: "Ask a query: "
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
@@ -21,13 +21,13 @@ prompts:
   - Question
   - What
   - '!'
-  assign: LOCATION
+  def: LOCATION
   show_result: false
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
   input:
     get: LOCATION
-  assign: WEATHER
+  def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   decoding: argmax

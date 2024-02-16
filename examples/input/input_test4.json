@@ -4,7 +4,7 @@
         {
             "filename": "tests/data/input.json",
             "json_content": true,
-            "assign": "PERSON",
+            "def": "PERSON",
             "show_result": false
         },
         {"get": "PERSON.name"},

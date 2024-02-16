@@ -27,7 +27,7 @@ model_chain_data = {
     "prompts": [
         "Hello,",
         {
-            "assign": "SOMEONE",
+            "def": "SOMEONE",
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
@@ -41,7 +41,7 @@ model_chain_data = {
         {"get": "SOMEONE"},
         "?\n",
         {
-            "assign": "RESULT",
+            "def": "RESULT",
             "prompts": [
                 {
                     "model": "google/flan-t5-xl",
@@ -77,7 +77,7 @@ multi_shot_data = {
     "description": "Hello world showing model chaining",
     "prompts": [
         {
-            "assign": "LOCATION",
+            "def": "LOCATION",
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",

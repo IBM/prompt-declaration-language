@@ -1,14 +1,14 @@
 description: Fibonacci
 prompts:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
-- assign: CODE
+- def: CODE
   model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
 - "What is the name of the function above?\n Do not include 'Answer' in the answer"
-- assign: FUNCTION
+- def: FUNCTION
   model: ibm/granite-20b-code-instruct-v1
   decoding: argmax
-- assign: N
+- def: N
   lan: python
   code:
   - "import random\n"

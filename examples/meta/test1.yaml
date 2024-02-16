@@ -16,7 +16,7 @@ prompts:
   code:
   - |
     result = input("How can I help you?: ")
-  assign: QUERY
+  def: QUERY
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
   decoding: greedy

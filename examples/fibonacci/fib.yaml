@@ -1,12 +1,12 @@
 description: Fibonacci
 prompts:
-- assign: CODE
+- def: CODE
   model: ibm/granite-20b-code-instruct-v1
   input:
     prompts:
     - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - "\nFind a random number between 1 and 20\n"
-- assign: N
+- def: N
   lan: python
   code:
   - "import random\n"
@@ -15,7 +15,7 @@ prompts:
 - "\nNow computing fib("
 - get: N
 - ")\n"
-- assign: RESULT
+- def: RESULT
   lan: python
   code:
   - get: CODE

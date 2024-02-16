@@ -408,7 +408,7 @@ def process_input(
         return output, scope, trace
 
     if block.json_content and block.assign is None:
-        msg = "If json_content is True in input block, then there must be assign field"
+        msg = "If json_content is True in input block, then there must be def field"
         error(msg)
         output = ""
         trace = ErrorBlock(msg=msg, block=block.model_copy())

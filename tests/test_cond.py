@@ -34,7 +34,7 @@ cond_data = {
             "prompts": [
                 "Question: ",
                 {
-                    "assign": "QUESTION",
+                    "def": "QUESTION",
                     "prompts": [
                         {
                             "model": "ibm/granite-20b-code-instruct-v1",
@@ -51,7 +51,7 @@ cond_data = {
                 {
                     "prompts": [
                         {
-                            "assign": "REASON_OR_CALC",
+                            "def": "REASON_OR_CALC",
                             "prompts": [
                                 {
                                     "model": "ibm/granite-20b-code-instruct-v1",
@@ -68,7 +68,7 @@ cond_data = {
                         {
                             "prompts": [
                                 {
-                                    "assign": "EXPR",
+                                    "def": "EXPR",
                                     "prompts": [
                                         {
                                             "model": "ibm/granite-20b-code-instruct-v1",
@@ -83,7 +83,7 @@ cond_data = {
                                 },
                                 "= ",
                                 {
-                                    "assign": "RESULT",
+                                    "def": "RESULT",
                                     "prompts": [
                                         {
                                             "lan": "python",
@@ -165,7 +165,7 @@ def cond_data1(show, name):
         "description": "Hello world showing call out to python code with condition",
         "prompts": [
             {
-                "assign": "NAME",
+                "def": "NAME",
                 "prompts": [
                     {
                         "lan": "python",
@@ -204,7 +204,7 @@ repeat_until_data = {
     "description": "Hello world showing call out to python code with condition",
     "prompts": [
         {
-            "assign": "I",
+            "def": "I",
             "prompts": [{"lan": "python", "code": ["result = 0"]}],
             "show_result": True,
         },
@@ -212,7 +212,7 @@ repeat_until_data = {
         {
             "prompts": [
                 {
-                    "assign": "I",
+                    "def": "I",
                     "prompts": [
                         {
                             "lan": "python",

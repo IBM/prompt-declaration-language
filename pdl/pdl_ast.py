@@ -1,6 +1,6 @@
 from typing import Any, Optional, TypeAlias
 
-from pydantic import BaseModel, ConfigDict, RootModel
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
 
@@ -35,7 +35,7 @@ class Block(BaseModel):
 
     description: Optional[str] = None
     defs: list["BlockType"] = []
-    assign: Optional[str] = None
+    assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
 

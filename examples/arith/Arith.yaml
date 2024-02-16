@@ -29,25 +29,25 @@ prompts:
 
 - prompts:
   - "\nQuestion: "
-  - assign: QUESTION
+  - def: QUESTION
     model: ibm/granite-20b-code-instruct-v1
     stop_sequences:
     - Answer
   - "Answer: Let's think step by step.\n"
   - prompts:
-    - assign: REASON_OR_CALC
+    - def: REASON_OR_CALC
       model: ibm/granite-20b-code-instruct-v1
       stop_sequences:
       - '<<'
       include_stop_sequences: true
     - prompts:
-      - assign: EXPR
+      - def: EXPR
         model: ibm/granite-20b-code-instruct-v1
         stop_sequences:
         - '='
         - "\n"
       - '= '
-      - assign: RESULT
+      - def: RESULT
         lan: python
         code:
         - 'result = '

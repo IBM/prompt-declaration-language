@@ -11,7 +11,7 @@ prompts:
 - "Where is Apple Computers headquartered?\n"
 - prompts:
   - prompts:
-    - assign: THOUGHT
+    - def: THOUGHT
       model: ibm/granite-20b-code-instruct-v1
       decoding: sample
       params:
@@ -30,7 +30,7 @@ prompts:
         arg0:
           get: THOUGHT
         arg1: 'Act:'
-  - assign: SUBJECT
+  - def: SUBJECT
     model: ibm/granite-20b-code-instruct-v1
     decoding: sample
     params:

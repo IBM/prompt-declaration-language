@@ -48,7 +48,7 @@ input_json_data = {
         {
             "filename": "tests/data/input.json",
             "json_content": True,
-            "assign": "PERSON",
+            "def": "PERSON",
             "show_result": False,
         },
         {"get": "PERSON.name"},

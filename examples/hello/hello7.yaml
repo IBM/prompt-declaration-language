@@ -6,7 +6,7 @@ prompts:
   - |
     import random
     result = random.choice([True, False])
-  assign: QUESTION
+  def: QUESTION
   show_result: false
 - prompts:
   - |

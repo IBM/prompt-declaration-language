@@ -3,4 +3,4 @@ prompts:
 - "The following will prompt the user on stdin.\n"
 - stdin: True
   prompt: "Please provide an input: "
-  assign: STDIN
+  def: STDIN

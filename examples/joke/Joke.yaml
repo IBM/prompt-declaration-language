@@ -9,7 +9,7 @@ prompts:
 - "A: Sir Cumference. END \n"
 - prompts:
   - 'Q: '
-  - assign: JOKE
+  - def: JOKE
     constraints:
     - len(words(JOKE)) < 20
     model: ibm/granite-20b-code-instruct-v1
