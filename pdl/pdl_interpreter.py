@@ -66,12 +66,11 @@ def generate(
             data = yaml.safe_load(infile)
             prog = Program.model_validate(data)
             log: list[str] = []
-            result = ""
             trace = prog.root
             try:
-                result, output, scope, trace = process_block(log, scope, prog.root)
+                _, output, scope, trace = process_block(log, scope, prog.root)
             finally:
-                print(result)
+                print(output)
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
@@ -209,12 +208,14 @@ def process_block_body(
 
 
 def process_defs(
-    log, scope: ScopeType, defs: list[BlockType]
-) -> tuple[ScopeType, list[BlockType]]:
-    defs_trace: list[Block] = []
-    for b in defs:
-        _, _, scope, b_trace = process_block(log, scope, b)
-        defs_trace.append(b_trace)
+    log, scope: ScopeType, defs: dict[str, BlockType]
+) -> tuple[ScopeType, dict[str, BlockType]]:
+    defs_trace: dict[str, Block] = {}
+    scope_init = scope
+    for x, b in defs.items():
+        result, _, _, b_trace = process_block(log, scope_init, b)
+        scope = scope | {x: result}
+        defs_trace[x] = b_trace
     return scope, defs_trace
 
 
