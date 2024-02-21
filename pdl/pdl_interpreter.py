@@ -94,18 +94,34 @@ def generate(
 def process_block(
     log, scope: ScopeType, block: BlockType
 ) -> tuple[str, ScopeType, BlockType]:
-    output: str
-    trace: pdl_ast.BlockType
-    scope_init = scope
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(log, scope, block.defs)
-        block = block.model_copy(update={"defs": defs_trace})
+    else:
+        defs_trace = block.defs
+    output, scope, trace = process_block_body(log, scope, block)
+    if block.assign is not None:
+        var = block.assign
+        scope = scope | {var: output}
+        debug("Storing model result for " + var + ": " + str(trace.result))
+    trace = trace.model_copy(update={"defs": defs_trace, "result": output})
+    if block.show_result is False:
+        output = ""
+    scope = scope | {"context": output}
+    return output, scope, trace
+
+
+def process_block_body(
+    log, scope: ScopeType, block: BlockType
+) -> tuple[str, ScopeType, BlockType]:
+    scope_init = scope
+    output: str
+    trace: pdl_ast.BlockType
     match block:
         case ModelBlock():
             output, scope, trace = call_model(log, scope, block)
         case CodeBlock(lan="python", code=code):
             output, scope, code_trace = call_python(log, scope, code)
-            trace = block.model_copy(update={"result": output, "code": code_trace})
+            trace = block.model_copy(update={"code": code_trace})
         case CodeBlock(lan=l):
             msg = f"Unsupported language: {l}"
             error(msg)
@@ -113,15 +129,15 @@ def process_block(
             trace = ErrorBlock(msg=msg, block=block.model_copy())
         case GetBlock(get=var):
             output = str(get_var(var, scope))
-            trace = block.model_copy(update={"result": output})
+            trace = block.model_copy()
         case ValueBlock(value=v):
             output = str(v)
-            trace = block.model_copy(update={"result": output})
+            trace = block.model_copy()
         case ApiBlock():
             output, scope, trace = call_api(log, scope, block)
         case SequenceBlock():
             output, scope, prompts = process_prompts(log, scope, block.prompts)
-            trace = block.model_copy(update={"result": output, "prompts": prompts})
+            trace = block.model_copy(update={"prompts": prompts})
         case IfBlock():
             b, scope, cond_trace = process_condition(log, scope, block.condition)
             scope = scope | {"context": scope_init["context"]}
@@ -129,16 +145,13 @@ def process_block(
                 output, scope, prompts = process_prompts(log, scope, block.prompts)
                 trace = block.model_copy(
                     update={
-                        "result": output,
                         "condition": cond_trace,
                         "prompts": prompts,
                     }
                 )
             else:
                 output = ""
-                trace = block.model_copy(
-                    update={"result": output, "condition": cond_trace}
-                )
+                trace = block.model_copy(update={"condition": cond_trace})
         case RepeatsBlock(repeats=n):
             output = ""
             iteration_trace: list[PromptsType] = []
@@ -150,9 +163,7 @@ def process_block(
                 )
                 output += iteration_output
                 iteration_trace.append(prompts)
-            trace = block.model_copy(
-                update={"result": output, "trace": iteration_trace}
-            )
+            trace = block.model_copy(update={"trace": iteration_trace})
         case RepeatsUntilBlock(repeats_until=cond_trace):
             stop = False
             output = ""
@@ -166,9 +177,7 @@ def process_block(
                 output += iteration_output
                 iteration_trace.append(prompts)
                 stop, scope, _ = process_condition(log, scope, cond_trace)
-            trace = block.model_copy(
-                update={"result": output, "trace": iteration_trace}
-            )
+            trace = block.model_copy(update={"trace": iteration_trace})
         case InputBlock():
             output, scope, trace = process_input(log, scope, block)
         case FunctionBlock(function=name):
@@ -177,7 +186,7 @@ def process_block(
             scope = scope | {name: closure}
             closure.scope = scope
             output = ""
-            trace = closure.model_copy(update={"result": output})
+            trace = closure.model_copy(update={})
         case CallBlock(call=f):
             closure = get_var(f, scope)
             f_body = closure.body
@@ -186,13 +195,6 @@ def process_block(
             trace = block.model_copy(update={"trace": f_trace})
         case _:
             assert False
-    if block.assign is not None:
-        var = block.assign
-        scope = scope | {var: trace.result}
-        debug("Storing model result for " + var + ": " + str(trace.result))
-    if block.show_result is False:
-        output = ""
-    scope = scope | {"context": output}
     return output, scope, trace
 
 
@@ -362,7 +364,7 @@ def call_api(
         output = str(response.json())
         debug(output)
         append_log(log, "API Output", output)
-        trace = block.model_copy(update={"result": output, "input": input_trace})
+        trace = block.model_copy(update={"input": input_trace})
     except Exception as e:
         msg = f"API error: {e}"
         error(msg)
