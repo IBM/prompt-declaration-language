@@ -156,7 +156,7 @@ assert_data = [
 def test_cond():
     log = []
     data = Program.model_validate(cond_data)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(assert_data)
 
 
@@ -189,14 +189,14 @@ def cond_data1(show, name):
 def test_cond1():
     log = []
     data = Program.model_validate(cond_data1(False, "blah"))
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""
 
 
 def test_cond2():
     log = []
     data = Program.model_validate(cond_data1(True, "acy"))
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Tracy, hello there!\n"
 
 
@@ -232,7 +232,7 @@ repeat_until_data = {
 def test_repeat_until():
     log = []
     data = Program.model_validate(repeat_until_data)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(
         [
             "0",

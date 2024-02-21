@@ -12,7 +12,7 @@ input_data = {
 def test_input_filename():
     log = []
     data = Program.model_validate(input_data)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"
 
 
@@ -25,7 +25,7 @@ input_data_error = {
 def test_input_error():
     log = []
     data = Program.model_validate(input_data_error)
-    _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)
 
 
@@ -38,7 +38,7 @@ input_data_error1 = {
 def test_input_error1():
     log = []
     data = Program.model_validate(input_data_error1)
-    _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)
 
 
@@ -67,7 +67,7 @@ input_json_data = {
 def test_input_json():
     log = []
     data = Program.model_validate(input_json_data)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert (
         document
         == "Bob lives at the following address:\n87 Smith Road in the town of Armonk NY"
@@ -89,5 +89,5 @@ input_json_data_error = {
 def test_input_json_error():
     log = []
     data = Program.model_validate(input_json_data_error)
-    _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
     assert isinstance(trace.prompts[0], ErrorBlock)

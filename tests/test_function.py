@@ -14,14 +14,14 @@ hello_call = {"description": "Call hello", "prompts": [hello_def, {"call": "hell
 def test_function_def():
     log = []
     data = Program.model_validate(hello_def)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""
 
 
 def test_function_call():
     log = []
     data = Program.model_validate(hello_call)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello world!"
 
 
@@ -42,7 +42,7 @@ hello_params = {
 def test_function_params():
     log = []
     data = Program.model_validate(hello_params)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello World!"
 
 
@@ -59,7 +59,7 @@ hello_stutter = {
 def test_function_implicit_context():
     log = []
     data = Program.model_validate(hello_stutter)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello World!\nHello World!\n"
 
 
@@ -76,5 +76,5 @@ hello_bye = {
 def test_function_explicit_context():
     log = []
     data = Program.model_validate(hello_bye)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello World!\nBye!"

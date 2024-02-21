@@ -18,7 +18,7 @@ python_data = {
 def test_python():
     log = []
     data = Program.model_validate(python_data)
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello, Tracy!\n"
 
 
@@ -40,12 +40,12 @@ def show_result_data(show):
 def test_show_result():
     log = []
     data = Program.model_validate(show_result_data(True))
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "How can I help you?: "
 
 
 def test_show_result_false():
     log = []
     data = Program.model_validate(show_result_data(False))
-    document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""
