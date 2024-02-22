@@ -208,14 +208,13 @@ def process_block_body(
 
 
 def process_defs(
-    log, scope: ScopeType, defs: dict[str, BlockType]
-) -> tuple[ScopeType, dict[str, BlockType]]:
-    defs_trace: dict[str, Block] = {}
-    scope_init = scope
-    for x, b in defs.items():
-        result, _, _, b_trace = process_block(log, scope_init, b)
+    log, scope: ScopeType, defs: dict[str, PromptType]
+) -> tuple[ScopeType, dict[str, PromptType]]:
+    defs_trace: dict[str, PromptType] = {}
+    for x, p in defs.items():
+        result, _, _, p_trace = process_prompt(log, scope, p)
         scope = scope | {x: result}
-        defs_trace[x] = b_trace
+        defs_trace[x] = p_trace
     return scope, defs_trace
 
 
