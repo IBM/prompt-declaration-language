@@ -62,8 +62,8 @@
 \newcommand{\pdlrepeats}[2]{\ensuremath{\jsobj{\mtt{prompts:}{#1}\mtt{,} \mtt{repeats:}{#2}}}}
 \newcommand{\pdlrepeatsuntil}[2]{\ensuremath{\jsobj{\mtt{prompts:}{#1}\mtt{,} \mtt{repeats\_until:}{#2}}}}
 \newcommand{\pdlinput}[1]{\ensuremath{\jsobj{\mtt{input:}{#1}}}}
-\newcommand{\pdlfunction}[2]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  {#2}}}}
-\newcommand{\pdlclosure}[3]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  {#2}, \mtt{scope:}{#3}}}}
+\newcommand{\pdlfunction}[2]{\ensuremath{\jsobj{\mtt{params:}{#1}\mtt{,}  {#2}}}}
+\newcommand{\pdlclosure}[3]{\ensuremath{\jsobj{\mtt{params:}{#1}\mtt{,}  {#2}, \mtt{scope:}{#3}}}}
 \newcommand{\pdlcall}[2]{\ensuremath{\jsobj{\mtt{call:}{#1}\mtt{,} \mtt{args:}{#2}}}}
 
 
@@ -178,21 +178,21 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 {
 }
 {\pdlsemp{S}{\jsarr{}}
-          {S}{\jsnull}{\jsstr{}}}
+          {S}{\jsarr{}}{\jsstr{}}}
 
 % Sequence one
 \inferrule%
 {\pdlsemp{S}{p}{S'}{v}{s}
 }
-{\pdlsemp{S}{\jsarr{p}}{S'}{v}{s}}
+{\pdlsemp{S}{\jsarr{p}}{S'}{\jsarr{v}}{s}}
 
 % Sequence
 \inferrule%
 {\pdlsemp{S}{p_1}{S_1}{v_1}{s_1} \\
- \pdlsemp{S_1[\mit{context} \leftarrow S(\mit{context}) + s_1]}{\mit{prompts}}{S'}{v}{s}
+ \pdlsemp{S_1[\mit{context} \leftarrow S(\mit{context}) + s_1]}{\mit{prompts}}{S'}{\mit{vs}}{s}
 }
 {\pdlsemp{S}{\jsarr{p_1, \mit{prompts}}}
-          {S'[\mit{context} \leftarrow S(\mit{context})]}{v}{s_1 + s}}
+          {S'}{\jsarr{v_1\mtt{,} \mit{vs}}}{s_1 + s}}
 
 \end{mathpar}
 
