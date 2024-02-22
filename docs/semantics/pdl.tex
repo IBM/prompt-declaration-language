@@ -193,21 +193,21 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 \begin{mathpar}
 % Model
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s} \textsc{~~OR~~} \pdlsemp{S[\mit{context}\leftarrow \jsstr{}]}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{p}{S'}{\_}{s}\\
   m(s) = v
 }
 {\pdlsembb{S}{\pdlmodel{m}{p}}{S}{v}{\pdlstr{v}}}
 
 % Code
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s} \textsc{~~OR~~} \pdlsemp{S[\mit{context}\leftarrow \jsstr{}]}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{p}{S'}{\_}{s}\\
  s \Downarrow v
 }
 {\pdlsembb{S}{\pdlcode{p}}{S}{v}{\pdlstr{v}}}
 
 % API
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s} \textsc{~~OR~~} \pdlsemp{S[\mit{context}\leftarrow \jsstr{}]}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{p}{S'}{\_}{s}\\
   \mit{url}/\mit{api}(s) = v
 }
 {\pdlsembb{S}{\pdlapi{\mit{url}}{\mit{api}}{p}}{S}{v}{\pdlstr{v}}}
