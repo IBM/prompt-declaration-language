@@ -155,20 +155,14 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 \inferrule%
 {\pdlsemp{S}{\mit{block}}{S'}{v}{s}
 }
-{\pdlsemp{S}{\pdlblockdefs{\jsobj{}}{\mit{block}}}{S}{v}{s}}
+{\pdlsemp{S}{\pdlblockdefs{\jsobj{}}{\mit{block}}}{S'}{v}{s}}
 
 % Defs
-% \inferrule%
-% {\pdlsembb{S}{b_x}{S_x}{v_x}{s_x} \\
-%  \pdlsemp{S_x[x \leftarrow v_x]}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
-% }
-% {\pdlsemp{S}{\pdlblockdefs{\jsobj{\pdldef{x}{b_x}\mtt{,} \mit{defs}}}{\mit{block}}}{S'}{v}{s}}
-
 \inferrule%
 {\pdlsembb{S}{b_x}{S_x}{v_x}{s_x} \\
- \pdlsemp{S}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
+ \pdlsemp{S[x \leftarrow v_x]}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
 }
-{\pdlsemp{S}{\pdlblockdefs{\jsobj{\pdldef{x}{b_x}\mtt{,} \mit{defs}}}{\mit{block}}}{S'[x \leftarrow v_x]}{v}{s}}
+{\pdlsemp{S}{\pdlblockdefs{\jsobj{\pdldef{x}{b_x}\mtt{,} \mit{defs}}}{\mit{block}}}{S'}{v}{s}}
 
 \end{mathpar}
 
