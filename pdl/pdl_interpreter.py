@@ -59,6 +59,7 @@ def generate(
     output: Optional[str],
 ):
     scope: ScopeType = empty_scope
+    document = ""
     if logging is None:
         logging = "log.txt"
     with open(pdl, "r", encoding="utf-8") as infile:
@@ -68,9 +69,9 @@ def generate(
             log: list[str] = []
             trace = prog.root
             try:
-                _, output, scope, trace = process_block(log, scope, prog.root)
+                _, document, scope, trace = process_block(log, scope, prog.root)
             finally:
-                print(output)
+                print(document)
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
