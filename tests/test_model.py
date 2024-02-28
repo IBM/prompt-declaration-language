@@ -8,7 +8,11 @@ model_data = {
         "Hello,",
         {
             "model": "ibm/granite-20b-code-instruct-v1",
-            "stop_sequences": ["!"],
+            "parameters": {
+                "decoding_method": "greedy",
+                "stop_sequences": ["!"],
+                "include_stop_sequence": False,
+            },
         },
         "!\n",
     ],
@@ -31,8 +35,11 @@ model_chain_data = {
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
-                    "stop_sequences": ["!"],
-                    "include_stop_sequences": False,
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["!"],
+                        "include_stop_sequence": False,
+                    },
                 }
             ],
         },
@@ -45,8 +52,11 @@ model_chain_data = {
             "prompts": [
                 {
                     "model": "google/flan-t5-xl",
-                    "decoding": "argmax",
-                    "stop_sequences": ["!"],
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["!"],
+                        "include_stop_sequence": False,
+                    },
                 }
             ],
         },
@@ -81,7 +91,6 @@ multi_shot_data = {
             "prompts": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
-                    "decoding": "argmax",
                     "input": {
                         "prompts": [
                             "Question: What is the weather in London?\n",
@@ -93,7 +102,11 @@ multi_shot_data = {
                             "Question: What is the weather in Armonk, NY?\n",
                         ]
                     },
-                    "stop_sequences": ["Question"],
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["Question"],
+                        "include_stop_sequence": False,
+                    },
                 }
             ],
             "show_result": True,

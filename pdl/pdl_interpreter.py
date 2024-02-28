@@ -7,9 +7,8 @@ from typing import Any, Literal, Optional
 import requests
 import yaml
 from dotenv import load_dotenv
+from genai.client import Client
 from genai.credentials import Credentials
-from genai.model import Model
-from genai.schemas import GenerateParams
 
 from . import pdl_ast, ui
 from .pdl_ast import (
@@ -28,6 +27,8 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     InputBlock,
+    InputFileBlock,
+    InputStdinBlock,
     ModelBlock,
     Program,
     PromptsType,
@@ -287,67 +288,40 @@ def contains(
     return result, scope, cond.model_copy(update={"arg0": arg0_trace})
 
 
+def _get_bam_client() -> Optional[Client]:
+    credentials = Credentials.from_env()
+    client = Client(credentials=credentials)
+    return client
+
+
 def call_model(
     log, scope: ScopeType, block: ModelBlock
 ) -> tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]:
-    model_input = ""
-    stop_sequences = []
-    include_stop_sequences = False
-    if block.input is not None:  # If not set to document, then input must be a block
+    if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = process_prompt(log, scope, block.input)
     else:
-        input_trace = None
-    if model_input == "":
         model_input = scope["context"]
-    if block.stop_sequences is not None:
-        stop_sequences = block.stop_sequences
-    if block.include_stop_sequences is not None:
-        include_stop_sequences = block.include_stop_sequences
-
-    if GENAI_API is None:
-        msg = "Environment variable GENAI_API must be defined"
-        error(msg)
-        trace = ErrorBlock(msg=msg, block=block.model_copy())
-        return None, "", scope, trace
-
-    if GENAI_KEY is None:
-        msg = "Environment variable GENAI_KEY must be defined"
-        error(msg)
-        trace = ErrorBlock(msg=msg, block=block.model_copy())
-        return None, "", scope, trace
-
-    creds = Credentials(GENAI_KEY, api_endpoint=GENAI_API)
-    params = None
-    if stop_sequences != []:
-        params = GenerateParams(  # pyright: ignore
-            decoding_method="greedy",
-            max_new_tokens=1000,
-            min_new_tokens=1,
-            # stream=False,
-            # temperature=1,
-            # top_k=50,
-            # top_p=1,
-            repetition_penalty=1.07,
-            include_stop_sequence=include_stop_sequences,
-            stop_sequences=stop_sequences,
-        )
-    else:
-        params = GenerateParams(  # pyright: ignore
-            decoding_method="greedy",
-            max_new_tokens=1000,
-            min_new_tokens=1,
-            # stream=False,
-            # temperature=1,
-            # top_k=50,
-            # top_p=1,
-            repetition_penalty=1.07,
-        )
+        input_trace = None
     try:
         debug("model input: " + model_input)
         append_log(log, "Model Input", model_input)
-        model = Model(block.model, params=params, credentials=creds)
-        response = model.generate([model_input])
-        gen = response[0].generated_text
+        client = _get_bam_client()
+        if client is None:
+            msg = "Fail to get a BAM client"
+            error(msg)
+            trace = ErrorBlock(
+                msg=msg, block=block.model_copy(update={"input": input_trace})
+            )
+            return None, "", scope, trace
+        response = client.text.generation.create(
+            model_id=block.model,
+            prompt_id=block.prompt_id,
+            inputs=model_input,
+            parameters=block.parameters,
+            moderations=block.moderations,
+            data=block.data,
+        )
+        gen = next(response).results[0].generated_text
         debug("model output: " + gen)
         append_log(log, "Model Output", gen)
         trace = block.model_copy(update={"result": gen, "input": input_trace})
@@ -409,25 +383,22 @@ def get_code_string(
 def process_input(
     log, scope: ScopeType, block: InputBlock
 ) -> tuple[Any, str, ScopeType, InputBlock | ErrorBlock]:
-    if (block.filename is None and block.stdin is False) or (
-        block.filename is not None and block.stdin is True
-    ):
-        msg = "Input block must have either a filename or stdin and not both"
-        error(msg)
-        trace = ErrorBlock(msg=msg, block=block.model_copy())
-        return None, "", scope, trace
-
     if block.json_content and block.assign is None:
         msg = "If json_content is True in input block, then there must be def field"
         error(msg)
         trace = ErrorBlock(msg=msg, block=block.model_copy())
         return None, "", scope, trace
 
-    if block.filename is not None:
+    if isinstance(block, InputFileBlock):
         with open(block.filename, encoding="utf-8") as f:
             s = f.read()
             append_log(log, "Input from File: " + block.filename, s)
-    else:  # block.stdin == True
+    elif isinstance(block, InputStdinBlock):
+        if block.stdin is False:
+            msg = "Input block must have either a filename or stdin set to true"
+            error(msg)
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            return None, "", scope, trace
         message = ""
         if block.message is not None:
             message = block.message
@@ -449,7 +420,8 @@ def process_input(
                 contents.append(line + "\n")
             s = "".join(contents)
             append_log(log, "Input from stdin: ", s)
-
+    else:
+        assert False
     if block.json_content and block.assign is not None:
         result = json.loads(s)
         scope = scope | {block.assign: s}

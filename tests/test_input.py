@@ -16,19 +16,6 @@ def test_input_filename():
     assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"
 
 
-input_data_error = {
-    "description": "Input block example",
-    "prompts": [{"filename": "tests/data/input_data.txt", "stdin": True}],
-}
-
-
-def test_input_error():
-    log = []
-    data = Program.model_validate(input_data_error)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
-    assert isinstance(trace.prompts[0], ErrorBlock)
-
-
 input_data_error1 = {
     "description": "Input block example",
     "prompts": [{"stdin": False}],

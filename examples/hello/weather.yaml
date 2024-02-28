@@ -5,7 +5,6 @@ prompts:
   message: "Ask a query: "
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
   input:
     prompts:
     - |-
@@ -17,10 +16,13 @@ prompts:
       Lagos
       Question: 
     - get: QUERY
-  stop_sequences:
-  - Question
-  - What
-  - '!'
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - Question
+    - What
+    - '!'
+    include_stop_sequence: false
   def: LOCATION
   show_result: false
 - api: https
@@ -30,7 +32,6 @@ prompts:
   def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
   input:
     prompts:
     - |
@@ -39,6 +40,10 @@ prompts:
     - get: WEATHER
     - |
       ```
-  stop_sequences:
-  - What
-  - '!'
+  parameters:
+    decoding_method: greedy
+    max_new_tokens: 100
+    stop_sequences:
+    - What
+    - '!'
+    include_stop_sequence: false

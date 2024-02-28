@@ -1,4 +1,4 @@
-ibm-generative-ai==0.4.1
+ibm-generative-ai==2.2.0
 requests==2.31.0
 wikipedia==1.4.0
 pre-commit

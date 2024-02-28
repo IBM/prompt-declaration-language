@@ -13,15 +13,15 @@ prompts:
   - prompts:
     - def: THOUGHT
       model: ibm/granite-20b-code-instruct-v1
-      decoding: sample
-      params:
+      parameters:
+        decoding_method: sample
         no_repeat_ngram_size: 3
-      stop_sequences:
-      - "\n"
-      - 'Act:'
-      - 'Obs:'
-      - 'Tho:'
-      include_stop_sequences: true
+        stop_sequences:
+        - "\n"
+        - 'Act:'
+        - 'Obs:'
+        - 'Tho:'
+        include_stop_sequence: true
       constraints:
       - words_len: '>2'
         not_contains: Tho
@@ -32,14 +32,15 @@ prompts:
         arg1: 'Act:'
   - def: SUBJECT
     model: ibm/granite-20b-code-instruct-v1
-    decoding: sample
-    params:
+    parameters:
+      decoding_method: sample
       no_repeat_ngram_size: 3
-    stop_sequences:
-    - "\n"
-    - Tho
-    - Act
-    - Obs
+      stop_sequences:
+      - "\n"
+      - Tho
+      - Act
+      - Obs
+      include_stop_sequence: false
   - "\n"
   - lan: python
     code:
@@ -49,14 +50,15 @@ prompts:
     - "\"\n"
     - "result = wikipedia.summary(res)\n"
   - model: ibm/granite-20b-code-instruct-v1
-    decoding: sample
-    params:
+    parameters:
+      decoding_method: sample
       no_repeat_ngram_size: 3
-    stop_sequences:
-    - "\n"
-    - Tho
-    - Act
-    - Obs
+      stop_sequences:
+      - "\n"
+      - Tho
+      - Act
+      - Obs
+      include_stop_sequence: false
   repeats_until:
     contains:
       arg0:

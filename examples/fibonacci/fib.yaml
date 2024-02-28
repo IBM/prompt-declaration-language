@@ -5,6 +5,9 @@ prompts:
   input:
     prompts:
     - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+  parameters:
+    decoding_method: greedy
+    max_new_tokens: 1024
 - "\nFind a random number between 1 and 20\n"
 - def: N
   lan: python
@@ -25,8 +28,11 @@ prompts:
   show_result: false
 - 'The result is: '
 - get: RESULT
-- "\n\n Explain what the above code does and what the result means\n\n"
+- "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-  stop_sequences:
-  - Answer
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - Answer
+    include_stop_sequence: false
+    max_new_tokens: 1024

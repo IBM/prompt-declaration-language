@@ -3,11 +3,19 @@ prompts:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - def: CODE
   model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-- "What is the name of the function above?\n Do not include 'Answer' in the answer"
+  parameters:
+    max_new_tokens: 1024
+    decoding_method: greedy
+- "What is the name of the function above?\n"
 - def: FUNCTION
   model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
+    stop_sequences: [" "]
+  input:
+    prompts:
+    - get: context
+    - "Answer: "
 - def: N
   lan: python
   code:

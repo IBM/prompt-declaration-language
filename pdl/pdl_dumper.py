@@ -14,6 +14,8 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     InputBlock,
+    InputFileBlock,
+    InputStdinBlock,
     ModelBlock,
     RepeatsBlock,
     RepeatsUntilBlock,
@@ -56,19 +58,23 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
     d: dict[str, Any] = {}
     if block.description is not None:
         d["description"] = block.description
+    if block.spec is not None:
+        d["spec"] = block.spec
     match block:
         case ModelBlock():
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = prompt_to_dict(block.input)
-            if block.decoding is not None:
-                d["decoding"] = block.decoding
-            if block.stop_sequences is not None:
-                d["stop_sequences"] = block.stop_sequences
-            if block.include_stop_sequences is True:
-                d["include_stop_sequences"] = block.include_stop_sequences
-            if block.params is not None:
-                d["params"] = block.params
+            if block.prompt_id is not None:
+                d["prompt_id"] = block.prompt_id
+            if block.parameters is not None:
+                d["parameters"] = block.parameters.model_dump_json()
+            if block.moderations is not None:
+                d["moderations"] = block.moderations
+            if block.data is True:
+                d["data"] = block.data
+            if block.constraints is not None:
+                d["constraints"] = block.constraints
         case CodeBlock():
             d["lan"] = block.lan
             d["code"] = prompts_to_dict(block.code)
@@ -83,8 +89,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case SequenceBlock():
             d["prompts"] = prompts_to_dict(block.prompts)
         case InputBlock():
-            d["filename"] = block.filename
-            d["stdin"] = block.stdin
+            if isinstance(block, InputFileBlock):
+                d["filename"] = block.filename
+            if isinstance(block, InputStdinBlock):
+                d["stdin"] = block.stdin
             d["message"] = block.message
             d["multiline"] = block.multiline
             d["json_content"] = block.json_content

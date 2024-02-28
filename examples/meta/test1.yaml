@@ -19,7 +19,8 @@ prompts:
   def: QUERY
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: greedy
+  parameters:
+    decoding_method: greedy
   input:
     prompts:
     - |-

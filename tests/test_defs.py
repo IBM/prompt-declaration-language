@@ -11,8 +11,11 @@ defs_data = {
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
                     "input": {"get": "HELLO"},
-                    "decoding": "argmax",
-                    "stop_sequences": ["!"],
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["!"],
+                        "include_stop_sequence": False,
+                    },
                 }
             ]
         },

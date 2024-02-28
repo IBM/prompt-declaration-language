@@ -11,7 +11,9 @@ prompts:
 - get: CODE.source_code
 - "\n"
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
+    max_new_tokens: 1024
   input:
     prompts:
     - |

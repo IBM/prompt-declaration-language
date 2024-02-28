@@ -3,21 +3,26 @@ prompts:
 - 'Question: '
 - def: QUESTION
   model: ibm/granite-20b-code-instruct-v1
-  stop_sequences:
-  - Answer
+  parameters:
+    stop_sequences:
+    - Answer
+    include_stop_sequence: false
 - "Answer: Let's think step by step.\n"
 - prompts:
   - def: REASON_OR_CALC
     model: ibm/granite-20b-code-instruct-v1
-    stop_sequences:
-    - '<<'
-    include_stop_sequences: true
+    parameters:
+      stop_sequences:
+      - '<<'
+      include_stop_sequence: true
   - prompts:
     - def: EXPR
       model: ibm/granite-20b-code-instruct-v1
-      stop_sequences:
-      - '='
-      - "\n"
+      parameters:
+        stop_sequences:
+        - '='
+        - "\n"
+        include_stop_sequence: false
     - '= '
     - def: RESULT
       lan: python
@@ -35,6 +40,3 @@ prompts:
       arg0:
         get: REASON_OR_CALC
       arg1: The answer is
-
-
-

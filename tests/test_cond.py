@@ -38,12 +38,12 @@ cond_data = {
                     "prompts": [
                         {
                             "model": "ibm/granite-20b-code-instruct-v1",
-                            "decoding": "argmax",
-                            "params": {
-                                "distribution_batch_size": 1,
-                                "max_length": 2048,
+                            "parameters": {
+                                "decoding_method": "greedy",
+                                "max_new_tokens": 2048,
+                                "stop_sequences": ["Answer"],
+                                "include_stop_sequence": False,
                             },
-                            "stop_sequences": ["Answer"],
                         }
                     ],
                 },
@@ -55,13 +55,12 @@ cond_data = {
                             "prompts": [
                                 {
                                     "model": "ibm/granite-20b-code-instruct-v1",
-                                    "decoding": "argmax",
-                                    "params": {
-                                        "distribution_batch_size": 1,
-                                        "max_length": 2048,
+                                    "parameters": {
+                                        "decoding_method": "greedy",
+                                        "max_new_tokens": 2048,
+                                        "stop_sequences": ["<<"],
+                                        "include_stop_sequence": True,
                                     },
-                                    "stop_sequences": ["<<"],
-                                    "include_stop_sequences": True,
                                 }
                             ],
                         },
@@ -72,12 +71,12 @@ cond_data = {
                                     "prompts": [
                                         {
                                             "model": "ibm/granite-20b-code-instruct-v1",
-                                            "decoding": "argmax",
-                                            "params": {
-                                                "distribution_batch_size": 1,
-                                                "max_length": 2048,
+                                            "parameters": {
+                                                "decoding_method": "greedy",
+                                                "max_new_tokens": 2048,
+                                                "stop_sequences": ["=", "\n"],
+                                                "include_stop_sequence": False,
                                             },
-                                            "stop_sequences": ["=", "\n"],
                                         }
                                     ],
                                 },
@@ -139,12 +138,12 @@ assert_data = [
     "Question: ",
     "\n"
     "Noah charges $10 for a large painting and $5 for a small painting.\n"
-    "Last month he sold two large paintings and six small paintings.\n"
-    "If he sold half as much this month, how much is his sales for this month?\n"
+    "Last month he sold two large paintings and three small paintings.\n"
+    "If he sold twice as much this month, how much is his sales for this month?\n"
     "\n",
     "Answer: Let's think step by step.\n",
-    "He sold 2 large paintings and 6 small paintings last month.\n"
-    "He sold half as many this month.\n"
+    "He sold 2 large paintings and 3 small paintings last month.\n"
+    "He sold twice as many this month.\n"
     "2 large paintings x $10 = <<",
     " 2*10",
     "= ",

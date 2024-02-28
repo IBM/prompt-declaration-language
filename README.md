@@ -95,17 +95,18 @@ The property `repeats_until` indicates repetition of the block until a condition
 
 ### LLM Call
 
-In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequences` if the string the stopped the generation should be part of the output.
+In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequence` if the string the stopped the generation should be part of the output.
 
 ```
 description: Hello world with a call into a model
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: greedy
-  stop_sequences:
-  - '!'
-  include_stop_sequences: true
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true
 - "\n"
 ```
 
@@ -124,10 +125,11 @@ description: Hello world with variable use
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-  stop_sequences:
-  - '!'
-  include_stop_sequences: true
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true
   def: NAME
 - "\n"
 - Who is
@@ -150,19 +152,22 @@ description: Hello world showing model chaining
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-  stop_sequences:
-  - '!'
-  include_stop_sequences: true
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true
   def: NAME
 - "\n"
 - Who is
 - get: NAME
 - "?\n"
 - model: google/flan-t5-xl
-  decoding: argmax
-  stop_sequences:
-  - '!'
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: false
 - "\n"
 ```
 
@@ -306,11 +311,7 @@ to that field inside the JSON object.
 
 ## Additional Notes and Future Work
 
-- Currently, the parameters for calling models are hard-wired to the following. In the future, we will support user-provided parameters.
-    - decoding_method="greedy",
-    - max_new_tokens=200,
-    - min_new_tokens=1,
-    - repetition_penalty=1.07
+- Currently, model blocks only support the [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface of BAM.
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
@@ -328,11 +329,13 @@ In the following example, the variable `NAME` is constrained to consist of a sin
             "var": "NAME",
             "lookup": {
                 "model": "ibm/granite-20b-code-instruct-v1",
-                "decoding": "argmax",
                 "input": "context",
-                "stop_sequences": [
-                    "!"
-                ],
+                parameters: {
+                  "decoding_method": "greedy",
+                  "stop_sequences": [
+                      "!"
+                  ],
+                }
                 "constraints": [
                     {
                         "words_len": 1

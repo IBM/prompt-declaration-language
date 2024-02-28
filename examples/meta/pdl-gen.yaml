@@ -15,7 +15,8 @@ prompts:
   def: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
   input:
     prompts:
     - |-
@@ -105,7 +106,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
       ```
 
       Question: Write a PDL script that makes a call to a model with stop sequence '!' and stop sequences included
@@ -115,10 +117,11 @@ prompts:
       description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
-        decoding: greedy
-        stop_sequences:
-        - '!'
-        include_stop_sequences: true
+        parameters:
+          decoding_method: greedy
+          stop_sequences:
+          - '!'
+          include_stop_sequence: true
       ```
 
 
@@ -129,7 +132,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
       ```
 
       Question: Write a PDL script that makes a call to a model with stop sequence '\n' and stop sequences not included
@@ -139,10 +143,11 @@ prompts:
       description: PDL with model call
       prompts:
       - model: ibm/granite-20b-code-instruct-v1
-        decoding: greedy
-        stop_sequences:
-        - '\n'
-        include_stop_sequences: false
+        parameters:
+          decoding_method: greedy
+          stop_sequences:
+          - '\n'
+          include_stop_sequence: false
       ```
 
       Question: Write a PDL script with a block that has an assignment to variable NAME
@@ -152,7 +157,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         def: NAME
       ```
 
@@ -163,7 +169,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         show_results: false
       ```
 
@@ -216,7 +223,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         input:
           prompts:
           - |-
@@ -234,7 +242,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         input:
           prompts:
           - |-
@@ -253,7 +262,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         input:
           prompts:
           - |-
@@ -274,7 +284,8 @@ prompts:
       description: PDL with model call
       prompts:
       - model: "google/flan-t5-xl"
-        decoding: greedy
+        parameters:
+          decoding_method: greedy
         input:
           prompts:
           - |-

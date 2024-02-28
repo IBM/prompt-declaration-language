@@ -13,20 +13,22 @@ prompts:
     constraints:
     - len(words(JOKE)) < 20
     model: ibm/granite-20b-code-instruct-v1
-    decoding: beam
-    params:
-      n: 3
-    stop_sequences:
-    - '?'
-    - "\n"
+    parameters:
+      decoding_method: beam
+      beam_width: 3
+      stop_sequences:
+      - '?'
+      - "\n"
+      include_stop_sequence: false
   - "\nA: "
   - model: ibm/granite-20b-code-instruct-v1
-    decoding: beam
-    params:
-      n: 3
-    stop_sequences:
-    - END
-    - "\n"
+    parameters:
+      decoding_method: beam
+      beam_width: 3
+      stop_sequences:
+      - END
+      - "\n"
+      include_stop_sequence: false
     constraints:
     - words_len: '>10'
   - "\n"

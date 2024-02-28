@@ -3,17 +3,20 @@ spec: Abstract hello world
 prompts:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
-  stop_sequences:
-  - '!'
-  include_stop_sequences: true
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: false
   def: NAME
-- "\n"
+- "!\n"
 - Who is
 - get: NAME
 - "?\n"
 - model: google/flan-t5-xl
-  decoding: argmax
-  stop_sequences:
-  - '!'
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: false
 - "\n"

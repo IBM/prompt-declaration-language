@@ -2,5 +2,6 @@ description: PDL code with input block
 prompts:
 - "The following will prompt the user on stdin.\n"
 - stdin: True
-  prompt: "Please provide an input: "
+  message: "Please provide an input: "
   def: STDIN
+- get: STDIN

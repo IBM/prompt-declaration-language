@@ -6,11 +6,13 @@ export const hello = {
         "Hello,",
         {
             "model": "ibm/granite-20b-code-instruct-v1",
-            "decoding": "greedy",
-            "stop_sequences": [
-                "!"
-            ],
-            "include_stop_sequences": true,
+            "parameters": {
+                "decoding_method": "greedy",
+                "stop_sequences": [
+                    "!"
+                ],
+                "include_stop_sequence": true,
+            },
             "result": "World!"
         },
         "\n"
@@ -42,7 +44,7 @@ export const weather = {
         ],
         "result": "Question: What is the weather in London?\nLondon\nQuestion: What's the weather in Paris?\nParis\nQuestion: Tell me the weather in Lagos?\nLagos\nQuestion: What is the weather in Madrid?"
       },
-      "decoding": "argmax",
+      "decoding_method": "greedy",
       "stop_sequences": [
         "Question",
         "What",
@@ -76,7 +78,7 @@ export const weather = {
         ],
         "result": "Explain what the weather is from the following JSON:\n```\n{'location': {'name': 'Madrid', 'region': 'Madrid', 'country': 'Spain', 'lat': 40.4, 'lon': -3.68, 'tz_id': 'Europe/Madrid', 'localtime_epoch': 1708050435, 'localtime': '2024-02-16 3:27'}, 'current': {'last_updated_epoch': 1708049700, 'last_updated': '2024-02-16 03:15', 'temp_c': 9.0, 'temp_f': 48.2, 'is_day': 0, 'condition': {'text': 'Clear', 'icon': '//cdn.weatherapi.com/weather/64x64/night/113.png', 'code': 1000}, 'wind_mph': 6.9, 'wind_kph': 11.2, 'wind_degree': 260, 'wind_dir': 'W', 'pressure_mb': 1019.0, 'pressure_in': 30.09, 'precip_mm': 0.01, 'precip_in': 0.0, 'humidity': 87, 'cloud': 0, 'feelslike_c': 6.0, 'feelslike_f': 42.9, 'vis_km': 10.0, 'vis_miles': 6.0, 'uv': 1.0, 'gust_mph': 20.7, 'gust_kph': 33.3}}```\n"
       },
-      "decoding": "argmax",
+      "decoding_method": "greedy",
       "stop_sequences": [
         "What",
         "!"

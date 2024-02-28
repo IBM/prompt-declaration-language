@@ -1,6 +1,11 @@
 from typing import Any, Optional, TypeAlias
 
-from pydantic import BaseModel, ConfigDict, Field, RootModel
+from genai.schema import (
+    ModerationParameters,
+    PromptTemplateData,
+    TextGenerationParameters,
+)
+from pydantic import BaseModel, ConfigDict, Field, InstanceOf, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
 
@@ -34,6 +39,7 @@ class Block(BaseModel):
     """PDL program block"""
 
     description: Optional[str] = None
+    spec: Any = None  # TODO
     defs: dict[str, "PromptType"] = {}
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
@@ -59,70 +65,90 @@ class FunctionBlock(Block):
 
 
 class CallBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     call: str
     args: dict[str, Any] = {}
 
 
 class ModelBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     model: str
     input: Optional["PromptType"] = None
-    decoding: Optional[str] = None
-    stop_sequences: Optional[list[str]] = None
-    include_stop_sequences: bool = False
-    params: Optional[Any] = None
+    prompt_id: Optional[str] = None
+    parameters: Optional[TextGenerationParameters] = None
+    moderations: Optional[ModerationParameters] = None
+    data: Optional[PromptTemplateData] = None
+    constraints: Any = None  # TODO
 
 
 class CodeBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     lan: str
     code: "PromptsType"
 
 
 class ApiBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     api: str
     url: str
     input: "PromptType"
 
 
 class GetBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     get: str
 
 
 class ValueBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     value: Any
 
 
 class SequenceBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     prompts: "PromptsType"
 
 
 class IfBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     prompts: "PromptsType"
     condition: ConditionType
 
 
 class RepeatsBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     prompts: "PromptsType"
     repeats: int
     trace: list["PromptsType"] = []
 
 
 class RepeatsUntilBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     prompts: "PromptsType"
     repeats_until: ConditionType
     trace: list["PromptsType"] = []
 
 
 class ErrorBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     msg: str
     block: "BlockType"
 
 
 class InputBlock(Block):
-    filename: Optional[str] = None
-    stdin: bool = False
     message: Optional[str] = None
     multiline: bool = False
     json_content: bool = False
+
+
+class InputFileBlock(InputBlock):
+    model_config = ConfigDict(extra="forbid")
+    filename: str
+
+
+class InputStdinBlock(InputBlock):
+    model_config = ConfigDict(extra="forbid")
+    stdin: bool
 
 
 BlockType: TypeAlias = (
@@ -138,8 +164,9 @@ BlockType: TypeAlias = (
     | RepeatsUntilBlock
     | SequenceBlock
     | ErrorBlock
-    | InputBlock
-    | Block
+    | InputFileBlock
+    | InputStdinBlock
+    | InstanceOf[Block]
 )
 PromptType: TypeAlias = str | BlockType  # pyright: ignore
 PromptsType: TypeAlias = list[PromptType]

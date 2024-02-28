@@ -5,7 +5,8 @@ prompts:
   def: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
   input:
     prompts:
     - |-
@@ -42,7 +43,8 @@ prompts:
 
 
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
   input:
     prompts:
     - |-
@@ -144,7 +146,8 @@ prompts:
   show_result: true
 
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: argmax
+  parameters:
+    decoding_method: greedy
   input:
     prompts:
     - get: RESULT

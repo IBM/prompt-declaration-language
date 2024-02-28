@@ -3,5 +3,6 @@ prompts:
 - |
   Q: What is the capital of France?
 - model: ibm/granite-20b-code-instruct-v1
-  decoding: greedy
+  parameters:
+    decoding_method: greedy
 spec: GraniteQuestionAnswerSpec
