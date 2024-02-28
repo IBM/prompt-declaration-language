@@ -1,7 +1,7 @@
 description: Things not to forget
 prompts:
 - 'A list of things not to forget when '
-- "travelling:\n"
+- "traveling:\n"
 - prompts:
   - '- '
   - constraints:
@@ -11,9 +11,10 @@ prompts:
       - keys
     - words_len: <=2
     model: ibm/granite-20b-code-instruct-v1
-    decoding_method: greedy
+    parameters:
+      decoding_method: greedy
   - "\n"
-  repeat: 2
+  repeats: 2
 - 'The most important of these is '
 - def: ITEM
   model: ibm/granite-20b-code-instruct-v1

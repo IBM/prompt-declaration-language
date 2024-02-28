@@ -15,7 +15,7 @@ prompts:
       model: ibm/granite-20b-code-instruct-v1
       parameters:
         decoding_method: sample
-        no_repeat_ngram_size: 3
+        # no_repeat_ngram_size: 3
         stop_sequences:
         - "\n"
         - 'Act:'
@@ -34,7 +34,7 @@ prompts:
     model: ibm/granite-20b-code-instruct-v1
     parameters:
       decoding_method: sample
-      no_repeat_ngram_size: 3
+      # no_repeat_ngram_size: 3
       stop_sequences:
       - "\n"
       - Tho
@@ -52,7 +52,7 @@ prompts:
   - model: ibm/granite-20b-code-instruct-v1
     parameters:
       decoding_method: sample
-      no_repeat_ngram_size: 3
+      # no_repeat_ngram_size: 3
       stop_sequences:
       - "\n"
       - Tho
