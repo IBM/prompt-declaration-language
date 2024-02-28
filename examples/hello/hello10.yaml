@@ -1,6 +1,6 @@
 description: Hello function
 prompts:
-  - function: hello
+  - def: hello
     params:
       name: str
     prompts:

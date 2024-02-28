@@ -190,10 +190,11 @@ def process_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case InputBlock():
             result, output, scope, trace = process_input(log, scope, block)
-        case FunctionBlock(function=name):
+        case FunctionBlock():
             _ = block.body  # Parse the body of the function
             closure = block.model_copy()
-            scope = scope | {name: closure}
+            if block.assign is not None:
+                scope = scope | {block.assign: closure}
             closure.scope = scope
             result = closure
             output = ""

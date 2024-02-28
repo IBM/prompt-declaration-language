@@ -49,8 +49,7 @@ class Block(BaseModel):
 class FunctionBlock(Block):
     model_config = ConfigDict(extra="allow")
     show_result: bool = False
-    function: str
-    params: dict[str, Any] = {}
+    params: Optional[dict[str, Any]]
     scope: Optional[ScopeType] = None
 
     _body: Optional["BlockType"] = None
@@ -59,7 +58,7 @@ class FunctionBlock(Block):
     def body(self) -> Optional["BlockType"]:
         if self._body is None and self.model_extra is not None:
             self._body = Program.model_validate(
-                {"description": f"function {self.function} body"} | self.model_extra
+                {"description": "function body"} | self.model_extra
             ).root
         return self._body
 

@@ -3,8 +3,9 @@ from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 hello_def = {
+    "def": "hello",
     "description": "Define hello",
-    "function": "hello",
+    "params": None,
     "prompts": ["Hello world!"],
 }
 
@@ -30,7 +31,7 @@ hello_params = {
     "prompts": [
         {
             "description": "Define hello",
-            "function": "hello",
+            "def": "hello",
             "params": {"name": "str"},
             "prompts": ["Hello ", {"get": "name"}, "!"],
         },
@@ -49,7 +50,7 @@ def test_function_params():
 hello_stutter = {
     "description": "Repeat the context",
     "prompts": [
-        {"function": "stutter", "get": "context"},
+        {"def": "stutter", "params": None, "get": "context"},
         "Hello World!\n",
         {"call": "stutter"},
     ],
@@ -66,7 +67,7 @@ def test_function_implicit_context():
 hello_bye = {
     "description": "Repeat the context",
     "prompts": [
-        {"function": "stutter", "get": "context"},
+        {"def": "stutter", "params": {}, "get": "context"},
         "Hello World!\n",
         {"call": "stutter", "args": {"context": "Bye!"}},
     ],

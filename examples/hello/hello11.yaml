@@ -1,7 +1,6 @@
 description: Hello function
 defs:
   hello:
-    function: _hello
     params:
       name: str
     prompts:
