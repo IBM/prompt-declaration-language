@@ -311,7 +311,12 @@ to that field inside the JSON object.
 
 ## Additional Notes and Future Work
 
-- Currently, model blocks only support the [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface of BAM.
+- Currently, model blocks support the [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface of BAM, with the exception
+that we provide some default values when the following parameters are missing:
+  - `decoding_method`: `greedy`
+  - `max_new_tokens`: 1024
+  - `min_new_tokens`: 1
+  - `repetition_penalty`: 1.07
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
