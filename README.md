@@ -21,7 +21,7 @@ pip3 install -r requirements.txt
 ```
 
 In order to run the examples that use BAM models, you need to set up 2 environment variables:
-- `GENAI_API` set to `https://bam-api.res.ibm.com/v1/`
+- `GENAI_API` set to `https://bam-api.res.ibm.com/`
 - `GENAI_KEY` set to your BAM API key. To obtain your key, go to the [BAM](https://bam.res.ibm.com/) main page. On the right and under the "Documentation" section, you will see a button to copy your API key.
 
 To run the interpreter:
