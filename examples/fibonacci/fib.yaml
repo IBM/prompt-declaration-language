@@ -32,7 +32,4 @@ prompts:
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
     decoding_method: greedy
-    stop_sequences:
-    - Answer
-    include_stop_sequence: false
     max_new_tokens: 1024

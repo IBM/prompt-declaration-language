@@ -138,12 +138,12 @@ assert_data = [
     "Question: ",
     "\n"
     "Noah charges $10 for a large painting and $5 for a small painting.\n"
-    "Last month he sold two large paintings and three small paintings.\n"
-    "If he sold twice as much this month, how much is his sales for this month?\n"
+    "Last month he sold two large paintings and six small paintings.\n"
+    "If he sold half as much this month, how much is his sales for this month?\n"
     "\n",
     "Answer: Let's think step by step.\n",
-    "He sold 2 large paintings and 3 small paintings last month.\n"
-    "He sold twice as many this month.\n"
+    "He sold 2 large paintings and 6 small paintings last month.\n"
+    "He sold half as many this month.\n"
     "2 large paintings x $10 = <<",
     " 2*10",
     "= ",

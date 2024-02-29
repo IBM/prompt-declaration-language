@@ -9,6 +9,7 @@ import yaml
 from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
+from genai.schema import DecodingMethod
 
 from . import pdl_ast, ui
 from .pdl_ast import (
@@ -44,6 +45,10 @@ from .pdl_dumper import block_to_dict, dump_yaml
 # from .pdl_dumper import dump_yaml, dumps_json, program_to_dict
 
 DEBUG = False
+
+MAX_NEW_TOKENS = 1024
+MIN_NEW_TOKENS = 1
+REPETITION_PENATLY = 1.07
 
 load_dotenv()
 GENAI_KEY = os.getenv("GENAI_KEY")
@@ -314,11 +319,20 @@ def call_model(
                 msg=msg, block=block.model_copy(update={"input": input_trace})
             )
             return None, "", scope, trace
+        params = block.parameters
+        if params is not None and params.decoding_method is None:
+            params.decoding_method = DecodingMethod.GREEDY
+        if params is not None and params.max_new_tokens is None:
+            params.max_new_tokens = MAX_NEW_TOKENS
+        if params is not None and params.min_new_tokens is None:
+            params.min_new_tokens = MIN_NEW_TOKENS
+        if params is not None and params.repetition_penalty is None:
+            params.repetition_penalty = REPETITION_PENATLY
         response = client.text.generation.create(
             model_id=block.model,
             prompt_id=block.prompt_id,
             inputs=model_input,
-            parameters=block.parameters,
+            parameters=params,
             moderations=block.moderations,
             data=block.data,
         )
