@@ -6,4 +6,4 @@ pytest
 python-dotenv
 jinja2
 textdistance
-
+pystache

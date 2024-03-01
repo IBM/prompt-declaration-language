@@ -7,9 +7,7 @@ prompts:
 - filename: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- "\n"
-- get: CODE.source_code
-- "\n"
+- "\n{{{ CODE.source_code }}}\n"
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
     decoding_method: greedy
@@ -19,31 +17,25 @@ prompts:
     - |
       Here is some info about the location of the function in the repo.
       repo: 
-    - get: CODE.repo_info.repo
-    - "\npath: "
-    - get: CODE.repo_info.path
-    - "\nFunction_name: "
-    - get: CODE.repo_info.function_name
-    - "\n\n\n"
-    - "Explain the following code:\n"
-    - "```\n"
-    - get: CODE.source_code
-    - "```\n"
+      {{{ CODE.repo_info.repo }}}
+      path: {{{ CODE.repo_info.path }}}
+      Function_name: {{{ CODE.repo_info.function_name }}}
+
+
+      Explain the following code:
+      ```
+      {{{ CODE.source_code }}}```
   def: EXPLANATION
-- "\n\n\nEVALUATION:"
-- "\nThe similarity (Levenshtein) between this answer and the ground truth is: "
+- |
+
+
+  EVALUATION:
+  The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
   lan: python
   code:
   - |
     import textdistance
-    expl = """
-  - get: EXPLANATION
-  - |
-    """
-    truth = """
-  - get: TRUTH
-  - |
-    """
+    expl = """{{{ EXPLANATION }}}"""
+    truth = """{{{ TRUTH }}}"""
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-

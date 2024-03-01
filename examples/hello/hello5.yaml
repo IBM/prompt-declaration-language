@@ -9,14 +9,12 @@ prompts:
     - '!'
     include_stop_sequence: false
   def: NAME
-- "!\n"
-- Who is
-- get: NAME
-- "?\n"
+- |+
+  !
+  Who is{{{ NAME }}}?
 - model: google/flan-t5-xl
   parameters:
     decoding_method: greedy
     stop_sequences:
     - '!'
     include_stop_sequence: false
-- "\n"

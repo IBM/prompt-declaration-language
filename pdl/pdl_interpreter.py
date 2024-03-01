@@ -2,8 +2,9 @@ import json
 import os
 import types
 from pathlib import Path
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional, TypeVar
 
+import pystache
 import requests
 import yaml
 from dotenv import load_dotenv
@@ -42,7 +43,8 @@ from .pdl_ast import (
 )
 from .pdl_dumper import block_to_dict, dump_yaml
 
-# from .pdl_dumper import dump_yaml, dumps_json, program_to_dict
+T = TypeVar("T")
+
 
 DEBUG = False
 
@@ -154,7 +156,7 @@ def process_block_body(
             output = result if isinstance(result, str) else json.dumps(result)
             trace = block.model_copy()
         case ValueBlock(value=v):
-            result = v
+            result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
             trace = block.model_copy()
         case ApiBlock():
@@ -223,9 +225,10 @@ def process_block_body(
             output = ""
             trace = closure.model_copy(update={})
         case CallBlock(call=f):
+            args = process_expr(scope, block.args)
             closure = get_var(f, scope)
             f_body = closure.body
-            f_scope = closure.scope | {"context": scope["context"]} | block.args
+            f_scope = closure.scope | {"context": scope["context"]} | args
             result, output, _, f_trace = process_block(log, f_scope, f_body)
             trace = block.model_copy(update={"trace": f_trace})
         case _:
@@ -264,15 +267,25 @@ def process_prompt(
 ) -> tuple[Any, str, ScopeType, PromptType]:
     output: str = ""
     if isinstance(prompt, str):
-        result = prompt
-        output = prompt
-        trace = prompt
-        append_log(log, "Prompt", prompt)
+        result = process_expr(scope, prompt)
+        output = result
+        trace = result
+        append_log(log, "Prompt", result)
     elif isinstance(prompt, Block):
         result, output, scope, trace = process_block(log, scope, prompt)
     else:
         assert False
     return result, output, scope, trace
+
+
+def process_expr(scope: ScopeType, e: T) -> T:
+    if isinstance(e, str):
+        return pystache.render(e, scope)
+    if isinstance(e, list):
+        return [process_expr(scope, x) for x in e]  # type: ignore
+    if isinstance(e, dict):
+        return {k: process_expr(scope, x) for k, x in e.items()}  # type: ignore
+    return e
 
 
 def process_condition(
@@ -297,8 +310,9 @@ def ends_with(
 ) -> tuple[bool, ScopeType, EndsWithArgs]:
     context_init = scope["context"]
     _, output, scope, arg0_trace = process_prompt(log, scope, cond.arg0)
+    arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
-    result = output.endswith(cond.arg1)
+    result = output.endswith(arg1)
     return result, scope, cond.model_copy(update={"arg0": arg0_trace})
 
 
@@ -307,8 +321,9 @@ def contains(
 ) -> tuple[bool, ScopeType, ContainsArgs]:
     context_init = scope["context"]
     _, output, scope, arg0_trace = process_prompt(log, scope, cond.arg0)
+    arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
-    result = cond.arg1 in output
+    result = arg1 in output
     return result, scope, cond.model_copy(update={"arg0": arg0_trace})
 
 

@@ -9,6 +9,17 @@ from pydantic import BaseModel, ConfigDict, Field, InstanceOf, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
 
+ExpressionType: TypeAlias = Any
+# (
+#     str
+#     | int
+#     | float
+#     | bool
+#     | None
+#     | list["ExpressionType"]
+#     | dict[str, "ExpressionType"]
+# )
+
 
 class ConditionExpr(BaseModel):
     result: Optional[bool] = None
@@ -16,7 +27,7 @@ class ConditionExpr(BaseModel):
 
 class EndsWithArgs(BaseModel):
     arg0: "PromptType"
-    arg1: str
+    arg1: ExpressionType
 
 
 class EndsWithCondition(ConditionExpr):
@@ -25,7 +36,7 @@ class EndsWithCondition(ConditionExpr):
 
 class ContainsArgs(BaseModel):
     arg0: "PromptType"
-    arg1: str
+    arg1: ExpressionType
 
 
 class ContainsCondition(ConditionExpr):
@@ -100,7 +111,7 @@ class GetBlock(Block):
 
 class ValueBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    value: Any
+    value: ExpressionType
 
 
 class SequenceBlock(Block):

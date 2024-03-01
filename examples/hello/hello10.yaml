@@ -4,9 +4,7 @@ prompts:
     params:
       name: str
     prompts:
-      - 'Hello '
-      - get: name
-      - '!'
+      - Hello {{{ name }}}!
   - call: hello
     args:
       name: World

@@ -10,13 +10,10 @@ prompts:
   - def: I
     lan: python
     code:
-    - 'result = '
-    - get: I
-    - ' + 1'
+    - result = {{{ I }}} + 1
     show_result: true
   - "\n"
   repeats_until:
     contains:
-      arg0:
-        get: I
+      arg0: '{{{ I }}}'
       arg1: '5'
