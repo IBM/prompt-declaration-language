@@ -1,0 +1,55 @@
+description: Arithmetic Expressions
+prompts:
+- filename: examples/arith/example1.txt
+- filename: examples/arith/example2.txt
+- prompts:
+  - "\nQuestion: "
+  - def: QUESTION
+    model: ibm/granite-20b-code-instruct-v1
+    parameters:
+      decoding_method: greedy
+      max_new_tokens: 1024
+      stop_sequences:
+      - Answer
+      include_stop_sequence: false
+  - "Answer: Let's think step by step.\n"
+  - repeats_until:
+      contains:
+        arg0:
+          get: REASON_OR_CALC
+        arg1: The answer is
+    prompts:
+    - def: REASON_OR_CALC
+      model: ibm/granite-20b-code-instruct-v1
+      parameters:
+        decoding_method: greedy
+        max_new_tokens: 1024
+        stop_sequences:
+        - '<<'
+        include_stop_sequence: true
+    - condition:
+        ends_with:
+          arg0:
+            get: REASON_OR_CALC
+          arg1: '<<'
+      prompts:
+      - def: EXPR
+        model: ibm/granite-20b-code-instruct-v1
+        parameters:
+          decoding_method: greedy
+          max_new_tokens: 1024
+          stop_sequences:
+          - '='
+          - "\n"
+          include_stop_sequence: false
+      - '= '
+      - def: RESULT
+        lan: python
+        code:
+        - 'result = '
+        - get: EXPR
+      - ' >>'
+      
+    
+  - "\n\n"
+  repeats: 3

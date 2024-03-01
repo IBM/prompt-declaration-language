@@ -177,6 +177,8 @@ def process_block_body(
                 )
                 output += iteration_output
                 iterations_trace.append(prompts)
+                if contains_error(prompts):
+                    break
             trace = block.model_copy(update={"trace": iterations_trace})
         case RepeatsUntilBlock(repeats_until=cond_trace):
             result = None
@@ -191,6 +193,8 @@ def process_block_body(
                 )
                 output += iteration_output
                 iterations_trace.append(prompts)
+                if contains_error(prompts):
+                    break
                 stop, scope, _ = process_condition(log, scope, cond_trace)
             trace = block.model_copy(update={"trace": iterations_trace})
         case InputBlock():
@@ -469,3 +473,10 @@ def debug(somestring):
 
 def error(somestring):
     print("***Error: " + somestring)
+
+
+def contains_error(prompts: PromptsType) -> bool:
+    for prompt in prompts:
+        if isinstance(prompt, ErrorBlock):
+            return True
+    return False
