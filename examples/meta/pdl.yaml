@@ -130,6 +130,7 @@ prompts:
     from pdl import pdl_ast, pdl_interpreter
     from pdl.pdl_ast import Program
     from pdl.pdl_interpreter import process_block
+    from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
     s = """'
@@ -138,20 +139,10 @@ prompts:
     '"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
-    scope = {}
     log = []
     data = Program.model_validate(obj)
-    result, _ = process_block(log, scope, "", data.root)
+    _, result, _, _ = process_block(log, empty_scope, data.root)
   def: RESULT
   show_result: true
-
-- model: ibm/granite-20b-code-instruct-v1
-  parameters:
-    decoding_method: greedy
-  input:
-    prompts:
-    - get: RESULT
-
-
 
 
