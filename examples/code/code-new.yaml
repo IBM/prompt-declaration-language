@@ -1,0 +1,28 @@
+description: Code explanation example
+defs: 
+   CODE:
+      filename: examples/code/data.json
+      json_content: true
+      def: CODE
+   EXPLANATION:
+      model: ibm/granite-20b-code-instruct-v1
+      input:
+         prompts:
+         - |
+            Here is some info about the location of the function in the repo.
+            repo: 
+         - get: CODE.repo_info.repo
+         - "\npath: "
+         - get: CODE.repo_info.path
+         - "\nFunction_name: "
+         - get: CODE.repo_info.function_name
+         - "\n\n\n"
+         - "Explain the following code:\n"
+         - "```\n"
+         - get: CODE.source_code
+         - "```\n"
+            
+
+prompts: 
+- get: CODE.source_code
+- get: EXPLANATION

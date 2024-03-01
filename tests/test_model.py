@@ -120,3 +120,24 @@ def test_multi_shot():
     data = Program.model_validate(multi_shot_data)
     _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Armonk, NY\n"
+
+
+model_data_missing_parameters = {
+    "description": "Hello world with a variable to call into a model",
+    "prompts": [
+        "Hello,\n",
+        {
+            "model": "ibm/granite-20b-code-instruct-v1",
+            "parameters": {
+                "stop_sequences": ["."],
+            },
+        },
+    ],
+}
+
+
+def test_data_missing_parameters():
+    log = []
+    data = Program.model_validate(model_data_missing_parameters)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "Hello,\n\nI am a student at the University of Toronto."

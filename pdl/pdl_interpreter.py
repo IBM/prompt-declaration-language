@@ -9,7 +9,7 @@ import yaml
 from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
-from genai.schema import DecodingMethod
+from genai.schema import DecodingMethod, TextGenerationParameters
 
 from . import pdl_ast, ui
 from .pdl_ast import (
@@ -56,6 +56,20 @@ GENAI_API = os.getenv("GENAI_API")
 
 
 empty_scope: ScopeType = {"context": ""}
+empty_text_generation_parameters = TextGenerationParameters(
+    beam_width=None,
+    max_new_tokens=None,
+    min_new_tokens=None,
+    random_seed=None,
+    repetition_penalty=None,
+    stop_sequences=None,
+    temperature=None,
+    time_limit=None,
+    top_k=None,
+    top_p=None,
+    truncate_input_tokens=None,
+    typical_p=None,
+)
 
 
 def generate(
@@ -324,13 +338,15 @@ def call_model(
             )
             return None, "", scope, trace
         params = block.parameters
-        if params is not None and params.decoding_method is None:
+        if params is None:
+            params = empty_text_generation_parameters
+        if params.decoding_method is None:
             params.decoding_method = DecodingMethod.GREEDY
-        if params is not None and params.max_new_tokens is None:
+        if params.max_new_tokens is None:
             params.max_new_tokens = MAX_NEW_TOKENS
-        if params is not None and params.min_new_tokens is None:
+        if params.min_new_tokens is None:
             params.min_new_tokens = MIN_NEW_TOKENS
-        if params is not None and params.repetition_penalty is None:
+        if params.repetition_penalty is None:
             params.repetition_penalty = REPETITION_PENATLY
         response = client.text.generation.create(
             model_id=block.model,
