@@ -10,7 +10,7 @@ import yaml
 from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
-from genai.schema import DecodingMethod, TextGenerationParameters
+from genai.schema import DecodingMethod
 
 from . import pdl_ast, ui
 from .pdl_ast import (
@@ -32,6 +32,7 @@ from .pdl_ast import (
     InputFileBlock,
     InputStdinBlock,
     ModelBlock,
+    PDLTextGenerationParameters,
     Program,
     PromptsType,
     PromptType,
@@ -58,7 +59,7 @@ GENAI_API = os.getenv("GENAI_API")
 
 
 empty_scope: ScopeType = {"context": ""}
-empty_text_generation_parameters = TextGenerationParameters(
+empty_text_generation_parameters = PDLTextGenerationParameters(
     beam_width=None,
     max_new_tokens=None,
     min_new_tokens=None,
@@ -367,7 +368,7 @@ def call_model(
             model_id=block.model,
             prompt_id=block.prompt_id,
             inputs=model_input,
-            parameters=params,
+            parameters=params.__dict__,
             moderations=block.moderations,
             data=block.data,
         )

@@ -49,6 +49,7 @@ ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
 class Block(BaseModel):
     """PDL program block"""
 
+    model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
     spec: Any = None  # TODO
     defs: dict[str, "PromptType"] = {}
@@ -80,12 +81,16 @@ class CallBlock(Block):
     args: dict[str, Any] = {}
 
 
+class PDLTextGenerationParameters(TextGenerationParameters):
+    model_config = ConfigDict(extra="forbid")
+
+
 class ModelBlock(Block):
     model_config = ConfigDict(extra="forbid")
     model: str
     input: Optional["PromptType"] = None
     prompt_id: Optional[str] = None
-    parameters: Optional[TextGenerationParameters] = None
+    parameters: Optional[PDLTextGenerationParameters] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
