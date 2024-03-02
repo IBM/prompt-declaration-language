@@ -1,7 +1,7 @@
 # from pdl.pdl.pdl_ast import ErrorBlock  # pyright: ignore
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ignore
 
 hello = {
     "description": "Hello world!",
@@ -95,25 +95,24 @@ def test_repeat_nested3():
     repeat_nested(3)
 
 
-# repeat_data_error = {
-#    "description": "Hello world with variable use",
-#    "prompts": [
-#        "Hello,",
-#        {
-#            "model": "ibm/granite-20b-code-instruct-v",
-#            "def": "NAME"
-#        },
-#    ],
-#    "repeats": 3
-# }
+repeat_data_error = {
+    "description": "Hello world with variable use",
+    "prompts": [
+        "Hello,",
+        {"model": "ibm/granite-20b-code-instruct-v", "def": "NAME"},
+    ],
+    "repeats": 3,
+}
 
-# def test_repeat_error():
-#    log = []
-#    data = Program.model_validate(repeat_data_error)
-#    _, _, _, trace = process_block(log, empty_scope, data.root)
-#    errors = 0
-#    for p in trace.prompts:
-#        if isinstance(p, ErrorBlock):
-#            errors += 1
-#
-#    assert errors == 1
+
+def test_repeat_error():
+    log = []
+    data = Program.model_validate(repeat_data_error)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
+    errors = 0
+    print(trace)
+    for prompts in trace.trace:
+        if contains_error(prompts):
+            errors += 1
+
+    assert errors == 1
