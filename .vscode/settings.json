@@ -1,8 +1,5 @@
 {
     "yaml.schemas": {
-        "file:///Users/mvaziri/ai4code/pdl/schema.json": [
-            "file:///Users/mvaziri/ai4code/pdl/examples/hello/hello4.yaml",
-            "file:///Users/mvaziri/ai4code/pdl/examples/hello/hello.yaml"
-        ]
+        "./pdl-schema.json": "*.yaml"
     }
 }

@@ -32,6 +32,7 @@ python3 -m pdl.pdl <path/to/example.yaml>
 
 The folder `examples` contains some examples of PDL scripts. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
 
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema. This enables the editor to give errors when the yaml deviates from the schema and provides code completion. *Notice that the error messages given in the VS Code editor are more precise than the output of the interpreter when a YAML is ill-formed.*
 
 The following section is an introduction to PDL.
 
