@@ -627,8 +627,7 @@
           "title": "Arg0"
         },
         "arg1": {
-          "title": "Arg1",
-          "type": "string"
+          "title": "Arg1"
         }
       },
       "required": [
@@ -726,8 +725,7 @@
           "title": "Arg0"
         },
         "arg1": {
-          "title": "Arg1",
-          "type": "string"
+          "title": "Arg1"
         }
       },
       "required": [
