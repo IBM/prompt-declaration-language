@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
 from genai.schema import DecodingMethod
+from pydantic import ValidationError
 
 from . import pdl_ast, ui
 from .pdl_ast import (
@@ -87,31 +88,39 @@ def generate(
         logging = "log.txt"
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
-            data = yaml.safe_load(infile)
-            prog = Program.model_validate(data)
             log: list[str] = []
-            trace = prog.root
+            data = yaml.safe_load(infile)
+            trace = None
             try:
+                prog = Program.model_validate(data)
+                trace = prog.root
                 _, document, scope, trace = process_block(log, scope, prog.root)
+            except ValidationError:
+                print("Invalid yaml")
+                with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
+                    schema = json.load(schemafile)
+                    defs = schema["$defs"]
+                    analyze_errors(defs, schema, data)
             finally:
                 print(document)
                 print("\n")
                 for prompt in log:
                     logfile.write(prompt)
-                if mode == "html":
-                    if output is None:
-                        output = str(Path(pdl).with_suffix("")) + "_result.html"
-                    ui.render(trace, output)
-                if mode == "json":
-                    if output is None:
-                        output = str(Path(pdl).with_suffix("")) + "_result.json"
-                    with open(output, "w", encoding="utf-8") as fp:
-                        json.dump(block_to_dict(trace), fp)
-                if mode == "yaml":
-                    if output is None:
-                        output = str(Path(pdl).with_suffix("")) + "_result.yaml"
-                    with open(output, "w", encoding="utf-8") as fp:
-                        dump_yaml(block_to_dict(trace), stream=fp)
+                if trace is not None:
+                    if mode == "html":
+                        if output is None:
+                            output = str(Path(pdl).with_suffix("")) + "_result.html"
+                        ui.render(trace, output)
+                    if mode == "json":
+                        if output is None:
+                            output = str(Path(pdl).with_suffix("")) + "_result.json"
+                        with open(output, "w", encoding="utf-8") as fp:
+                            json.dump(block_to_dict(trace), fp)
+                    if mode == "yaml":
+                        if output is None:
+                            output = str(Path(pdl).with_suffix("")) + "_result.yaml"
+                        with open(output, "w", encoding="utf-8") as fp:
+                            dump_yaml(block_to_dict(trace), stream=fp)
 
 
 def process_block(
@@ -512,3 +521,161 @@ def contains_error(prompts: PromptsType) -> bool:
         if isinstance(prompt, ErrorBlock):
             return True
     return False
+
+
+def is_base_type(schema):
+    if "type" in schema:
+        the_type = schema["type"]
+        if the_type in set(["string", "boolean", "integer", "number", "null"]):
+            return True
+    if "enum" in schema:
+        return True
+    return False
+
+
+def is_array(schema):
+    if "type" in schema:
+        return schema["type"] == "array"
+    return False
+
+
+def is_object(schema):
+    if "type" in schema:
+        return schema["type"] == "object"
+    return False
+
+
+def is_any_of(schema):
+    if "anyOf" in schema:
+        return True
+    return False
+
+
+def nullable(schema):
+    if "anyOf" in schema:
+        for item in schema["anyOf"]:
+            if "type" in item and item["type"] == "null":
+                return True
+    return False
+
+
+def get_non_null_type(schema):
+    if "anyOf" in schema and len(schema["anyOf"]) == 2:
+        for item in schema["anyOf"]:
+            if "type" not in item or "type" in item and item["type"] != "null":
+                return item
+    return None
+
+
+json_types_convert = {
+    "null": "None",
+    "string": str,
+    "boolean": bool,
+    "integer": int,
+    "number": float,
+    "array": list,
+    "object": dict,
+}
+
+
+def convert_to_json_type(a_type):
+    for k, v in json_types_convert.items():
+        if a_type == v:
+            return k
+    return None
+
+
+def match(ref_type, data):
+    # if "required" in ref_type.keys():
+    # required_fields = ref_type["required"]
+    all_fields = ref_type["properties"].keys()
+    intersection = list(set(data.keys()) & set(all_fields))
+    return len(intersection)
+
+
+def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
+    if schema == {}:
+        return  # anything matches type Any
+
+    if is_base_type(schema):
+        if "type" in schema:
+            the_type = json_types_convert[schema["type"]]
+            if not isinstance(data, the_type):
+                print("Error0: " + str(data) + " should be of type " + the_type)
+        if "enum" in schema:
+            if data not in schema["enum"]:
+                print(
+                    "Error: " + str(data) + " should be one of: " + str(schema["enum"])
+                )
+
+    elif "$ref" in schema:
+        ref_string = schema["$ref"].split("/")[2]
+        ref_type = defs[ref_string]
+        analyze_errors(defs, ref_type, data)
+
+    elif is_array(schema):
+        if not isinstance(data, list):
+            print("Error: " + str(data) + " should be a list")
+        else:
+            for item in data:
+                analyze_errors(defs, schema["items"], item)
+
+    elif is_object(schema):
+        if not isinstance(data, dict):
+            print("Error: " + str(data) + " should be an object")
+        else:
+            if "required" in schema.keys():
+                required_fields = schema["required"]
+                for missing in list(set(required_fields) - set(data.keys())):
+                    print("Error: Missing required field: " + missing)
+            all_fields = schema["properties"].keys()
+            extras = list(set(data.keys()) - set(all_fields))
+            if schema["additionalProperties"] is False:
+                for field in extras:
+                    print("Error: Field not allowed: " + field)
+
+            valid_fields = list(set(all_fields) & set(data.keys()))
+            for field in valid_fields:
+                analyze_errors(defs, schema["properties"][field], data[field])
+
+    elif is_any_of(schema):
+        if len(schema["anyOf"]) == 2 and nullable(schema):
+            analyze_errors(defs, get_non_null_type(schema), data)
+
+        elif not isinstance(data, dict) and not isinstance(data, list):
+            the_type = convert_to_json_type(type(data))
+            the_type_exists = False
+            for item in schema["anyOf"]:
+                if "type" in item and item["type"] == the_type:
+                    the_type_exists = True
+                if "enum" in item and data in item["enum"]:
+                    the_type_exists = True
+            if not the_type_exists:
+                print("Error1: " + str(data) + " should be of type " + str(schema))
+
+        elif isinstance(data, list):  # TODO: missing case here!!!
+            print("Error: " + str(data) + " should not be a list")
+
+        elif isinstance(data, dict):
+            match_ref = {}
+            highest_match = 0
+            for item in schema["anyOf"]:
+                field_matches = 0
+                if "type" in item and item["type"] == "object":
+                    field_matches = match(item, data)
+                    if field_matches > highest_match:
+                        highest_match = field_matches
+                        match_ref = item
+                if "$ref" in item:
+                    ref_string = item["$ref"].split("/")[2]
+                    ref_type = defs[ref_string]
+                    field_matches = match(ref_type, data)
+                    if field_matches > highest_match:
+                        highest_match = field_matches
+                        match_ref = ref_type
+
+            if match_ref == {}:
+                print("Error2: " + str(data) + " should be of type: " + str(schema))
+
+            else:
+                analyze_errors(defs, match_ref, data)
