@@ -43,6 +43,7 @@ from .pdl_ast import (
     SequenceBlock,
     ValueBlock,
 )
+from .pdl_ast_utils import iter_block_children, iter_prompts
 from .pdl_dumper import block_to_dict, dump_yaml
 
 T = TypeVar("T")
@@ -517,10 +518,16 @@ def error(somestring):
 
 
 def contains_error(prompts: PromptsType) -> bool:
-    for prompt in prompts:
-        if isinstance(prompt, ErrorBlock):
-            return True
-    return False
+    def raise_on_error(block):
+        if isinstance(block, ErrorBlock):
+            raise StopIteration
+        iter_block_children(raise_on_error, block)
+
+    try:
+        iter_prompts(raise_on_error, prompts)
+        return False
+    except StopIteration:
+        return True
 
 
 def is_base_type(schema):
