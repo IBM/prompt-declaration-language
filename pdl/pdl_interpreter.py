@@ -601,7 +601,7 @@ def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
         if "type" in schema:
             the_type = json_types_convert[schema["type"]]
             if not isinstance(data, the_type):
-                print("Error0: " + str(data) + " should be of type " + the_type)
+                print("Error0: " + str(data) + " should be of type " + str(the_type))
         if "enum" in schema:
             if data not in schema["enum"]:
                 print(
@@ -630,7 +630,10 @@ def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
                     print("Error: Missing required field: " + missing)
             all_fields = schema["properties"].keys()
             extras = list(set(data.keys()) - set(all_fields))
-            if schema["additionalProperties"] is False:
+            if (
+                "additionalProperties" in schema
+                and schema["additionalProperties"] is False
+            ):
                 for field in extras:
                     print("Error: Field not allowed: " + field)
 
