@@ -4,11 +4,11 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 var_data = {
     "description": "Hello world with variable use",
-    "prompts": [
+    "document": [
         "Hello,",
         {
             "def": "NAME",
-            "prompts": [
+            "document": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
                     "parameters": {
@@ -36,10 +36,10 @@ def test_var():
 
 code_var_data = {
     "description": "simple python",
-    "prompts": [
+    "document": [
         {
             "def": "I",
-            "prompts": [
+            "document": [
                 {
                     "lan": "python",
                     "code": ["result = 0"],

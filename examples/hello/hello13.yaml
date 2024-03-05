@@ -1,5 +1,5 @@
 description: Inline variable
 defs:
   name: World
-prompts:
+document:
   - Hello {{ name }}!

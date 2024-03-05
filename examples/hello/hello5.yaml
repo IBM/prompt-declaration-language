@@ -1,6 +1,6 @@
 description: Hello world showing model chaining
 spec: Abstract hello world
-prompts:
+document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
   parameters:

@@ -4,7 +4,7 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 python_data = {
     "description": "Hello world showing call out to python code",
-    "prompts": [
+    "document": [
         "Hello, ",
         {
             "lan": "python",
@@ -25,10 +25,10 @@ def test_python():
 def show_result_data(show):
     return {
         "description": "Using a weather API and LLM to make a small weather app",
-        "prompts": [
+        "document": [
             {
                 "def": "QUERY",
-                "prompts": [
+                "document": [
                     {"lan": "python", "code": ["result = 'How can I help you?: '"]}
                 ],
                 "show_result": show,

@@ -1,6 +1,6 @@
 {
     "description": "Input block example with json input from stdin",
-    "prompts": [
+    "document": [
         {
             "stdin": true, 
             "json_content": true, 

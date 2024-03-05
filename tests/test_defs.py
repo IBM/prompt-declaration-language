@@ -7,7 +7,7 @@ defs_data = {
     "defs": {
         "HELLO": "Hello,",
         "NAME": {
-            "prompts": [
+            "document": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
                     "input": {"get": "HELLO"},
@@ -20,7 +20,7 @@ defs_data = {
             ]
         },
     },
-    "prompts": [
+    "document": [
         {"get": "HELLO"},
         {"get": "NAME"},
         "!\n",
@@ -40,9 +40,9 @@ defs_chain_data = {
     "defs": {
         "X": {"value": "a"},
         "Y": {"value": "b"},
-        "Z": {"prompts": [{"get": "X"}, {"get": "Y"}, "c"]},
+        "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
     },
-    "prompts": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
+    "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
 }
 
 

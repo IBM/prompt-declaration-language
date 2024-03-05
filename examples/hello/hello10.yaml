@@ -1,9 +1,9 @@
 description: Hello function
-prompts:
+document:
   - def: hello
     params:
       name: str
-    prompts:
+    document:
       - Hello {{{ name }}}!
   - call: hello
     args:

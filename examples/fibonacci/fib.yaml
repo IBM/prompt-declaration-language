@@ -1,9 +1,9 @@
 description: Fibonacci
-prompts:
+document:
 - def: CODE
   model: ibm/granite-20b-code-instruct-v1
   input:
-    prompts:
+    document:
     - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
   parameters:
     decoding_method: greedy

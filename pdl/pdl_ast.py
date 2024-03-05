@@ -121,25 +121,25 @@ class ValueBlock(Block):
 
 class SequenceBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    prompts: "PromptsType"
+    document: "PromptsType"
 
 
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    prompts: "PromptsType"
+    document: "PromptsType"
     condition: ConditionType
 
 
 class RepeatsBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    prompts: "PromptsType"
+    document: "PromptsType"
     repeats: int
     trace: list["PromptsType"] = []
 
 
 class RepeatsUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    prompts: "PromptsType"
+    document: "PromptsType"
     repeats_until: ConditionType
     trace: list["PromptsType"] = []
 

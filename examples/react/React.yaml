@@ -1,5 +1,5 @@
 description: Interactive ReAct
-prompts:
+document:
 - "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?\n"
 - "Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...\n"
 - "Act: Search 'Colorado orogeny'\n"
@@ -9,8 +9,8 @@ prompts:
 - "Act: Finish '1,800 to 7,000 ft'\n"
 - "\n"
 - "Where is Apple Computers headquartered?\n"
-- prompts:
-  - prompts:
+- document:
+  - document:
     - def: THOUGHT
       model: ibm/granite-20b-code-instruct-v1
       parameters:

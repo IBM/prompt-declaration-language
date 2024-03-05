@@ -4,7 +4,7 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
-    "prompts": [
+    "document": [
         "Hello,",
         {
             "model": "ibm/granite-20b-code-instruct-v1",
@@ -28,11 +28,11 @@ def test_model():
 
 model_chain_data = {
     "description": "Hello world showing model chaining",
-    "prompts": [
+    "document": [
         "Hello,",
         {
             "def": "SOMEONE",
-            "prompts": [
+            "document": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
                     "parameters": {
@@ -49,7 +49,7 @@ model_chain_data = {
         "?\n",
         {
             "def": "RESULT",
-            "prompts": [
+            "document": [
                 {
                     "model": "google/flan-t5-xl",
                     "parameters": {
@@ -85,14 +85,14 @@ def test_model_chain():
 
 multi_shot_data = {
     "description": "Hello world showing model chaining",
-    "prompts": [
+    "document": [
         {
             "def": "LOCATION",
-            "prompts": [
+            "document": [
                 {
                     "model": "ibm/granite-20b-code-instruct-v1",
                     "input": {
-                        "prompts": [
+                        "document": [
                             "Question: What is the weather in London?\n",
                             "London\n",
                             "Question: What's the weather in Paris?\n",
@@ -124,7 +124,7 @@ def test_multi_shot():
 
 model_data_missing_parameters = {
     "description": "Hello world with a variable to call into a model",
-    "prompts": [
+    "document": [
         "Hello,\n",
         {
             "model": "ibm/granite-20b-code-instruct-v1",

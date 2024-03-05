@@ -1,5 +1,5 @@
 description: Earth circumference question
-prompts:
+document:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
 - def: EXPERT
   model: ibm/granite-20b-code-instruct-v1

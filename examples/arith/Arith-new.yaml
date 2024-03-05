@@ -1,8 +1,8 @@
 description: Arithmetic Expressions
-prompts:
+document:
 - filename: examples/arith/example1.txt
 - filename: examples/arith/example2.txt
-- prompts:
+- document:
   - "\nQuestion: "
   - def: QUESTION
     model: ibm/granite-20b-code-instruct-v1
@@ -18,7 +18,7 @@ prompts:
         arg0:
           get: REASON_OR_CALC
         arg1: The answer is
-    prompts:
+    document:
     - def: REASON_OR_CALC
       model: ibm/granite-20b-code-instruct-v1
       parameters:
@@ -32,7 +32,7 @@ prompts:
           arg0:
             get: REASON_OR_CALC
           arg1: '<<'
-      prompts:
+      document:
       - def: EXPR
         model: ibm/granite-20b-code-instruct-v1
         parameters:

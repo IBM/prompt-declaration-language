@@ -1,12 +1,12 @@
 description: Using a weather API and LLM to make a small weather app
-prompts:
+document:
 - stdin: True
   def: QUERY
   message: "Ask a query: "
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
   input:
-    prompts:
+    document:
     - |-
       Question: What is the weather in London?
       London

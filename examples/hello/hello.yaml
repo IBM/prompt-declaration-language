@@ -1,4 +1,4 @@
 description: Hello world!
-prompts:
+document:
 - "Hello, world!\n"
 - "This is your first prompt descriptor!\n"

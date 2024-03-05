@@ -44,14 +44,14 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case ValueBlock():
             pass
         case SequenceBlock():
-            iter_prompts(f, block.prompts)
+            iter_prompts(f, block.document)
         case IfBlock():
             iter_condition(f, block.condition)
-            iter_prompts(f, block.prompts)
+            iter_prompts(f, block.document)
         case RepeatsBlock():
-            iter_prompts(f, block.prompts)
+            iter_prompts(f, block.document)
         case RepeatsUntilBlock():
-            iter_prompts(f, block.prompts)
+            iter_prompts(f, block.document)
             iter_condition(f, block.repeats_until)
         case ErrorBlock():
             f(block.block)

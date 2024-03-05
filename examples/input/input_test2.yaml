@@ -1,5 +1,5 @@
 description: Hello world!
-prompts:
+document:
 - "A multiline stdin input.\n"
 - stdin: True
   multiline: True

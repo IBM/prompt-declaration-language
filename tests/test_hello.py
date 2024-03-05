@@ -5,14 +5,14 @@ from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ig
 
 hello = {
     "description": "Hello world!",
-    "prompts": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
+    "document": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
 }
 
 
 def repeat_data(n):
     return {
         "description": "Hello world with a nested block",
-        "prompts": [
+        "document": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
         ],
@@ -23,10 +23,10 @@ def repeat_data(n):
 def nested_repeat_data(n):
     return {
         "description": "Hello world with a nested block",
-        "prompts": [
+        "document": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
-            {"prompts": ["This sentence repeats!\n"], "repeats": n},
+            {"document": ["This sentence repeats!\n"], "repeats": n},
         ],
     }
 
@@ -97,7 +97,7 @@ def test_repeat_nested3():
 
 repeat_data_error = {
     "description": "Hello world with variable use",
-    "prompts": [
+    "document": [
         "Hello,",
         {"model": "ibm/granite-20b-code-instruct-v", "def": "NAME"},
     ],
@@ -111,8 +111,8 @@ def test_repeat_error():
     _, _, _, trace = process_block(log, empty_scope, data.root)
     errors = 0
     print(trace)
-    for prompts in trace.trace:
-        if contains_error(prompts):
+    for document in trace.trace:
+        if contains_error(document):
             errors += 1
 
     assert errors == 1

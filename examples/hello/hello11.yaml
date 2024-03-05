@@ -3,9 +3,9 @@ defs:
   hello:
     params:
       name: str
-    prompts:
+    document:
       - Hello {{{ name }}}!
-prompts:
+document:
   - call: hello
     args:
       name: World

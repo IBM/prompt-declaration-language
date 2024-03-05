@@ -6,10 +6,10 @@ hello_def = {
     "def": "hello",
     "description": "Define hello",
     "params": None,
-    "prompts": ["Hello world!"],
+    "document": ["Hello world!"],
 }
 
-hello_call = {"description": "Call hello", "prompts": [hello_def, {"call": "hello"}]}
+hello_call = {"description": "Call hello", "document": [hello_def, {"call": "hello"}]}
 
 
 def test_function_def():
@@ -28,12 +28,12 @@ def test_function_call():
 
 hello_params = {
     "description": "Call hello",
-    "prompts": [
+    "document": [
         {
             "description": "Define hello",
             "def": "hello",
             "params": {"name": "str"},
-            "prompts": ["Hello ", {"get": "name"}, "!"],
+            "document": ["Hello ", {"get": "name"}, "!"],
         },
         {"call": "hello", "args": {"name": "World"}},
     ],
@@ -49,7 +49,7 @@ def test_function_params():
 
 hello_stutter = {
     "description": "Repeat the context",
-    "prompts": [
+    "document": [
         {"def": "stutter", "params": None, "get": "context"},
         "Hello World!\n",
         {"call": "stutter"},
@@ -66,7 +66,7 @@ def test_function_implicit_context():
 
 hello_bye = {
     "description": "Repeat the context",
-    "prompts": [
+    "document": [
         {"def": "stutter", "params": {}, "get": "context"},
         "Hello World!\n",
         {"call": "stutter", "args": {"context": "Bye!"}},

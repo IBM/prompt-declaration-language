@@ -1,5 +1,5 @@
 description: PDL code with input block
-prompts:
+document:
 - "The following will prompt the user on stdin.\n"
 - stdin: True
   message: "Please provide an input: "

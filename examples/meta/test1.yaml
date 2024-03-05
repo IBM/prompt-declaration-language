@@ -11,7 +11,7 @@
 # "the time is 11:00 am EST"
 # EST
 description: Using a weather API and LLM to make a small weather app
-prompts:
+document:
 - lan: python
   code:
   - |
@@ -22,7 +22,7 @@ prompts:
   parameters:
     decoding_method: greedy
   input:
-    prompts:
+    document:
     - |-
       I live in New York so EST time
       EST

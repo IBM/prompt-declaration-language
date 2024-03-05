@@ -5,7 +5,7 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 input_data = {
     "description": "Input block example",
-    "prompts": [{"filename": "tests/data/input_data.txt"}],
+    "document": [{"filename": "tests/data/input_data.txt"}],
 }
 
 
@@ -18,7 +18,7 @@ def test_input_filename():
 
 input_data_error1 = {
     "description": "Input block example",
-    "prompts": [{"stdin": False}],
+    "document": [{"stdin": False}],
 }
 
 
@@ -26,12 +26,12 @@ def test_input_error1():
     log = []
     data = Program.model_validate(input_data_error1)
     _, _, _, trace = process_block(log, empty_scope, data.root)
-    assert isinstance(trace.prompts[0], ErrorBlock)
+    assert isinstance(trace.document[0], ErrorBlock)
 
 
 input_json_data = {
     "description": "Input block example with json input",
-    "prompts": [
+    "document": [
         {
             "filename": "tests/data/input.json",
             "json_content": True,
@@ -63,7 +63,7 @@ def test_input_json():
 
 input_json_data_error = {
     "description": "Input block example with json input",
-    "prompts": [
+    "document": [
         {
             "filename": "tests/data/input1.json",
             "json_content": True,
@@ -77,4 +77,4 @@ def test_input_json_error():
     log = []
     data = Program.model_validate(input_json_data_error)
     _, _, _, trace = process_block(log, empty_scope, data.root)
-    assert isinstance(trace.prompts[0], ErrorBlock)
+    assert isinstance(trace.document[0], ErrorBlock)

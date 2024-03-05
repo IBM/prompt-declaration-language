@@ -1,5 +1,5 @@
 description: Code explanation example
-prompts:
+document:
 - filename: examples/code/data.json
   json_content: true
   def: CODE
@@ -13,7 +13,7 @@ prompts:
     decoding_method: greedy
     max_new_tokens: 1024
   input:
-    prompts:
+    document:
     - |
       Here is some info about the location of the function in the repo.
       repo: 

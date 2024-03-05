@@ -1,5 +1,5 @@
 description: I ate 42 apples! How many was that?
-prompts:
+document:
 - "I ate "
 - lan: python
   code:

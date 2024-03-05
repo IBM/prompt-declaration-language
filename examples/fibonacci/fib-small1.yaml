@@ -1,5 +1,5 @@
 description: Fibonacci
-prompts:
+document:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - def: CODE
   model: ibm/granite-20b-code-instruct-v1
@@ -13,7 +13,7 @@ prompts:
     decoding_method: greedy
     stop_sequences: [" "]
   input:
-    prompts:
+    document:
     - get: context
     - "Answer: "
 - def: N

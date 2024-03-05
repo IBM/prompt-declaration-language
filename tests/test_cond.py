@@ -4,7 +4,7 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 cond_data = {
     "description": "Arithmetic Expressions",
-    "prompts": [
+    "document": [
         "Question: Noah charges $60 for a large painting and $30 for a small painting.\n",
         "Last month he sold eight large paintings and four small paintings.\n",
         "If he sold twice as much this month, how much is his sales for this month?\n",
@@ -31,11 +31,11 @@ cond_data = {
         "Therefore he sold << 180*3= 540 >> this month.\n",
         "The answer is $540.\n\n",
         {
-            "prompts": [
+            "document": [
                 "Question: ",
                 {
                     "def": "QUESTION",
-                    "prompts": [
+                    "document": [
                         {
                             "model": "ibm/granite-20b-code-instruct-v1",
                             "parameters": {
@@ -49,10 +49,10 @@ cond_data = {
                 },
                 "Answer: Let's think step by step.\n",
                 {
-                    "prompts": [
+                    "document": [
                         {
                             "def": "REASON_OR_CALC",
-                            "prompts": [
+                            "document": [
                                 {
                                     "model": "ibm/granite-20b-code-instruct-v1",
                                     "parameters": {
@@ -65,10 +65,10 @@ cond_data = {
                             ],
                         },
                         {
-                            "prompts": [
+                            "document": [
                                 {
                                     "def": "EXPR",
-                                    "prompts": [
+                                    "document": [
                                         {
                                             "model": "ibm/granite-20b-code-instruct-v1",
                                             "parameters": {
@@ -83,7 +83,7 @@ cond_data = {
                                 "= ",
                                 {
                                     "def": "RESULT",
-                                    "prompts": [
+                                    "document": [
                                         {
                                             "lan": "python",
                                             "code": ["result = ", {"get": "EXPR"}],
@@ -162,10 +162,10 @@ def test_cond():
 def cond_data1(show, name):
     return {
         "description": "Hello world showing call out to python code with condition",
-        "prompts": [
+        "document": [
             {
                 "def": "NAME",
-                "prompts": [
+                "document": [
                     {
                         "lan": "python",
                         "code": [
@@ -178,7 +178,7 @@ def cond_data1(show, name):
                 "show_result": show,
             },
             {
-                "prompts": [", hello there!\n"],
+                "document": [", hello there!\n"],
                 "condition": {"ends_with": {"arg0": {"get": "NAME"}, "arg1": name}},
             },
         ],
@@ -201,18 +201,18 @@ def test_cond2():
 
 repeat_until_data = {
     "description": "Hello world showing call out to python code with condition",
-    "prompts": [
+    "document": [
         {
             "def": "I",
-            "prompts": [{"lan": "python", "code": ["result = 0"]}],
+            "document": [{"lan": "python", "code": ["result = 0"]}],
             "show_result": True,
         },
         "\n",
         {
-            "prompts": [
+            "document": [
                 {
                     "def": "I",
-                    "prompts": [
+                    "document": [
                         {
                             "lan": "python",
                             "code": ["result = ", {"get": "I"}, " + 1"],

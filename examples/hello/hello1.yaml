@@ -1,9 +1,9 @@
 description: Hello world with a nested block
-prompts:
+document:
 - |
   Hello, world!
   This is your first prompt descriptor!
-- prompts:
+- document:
   - |
     This sentence repeats!
   repeats: 3

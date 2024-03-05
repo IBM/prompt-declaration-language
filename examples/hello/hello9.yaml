@@ -1,5 +1,5 @@
 description: Granite question
-prompts:
+document:
 - |
   Q: What is the capital of France?
 - model: ibm/granite-20b-code-instruct-v1

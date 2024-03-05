@@ -87,7 +87,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["url"] = block.url
             d["input"] = prompt_to_dict(block.input)
         case SequenceBlock():
-            d["prompts"] = prompts_to_dict(block.prompts)
+            d["document"] = prompts_to_dict(block.document)
         case InputBlock():
             if isinstance(block, InputFileBlock):
                 d["filename"] = block.filename
@@ -97,14 +97,14 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["multiline"] = block.multiline
             d["json_content"] = block.json_content
         case IfBlock():
-            d["prompts"] = prompts_to_dict(block.prompts)
+            d["document"] = prompts_to_dict(block.document)
             d["condition"] = condition_to_dict(block.condition)
         case RepeatsBlock():
-            d["prompts"] = prompts_to_dict(block.prompts)
+            d["document"] = prompts_to_dict(block.document)
             d["repeats"] = block.repeats
             d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
         case RepeatsUntilBlock():
-            d["prompts"] = prompts_to_dict(block.prompts)
+            d["document"] = prompts_to_dict(block.document)
             d["repeats_until"] = condition_to_dict(block.repeats_until)
             d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
         case FunctionBlock():

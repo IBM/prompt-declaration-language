@@ -1,5 +1,5 @@
 description: Teaching PDL
-prompts:
+document:
 - stdin: True
   multiline: True
   def: QUERY
@@ -8,7 +8,7 @@ prompts:
   parameters:
     decoding_method: greedy
   input:
-    prompts:
+    document:
     - |-
       Question: Replace all arithmetic expressions by surrounding them with << >>
       Bob had 5 + 2 apples. He ate all them and bought 8 * 67 skittles.
@@ -46,7 +46,7 @@ prompts:
   parameters:
     decoding_method: greedy
   input:
-    prompts:
+    document:
     - |-
       Question: Write the following prompts in PDL:
       Hello world!
@@ -55,7 +55,7 @@ prompts:
       Answer:
       ```
       description: Hello world!
-      prompts:
+      document:
       - "Hello, world!\n"
       - "This is your first prompt descriptor!\n"      
       ```
@@ -73,7 +73,7 @@ prompts:
       Answer:
       ```
       description: Example of PDL code block
-      prompts:
+      document:
       - lan: python
         code:
         - |
@@ -94,7 +94,7 @@ prompts:
       Answer:
       ```
       description: Hello world!
-      prompts:
+      document:
       - "Hello, world!\n"
       - "This is your "
       - lan: python
@@ -109,7 +109,7 @@ prompts:
       Answer:
       ```
       description: Hello world!
-      prompts:
+      document:
       - "What is "
       - lan: python
         code:

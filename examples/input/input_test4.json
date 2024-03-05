@@ -1,6 +1,6 @@
 {
     "description": "Input block example with json input from file",
-    "prompts": [
+    "document": [
         {
             "filename": "tests/data/input.json",
             "json_content": true,

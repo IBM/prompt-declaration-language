@@ -1,12 +1,12 @@
 description: Hello world showing call out to python code with condition
-prompts:
+document:
 - def: I
   lan: python
   code:
   - result = 0
   show_result: true
 - "\n"
-- prompts:
+- document:
   - def: I
     lan: python
     code:

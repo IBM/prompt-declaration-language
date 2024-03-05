@@ -1,12 +1,12 @@
 description: Odd one out
-prompts:
+document:
 - "Pick the odd word out: skirt, dress, pen, jacket.\n"
 - "skirt is clothing, dress is clothing, pen is an object, jacket is clothing.\n"
 - "So the odd one is pen.\n\n"
 - "Pick the odd word out: Spain, France, German, England, Singapore.\n"
 - "Spain is a country, France is a country, German is a language, ...\n"
 - "So the odd one is German.\n\n"
-- prompts:
+- document:
   - 'Pick the odd word out: '
   - def: OPTIONS
     model: ibm/granite-20b-code-instruct-v1

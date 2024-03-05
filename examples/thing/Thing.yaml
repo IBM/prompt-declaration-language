@@ -1,8 +1,8 @@
 description: Things not to forget
-prompts:
+document:
 - 'A list of things not to forget when '
 - "traveling:\n"
-- prompts:
+- document:
   - '- '
   - constraints:
     - in:

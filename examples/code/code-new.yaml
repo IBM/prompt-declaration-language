@@ -7,7 +7,7 @@ defs:
    EXPLANATION:
       model: ibm/granite-20b-code-instruct-v1
       input:
-         prompts:
+         document:
          - |
             Here is some info about the location of the function in the repo.
             repo: 
@@ -23,6 +23,6 @@ defs:
          - "```\n"
             
 
-prompts: 
+document: 
 - get: CODE.source_code
 - get: EXPLANATION

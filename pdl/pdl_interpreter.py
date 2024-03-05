@@ -173,19 +173,19 @@ def process_block_body(
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
         case SequenceBlock():
-            result, output, scope, prompts = process_prompts(log, scope, block.prompts)
-            trace = block.model_copy(update={"prompts": prompts})
+            result, output, scope, prompts = process_prompts(log, scope, block.document)
+            trace = block.model_copy(update={"document": prompts})
         case IfBlock():
             b, _, cond_trace = process_condition(log, scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
                 result, output, scope, prompts = process_prompts(
-                    log, scope, block.prompts
+                    log, scope, block.document
                 )
                 trace = block.model_copy(
                     update={
                         "condition": cond_trace,
-                        "prompts": prompts,
+                        "document": prompts,
                     }
                 )
             else:
@@ -200,7 +200,7 @@ def process_block_body(
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, prompts = process_prompts(
-                    log, scope, block.prompts
+                    log, scope, block.document
                 )
                 output += iteration_output
                 iterations_trace.append(prompts)
@@ -216,7 +216,7 @@ def process_block_body(
             while not stop:
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, prompts = process_prompts(
-                    log, scope, block.prompts
+                    log, scope, block.document
                 )
                 output += iteration_output
                 iterations_trace.append(prompts)

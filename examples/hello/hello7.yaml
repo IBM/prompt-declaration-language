@@ -1,5 +1,5 @@
 description: Hello world showing call out to python code with condition
-prompts:
+document:
 - 'Hello! '
 - lan: python
   code:
@@ -8,7 +8,7 @@ prompts:
     result = random.choice([False, True])
   def: QUESTION
   show_result: false
-- prompts:
+- document:
   - |
     How are you?
   condition:

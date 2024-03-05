@@ -44,13 +44,13 @@ The following is a simple `hello, world` script:
 
 ```
 description: Hello world!
-prompts:
+document:
   - |
     Hello, world!
     This is your first prompt descriptor!
 ```
 
-This script has a `description` and specifies the `prompts` of the document. In this case, there are no calls to an LLM or other tools.
+This script has a `description` and specifies the `document` of the document. In this case, there are no calls to an LLM or other tools.
 To render the script into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
@@ -66,17 +66,17 @@ This is your first prompt descriptor!
 
 ### Prompt Blocks
 
-PDL scripts can have nested `block`s of prompts. A block of prompts can have various properties including `repeats`, `repeats_until`, and `condition`.
+PDL scripts can have nested `block`s of document. A block of document can have various properties including `repeats`, `repeats_until`, and `condition`.
 
-The following example shows a block of prompts that is repeated 3 times.
+The following example shows a block of document that is repeated 3 times.
 
 ```
 description: Hello world with a nested block
-prompts:
+document:
 - |
   Hello, world!
   This is your first prompt descriptor!
-- prompts:
+- document:
   - |
     This sentence repeats!
   repeats: 3
@@ -100,7 +100,7 @@ In the next example, a `model` block is used to call into an LLM. The `model` se
 
 ```
 description: Hello world with a call into a model
-prompts:
+document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
@@ -123,7 +123,7 @@ In the following example, we store the result of the LLM call in a variable `NAM
 
 ```
 description: Hello world with variable use
-prompts:
+document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
@@ -150,7 +150,7 @@ PDL also allows multiple models to be chained together as in the following examp
 
 ```
 description: Hello world showing model chaining
-prompts:
+document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
@@ -188,7 +188,7 @@ The following script shows how to execute python code. Currently, the python cod
 
 ```
 description: Hello world showing call out to python code
-prompts:
+document:
 - 'Hello, '
 - lan: python
   code:
@@ -227,17 +227,17 @@ PDL can accept textual input from a file or stdin. In the following example, the
 
 ```
 description: PDL code with input block
-prompts:
+document:
 - filename: examples/input/data.txt
   def: HELLO
   show_result: False
 - get: HELLO
 ```
 
-In the next example, prompts are obtained from stdin.
+In the next example, document are obtained from stdin.
 ```
 description: PDL code with input block
-prompts:
+document:
 - "The following will prompt the user on stdin.\n"
 - stdin: True
   message: "Please provide an input: "
@@ -249,7 +249,7 @@ Notice that when executing this program, the stdin input is obtained first and t
 The following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
 ```
 description: PDL code with input block
-prompts:
+document:
 - "A multiline stdin input.\n"
 - stdin: True
   multiline: True
@@ -277,7 +277,7 @@ to that field inside the JSON object.
 ```
 {
     "description": "Input block example with json input",
-    "prompts": [
+    "document": [
         {
             "filename": "tests/data/input.json", 
             "json_content": true, 
@@ -329,7 +329,7 @@ In the following example, the variable `NAME` is constrained to consist of a sin
 ```
 {
     "description": "Hello world with a constraint",
-    "prompts": [
+    "document": [
         "Hello,",
         {
             "var": "NAME",

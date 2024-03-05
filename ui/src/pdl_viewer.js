@@ -2,7 +2,7 @@ import YAML from 'yaml';
 
 export const hello = {
     "description": "Hello world with a call into a model",
-    "prompts": [
+    "document": [
         "Hello,",
         {
             "model": "ibm/granite-20b-code-instruct-v1",
@@ -22,7 +22,7 @@ export const hello = {
 
 export const weather = {
   "description": "Using a weather API and LLM to make a small weather app",
-  "prompts": [
+  "document": [
     {
       "filename": null,
       "stdin": true,
@@ -35,7 +35,7 @@ export const weather = {
     {
       "model": "ibm/granite-20b-code-instruct-v1",
       "input": {
-        "prompts": [
+        "document": [
           "Question: What is the weather in London?\nLondon\nQuestion: What's the weather in Paris?\nParis\nQuestion: Tell me the weather in Lagos?\nLagos\nQuestion: ",
           {
             "get": "QUERY",
@@ -68,7 +68,7 @@ export const weather = {
     {
       "model": "ibm/granite-20b-code-instruct-v1",
       "input": {
-        "prompts": [
+        "document": [
           "Explain what the weather is from the following JSON:\n```\n",
           {
             "get": "WEATHER",
@@ -148,7 +148,7 @@ export function show_block(data) {
     } else if (data.hasOwnProperty("condition")) {
         div.classList.add("pdl_condition")
         // div.appendChild(show_result(data))
-        for (const block of data.prompts) {
+        for (const block of data.document) {
             let child = show_block(block)
             div.appendChild(child)
         }
@@ -163,9 +163,9 @@ export function show_block(data) {
         div.classList.add("pdl_repeats_until")
         let body = show_loop_trace(data.trace)
         div.appendChild(body)
-    } else if (data.hasOwnProperty("prompts")) {
+    } else if (data.hasOwnProperty("document")) {
         div.classList.add("pdl_sequence")
-        for (const block of data.prompts) {
+        for (const block of data.document) {
             let child = show_block(block)
             div.appendChild(child)
         }
@@ -174,9 +174,9 @@ export function show_block(data) {
     return div
 }
 
-export function show_prompts(prompts) {
+export function show_document(document) {
     let doc_fragment = document.createDocumentFragment()
-    for (const block of prompts) {
+    for (const block of document) {
         let child = show_block(block)
         doc_fragment.appendChild(child)
     }
@@ -197,7 +197,7 @@ export function show_loop_trace(trace) {
     if (trace.length > 0) {
         let iteration = document.createElement("div")
         iteration.classList.add("pdl_block", "pdl_sequence")
-        let child = show_prompts(trace.slice(-1)[0])
+        let child = show_document(trace.slice(-1)[0])
         iteration.appendChild(child)
         doc_fragment.appendChild(iteration)
     }

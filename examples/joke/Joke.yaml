@@ -1,12 +1,12 @@
 description: Joke example
-prompts:
+document:
 - |
   A list of good dad jokes. A indicates the punchline
   Q: How does a penguin build its house?
   A: Igloos it together. END
   Q: Which knight invented King Arthur''s Round Table?
   A: Sir Cumference. END
-- prompts:
+- document:
   - 'Q: '
   - def: JOKE
     constraints:
