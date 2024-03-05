@@ -69,6 +69,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -160,6 +215,61 @@
             },
             {
               "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
             }
           ],
           "title": "Input"
@@ -243,6 +353,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -350,6 +515,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -469,6 +689,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -508,60 +783,112 @@
           "type": "string"
         },
         "code": {
-          "items": {
-            "anyOf": [
-              {
-                "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputFileBlock"
+            },
+            {
+              "$ref": "#/$defs/InputStdinBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
               },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/ValueBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              }
-            ]
-          },
-          "title": "Code",
-          "type": "array"
+              "type": "array"
+            }
+          ],
+          "title": "Code"
         }
       },
       "required": [
@@ -622,6 +949,61 @@
             },
             {
               "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
             }
           ],
           "title": "Arg0"
@@ -720,6 +1102,61 @@
             },
             {
               "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
             }
           ],
           "title": "Arg0"
@@ -828,6 +1265,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -993,6 +1485,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1126,6 +1673,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1240,6 +1842,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1275,60 +1932,112 @@
           "title": "Result"
         },
         "document": {
-          "items": {
-            "anyOf": [
-              {
-                "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputFileBlock"
+            },
+            {
+              "$ref": "#/$defs/InputStdinBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
               },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/ValueBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              }
-            ]
-          },
-          "title": "Document",
-          "type": "array"
+              "type": "array"
+            }
+          ],
+          "title": "Document"
         },
         "condition": {
           "anyOf": [
@@ -1421,6 +2130,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1557,6 +2321,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1726,6 +2545,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -1813,6 +2687,61 @@
             },
             {
               "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
             },
             {
               "type": "null"
@@ -2422,6 +3351,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -2457,6 +3441,119 @@
           "title": "Result"
         },
         "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputFileBlock"
+            },
+            {
+              "$ref": "#/$defs/InputStdinBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Document"
+        },
+        "repeats": {
+          "title": "Repeats",
+          "type": "integer"
+        },
+        "trace": {
+          "default": [],
           "items": {
             "anyOf": [
               {
@@ -2506,72 +3603,63 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
-          },
-          "title": "Document",
-          "type": "array"
-        },
-        "repeats": {
-          "title": "Repeats",
-          "type": "integer"
-        },
-        "trace": {
-          "default": [],
-          "items": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "$ref": "#/$defs/FunctionBlock"
-                },
-                {
-                  "$ref": "#/$defs/CallBlock"
-                },
-                {
-                  "$ref": "#/$defs/ModelBlock"
-                },
-                {
-                  "$ref": "#/$defs/CodeBlock"
-                },
-                {
-                  "$ref": "#/$defs/ApiBlock"
-                },
-                {
-                  "$ref": "#/$defs/GetBlock"
-                },
-                {
-                  "$ref": "#/$defs/ValueBlock"
-                },
-                {
-                  "$ref": "#/$defs/IfBlock"
-                },
-                {
-                  "$ref": "#/$defs/RepeatsBlock"
-                },
-                {
-                  "$ref": "#/$defs/RepeatsUntilBlock"
-                },
-                {
-                  "$ref": "#/$defs/SequenceBlock"
-                },
-                {
-                  "$ref": "#/$defs/ErrorBlock"
-                },
-                {
-                  "$ref": "#/$defs/InputFileBlock"
-                },
-                {
-                  "$ref": "#/$defs/InputStdinBlock"
-                },
-                {
-                  "$ref": "#/$defs/Block"
-                }
-              ]
-            },
-            "type": "array"
           },
           "title": "Trace",
           "type": "array"
@@ -2653,6 +3741,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -2688,6 +3831,129 @@
           "title": "Result"
         },
         "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputFileBlock"
+            },
+            {
+              "$ref": "#/$defs/InputStdinBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Document"
+        },
+        "repeats_until": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/EndsWithCondition"
+            },
+            {
+              "$ref": "#/$defs/ContainsCondition"
+            }
+          ],
+          "title": "Repeats Until"
+        },
+        "trace": {
+          "default": [],
           "items": {
             "anyOf": [
               {
@@ -2737,82 +4003,63 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
-          },
-          "title": "Document",
-          "type": "array"
-        },
-        "repeats_until": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/EndsWithCondition"
-            },
-            {
-              "$ref": "#/$defs/ContainsCondition"
-            }
-          ],
-          "title": "Repeats Until"
-        },
-        "trace": {
-          "default": [],
-          "items": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "$ref": "#/$defs/FunctionBlock"
-                },
-                {
-                  "$ref": "#/$defs/CallBlock"
-                },
-                {
-                  "$ref": "#/$defs/ModelBlock"
-                },
-                {
-                  "$ref": "#/$defs/CodeBlock"
-                },
-                {
-                  "$ref": "#/$defs/ApiBlock"
-                },
-                {
-                  "$ref": "#/$defs/GetBlock"
-                },
-                {
-                  "$ref": "#/$defs/ValueBlock"
-                },
-                {
-                  "$ref": "#/$defs/IfBlock"
-                },
-                {
-                  "$ref": "#/$defs/RepeatsBlock"
-                },
-                {
-                  "$ref": "#/$defs/RepeatsUntilBlock"
-                },
-                {
-                  "$ref": "#/$defs/SequenceBlock"
-                },
-                {
-                  "$ref": "#/$defs/ErrorBlock"
-                },
-                {
-                  "$ref": "#/$defs/InputFileBlock"
-                },
-                {
-                  "$ref": "#/$defs/InputStdinBlock"
-                },
-                {
-                  "$ref": "#/$defs/Block"
-                }
-              ]
-            },
-            "type": "array"
           },
           "title": "Trace",
           "type": "array"
@@ -2894,6 +4141,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },
@@ -2929,60 +4231,112 @@
           "title": "Result"
         },
         "document": {
-          "items": {
-            "anyOf": [
-              {
-                "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputFileBlock"
+            },
+            {
+              "$ref": "#/$defs/InputStdinBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputFileBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputStdinBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
               },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/ValueBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              }
-            ]
-          },
-          "title": "Document",
-          "type": "array"
+              "type": "array"
+            }
+          ],
+          "title": "Document"
         }
       },
       "required": [
@@ -3153,6 +4507,61 @@
               },
               {
                 "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ValueBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputFileBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputStdinBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
               }
             ]
           },

@@ -3,7 +3,6 @@ document:
 - |
   Hello, world!
   This is your first prompt descriptor!
-- document:
-  - |
+- document: |
     This sentence repeats!
   repeats: 3

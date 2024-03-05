@@ -1,5 +1,4 @@
 description: Inline variable
 defs:
   name: World
-document:
-  - Hello {{ name }}!
+document: Hello {{ name }}!

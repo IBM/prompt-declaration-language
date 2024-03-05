@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Sequence
 
 from .pdl_ast import (
     ApiBlock,
@@ -8,6 +8,7 @@ from .pdl_ast import (
     CodeBlock,
     ConditionType,
     ContainsCondition,
+    DocumentType,
     EndsWithCondition,
     ErrorBlock,
     FunctionBlock,
@@ -16,8 +17,6 @@ from .pdl_ast import (
     InputFileBlock,
     InputStdinBlock,
     ModelBlock,
-    PromptsType,
-    PromptType,
     RepeatsBlock,
     RepeatsUntilBlock,
     SequenceBlock,
@@ -34,24 +33,24 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case ModelBlock():
             if block.input is not None:
-                iter_prompt(f, block.input)
+                iter_document(f, block.input)
         case CodeBlock():
-            iter_prompts(f, block.code)
+            iter_document(f, block.code)
         case ApiBlock():
-            iter_prompt(f, block.input)
+            iter_document(f, block.input)
         case GetBlock():
             pass
         case ValueBlock():
             pass
         case SequenceBlock():
-            iter_prompts(f, block.document)
+            iter_document(f, block.document)
         case IfBlock():
             iter_condition(f, block.condition)
-            iter_prompts(f, block.document)
+            iter_document(f, block.document)
         case RepeatsBlock():
-            iter_prompts(f, block.document)
+            iter_document(f, block.document)
         case RepeatsUntilBlock():
-            iter_prompts(f, block.document)
+            iter_document(f, block.document)
             iter_condition(f, block.repeats_until)
         case ErrorBlock():
             f(block.block)
@@ -65,18 +64,18 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             ), f"Internal error (missing case iter_block_children({type(block)}))"
 
 
-def iter_prompt(f: Callable[[BlockType], None], prompt: PromptType) -> None:
-    if isinstance(prompt, str):
+def iter_document(f: Callable[[BlockType], None], document: DocumentType) -> None:
+    if isinstance(document, str):
         pass
-    elif isinstance(prompt, Block):
-        f(prompt)
+    elif isinstance(document, Block):
+        f(document)
+    elif isinstance(document, Sequence):
+        for d in document:
+            iter_document(f, d)
     else:
-        assert False
-
-
-def iter_prompts(f: Callable[[BlockType], None], prompts: PromptsType) -> None:
-    for p in prompts:
-        iter_prompt(f, p)
+        assert (
+            False
+        ), f"Internal error (iter_document): unexpected document type {type(document)}"
 
 
 def iter_condition(f: Callable[[BlockType], None], cond: ConditionType) -> None:
@@ -84,8 +83,8 @@ def iter_condition(f: Callable[[BlockType], None], cond: ConditionType) -> None:
         case cond if isinstance(cond, str):
             pass
         case EndsWithCondition():
-            iter_prompt(f, cond.ends_with.arg0)
+            iter_document(f, cond.ends_with.arg0)
         case ContainsCondition():
-            iter_prompt(f, cond.contains.arg0)
+            iter_document(f, cond.contains.arg0)
         case _:
             assert False, f"Internal error (missing case iter_condition({type(cond)}))"

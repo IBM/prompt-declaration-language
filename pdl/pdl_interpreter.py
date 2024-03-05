@@ -2,7 +2,7 @@ import json
 import os
 import types
 from pathlib import Path
-from typing import Any, Literal, Optional, TypeVar
+from typing import Any, Literal, Optional, Sequence, TypeVar
 
 import pystache
 import requests
@@ -23,6 +23,7 @@ from .pdl_ast import (
     ConditionType,
     ContainsArgs,
     ContainsCondition,
+    DocumentType,
     EndsWithArgs,
     EndsWithCondition,
     ErrorBlock,
@@ -35,15 +36,13 @@ from .pdl_ast import (
     ModelBlock,
     PDLTextGenerationParameters,
     Program,
-    PromptsType,
-    PromptType,
     RepeatsBlock,
     RepeatsUntilBlock,
     ScopeType,
     SequenceBlock,
     ValueBlock,
 )
-from .pdl_ast_utils import iter_block_children, iter_prompts
+from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
 
 T = TypeVar("T")
@@ -105,8 +104,8 @@ def generate(
             finally:
                 print(document)
                 print("\n")
-                for prompt in log:
-                    logfile.write(prompt)
+                for line in log:
+                    logfile.write(line)
                 if trace is not None:
                     if mode == "html":
                         if output is None:
@@ -173,19 +172,21 @@ def process_block_body(
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
         case SequenceBlock():
-            result, output, scope, prompts = process_prompts(log, scope, block.document)
-            trace = block.model_copy(update={"document": prompts})
+            result, output, scope, document = process_document(
+                log, scope, block.document
+            )
+            trace = block.model_copy(update={"document": document})
         case IfBlock():
             b, _, cond_trace = process_condition(log, scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
-                result, output, scope, prompts = process_prompts(
+                result, output, scope, document = process_document(
                     log, scope, block.document
                 )
                 trace = block.model_copy(
                     update={
                         "condition": cond_trace,
-                        "document": prompts,
+                        "document": document,
                     }
                 )
             else:
@@ -195,16 +196,16 @@ def process_block_body(
         case RepeatsBlock(repeats=n):
             result = None
             output = ""
-            iterations_trace: list[PromptsType] = []
+            iterations_trace: list[DocumentType] = []
             context_init = scope_init["context"]
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, prompts = process_prompts(
+                result, iteration_output, scope, document = process_document(
                     log, scope, block.document
                 )
                 output += iteration_output
-                iterations_trace.append(prompts)
-                if contains_error(prompts):
+                iterations_trace.append(document)
+                if contains_error(document):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
         case RepeatsUntilBlock(repeats_until=cond_trace):
@@ -215,12 +216,12 @@ def process_block_body(
             context_init = scope_init["context"]
             while not stop:
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, prompts = process_prompts(
+                result, iteration_output, scope, document = process_document(
                     log, scope, block.document
                 )
                 output += iteration_output
-                iterations_trace.append(prompts)
-                if contains_error(prompts):
+                iterations_trace.append(document)
+                if contains_error(document):
                     break
                 stop, scope, _ = process_condition(log, scope, cond_trace)
             trace = block.model_copy(update={"trace": iterations_trace})
@@ -248,44 +249,41 @@ def process_block_body(
 
 
 def process_defs(
-    log, scope: ScopeType, defs: dict[str, PromptType]
-) -> tuple[ScopeType, dict[str, PromptType]]:
-    defs_trace: dict[str, PromptType] = {}
-    for x, p in defs.items():
-        result, _, _, p_trace = process_prompt(log, scope, p)
+    log, scope: ScopeType, defs: dict[str, DocumentType]
+) -> tuple[ScopeType, dict[str, DocumentType]]:
+    defs_trace: dict[str, DocumentType] = {}
+    for x, document in defs.items():
+        result, _, _, document_trace = process_document(log, scope, document)
         scope = scope | {x: result}
-        defs_trace[x] = p_trace
+        defs_trace[x] = document_trace
     return scope, defs_trace
 
 
-def process_prompts(
-    log, scope: ScopeType, prompts: PromptsType
-) -> tuple[Any, str, ScopeType, PromptsType]:
-    result = None
-    output: str = ""
-    trace: PromptsType = []
-    context_init = scope["context"]
-    for prompt in prompts:
-        scope = scope | {"context": context_init + output}
-        result, o, scope, p = process_prompt(log, scope, prompt)
-        output += o
-        trace.append(p)
-    return result, output, scope, trace
-
-
-def process_prompt(
-    log, scope: ScopeType, prompt: PromptType
-) -> tuple[Any, str, ScopeType, PromptType]:
-    output: str = ""
-    if isinstance(prompt, str):
-        result = process_expr(scope, prompt)
+def process_document(
+    log, scope: ScopeType, document: DocumentType
+) -> tuple[Any, str, ScopeType, DocumentType]:
+    result: Any
+    output: str
+    trace: DocumentType
+    if isinstance(document, str):
+        result = process_expr(scope, document)
         output = result
         trace = result
-        append_log(log, "Prompt", result)
-    elif isinstance(prompt, Block):
-        result, output, scope, trace = process_block(log, scope, prompt)
+        append_log(log, "Document", result)
+    elif isinstance(document, Block):
+        result, output, scope, trace = process_block(log, scope, document)
+    elif isinstance(document, Sequence):
+        result = None
+        output = ""
+        trace = []
+        context_init = scope["context"]
+        for doc in document:
+            scope = scope | {"context": context_init + output}
+            result, o, scope, t = process_document(log, scope, doc)
+            output += o
+            trace.append(t)
     else:
-        assert False
+        assert False, f"Internal error: unexpected document type {type(document)}"
     return result, output, scope, trace
 
 
@@ -320,7 +318,7 @@ def ends_with(
     log, scope: ScopeType, cond: EndsWithArgs
 ) -> tuple[bool, ScopeType, EndsWithArgs]:
     context_init = scope["context"]
-    _, output, scope, arg0_trace = process_prompt(log, scope, cond.arg0)
+    _, output, scope, arg0_trace = process_document(log, scope, cond.arg0)
     arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
     result = output.endswith(arg1)
@@ -331,7 +329,7 @@ def contains(
     log, scope: ScopeType, cond: ContainsArgs
 ) -> tuple[bool, ScopeType, ContainsArgs]:
     context_init = scope["context"]
-    _, output, scope, arg0_trace = process_prompt(log, scope, cond.arg0)
+    _, output, scope, arg0_trace = process_document(log, scope, cond.arg0)
     arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
     result = arg1 in output
@@ -348,7 +346,7 @@ def call_model(
     log, scope: ScopeType, block: ModelBlock
 ) -> tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]:
     if block.input is not None:  # If not implicit, then input must be a block
-        _, model_input, _, input_trace = process_prompt(log, scope, block.input)
+        _, model_input, _, input_trace = process_document(log, scope, block.input)
     else:
         model_input = scope["context"]
         input_trace = None
@@ -399,7 +397,7 @@ def call_model(
 def call_api(
     log, scope: ScopeType, block: ApiBlock
 ) -> tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]:
-    _, input_str, _, input_trace = process_prompt(log, scope, block.input)
+    _, input_str, _, input_trace = process_document(log, scope, block.input)
     input_str = block.url + input_str
     try:
         append_log(log, "API Input", input_str)
@@ -421,8 +419,8 @@ def call_api(
 
 
 def call_python(
-    log, scope: ScopeType, code: PromptsType
-) -> tuple[Any, str, ScopeType, PromptsType]:
+    log, scope: ScopeType, code: DocumentType
+) -> tuple[Any, str, ScopeType, DocumentType]:
     _, code_str, _, code_trace = get_code_string(log, scope, code)
     my_namespace = types.SimpleNamespace()
     append_log(log, "Code Input", code_str)
@@ -434,9 +432,9 @@ def call_python(
 
 
 def get_code_string(
-    log, scope: ScopeType, code: PromptsType
-) -> tuple[str, str, ScopeType, PromptsType]:
-    _, code_s, _, code_trace = process_prompts(log, scope, code)
+    log, scope: ScopeType, code: DocumentType
+) -> tuple[str, str, ScopeType, DocumentType]:
+    _, code_s, _, code_trace = process_document(log, scope, code)
     debug("code string: " + code_s)
     return code_s, code_s, scope, code_trace
 
@@ -517,14 +515,14 @@ def error(somestring):
     print("***Error: " + somestring)
 
 
-def contains_error(prompts: PromptsType) -> bool:
+def contains_error(document: DocumentType) -> bool:
     def raise_on_error(block):
         if isinstance(block, ErrorBlock):
             raise StopIteration
         iter_block_children(raise_on_error, block)
 
     try:
-        iter_prompts(raise_on_error, prompts)
+        iter_document(raise_on_error, document)
         return False
     except StopIteration:
         return True

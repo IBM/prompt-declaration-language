@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Sequence
 
 import yaml
 
@@ -10,6 +10,7 @@ from .pdl_ast import (
     CallBlock,
     CodeBlock,
     ConditionExpr,
+    DocumentType,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -64,7 +65,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case ModelBlock():
             d["model"] = block.model
             if block.input is not None:
-                d["input"] = prompt_to_dict(block.input)
+                d["input"] = document_to_dict(block.input)
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
@@ -77,7 +78,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
                 d["constraints"] = block.constraints
         case CodeBlock():
             d["lan"] = block.lan
-            d["code"] = prompts_to_dict(block.code)
+            d["code"] = document_to_dict(block.code)
         case GetBlock():
             d["get"] = block.get
         case ValueBlock():
@@ -85,9 +86,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case ApiBlock():
             d["api"] = block.api
             d["url"] = block.url
-            d["input"] = prompt_to_dict(block.input)
+            if block.input is not None:
+                d["input"] = document_to_dict(block.input)
         case SequenceBlock():
-            d["document"] = prompts_to_dict(block.document)
+            d["document"] = document_to_dict(block.document)
         case InputBlock():
             if isinstance(block, InputFileBlock):
                 d["filename"] = block.filename
@@ -97,16 +99,16 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["multiline"] = block.multiline
             d["json_content"] = block.json_content
         case IfBlock():
-            d["document"] = prompts_to_dict(block.document)
+            d["document"] = document_to_dict(block.document)
             d["condition"] = condition_to_dict(block.condition)
         case RepeatsBlock():
-            d["document"] = prompts_to_dict(block.document)
+            d["document"] = document_to_dict(block.document)
             d["repeats"] = block.repeats
-            d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
+            d["trace"] = [document_to_dict(document) for document in block.trace]
         case RepeatsUntilBlock():
-            d["document"] = prompts_to_dict(block.document)
+            d["document"] = document_to_dict(block.document)
             d["repeats_until"] = condition_to_dict(block.repeats_until)
-            d["trace"] = [prompts_to_dict(prompts) for prompts in block.trace]
+            d["trace"] = [document_to_dict(document) for document in block.trace]
         case FunctionBlock():
             d["params"] = block.params
             if block.body is not None:
@@ -125,20 +127,16 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
     return d
 
 
-def prompts_to_dict(
-    prompts: pdl_ast.PromptsType | None,
-) -> list[str | dict[str, Any]] | None:
-    if prompts is None:
-        return None
-    return [prompt_to_dict(p) for p in prompts]
-
-
-def prompt_to_dict(prompt: pdl_ast.PromptType) -> str | dict[str, Any]:
-    result: str | dict[str, Any]
-    if isinstance(prompt, str):
-        result = prompt
-    elif isinstance(prompt, Block):
-        result = block_to_dict(prompt)
+def document_to_dict(
+    document: DocumentType,
+) -> str | dict[str, Any] | list[str | dict[str, Any]]:
+    result: str | dict[str, Any] | list[str | dict[str, Any]]
+    if isinstance(document, str):
+        result = document
+    elif isinstance(document, Block):
+        result = block_to_dict(document)
+    elif isinstance(document, Sequence):
+        result = [document_to_dict(doc) for doc in document]  # type: ignore
     else:
         assert False
     return result

@@ -2,15 +2,13 @@ description: Hello world showing call out to python code with condition
 document:
 - def: I
   lan: python
-  code:
-  - result = 0
+  code: result = 0
   show_result: true
 - "\n"
 - document:
   - def: I
     lan: python
-    code:
-    - result = {{{ I }}} + 1
+    code: result = {{{ I }}} + 1
     show_result: true
   - "\n"
   repeats_until:

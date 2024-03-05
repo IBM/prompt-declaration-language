@@ -3,8 +3,7 @@ document:
   - def: hello
     params:
       name: str
-    document:
-      - Hello {{{ name }}}!
+    document: Hello {{{ name }}}!
   - call: hello
     args:
       name: World

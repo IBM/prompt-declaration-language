@@ -6,8 +6,7 @@ document:
   show_result: true
 - model: ibm/granite-20b-code-instruct-v1
   input:
-    document:
-    - |-
+    document: |-
       Question: What is the weather in London?
       London
       Question: What's the weather in Paris?

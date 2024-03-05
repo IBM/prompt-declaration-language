@@ -2,8 +2,7 @@ description: Hello world showing call out to python code with condition
 document:
 - 'Hello! '
 - lan: python
-  code:
-  - |
+  code: |
     import random
     result = random.choice([False, True])
   def: QUESTION

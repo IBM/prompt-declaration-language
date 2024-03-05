@@ -26,7 +26,7 @@ class ConditionExpr(BaseModel):
 
 
 class EndsWithArgs(BaseModel):
-    arg0: "PromptType"
+    arg0: "DocumentType"
     arg1: ExpressionType
 
 
@@ -35,7 +35,7 @@ class EndsWithCondition(ConditionExpr):
 
 
 class ContainsArgs(BaseModel):
-    arg0: "PromptType"
+    arg0: "DocumentType"
     arg1: ExpressionType
 
 
@@ -52,7 +52,7 @@ class Block(BaseModel):
     model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
     spec: Any = None  # TODO
-    defs: dict[str, "PromptType"] = {}
+    defs: dict[str, "DocumentType"] = {}
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
@@ -88,7 +88,7 @@ class PDLTextGenerationParameters(TextGenerationParameters):
 class ModelBlock(Block):
     model_config = ConfigDict(extra="forbid")
     model: str
-    input: Optional["PromptType"] = None
+    input: Optional["DocumentType"] = None
     prompt_id: Optional[str] = None
     parameters: Optional[PDLTextGenerationParameters] = None
     moderations: Optional[ModerationParameters] = None
@@ -99,14 +99,14 @@ class ModelBlock(Block):
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     lan: str
-    code: "PromptsType"
+    code: "DocumentType"
 
 
 class ApiBlock(Block):
     model_config = ConfigDict(extra="forbid")
     api: str
     url: str
-    input: "PromptType"
+    input: "DocumentType"
 
 
 class GetBlock(Block):
@@ -121,27 +121,27 @@ class ValueBlock(Block):
 
 class SequenceBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "PromptsType"
+    document: "DocumentType"
 
 
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "PromptsType"
+    document: "DocumentType"
     condition: ConditionType
 
 
 class RepeatsBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "PromptsType"
+    document: "DocumentType"
     repeats: int
-    trace: list["PromptsType"] = []
+    trace: list["DocumentType"] = []
 
 
 class RepeatsUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "PromptsType"
+    document: "DocumentType"
     repeats_until: ConditionType
-    trace: list["PromptsType"] = []
+    trace: list["DocumentType"] = []
 
 
 class ErrorBlock(Block):
@@ -183,8 +183,7 @@ BlockType: TypeAlias = (
     | InputStdinBlock
     | InstanceOf[Block]
 )
-PromptType: TypeAlias = str | BlockType  # pyright: ignore
-PromptsType: TypeAlias = list[PromptType]
+DocumentType: TypeAlias = str | BlockType | list[str | BlockType]  # pyright: ignore
 
 
 class Program(RootModel):
