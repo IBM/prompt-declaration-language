@@ -4,17 +4,10 @@ document:
   parser: json
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
-  def: TRUTH
-  show_result: False
 - "\n{{{ CODE.source_code }}}\n"
 - model: ibm/granite-20b-code-instruct-v1
-  parameters:
-    decoding_method: greedy
-    max_new_tokens: 1024
   input:
-    document:
-    - |
+      |
       Here is some info about the location of the function in the repo.
       repo: 
       {{{ CODE.repo_info.repo }}}
@@ -25,17 +18,3 @@ document:
       Explain the following code:
       ```
       {{{ CODE.source_code }}}```
-  def: EXPLANATION
-- |
-
-
-  EVALUATION:
-  The similarity (Levenshtein) between this answer and the ground truth is:
-- def: EVAL
-  lan: python
-  code:
-  - |
-    import textdistance
-    expl = """{{{ EXPLANATION }}}"""
-    truth = """{{{ TRUTH }}}"""
-    result = textdistance.levenshtein.normalized_similarity(expl, truth)

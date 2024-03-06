@@ -3,7 +3,7 @@ document:
 - read:
   def: QUERY
   message: "Ask a query: "
-  show_result: true
+  show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   input:
     document: |-

@@ -1,0 +1,25 @@
+description: Hello world with model chainings
+document:
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  defs: GEN
+  parameters:
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true
+- def: translate
+  params:
+    sentence: str
+    language: str
+  documentss:
+    - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+    - model: ibm/falcon-40b-8lang-instruct
+- call: translate
+  args:
+    sentence: Hello,{{{ GEN }}}
+    language: French
+- call: translate
+  args:
+    sentence: Bye,{{{ GEN }}}
+    language: Spanish
+

@@ -1,14 +1,22 @@
 # Prompt Description Language
 
-The Prompt Decription Language (PDL) is a language to specify interactions between a user (prompts) and LLMs, and to compose their use with other tools. It is a declarative language to describe the shape of interactions and provide a way to specify constraints that must be satisfied. PDL scripts can be used for inference, LLM chaining, as well as composition with other tools such as code and APIs. PDL has an interpreter (`pdl/pdl.py`) that can be used for inference and to render programs into documents that capture the result of LLMs and tools interactions.
+LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Description Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. 
+
+PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML or JSON), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...). Moreover, PDL programs themselves are structured data (YAML) as opposed to traditional code, so they make good targets for LLM generation as well.
 
 
+PDL provides the following features:
+- Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages).
+- Control structures: variable definitions and use, conditionals, loops, functions
+- Ability to read from files, including JSON data.
+- Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle.
+- Ability to call out to REST APIS.
 
-In the future, we plan to provide checking and validation, as well as code generation (e.g., data synthesis, data processing pipelines) since PDL scripts can serve as a single-source of truth. The specified constraints can further be used for constrained decoding when using an LLM.
 
-You can find a demo video of PDL [here](https://ibm.box.com/s/g3x5zbd7b56o223mtqte3sr5e0xkttnl).
+The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
 
-## Overview
+See below for installation notes.
+
 
 ## Interpreter Installation
 
@@ -30,76 +38,24 @@ To run the interpreter:
 python3 -m pdl.pdl <path/to/example.yaml>
 ```
 
-The folder `examples` contains some examples of PDL scripts. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
+The folder `examples` contains some examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema. This enables the editor to give errors when the yaml deviates from the schema and provides code completion. *Notice that the error messages given in the VS Code editor are more precise than the output of the interpreter when a YAML is ill-formed.*
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
-The following section is an introduction to PDL.
+The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
-## Introduction to PDL
-
-PDL scipts are specified in YAML, which reflects their declarative nature. YAML is also easy to write and to consume by other tools, unlike DSLs that require a suite of tools. Unlike other LLM programming frameworks, PDL is agnostic of any programming language. The user describes the shape of a document, elements of which capture interactions with LLMs and other tools. 
-
-The following is a simple `hello, world` script:
+To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-description: Hello world!
-document:
-  - |
-    Hello, world!
-    This is your first prompt descriptor!
+python3 -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
-This script has a `description` and specifies the `document` of the document. In this case, there are no calls to an LLM or other tools.
-To render the script into an actual document, we have a PDL interpreter that can be invoked as follows:
+## Overview
+
+In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```
-python3 -m pdl.pdl ./examples/hello/hello.yaml
-```
-
-This results in the following output:
-
-```
-Hello, world!
-This is your first prompt descriptor!
-```
-
-### Prompt Blocks
-
-PDL scripts can have nested `block`s of document. A block of document can have various properties including `repeats`, `repeats_until`, and `condition`.
-
-The following example shows a block of document that is repeated 3 times.
-
-```
-description: Hello world with a nested block
-document:
-- |
-  Hello, world!
-  This is your first prompt descriptor!
-- document:
-  - |
-    This sentence repeats!
-  repeats: 3
-```
-
-It results in the following document, when ran through the interpreter:
-
-```
-Hello, world!
-This is your first prompt descriptor!
-This sentence repeats!
-This sentence repeats!
-This sentence repeats!
-```
-
-The property `repeats_until` indicates repetition of the block until a condition is satisfied, and `condition` specifies that the block is executed only if the condition is true. Currently, the only supported conditions are `ends_with` and `contains`. See examples of these properties in [`examples/arith/Arith.yaml`](examples/arith/Arith.yaml).
-
-### LLM Call
-
-In the next example, a `model` block is used to call into an LLM. The `model` section requests a call to the `ibm/granite-20b-code-instruct-v1` model on BAM with `greedy` decoding scheme. The input to the model is the entire context, meaning all the text generated from the start of the script (this can be changed using the `input` field). The field `stop_sequences` indicates strings that cause generation to stop and `include_stop_sequence` if the string the stopped the generation should be part of the output.
-
-```
-description: Hello world with a call into a model
+description: Hello world calling a model
 document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
@@ -108,205 +64,202 @@ document:
     stop_sequences:
     - '!'
     include_stop_sequence: true
-- "\n"
 ```
 
-This results in the following document, where the text `world` has been generated by granite. 
+The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello,"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-20b-code-instruct-v1` from BAM, with the indicated parameters. The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output. The input to the model call is everything that has been produced so far in the document.
+
+When we execute this program using the PDL interpreter:
 
 ```
-Hello, world!
+python3 -m pdl.pdl examples/hello/hello2.yaml
 ```
 
-### Variable Definition and Value
-
-In the following example, we store the result of the LLM call in a variable `NAME` using the `def` field. Then value of variable is recalled using a `get` block:
-
-```
-description: Hello world with variable use
-document:
-- Hello,
-- model: ibm/granite-20b-code-instruct-v1
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
-    - '!'
-    include_stop_sequence: true
-  def: NAME
-- "\n"
-- Who is
-- get: NAME
-- "?\n"
-```
-
-This results in the following document:
-```
-Hello, world!
-Who is world?
-```
-
-### Model Chaining
-
-PDL also allows multiple models to be chained together as in the following example, where 2 different models are called.
-
-```
-description: Hello world showing model chaining
-document:
-- Hello,
-- model: ibm/granite-20b-code-instruct-v1
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
-    - '!'
-    include_stop_sequence: true
-  def: NAME
-- "\n"
-- Who is
-- get: NAME
-- "?\n"
-- model: google/flan-t5-xl
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
-    - '!'
-    include_stop_sequence: false
-- "\n"
-```
-
-This results in the following document:
+we obtain the following document:
 
 ```
 Hello, world!
-Who is world?
-Hello, world
 ```
 
-where the last line is the output of the second model `google/flan-t5-xl`, when given the first 2 lines as input.
+where the portion ` world!` was produced by granite. In general, PDL provides blocks for calling to models, Python code, as well as APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
-### Python Code
+Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
+containing the source code and some information regarding the repository where it came from.
 
-The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
-
-```
-description: Hello world showing call out to python code
-document:
-- 'Hello, '
-- lan: python
-  code:
-  - |
-    import random
-    import string
-    result = random.choice(string.ascii_lowercase)
-- "!\n"
-```
-
-This results in the following output:
-```
-Hello, r!
-```
-
-### API Calls
-
-PDL variables can also be fulfilled by making API calls. Consider a simple weather app (`examples/hello/weather.json`), where the user asks a question about the weather in some location. Then we make one call to an LLM to extract the location entity, use it to make an API call to get real-time weather information for that location, and then make a final call to an LLM to interpret the JSON output and return an English text to the user with the weather information. In this example, the call to the API is made with the following block:
-
-```
-- api: https
-  url: https://api.weatherapi.com/v1/current.json?key=XXXXXX
-  input:
-    get: LOCATION
-  def: WEATHER
-  show_result: false
-```
-
-Notice that by setting `show_result` to `false`, we exclude the text resulting from this interaction from the final output document. This can be handy to compute intermediate results that can be passed to other calls.
-
-See a [demo](https://ibm.box.com/s/g3x5zbd7b56o223mtqte3sr5e0xkttnl) video of this example.
-
-### Input Blocks
-
-PDL can accept textual input from a file or stdin. In the following example, the contents of the file `examples/input/data.txt` are read by PDL and incorporated as a prompt. In this case, the result is assigned to a variable `HELLO`, which is immediately used.
-
-```
-description: PDL code with input block
-document:
-- filename: examples/input/data.txt
-  def: HELLO
-  show_result: False
-- get: HELLO
-```
-
-In the next example, document are obtained from stdin.
-```
-description: PDL code with input block
-document:
-- "The following will prompt the user on stdin.\n"
-- stdin: True
-  message: "Please provide an input: "
-  def: STDIN
-```
-
-Notice that when executing this program, the stdin input is obtained first and then the entire document is printed. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
-
-The following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
-```
-description: PDL code with input block
-document:
-- "A multiline stdin input.\n"
-- stdin: True
-  multiline: True
-```
-
-Finally, the following example shows reading content in JSON format. In this case the block's `assign` field must be defined since the block adds the JSON content in that format to the scope, assigning this content to the named variable.
-
-Consider the JSON content in file `tests/data/input.json`:
+For example, given the data in this JSON [file](examples/code/data.json):
 ```
 {
-    "name": "Bob",
-    "address": {
-        "number": 87,
-        "street": "Smith Road",
-        "town": "Armonk", 
-        "state": "NY",
-        "zip": 10504
+    "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}",
+    "repo_info": {
+        "repo": "streamsets/datacollector",
+        "path": "stagesupport/src/main/java/com/.../OffsetUtil.java",
+        "function_name": "OffsetUtil.deserializeOffsetMap"
     }
 }
 ```
 
-The following PDL program reads this content and assigns it to variable `PERSON` in JSON format. The reference `PERSON.address.street` then refers
-to that field inside the JSON object.
+we would like to express the following prompt and submit it to an LLM:
 
 ```
-{
-    "description": "Input block example with json input",
-    "document": [
-        {
-            "filename": "tests/data/input.json", 
-            "json_content": true, 
-            "def": "PERSON",
-            "show_result": false
-        }, 
-        {
-            "get": "PERSON.name"
-        },
-        " lives at the following address:\n",
-        {
-            "get": "PERSON.address.number"
-        },
-        " ",
-        {
-            "get": "PERSON.address.street"
-        },
-        " in the town of ",
-        {
-            "get": "PERSON.address.town"
-        },
-        " ",
-        {
-            "get": "PERSON.address.state"
-        }
-    ]
+Here is some info about the location of the function in the repo.
+repo: 
+streamsets/datacollector
+path: stagesupport/src/main/java/com/.../OffsetUtil.java
+Function_name: OffsetUtil.deserializeOffsetMap
+
+
+Explain the following code:
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+  }
+  return offsetMap;
 }
 ```
 
+In PDL, this would be expressed as follows (see [file](examples/code/code.yaml)):
+
+```
+description: Code explanation example
+document:
+- read: examples/code/data.json
+  parser: json
+  def: CODE
+  show_result: False
+- "\n{{{ CODE.source_code }}}\n"
+- model: ibm/granite-20b-code-instruct-v1
+  input:
+     |
+      Here is some info about the location of the function in the repo.
+      repo: 
+      {{{ CODE.repo_info.repo }}}
+      path: {{{ CODE.repo_info.path }}}
+      Function_name: {{{ CODE.repo_info.function_name }}}
+
+
+      Explain the following code:
+      ```
+      {{{ CODE.source_code }}}```
+```
+
+The first block of the document is an *input* block. It reads the indicated filename (`examples/code/data.json`) and loads its contents into a variable named `CODE`. In PDL, any block can have a `def` field, which means the output of that block is assigned to that variable. Since the field `parser` is set to `json`, variable `CODE` contains that data in JSON format. The final field in the input block says that `show_result` is set to `false`, which means that the output of this block (the content that was read) is not included in the document. This feature allows the user to obtain intermediate results that are not necessarily included in the final output.
+
+The second block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{{ var }}}` means accessing the value of a variable in the scope. Since `CODE` contains JSON data, we can also access fields such as `CODE.source_code`.
+
+The third block calls a granite model. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
+
+When we execute this program with the PDL interpreter, we obtain the following document:
+
+```
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+  }
+  return offsetMap;
+}
+
+Answer:
+The above code is a part of the StreamSets Data Collector that deserializes an offset map from a string. The function takes in a string representing the last source offset and returns a map containing the deserialized offsets.
+
+The @SuppressWarnings annotation is used to suppress warnings related to unchecked operations performed by the Jackson library. This is necessary because the deserializeOffsetMap function uses generics to handle different types of maps, but the Jackson library does not support generic types.
+
+The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library's ObjectMapper class and returned as a map.
+
+```
+
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](examples/code/ground_truth.txt). See [file](examples/code/code-eval.yaml):
+
+```
+description: Code explanation example
+document:
+- read: examples/code/data.json
+  parser: json
+  def: CODE
+  show_result: False
+- read: examples/code/ground_truth.txt
+  def: TRUTH
+  show_result: False
+- "\n{{{ CODE.source_code }}}\n"
+- model: ibm/granite-20b-code-instruct-v1
+  def: EXPLANATION
+  parameters:
+    decoding_method: greedy
+    max_new_tokens: 1024
+  input:
+    document:
+    - |
+      Here is some info about the location of the function in the repo.
+      repo: 
+      {{{ CODE.repo_info.repo }}}
+      path: {{{ CODE.repo_info.path }}}
+      Function_name: {{{ CODE.repo_info.function_name }}}
+
+
+      Explain the following code:
+      ```
+      {{{ CODE.source_code }}}```
+- |
+
+
+  EVALUATION:
+  The similarity (Levenshtein) between this answer and the ground truth is:
+- def: EVAL
+  lan: python
+  code:
+  - |
+    import textdistance
+    expl = """
+    {{{ EXPLANATION }}}
+    """
+    truth = """
+    {{{ TRUTH }}}
+    """
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)
+```
+
+This program has an input block that reads the ground truth from filename `examples/code/ground_truth.txt` and assigns its contents to variable `TRUTH`. It also assigns the output of the model to the variable `EXPLANATION`. The last block is a call to Python code, which is included after the `code` field. Notice how code is included here simply as data. We collate fragments of Python with outputs obtained from previous blocks. This is one of the powerful features of PDL: the ability to specify the execution of code that is not known ahead of time. We can use LLMs to generate code that is later executed in the same programming model. This is made possible because PDL treats code as data, like any another part of the document.
+
+When we execute this new program, we obtain the following:
+
+```
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+  }
+  return offsetMap;
+}
+
+Answer:
+The above code is a part of the StreamSets Data Collector that deserializes an offset map from a string. The function takes in a string representing the last source offset and returns a map containing the deserialized offsets.
+
+The @SuppressWarnings annotation is used to suppress warnings related to unchecked operations performed by the Jackson library. This is necessary because the deserializeOffsetMap function uses generics to handle different types of maps, but the Jackson library does not support generic types.
+
+The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library's ObjectMapper class and returned as a map.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.9987730061349693
+```
+
+PDL allows rapid prototyping of prompts by allowing the user to change prompts and see the effects on metrics. Try it!
+
+
+
+## PDL Language Tutorial
+
+See [PDL Language Tutorial](docs/tutorial.md)
 
 
 
@@ -323,37 +276,14 @@ that we provide some default values when the following parameters are missing:
 
 - The example `examples/react/React.json` is work-in-progress.
 
-- PDL scripts can also contain constraints for the output of an LLM. This can be used for constrained decoding and is part of future work (not currently supported).
-In the following example, the variable `NAME` is constrained to consist of a single word.
+For a complete list of issues see [here](https://github.ibm.com/ml4code/pdl/issues).
 
-```
-{
-    "description": "Hello world with a constraint",
-    "document": [
-        "Hello,",
-        {
-            "var": "NAME",
-            "lookup": {
-                "model": "ibm/granite-20b-code-instruct-v1",
-                "input": "context",
-                parameters: {
-                  "decoding_method": "greedy",
-                  "stop_sequences": [
-                      "!"
-                  ],
-                }
-                "constraints": [
-                    {
-                        "words_len": 1
-                    }
-                ]
-            }
-        },
-        "!\n"
-    ]
-}
-```
 
 ## Contributing to the Project
 
 See [Contributing to PDL](docs/contrib.md)
+
+
+
+
+
