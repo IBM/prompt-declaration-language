@@ -1,0 +1,27 @@
+{
+  "name": "pdl-live",
+  "version": "1.0.0",
+  "description": "Interactive PDL viewer.",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "20.8.2",
+    "gts": "^5.2.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "~5.2.0",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "webpack",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
+  },
+  "dependencies": {
+    "json-schema-to-typescript": "^13.1.2"
+  }
+}
