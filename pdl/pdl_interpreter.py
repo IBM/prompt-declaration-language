@@ -98,7 +98,9 @@ def generate(
                 with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
                     schema = json.load(schemafile)
                     defs = schema["$defs"]
-                    analyze_errors(defs, schema, data)
+                    errors = analyze_errors(defs, schema, data)
+                    for item in errors:
+                        print(item)
             finally:
                 print(document)
                 print("\n")
@@ -535,7 +537,7 @@ def contains_error(document: DocumentType) -> bool:
 def is_base_type(schema):
     if "type" in schema:
         the_type = schema["type"]
-        if the_type in set(["string", "boolean", "integer", "number", "null"]):
+        if the_type in set(["string", "boolean", "integer", "number"]):
             return True
     if "enum" in schema:
         return True
@@ -577,7 +579,6 @@ def get_non_null_type(schema):
 
 
 json_types_convert = {
-    "null": "None",
     "string": str,
     "boolean": bool,
     "integer": int,
@@ -595,64 +596,68 @@ def convert_to_json_type(a_type):
 
 
 def match(ref_type, data):
-    # if "required" in ref_type.keys():
-    # required_fields = ref_type["required"]
     all_fields = ref_type["properties"].keys()
     intersection = list(set(data.keys()) & set(all_fields))
     return len(intersection)
 
 
-def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
+def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
+    ret = []
     if schema == {}:
-        return  # anything matches type Any
+        return []  # anything matches type Any
 
     if is_base_type(schema):
         if "type" in schema:
             the_type = json_types_convert[schema["type"]]
-            if not isinstance(data, the_type):
-                print("Error0: " + str(data) + " should be of type " + str(the_type))
+            if not isinstance(data, the_type):  # pyright: ignore
+                ret.append(
+                    "Error0: " + str(data) + " should be of type " + str(the_type)
+                )
         if "enum" in schema:
             if data not in schema["enum"]:
-                print(
+                ret.append(
                     "Error: " + str(data) + " should be one of: " + str(schema["enum"])
                 )
 
     elif "$ref" in schema:
         ref_string = schema["$ref"].split("/")[2]
         ref_type = defs[ref_string]
-        analyze_errors(defs, ref_type, data)
+        ret += analyze_errors(defs, ref_type, data)
 
     elif is_array(schema):
         if not isinstance(data, list):
-            print("Error: " + str(data) + " should be a list")
+            ret.append("Error: " + str(data) + " should be a list")
         else:
             for item in data:
-                analyze_errors(defs, schema["items"], item)
+                ret += analyze_errors(defs, schema["items"], item)
 
     elif is_object(schema):
         if not isinstance(data, dict):
-            print("Error: " + str(data) + " should be an object")
+            ret.append("Error: " + str(data) + " should be an object")
         else:
             if "required" in schema.keys():
                 required_fields = schema["required"]
                 for missing in list(set(required_fields) - set(data.keys())):
-                    print("Error: Missing required field: " + missing)
-            all_fields = schema["properties"].keys()
-            extras = list(set(data.keys()) - set(all_fields))
-            if (
-                "additionalProperties" in schema
-                and schema["additionalProperties"] is False
-            ):
-                for field in extras:
-                    print("Error: Field not allowed: " + field)
+                    ret.append("Error: Missing required field: " + missing)
+            if "properties" in schema.keys():
+                all_fields = schema["properties"].keys()
+                extras = list(set(data.keys()) - set(all_fields))
+                if (
+                    "additionalProperties" in schema
+                    and schema["additionalProperties"] is False
+                ):
+                    for field in extras:
+                        ret.append("Error: Field not allowed: " + field)
 
-            valid_fields = list(set(all_fields) & set(data.keys()))
-            for field in valid_fields:
-                analyze_errors(defs, schema["properties"][field], data[field])
+                valid_fields = list(set(all_fields) & set(data.keys()))
+                for field in valid_fields:
+                    ret += analyze_errors(
+                        defs, schema["properties"][field], data[field]
+                    )
 
     elif is_any_of(schema):
         if len(schema["anyOf"]) == 2 and nullable(schema):
-            analyze_errors(defs, get_non_null_type(schema), data)
+            ret += analyze_errors(defs, get_non_null_type(schema), data)
 
         elif not isinstance(data, dict) and not isinstance(data, list):
             the_type = convert_to_json_type(type(data))
@@ -663,10 +668,17 @@ def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
                 if "enum" in item and data in item["enum"]:
                     the_type_exists = True
             if not the_type_exists:
-                print("Error1: " + str(data) + " should be of type " + str(schema))
+                ret.append("Error1: " + str(data) + " should be of type " + str(schema))
 
-        elif isinstance(data, list):  # TODO: missing case here!!!
-            print("Error: " + str(data) + " should not be a list")
+        elif isinstance(data, list):
+            found = None
+            for item in schema["anyOf"]:
+                if is_array(item):
+                    found = item
+            if found is not None:
+                ret += analyze_errors(defs, found, data)
+            else:
+                ret.append("Error: " + str(data) + " should not be a list")
 
         elif isinstance(data, dict):
             match_ref = {}
@@ -687,7 +699,10 @@ def analyze_errors(defs, schema, data):  # noqa: C901, noqa: R0911
                         match_ref = ref_type
 
             if match_ref == {}:
-                print("Error2: " + str(data) + " should be of type: " + str(schema))
+                ret.append(
+                    "Error2: " + str(data) + " should be of type: " + str(schema)
+                )
 
             else:
-                analyze_errors(defs, match_ref, data)
+                ret += analyze_errors(defs, match_ref, data)
+    return ret
