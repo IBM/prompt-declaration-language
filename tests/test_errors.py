@@ -27,7 +27,14 @@ error1 = {
 
 
 def test_error1():
-    error(error1, ["Error: Missing required field: params"])
+    error(
+        error1,
+        [
+            "Error: Missing required field: document",
+            "Error: Missing required field: params",
+            "Error: Field not allowed: documents",
+        ],
+    )
 
 
 error2 = {
@@ -48,7 +55,13 @@ error2 = {
 
 
 def test_error2():
-    error(error2, ["Error: Field not allowed: parameterss"])
+    error(
+        error2,
+        [
+            "Error: Missing required field: params",
+            "Error: Field not allowed: parameterss",
+        ],
+    )
 
 
 error3 = {
@@ -69,7 +82,13 @@ error3 = {
 
 
 def test_error3():
-    error(error3, ["Error: Field not allowed: decoding_methods"])
+    error(
+        error3,
+        [
+            "Error: Missing required field: params",
+            "Error: Field not allowed: decoding_methods",
+        ],
+    )
 
 
 error4 = {
@@ -93,6 +112,7 @@ def test_error4():
     error(
         error4,
         [
+            "Error: Missing required field: params",
             "Error: Field not allowed: decoding_methods",
             "Error: Field not allowed: stop_sequencess",
         ],
@@ -114,7 +134,12 @@ error5 = {
 
 def test_error5():
     error(
-        error5, ["Error: Missing required field: lan", "Error: Field not allowed: lans"]
+        error5,
+        [
+            "Error: Missing required field: params",
+            "Error: Missing required field: lan",
+            "Error: Field not allowed: lans",
+        ],
     )
 
 

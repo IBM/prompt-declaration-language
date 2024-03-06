@@ -23,6 +23,7 @@ from .pdl_ast import (
     ConditionType,
     ContainsArgs,
     ContainsCondition,
+    DataBlock,
     DocumentType,
     EndsWithArgs,
     EndsWithCondition,
@@ -38,7 +39,6 @@ from .pdl_ast import (
     RepeatsUntilBlock,
     ScopeType,
     SequenceBlock,
-    ValueBlock,
 )
 from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
@@ -158,7 +158,7 @@ def process_block_body(
             result = get_var(var, scope)
             output = result if isinstance(result, str) else json.dumps(result)
             trace = block.model_copy()
-        case ValueBlock(value=v):
+        case DataBlock(data=v):
             result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
             trace = block.model_copy()
@@ -232,7 +232,6 @@ def process_block_body(
         case InputBlock():
             result, output, scope, trace = process_input(log, scope, block)
         case FunctionBlock():
-            _ = block.body  # Parse the body of the function
             closure = block.model_copy()
             if block.assign is not None:
                 scope = scope | {block.assign: closure}
@@ -243,9 +242,9 @@ def process_block_body(
         case CallBlock(call=f):
             args = process_expr(scope, block.args)
             closure = get_var(f, scope)
-            f_body = closure.body
+            f_body = closure.document
             f_scope = closure.scope | {"context": scope["context"]} | args
-            result, output, _, f_trace = process_block(log, f_scope, f_body)
+            result, output, _, f_trace = process_document(log, f_scope, f_body)
             trace = block.model_copy(update={"trace": f_trace})
         case _:
             assert False

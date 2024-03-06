@@ -38,8 +38,8 @@ def test_defs():
 defs_chain_data = {
     "description": "Hello world with variable use",
     "defs": {
-        "X": {"value": "a"},
-        "Y": {"value": "b"},
+        "X": {"data": "a"},
+        "Y": {"data": "b"},
         "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
     },
     "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],

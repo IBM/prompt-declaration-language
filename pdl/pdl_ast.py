@@ -59,20 +59,10 @@ class Block(BaseModel):
 
 
 class FunctionBlock(Block):
-    model_config = ConfigDict(extra="allow")
-    show_result: bool = False
+    model_config = ConfigDict(extra="forbid")
     params: Optional[dict[str, Any]]
+    document: "DocumentType"
     scope: Optional[ScopeType] = None
-
-    _body: Optional["BlockType"] = None
-
-    @property
-    def body(self) -> Optional["BlockType"]:
-        if self._body is None and self.model_extra is not None:
-            self._body = Program.model_validate(
-                {"description": "function body"} | self.model_extra
-            ).root
-        return self._body
 
 
 class CallBlock(Block):
@@ -114,9 +104,9 @@ class GetBlock(Block):
     get: str
 
 
-class ValueBlock(Block):
+class DataBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    value: ExpressionType
+    data: ExpressionType
 
 
 class SequenceBlock(Block):
@@ -165,7 +155,7 @@ BlockType: TypeAlias = (
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock

@@ -44,7 +44,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -92,7 +92,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -184,7 +184,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -232,7 +232,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -316,7 +316,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -364,7 +364,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -472,7 +472,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -520,7 +520,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -640,7 +640,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -688,7 +688,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -776,7 +776,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -824,7 +824,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -888,7 +888,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -936,7 +936,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -1001,6 +1001,168 @@
       "title": "ContainsCondition",
       "type": "object"
     },
+    "DataBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/ModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatsBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatsUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/InputBlock"
+              },
+              {
+                "$ref": "#/$defs/Block"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatsUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/InputBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/Block"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "data": {
+          "title": "Data"
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "title": "DataBlock",
+      "type": "object"
+    },
     "DecodingMethod": {
       "enum": [
         "greedy",
@@ -1035,7 +1197,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -1083,7 +1245,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -1192,7 +1354,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -1240,7 +1402,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -1325,7 +1487,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -1360,7 +1522,7 @@
       "type": "object"
     },
     "FunctionBlock": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "description": {
           "anyOf": [
@@ -1403,7 +1565,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -1451,7 +1613,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -1497,7 +1659,7 @@
           "title": "Def"
         },
         "show_result": {
-          "default": false,
+          "default": true,
           "title": "Show Result",
           "type": "boolean"
         },
@@ -1522,6 +1684,108 @@
           ],
           "title": "Params"
         },
+        "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Document"
+        },
         "scope": {
           "anyOf": [
             {
@@ -1536,7 +1800,8 @@
         }
       },
       "required": [
-        "params"
+        "params",
+        "document"
       ],
       "title": "FunctionBlock",
       "type": "object"
@@ -1585,7 +1850,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -1633,7 +1898,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -1748,7 +2013,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -1796,7 +2061,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -1894,7 +2159,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -1942,7 +2207,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -1996,7 +2261,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -2044,7 +2309,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -2130,7 +2395,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -2178,7 +2443,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -2362,7 +2627,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -2410,7 +2675,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -2498,7 +2763,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -2546,7 +2811,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -3156,7 +3421,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -3204,7 +3469,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -3288,7 +3553,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -3336,7 +3601,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -3396,7 +3661,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -3444,7 +3709,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -3528,7 +3793,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -3576,7 +3841,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -3660,7 +3925,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -3708,7 +3973,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -3778,7 +4043,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -3826,7 +4091,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -3910,7 +4175,7 @@
                 "$ref": "#/$defs/GetBlock"
               },
               {
-                "$ref": "#/$defs/ValueBlock"
+                "$ref": "#/$defs/DataBlock"
               },
               {
                 "$ref": "#/$defs/IfBlock"
@@ -3958,7 +4223,7 @@
                       "$ref": "#/$defs/GetBlock"
                     },
                     {
-                      "$ref": "#/$defs/ValueBlock"
+                      "$ref": "#/$defs/DataBlock"
                     },
                     {
                       "$ref": "#/$defs/IfBlock"
@@ -4042,7 +4307,7 @@
               "$ref": "#/$defs/GetBlock"
             },
             {
-              "$ref": "#/$defs/ValueBlock"
+              "$ref": "#/$defs/DataBlock"
             },
             {
               "$ref": "#/$defs/IfBlock"
@@ -4090,7 +4355,7 @@
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
-                    "$ref": "#/$defs/ValueBlock"
+                    "$ref": "#/$defs/DataBlock"
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
@@ -4219,168 +4484,6 @@
       },
       "title": "TextGenerationReturnOptions",
       "type": "object"
-    },
-    "ValueBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/ValueBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ValueBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/Block"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "value": {
-          "title": "Value"
-        }
-      },
-      "required": [
-        "value"
-      ],
-      "title": "ValueBlock",
-      "type": "object"
     }
   },
   "anyOf": [
@@ -4403,7 +4506,7 @@
       "$ref": "#/$defs/GetBlock"
     },
     {
-      "$ref": "#/$defs/ValueBlock"
+      "$ref": "#/$defs/DataBlock"
     },
     {
       "$ref": "#/$defs/IfBlock"

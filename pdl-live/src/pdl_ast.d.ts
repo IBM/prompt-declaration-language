@@ -15,7 +15,7 @@ export type Program =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -55,7 +55,7 @@ export type Block1 =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -73,7 +73,7 @@ export type Document =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -89,7 +89,7 @@ export type Document =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -108,7 +108,7 @@ export type Repeat =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -124,7 +124,7 @@ export type Repeat =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -143,7 +143,7 @@ export type Arg0 =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -159,7 +159,7 @@ export type Arg0 =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -177,7 +177,7 @@ export type Arg01 =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -193,7 +193,7 @@ export type Arg01 =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -210,7 +210,7 @@ export type Trace = (
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -226,7 +226,7 @@ export type Trace = (
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -246,7 +246,7 @@ export type Repeat1 =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -262,7 +262,7 @@ export type Repeat1 =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -280,7 +280,7 @@ export type Trace1 = (
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -296,7 +296,7 @@ export type Trace1 = (
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -317,7 +317,7 @@ export type Then =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -333,7 +333,7 @@ export type Then =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -350,7 +350,7 @@ export type Else =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -366,7 +366,7 @@ export type Else =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -393,7 +393,7 @@ export type Input =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -409,7 +409,7 @@ export type Input =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -429,7 +429,7 @@ export type Code =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -445,7 +445,7 @@ export type Code =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -465,7 +465,7 @@ export type Input1 =
   | CodeBlock
   | ApiBlock
   | GetBlock
-  | ValueBlock
+  | DataBlock
   | IfBlock
   | RepeatsBlock
   | RepeatsUntilBlock
@@ -481,7 +481,7 @@ export type Input1 =
       | CodeBlock
       | ApiBlock
       | GetBlock
-      | ValueBlock
+      | DataBlock
       | IfBlock
       | RepeatsBlock
       | RepeatsUntilBlock
@@ -553,6 +553,39 @@ export type ShowResult13 = boolean;
 export type Params = {
   [k: string]: unknown;
 } | null;
+export type Document1 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatsBlock
+  | RepeatsUntilBlock
+  | SequenceBlock
+  | ErrorBlock
+  | InputBlock
+  | Block
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatsBlock
+      | RepeatsUntilBlock
+      | SequenceBlock
+      | ErrorBlock
+      | InputBlock
+      | Block
+    )[];
 export type Scope = {
   [k: string]: unknown;
 } | null;
@@ -565,8 +598,8 @@ export interface FunctionBlock {
   show_result?: ShowResult13;
   result?: unknown;
   params: Params;
+  document: Document1;
   scope?: Scope;
-  [k: string]: unknown;
 }
 export interface Spec {
   [k: string]: unknown;
@@ -580,7 +613,7 @@ export interface Defs {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -596,7 +629,7 @@ export interface Defs {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -628,7 +661,7 @@ export interface Defs1 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -644,7 +677,7 @@ export interface Defs1 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -681,7 +714,7 @@ export interface Defs2 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -697,7 +730,7 @@ export interface Defs2 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -729,7 +762,7 @@ export interface Defs3 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -745,7 +778,7 @@ export interface Defs3 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -778,7 +811,7 @@ export interface Defs4 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -794,7 +827,7 @@ export interface Defs4 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -825,7 +858,7 @@ export interface Defs5 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -841,7 +874,7 @@ export interface Defs5 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -851,14 +884,14 @@ export interface Defs5 {
         | Block
       )[];
 }
-export interface ValueBlock {
+export interface DataBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
   def?: Def7;
   show_result?: ShowResult7;
   result?: unknown;
-  value: Value;
+  data: Data;
 }
 export interface Spec6 {
   [k: string]: unknown;
@@ -872,7 +905,7 @@ export interface Defs6 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -888,7 +921,7 @@ export interface Defs6 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -921,7 +954,7 @@ export interface Defs7 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -937,7 +970,7 @@ export interface Defs7 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -970,7 +1003,7 @@ export interface Defs8 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -986,7 +1019,7 @@ export interface Defs8 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1019,7 +1052,7 @@ export interface Defs9 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -1035,7 +1068,7 @@ export interface Defs9 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1066,7 +1099,7 @@ export interface Defs10 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -1082,7 +1115,7 @@ export interface Defs10 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1114,7 +1147,7 @@ export interface Defs11 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -1130,7 +1163,7 @@ export interface Defs11 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1164,7 +1197,7 @@ export interface Defs12 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -1180,7 +1213,7 @@ export interface Defs12 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1213,7 +1246,7 @@ export interface Defs13 {
     | CodeBlock
     | ApiBlock
     | GetBlock
-    | ValueBlock
+    | DataBlock
     | IfBlock
     | RepeatsBlock
     | RepeatsUntilBlock
@@ -1229,7 +1262,7 @@ export interface Defs13 {
         | CodeBlock
         | ApiBlock
         | GetBlock
-        | ValueBlock
+        | DataBlock
         | IfBlock
         | RepeatsBlock
         | RepeatsUntilBlock
@@ -1265,7 +1298,7 @@ export interface ContainsArgs {
 export interface Arg11 {
   [k: string]: unknown;
 }
-export interface Value {
+export interface Data {
   [k: string]: unknown;
 }
 export interface PDLTextGenerationParameters {

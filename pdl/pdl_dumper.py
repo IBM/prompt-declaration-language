@@ -10,6 +10,7 @@ from .pdl_ast import (
     CallBlock,
     CodeBlock,
     ConditionExpr,
+    DataBlock,
     DocumentType,
     FunctionBlock,
     GetBlock,
@@ -18,8 +19,8 @@ from .pdl_ast import (
     ModelBlock,
     RepeatsBlock,
     RepeatsUntilBlock,
+    ScopeType,
     SequenceBlock,
-    ValueBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -79,8 +80,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["code"] = document_to_dict(block.code)
         case GetBlock():
             d["get"] = block.get
-        case ValueBlock():
-            d["value"] = block.value
+        case DataBlock():
+            d["data"] = block.data
         case ApiBlock():
             d["api"] = block.api
             d["url"] = block.url
@@ -109,10 +110,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["trace"] = [document_to_dict(document) for document in block.trace]
         case FunctionBlock():
             d["params"] = block.params
-            if block.body is not None:
-                body = block_to_dict(block.body)
-                for k, v in body.items():
-                    d[k] = v
+            d["document"] = document_to_dict(block.document)
+            if block.scope is not None:
+                d["scope"] = scope_to_dict(block.scope)
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
@@ -149,3 +149,13 @@ def condition_to_dict(cond: pdl_ast.ConditionType) -> str | dict[str, Any]:
     else:
         assert False
     return result
+
+
+def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
+    d = {}
+    for x, v in scope.items():
+        if isinstance(v, Block):
+            d[x] = block_to_dict(v)
+        else:
+            d[x] = v
+    return d
