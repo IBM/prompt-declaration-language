@@ -150,15 +150,8 @@ def process_block_body(
     match block:
         case ModelBlock():
             result, output, scope, trace = call_model(log, scope, block)
-        case CodeBlock(lan="python", code=code):
-            result, output, scope, code_trace = call_python(log, scope, code)
-            trace = block.model_copy(update={"code": code_trace})
-        case CodeBlock(lan=l):
-            msg = f"Unsupported language: {l}"
-            error(msg)
-            result = None
-            output = ""
-            trace = ErrorBlock(msg=msg, block=block.model_copy())
+        case CodeBlock():
+            result, output, scope, trace = call_code(log, scope, block)
         case GetBlock(get=var):
             result = get_var(var, scope)
             output = result if isinstance(result, str) else json.dumps(result)
@@ -427,25 +420,33 @@ def call_api(
     return result, output, scope, trace
 
 
-def call_python(
-    log, scope: ScopeType, code: DocumentType
-) -> tuple[Any, str, ScopeType, DocumentType]:
-    _, code_str, _, code_trace = get_code_string(log, scope, code)
-    my_namespace = types.SimpleNamespace()
-    append_log(log, "Code Input", code_str)
-    exec(code_str, my_namespace.__dict__)
-    result = my_namespace.result
-    output = str(result)
-    append_log(log, "Code Output", result)
-    return result, output, scope, code_trace
-
-
-def get_code_string(
-    log, scope: ScopeType, code: DocumentType
-) -> tuple[str, str, ScopeType, DocumentType]:
-    _, code_s, _, code_trace = process_document(log, scope, code)
+def call_code(
+    log, scope: ScopeType, block: CodeBlock
+) -> tuple[Any, str, ScopeType, BlockType]:
+    _, code_s, _, code_trace = process_document(log, scope, block.code)
+    append_log(log, "Code Input", code_s)
     debug("code string: " + code_s)
-    return code_s, code_s, scope, code_trace
+    match block.lan:
+        case "python":
+            result = call_python(code_s)
+            output = str(result)
+        case _:
+            msg = f"Unsupported language: {block.lan}"
+            error(msg)
+            result = None
+            output = ""
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            return result, output, scope, trace
+    append_log(log, "Code Output", result)
+    trace = block.model_copy(update={"result": result, "code": code_trace})
+    return result, output, scope, trace
+
+
+def call_python(code: str) -> Any:
+    my_namespace = types.SimpleNamespace()
+    exec(code, my_namespace.__dict__)
+    result = my_namespace.result
+    return result
 
 
 def process_input(
