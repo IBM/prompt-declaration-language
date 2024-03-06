@@ -1,8 +1,8 @@
 description: Code explanation example
 defs: 
    CODE:
-      filename: examples/code/data.json
-      json_content: true
+      read: examples/code/data.json
+      parser: json
       def: CODE
    EXPLANATION:
       model: ibm/granite-20b-code-instruct-v1

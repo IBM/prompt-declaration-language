@@ -9,8 +9,8 @@ document:
 - "Act: Finish '1,800 to 7,000 ft'\n"
 - "\n"
 - "Where is Apple Computers headquartered?\n"
-- document:
-  - document:
+- repeat:
+  - repeat:
     - def: THOUGHT
       model: ibm/granite-20b-code-instruct-v1
       parameters:
@@ -25,7 +25,7 @@ document:
       constraints:
       - words_len: '>2'
         not_contains: Tho
-    repeats_until:
+    until:
       ends_with:
         arg0:
           get: THOUGHT
@@ -59,7 +59,7 @@ document:
       - Act
       - Obs
       include_stop_sequence: false
-  repeats_until:
+  until:
     contains:
       arg0:
         get: THOUGHT

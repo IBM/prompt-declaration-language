@@ -6,7 +6,7 @@ document:
   A: Igloos it together. END
   Q: Which knight invented King Arthur''s Round Table?
   A: Sir Cumference. END
-- document:
+- repeat:
   - 'Q: '
   - def: JOKE
     constraints:
@@ -29,4 +29,4 @@ document:
     constraints:
     - words_len: '>10'
   - "\n"
-  repeats: 2
+  num_iterations: 2

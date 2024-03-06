@@ -8,14 +8,14 @@ document:
     - Answer
     include_stop_sequence: false
 - "Answer: Let's think step by step.\n"
-- document:
+- repeat:
   - def: REASON_OR_CALC
     model: ibm/granite-20b-code-instruct-v1
     parameters:
       stop_sequences:
       - '<<'
       include_stop_sequence: true
-  - document:
+  - then:
     - def: EXPR
       model: ibm/granite-20b-code-instruct-v1
       parameters:
@@ -30,12 +30,12 @@ document:
       - 'result = '
       - get: EXPR
     - ' >>'
-    condition:
+    if:
       ends_with:
         arg0:
           get: REASON_OR_CALC
         arg1: '<<'
-  repeats_until:
+  until:
     contains:
       arg0:
         get: REASON_OR_CALC

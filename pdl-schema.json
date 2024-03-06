@@ -62,10 +62,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -113,10 +110,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -208,10 +202,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -259,10 +250,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -346,10 +334,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -397,10 +382,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -508,10 +490,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -559,10 +538,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -682,10 +658,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -733,10 +706,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -824,10 +794,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -875,10 +842,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -942,10 +906,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -993,10 +954,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -1095,10 +1053,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -1146,10 +1101,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -1258,10 +1210,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -1309,10 +1258,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -1397,10 +1343,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -1478,10 +1421,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -1529,10 +1469,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -1666,10 +1603,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -1717,10 +1651,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -1835,10 +1766,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -1886,10 +1814,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -1931,7 +1856,21 @@
           "default": null,
           "title": "Result"
         },
-        "document": {
+        "if": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/EndsWithCondition"
+            },
+            {
+              "$ref": "#/$defs/ContainsCondition"
+            }
+          ],
+          "title": "If"
+        },
+        "then": {
           "anyOf": [
             {
               "type": "string"
@@ -1973,10 +1912,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -2024,10 +1960,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -2037,31 +1970,123 @@
               "type": "array"
             }
           ],
-          "title": "Document"
+          "title": "Then"
         },
-        "condition": {
+        "else": {
           "anyOf": [
             {
               "type": "string"
             },
             {
-              "$ref": "#/$defs/EndsWithCondition"
+              "$ref": "#/$defs/FunctionBlock"
             },
             {
-              "$ref": "#/$defs/ContainsCondition"
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/ValueBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatsUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/InputBlock"
+            },
+            {
+              "$ref": "#/$defs/Block"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ValueBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatsUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/InputBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Block"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
-          "title": "Condition"
+          "default": null,
+          "title": "Else"
         }
       },
       "required": [
-        "document",
-        "condition"
+        "if",
+        "then"
       ],
       "title": "IfBlock",
       "type": "object"
     },
-    "InputFileBlock": {
+    "InputBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -2123,10 +2148,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -2174,10 +2196,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -2236,211 +2255,34 @@
           "title": "Multiline",
           "type": "boolean"
         },
-        "json_content": {
-          "default": false,
-          "title": "Json Content",
-          "type": "boolean"
+        "parser": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
-        "filename": {
-          "title": "Filename",
-          "type": "string"
+        "read": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Read"
         }
       },
       "required": [
-        "filename"
+        "read"
       ],
-      "title": "InputFileBlock",
-      "type": "object"
-    },
-    "InputStdinBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/ValueBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ValueBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/Block"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "message": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Message"
-        },
-        "multiline": {
-          "default": false,
-          "title": "Multiline",
-          "type": "boolean"
-        },
-        "json_content": {
-          "default": false,
-          "title": "Json Content",
-          "type": "boolean"
-        },
-        "stdin": {
-          "title": "Stdin",
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "stdin"
-      ],
-      "title": "InputStdinBlock",
+      "title": "InputBlock",
       "type": "object"
     },
     "LengthPenalty": {
@@ -2538,10 +2380,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -2589,10 +2428,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -2680,10 +2516,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -2731,10 +2564,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -3344,10 +3174,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -3395,10 +3222,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -3440,7 +3264,7 @@
           "default": null,
           "title": "Result"
         },
-        "document": {
+        "repeat": {
           "anyOf": [
             {
               "type": "string"
@@ -3482,10 +3306,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -3533,10 +3354,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -3546,10 +3364,10 @@
               "type": "array"
             }
           ],
-          "title": "Document"
+          "title": "Repeat"
         },
-        "repeats": {
-          "title": "Repeats",
+        "num_iterations": {
+          "title": "Num Iterations",
           "type": "integer"
         },
         "trace": {
@@ -3596,10 +3414,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -3647,10 +3462,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -3666,8 +3478,8 @@
         }
       },
       "required": [
-        "document",
-        "repeats"
+        "repeat",
+        "num_iterations"
       ],
       "title": "RepeatsBlock",
       "type": "object"
@@ -3734,10 +3546,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -3785,10 +3594,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -3830,7 +3636,7 @@
           "default": null,
           "title": "Result"
         },
-        "document": {
+        "repeat": {
           "anyOf": [
             {
               "type": "string"
@@ -3872,10 +3678,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -3923,10 +3726,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -3936,9 +3736,9 @@
               "type": "array"
             }
           ],
-          "title": "Document"
+          "title": "Repeat"
         },
-        "repeats_until": {
+        "until": {
           "anyOf": [
             {
               "type": "string"
@@ -3950,7 +3750,7 @@
               "$ref": "#/$defs/ContainsCondition"
             }
           ],
-          "title": "Repeats Until"
+          "title": "Until"
         },
         "trace": {
           "default": [],
@@ -3996,10 +3796,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -4047,10 +3844,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -4066,8 +3860,8 @@
         }
       },
       "required": [
-        "document",
-        "repeats_until"
+        "repeat",
+        "until"
       ],
       "title": "RepeatsUntilBlock",
       "type": "object"
@@ -4134,10 +3928,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -4185,10 +3976,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -4272,10 +4060,7 @@
               "$ref": "#/$defs/ErrorBlock"
             },
             {
-              "$ref": "#/$defs/InputFileBlock"
-            },
-            {
-              "$ref": "#/$defs/InputStdinBlock"
+              "$ref": "#/$defs/InputBlock"
             },
             {
               "$ref": "#/$defs/Block"
@@ -4323,10 +4108,7 @@
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
-                    "$ref": "#/$defs/InputFileBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputStdinBlock"
+                    "$ref": "#/$defs/InputBlock"
                   },
                   {
                     "$ref": "#/$defs/Block"
@@ -4500,10 +4282,7 @@
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
-                "$ref": "#/$defs/InputFileBlock"
-              },
-              {
-                "$ref": "#/$defs/InputStdinBlock"
+                "$ref": "#/$defs/InputBlock"
               },
               {
                 "$ref": "#/$defs/Block"
@@ -4551,10 +4330,7 @@
                       "$ref": "#/$defs/ErrorBlock"
                     },
                     {
-                      "$ref": "#/$defs/InputFileBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputStdinBlock"
+                      "$ref": "#/$defs/InputBlock"
                     },
                     {
                       "$ref": "#/$defs/Block"
@@ -4645,10 +4421,7 @@
       "$ref": "#/$defs/ErrorBlock"
     },
     {
-      "$ref": "#/$defs/InputFileBlock"
-    },
-    {
-      "$ref": "#/$defs/InputStdinBlock"
+      "$ref": "#/$defs/InputBlock"
     },
     {
       "$ref": "#/$defs/Block"

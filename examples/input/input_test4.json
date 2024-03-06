@@ -2,8 +2,8 @@
     "description": "Input block example with json input from file",
     "document": [
         {
-            "filename": "tests/data/input.json",
-            "json_content": true,
+            "read": "tests/data/input.json",
+            "parser": "json",
             "def": "PERSON",
             "show_result": false
         },

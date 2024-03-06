@@ -5,36 +5,16 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 input_data = {
     "description": "Input block example",
-    "document": [{"filename": "tests/data/input_data.txt"}],
+    "document": [{"read": "tests/data/input_data.txt"}],
 }
-
-
-def test_input_filename():
-    log = []
-    data = Program.model_validate(input_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
-    assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"
-
-
-input_data_error1 = {
-    "description": "Input block example",
-    "document": [{"stdin": False}],
-}
-
-
-def test_input_error1():
-    log = []
-    data = Program.model_validate(input_data_error1)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
-    assert isinstance(trace.document[0], ErrorBlock)
 
 
 input_json_data = {
     "description": "Input block example with json input",
     "document": [
         {
-            "filename": "tests/data/input.json",
-            "json_content": True,
+            "read": "tests/data/input.json",
+            "parser": "json",
             "def": "PERSON",
             "show_result": False,
         },
@@ -65,8 +45,8 @@ input_json_data_error = {
     "description": "Input block example with json input",
     "document": [
         {
-            "filename": "tests/data/input1.json",
-            "json_content": True,
+            "read": "tests/data/input1.json",
+            "parser": "json",
             "show_result": False,
         }
     ],

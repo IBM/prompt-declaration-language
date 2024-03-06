@@ -1,5 +1,5 @@
 description: Hello world!
 document:
 - "A multiline stdin input.\n"
-- stdin: True
+- read:
   multiline: True

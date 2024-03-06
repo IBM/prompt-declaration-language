@@ -6,7 +6,7 @@ document:
 - "Pick the odd word out: Spain, France, German, England, Singapore.\n"
 - "Spain is a country, France is a country, German is a language, ...\n"
 - "So the odd one is German.\n\n"
-- document:
+- repeat:
   - 'Pick the odd word out: '
   - def: OPTIONS
     model: ibm/granite-20b-code-instruct-v1
@@ -39,4 +39,4 @@ document:
     constraints:
     - in: OPTIONS
   - "\n\n"
-  repeats: 2
+  num_iterations: 2

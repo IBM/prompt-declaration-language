@@ -12,11 +12,11 @@ hello = {
 def repeat_data(n):
     return {
         "description": "Hello world with a nested block",
-        "document": [
+        "repeat": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
         ],
-        "repeats": n,
+        "num_iterations": n,
     }
 
 
@@ -26,7 +26,7 @@ def nested_repeat_data(n):
         "document": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
-            {"document": ["This sentence repeats!\n"], "repeats": n},
+            {"repeat": ["This sentence repeats!\n"], "num_iterations": n},
         ],
     }
 
@@ -97,11 +97,11 @@ def test_repeat_nested3():
 
 repeat_data_error = {
     "description": "Hello world with variable use",
-    "document": [
+    "repeat": [
         "Hello,",
         {"model": "ibm/granite-20b-code-instruct-v", "def": "NAME"},
     ],
-    "repeats": 3,
+    "num_iterations": 3,
 }
 
 

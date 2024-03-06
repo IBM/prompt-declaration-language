@@ -126,21 +126,22 @@ class SequenceBlock(Block):
 
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "DocumentType"
-    condition: ConditionType
+    condition: "ConditionType" = Field(alias="if")
+    then: "DocumentType"
+    elses: Optional["DocumentType"] = Field(default=None, alias="else")
 
 
 class RepeatsBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "DocumentType"
-    repeats: int
+    repeat: "DocumentType"
+    num_iterations: int
     trace: list["DocumentType"] = []
 
 
 class RepeatsUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    document: "DocumentType"
-    repeats_until: ConditionType
+    repeat: "DocumentType"
+    until: ConditionType
     trace: list["DocumentType"] = []
 
 
@@ -153,17 +154,8 @@ class ErrorBlock(Block):
 class InputBlock(Block):
     message: Optional[str] = None
     multiline: bool = False
-    json_content: bool = False
-
-
-class InputFileBlock(InputBlock):
-    model_config = ConfigDict(extra="forbid")
-    filename: str
-
-
-class InputStdinBlock(InputBlock):
-    model_config = ConfigDict(extra="forbid")
-    stdin: bool
+    parser: Optional[str] = None  # json
+    read: str | None
 
 
 BlockType: TypeAlias = (
@@ -179,8 +171,7 @@ BlockType: TypeAlias = (
     | RepeatsUntilBlock
     | SequenceBlock
     | ErrorBlock
-    | InputFileBlock
-    | InputStdinBlock
+    | InputBlock
     | InstanceOf[Block]
 )
 DocumentType: TypeAlias = str | BlockType | list[str | BlockType]  # pyright: ignore

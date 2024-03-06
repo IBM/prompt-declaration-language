@@ -5,13 +5,13 @@ document:
   code: result = 0
   show_result: true
 - "\n"
-- document:
+- repeat:
   - def: I
     lan: python
     code: result = {{{ I }}} + 1
     show_result: true
   - "\n"
-  repeats_until:
+  until:
     contains:
       arg0: '{{{ I }}}'
       arg1: '5'

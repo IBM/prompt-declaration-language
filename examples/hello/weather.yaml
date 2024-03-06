@@ -1,6 +1,6 @@
 description: Using a weather API and LLM to make a small weather app
 document:
-- stdin: True
+- read:
   def: QUERY
   message: "Ask a query: "
   show_result: true

@@ -7,8 +7,8 @@ document:
     result = random.choice([False, True])
   def: QUESTION
   show_result: false
-- document:
+- then:
   - |
     How are you?
-  condition:
+  if:
     ends_with: {'arg0': { 'get': 'QUESTION' }, 'arg1': 'true' }

@@ -31,8 +31,6 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     InputBlock,
-    InputFileBlock,
-    InputStdinBlock,
     ModelBlock,
     PDLTextGenerationParameters,
     Program,
@@ -181,19 +179,30 @@ def process_block_body(
             # scope = scope | {"context": scope_init["context"]}
             if b:
                 result, output, scope, document = process_document(
-                    log, scope, block.document
+                    log, scope, block.then
                 )
                 trace = block.model_copy(
                     update={
                         "condition": cond_trace,
-                        "document": document,
+                        "then": document,
+                    }
+                )
+            elif block.elses is not None:
+                result, output, scope, document = process_document(
+                    log, scope, block.elses
+                )
+                trace = block.model_copy(
+                    update={
+                        "condition": cond_trace,
+                        "elses": document,
                     }
                 )
             else:
                 result = None
                 output = ""
                 trace = block.model_copy(update={"condition": cond_trace})
-        case RepeatsBlock(repeats=n):
+
+        case RepeatsBlock(num_iterations=n):
             result = None
             output = ""
             iterations_trace: list[DocumentType] = []
@@ -201,14 +210,14 @@ def process_block_body(
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, document = process_document(
-                    log, scope, block.document
+                    log, scope, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
                 if contains_error(document):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
-        case RepeatsUntilBlock(repeats_until=cond_trace):
+        case RepeatsUntilBlock(until=cond_trace):
             result = None
             stop = False
             output = ""
@@ -217,7 +226,7 @@ def process_block_body(
             while not stop:
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, document = process_document(
-                    log, scope, block.document
+                    log, scope, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
@@ -442,22 +451,17 @@ def get_code_string(
 def process_input(
     log, scope: ScopeType, block: InputBlock
 ) -> tuple[Any, str, ScopeType, InputBlock | ErrorBlock]:
-    if block.json_content and block.assign is None:
-        msg = "If json_content is True in input block, then there must be def field"
+    if block.parser == "json" and block.assign is None:
+        msg = "If parser is json in input block, then there must be def field"
         error(msg)
         trace = ErrorBlock(msg=msg, block=block.model_copy())
         return None, "", scope, trace
 
-    if isinstance(block, InputFileBlock):
-        with open(block.filename, encoding="utf-8") as f:
+    if block.read is not None:
+        with open(block.read, encoding="utf-8") as f:
             s = f.read()
-            append_log(log, "Input from File: " + block.filename, s)
-    elif isinstance(block, InputStdinBlock):
-        if block.stdin is False:
-            msg = "Input block must have either a filename or stdin set to true"
-            error(msg)
-            trace = ErrorBlock(msg=msg, block=block.model_copy())
-            return None, "", scope, trace
+            append_log(log, "Input from File: " + block.read, s)
+    else:
         message = ""
         if block.message is not None:
             message = block.message
@@ -479,9 +483,8 @@ def process_input(
                 contents.append(line + "\n")
             s = "".join(contents)
             append_log(log, "Input from stdin: ", s)
-    else:
-        assert False
-    if block.json_content and block.assign is not None:
+
+    if block.parser == "json" and block.assign is not None:
         result = json.loads(s)
         scope = scope | {block.assign: s}
     else:

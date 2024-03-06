@@ -15,8 +15,6 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     InputBlock,
-    InputFileBlock,
-    InputStdinBlock,
     ModelBlock,
     RepeatsBlock,
     RepeatsUntilBlock,
@@ -91,23 +89,23 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case SequenceBlock():
             d["document"] = document_to_dict(block.document)
         case InputBlock():
-            if isinstance(block, InputFileBlock):
-                d["filename"] = block.filename
-            if isinstance(block, InputStdinBlock):
-                d["stdin"] = block.stdin
+            if isinstance(block, InputBlock):
+                d["read"] = block.read
             d["message"] = block.message
             d["multiline"] = block.multiline
-            d["json_content"] = block.json_content
+            d["parser"] = block.parser
         case IfBlock():
-            d["document"] = document_to_dict(block.document)
             d["condition"] = condition_to_dict(block.condition)
+            d["then"] = document_to_dict(block.then)
+            if block.elses is not None:
+                d["else"] = document_to_dict(block.elses)
         case RepeatsBlock():
-            d["document"] = document_to_dict(block.document)
-            d["repeats"] = block.repeats
+            d["repeat"] = document_to_dict(block.repeat)
+            d["num_iterations"] = block.num_iterations
             d["trace"] = [document_to_dict(document) for document in block.trace]
         case RepeatsUntilBlock():
-            d["document"] = document_to_dict(block.document)
-            d["repeats_until"] = condition_to_dict(block.repeats_until)
+            d["repeat"] = document_to_dict(block.repeat)
+            d["until"] = condition_to_dict(block.until)
             d["trace"] = [document_to_dict(document) for document in block.trace]
         case FunctionBlock():
             d["params"] = block.params

@@ -2,8 +2,8 @@
     "description": "Input block example with json input from stdin",
     "document": [
         {
-            "stdin": true, 
-            "json_content": true, 
+            "read": null, 
+            "parser": "json", 
             "def": "PERSON",
             "show_result": false
         }, 

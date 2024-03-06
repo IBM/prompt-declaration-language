@@ -1,6 +1,6 @@
 description: Teaching PDL
 document:
-- stdin: True
+- read:
   multiline: True
   def: QUERY
   show_result: false

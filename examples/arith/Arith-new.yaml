@@ -1,8 +1,8 @@
 description: Arithmetic Expressions
 document:
-- filename: examples/arith/example1.txt
-- filename: examples/arith/example2.txt
-- document:
+- read: examples/arith/example1.txt
+- read: examples/arith/example2.txt
+- repeat:
   - "\nQuestion: "
   - def: QUESTION
     model: ibm/granite-20b-code-instruct-v1
@@ -13,12 +13,12 @@ document:
       - Answer
       include_stop_sequence: false
   - "Answer: Let's think step by step.\n"
-  - repeats_until:
+  - until:
       contains:
         arg0:
           get: REASON_OR_CALC
         arg1: The answer is
-    document:
+    repeat:
     - def: REASON_OR_CALC
       model: ibm/granite-20b-code-instruct-v1
       parameters:
@@ -27,12 +27,12 @@ document:
         stop_sequences:
         - '<<'
         include_stop_sequence: true
-    - condition:
+    - if:
         ends_with:
           arg0:
             get: REASON_OR_CALC
           arg1: '<<'
-      document:
+      then:
       - def: EXPR
         model: ibm/granite-20b-code-instruct-v1
         parameters:
@@ -52,4 +52,4 @@ document:
       
     
   - "\n\n"
-  repeats: 3
+  num_iterations: 3

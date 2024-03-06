@@ -1,6 +1,6 @@
 description: Hello world!
 document:
-- filename: examples/input/data.txt
+- read: examples/input/data.txt
   def: HELLO
   show_result: False
 - get: HELLO

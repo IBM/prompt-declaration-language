@@ -14,8 +14,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
-    InputFileBlock,
-    InputStdinBlock,
+    InputBlock,
     ModelBlock,
     RepeatsBlock,
     RepeatsUntilBlock,
@@ -46,17 +45,17 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             iter_document(f, block.document)
         case IfBlock():
             iter_condition(f, block.condition)
-            iter_document(f, block.document)
+            iter_document(f, block.then)
+            if block.elses is not None:
+                iter_document(f, block.elses)
         case RepeatsBlock():
-            iter_document(f, block.document)
+            iter_document(f, block.repeat)
         case RepeatsUntilBlock():
-            iter_document(f, block.document)
-            iter_condition(f, block.repeats_until)
+            iter_document(f, block.repeat)
+            iter_condition(f, block.until)
         case ErrorBlock():
             f(block.block)
-        case InputFileBlock():
-            pass
-        case InputStdinBlock():
+        case InputBlock():
             pass
         case _:
             assert (

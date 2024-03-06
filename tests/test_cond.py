@@ -65,7 +65,7 @@ cond_data = {
                             ],
                         },
                         {
-                            "document": [
+                            "then": [
                                 {
                                     "def": "EXPR",
                                     "document": [
@@ -92,7 +92,7 @@ cond_data = {
                                 },
                                 " >>",
                             ],
-                            "condition": {
+                            "if": {
                                 "ends_with": {
                                     "arg0": {"get": "REASON_OR_CALC"},
                                     "arg1": "<<",
@@ -178,8 +178,8 @@ def cond_data1(show, name):
                 "show_result": show,
             },
             {
-                "document": [", hello there!\n"],
-                "condition": {"ends_with": {"arg0": {"get": "NAME"}, "arg1": name}},
+                "then": [", hello there!\n"],
+                "if": {"ends_with": {"arg0": {"get": "NAME"}, "arg1": name}},
             },
         ],
     }
@@ -209,7 +209,7 @@ repeat_until_data = {
         },
         "\n",
         {
-            "document": [
+            "repeat": [
                 {
                     "def": "I",
                     "document": [
@@ -222,7 +222,7 @@ repeat_until_data = {
                 },
                 "\n",
             ],
-            "repeats_until": {"contains": {"arg0": {"get": "I"}, "arg1": "5"}},
+            "until": {"contains": {"arg0": {"get": "I"}, "arg1": "5"}},
         },
     ],
 }

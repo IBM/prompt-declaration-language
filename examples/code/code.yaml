@@ -1,10 +1,10 @@
 description: Code explanation example
 document:
-- filename: examples/code/data.json
-  json_content: true
+- read: examples/code/data.json
+  parser: json
   def: CODE
   show_result: False
-- filename: examples/code/ground_truth.txt
+- read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
 - "\n{{{ CODE.source_code }}}\n"

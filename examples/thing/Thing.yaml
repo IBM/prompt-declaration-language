@@ -2,7 +2,7 @@ description: Things not to forget
 document:
 - 'A list of things not to forget when '
 - "traveling:\n"
-- document:
+- repeat:
   - '- '
   - constraints:
     - in:
@@ -14,7 +14,7 @@ document:
     parameters:
       decoding_method: greedy
   - "\n"
-  repeats: 2
+  num_iterations: 2
 - 'The most important of these is '
 - def: ITEM
   model: ibm/granite-20b-code-instruct-v1

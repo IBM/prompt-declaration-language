@@ -3,6 +3,6 @@ document:
 - |
   Hello, world!
   This is your first prompt descriptor!
-- document: |
+- repeat: |
     This sentence repeats!
-  repeats: 3
+  num_iterations: 3
