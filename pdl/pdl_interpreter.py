@@ -488,8 +488,15 @@ def process_input(
             append_log(log, "Input from stdin: ", s)
 
     if block.parser == "json" and block.assign is not None:
-        result = json.loads(s)
-        scope = scope | {block.assign: s}
+        try:
+            result = json.loads(s)
+            scope = scope | {block.assign: s}
+        except Exception:
+            msg = "Attempted to parse ill-formed JSON"
+            error(msg)
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            return None, "", scope, trace
+
     else:
         result = s
 
@@ -500,8 +507,11 @@ def process_input(
 def get_var(var: str, scope: ScopeType) -> Any:
     segs = var.split(".")
     res = scope[segs[0]]
-    for v in segs[1:]:
-        res = res[v]
+    try:
+        for v in segs[1:]:
+            res = res[v]
+    except Exception:
+        return None
     return res
 
 
@@ -518,7 +528,7 @@ def debug(somestring):
 
 
 def error(somestring):
-    print("***Error: " + somestring)
+    print("Error: " + somestring)
 
 
 def contains_error(document: DocumentType) -> bool:
