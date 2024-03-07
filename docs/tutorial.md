@@ -3,33 +3,28 @@
 # PDL Language Tutorial
 
 The following sections give a step-by-step overview of PDL language features.
-<!-- vscode-markdown-toc -->
-* 1. [Simple document](#Simpledocument)
-* 2. [Calling an LLM](#CallinganLLM)
-* 3. [Variable Definition and Use](#VariableDefinitionandUse)
-* 4. [Model Chaining](#ModelChaining)
-* 5. [Function Definition](#FunctionDefinition)
-* 6. [Grouping Variable Definitions in Defs](#GroupingVariableDefinitionsinDefs)
-* 7. [Muting Block Output with Show_result](#MutingBlockOutputwithShow_result)
-* 8. [Input from File or Stdin](#InputfromFileorStdin)
-* 9. [Calling code](#Callingcode)
-* 10. [Calling APIs](#CallingAPIs)
-* 11. [Data Block](#DataBlock)
-* 12. [Conditionals and Loops](#ConditionalsandLoops)
-* 13. [Debugging PDL Programs](#DebuggingPDLPrograms)
-* 14. [Calling PDL Programmatically from Python](#CallingPDLProgrammaticallyfromPython)
-* 15. [Visualization with the Live Document](#VisualizationwiththeLiveDocument)
-* 16. [PDL Code Assistant](#PDLCodeAssistant)
 
-<!-- vscode-markdown-toc-config
-	numbering=true
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+- [PDL Language Tutorial](#pdl-language-tutorial)
+  - [Simple document](#simple-document)
+  - [Calling an LLM](#calling-an-llm)
+  - [Variable Definition and Use](#variable-definition-and-use)
+  - [Model Chaining](#model-chaining)
+  - [Function Definition](#function-definition)
+  - [Grouping Variable Definitions in Defs](#grouping-variable-definitions-in-defs)
+  - [Muting Block Output with Show\_result](#muting-block-output-with-show_result)
+  - [Input from File or Stdin](#input-from-file-or-stdin)
+  - [Calling code](#calling-code)
+  - [Calling APIs](#calling-apis)
+  - [Data Block](#data-block)
+  - [Conditionals and Loops](#conditionals-and-loops)
+  - [Debugging PDL Programs](#debugging-pdl-programs)
+  - [Calling PDL Programmatically from Python](#calling-pdl-programmatically-from-python)
+  - [Visualization with the Live Document](#visualization-with-the-live-document)
+  - [PDL Code Assistant](#pdl-code-assistant)
 
 
 
-##  1. <a name='Simpledocument'></a>Simple document
+##  Simple document
 
 The simplest PDL program is one that generates a small document:
 
@@ -53,7 +48,7 @@ This results in the following output:
 Hello, world!
 ```
 
-##  2. <a name='CallinganLLM'></a>Calling an LLM
+##  Calling an LLM
 
 ```
 description: Hello world calling a model
@@ -104,7 +99,7 @@ In this case, we make a call to a falcon model, and the input passed to the mode
 Hello, Le monde
 ```
 
-##  3. <a name='VariableDefinitionandUse'></a>Variable Definition and Use
+##  Variable Definition and Use
 
 Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
 
@@ -132,7 +127,7 @@ Hello, world!
 GEN is equal to:  world!
 ```
 
-##  4. <a name='ModelChaining'></a>Model Chaining
+##  Model Chaining
 
 In PDL, we can declaratively chain models together as in the following example:
 
@@ -161,7 +156,7 @@ Bonjour, monde!
 
 
 
-##  5. <a name='FunctionDefinition'></a>Function Definition
+## Function Definition
 
 PDL also supports function definitions to make it easier to reuse code.
 Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows:
@@ -207,7 +202,7 @@ Adiós, mundo!
 
 A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current document context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the falcon model. 
 
-##  6. <a name='GroupingVariableDefinitionsinDefs'></a>Grouping Variable Definitions in Defs
+##  Grouping Variable Definitions in Defs
 
 In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows:
 
@@ -246,7 +241,7 @@ Notice that moving the `GEN` variable in `defs` would change the semantics of th
 
 
 
-##  7. <a name='MutingBlockOutputwithShow_result'></a>Muting Block Output with Show_result
+##  Muting Block Output with Show_result
 
 By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting `show_result` to `false` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document.
 
@@ -293,7 +288,7 @@ The french sentence was: Bonjour, monde!
 
 
 
-##  8. <a name='InputfromFileorStdin'></a>Input from File or Stdin
+##  Input from File or Stdin
 
 PDL can accept textual input from a file or stdin. In the following example, the contents of this [file](../examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
 
@@ -363,7 +358,7 @@ Bob lives at the following address:
 ```
 
 
-##  9. <a name='Callingcode'></a>Calling code
+##  Calling code
 
 The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
@@ -384,7 +379,7 @@ This results in the following output:
 Hello, r!
 ```
 
-##  10. <a name='CallingAPIs'></a>Calling APIs
+## Calling APIs
 
 PDL programs can contain calls to REST APIs. Consider a simple [weather app](../examples/hello/weather.yaml).
 
@@ -441,7 +436,7 @@ Ask a query: What is the weather in Anchorage?
 Answer: The weather in Anchorage, Alaska, United States of America is currently overcast with a temperature of -2.8°C (-5.0°F). The wind speed is 4.3 mph (6.8 kph) and the humidity is 66%.
 ```
 
-##  11. <a name='DataBlock'></a>Data Block
+##  Data Block
 
 PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](../README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse.
 
@@ -492,7 +487,7 @@ document:
     metric: "{{{ EVAL }}}"
 ```
 
-##  12. <a name='ConditionalsandLoops'></a>Conditionals and Loops
+##  Conditionals and Loops
 
 PDL supports conditionals and loops as illustrated in this [example](../examples/arith/Arith-new.yaml).
 
@@ -573,7 +568,7 @@ The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` a
 
 When we execute this program, we obtain 3 math problems like the ones in the [examples](../examples/arith/). Try it! 
 
-##  13. <a name='DebuggingPDLPrograms'></a>Debugging PDL Programs
+##  Debugging PDL Programs
 
 We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
@@ -585,15 +580,15 @@ To change the log filename, you can pass it to the interpreter as follows:
 python3 -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
-##  14. <a name='CallingPDLProgrammaticallyfromPython'></a>Calling PDL Programmatically from Python
+##  Calling PDL Programmatically from Python
 
 [[ TODO ]]
 
-##  15. <a name='VisualizationwiththeLiveDocument'></a>Visualization with the Live Document
+##  Visualization with the Live Document
 
 [[ TODO ]]
 
-##  16. <a name='PDLCodeAssistant'></a>PDL Code Assistant
+##  PDL Code Assistant
 
 [[ TODO ]]
 
