@@ -2,16 +2,16 @@ description: Hello world with model chainings
 document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1
-  defs: GEN
+  def: GEN
   parameters:
     stop_sequences:
     - '!'
     include_stop_sequence: true
 - def: translate
-  params:
+  function:
     sentence: str
     language: str
-  documentss:
+  document:
     - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate

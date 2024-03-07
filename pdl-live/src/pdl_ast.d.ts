@@ -550,7 +550,7 @@ export type ShowResult12 = boolean;
 export type Call = string;
 export type Def13 = string | null;
 export type ShowResult13 = boolean;
-export type Params = {
+export type Function = {
   [k: string]: unknown;
 } | null;
 export type Document1 =
@@ -597,7 +597,7 @@ export interface FunctionBlock {
   def?: Def13;
   show_result?: ShowResult13;
   result?: unknown;
-  params: Params;
+  function: Function;
   document: Document1;
   scope?: Scope;
 }

@@ -172,7 +172,7 @@ document:
     - '!'
     include_stop_sequence: true
 - def: translate
-  params:
+  function:
     sentence: str
     language: str
   document:
@@ -210,7 +210,7 @@ In PDL, the above program can be written more neatly by grouping certain variabl
 description: Hello world with functions
 defs:
   translate:
-    params:
+    function:
       sentence: str
       language: str
     document:
@@ -258,7 +258,7 @@ document:
     - '!'
     include_stop_sequence: true
 - def: translate
-  params:
+  function:
     sentence: str
     language: str
   document:

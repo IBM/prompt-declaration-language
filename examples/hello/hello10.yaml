@@ -1,7 +1,7 @@
 description: Hello function
 document:
   - def: hello
-    params:
+    function:
       name: str
     document: Hello {{{ name }}}!
   - call: hello

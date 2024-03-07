@@ -1673,7 +1673,7 @@
           "default": null,
           "title": "Result"
         },
-        "params": {
+        "function": {
           "anyOf": [
             {
               "type": "object"
@@ -1682,7 +1682,7 @@
               "type": "null"
             }
           ],
-          "title": "Params"
+          "title": "Function"
         },
         "document": {
           "anyOf": [
@@ -1800,7 +1800,7 @@
         }
       },
       "required": [
-        "params",
+        "function",
         "document"
       ],
       "title": "FunctionBlock",

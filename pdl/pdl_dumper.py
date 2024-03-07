@@ -109,7 +109,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["until"] = condition_to_dict(block.until)
             d["trace"] = [document_to_dict(document) for document in block.trace]
         case FunctionBlock():
-            d["params"] = block.params
+            d["function"] = block.function
             d["document"] = document_to_dict(block.document)
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope)

@@ -60,7 +60,7 @@ class Block(BaseModel):
 
 class FunctionBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    params: Optional[dict[str, Any]]
+    function: Optional[dict[str, Any]]
     document: "DocumentType"
     scope: Optional[ScopeType] = None
 

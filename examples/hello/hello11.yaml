@@ -1,7 +1,7 @@
 description: Hello function
 defs:
   hello:
-    params:
+    function:
       name: str
     document: Hello {{{ name }}}!
 document:
