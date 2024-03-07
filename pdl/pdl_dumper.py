@@ -111,8 +111,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case FunctionBlock():
             d["params"] = block.params
             d["document"] = document_to_dict(block.document)
-            if block.scope is not None:
-                d["scope"] = scope_to_dict(block.scope)
+            # if block.scope is not None:
+            #     d["scope"] = scope_to_dict(block.scope)
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args

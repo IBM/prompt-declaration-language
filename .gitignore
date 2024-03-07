@@ -129,14 +129,21 @@ dmypy.json
 .pyre/
 
 log.txt
+
+# UI
 ui/node_modules/
 ui/package-lock.json
+
+# TypeScript
+pdl-live/node_modules
+pdl-live/package-lock.json
 
 # Latex
 *.aux
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+
 
 # PDL trace
 *_result.json
