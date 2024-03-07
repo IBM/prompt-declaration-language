@@ -3,8 +3,33 @@
 # PDL Language Tutorial
 
 The following sections give a step-by-step overview of PDL language features.
+<!-- vscode-markdown-toc -->
+* 1. [Simple document](#Simpledocument)
+* 2. [Calling an LLM](#CallinganLLM)
+* 3. [Variable Definition and Use](#VariableDefinitionandUse)
+* 4. [Model Chaining](#ModelChaining)
+* 5. [Function Definition](#FunctionDefinition)
+* 6. [Grouping Variable Definitions in Defs](#GroupingVariableDefinitionsinDefs)
+* 7. [Muting Block Output with Show_result](#MutingBlockOutputwithShow_result)
+* 8. [Input from File or Stdin](#InputfromFileorStdin)
+* 9. [Calling code](#Callingcode)
+* 10. [Calling APIs](#CallingAPIs)
+* 11. [Data Block](#DataBlock)
+* 12. [Conditionals and Loops](#ConditionalsandLoops)
+* 13. [Debugging PDL Programs](#DebuggingPDLPrograms)
+* 14. [Calling PDL Programmatically from Python](#CallingPDLProgrammaticallyfromPython)
+* 15. [Visualization with the Live Document](#VisualizationwiththeLiveDocument)
+* 16. [PDL Code Assistant](#PDLCodeAssistant)
 
-## Simple document
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+
+
+##  1. <a name='Simpledocument'></a>Simple document
 
 The simplest PDL program is one that generates a small document:
 
@@ -28,7 +53,7 @@ This results in the following output:
 Hello, world!
 ```
 
-## Calling an LLM
+##  2. <a name='CallinganLLM'></a>Calling an LLM
 
 ```
 description: Hello world calling a model
@@ -79,7 +104,7 @@ In this case, we make a call to a falcon model, and the input passed to the mode
 Hello, Le monde
 ```
 
-## Variable definition and use
+##  3. <a name='VariableDefinitionandUse'></a>Variable Definition and Use
 
 Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
 
@@ -107,7 +132,7 @@ Hello, world!
 GEN is equal to:  world!
 ```
 
-## Model chaining
+##  4. <a name='ModelChaining'></a>Model Chaining
 
 In PDL, we can declaratively chain models together as in the following example:
 
@@ -136,7 +161,7 @@ Bonjour, monde!
 
 
 
-## Function definition
+##  5. <a name='FunctionDefinition'></a>Function Definition
 
 PDL also supports function definitions to make it easier to reuse code.
 Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows:
@@ -182,7 +207,46 @@ Adiós, mundo!
 
 A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current document context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the falcon model. 
 
-## Show_result
+##  6. <a name='GroupingVariableDefinitionsinDefs'></a>Grouping Variable Definitions in Defs
+
+In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows:
+
+```
+description: Hello world with functions
+defs:
+  translate:
+    params:
+      sentence: str
+      language: str
+    document:
+      - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+      - model: ibm/falcon-40b-8lang-instruct
+document:
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  def: GEN
+  parameters:
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true 
+- call: translate
+  args:
+    sentence: Hello,{{{ GEN }}}
+    language: French
+- call: translate
+  args:
+    sentence: Bye,{{{ GEN }}}
+    language: Spanish
+
+```
+
+This program has the same output has the one from the previous section.
+
+Notice that moving the `GEN` variable in `defs` would change the semantics of the program. This is because that model call is dependent on its context. Since it does not have an `input` field, it depends on what was produced in the document up to that point. Moving it to `defs` means that it would be executed immediately with an empty context. 
+
+
+
+##  7. <a name='MutingBlockOutputwithShow_result'></a>Muting Block Output with Show_result
 
 By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting `show_result` to `false` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document.
 
@@ -227,7 +291,9 @@ Nos vemos, mundo!
 The french sentence was: Bonjour, monde!
 ```
 
-## Input
+
+
+##  8. <a name='InputfromFileorStdin'></a>Input from File or Stdin
 
 PDL can accept textual input from a file or stdin. In the following example, the contents of this [file](../examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
 
@@ -297,7 +363,7 @@ Bob lives at the following address:
 ```
 
 
-## Calling code
+##  9. <a name='Callingcode'></a>Calling code
 
 The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
@@ -318,7 +384,7 @@ This results in the following output:
 Hello, r!
 ```
 
-## Calling APIs
+##  10. <a name='CallingAPIs'></a>Calling APIs
 
 PDL programs can contain calls to REST APIs. Consider a simple [weather app](../examples/hello/weather.yaml).
 
@@ -366,7 +432,7 @@ document:
     include_stop_sequence: false
 ```
 
-In this program, we first prompt the user to enter a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API block. Currently we only support simple `GET` calls as shown above. Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice how many blocks have `show_result` set to `false` to hide intermediate results.
+In this program, we first prompt the user to enter a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API block. Currently we only support simple `GET` calls as shown above, but will improve this interface in the future. Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice how many blocks have `show_result` set to `false` to hide intermediate results.
 
 Here is an example of interaction with this program:
 ```
@@ -375,14 +441,139 @@ Ask a query: What is the weather in Anchorage?
 Answer: The weather in Anchorage, Alaska, United States of America is currently overcast with a temperature of -2.8°C (-5.0°F). The wind speed is 4.3 mph (6.8 kph) and the humidity is 66%.
 ```
 
+##  11. <a name='DataBlock'></a>Data Block
 
-## Conditionals and Loops
+PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](../README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse.
+
+```
+description: Code explanation example
+document:
+- read: examples/code/data.json
+  parser: json
+  def: CODE
+  show_result: False
+- read: examples/code/ground_truth.txt
+  def: TRUTH
+  show_result: False
+- model: ibm/granite-20b-code-instruct-v1
+  def: EXPLANATION
+  show_result: False
+  parameters:
+    decoding_method: greedy
+    max_new_tokens: 1024
+  input:
+     |
+      Here is some info about the location of the function in the repo.
+      repo: 
+      {{{ CODE.repo_info.repo }}}
+      path: {{{ CODE.repo_info.path }}}
+      Function_name: {{{ CODE.repo_info.function_name }}}
+
+
+      Explain the following code:
+      ```
+      {{{ CODE.source_code }}}```
+- def: EVAL
+  show_result: False
+  lan: python
+  code:
+    |
+    import textdistance
+    expl = """
+    {{{ EXPLANATION }}}
+    """
+    truth = """
+    {{{ TRUTH }}}
+    """
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- data:
+    input: "{{{ CODE }}}"
+    output: "{{{ EXPLANATION }}}"
+    metric: "{{{ EVAL }}}"
+```
+
+##  12. <a name='ConditionalsandLoops'></a>Conditionals and Loops
 
 PDL supports conditionals and loops as illustrated in this [example](../examples/arith/Arith-new.yaml).
 
-[[TODO]]
+The task at hand is to generate math problems that look like the [following](../examples/arith/example1.txt):
 
-## Debugging PDL Programs
+```
+Question: Noah charges $60 for a large painting and $30 for a small painting.
+Last month he sold eight large paintings and four small paintings.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 8 large paintings and 4 small paintings last month.
+He sold twice as many this month.
+8 large paintings x $60 = << 8*60= 480 >> 480
+4 small paintings x $30 = << 4*30= 120 >> 120
+So he sold << 480+120= 600 >> 600 paintings last month.
+Therefore he sold << 600*2= 1200 >> this month.
+The answer is $1200.
+```
+
+We want the LLM to generate a math problem after `Question`, then generate an `Answer` with step-by-step reasoning. In the answer there may be arithmetic expressions. As we know that LLMs sometimes make mistakes with arithmentic, we wish to use Python to computer all arithmetic expressions in the answer. In the example above, generation should stop at `<<` symbols, then generate an arithmetic expression, followed by an `=` sign. At that point, we want to switch to Python and compute the expression as code, print the result and continue generation. This process should repeat until the model generates the phrase `The answer is`.
+
+The following PDL program captures this task:
+
+```
+description: Arithmetic Expressions
+document:
+- read: examples/arith/example1.txt
+- read: examples/arith/example2.txt
+- repeat:
+  - "\nQuestion: "
+  - def: QUESTION
+    model: ibm/granite-20b-code-instruct-v1
+    parameters:
+      stop_sequences:
+      - Answer
+      include_stop_sequence: false
+  - "Answer: Let's think step by step.\n"
+  - repeat:
+    - def: REASON_OR_CALC
+      model: ibm/granite-20b-code-instruct-v1
+      parameters:
+        stop_sequences:
+        - '<<'
+        include_stop_sequence: true
+    - if:
+        ends_with:
+          arg0: '{{{ REASON_OR_CALC }}}'
+          arg1: '<<'
+      then:
+      - def: EXPR
+        model: ibm/granite-20b-code-instruct-v1
+        parameters:
+          stop_sequences:
+          - '='
+          - "\n"
+          include_stop_sequence: false
+      - '= '
+      - def: RESULT
+        lan: python
+        code:
+        - result = {{{ EXPR }}}
+      - ' >>'
+    until:
+      contains:
+        arg0: '{{{ REASON_OR_CALC }}}'
+        arg1: The answer is  
+    
+  - "\n\n"
+  num_iterations: 3
+```
+
+The first two blocks read math problem examples and include them in the document. These will be our few-shot examples. The next block is a repetion as indicated by the fields: `repeat` and the accompanying `num_iterations`. The field `repeat` can contain any document (string or block or list of strings and blocks), the `num_iterations` indicates how many times to repeat.
+
+In the body of the `repeat` block, the program first asks granite to generate a question and add it to the document. Next we print `Answer: Let's think step by step.\n`. The following block is a repeat-until: the document in `repeat` is repeated until the condition in the `until` field becomes true. Here the condition states that we stop the iteration when variable `REASON_OR_CALC` contains `<<`. That variable is defined in the first block of the repeat-until -- we prompt a granite model and stop at the character `<<`.
+
+The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block. 
+
+When we execute this program, we obtain 3 math problems like the ones in the [examples](../examples/arith/). Try it! 
+
+##  13. <a name='DebuggingPDLPrograms'></a>Debugging PDL Programs
 
 We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
@@ -394,7 +585,15 @@ To change the log filename, you can pass it to the interpreter as follows:
 python3 -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
-## PDL Code Assistant
+##  14. <a name='CallingPDLProgrammaticallyfromPython'></a>Calling PDL Programmatically from Python
+
+[[ TODO ]]
+
+##  15. <a name='VisualizationwiththeLiveDocument'></a>Visualization with the Live Document
+
+[[ TODO ]]
+
+##  16. <a name='PDLCodeAssistant'></a>PDL Code Assistant
 
 [[ TODO ]]
 

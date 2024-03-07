@@ -38,9 +38,9 @@ document:
     {{{ TRUTH }}}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- |
-  {
-    'input': {{{ CODE }}}
-    'output': '{{{ EXPLANATION }}}'
-    'metric': {{{ EVAL }}}
-  }
+- data: 
+    input: "{{{ CODE }}}"
+    output: "{{{ EXPLANATION }}}"
+    metric: "{{{ EVAL }}}"
+  def: MINE
+- "\n\n"

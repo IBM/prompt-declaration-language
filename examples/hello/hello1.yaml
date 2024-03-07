@@ -1,8 +1,26 @@
-description: Hello world with a nested block
+description: Hello world with functions
+defs:
+  translate:
+    params:
+      sentence: str
+      language: str
+    document:
+      - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+      - model: ibm/falcon-40b-8lang-instruct
+
 document:
-- |
-  Hello, world!
-  This is your first prompt descriptor!
-- repeat: |
-    This sentence repeats!
-  num_iterations: 3
+- Hello,
+- model: ibm/granite-20b-code-instruct-v1
+  def: GEN
+  parameters:
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true 
+- call: translate
+  args:
+    sentence: Hello,{{{ GEN }}}
+    language: French
+- call: translate
+  args:
+    sentence: Bye,{{{ GEN }}}
+    language: Spanish
