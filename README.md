@@ -54,7 +54,7 @@ python3 -m pdl.pdl --log <my-logfile> <my-example>
 
 In PDL, we can write some YAML to create a prompt and call an LLM:
 
-```
+```yaml
 description: Hello world calling a model
 document:
 - Hello,
@@ -86,7 +86,7 @@ Consider now an example from AI for code, where we want to build a prompt templa
 containing the source code and some information regarding the repository where it came from.
 
 For example, given the data in this JSON [file](examples/code/data.json):
-```
+```json
 {
     "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}",
     "repo_info": {
@@ -123,7 +123,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 
 In PDL, this would be expressed as follows (see [file](examples/code/code.yaml)):
 
-```
+```yaml
 description: Code explanation example
 document:
 - read: examples/code/data.json
@@ -177,7 +177,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 
 Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](examples/code/ground_truth.txt). See [file](examples/code/code-eval.yaml):
 
-```
+```yaml
 description: Code explanation example
 document:
 - read: examples/code/data.json
@@ -257,7 +257,7 @@ PDL allows rapid prototyping of prompts by allowing the user to change prompts a
 
 Finally, we can output JSON data as a result of this program, as follows:
 
-```
+```yaml
 description: Code explanation example
 document:
 - read: examples/code/data.json
