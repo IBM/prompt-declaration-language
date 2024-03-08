@@ -5,8 +5,8 @@ document:
   message: "Ask a query: "
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
-  input: 
-    - |
+  input:
+    document: |-
       Question: What is the weather in London?
       London
       Question: What's the weather in Paris?
@@ -15,6 +15,7 @@ document:
       Lagos
       Question: {{{ QUERY }}}
   parameters:
+    decoding_method: greedy
     stop_sequences:
     - Question
     - What
@@ -28,11 +29,11 @@ document:
   def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
-  input: 
-    - |
-      Explain what the weather is from the following JSON:
-      `{{{ WEATHER }}}`
+  input: >
+    Explain what the weather is from the following JSON:
+    `{{{ WEATHER }}}`
   parameters:
+    decoding_method: greedy
     max_new_tokens: 100
     stop_sequences:
     - What

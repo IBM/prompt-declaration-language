@@ -1,0 +1,4 @@
+description: PDL code with input block
+document:
+- read: examples/input/data.txt
+  def: HELLO

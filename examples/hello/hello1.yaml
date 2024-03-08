@@ -1,26 +1,7 @@
-description: Hello world with functions
-defs:
-  translate:
-    function:
-      sentence: str
-      language: str
-    document:
-      - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
-      - model: ibm/falcon-40b-8lang-instruct
-
+description: Hello world!
 document:
-- Hello,
-- model: ibm/granite-20b-code-instruct-v1
-  def: GEN
-  parameters:
-    stop_sequences:
-    - '!'
-    include_stop_sequence: true 
-- call: translate
-  args:
-    sentence: Hello,{{{ GEN }}}
-    language: French
-- call: translate
-  args:
-    sentence: Bye,{{{ GEN }}}
-    language: Spanish
+    - Hello, world!
+    - "\n"
+    - repeat:
+        "This is your first PDL program\n"
+      num_iterations: 3

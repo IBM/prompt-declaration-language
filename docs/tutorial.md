@@ -3,6 +3,7 @@
 # PDL Language Tutorial
 
 The following sections give a step-by-step overview of PDL language features.
+All the examples in this tutorial can be found [here](../examples/tutorial/).
 
 - [PDL Language Tutorial](#pdl-language-tutorial)
   - [Simple document](#simple-document)
@@ -26,7 +27,7 @@ The following sections give a step-by-step overview of PDL language features.
 
 ##  Simple document
 
-The simplest PDL program is one that generates a small document:
+The simplest PDL program is one that generates a small document ([file](../examples/tutorial/simple_program.yaml)):
 
 ```
 description: Hello world!
@@ -62,7 +63,7 @@ document:
     include_stop_sequence: true
 ```
 
-In this program, the `document` starts with the word `Hello,`, and we call a model (`ibm/granite-20b-code-instruct-v1`) with this as input prompt. 
+In this program ([file](../examples/tutorial/calling_llm.yaml)), the `document` starts with the word `Hello,`, and we call a model (`ibm/granite-20b-code-instruct-v1`) with this as input prompt. 
 The model is passed some parameters including the `decoding_method` and `stop_sequences`, which are to be included in the output. Since the `input` field is not specified in the model call, the entire document up that point is passed to the model as input context. 
 
 In general, a model call accepts the same parameters as BAM's [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface, with the exception that we provide some default values when the following parameters are missing:
@@ -103,7 +104,7 @@ Hello, Le monde
 
 Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
 
-Consider the following example:
+Consider the following example ([file](../examples/tutorial/variable_def_use.yaml)):
 
 ```
 description: Hello world with variable def and use
@@ -129,7 +130,7 @@ GEN is equal to:  world!
 
 ##  Model Chaining
 
-In PDL, we can declaratively chain models together as in the following example:
+In PDL, we can declaratively chain models together as in the following example ([file](../examples/tutorial/model_chaining.yaml)):
 
 ```
 description: Hello world with model chainings
@@ -159,7 +160,7 @@ Bonjour, monde!
 ## Function Definition
 
 PDL also supports function definitions to make it easier to reuse code.
-Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows:
+Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows ([file](../examples/tutorial/function_definition.yaml)):
 
 ```
 description: Hello world with functions
@@ -204,7 +205,7 @@ A function only contributes to the output document when it is called. So the def
 
 ##  Grouping Variable Definitions in Defs
 
-In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows:
+In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows ([file](../examples/tutorial/grouping_definitions.yaml)):
 
 ```
 description: Hello world with functions
@@ -245,7 +246,7 @@ Notice that moving the `GEN` variable in `defs` would change the semantics of th
 
 By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting `show_result` to `false` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document.
 
-Consider the same example as above, but with `show_result` set to `false`:
+Consider the same example as above, but with `show_result` set to `false` ([file](../examples/tutorial/muting_block_output.yaml)):
 
 ```
 description: Hello world with functions
@@ -290,7 +291,8 @@ The french sentence was: Bonjour, monde!
 
 ##  Input from File or Stdin
 
-PDL can accept textual input from a file or stdin. In the following example, the contents of this [file](../examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
+PDL can accept textual input from a file or stdin. In the following example ([file](../examples/tutorial/input_file.yaml)), the contents of this [file](../examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
+
 
 ```
 description: PDL code with input block
@@ -299,7 +301,7 @@ document:
   def: HELLO
 ```
 
-In the next example, prompts are obtained from stdin. This is indicated by assigning the value `null` to the `read` field.
+In the next example, prompts are obtained from stdin ([file](../examples/tutorial/input_stdin.yaml)). This is indicated by assigning the value `null` to the `read` field.
 
 ```
 description: PDL code with input block
@@ -312,7 +314,7 @@ document:
 
 Notice that when executing programs containing input blocks, the stdin input is obtained first and then the entire document is printed when produced. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
 
-The following example shows a multiline stdin input. When executing this code and to exit from the multiline input simply press control D (macos).
+The following example shows a multiline stdin input ([file](../examples/tutorial/input_stdin_multiline.yaml)). When executing this code and to exit from the multiline input simply press control D (macos).
 ```
 description: PDL code with input block
 document:
@@ -337,8 +339,7 @@ Consider the JSON content in this [file](../tests/data/input.json):
 }
 ```
 
-The following PDL program reads this content and assigns it to variable `PERSON` in JSON format. The reference `PERSON.address.street` then refers
-to that field inside the JSON object.
+The following PDL program reads this content and assigns it to variable `PERSON` in JSON format ([file](../examples/tutorial/input_file_json.yaml)). The reference `PERSON.address.street` then refers to that field inside the JSON object.
 
 ```
 description: Input block example with json input
@@ -360,7 +361,7 @@ Bob lives at the following address:
 
 ##  Calling code
 
-The following script shows how to execute python code. Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
+The following script shows how to execute python code ([file](../examples/tutorial/calling_code.yaml)). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
 ```
 description: Hello world showing call to python code
@@ -381,7 +382,7 @@ Hello, r!
 
 ## Calling APIs
 
-PDL programs can contain calls to REST APIs. Consider a simple [weather app](../examples/hello/weather.yaml).
+PDL programs can contain calls to REST APIs. Consider a simple weather app ([file](../examples/tutorial/calling_apis.yaml)):
 
 ```
 description: Using a weather API and LLM to make a small weather app
@@ -438,7 +439,7 @@ Answer: The weather in Anchorage, Alaska, United States of America is currently 
 
 ##  Data Block
 
-PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](../README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse.
+PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](../README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse. ([file](../examples/tutorial/data_block.yaml))
 
 ```
 description: Code explanation example
@@ -489,7 +490,7 @@ document:
 
 ##  Conditionals and Loops
 
-PDL supports conditionals and loops as illustrated in this [example](../examples/arith/Arith-new.yaml).
+PDL supports conditionals and loops as illustrated in the followin example ([file](../examples/tutorial/conditionals_loops.yaml)).
 
 The task at hand is to generate math problems that look like the [following](../examples/arith/example1.txt):
 

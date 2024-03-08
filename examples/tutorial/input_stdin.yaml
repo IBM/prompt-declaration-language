@@ -1,0 +1,6 @@
+description: PDL code with input block
+document:
+- "The following will prompt the user on stdin.\n"
+- read:
+  message: "Please provide an input: "
+  def: STDIN

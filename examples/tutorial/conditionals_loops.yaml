@@ -1,4 +1,4 @@
-description: Math Problems
+description: Arithmetic Expressions
 document:
 - read: examples/arith/example1.txt
 - read: examples/arith/example2.txt
@@ -40,5 +40,6 @@ document:
       contains:
         arg0: '{{{ REASON_OR_CALC }}}'
         arg1: The answer is  
+    
   - "\n\n"
   num_iterations: 3

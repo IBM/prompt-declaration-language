@@ -10,3 +10,4 @@ He sold twice as many this month.
 So he sold << 480+120= 600 >> 600 paintings last month.
 Therefore he sold << 600*2= 1200 >> this month.
 The answer is $1200.
+

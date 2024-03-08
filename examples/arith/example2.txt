@@ -1,4 +1,4 @@
-Question: Noah charges $30 for a large vases and $10 for a small vases.
+Question: Noah charges $10 for a small vase and $30 for a large vases
 Last month he sold five large vases and three small vases.
 If he sold three times as much this month, how much is his sales for this month?
 
