@@ -1,0 +1,52 @@
+description: Retrieval-augmented generation for NL-to-Code generation task.
+defs:
+  VECTOR_DATABASE:
+    lan: python
+    code:
+    - import datasets
+    - train_data = datasets.load_dataset("mbpp", "sanitized", split="train")
+    - result = train_data.add_faiss_index("embeddings")
+  TEST:
+    lan: python
+    code:
+    - import datasets
+    - test_data = datasets.load_dataset("mbpp", "sanitized", split="test")
+    - result = test_data[0]
+  RETRIEVED:
+    lan: python
+    args:
+      vec_db: "{{{ VECTOR_DATABASE }}}"
+      text: "{{{ TEST.text }}}"
+    code:
+    - result = vec_db.get_nearest_examples("embeddings", np.array(text), 3)
+  AUGMENTATION: |
+    Q: {{{ RETRIEVED[0].text }}}
+    A: ```{{{ RETRIEVED[0].code }}}```
+
+    Q: {{{ RETRIEVED[1].text }}}
+    A: ```{{{ RETRIEVED[1].code }}}```
+
+    Q: {{{ RETRIEVED[2].text }}}
+    A: ```{{{ RETRIEVED[2].code }}}```
+  GENERATED:
+    model: ibm/granite-20b-code-instruct-v1
+    input: |
+      Given text after "Q:", generate a Python function after "A:".
+
+      {{{ AUGMENTATION }}}
+      
+      Q: {{{ TEST.text }}}
+      A: ```
+    parameters:
+      stop_sequences:
+      - "```"
+      include_stop_sequence: false
+document: |
+  text:
+  {{{ TEST.text }}}
+
+  generated code:
+  {{{ GENERATED }}}
+
+  ground truth:
+  {{{ TEST.code }}}
