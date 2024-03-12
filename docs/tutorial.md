@@ -17,6 +17,7 @@ All the examples in this tutorial can be found [here](../examples/tutorial/).
   - [Calling code](#calling-code)
   - [Calling APIs](#calling-apis)
   - [Data Block](#data-block)
+  - [Include Block](#include-block)
   - [Conditionals and Loops](#conditionals-and-loops)
   - [Debugging PDL Programs](#debugging-pdl-programs)
   - [Calling PDL Programmatically from Python](#calling-pdl-programmatically-from-python)
@@ -487,6 +488,60 @@ document:
     output: "{{{ EXPLANATION }}}"
     metric: "{{{ EVAL }}}"
 ```
+
+## Include Block
+
+PDL allows programs to be defined over multiple files. The `include` block allows one file to incorporate another, as shown in the
+following [example](../examples/consultant/biz_rules_extraction.yaml):
+
+```
+description: Business Rules extraction from Jsp pages
+defs:
+  PROMPTS2: 
+    | 
+    Convert above provided JSP code into business rules. Response should be in plain English and should not include any code. Do not output anything other than response. Please extract and summarize all the business rules in the below 5 categories:
+      -Data Retrieval
+      -User Interface
+      -Results Display
+      -JavaScript
+  PROMPTS2_NOTES:
+  - |
+    
+    * Strictly include all relevant parameters related to each of the above categories
+
+document:
+  - include: examples/consultant/function.yaml
+  - call: template
+    args:
+      preamble: "jsp: {{{ input_data }}}"
+      question: "{{{ PROMPTS2 }}}"
+      notes: "{{{ PROMPTS2_NOTES }}}"
+```
+
+which includes the following [file](../examples/consultant/function.yaml):
+
+```
+description: Function definition
+defs:
+  template:
+    function:
+      preamble: str
+      question: str
+      notes: str
+    document:
+    - |
+      {{{ preamble }}}
+      ### Question: {{{ question }}}
+
+      ### Notes:
+      {{{ notes }}}
+
+      ### Answer: 
+document: ""
+```
+
+The `include` block means that the PDL code at that file is executed and its output is included at the point where the `include` block appears in a document. In this example, the file contains a function definition, which is used in the first program as a template. This feature allows reuse of common templates and patterns and to build libraries.
+
 
 ##  Conditionals and Loops
 
