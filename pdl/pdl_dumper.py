@@ -15,6 +15,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
+    IncludeBlock,
     InputBlock,
     ModelBlock,
     RepeatsBlock,
@@ -90,11 +91,12 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case SequenceBlock():
             d["document"] = document_to_dict(block.document)
         case InputBlock():
-            if isinstance(block, InputBlock):
-                d["read"] = block.read
+            d["read"] = block.read
             d["message"] = block.message
             d["multiline"] = block.multiline
             d["parser"] = block.parser
+        case IncludeBlock():
+            d["include"] = block.include
         case IfBlock():
             d["condition"] = condition_to_dict(block.condition)
             d["then"] = document_to_dict(block.then)

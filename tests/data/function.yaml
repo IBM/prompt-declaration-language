@@ -1,0 +1,20 @@
+description: Function definition
+defs:
+  template:
+    function:
+      preamble: str
+      question: str
+      notes: str
+    document:
+    - |
+      {{{ preamble }}}
+      ### Question: {{{ question }}}
+
+      ### Notes:
+      {{{ notes }}}
+
+      ### Answer:
+document: ""
+
+
+

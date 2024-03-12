@@ -31,6 +31,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
+    IncludeBlock,
     InputBlock,
     ModelBlock,
     PDLTextGenerationParameters,
@@ -231,6 +232,8 @@ def process_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case InputBlock():
             result, output, scope, trace = process_input(log, scope, block)
+        case IncludeBlock():
+            result, output, scope, trace = process_include(log, scope, block)
         case FunctionBlock():
             closure = block.model_copy()
             if block.assign is not None:
@@ -503,10 +506,29 @@ def process_input(
     return result, s, scope, trace
 
 
+def process_include(
+    log, scope: ScopeType, block: IncludeBlock
+) -> tuple[Any, str, ScopeType, BlockType]:
+    with open(block.include, "r", encoding="utf-8") as infile:
+        data = yaml.safe_load(infile)
+        trace = None
+        try:
+            prog = Program.model_validate(data)
+            trace = prog.root
+            return process_block(log, scope, prog.root)
+        except ValidationError as e:
+            print(e)
+            msg = "Attempting to include invalid yaml: " + block.include
+            error(msg)
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            return None, "", scope, trace
+
+
 def get_var(var: str, scope: ScopeType) -> Any:
-    segs = var.split(".")
-    res = scope[segs[0]]
     try:
+        segs = var.split(".")
+        res = scope[segs[0]]
+
         for v in segs[1:]:
             res = res[v]
     except Exception:

@@ -148,6 +148,11 @@ class InputBlock(Block):
     read: str | None
 
 
+class IncludeBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    include: str
+
+
 BlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
@@ -162,6 +167,7 @@ BlockType: TypeAlias = (
     | SequenceBlock
     | ErrorBlock
     | InputBlock
+    | IncludeBlock
     | InstanceOf[Block]
 )
 DocumentType: TypeAlias = str | BlockType | list[str | BlockType]  # pyright: ignore
