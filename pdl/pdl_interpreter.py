@@ -157,8 +157,14 @@ def process_block_body(
             result, output, scope, trace = call_code(log, scope, block)
         case GetBlock(get=var):
             result = get_var(var, scope)
-            output = result if isinstance(result, str) else json.dumps(result)
-            trace = block.model_copy()
+            if result is None:
+                msg = "Variable is undefined: " + var
+                error(msg)
+                output = ""
+                trace = ErrorBlock(msg=msg, block=block.model_copy())
+            else:
+                output = result if isinstance(result, str) else json.dumps(result)
+                trace = block.model_copy()
         case DataBlock(data=v):
             result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
@@ -245,10 +251,17 @@ def process_block_body(
         case CallBlock(call=f):
             args = process_expr(scope, block.args)
             closure = get_var(f, scope)
-            f_body = closure.document
-            f_scope = closure.scope | {"context": scope["context"]} | args
-            result, output, _, f_trace = process_document(log, f_scope, f_body)
-            trace = block.model_copy(update={"trace": f_trace})
+            if closure is None:
+                msg = "Function is undefined: " + f
+                error(msg)
+                output = ""
+                result = None
+                trace = ErrorBlock(msg=msg, block=block.model_copy())
+            else:
+                f_body = closure.document
+                f_scope = closure.scope | {"context": scope["context"]} | args
+                result, output, _, f_trace = process_document(log, f_scope, f_body)
+                trace = block.model_copy(update={"trace": f_trace})
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, output, scope, trace
