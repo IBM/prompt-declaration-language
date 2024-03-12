@@ -24,6 +24,7 @@ from .pdl_ast import (
     ContainsArgs,
     ContainsCondition,
     DataBlock,
+    DocumentBlock,
     DocumentType,
     EndsWithArgs,
     EndsWithCondition,
@@ -32,14 +33,13 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
-    InputBlock,
     ModelBlock,
     PDLTextGenerationParameters,
     Program,
-    RepeatsBlock,
-    RepeatsUntilBlock,
+    ReadBlock,
+    RepeatBlock,
+    RepeatUntilBlock,
     ScopeType,
-    SequenceBlock,
 )
 from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
@@ -165,7 +165,7 @@ def process_block_body(
             trace = block.model_copy()
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
-        case SequenceBlock():
+        case DocumentBlock():
             result, output, scope, document = process_document(
                 log, scope, block.document
             )
@@ -198,7 +198,7 @@ def process_block_body(
                 output = ""
                 trace = block.model_copy(update={"condition": cond_trace})
 
-        case RepeatsBlock(num_iterations=n):
+        case RepeatBlock(num_iterations=n):
             result = None
             output = ""
             iterations_trace: list[DocumentType] = []
@@ -213,7 +213,7 @@ def process_block_body(
                 if contains_error(document):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
-        case RepeatsUntilBlock(until=cond_trace):
+        case RepeatUntilBlock(until=cond_trace):
             result = None
             stop = False
             output = ""
@@ -230,7 +230,7 @@ def process_block_body(
                     break
                 stop, scope, _ = process_condition(log, scope, cond_trace)
             trace = block.model_copy(update={"trace": iterations_trace})
-        case InputBlock():
+        case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block)
         case IncludeBlock():
             result, output, scope, trace = process_include(log, scope, block)
@@ -250,7 +250,7 @@ def process_block_body(
             result, output, _, f_trace = process_document(log, f_scope, f_body)
             trace = block.model_copy(update={"trace": f_trace})
         case _:
-            assert False
+            assert False, f"Internal error: unsupported type ({type(block)})"
     return result, output, scope, trace
 
 
@@ -277,7 +277,7 @@ def process_document(
         trace = result
         append_log(log, "Document", result)
     elif isinstance(document, Block):
-        result, output, scope, trace = process_block(log, scope, document)
+        result, output, scope, trace = process_block(log, scope, document)  # type: ignore
     elif isinstance(document, Sequence):
         result = None
         output = ""
@@ -287,7 +287,7 @@ def process_document(
             scope = scope | {"context": context_init + output}
             result, o, scope, t = process_document(log, scope, doc)
             output += o
-            trace.append(t)
+            trace.append(t)  # type: ignore
     else:
         assert False, f"Internal error: unexpected document type {type(document)}"
     return result, output, scope, trace
@@ -454,8 +454,8 @@ def call_python(code: str) -> Any:
 
 
 def process_input(
-    log, scope: ScopeType, block: InputBlock
-) -> tuple[Any, str, ScopeType, InputBlock | ErrorBlock]:
+    log, scope: ScopeType, block: ReadBlock
+) -> tuple[Any, str, ScopeType, ReadBlock | ErrorBlock]:
     if block.parser == "json" and block.assign is None:
         msg = "If parser is json in input block, then there must be def field"
         error(msg)

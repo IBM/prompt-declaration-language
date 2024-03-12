@@ -9,17 +9,17 @@ from .pdl_ast import (
     ConditionType,
     ContainsCondition,
     DataBlock,
+    DocumentBlock,
     DocumentType,
     EndsWithCondition,
     ErrorBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
-    InputBlock,
     ModelBlock,
-    RepeatsBlock,
-    RepeatsUntilBlock,
-    SequenceBlock,
+    ReadBlock,
+    RepeatBlock,
+    RepeatUntilBlock,
 )
 
 
@@ -41,21 +41,21 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DataBlock():
             pass
-        case SequenceBlock():
+        case DocumentBlock():
             iter_document(f, block.document)
         case IfBlock():
             iter_condition(f, block.condition)
             iter_document(f, block.then)
             if block.elses is not None:
                 iter_document(f, block.elses)
-        case RepeatsBlock():
+        case RepeatBlock():
             iter_document(f, block.repeat)
-        case RepeatsUntilBlock():
+        case RepeatUntilBlock():
             iter_document(f, block.repeat)
             iter_condition(f, block.until)
         case ErrorBlock():
             f(block.block)
-        case InputBlock():
+        case ReadBlock():
             pass
         case _:
             assert (
@@ -67,7 +67,7 @@ def iter_document(f: Callable[[BlockType], None], document: DocumentType) -> Non
     if isinstance(document, str):
         pass
     elif isinstance(document, Block):
-        f(document)
+        f(document)  # type: ignore
     elif isinstance(document, Sequence):
         for d in document:
             iter_document(f, d)

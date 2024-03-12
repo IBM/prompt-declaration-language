@@ -1,11 +1,12 @@
-from typing import Any, Optional, TypeAlias
+from enum import StrEnum
+from typing import Any, Literal, Optional, TypeAlias
 
 from genai.schema import (
     ModerationParameters,
     PromptTemplateData,
     TextGenerationParameters,
 )
-from pydantic import BaseModel, ConfigDict, Field, InstanceOf, RootModel
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
 
@@ -46,6 +47,23 @@ class ContainsCondition(ConditionExpr):
 ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
 
 
+class BlockKind(StrEnum):
+    FUNCTION = "function"
+    CALL = "call"
+    MODEL = "model"
+    CODE = "code"
+    API = "api"
+    GET = "get"
+    DATA = "data"
+    DOCUMENT = "document"
+    IF = "if"
+    REPEAT = "repeat"
+    REPEAT_UNTIL = "repeat_until"
+    READ = "read"
+    INCLUDE = "include"
+    ERROR = "error"
+
+
 class Block(BaseModel):
     """PDL program block"""
 
@@ -60,6 +78,7 @@ class Block(BaseModel):
 
 class FunctionBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
     document: "DocumentType"
     scope: Optional[ScopeType] = None
@@ -67,6 +86,7 @@ class FunctionBlock(Block):
 
 class CallBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.CALL] = BlockKind.CALL
     call: str
     args: dict[str, Any] = {}
 
@@ -77,6 +97,7 @@ class PDLTextGenerationParameters(TextGenerationParameters):
 
 class ModelBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str
     input: Optional["DocumentType"] = None
     prompt_id: Optional[str] = None
@@ -88,12 +109,14 @@ class ModelBlock(Block):
 
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lan: str
     code: "DocumentType"
 
 
 class ApiBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.API] = BlockKind.API
     api: str
     url: str
     input: "DocumentType"
@@ -101,56 +124,66 @@ class ApiBlock(Block):
 
 class GetBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.GET] = BlockKind.GET
     get: str
 
 
 class DataBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType
 
 
-class SequenceBlock(Block):
+class DocumentBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
     document: "DocumentType"
 
 
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: "ConditionType" = Field(alias="if")
     then: "DocumentType"
     elses: Optional["DocumentType"] = Field(default=None, alias="else")
 
 
-class RepeatsBlock(Block):
+class RepeatBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "DocumentType"
     num_iterations: int
     trace: list["DocumentType"] = []
 
 
-class RepeatsUntilBlock(Block):
+class RepeatUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "DocumentType"
     until: ConditionType
     trace: list["DocumentType"] = []
 
 
-class ErrorBlock(Block):
+class ReadBlock(Block):
     model_config = ConfigDict(extra="forbid")
-    msg: str
-    block: "BlockType"
-
-
-class InputBlock(Block):
+    kind: Literal[BlockKind.READ] = BlockKind.READ
+    read: str | None
     message: Optional[str] = None
     multiline: bool = False
     parser: Optional[str] = None  # json
-    read: str | None
 
 
 class IncludeBlock(Block):
     model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.INCLUDE] = BlockKind.INCLUDE
     include: str
+
+
+class ErrorBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
+    msg: str
+    block: "BlockType"
 
 
 BlockType: TypeAlias = (
@@ -162,13 +195,12 @@ BlockType: TypeAlias = (
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
-    | ErrorBlock
-    | InputBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
     | IncludeBlock
-    | InstanceOf[Block]
+    | ErrorBlock
 )
 DocumentType: TypeAlias = str | BlockType | list[str | BlockType]  # pyright: ignore
 

@@ -17,12 +17,12 @@ export type Program =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
-  | ErrorBlock
-  | InputBlock
-  | Block;
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock;
 export type Description = string | null;
 export type Description1 = string | null;
 export type Description2 = string | null;
@@ -39,16 +39,9 @@ export type Description12 = string | null;
 export type Description13 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
-export type Def1 = string | null;
-export type ShowResult1 = boolean;
-export type Message = string | null;
-export type Multiline = boolean;
-export type Parser = string | null;
-export type Read = string | null;
-export type Def2 = string | null;
-export type ShowResult2 = boolean;
+export type Kind = "error";
 export type Msg = string;
-export type Block1 =
+export type Block =
   | FunctionBlock
   | CallBlock
   | ModelBlock
@@ -57,14 +50,26 @@ export type Block1 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
-  | ErrorBlock
-  | InputBlock
-  | Block;
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock;
+export type Def1 = string | null;
+export type ShowResult1 = boolean;
+export type Kind1 = "include";
+export type Include = string;
+export type Def2 = string | null;
+export type ShowResult2 = boolean;
+export type Kind2 = "read";
+export type Read = string | null;
+export type Message = string | null;
+export type Multiline = boolean;
+export type Parser = string | null;
 export type Def3 = string | null;
 export type ShowResult3 = boolean;
+export type Kind3 = "document";
 export type Document =
   | string
   | FunctionBlock
@@ -75,12 +80,12 @@ export type Document =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -91,15 +96,16 @@ export type Document =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Def4 = string | null;
 export type ShowResult4 = boolean;
+export type Kind4 = "repeat_until";
 export type Repeat =
   | string
   | FunctionBlock
@@ -110,12 +116,12 @@ export type Repeat =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -126,12 +132,12 @@ export type Repeat =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Until = string | EndsWithCondition | ContainsCondition;
 export type Result5 = boolean | null;
@@ -145,12 +151,12 @@ export type Arg0 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -161,12 +167,12 @@ export type Arg0 =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Result6 = boolean | null;
 export type Arg01 =
@@ -179,12 +185,12 @@ export type Arg01 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -195,12 +201,12 @@ export type Arg01 =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Trace = (
   | string
@@ -212,12 +218,12 @@ export type Trace = (
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -228,16 +234,17 @@ export type Trace = (
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[]
 )[];
 export type Def5 = string | null;
 export type ShowResult5 = boolean;
+export type Kind5 = "repeat";
 export type Repeat1 =
   | string
   | FunctionBlock
@@ -248,12 +255,12 @@ export type Repeat1 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -264,12 +271,12 @@ export type Repeat1 =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type NumIterations = number;
 export type Trace1 = (
@@ -282,12 +289,12 @@ export type Trace1 = (
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -298,16 +305,17 @@ export type Trace1 = (
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[]
 )[];
 export type Def6 = string | null;
 export type ShowResult6 = boolean;
+export type Kind6 = "if";
 export type If = string | EndsWithCondition | ContainsCondition;
 export type Then =
   | string
@@ -319,12 +327,12 @@ export type Then =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -335,12 +343,12 @@ export type Then =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Else =
   | string
@@ -352,12 +360,12 @@ export type Else =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -368,21 +376,24 @@ export type Else =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[]
   | null;
 export type Def7 = string | null;
 export type ShowResult7 = boolean;
+export type Kind7 = "data";
 export type Def8 = string | null;
 export type ShowResult8 = boolean;
+export type Kind8 = "get";
 export type Get = string;
 export type Def9 = string | null;
 export type ShowResult9 = boolean;
+export type Kind9 = "api";
 export type Api = string;
 export type Url = string;
 export type Input =
@@ -395,12 +406,12 @@ export type Input =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -411,15 +422,16 @@ export type Input =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Def10 = string | null;
 export type ShowResult10 = boolean;
+export type Kind10 = "code";
 export type Lan = string;
 export type Code =
   | string
@@ -431,12 +443,12 @@ export type Code =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -447,15 +459,16 @@ export type Code =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
+export type Kind11 = "model";
 export type Model = string;
 export type Input1 =
   | string
@@ -467,12 +480,12 @@ export type Input1 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -483,12 +496,12 @@ export type Input1 =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[]
   | null;
 export type PromptId = string | null;
@@ -547,9 +560,11 @@ export type ExampleFileIds =
   | null;
 export type Def12 = string | null;
 export type ShowResult12 = boolean;
+export type Kind12 = "call";
 export type Call = string;
 export type Def13 = string | null;
 export type ShowResult13 = boolean;
+export type Kind13 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
@@ -563,12 +578,12 @@ export type Document1 =
   | GetBlock
   | DataBlock
   | IfBlock
-  | RepeatsBlock
-  | RepeatsUntilBlock
-  | SequenceBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
   | ErrorBlock
-  | InputBlock
-  | Block
   | (
       | string
       | FunctionBlock
@@ -579,12 +594,12 @@ export type Document1 =
       | GetBlock
       | DataBlock
       | IfBlock
-      | RepeatsBlock
-      | RepeatsUntilBlock
-      | SequenceBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
       | ErrorBlock
-      | InputBlock
-      | Block
     )[];
 export type Scope = {
   [k: string]: unknown;
@@ -597,6 +612,7 @@ export interface FunctionBlock {
   def?: Def13;
   show_result?: ShowResult13;
   result?: unknown;
+  kind?: Kind13;
   function: Function;
   document: Document1;
   scope?: Scope;
@@ -615,12 +631,12 @@ export interface Defs {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -631,12 +647,12 @@ export interface Defs {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface CallBlock {
@@ -646,6 +662,7 @@ export interface CallBlock {
   def?: Def12;
   show_result?: ShowResult12;
   result?: unknown;
+  kind?: Kind12;
   call: Call;
   args?: Args;
 }
@@ -663,12 +680,12 @@ export interface Defs1 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -679,12 +696,12 @@ export interface Defs1 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface ModelBlock {
@@ -694,6 +711,7 @@ export interface ModelBlock {
   def?: Def11;
   show_result?: ShowResult11;
   result?: unknown;
+  kind?: Kind11;
   model: Model;
   input?: Input1;
   prompt_id?: PromptId;
@@ -716,12 +734,12 @@ export interface Defs2 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -732,12 +750,12 @@ export interface Defs2 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface CodeBlock {
@@ -747,6 +765,7 @@ export interface CodeBlock {
   def?: Def10;
   show_result?: ShowResult10;
   result?: unknown;
+  kind?: Kind10;
   lan: Lan;
   code: Code;
 }
@@ -764,12 +783,12 @@ export interface Defs3 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -780,12 +799,12 @@ export interface Defs3 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface ApiBlock {
@@ -795,6 +814,7 @@ export interface ApiBlock {
   def?: Def9;
   show_result?: ShowResult9;
   result?: unknown;
+  kind?: Kind9;
   api: Api;
   url: Url;
   input: Input;
@@ -813,12 +833,12 @@ export interface Defs4 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -829,12 +849,12 @@ export interface Defs4 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface GetBlock {
@@ -844,6 +864,7 @@ export interface GetBlock {
   def?: Def8;
   show_result?: ShowResult8;
   result?: unknown;
+  kind?: Kind8;
   get: Get;
 }
 export interface Spec5 {
@@ -860,12 +881,12 @@ export interface Defs5 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -876,12 +897,12 @@ export interface Defs5 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface DataBlock {
@@ -891,6 +912,7 @@ export interface DataBlock {
   def?: Def7;
   show_result?: ShowResult7;
   result?: unknown;
+  kind?: Kind7;
   data: Data;
 }
 export interface Spec6 {
@@ -907,12 +929,12 @@ export interface Defs6 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -923,12 +945,12 @@ export interface Defs6 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface IfBlock {
@@ -938,6 +960,7 @@ export interface IfBlock {
   def?: Def6;
   show_result?: ShowResult6;
   result?: unknown;
+  kind?: Kind6;
   if: If;
   then: Then;
   else?: Else;
@@ -956,12 +979,12 @@ export interface Defs7 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -972,21 +995,22 @@ export interface Defs7 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-export interface RepeatsBlock {
+export interface RepeatBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
   def?: Def5;
   show_result?: ShowResult5;
   result?: unknown;
+  kind?: Kind5;
   repeat: Repeat1;
   num_iterations: NumIterations;
   trace?: Trace1;
@@ -1005,12 +1029,12 @@ export interface Defs8 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1021,21 +1045,22 @@ export interface Defs8 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-export interface RepeatsUntilBlock {
+export interface RepeatUntilBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
   def?: Def4;
   show_result?: ShowResult4;
   result?: unknown;
+  kind?: Kind4;
   repeat: Repeat;
   until: Until;
   trace?: Trace;
@@ -1054,12 +1079,12 @@ export interface Defs9 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1070,21 +1095,22 @@ export interface Defs9 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-export interface SequenceBlock {
+export interface DocumentBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
   def?: Def3;
   show_result?: ShowResult3;
   result?: unknown;
+  kind?: Kind3;
   document: Document;
 }
 export interface Spec10 {
@@ -1101,12 +1127,12 @@ export interface Defs10 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1117,23 +1143,26 @@ export interface Defs10 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-export interface ErrorBlock {
+export interface ReadBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
   def?: Def2;
   show_result?: ShowResult2;
   result?: unknown;
-  msg: Msg;
-  block: Block1;
+  kind?: Kind2;
+  read: Read;
+  message?: Message;
+  multiline?: Multiline;
+  parser?: Parser;
 }
 export interface Spec11 {
   [k: string]: unknown;
@@ -1149,12 +1178,12 @@ export interface Defs11 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1165,25 +1194,23 @@ export interface Defs11 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-export interface InputBlock {
+export interface IncludeBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
   def?: Def1;
   show_result?: ShowResult1;
   result?: unknown;
-  message?: Message;
-  multiline?: Multiline;
-  parser?: Parser;
-  read: Read;
+  kind?: Kind1;
+  include: Include;
 }
 export interface Spec12 {
   [k: string]: unknown;
@@ -1199,12 +1226,12 @@ export interface Defs12 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1215,24 +1242,24 @@ export interface Defs12 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
-/**
- * PDL program block
- */
-export interface Block {
+export interface ErrorBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
   def?: Def;
   show_result?: ShowResult;
   result?: unknown;
+  kind?: Kind;
+  msg: Msg;
+  block: Block;
 }
 export interface Spec13 {
   [k: string]: unknown;
@@ -1248,12 +1275,12 @@ export interface Defs13 {
     | GetBlock
     | DataBlock
     | IfBlock
-    | RepeatsBlock
-    | RepeatsUntilBlock
-    | SequenceBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
     | ErrorBlock
-    | InputBlock
-    | Block
     | (
         | string
         | FunctionBlock
@@ -1264,12 +1291,12 @@ export interface Defs13 {
         | GetBlock
         | DataBlock
         | IfBlock
-        | RepeatsBlock
-        | RepeatsUntilBlock
-        | SequenceBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
         | ErrorBlock
-        | InputBlock
-        | Block
       )[];
 }
 export interface EndsWithCondition {

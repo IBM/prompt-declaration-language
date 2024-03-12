@@ -50,25 +50,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -101,25 +98,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -157,6 +151,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "api",
+          "default": "api",
+          "title": "Kind"
         },
         "api": {
           "title": "Api",
@@ -196,25 +195,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -247,25 +243,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -281,169 +274,6 @@
         "input"
       ],
       "title": "ApiBlock",
-      "type": "object"
-    },
-    "Block": {
-      "additionalProperties": false,
-      "description": "PDL program block",
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/Block"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        }
-      },
-      "title": "Block",
       "type": "object"
     },
     "CallBlock": {
@@ -496,25 +326,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -547,25 +374,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -603,6 +427,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "call",
+          "default": "call",
+          "title": "Kind"
         },
         "call": {
           "title": "Call",
@@ -670,25 +499,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -721,25 +547,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -778,6 +601,11 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind"
+        },
         "lan": {
           "title": "Lan",
           "type": "string"
@@ -812,25 +640,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -863,25 +688,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -930,25 +752,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -981,25 +800,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -1093,25 +909,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -1144,25 +957,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -1201,6 +1011,11 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "data",
+          "default": "data",
+          "title": "Kind"
+        },
         "data": {
           "title": "Data"
         }
@@ -1218,6 +1033,272 @@
       ],
       "title": "DecodingMethod",
       "type": "string"
+    },
+    "DocumentBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/ModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "kind": {
+          "const": "document",
+          "default": "document",
+          "title": "Kind"
+        },
+        "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Document"
+        }
+      },
+      "required": [
+        "document"
+      ],
+      "title": "DocumentBlock",
+      "type": "object"
     },
     "EndsWithArgs": {
       "properties": {
@@ -1251,25 +1332,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -1302,25 +1380,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -1414,25 +1489,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -1465,25 +1537,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -1522,6 +1591,11 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "error",
+          "default": "error",
+          "title": "Kind"
+        },
         "msg": {
           "title": "Msg",
           "type": "string"
@@ -1553,25 +1627,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             }
           ],
           "title": "Block"
@@ -1634,25 +1705,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -1685,25 +1753,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -1741,6 +1806,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "function",
+          "default": "function",
+          "title": "Kind"
         },
         "function": {
           "anyOf": [
@@ -1783,25 +1853,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -1834,25 +1901,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -1931,25 +1995,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -1982,25 +2043,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -2038,6 +2096,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "get",
+          "default": "get",
+          "title": "Kind"
         },
         "get": {
           "title": "Get",
@@ -2100,25 +2163,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -2151,25 +2211,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -2207,6 +2264,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "if",
+          "default": "if",
+          "title": "Kind"
         },
         "if": {
           "anyOf": [
@@ -2252,25 +2314,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -2303,25 +2362,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -2360,25 +2416,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -2411,25 +2464,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -2500,25 +2550,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -2551,25 +2598,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -2607,6 +2651,11 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "kind": {
+          "const": "include",
+          "default": "include",
+          "title": "Kind"
         },
         "include": {
           "title": "Include",
@@ -2617,211 +2666,6 @@
         "include"
       ],
       "title": "IncludeBlock",
-      "type": "object"
-    },
-    "InputBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/Block"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "message": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Message"
-        },
-        "multiline": {
-          "default": false,
-          "title": "Multiline",
-          "type": "boolean"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Parser"
-        },
-        "read": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Read"
-        }
-      },
-      "required": [
-        "read"
-      ],
-      "title": "InputBlock",
       "type": "object"
     },
     "LengthPenalty": {
@@ -2907,25 +2751,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -2958,25 +2799,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -3015,6 +2853,11 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "model",
+          "default": "model",
+          "title": "Kind"
+        },
         "model": {
           "title": "Model",
           "type": "string"
@@ -3049,25 +2892,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -3100,25 +2940,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -3663,7 +3500,7 @@
       "title": "PromptTemplateData",
       "type": "object"
     },
-    "RepeatsBlock": {
+    "ReadBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -3713,25 +3550,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -3764,25 +3598,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -3821,6 +3652,215 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "read",
+          "default": "read",
+          "title": "Kind"
+        },
+        "read": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Read"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "multiline": {
+          "default": false,
+          "title": "Multiline",
+          "type": "boolean"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        }
+      },
+      "required": [
+        "read"
+      ],
+      "title": "ReadBlock",
+      "type": "object"
+    },
+    "RepeatBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/ModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "kind": {
+          "const": "repeat",
+          "default": "repeat",
+          "title": "Kind"
+        },
         "repeat": {
           "anyOf": [
             {
@@ -3851,25 +3891,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -3902,25 +3939,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -3965,25 +3999,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -4016,25 +4047,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -4050,10 +4078,10 @@
         "repeat",
         "num_iterations"
       ],
-      "title": "RepeatsBlock",
+      "title": "RepeatBlock",
       "type": "object"
     },
-    "RepeatsUntilBlock": {
+    "RepeatUntilBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -4103,25 +4131,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -4154,25 +4179,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -4211,6 +4233,11 @@
           "default": null,
           "title": "Result"
         },
+        "kind": {
+          "const": "repeat_until",
+          "default": "repeat_until",
+          "title": "Kind"
+        },
         "repeat": {
           "anyOf": [
             {
@@ -4241,25 +4268,22 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
-              "$ref": "#/$defs/RepeatsUntilBlock"
+              "$ref": "#/$defs/RepeatUntilBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
+              "$ref": "#/$defs/ReadBlock"
             },
             {
               "$ref": "#/$defs/IncludeBlock"
             },
             {
-              "$ref": "#/$defs/Block"
+              "$ref": "#/$defs/ErrorBlock"
             },
             {
               "items": {
@@ -4292,25 +4316,22 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
+                    "$ref": "#/$defs/RepeatUntilBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
+                    "$ref": "#/$defs/ReadBlock"
                   },
                   {
                     "$ref": "#/$defs/IncludeBlock"
                   },
                   {
-                    "$ref": "#/$defs/Block"
+                    "$ref": "#/$defs/ErrorBlock"
                   }
                 ]
               },
@@ -4365,25 +4386,22 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
-                "$ref": "#/$defs/RepeatsUntilBlock"
+                "$ref": "#/$defs/RepeatUntilBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
+                "$ref": "#/$defs/ReadBlock"
               },
               {
                 "$ref": "#/$defs/IncludeBlock"
               },
               {
-                "$ref": "#/$defs/Block"
+                "$ref": "#/$defs/ErrorBlock"
               },
               {
                 "items": {
@@ -4416,25 +4434,22 @@
                       "$ref": "#/$defs/IfBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsBlock"
+                      "$ref": "#/$defs/RepeatBlock"
                     },
                     {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
+                      "$ref": "#/$defs/RepeatUntilBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
+                      "$ref": "#/$defs/ReadBlock"
                     },
                     {
                       "$ref": "#/$defs/IncludeBlock"
                     },
                     {
-                      "$ref": "#/$defs/Block"
+                      "$ref": "#/$defs/ErrorBlock"
                     }
                   ]
                 },
@@ -4450,280 +4465,7 @@
         "repeat",
         "until"
       ],
-      "title": "RepeatsUntilBlock",
-      "type": "object"
-    },
-    "SequenceBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatsUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/InputBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/Block"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatsUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/InputBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/Block"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "document": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatsBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatsUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/SequenceBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/InputBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/Block"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatsBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatsUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/SequenceBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/InputBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/Block"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "title": "Document"
-        }
-      },
-      "required": [
-        "document"
-      ],
-      "title": "SequenceBlock",
+      "title": "RepeatUntilBlock",
       "type": "object"
     },
     "TextGenerationReturnOptions": {
@@ -4846,25 +4588,22 @@
       "$ref": "#/$defs/IfBlock"
     },
     {
-      "$ref": "#/$defs/RepeatsBlock"
+      "$ref": "#/$defs/RepeatBlock"
     },
     {
-      "$ref": "#/$defs/RepeatsUntilBlock"
+      "$ref": "#/$defs/RepeatUntilBlock"
     },
     {
-      "$ref": "#/$defs/SequenceBlock"
+      "$ref": "#/$defs/DocumentBlock"
     },
     {
-      "$ref": "#/$defs/ErrorBlock"
-    },
-    {
-      "$ref": "#/$defs/InputBlock"
+      "$ref": "#/$defs/ReadBlock"
     },
     {
       "$ref": "#/$defs/IncludeBlock"
     },
     {
-      "$ref": "#/$defs/Block"
+      "$ref": "#/$defs/ErrorBlock"
     }
   ],
   "description": "Prompt Description Program (PDL)",
