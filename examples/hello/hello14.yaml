@@ -1,4 +1,4 @@
-description: Hello world with model chainings
+description: Hello world with model chaining
 document:
 - Hello,
 - model: ibm/granite-20b-code-instruct-v1

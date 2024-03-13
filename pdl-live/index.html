@@ -1,12 +1,142 @@
 <!DOCTYPE html>
- <html>
-   <head>
-     <meta charset="utf-8" />
-     <title>PDL Live</title>
+<html>
 
-   </head>
-   <body>
+<head>
+  <meta charset="utf-8" />
+  <title>PDL Live</title>
 
-    <script src="./dist/bundle.js"></script>
-   </body>
- </html>
+  <!-- Styling -->
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    .pdl_block {
+      border-radius: 3px;
+      margin: 3px;
+      padding: 5px;
+      margin: 2px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    .pdl_show_result_false {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .pdl_string {
+      background-color: antiquewhite;
+    }
+
+    .pdl_document {
+      background-color: rgb(219, 215, 250);
+    }
+
+    .pdl_model {
+      background-color: rgb(215, 250, 224);
+    }
+
+    .pdl_code {
+      background-color: rgb(250, 215, 225);
+    }
+
+    .pdl_api {
+      background-color: rgb(122, 246, 113);
+    }
+
+    .pdl_get {
+      background-color: rgb(125, 229, 243);
+    }
+
+    .pdl_data {
+      background-color: rgb(146, 181, 245);
+    }
+
+    .pdl_if {
+      background-color: rgb(248, 99, 141);
+    }
+
+    .pdl_repeats {
+      background-color: rgb(251, 201, 86);
+    }
+
+    .pdl_repeats_until {
+      background-color: rgb(243, 209, 77);
+    }
+
+    .pdl_read {
+      background-color: rgb(243, 77, 113);
+    }
+
+    .pdl_import {
+      background-color: rgb(245, 18, 67);
+    }
+
+    .pdl_function {
+      background-color: rgb(77, 243, 132);
+    }
+    .pdl_call {
+      background-color: rgb(80, 243, 77);
+    }
+
+  </style>
+
+  <!-- Main script -->
+  <script src="./dist/bundle.js"></script>
+
+  <!-- Multi column layout -->
+  <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css">
+
+  <!-- Carbon design -->
+  <script type="module"
+    src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/ui-shell.min.js"></script>
+  <link rel="stylesheet" href="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/themes.css" />
+
+</head>
+
+<body>
+
+  <!-- Navigation bar -->
+  <cds-header id="navbar" aria-label="PDL" class="cds-theme-zone-g90">
+    <cds-header-name>PDL viewer</cds-header-name>
+  </cds-header>
+
+  <!-- Main window -->
+  <div id="mainview">
+
+    <!-- Load file -->
+    <input type="file" name="input_file" id="input_file">
+    <script type="text/javascript">
+      document.getElementById('input_file')
+        .addEventListener('change', function () {
+
+          let fr = new FileReader();
+          fr.onload = function () {
+            data = JSON.parse(fr.result)
+            pdl_viewer.replace_div('doc', pdl_viewer.show_output(data))
+          }
+
+          fr.readAsText(this.files[0]);
+        })
+    </script>
+    <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_output(pdl_viewer.data))"
+      value="Display">
+
+    <!-- Main window layout -->
+    <div id="layout" style="width: 95%; height: 900px;"></div>
+    <script type="module">
+      import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+
+      let pstyle = 'border: 1px solid #efefef; padding: 5px'
+      new w2layout({
+        box: '#layout',
+        name: 'layout',
+        panels: [
+          { type: 'left', size: 400, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
+          { type: 'main', style: pstyle, html: '<div id="code"></div>' }
+        ]
+      })
+    </script>
+
+  </div>
+
+</body>
+
+</html>

@@ -23,24 +23,29 @@ ExpressionType: TypeAlias = Any
 
 
 class ConditionExpr(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     result: Optional[bool] = None
 
 
 class EndsWithArgs(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     arg0: "DocumentType"
     arg1: ExpressionType
 
 
 class EndsWithCondition(ConditionExpr):
+    model_config = ConfigDict(extra="forbid")
     ends_with: EndsWithArgs
 
 
 class ContainsArgs(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     arg0: "DocumentType"
     arg1: ExpressionType
 
 
 class ContainsCondition(ConditionExpr):
+    model_config = ConfigDict(extra="forbid")
     contains: ContainsArgs
 
 
@@ -146,6 +151,7 @@ class IfBlock(Block):
     condition: "ConditionType" = Field(alias="if")
     then: "DocumentType"
     elses: Optional["DocumentType"] = Field(default=None, alias="else")
+    if_result: Optional[bool] = None
 
 
 class RepeatBlock(Block):
@@ -177,16 +183,17 @@ class IncludeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.INCLUDE] = BlockKind.INCLUDE
     include: str
+    trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
-    block: "BlockType"
+    document: "DocumentType"
 
 
-BlockType: TypeAlias = (
+AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | ModelBlock
@@ -202,7 +209,8 @@ BlockType: TypeAlias = (
     | IncludeBlock
     | ErrorBlock
 )
-DocumentType: TypeAlias = str | BlockType | list[str | BlockType]  # pyright: ignore
+BlockType: TypeAlias = str | AdvancedBlockType
+DocumentType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 
 
 class Program(RootModel):

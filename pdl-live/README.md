@@ -1,0 +1,24 @@
+Install the dependencies:
+```
+npm install
+```
+
+Update the type definitions (if needed):
+```
+npx json2ts ../pdl-schema.json src/pdl_ast.d.ts
+```
+
+Automatically format the code
+```
+npm run fix
+```
+
+Package the code:
+```
+npm run build
+```
+
+Open the UI:
+```
+open index.html
+```
