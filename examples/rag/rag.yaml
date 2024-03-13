@@ -1,24 +1,18 @@
 description: Retrieval-augmented generation for NL-to-Code generation task.
 defs:
-  VECTOR_DATABASE:
-    lan: python
-    code:
-    - import datasets
-    - train_data = datasets.load_dataset("mbpp", "sanitized", split="train")
-    - result = train_data.add_faiss_index("embeddings")
   TEST:
     lan: python
     code:
     - import datasets
+    - train_data = datasets.load_dataset("mbpp", "sanitized", split="train")
+    - pdl_session["index"] = train_data.add_faiss_index("embeddings")
     - test_data = datasets.load_dataset("mbpp", "sanitized", split="test")
     - result = test_data[0]
   RETRIEVED:
     lan: python
-    args:
-      vec_db: "{{{ VECTOR_DATABASE }}}"
-      text: "{{{ TEST.text }}}"
     code:
-    - result = vec_db.get_nearest_examples("embeddings", np.array(text), 3)
+    - text = np.array({{{ TEST.text }}})
+    - result = pdl_session["index"].get_nearest_examples("embeddings", text, 3)
   AUGMENTATION: |
     Q: {{{ RETRIEVED[0].text }}}
     A: ```{{{ RETRIEVED[0].code }}}```
@@ -46,7 +40,7 @@ document: |
   {{{ TEST.text }}}
 
   generated code:
-  {{{ GENERATED }}}
+  ```{{{ GENERATED }}}```
 
   ground truth:
-  {{{ TEST.code }}}
+  ```{{{ TEST.code }}}```
