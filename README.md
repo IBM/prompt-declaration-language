@@ -319,7 +319,12 @@ that we provide some default values when the following parameters are missing:
   - `decoding_method`: `greedy`
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
-  - `repetition_penalty`: 1.07
+  - `repetition_penalty`: 1.05
+  
+  Also if the `decoding_method` is `sample`, then the following defaults are used:
+  - `temperature`: 0.7
+  - `top_p`: 0.85
+  - `top_k`: 50
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 

@@ -73,6 +73,11 @@ In general, a model call accepts the same parameters as BAM's [text generation](
   - `min_new_tokens`: 1
   - `repetition_penalty`: 1.07
 
+Also if the `decoding_method` is `sample`, then the following defaults are used:
+  - `temperature`: 0.7
+  - `top_p`: 0.85
+  - `top_k`: 50
+
 The user can override these defaults by explicitly including them in the model call.
 
 When we execute this program using the interpreter, we obtain:

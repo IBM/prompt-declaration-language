@@ -51,7 +51,10 @@ DEBUG = False
 
 MAX_NEW_TOKENS = 1024
 MIN_NEW_TOKENS = 1
-REPETITION_PENATLY = 1.07
+REPETITION_PENATLY = 1.05
+TEMPERATURE_SAMPLING = 0.7
+TOP_P_SAMPLING = 0.85
+TOP_K_SAMPLING = 50
 
 load_dotenv()
 GENAI_KEY = os.getenv("GENAI_KEY")
@@ -391,6 +394,13 @@ def call_model(
             params.min_new_tokens = MIN_NEW_TOKENS
         if params.repetition_penalty is None:
             params.repetition_penalty = REPETITION_PENATLY
+        if params.decoding_method == DecodingMethod.SAMPLE:
+            if params.temperature is None:
+                params.temperature = TEMPERATURE_SAMPLING
+            if params.top_k is None:
+                params.top_k = TOP_K_SAMPLING
+            if params.top_p is None:
+                params.top_p = TOP_P_SAMPLING
         response = client.text.generation.create(
             model_id=block.model,
             prompt_id=block.prompt_id,
