@@ -6,13 +6,13 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
-    Block,
     CallBlock,
     CodeBlock,
     ConditionExpr,
     DataBlock,
     DocumentBlock,
     DocumentType,
+    ErrorBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -21,7 +21,6 @@ from .pdl_ast import (
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
-    ScopeType,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -51,11 +50,13 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
-def program_to_dict(prog: pdl_ast.Program) -> dict[str, Any]:
+def program_to_dict(prog: pdl_ast.Program) -> str | dict[str, Any]:
     return block_to_dict(prog.root)
 
 
-def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
+def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
+    if isinstance(block, str):
+        return block
     d: dict[str, Any] = {}
     d["kind"] = block.kind
     if block.description is not None:
@@ -119,6 +120,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
+        case ErrorBlock():
+            d["document"] = block.document
     if block.assign is not None:
         d["def"] = block.assign
     if block.show_result is False:
@@ -132,14 +135,10 @@ def document_to_dict(
     document: DocumentType,
 ) -> str | dict[str, Any] | list[str | dict[str, Any]]:
     result: str | dict[str, Any] | list[str | dict[str, Any]]
-    if isinstance(document, str):
-        result = document
-    elif isinstance(document, Block):
-        result = block_to_dict(document)  # type: ignore
-    elif isinstance(document, Sequence):
-        result = [document_to_dict(doc) for doc in document]  # type: ignore
+    if not isinstance(document, str) and isinstance(document, Sequence):
+        result = [block_to_dict(block) for block in document]
     else:
-        assert False
+        result = block_to_dict(document)
     return result
 
 
@@ -154,11 +153,11 @@ def condition_to_dict(cond: pdl_ast.ConditionType) -> str | dict[str, Any]:
     return result
 
 
-def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
-    d = {}
-    for x, v in scope.items():
-        if isinstance(v, Block):
-            d[x] = block_to_dict(v)  # type: ignore
-        else:
-            d[x] = v
-    return d
+# def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
+#     d = {}
+#     for x, v in scope.items():
+#         if isinstance(v, Block):
+#             d[x] = block_to_dict(v)  # type: ignore
+#         else:
+#             d[x] = v
+#     return d

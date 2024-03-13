@@ -2,7 +2,6 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     ApiBlock,
-    Block,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -25,6 +24,8 @@ from .pdl_ast import (
 
 def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> None:
     match block:
+        case s if isinstance(s, str):
+            pass
         case FunctionBlock():
             if block.document is not None:
                 iter_document(f, block.document)
@@ -54,7 +55,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             iter_document(f, block.repeat)
             iter_condition(f, block.until)
         case ErrorBlock():
-            f(block.block)
+            iter_document(f, block.document)
         case ReadBlock():
             pass
         case _:
@@ -64,17 +65,11 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
 
 
 def iter_document(f: Callable[[BlockType], None], document: DocumentType) -> None:
-    if isinstance(document, str):
-        pass
-    elif isinstance(document, Block):
-        f(document)  # type: ignore
-    elif isinstance(document, Sequence):
-        for d in document:
-            iter_document(f, d)
+    if not isinstance(document, str) and isinstance(document, Sequence):
+        for block in document:
+            f(block)
     else:
-        assert (
-            False
-        ), f"Internal error (iter_document): unexpected document type {type(document)}"
+        f(document)
 
 
 def iter_condition(f: Callable[[BlockType], None], cond: ConditionType) -> None:

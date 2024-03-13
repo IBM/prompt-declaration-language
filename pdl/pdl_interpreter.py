@@ -13,10 +13,10 @@ from genai.credentials import Credentials
 from genai.schema import DecodingMethod
 from pydantic import ValidationError
 
-from . import pdl_ast, ui
+from . import ui
 from .pdl_ast import (
+    AdvancedBlockType,
     ApiBlock,
-    Block,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -130,6 +130,12 @@ def generate(
 def process_block(
     log, scope: ScopeType, block: BlockType
 ) -> tuple[Any, str, ScopeType, BlockType]:
+    if isinstance(block, str):
+        result = process_expr(scope, block)
+        output = result
+        trace = result
+        append_log(log, "Document", result)
+        return result, output, scope, block
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(log, scope, block.defs)
     else:
@@ -147,12 +153,12 @@ def process_block(
 
 
 def process_block_body(
-    log, scope: ScopeType, block: BlockType
-) -> tuple[Any, str, ScopeType, BlockType]:
+    log, scope: ScopeType, block: AdvancedBlockType
+) -> tuple[Any, str, ScopeType, AdvancedBlockType]:
     scope_init = scope
     result: Any
     output: str
-    trace: pdl_ast.BlockType
+    trace: AdvancedBlockType
     match block:
         case ModelBlock():
             result, output, scope, trace = call_model(log, scope, block)
@@ -164,7 +170,7 @@ def process_block_body(
                 msg = "Variable is undefined: " + var
                 error(msg)
                 output = ""
-                trace = ErrorBlock(msg=msg, block=block.model_copy())
+                trace = ErrorBlock(msg=msg, document=block.model_copy())
             else:
                 output = result if isinstance(result, str) else json.dumps(result)
                 trace = block.model_copy()
@@ -188,6 +194,7 @@ def process_block_body(
                 )
                 trace = block.model_copy(
                     update={
+                        "if_result": b,
                         "condition": cond_trace,
                         "then": document,
                     }
@@ -198,6 +205,7 @@ def process_block_body(
                 )
                 trace = block.model_copy(
                     update={
+                        "if_result": b,
                         "condition": cond_trace,
                         "elses": document,
                     }
@@ -259,7 +267,7 @@ def process_block_body(
                 error(msg)
                 output = ""
                 result = None
-                trace = ErrorBlock(msg=msg, block=block.model_copy())
+                trace = ErrorBlock(msg=msg, document=block.model_copy())
             else:
                 f_body = closure.document
                 f_scope = closure.scope | {"context": scope["context"]} | args
@@ -287,25 +295,18 @@ def process_document(
     result: Any
     output: str
     trace: DocumentType
-    if isinstance(document, str):
-        result = process_expr(scope, document)
-        output = result
-        trace = result
-        append_log(log, "Document", result)
-    elif isinstance(document, Block):
-        result, output, scope, trace = process_block(log, scope, document)  # type: ignore
-    elif isinstance(document, Sequence):
+    if not isinstance(document, str) and isinstance(document, Sequence):
         result = None
         output = ""
         trace = []
         context_init = scope["context"]
-        for doc in document:
+        for block in document:
             scope = scope | {"context": context_init + output}
-            result, o, scope, t = process_document(log, scope, doc)
+            result, o, scope, t = process_block(log, scope, block)
             output += o
             trace.append(t)  # type: ignore
     else:
-        assert False, f"Internal error: unexpected document type {type(document)}"
+        result, output, scope, trace = process_block(log, scope, document)
     return result, output, scope, trace
 
 
@@ -380,7 +381,7 @@ def call_model(
             msg = "Fail to get a BAM client"
             error(msg)
             trace = ErrorBlock(
-                msg=msg, block=block.model_copy(update={"input": input_trace})
+                msg=msg, document=block.model_copy(update={"input": input_trace})
             )
             return None, "", scope, trace
         params = block.parameters
@@ -418,7 +419,7 @@ def call_model(
         msg = f"Model error: {e}"
         error(msg)
         trace = ErrorBlock(
-            msg=msg, block=block.model_copy(update={"input": input_trace})
+            msg=msg, document=block.model_copy(update={"input": input_trace})
         )
         return None, "", scope, trace
 
@@ -442,14 +443,14 @@ def call_api(
         result = None
         output = ""
         trace = ErrorBlock(
-            msg=msg, block=block.model_copy(update={"input": input_trace})
+            msg=msg, document=block.model_copy(update={"input": input_trace})
         )
     return result, output, scope, trace
 
 
 def call_code(
     log, scope: ScopeType, block: CodeBlock
-) -> tuple[Any, str, ScopeType, BlockType]:
+) -> tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]:
     _, code_s, _, code_trace = process_document(log, scope, block.code)
     append_log(log, "Code Input", code_s)
     debug("code string: " + code_s)
@@ -462,7 +463,7 @@ def call_code(
             error(msg)
             result = None
             output = ""
-            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            trace = ErrorBlock(msg=msg, document=block.model_copy())
             return result, output, scope, trace
     append_log(log, "Code Output", result)
     trace = block.model_copy(update={"result": result, "code": code_trace})
@@ -482,7 +483,7 @@ def process_input(
     if block.parser == "json" and block.assign is None:
         msg = "If parser is json in input block, then there must be def field"
         error(msg)
-        trace = ErrorBlock(msg=msg, block=block.model_copy())
+        trace = ErrorBlock(msg=msg, document=block.model_copy())
         return None, "", scope, trace
 
     if block.read is not None:
@@ -519,7 +520,7 @@ def process_input(
         except Exception:
             msg = "Attempted to parse ill-formed JSON"
             error(msg)
-            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            trace = ErrorBlock(msg=msg, document=block.model_copy())
             return None, "", scope, trace
 
     else:
@@ -531,19 +532,20 @@ def process_input(
 
 def process_include(
     log, scope: ScopeType, block: IncludeBlock
-) -> tuple[Any, str, ScopeType, BlockType]:
+) -> tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]:
     with open(block.include, "r", encoding="utf-8") as infile:
         data = yaml.safe_load(infile)
         trace = None
         try:
             prog = Program.model_validate(data)
-            trace = prog.root
-            return process_block(log, scope, prog.root)
+            result, output, scope, trace = process_block(log, scope, prog.root)
+            include_trace = block.model_copy(update={"trace": trace})
+            return result, output, scope, include_trace
         except ValidationError as e:
             print(e)
             msg = "Attempting to include invalid yaml: " + block.include
             error(msg)
-            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            trace = ErrorBlock(msg=msg, document=block.model_copy())
             return None, "", scope, trace
 
 

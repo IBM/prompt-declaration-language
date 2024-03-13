@@ -721,6 +721,7 @@
       "type": "object"
     },
     "ContainsArgs": {
+      "additionalProperties": false,
       "properties": {
         "arg0": {
           "anyOf": [
@@ -836,6 +837,7 @@
       "type": "object"
     },
     "ContainsCondition": {
+      "additionalProperties": false,
       "properties": {
         "result": {
           "anyOf": [
@@ -1301,6 +1303,7 @@
       "type": "object"
     },
     "EndsWithArgs": {
+      "additionalProperties": false,
       "properties": {
         "arg0": {
           "anyOf": [
@@ -1416,6 +1419,7 @@
       "type": "object"
     },
     "EndsWithCondition": {
+      "additionalProperties": false,
       "properties": {
         "result": {
           "anyOf": [
@@ -1600,8 +1604,11 @@
           "title": "Msg",
           "type": "string"
         },
-        "block": {
+        "document": {
           "anyOf": [
+            {
+              "type": "string"
+            },
             {
               "$ref": "#/$defs/FunctionBlock"
             },
@@ -1643,14 +1650,66 @@
             },
             {
               "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  }
+                ]
+              },
+              "type": "array"
             }
           ],
-          "title": "Block"
+          "title": "Document"
         }
       },
       "required": [
         "msg",
-        "block"
+        "document"
       ],
       "title": "ErrorBlock",
       "type": "object"
@@ -2491,6 +2550,18 @@
           ],
           "default": null,
           "title": "Else"
+        },
+        "if_result": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "If Result"
         }
       },
       "required": [
@@ -2660,6 +2731,60 @@
         "include": {
           "title": "Include",
           "type": "string"
+        },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
         }
       },
       "required": [
@@ -4563,6 +4688,9 @@
     }
   },
   "anyOf": [
+    {
+      "type": "string"
+    },
     {
       "$ref": "#/$defs/FunctionBlock"
     },

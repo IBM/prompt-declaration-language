@@ -9,6 +9,7 @@
  * Prompt Description Program (PDL)
  */
 export type Program =
+  | string
   | FunctionBlock
   | CallBlock
   | ModelBlock
@@ -41,7 +42,8 @@ export type Def = string | null;
 export type ShowResult = boolean;
 export type Kind = "error";
 export type Msg = string;
-export type Block =
+export type Document =
+  | string
   | FunctionBlock
   | CallBlock
   | ModelBlock
@@ -55,11 +57,45 @@ export type Block =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
-  | ErrorBlock;
+  | ErrorBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+    )[];
 export type Def1 = string | null;
 export type ShowResult1 = boolean;
 export type Kind1 = "include";
 export type Include = string;
+export type Trace =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | null;
 export type Def2 = string | null;
 export type ShowResult2 = boolean;
 export type Kind2 = "read";
@@ -70,7 +106,7 @@ export type Parser = string | null;
 export type Def3 = string | null;
 export type ShowResult3 = boolean;
 export type Kind3 = "document";
-export type Document =
+export type Document1 =
   | string
   | FunctionBlock
   | CallBlock
@@ -208,7 +244,7 @@ export type Arg01 =
       | IncludeBlock
       | ErrorBlock
     )[];
-export type Trace = (
+export type Trace1 = (
   | string
   | FunctionBlock
   | CallBlock
@@ -279,7 +315,7 @@ export type Repeat1 =
       | ErrorBlock
     )[];
 export type NumIterations = number;
-export type Trace1 = (
+export type Trace2 = (
   | string
   | FunctionBlock
   | CallBlock
@@ -384,6 +420,7 @@ export type Else =
       | ErrorBlock
     )[]
   | null;
+export type IfResult = boolean | null;
 export type Def7 = string | null;
 export type ShowResult7 = boolean;
 export type Kind7 = "data";
@@ -568,7 +605,7 @@ export type Kind13 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
-export type Document1 =
+export type Document2 =
   | string
   | FunctionBlock
   | CallBlock
@@ -614,7 +651,7 @@ export interface FunctionBlock {
   result?: unknown;
   kind?: Kind13;
   function: Function;
-  document: Document1;
+  document: Document2;
   scope?: Scope;
 }
 export interface Spec {
@@ -964,6 +1001,7 @@ export interface IfBlock {
   if: If;
   then: Then;
   else?: Else;
+  if_result?: IfResult;
 }
 export interface Spec7 {
   [k: string]: unknown;
@@ -1013,7 +1051,7 @@ export interface RepeatBlock {
   kind?: Kind5;
   repeat: Repeat1;
   num_iterations: NumIterations;
-  trace?: Trace1;
+  trace?: Trace2;
 }
 export interface Spec8 {
   [k: string]: unknown;
@@ -1063,7 +1101,7 @@ export interface RepeatUntilBlock {
   kind?: Kind4;
   repeat: Repeat;
   until: Until;
-  trace?: Trace;
+  trace?: Trace1;
 }
 export interface Spec9 {
   [k: string]: unknown;
@@ -1111,7 +1149,7 @@ export interface DocumentBlock {
   show_result?: ShowResult3;
   result?: unknown;
   kind?: Kind3;
-  document: Document;
+  document: Document1;
 }
 export interface Spec10 {
   [k: string]: unknown;
@@ -1211,6 +1249,7 @@ export interface IncludeBlock {
   result?: unknown;
   kind?: Kind1;
   include: Include;
+  trace?: Trace;
 }
 export interface Spec12 {
   [k: string]: unknown;
@@ -1259,7 +1298,7 @@ export interface ErrorBlock {
   result?: unknown;
   kind?: Kind;
   msg: Msg;
-  block: Block;
+  document: Document;
 }
 export interface Spec13 {
   [k: string]: unknown;
@@ -1302,12 +1341,10 @@ export interface Defs13 {
 export interface EndsWithCondition {
   result?: Result5;
   ends_with: EndsWithArgs;
-  [k: string]: unknown;
 }
 export interface EndsWithArgs {
   arg0: Arg0;
   arg1: Arg1;
-  [k: string]: unknown;
 }
 export interface Arg1 {
   [k: string]: unknown;
@@ -1315,12 +1352,10 @@ export interface Arg1 {
 export interface ContainsCondition {
   result?: Result6;
   contains: ContainsArgs;
-  [k: string]: unknown;
 }
 export interface ContainsArgs {
   arg0: Arg01;
   arg1: Arg11;
-  [k: string]: unknown;
 }
 export interface Arg11 {
   [k: string]: unknown;
