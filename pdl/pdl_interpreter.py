@@ -470,7 +470,7 @@ def call_code(
     return result, output, scope, trace
 
 
-__PDL_SESSION = {}
+__PDL_SESSION: dict[str, Any] = {}
 
 
 def call_python(code: str) -> Any:
