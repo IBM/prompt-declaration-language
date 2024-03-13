@@ -24,6 +24,7 @@ from .pdl_ast import (
     ContainsArgs,
     ContainsCondition,
     DataBlock,
+    DocumentBlock,
     DocumentType,
     EndsWithArgs,
     EndsWithCondition,
@@ -31,14 +32,14 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
-    InputBlock,
+    IncludeBlock,
     ModelBlock,
     PDLTextGenerationParameters,
     Program,
-    RepeatsBlock,
-    RepeatsUntilBlock,
+    ReadBlock,
+    RepeatBlock,
+    RepeatUntilBlock,
     ScopeType,
-    SequenceBlock,
 )
 from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
@@ -156,15 +157,21 @@ def process_block_body(
             result, output, scope, trace = call_code(log, scope, block)
         case GetBlock(get=var):
             result = get_var(var, scope)
-            output = result if isinstance(result, str) else json.dumps(result)
-            trace = block.model_copy()
+            if result is None:
+                msg = "Variable is undefined: " + var
+                error(msg)
+                output = ""
+                trace = ErrorBlock(msg=msg, block=block.model_copy())
+            else:
+                output = result if isinstance(result, str) else json.dumps(result)
+                trace = block.model_copy()
         case DataBlock(data=v):
             result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
             trace = block.model_copy()
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
-        case SequenceBlock():
+        case DocumentBlock():
             result, output, scope, document = process_document(
                 log, scope, block.document
             )
@@ -197,7 +204,7 @@ def process_block_body(
                 output = ""
                 trace = block.model_copy(update={"condition": cond_trace})
 
-        case RepeatsBlock(num_iterations=n):
+        case RepeatBlock(num_iterations=n):
             result = None
             output = ""
             iterations_trace: list[DocumentType] = []
@@ -212,7 +219,7 @@ def process_block_body(
                 if contains_error(document):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
-        case RepeatsUntilBlock(until=cond_trace):
+        case RepeatUntilBlock(until=cond_trace):
             result = None
             stop = False
             output = ""
@@ -229,8 +236,10 @@ def process_block_body(
                     break
                 stop, scope, _ = process_condition(log, scope, cond_trace)
             trace = block.model_copy(update={"trace": iterations_trace})
-        case InputBlock():
+        case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block)
+        case IncludeBlock():
+            result, output, scope, trace = process_include(log, scope, block)
         case FunctionBlock():
             closure = block.model_copy()
             if block.assign is not None:
@@ -242,12 +251,19 @@ def process_block_body(
         case CallBlock(call=f):
             args = process_expr(scope, block.args)
             closure = get_var(f, scope)
-            f_body = closure.document
-            f_scope = closure.scope | {"context": scope["context"]} | args
-            result, output, _, f_trace = process_document(log, f_scope, f_body)
-            trace = block.model_copy(update={"trace": f_trace})
+            if closure is None:
+                msg = "Function is undefined: " + f
+                error(msg)
+                output = ""
+                result = None
+                trace = ErrorBlock(msg=msg, block=block.model_copy())
+            else:
+                f_body = closure.document
+                f_scope = closure.scope | {"context": scope["context"]} | args
+                result, output, _, f_trace = process_document(log, f_scope, f_body)
+                trace = block.model_copy(update={"trace": f_trace})
         case _:
-            assert False
+            assert False, f"Internal error: unsupported type ({type(block)})"
     return result, output, scope, trace
 
 
@@ -274,7 +290,7 @@ def process_document(
         trace = result
         append_log(log, "Document", result)
     elif isinstance(document, Block):
-        result, output, scope, trace = process_block(log, scope, document)
+        result, output, scope, trace = process_block(log, scope, document)  # type: ignore
     elif isinstance(document, Sequence):
         result = None
         output = ""
@@ -284,7 +300,7 @@ def process_document(
             scope = scope | {"context": context_init + output}
             result, o, scope, t = process_document(log, scope, doc)
             output += o
-            trace.append(t)
+            trace.append(t)  # type: ignore
     else:
         assert False, f"Internal error: unexpected document type {type(document)}"
     return result, output, scope, trace
@@ -451,8 +467,8 @@ def call_python(code: str) -> Any:
 
 
 def process_input(
-    log, scope: ScopeType, block: InputBlock
-) -> tuple[Any, str, ScopeType, InputBlock | ErrorBlock]:
+    log, scope: ScopeType, block: ReadBlock
+) -> tuple[Any, str, ScopeType, ReadBlock | ErrorBlock]:
     if block.parser == "json" and block.assign is None:
         msg = "If parser is json in input block, then there must be def field"
         error(msg)
@@ -503,10 +519,29 @@ def process_input(
     return result, s, scope, trace
 
 
+def process_include(
+    log, scope: ScopeType, block: IncludeBlock
+) -> tuple[Any, str, ScopeType, BlockType]:
+    with open(block.include, "r", encoding="utf-8") as infile:
+        data = yaml.safe_load(infile)
+        trace = None
+        try:
+            prog = Program.model_validate(data)
+            trace = prog.root
+            return process_block(log, scope, prog.root)
+        except ValidationError as e:
+            print(e)
+            msg = "Attempting to include invalid yaml: " + block.include
+            error(msg)
+            trace = ErrorBlock(msg=msg, block=block.model_copy())
+            return None, "", scope, trace
+
+
 def get_var(var: str, scope: ScopeType) -> Any:
-    segs = var.split(".")
-    res = scope[segs[0]]
     try:
+        segs = var.split(".")
+        res = scope[segs[0]]
+
         for v in segs[1:]:
             res = res[v]
     except Exception:

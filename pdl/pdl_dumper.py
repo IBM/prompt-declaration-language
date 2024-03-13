@@ -11,16 +11,17 @@ from .pdl_ast import (
     CodeBlock,
     ConditionExpr,
     DataBlock,
+    DocumentBlock,
     DocumentType,
     FunctionBlock,
     GetBlock,
     IfBlock,
-    InputBlock,
+    IncludeBlock,
     ModelBlock,
-    RepeatsBlock,
-    RepeatsUntilBlock,
+    ReadBlock,
+    RepeatBlock,
+    RepeatUntilBlock,
     ScopeType,
-    SequenceBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -56,6 +57,7 @@ def program_to_dict(prog: pdl_ast.Program) -> dict[str, Any]:
 
 def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
     d: dict[str, Any] = {}
+    d["kind"] = block.kind
     if block.description is not None:
         d["description"] = block.description
     if block.spec is not None:
@@ -87,24 +89,25 @@ def block_to_dict(block: pdl_ast.BlockType) -> dict[str, Any]:
             d["url"] = block.url
             if block.input is not None:
                 d["input"] = document_to_dict(block.input)
-        case SequenceBlock():
+        case DocumentBlock():
             d["document"] = document_to_dict(block.document)
-        case InputBlock():
-            if isinstance(block, InputBlock):
-                d["read"] = block.read
+        case ReadBlock():
+            d["read"] = block.read
             d["message"] = block.message
             d["multiline"] = block.multiline
             d["parser"] = block.parser
+        case IncludeBlock():
+            d["include"] = block.include
         case IfBlock():
             d["condition"] = condition_to_dict(block.condition)
             d["then"] = document_to_dict(block.then)
             if block.elses is not None:
                 d["else"] = document_to_dict(block.elses)
-        case RepeatsBlock():
+        case RepeatBlock():
             d["repeat"] = document_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
             d["trace"] = [document_to_dict(document) for document in block.trace]
-        case RepeatsUntilBlock():
+        case RepeatUntilBlock():
             d["repeat"] = document_to_dict(block.repeat)
             d["until"] = condition_to_dict(block.until)
             d["trace"] = [document_to_dict(document) for document in block.trace]
@@ -132,7 +135,7 @@ def document_to_dict(
     if isinstance(document, str):
         result = document
     elif isinstance(document, Block):
-        result = block_to_dict(document)
+        result = block_to_dict(document)  # type: ignore
     elif isinstance(document, Sequence):
         result = [document_to_dict(doc) for doc in document]  # type: ignore
     else:
@@ -155,7 +158,7 @@ def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
     d = {}
     for x, v in scope.items():
         if isinstance(v, Block):
-            d[x] = block_to_dict(v)
+            d[x] = block_to_dict(v)  # type: ignore
         else:
             d[x] = v
     return d

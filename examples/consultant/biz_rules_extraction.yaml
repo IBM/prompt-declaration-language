@@ -1,0 +1,21 @@
+description: Business Rules extraction from Jsp pages
+defs:
+  PROMPTS2: 
+    | 
+    Convert above provided JSP code into business rules. Response should be in plain English and should not include any code. Do not output anything other than response. Please extract and summarize all the business rules in the below 5 categories:
+      -Data Retrieval
+      -User Interface
+      -Results Display
+      -JavaScript
+  PROMPTS2_NOTES:
+  - |
+    
+    * Strictly include all relevant parameters related to each of the above categories
+
+document:
+  - include: examples/consultant/function.yaml
+  - call: template
+    args:
+      preamble: "jsp: {{{ input_data }}}"
+      question: "{{{ PROMPTS2 }}}"
+      notes: "{{{ PROMPTS2_NOTES }}}"
