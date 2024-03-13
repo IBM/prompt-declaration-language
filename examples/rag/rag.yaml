@@ -2,42 +2,62 @@ description: Retrieval-augmented generation for NL-to-Code generation task.
 defs:
   TEST:
     lan: python
-    code:
-    - import datasets
-    - train_data = datasets.load_dataset("mbpp", "sanitized", split="train")
-    - pdl_session["index"] = train_data.add_faiss_index("embeddings")
-    - test_data = datasets.load_dataset("mbpp", "sanitized", split="test")
-    - result = test_data[0]
+    code: |
+      import datasets
+      import numpy as np
+      import os
+      import requests
+      genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
+      def embed(text):
+          endpoint = f"{genai_api}v2/text/embeddings?version=2023-11-22"
+          headers = {
+              "Content-Type": "application/json",
+              "Authorization": f"Bearer {genai_key}",
+          }
+          json_data = {
+              "model_id": "sentence-transformers/all-minilm-l6-v2",
+              "input": text,
+          }
+          response = requests.post(endpoint, headers=headers, json=json_data)
+          return np.asarray(response.json()["results"][0])
+      PDL_SESSION["embed"] = embed
+      train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
+      train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
+      PDL_SESSION["index"] = train_em.add_faiss_index("embeddings")
+      test_in = datasets.load_dataset("mbpp", "sanitized", split="test")
+      result = test_in[0]
   RETRIEVED:
     lan: python
-    code:
-    - text = np.array({{{ TEST.text }}})
-    - result = pdl_session["index"].get_nearest_examples("embeddings", text, 3)
+    code: |
+      key = PDL_SESSION["embed"]("{{{ TEST.prompt }}}")
+      n = 3
+      nearest = PDL_SESSION["index"].get_nearest_examples("embeddings", key, n)
+      result = {col: nearest.examples[col] for col in ["prompt", "code"]}
   AUGMENTATION: |
-    Q: {{{ RETRIEVED[0].text }}}
-    A: ```{{{ RETRIEVED[0].code }}}```
+    Q: {{{ RETRIEVED.prompt[0] }}}
+    A: ```{{{ RETRIEVED.code[0] }}}```
 
-    Q: {{{ RETRIEVED[1].text }}}
-    A: ```{{{ RETRIEVED[1].code }}}```
+    Q: {{{ RETRIEVED.prompt[1] }}}
+    A: ```{{{ RETRIEVED.code[1] }}}```
 
-    Q: {{{ RETRIEVED[2].text }}}
-    A: ```{{{ RETRIEVED[2].code }}}```
+    Q: {{{ RETRIEVED.prompt[2] }}}
+    A: ```{{{ RETRIEVED.code[2] }}}```
   GENERATED:
     model: ibm/granite-20b-code-instruct-v1
     input: |
       Given text after "Q:", generate a Python function after "A:".
 
       {{{ AUGMENTATION }}}
-      
-      Q: {{{ TEST.text }}}
+
+      Q: {{{ TEST.prompt }}}
       A: ```
     parameters:
       stop_sequences:
       - "```"
       include_stop_sequence: false
 document: |
-  text:
-  {{{ TEST.text }}}
+  input text:
+  {{{ TEST.prompt }}}
 
   generated code:
   ```{{{ GENERATED }}}```

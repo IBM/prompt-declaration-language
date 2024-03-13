@@ -7,3 +7,5 @@ python-dotenv
 jinja2
 textdistance
 pystache
+datasets
+faiss-cpu

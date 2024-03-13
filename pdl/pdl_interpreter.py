@@ -459,8 +459,11 @@ def call_code(
     return result, output, scope, trace
 
 
+__PDL_SESSION = {}
+
+
 def call_python(code: str) -> Any:
-    my_namespace = types.SimpleNamespace()
+    my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION)
     exec(code, my_namespace.__dict__)
     result = my_namespace.result
     return result
