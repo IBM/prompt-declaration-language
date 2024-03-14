@@ -22,10 +22,15 @@ See below for installation notes, followed by an [overview](#overview) of the la
 
 The interpreter has been tested with Python version 3.11.6.
 
-To install the requirements for `pdl.py`, execute the command:
+To install the requirements for `pdl`, execute the command:
 
 ```
-pip3 install -r requirements.txt
+pip3 install .
+```
+
+To install the dependencies for development of PDL and execute all the example, execute the command:
+```
+pip3 install '.[all]'
 ```
 
 In order to run the examples that use BAM models, you need to set up 2 environment variables:

@@ -4,10 +4,10 @@ language: python
 python:
   - "3.11"
 env:
-  - SETUP_TARGET=.
+  - SETUP_TARGET=.[dev]
 
 before_script:
-  - pip install -r requirements.txt
+  - pip install $SETUP_TARGET
 script:
   - >-
     echo -e "${ANSI_GREEN}Running pre-commit...${ANSI_RESET}"
