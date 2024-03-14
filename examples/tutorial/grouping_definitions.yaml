@@ -5,7 +5,7 @@ defs:
       sentence: str
       language: str
     document:
-      - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+      - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
       - model: ibm/falcon-40b-8lang-instruct
 document:
 - Hello,
@@ -17,9 +17,9 @@ document:
     include_stop_sequence: true 
 - call: translate
   args:
-    sentence: Hello,{{{ GEN }}}
+    sentence: Hello,{{ GEN }}
     language: French
 - call: translate
   args:
-    sentence: Bye,{{{ GEN }}}
+    sentence: Bye,{{ GEN }}
     language: Spanish

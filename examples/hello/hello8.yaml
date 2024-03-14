@@ -8,10 +8,10 @@ document:
 - repeat:
   - def: I
     lan: python
-    code: result = {{{ I }}} + 1
+    code: result = {{ I }} + 1
     show_result: true
   - "\n"
   until:
     contains:
-      arg0: '{{{ I }}}'
+      arg0: '{{ I }}'
       arg1: '5'

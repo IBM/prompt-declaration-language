@@ -16,6 +16,6 @@ document:
   - include: examples/consultant/function.yaml
   - call: template
     args:
-      preamble: "jsp: {{{ input_data }}}"
-      question: "{{{ PROMPTS2 }}}"
-      notes: "{{{ PROMPTS2_NOTES }}}"
+      preamble: "jsp: {{ input_data }}"
+      question: "{{ PROMPTS2 }}"
+      notes: "{{ PROMPTS2_NOTES }}"

@@ -3,7 +3,7 @@ defs:
   hello:
     function:
       name: str
-    document: Hello {{{ name }}}!
+    document: Hello {{ name }}!
 document:
   - call: hello
     args:

@@ -13,14 +13,14 @@ document:
     import random
     result = random.randint(1, 20)
   show_result: true
-- "\nNow computing fib({{{ N }}})\n"
+- "\nNow computing fib({{ N }})\n"
 - def: RESULT
   lan: python
   code:
   - |
-    {{{ CODE }}}
-    result = fib( {{{ N }}} )
+    {{ CODE }}
+    result = fib( {{ N }} )
   show_result: false
-- "The result is: {{{ RESULT }}}"
+- "The result is: {{ RESULT }}"
 - "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-20b-code-instruct-v1

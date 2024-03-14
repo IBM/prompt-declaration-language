@@ -20,7 +20,7 @@ document:
         include_stop_sequence: true
     - if:
         ends_with:
-          arg0: '{{{ REASON_OR_CALC }}}'
+          arg0: '{{ REASON_OR_CALC }}'
           arg1: '<<'
       then:
       - def: EXPR
@@ -34,11 +34,11 @@ document:
       - def: RESULT
         lan: python
         code:
-        - result = {{{ EXPR }}}
+        - result = {{ EXPR }}
       - ' >>'
     until:
       contains:
-        arg0: '{{{ REASON_OR_CALC }}}'
+        arg0: '{{ REASON_OR_CALC }}'
         arg1: The answer is  
   - "\n\n"
   num_iterations: 3

@@ -123,10 +123,10 @@ document:
     stop_sequences:
     - '!'
     include_stop_sequence: true
-- "\nGEN is equal to: {{{ GEN }}}"
+- "\nGEN is equal to: {{ GEN }}"
 ```
 
-Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `{{{ }}}` for accessing the value of a variable.
+Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `{{ }}` for accessing the value of a variable.
 
 When we execute this program, we obtain:
 ```
@@ -183,15 +183,15 @@ document:
     sentence: str
     language: str
   document:
-    - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate
   args:
-    sentence: Hello,{{{ GEN }}}
+    sentence: Hello,{{ GEN }}
     language: French
 - call: translate
   args:
-    sentence: Bye,{{{ GEN }}}
+    sentence: Bye,{{ GEN }}
     language: Spanish
 ```
 
@@ -221,7 +221,7 @@ defs:
       sentence: str
       language: str
     document:
-      - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+      - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
       - model: ibm/falcon-40b-8lang-instruct
 document:
 - Hello,
@@ -233,11 +233,11 @@ document:
     include_stop_sequence: true 
 - call: translate
   args:
-    sentence: Hello,{{{ GEN }}}
+    sentence: Hello,{{ GEN }}
     language: French
 - call: translate
   args:
-    sentence: Bye,{{{ GEN }}}
+    sentence: Bye,{{ GEN }}
     language: Spanish
 
 ```
@@ -269,19 +269,19 @@ document:
     sentence: str
     language: str
   document:
-    - "\nTranslate the sentence '{{{ sentence }}}' to {{{ language }}}\n"
+    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate
   show_result: false
   def: FRENCH
   args:
-    sentence: Hello,{{{ GEN }}}
+    sentence: Hello,{{ GEN }}
     language: French
 - call: translate
   args:
-    sentence: Bye,{{{ GEN }}}
+    sentence: Bye,{{ GEN }}
     language: Spanish
-- "\nThe french sentence was: {{{ FRENCH }}}"
+- "\nThe french sentence was: {{ FRENCH }}"
 ```
 
 The call to the translator with French as language does not produce an output. However, we save the result in variable `FRENCH` and use it in the last sentence of the document. When we execute this program, we obtain:
@@ -354,8 +354,8 @@ document:
   parser: json
   def: PERSON
   show_result: false
-- "{{{ PERSON.name }}} lives at the following address:\n"
-- "{{{ PERSON.address.number }}} {{{ PERSON.address.street }}} in the town of {{{ PERSON.address.town }}}, {{{ PERSON.address.state }}}"
+- "{{ PERSON.name }} lives at the following address:\n"
+- "{{ PERSON.address.number }} {{ PERSON.address.street }} in the town of {{ PERSON.address.town }}, {{ PERSON.address.state }}"
 ```
 
 When we execute this program, we obtain:
@@ -406,7 +406,7 @@ document:
       Paris
       Question: Tell me the weather in Lagos?
       Lagos
-      Question: {{{ QUERY }}}
+      Question: {{ QUERY }}
   parameters:
     decoding_method: greedy
     stop_sequences:
@@ -418,13 +418,13 @@ document:
   show_result: false
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-  input: '{{{ LOCATION }}}'
+  input: '{{ LOCATION }}'
   def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   input: >
     Explain what the weather is from the following JSON:
-    `{{{ WEATHER }}}`
+    `{{ WEATHER }}`
   parameters:
     decoding_method: greedy
     max_new_tokens: 100
@@ -467,14 +467,14 @@ document:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{{ CODE.repo_info.repo }}}
-      path: {{{ CODE.repo_info.path }}}
-      Function_name: {{{ CODE.repo_info.function_name }}}
+      {{ CODE.repo_info.repo }}
+      path: {{ CODE.repo_info.path }}
+      Function_name: {{ CODE.repo_info.function_name }}
 
 
       Explain the following code:
       ```
-      {{{ CODE.source_code }}}```
+      {{ CODE.source_code }}```
 - def: EVAL
   show_result: False
   lan: python
@@ -482,16 +482,16 @@ document:
     |
     import textdistance
     expl = """
-    {{{ EXPLANATION }}}
+    {{ EXPLANATION }}
     """
     truth = """
-    {{{ TRUTH }}}
+    {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data:
-    input: "{{{ CODE }}}"
-    output: "{{{ EXPLANATION }}}"
-    metric: "{{{ EVAL }}}"
+    input: "{{ CODE }}"
+    output: "{{ EXPLANATION }}"
+    metric: "{{ EVAL }}"
 ```
 
 ## Include Block
@@ -518,9 +518,9 @@ document:
   - include: examples/consultant/function.yaml
   - call: template
     args:
-      preamble: "jsp: {{{ input_data }}}"
-      question: "{{{ PROMPTS2 }}}"
-      notes: "{{{ PROMPTS2_NOTES }}}"
+      preamble: "jsp: {{ input_data }}"
+      question: "{{ PROMPTS2 }}"
+      notes: "{{ PROMPTS2_NOTES }}"
 ```
 
 which includes the following [file](../examples/consultant/function.yaml):
@@ -535,11 +535,11 @@ defs:
       notes: str
     document:
     - |
-      {{{ preamble }}}
-      ### Question: {{{ question }}}
+      {{ preamble }}
+      ### Question: {{ question }}
 
       ### Notes:
-      {{{ notes }}}
+      {{ notes }}
 
       ### Answer: 
 document: ""
@@ -596,7 +596,7 @@ document:
         include_stop_sequence: true
     - if:
         ends_with:
-          arg0: '{{{ REASON_OR_CALC }}}'
+          arg0: '{{ REASON_OR_CALC }}'
           arg1: '<<'
       then:
       - def: EXPR
@@ -610,11 +610,11 @@ document:
       - def: RESULT
         lan: python
         code:
-        - result = {{{ EXPR }}}
+        - result = {{ EXPR }}
       - ' >>'
     until:
       contains:
-        arg0: '{{{ REASON_OR_CALC }}}'
+        arg0: '{{ REASON_OR_CALC }}'
         arg1: The answer is  
     
   - "\n\n"
