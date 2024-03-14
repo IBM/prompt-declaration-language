@@ -1,0 +1,17 @@
+description: Granite Single-Round Chat
+defs:
+  PROMPT:
+    read: examples/granite/prompt.txt
+document:
+- include: examples/granite/granite_defs.yaml
+- |
+  {{ SYSTEM_CONTENT_CHAT }}
+  {{ USER_TAG }}
+  {{ PROMPT }}
+  {{ ASSISTANT_TAG }}
+- model: ibm/granite-13b-chat-v2
+  parameters:
+    decoding_method: sample
+    max_new_tokens: 512
+
+
