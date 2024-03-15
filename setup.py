@@ -9,6 +9,9 @@ install_requires = [
     "requests",
     "python-dotenv",
     "jinja2",
+    "PyYAML",
+    "datasets",
+    "faiss-cpu",
 ]
 
 dev = ["black", "pre-commit", "pytest"]
