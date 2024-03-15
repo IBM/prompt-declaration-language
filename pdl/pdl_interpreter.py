@@ -1,16 +1,17 @@
 import json
 import os
 import types
+from ast import literal_eval
 from pathlib import Path
-from typing import Any, Literal, Optional, Sequence, TypeVar
+from typing import Any, Literal, Optional, Sequence
 
-import pystache
 import requests
 import yaml
 from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
 from genai.schema import DecodingMethod
+from jinja2 import Template
 from pydantic import ValidationError
 
 from . import ui
@@ -43,9 +44,6 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
-
-T = TypeVar("T")
-
 
 DEBUG = False
 
@@ -83,11 +81,23 @@ def generate(
     logging: Optional[str],
     mode: Literal["html", "json", "yaml"],
     output: Optional[str],
-):
+    scope_file: Optional[str],
+    scope_data: Optional[str],
+):  # pylint: disable=too-many-arguments
     scope: ScopeType = empty_scope
     document = ""
     if logging is None:
         logging = "log.txt"
+
+    if scope_file is not None:
+        with open(scope_file, "r", encoding="utf-8") as scopefile:
+            initial_scope = yaml.safe_load(scopefile)
+            scope = scope | initial_scope
+
+    if scope_data is not None:
+        initial_scope = yaml.safe_load(scope_data)
+        scope = scope | initial_scope
+
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
             log: list[str] = []
@@ -132,9 +142,9 @@ def process_block(
 ) -> tuple[Any, str, ScopeType, BlockType]:
     if isinstance(block, str):
         result = process_expr(scope, block)
-        output = result
-        trace = result
-        append_log(log, "Document", result)
+        output = result if isinstance(result, str) else json.dumps(result)
+        trace = output
+        append_log(log, "Document", output)
         return result, output, scope, block
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(log, scope, block.defs)
@@ -310,9 +320,20 @@ def process_document(
     return result, output, scope, trace
 
 
-def process_expr(scope: ScopeType, e: T) -> T:
+def process_expr(scope: ScopeType, e: Any) -> Any:
     if isinstance(e, str):
-        return pystache.render(e, scope)
+        template = Template(
+            e,
+            keep_trailing_newline=True
+            # block_start_string="",
+            # block_end_string="",
+            # comment_start_string="",
+            # comment_end_string="",
+        )
+        s = template.render(scope)
+        if e.startswith("{{") and e.endswith("}}"):
+            return literal_eval(s)
+        return s
     if isinstance(e, list):
         return [process_expr(scope, x) for x in e]  # type: ignore
     if isinstance(e, dict):
@@ -470,7 +491,7 @@ def call_code(
     return result, output, scope, trace
 
 
-__PDL_SESSION: dict[str, Any] = {}
+__PDL_SESSION = types.SimpleNamespace()
 
 
 def call_python(code: str) -> Any:

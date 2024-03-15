@@ -20,36 +20,37 @@ defs:
           }
           response = requests.post(endpoint, headers=headers, json=json_data)
           return np.asarray(response.json()["results"][0])
-      PDL_SESSION["embed"] = embed
+      PDL_SESSION.embed = embed
       train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
       train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
-      PDL_SESSION["index"] = train_em.add_faiss_index("embeddings")
+      PDL_SESSION.index = train_em.add_faiss_index("embeddings")
       test_in = datasets.load_dataset("mbpp", "sanitized", split="test")
       result = test_in[0]
   RETRIEVED:
     lan: python
     code: |
-      key = PDL_SESSION["embed"]("{{{ TEST.prompt }}}")
-      n = 3
-      nearest = PDL_SESSION["index"].get_nearest_examples("embeddings", key, n)
+      key = PDL_SESSION.embed("{{ TEST.prompt }}")
+      nearest = PDL_SESSION.index.get_nearest_examples("embeddings", key, 3)
       result = {col: nearest.examples[col] for col in ["prompt", "code"]}
-  AUGMENTATION: |
-    Q: {{{ RETRIEVED.prompt[0] }}}
-    A: ```{{{ RETRIEVED.code[0] }}}```
+  AUGMENTATION: |-
+    Q: {{ RETRIEVED.prompt[0] }}
+    A: ```{{ RETRIEVED.code[0] }}```
 
-    Q: {{{ RETRIEVED.prompt[1] }}}
-    A: ```{{{ RETRIEVED.code[1] }}}```
+    Q: {{ RETRIEVED.prompt[1] }}
+    A: ```{{ RETRIEVED.code[1] }}```
 
-    Q: {{{ RETRIEVED.prompt[2] }}}
-    A: ```{{{ RETRIEVED.code[2] }}}```
+    Q: {{ RETRIEVED.prompt[2] }}
+    A: ```{{ RETRIEVED.code[2] }}```
   GENERATED:
     model: ibm/granite-20b-code-instruct-v1
-    input: |
-      Given text after "Q:", generate a Python function after "A:".
+    input: |-
+      Given the text after "Q:", generate a Python function after "A:".
 
-      {{{ AUGMENTATION }}}
+      Here are some examples, complete the last one:
 
-      Q: {{{ TEST.prompt }}}
+      {{ AUGMENTATION }}
+
+      Q: {{ TEST.prompt }}
       A: ```
     parameters:
       stop_sequences:
@@ -57,10 +58,13 @@ defs:
       include_stop_sequence: false
 document: |
   input text:
-  {{{ TEST.prompt }}}
+  {{ TEST.prompt }}
 
-  generated code:
-  ```{{{ GENERATED }}}```
+  retrieved exemplars:
+  {{ AUGMENTATION }}
 
-  ground truth:
-  ```{{{ TEST.code }}}```
+  generated code: ```
+  {{ GENERATED }}```
+
+  ground truth: ```
+  {{ TEST.code }}```

@@ -13,7 +13,7 @@ document:
       Paris
       Question: Tell me the weather in Lagos?
       Lagos
-      Question: {{{ QUERY }}}
+      Question: {{ QUERY }}
   parameters:
     decoding_method: greedy
     stop_sequences:
@@ -25,13 +25,13 @@ document:
   show_result: false
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-  input: '{{{ LOCATION }}}'
+  input: '{{ LOCATION }}'
   def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v1
   input: >
     Explain what the weather is from the following JSON:
-    `{{{ WEATHER }}}`
+    `{{ WEATHER }}`
   parameters:
     decoding_method: greedy
     max_new_tokens: 100

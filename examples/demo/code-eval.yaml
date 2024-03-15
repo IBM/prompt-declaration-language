@@ -4,7 +4,7 @@ document:
   parser: json
   def: CODE
   show_result: False
-- "\n{{{ CODE.source_code }}}\n"
+- "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct-v1
   def: EXPLANATION
   parameters:
@@ -15,14 +15,14 @@ document:
     - |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{{ CODE.repo_info.repo }}}
-      path: {{{ CODE.repo_info.path }}}
-      Function_name: {{{ CODE.repo_info.function_name }}}
+      {{ CODE.repo_info.repo }}
+      path: {{ CODE.repo_info.path }}
+      Function_name: {{ CODE.repo_info.function_name }}
 
 
       Explain the following code:
       ```
-      {{{ CODE.source_code }}}```
+      {{ CODE.source_code }}```
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
@@ -37,9 +37,9 @@ document:
   - |
     import textdistance
     expl = """
-    {{{ EXPLANATION }}}
+    {{ EXPLANATION }}
     """
     truth = """
-    {{{ TRUTH }}}
+    {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)

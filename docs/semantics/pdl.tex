@@ -25,12 +25,12 @@
 % \newcommand{\pdlcode}[1]{\ensuremath{\mtt{code}({#1})}}
 % \newcommand{\pdlapi}[3]{\ensuremath{\mtt{api}({#1}, {#2},{#3})}}
 % \newcommand{\pdlget}[1]{\ensuremath{\mtt{get}({#1})}}
-% \newcommand{\pdlvalue}[1]{\ensuremath{\mtt{value}({#1})}}
-% \newcommand{\pdlvaluep}[2]{\ensuremath{\mtt{value}({#1}, {#2})}}
-% \newcommand{\pdlsequence}[2]{\ensuremath{\mtt{prompts}({#1},{#2})}}
+% \newcommand{\pdldata}[1]{\ensuremath{\mtt{data}({#1})}}
+% \newcommand{\pdldatap}[2]{\ensuremath{\mtt{data}({#1}, {#2})}}
+% \newcommand{\pdlsequence}[2]{\ensuremath{\mtt{document}({#1},{#2})}}
 % \newcommand{\pdlif}[2]{\ensuremath{\mtt{if}({#1},{#2})}}
-% \newcommand{\pdlrepeats}[2]{\ensuremath{\mtt{repeats}({#1},{#2})}}
-% \newcommand{\pdlrepeatsuntil}[2]{\ensuremath{\mtt{repeats\_until}({#1},{#2})}}
+% \newcommand{\pdlrepeat}[2]{\ensuremath{\mtt{repeats}({#1},{#2})}}
+% \newcommand{\pdlrepeatuntil}[2]{\ensuremath{\mtt{repeats\_until}({#1},{#2})}}
 % \newcommand{\pdlinput}[1]{\ensuremath{\mtt{input}({#1})}}
 % \newcommand{\pdlfunction}[2]{\ensuremath{\mtt{function}({#1}) \rightarrow {#2}}}
 % \newcommand{\pdlclosure}[3]{\ensuremath{<\mtt{function}({#1}) \rightarrow {#2}, {#3}>}}
@@ -55,15 +55,15 @@
 \newcommand{\pdlcode}[1]{\ensuremath{\jsobj{\mtt{code:}{#1}}}}
 \newcommand{\pdlapi}[3]{\ensuremath{\jsobj{\mtt{url:}{#1}\mtt{,} \mtt{api:}{#2}\mtt{,} \mtt{input:}{#3}}}}
 \newcommand{\pdlget}[1]{\ensuremath{\jsobj{\mtt{get:}{#1}}}}
-\newcommand{\pdlvalue}[1]{\ensuremath{\jsobj{\mtt{value:}{#1}}}}
-\newcommand{\pdlvaluep}[2]{\ensuremath{\jsobj{\mtt{value:}{#1}\mtt{,} \mtt{output:}{#2}}}}
-\newcommand{\pdlsequence}[1]{\ensuremath{\jsobj{\mtt{prompts:}{#1}}}}
-\newcommand{\pdlif}[2]{\ensuremath{\jsobj{\mtt{prompts:}{#1}\mtt{,} \mtt{if:}{#2}}}}
-\newcommand{\pdlrepeats}[2]{\ensuremath{\jsobj{\mtt{prompts:}{#1}\mtt{,} \mtt{repeats:}{#2}}}}
-\newcommand{\pdlrepeatsuntil}[2]{\ensuremath{\jsobj{\mtt{prompts:}{#1}\mtt{,} \mtt{repeats\_until:}{#2}}}}
+\newcommand{\pdldata}[1]{\ensuremath{\jsobj{\mtt{data:}{#1}}}}
+% \newcommand{\pdldatap}[2]{\ensuremath{\jsobj{\mtt{data:}{#1}\mtt{,} \mtt{output:}{#2}}}}
+\newcommand{\pdlsequence}[1]{\ensuremath{\jsobj{\mtt{document:}{#1}}}}
+\newcommand{\pdlif}[2]{\ensuremath{\jsobj{\mtt{if:}{#1}\mtt{,} \mtt{then:}{#2}}}}
+\newcommand{\pdlrepeat}[2]{\ensuremath{\jsobj{\mtt{repeat:}{#1}\mtt{,} \mtt{ntimes:}{#2}}}}
+\newcommand{\pdlrepeatuntil}[2]{\ensuremath{\jsobj{\mtt{repeat:}{#1}\mtt{,} \mtt{until:}{#2}}}}
 \newcommand{\pdlinput}[1]{\ensuremath{\jsobj{\mtt{input:}{#1}}}}
-\newcommand{\pdlfunction}[2]{\ensuremath{\jsobj{\mtt{params:}{#1}\mtt{,}  {#2}}}}
-\newcommand{\pdlclosure}[3]{\ensuremath{\jsobj{\mtt{params:}{#1}\mtt{,}  {#2}, \mtt{scope:}{#3}}}}
+\newcommand{\pdlfunction}[2]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  \mtt{document:}{#2}}}}
+\newcommand{\pdlclosure}[3]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  \mtt{document:}{#2}, \mtt{scope:}{#3}}}}
 \newcommand{\pdlcall}[2]{\ensuremath{\jsobj{\mtt{call:}{#1}\mtt{,} \mtt{args:}{#2}}}}
 
 
@@ -73,6 +73,7 @@
 \newcommand{\pdlsemp}[5]{\ensuremath{{#1}, {#2} \Rightarrow {#3}, {#4}, {#5}}}
 \newcommand{\pdlsembb}[5]{\ensuremath{{#1}, {#2} \rightarrow {#3}, {#4}, {#5}}}
 \newcommand{\pdlsemc}[3]{\ensuremath{{#1}, {#2} \downarrow {#3}}}
+\newcommand{\pdlseme}[3]{\ensuremath{{#1} \vdash {#2} \Downarrow {#3}}}
 
 \newcommand{\pdlstr}[1]{\ensuremath{\mit{str}({#1})}}
 
@@ -80,14 +81,12 @@
 Language:
 $$
 \begin{array}{lcl}
-    \mit{prompt} & ::= &\ 
-        \mit{string}
-        \mid \mit{block}
-    \\
-    \mit{prompts} & ::= &\ 
-        \jsarr{\mit{prompt}\mtt{,} \dots\mtt{,} \mit{prompt}}
+    \mit{document} & ::= &\ 
+        \jsarr{\mit{block}\mtt{,} \dots\mtt{,} \mit{block}}
     \\
     \mit{block} & ::= &\
+    \mit{string}
+    \\ &&\mid
     \pdlblock[\mit{show}]{x}{\mit{block\_body}}
     \\ &&\mid
     \pdlblockdefs{\mit{defs}}{\pdlblockstar[\mit{show}]{x}{\mit{block\_body}}}
@@ -96,25 +95,25 @@ $$
     \jsobj{\pdldef{x}{\mit{block\_body}}\mtt{,} \dots\mtt{,}\pdldef{x}{\mit{block\_body}}}
     \\
     \mit{block\_body} & ::= &\ 
-    \pdlmodel{\mit{model}}{\mit{prompt}}
+    \pdlmodel{\mit{model}}{\mit{block}}
     \\ &&\mid
-    \pdlcode{\mit{prompt}}
+    \pdlcode{\mit{block}}
     \\ &&\mid
-    \pdlapi{\mit{url}}{\mit{api}}{\mit{prompt}}
+    \pdlapi{\mit{url}}{\mit{api}}{\mit{block}}
     \\ &&\mid
     \pdlget{\mit{x}}
     \\ &&\mid
-    \pdlvalue{\mit{json}}
+    \pdldata{\mit{json}}
+    % \\ &&\mid
+    % \pdldatap{\mit{json}}{\mit{string}}
     \\ &&\mid
-    \pdlvaluep{\mit{json}}{\mit{string}}
+    \pdlsequence{\mit{document}}
     \\ &&\mid
-    \pdlsequence{\mit{prompts}}
+    \pdlif{\mit{condition}}{\mit{document}}
     \\ &&\mid
-    \pdlif{\mit{prompts}}{\mit{condition}}
+    \pdlrepeat{\mit{document}}{\mit{n}}
     \\ &&\mid
-    \pdlrepeats{\mit{prompts}}{\mit{n}}
-    \\ &&\mid
-    \pdlrepeatsuntil{\mit{prompts}}{\mit{condition}}
+    \pdlrepeatuntil{\mit{document}}{\mit{condition}}
     \\ &&\mid
     \pdlinput{\mit{msg}}
     \\ &&\mid
@@ -127,7 +126,9 @@ $$
 \end{array}
 $$
 
-The semantics of a prompt~$p$ is defined by the reductions $\pdlsemp{S}{p}{S'}{v}{s}$ which evaluates~$p$ in the environment~$S$ to return the updated environment~$S'$, the value~$v$, and the string~$s$.
+\subsection*{Big Step Semantics}
+
+The semantics of a document~$d$ is defined by the reduction $\pdlsemp{S}{d}{S'}{v}{s}$ which evaluates~$d$ in the environment~$S$ to return the updated environment~$S'$, the value~$v$, and the string~$s$.
 
 The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{S'}{v}{s}$ which evaluates~$b$ in the environment~$S$ to return the updated environment~$S'$, the value~$v$, and the string~$s$.
 
@@ -143,13 +144,13 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 \inferrule%
 {\pdlsembb{S}{b}{S'}{v}{s} \\
 }
-{\pdlsemp{S}{\pdlblock[\True]{x}{b}}{S'[x \leftarrow v]}{v}{s}}
+{\pdlsemp{S}{\pdlblock[\True]{x}{b}}{S'[x \leftarrow (v, s)]}{v}{s}}
 
 % Block show = false
 \inferrule%
 {\pdlsembb{S}{b}{S'}{v}{s} \\
 }
-{\pdlsemp{S}{\pdlblock[\False]{x}{b}}{S'[x \leftarrow v]}{v}{\jsstr{}}}
+{\pdlsemp{S}{\pdlblock[\False]{x}{b}}{S'[x \leftarrow (v, s)]}{v}{\jsstr{}}}
 
 % Defs empty
 \inferrule%
@@ -160,7 +161,7 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 % Defs
 \inferrule%
 {\pdlsembb{S}{b_x}{S_x}{v_x}{s_x} \\
- \pdlsemp{S[x \leftarrow v_x]}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
+ \pdlsemp{S[x \leftarrow (v_x, s_x)]}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
 }
 {\pdlsemp{S}{\pdlblockdefs{\jsobj{\pdldef{x}{b_x}\mtt{,} \mit{defs}}}{\mit{block}}}{S'}{v}{s}}
 
@@ -183,113 +184,117 @@ The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{
 % Sequence
 \inferrule%
 {\pdlsemp{S}{p_1}{S_1}{v_1}{s_1} \\
- \pdlsemp{S_1[\mit{context} \leftarrow S(\mit{context}) + s_1]}{\mit{prompts}}{S'}{\mit{vs}}{s}
+ \mit{ctx} = S(\mit{context}) + s_1 \\
+ \pdlsemp{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\mit{document}}{S'}{\mit{vs}}{s}
 }
-{\pdlsemp{S}{\jsarr{p_1, \mit{prompts}}}
-          {S'}{\jsarr{v_1\mtt{,} \mit{vs}}}{s_1 + s}}
+{\pdlsemp{S}{\jsarr{p_1} + \mit{document}}
+          {S'}{\jsarr{v_1} + \mit{vs}}{s_1 + s}}
 
 \end{mathpar}
 
 \begin{mathpar}
 % Model
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
   m(s) = v
 }
-{\pdlsembb{S}{\pdlmodel{m}{p}}{S}{v}{\pdlstr{v}}}
+{\pdlsembb{S}{\pdlmodel{m}{\mit{doc}}}{S}{v}{\pdlstr{v}}}
 
 % Code
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
  s \Downarrow v
 }
-{\pdlsembb{S}{\pdlcode{p}}{S}{v}{\pdlstr{v}}}
+{\pdlsembb{S}{\pdlcode{\mit{doc}}}{S}{v}{\pdlstr{v}}}
 
 % API
 \inferrule%
-{\pdlsemp{S}{p}{S'}{\_}{s}\\
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
   \mit{url}/\mit{api}(s) = v
 }
-{\pdlsembb{S}{\pdlapi{\mit{url}}{\mit{api}}{p}}{S}{v}{\pdlstr{v}}}
+{\pdlsembb{S}{\pdlapi{\mit{url}}{\mit{api}}{\mit{doc}}}{S}{v}{\pdlstr{v}}}
 
 % Get
 \inferrule%
-{S(x) = v
+{S(x) = v, s
 }
-{\pdlsembb{S}{\pdlget{x}}{S}{v}{\pdlstr{v}}}
+{\pdlsembb{S}{\pdlget{x}}{S}{v}{s}}
 
-% Value
+% Data
 \inferrule%
 {
+  \pdlseme{S}{e}{v}
 }
-{\pdlsembb{S}{\pdlvalue{v}}{S}{v}{\pdlstr{v}}}
+{\pdlsembb{S}{\pdldata{e}}{S}{v}{\pdlstr{v}}}
 
-% Valuep
-\inferrule%
-{
-}
-{\pdlsembb{S}{\pdlvaluep{v}{s}}{S}{v}{s}}
+% % datap
+% \inferrule%
+% {
+% }
+% {\pdlsembb{S}{\pdldatap{v}{s}}{S}{v}{s}}
 
 
 % Sequence one
 \inferrule%
-{\pdlsemp{S}{\mit{prompts}}{S'}{v}{s}
+{\pdlsemp{S}{\mit{doc}}{S'}{v}{s}
 }
-{\pdlsembb{S}{\pdlsequence{\mit{prompts}}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlsequence{\mit{doc}}}{S'}{v}{s}}
 
 
 % If true
 \inferrule%
 {\pdlsemc{S}{c}{\True} \\
- \pdlsemp{S}{p}{S'}{v}{s}
+ \pdlsemp{S}{\mit{doc}}{S'}{v}{s}
 }
-{\pdlsembb{S}{\pdlif{p}{c}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlif{c}{\mit{doc}}}{S'}{v}{s}}
 
 % If false
 \inferrule%
 {\pdlsemc{S}{c}{\False}}
-{\pdlsembb{S}{\pdlif{p}{c}}{S'}{\jsnull}{\jsstr{}}}
+{\pdlsembb{S}{\pdlif{c}{\mit{doc}}}{S'}{\jsnull}{\jsstr{}}}
 
 % Repeats true
 \inferrule%
-{\pdlsemp{S}{p}{S_1}{v_1}{s_1}\\
- n > 0 \\
- \pdlsembb{S_1[\mit{context} \leftarrow S(\mit{context})+s_1]}{\pdlrepeats{p}{n-1}}{S'}{v}{s}
+{\pdlsemp{S}{\mit{doc}}{S_1}{v_1}{s_1}\\
+ n > 1 \\
+ \mit{ctx} = S(\mit{context})+s_1 \\
+ \pdlsembb{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\pdlrepeat{p}{n-1}}{S'}{v}{s}
 }
-{\pdlsembb{S}{\pdlrepeats{p}{n}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlrepeat{\mit{doc}}{n}}{S'}{v}{s}}
 
 % Repeats false
 \inferrule%
-{\pdlsemp{S}{p}{S'}{v}{s}\\
- n \le 0
+{\pdlsemp{S}{\mit{doc}}{S'}{v}{s}\\
+ n \le 1
 }
-{\pdlsembb{S}{\pdlrepeats{p}{n}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlrepeat{\mit{doc}}{n}}{S'}{v}{s}}
 
 % Repeats_until true
 \inferrule%
-{\pdlsemp{S}{p}{S_1}{v_1}{s_1}\\
+{\pdlsemp{S}{\mit{doc}}{S_1}{v_1}{s_1}\\
  \pdlsemc{S_1}{c}{\True} \\
- \pdlsembb{S_1[\mit{context} \leftarrow S(\mit{context})+s_1]}{\pdlrepeatsuntil{p}{c}}{S'}{v}{s}
+ \mit{ctx} = S(\mit{context})+s_1 \\
+ \pdlsembb{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\pdlrepeatuntil{\mit{doc}}{c}}{S'}{v}{s}
 }
-{\pdlsembb{S}{\pdlrepeatsuntil{p}{c}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlrepeatuntil{\mit{doc}}{c}}{S'}{v}{s}}
 
 % Repeats_until false
 \inferrule%
 {\pdlsemp{S}{p}{S'}{v}{s}\\
  \pdlsemc{S'}{c}{\False}
 }
-{\pdlsembb{S}{\pdlrepeatsuntil{p}{c}}{S'}{v}{s}}
+{\pdlsembb{S}{\pdlrepeatuntil{p}{c}}{S'}{v}{s}}
 
 % Function
 \inferrule%
 {
 }
-{\pdlsembb{S}{\pdlfunction{x}{b}}{S}{\pdlclosure{x}{b}{S}}{\jsstr{}}}
+{\pdlsembb{S}{\pdlfunction{x}{\mit{doc}}}{S}{\pdlclosure{x}{\mit{doc}}{S}}{\jsstr{}}}
 
 % Call
 \inferrule%
-{S(f) = \pdlclosure{x}{b}{S'}\\
- \pdlsembb{S'[\mit{context} \leftarrow S(\mit{context})] + \mit{args}}{b}{S''}{v}{s}}
+{S(f) = \pdlclosure{x}{\mit{doc}}{S'}\\
+ \pdlsemp{S'[\mit{context} \leftarrow S(\mit{context})] + \mit{args}}{\mit{doc}}{S''}{v}{s}}
 {\pdlsembb{S}{\pdlcall{f}{\mit{args}}}{S}{v}{s}}
 
 \end{mathpar}

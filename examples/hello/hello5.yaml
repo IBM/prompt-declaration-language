@@ -11,7 +11,7 @@ document:
   def: NAME
 - |-
   !
-  Who is{{{ NAME }}}?
+  Who is{{ NAME }}?
 - model: google/flan-t5-xl
   parameters:
     decoding_method: greedy

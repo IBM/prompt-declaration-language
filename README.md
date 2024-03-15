@@ -22,10 +22,15 @@ See below for installation notes, followed by an [overview](#overview) of the la
 
 The interpreter has been tested with Python version 3.11.6.
 
-To install the requirements for `pdl.py`, execute the command:
+To install the requirements for `pdl`, execute the command:
 
 ```
-pip3 install -r requirements.txt
+pip3 install .
+```
+
+To install the dependencies for development of PDL and execute all the example, execute the command:
+```
+pip3 install '.[all]'
 ```
 
 In order to run the examples that use BAM models, you need to set up 2 environment variables:
@@ -48,6 +53,18 @@ To change the log filename, you can pass it to the interpreter as follows:
 
 ```
 python3 -m pdl.pdl --log <my-logfile> <my-example>
+```
+
+We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
+
+```
+python3 -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
+```
+
+This can also be done by passing a JSON or YAML file:
+
+```
+python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
 ```
 
 ## Overview
@@ -130,25 +147,25 @@ document:
   parser: json
   def: CODE
   show_result: False
-- "\n{{{ CODE.source_code }}}\n"
+- "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct-v1
   input:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{{ CODE.repo_info.repo }}}
-      path: {{{ CODE.repo_info.path }}}
-      Function_name: {{{ CODE.repo_info.function_name }}}
+      {{ CODE.repo_info.repo }}
+      path: {{ CODE.repo_info.path }}
+      Function_name: {{ CODE.repo_info.function_name }}
 
 
       Explain the following code:
       ```
-      {{{ CODE.source_code }}}```
+      {{ CODE.source_code }}```
 ```
 
 The first block of the document is an *input* block. It reads the indicated filename (`examples/code/data.json`) and loads its contents into a variable named `CODE`. In PDL, any block can have a `def` field, which means the output of that block is assigned to that variable. Since the field `parser` is set to `json`, variable `CODE` contains that data in JSON format. The final field in the input block says that `show_result` is set to `false`, which means that the output of this block (the content that was read) is not included in the document. This feature allows the user to obtain intermediate results that are not necessarily included in the final output.
 
-The second block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{{ var }}}` means accessing the value of a variable in the scope. Since `CODE` contains JSON data, we can also access fields such as `CODE.source_code`.
+The second block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains JSON data, we can also access fields such as `CODE.source_code`.
 
 The third block calls a granite model. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
@@ -187,7 +204,7 @@ document:
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- "\n{{{ CODE.source_code }}}\n"
+- "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct-v1
   def: EXPLANATION
   parameters:
@@ -198,14 +215,14 @@ document:
     - |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{{ CODE.repo_info.repo }}}
-      path: {{{ CODE.repo_info.path }}}
-      Function_name: {{{ CODE.repo_info.function_name }}}
+      {{ CODE.repo_info.repo }}
+      path: {{ CODE.repo_info.path }}
+      Function_name: {{ CODE.repo_info.function_name }}
 
 
       Explain the following code:
       ```
-      {{{ CODE.source_code }}}```
+      {{ CODE.source_code }}```
 - |
 
 
@@ -217,10 +234,10 @@ document:
   - |
     import textdistance
     expl = """
-    {{{ EXPLANATION }}}
+    {{ EXPLANATION }}
     """
     truth = """
-    {{{ TRUTH }}}
+    {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 ```
@@ -277,14 +294,14 @@ document:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{{ CODE.repo_info.repo }}}
-      path: {{{ CODE.repo_info.path }}}
-      Function_name: {{{ CODE.repo_info.function_name }}}
+      {{ CODE.repo_info.repo }}
+      path: {{ CODE.repo_info.path }}
+      Function_name: {{ CODE.repo_info.function_name }}
 
 
       Explain the following code:
       ```
-      {{{ CODE.source_code }}}```
+      {{ CODE.source_code }}```
 - def: EVAL
   show_result: False
   lan: python
@@ -292,16 +309,16 @@ document:
     |
     import textdistance
     expl = """
-    {{{ EXPLANATION }}}
+    {{ EXPLANATION }}
     """
     truth = """
-    {{{ TRUTH }}}
+    {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data:
-    input: "{{{ CODE }}}"
-    output: "{{{ EXPLANATION }}}"
-    metric: "{{{ EVAL }}}"
+    input: "{{ CODE }}"
+    output: "{{ EXPLANATION }}"
+    metric: "{{ EVAL }}"
 ```
 
 The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `show_result` set to `false`. The output of this program is the corresponding serialized JSON object, with the appropriate treatment of quotation marks. Such PDL programs can be bootstrapped in a bash or Python script to create data en masse.
