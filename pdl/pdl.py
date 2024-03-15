@@ -20,13 +20,13 @@ def main():
 
     parser.add_argument(
         "-f",
-        "--scope_file",
+        "--data_file",
         help="initial scope data file",
     )
 
     parser.add_argument(
-        "-s",
-        "--scope_data",
+        "-d",
+        "--data",
         help="scope data",
     )
 
@@ -44,7 +44,12 @@ def main():
     if args.pdl is None:
         return
     pdl_interpreter.generate(
-        args.pdl, args.log, args.mode, args.output, args.scope_file, args.scope_data
+        args.pdl,
+        args.log,
+        args.mode,
+        args.output,
+        scope_file=args.data_file,
+        scope_data=args.data,
     )
 
 

@@ -55,6 +55,18 @@ To change the log filename, you can pass it to the interpreter as follows:
 python3 -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
+We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
+
+```
+python3 -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
+```
+
+This can also be done by passing a JSON or YAML file:
+
+```
+python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
+```
+
 ## Overview
 
 In PDL, we can write some YAML to create a prompt and call an LLM:
