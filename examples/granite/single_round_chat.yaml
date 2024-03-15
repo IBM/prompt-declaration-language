@@ -1,7 +1,4 @@
 description: Granite Single-Round Chat
-defs:
-  PROMPT:
-    read: examples/granite/prompt.txt
 document:
 - include: examples/granite/granite_defs.yaml
 - |

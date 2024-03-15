@@ -81,11 +81,23 @@ def generate(
     logging: Optional[str],
     mode: Literal["html", "json", "yaml"],
     output: Optional[str],
-):
+    scope_file: Optional[str],
+    scope_data: Optional[str],
+):  # pylint: disable=too-many-arguments
     scope: ScopeType = empty_scope
     document = ""
     if logging is None:
         logging = "log.txt"
+
+    if scope_file is not None:
+        with open(scope_file, "r", encoding="utf-8") as scopefile:
+            initial_scope = yaml.safe_load(scopefile)
+            scope = scope | initial_scope
+
+    if scope_data is not None:
+        initial_scope = yaml.safe_load(scope_data)
+        scope = scope | initial_scope
+
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
             log: list[str] = []

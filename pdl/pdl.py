@@ -17,6 +17,19 @@ def main():
         "--log",
         help="log file",
     )
+
+    parser.add_argument(
+        "-f",
+        "--scope_file",
+        help="initial scope data file",
+    )
+
+    parser.add_argument(
+        "-s",
+        "--scope_data",
+        help="scope data",
+    )
+
     parser.add_argument("-o", "--output", help="output file")
     parser.add_argument(
         "-m", "--mode", help="output mode", choices=["html", "json", "yaml"]
@@ -30,7 +43,9 @@ def main():
         print(json.dumps(Program.model_json_schema(), indent=2))
     if args.pdl is None:
         return
-    pdl_interpreter.generate(args.pdl, args.log, args.mode, args.output)
+    pdl_interpreter.generate(
+        args.pdl, args.log, args.mode, args.output, args.scope_file, args.scope_data
+    )
 
 
 if __name__ == "__main__":
