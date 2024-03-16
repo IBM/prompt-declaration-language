@@ -54,3 +54,39 @@ def test_false():
     result, document, _, _ = process_block(log, empty_scope, data.root)
     assert not result
     assert document == "false"
+
+
+var_data1 = {"defs": {"X": "something"}, "document": "{{ X }}"}
+
+
+def test_var1():
+    log = []
+    data = Program.model_validate(var_data1)
+    result, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "something"
+    assert result == "something"
+
+
+var_data2 = {
+    "defs": {"X": "something", "Y": "something else"},
+    "document": "{{ [X, Y] }}",
+}
+
+
+def test_var2():
+    log = []
+    data = Program.model_validate(var_data2)
+    result, document, _, _ = process_block(log, empty_scope, data.root)
+    assert result == ["something", "something else"]
+    assert document == '["something", "something else"]'
+
+
+list_data = {"defs": {"X": {"data": [1, 2, 3]}}, "document": "{{ X }}"}
+
+
+def test_list():
+    log = []
+    data = Program.model_validate(list_data)
+    result, document, _, _ = process_block(log, empty_scope, data.root)
+    assert result == [1, 2, 3]
+    assert document == "[1, 2, 3]"

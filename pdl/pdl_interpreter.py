@@ -332,7 +332,10 @@ def process_expr(scope: ScopeType, e: Any) -> Any:
         )
         s = template.render(scope)
         if e.startswith("{{") and e.endswith("}}"):
-            return literal_eval(s)
+            try:
+                return literal_eval(s)
+            except Exception:
+                pass
         return s
     if isinstance(e, list):
         return [process_expr(scope, x) for x in e]  # type: ignore
