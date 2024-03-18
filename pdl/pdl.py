@@ -31,9 +31,7 @@ def main():
     )
 
     parser.add_argument("-o", "--output", help="output file")
-    parser.add_argument(
-        "-m", "--mode", help="output mode", choices=["html", "json", "yaml"]
-    )
+    parser.add_argument("-m", "--mode", help="output mode", choices=["json", "yaml"])
     parser.add_argument("--json", help="json file")
     parser.add_argument("--yaml", help="yaml file")
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)

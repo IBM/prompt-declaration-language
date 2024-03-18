@@ -14,7 +14,6 @@ from genai.schema import DecodingMethod
 from jinja2 import Template
 from pydantic import ValidationError
 
-from . import ui
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
@@ -79,7 +78,7 @@ empty_text_generation_parameters = PDLTextGenerationParameters(
 def generate(
     pdl: str,
     logging: Optional[str],
-    mode: Literal["html", "json", "yaml"],
+    mode: Literal["json", "yaml"],
     output: Optional[str],
     scope_file: Optional[str],
     scope_data: Optional[str],
@@ -121,10 +120,6 @@ def generate(
                 for line in log:
                     logfile.write(line)
                 if trace is not None:
-                    if mode == "html":
-                        if output is None:
-                            output = str(Path(pdl).with_suffix("")) + "_result.html"
-                        ui.render(trace, output)
                     if mode == "json":
                         if output is None:
                             output = str(Path(pdl).with_suffix("")) + "_result.json"
