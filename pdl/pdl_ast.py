@@ -67,6 +67,7 @@ class BlockKind(StrEnum):
     READ = "read"
     INCLUDE = "include"
     ERROR = "error"
+    EMPTY = "empty"
 
 
 class Block(BaseModel):
@@ -193,6 +194,10 @@ class ErrorBlock(Block):
     document: "DocumentType"
 
 
+class EmptyBlock(Block):
+    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
+
+
 AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
@@ -208,7 +213,9 @@ AdvancedBlockType: TypeAlias = (
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
 )
+
 BlockType: TypeAlias = str | AdvancedBlockType
 DocumentType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 

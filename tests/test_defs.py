@@ -51,3 +51,13 @@ def test_defs_chain():
     data = Program.model_validate(defs_chain_data)
     _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "abc"
+
+
+defs_only = {"description": "defs only", "defs": {"var": "hello"}}
+
+
+def test_defs_only():
+    log = []
+    data = Program.model_validate(defs_only)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == ""

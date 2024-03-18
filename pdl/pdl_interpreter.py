@@ -26,6 +26,7 @@ from .pdl_ast import (
     DataBlock,
     DocumentBlock,
     DocumentType,
+    EmptyBlock,
     EndsWithArgs,
     EndsWithCondition,
     ErrorBlock,
@@ -278,6 +279,11 @@ def process_block_body(
                 f_scope = closure.scope | {"context": scope["context"]} | args
                 result, output, _, f_trace = process_document(log, f_scope, f_body)
                 trace = block.model_copy(update={"trace": f_trace})
+        case EmptyBlock():
+            result = ""
+            output = ""
+            trace = block.model_copy()
+
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, output, scope, trace
