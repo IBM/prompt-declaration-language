@@ -502,12 +502,6 @@ def call_python(code: str) -> Any:
 def process_input(
     log, scope: ScopeType, block: ReadBlock
 ) -> tuple[Any, str, ScopeType, ReadBlock | ErrorBlock]:
-    if block.parser == "json" and block.assign is None:
-        msg = "If parser is json in input block, then there must be def field"
-        error(msg)
-        trace = ErrorBlock(msg=msg, document=block.model_copy())
-        return None, "", scope, trace
-
     if block.read is not None:
         with open(block.read, encoding="utf-8") as f:
             s = f.read()
@@ -535,18 +529,19 @@ def process_input(
             s = "".join(contents)
             append_log(log, "Input from stdin: ", s)
 
-    if block.parser == "json" and block.assign is not None:
+    if block.parser == "json":
         try:
             result = json.loads(s)
-            scope = scope | {block.assign: s}
         except Exception:
             msg = "Attempted to parse ill-formed JSON"
             error(msg)
             trace = ErrorBlock(msg=msg, document=block.model_copy())
             return None, "", scope, trace
-
     else:
         result = s
+
+    if block.assign is not None:
+        scope = scope | {block.assign: s}
 
     trace = block.model_copy(update={"result": s})
     return result, s, scope, trace

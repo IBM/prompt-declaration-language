@@ -1,4 +1,3 @@
-from pdl.pdl.pdl_ast import ErrorBlock  # pyright: ignore
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
@@ -41,20 +40,40 @@ def test_input_json():
     )
 
 
-input_json_data_error = {
+input_json_data_defs = {
     "description": "Input block example with json input",
-    "document": [
-        {
+    "defs": {
+        "data": {
             "read": "tests/data/input1.json",
             "parser": "json",
             "show_result": False,
         }
-    ],
+    },
+    "document": ["The name in the input is: {{ data.name }}"],
 }
 
 
-def test_input_json_error():
+def test_input_json_defs():
     log = []
-    data = Program.model_validate(input_json_data_error)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
-    assert isinstance(trace.document[0], ErrorBlock)
+    data = Program.model_validate(input_json_data_defs)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "The name in the input is: Carol"
+
+
+input_json_data_defs1 = {
+    "description": "Input block example with json input",
+    "defs": {
+        "data": {
+            "read": "tests/data/input_data.txt",
+            "show_result": True,
+        }
+    },
+    "document": ["{{ data }}"],
+}
+
+
+def test_input_json_defs1():
+    log = []
+    data = Program.model_validate(input_json_data_defs1)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"
