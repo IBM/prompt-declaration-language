@@ -1,0 +1,16 @@
+description: Granite Multi-Round Chat
+document:
+- include: examples/granite/granite_defs.yaml
+- "{{ SYSTEM_CONTENT_CHAT }}"
+- for:
+    prompt: "{{ prompts }}"
+  repeat:
+  - |
+    {{ USER_TAG }}
+    {{ prompt }}
+    {{ ASSISTANT_TAG }}"
+  - model: ibm/granite-13b-chat-v2
+    parameters:
+      decoding_method: sample
+      max_new_tokens: 512
+

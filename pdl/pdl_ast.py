@@ -68,6 +68,7 @@ class BlockKind(StrEnum):
     INCLUDE = "include"
     ERROR = "error"
     EMPTY = "empty"
+    FOR = "for"
 
 
 class Block(BaseModel):
@@ -155,6 +156,13 @@ class IfBlock(Block):
     if_result: Optional[bool] = None
 
 
+class ForBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.FOR] = BlockKind.FOR
+    fors: dict[str, Any] = Field(alias="for")
+    repeat: "DocumentType"
+
+
 class RepeatBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
@@ -195,6 +203,7 @@ class ErrorBlock(Block):
 
 
 class EmptyBlock(Block):
+    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 
@@ -214,6 +223,7 @@ AdvancedBlockType: TypeAlias = (
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
+    | ForBlock
 )
 
 BlockType: TypeAlias = str | AdvancedBlockType

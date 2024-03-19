@@ -13,6 +13,7 @@ from .pdl_ast import (
     DocumentBlock,
     DocumentType,
     ErrorBlock,
+    ForBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -112,6 +113,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["repeat"] = document_to_dict(block.repeat)
             d["until"] = condition_to_dict(block.until)
             d["trace"] = [document_to_dict(document) for document in block.trace]
+        case ForBlock():
+            d["for"] = block.fors
+            d["repeat"] = block.repeat
         case FunctionBlock():
             d["function"] = block.function
             d["document"] = document_to_dict(block.document)

@@ -30,6 +30,7 @@ from .pdl_ast import (
     EndsWithArgs,
     EndsWithCondition,
     ErrorBlock,
+    ForBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -236,6 +237,36 @@ def process_block_body(
                 if contains_error(document):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
+        case ForBlock():
+            result = None
+            output = ""
+            iter_trace: list[DocumentType] = []
+            context_init = scope_init["context"]
+            items: dict[str, Any] = {}
+            lengths = []
+            for k, v in block.fors.items():
+                klist = process_expr(scope, v)
+                items = items | {k: klist}
+                lengths.append(len(klist))
+            if len(set(lengths)) != 1:  # Not all the lists are of the same length
+                msg = "Lists inside the For block must be of the same length"
+                error(msg)
+                output = ""
+                trace = ErrorBlock(msg=msg, document=block.model_copy())
+            else:
+                for i in range(lengths[0]):
+                    scope = scope | {"context": context_init + output}
+                    for k in items.keys():
+                        scope = scope | {k: items[k][i]}
+                    result, iteration_output, scope, document = process_document(
+                        log, scope, block.repeat
+                    )
+                    output += iteration_output
+                    iter_trace.append(document)
+                    if contains_error(document):
+                        break
+                trace = block.model_copy(update={"trace": iter_trace})
+
         case RepeatUntilBlock(until=cond_trace):
             result = None
             stop = False
