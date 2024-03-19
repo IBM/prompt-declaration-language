@@ -19,6 +19,7 @@ All the examples in this tutorial can be found [here](../examples/tutorial/).
   - [Data Block](#data-block)
   - [Include Block](#include-block)
   - [Conditionals and Loops](#conditionals-and-loops)
+  - [For Loops](#for-loops)
   - [Debugging PDL Programs](#debugging-pdl-programs)
   - [Calling PDL Programmatically from Python](#calling-pdl-programmatically-from-python)
   - [Visualization with the Live Document](#visualization-with-the-live-document)
@@ -628,6 +629,49 @@ In the body of the `repeat` block, the program first asks granite to generate a 
 The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block. 
 
 When we execute this program, we obtain 3 math problems like the ones in the [examples](../examples/arith/). Try it! 
+
+## For Loops
+
+PDL also offers `for` loops over lists.
+The following [example](../examples/hello/hello17.yaml) simply prints each value in the list followed by a newline:
+
+```
+description: for loop
+document:
+- for:
+    i: [1, 2, 3, 4]
+  repeat: 
+    "{{ i }}\n"
+```
+
+The `for` loop constructs also allows iterating over 2 or more lists of the same length simultaneously:
+
+```
+description: for loop
+defs:
+  numbers: {
+    data: [1, 2, 3, 4]
+  }
+  names: {
+    data: ["Bob", "Carol", "David", "Ernest"]
+  }
+
+document:
+- for:
+    number: "{{ numbers }}"
+    name: "{{ names }}"
+  repeat:
+    "{{ name }}'s number is {{ number }}\n"
+```
+
+This results in the following output:
+
+```
+Bob's number is 1
+Carol's number is 2
+David's number is 3
+Ernest's number is 4
+```
 
 ##  Debugging PDL Programs
 

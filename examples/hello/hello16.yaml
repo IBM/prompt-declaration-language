@@ -4,7 +4,7 @@ defs:
     data: [1, 2, 3, 4]
   }
   names: {
-    data: ["Bob", 'Carol', "David", "Ernest"]
+    data: ["Bob", "Carol", "David", "Ernest"]
   }
 
 document:
