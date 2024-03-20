@@ -12,7 +12,7 @@ EXPECTED_INVALID = [
 ]
 
 
-def test_valid_programs():
+def test_valid_programs() -> None:
     actual_invalid: set[str] = set()
     for yaml_file_name in pathlib.Path(".").glob("**/*.yaml"):
         with open(yaml_file_name, "r", encoding="utf-8") as pdl_file:

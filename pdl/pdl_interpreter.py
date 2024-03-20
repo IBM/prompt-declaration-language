@@ -3,7 +3,7 @@ import os
 import types
 from ast import literal_eval
 from pathlib import Path
-from typing import Any, Literal, Optional, Sequence
+from typing import Any, Generator, Generic, Literal, Optional, Sequence, TypeVar
 
 import requests
 import yaml
@@ -81,7 +81,7 @@ def generate(
     pdl: str,
     logging: Optional[str],
     mode: Literal["json", "yaml"],
-    output: Optional[str],
+    output_file: Optional[str],
     scope_file: Optional[str],
     scope_data: Optional[str],
 ):  # pylint: disable=too-many-arguments
@@ -107,7 +107,17 @@ def generate(
             try:
                 prog = Program.model_validate(data)
                 trace = prog.root
-                _, document, scope, trace = process_block(log, scope, prog.root)
+                doc_generator = GeneratorWrapper(
+                    step_block(log, scope, show_result=True, block=prog.root)
+                )
+                incremental_document = ""
+                for output in doc_generator:
+                    print(output, end="")
+                    assert output is not None
+                    incremental_document += output
+                print()
+                _, document, scope, trace = doc_generator.value
+                assert document == incremental_document
             except ValidationError:
                 print("Invalid yaml")
                 with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
@@ -117,29 +127,71 @@ def generate(
                     for item in errors:
                         print(item)
             finally:
-                print(document)
-                print("\n")
                 for line in log:
                     logfile.write(line)
                 if trace is not None:
                     if mode == "json":
-                        if output is None:
-                            output = str(Path(pdl).with_suffix("")) + "_result.json"
-                        with open(output, "w", encoding="utf-8") as fp:
+                        if output_file is None:
+                            output_file = (
+                                str(Path(pdl).with_suffix("")) + "_result.json"
+                            )
+                        with open(output_file, "w", encoding="utf-8") as fp:
                             json.dump(block_to_dict(trace), fp)
                     if mode == "yaml":
-                        if output is None:
-                            output = str(Path(pdl).with_suffix("")) + "_result.yaml"
-                        with open(output, "w", encoding="utf-8") as fp:
+                        if output_file is None:
+                            output_file = (
+                                str(Path(pdl).with_suffix("")) + "_result.yaml"
+                            )
+                        with open(output_file, "w", encoding="utf-8") as fp:
                             dump_yaml(block_to_dict(trace), stream=fp)
+
+
+GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
+GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
+GeneratorWrapperReturnT = TypeVar("GeneratorWrapperReturnT")
+
+
+class GeneratorWrapper(
+    Generic[GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT]
+):
+    value: GeneratorWrapperReturnT
+
+    def __init__(
+        self,
+        gen: Generator[
+            GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT
+        ],
+    ):
+        self.gen = gen
+
+    def __iter__(self):
+        self.value = yield from self.gen
+
+
+GeneratorReturnT = TypeVar("GeneratorReturnT")
+
+
+def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorReturnT:
+    w = GeneratorWrapper(gen)
+    for _ in w:
+        pass
+    return w.value
 
 
 def process_block(
     log, scope: ScopeType, block: BlockType
 ) -> tuple[Any, str, ScopeType, BlockType]:
+    return step_to_completion(step_block(log, scope, show_result=False, block=block))
+
+
+def step_block(
+    log, scope: ScopeType, show_result: bool, block: BlockType
+) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
         result = process_expr(scope, block)
         output = result if isinstance(result, str) else json.dumps(result)
+        if show_result:
+            yield output
         trace = output
         append_log(log, "Document", output)
         return result, output, scope, block
@@ -147,7 +199,10 @@ def process_block(
         scope, defs_trace = process_defs(log, scope, block.defs)
     else:
         defs_trace = block.defs
-    result, output, scope, trace = process_block_body(log, scope, block)
+    show_result &= block.show_result
+    result, output, scope, trace = yield from step_block_body(
+        log, scope, show_result, block
+    )
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
@@ -159,18 +214,22 @@ def process_block(
     return result, output, scope, trace
 
 
-def process_block_body(
-    log, scope: ScopeType, block: AdvancedBlockType
-) -> tuple[Any, str, ScopeType, AdvancedBlockType]:
+def step_block_body(
+    log, scope: ScopeType, show_result: bool, block: AdvancedBlockType
+) -> Generator[str, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
     output: str
     trace: AdvancedBlockType
     match block:
         case ModelBlock():
-            result, output, scope, trace = call_model(log, scope, block)
+            result, output, scope, trace = yield from step_call_model(
+                log, scope, show_result, block
+            )
         case CodeBlock():
             result, output, scope, trace = call_code(log, scope, block)
+            if show_result:
+                yield output
         case GetBlock(get=var):
             result = get_var(var, scope)
             if result is None:
@@ -181,23 +240,29 @@ def process_block_body(
             else:
                 output = result if isinstance(result, str) else json.dumps(result)
                 trace = block.model_copy()
+            if show_result:
+                yield output
         case DataBlock(data=v):
             result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
+            if show_result:
+                yield output
             trace = block.model_copy()
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
+            if show_result:
+                yield output
         case DocumentBlock():
-            result, output, scope, document = process_document(
-                log, scope, block.document
+            result, output, scope, document = yield from step_document(
+                log, scope, show_result, block.document
             )
             trace = block.model_copy(update={"document": document})
         case IfBlock():
             b, _, cond_trace = process_condition(log, scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
-                result, output, scope, document = process_document(
-                    log, scope, block.then
+                result, output, scope, document = yield from step_document(
+                    log, scope, show_result, block.then
                 )
                 trace = block.model_copy(
                     update={
@@ -207,8 +272,8 @@ def process_block_body(
                     }
                 )
             elif block.elses is not None:
-                result, output, scope, document = process_document(
-                    log, scope, block.elses
+                result, output, scope, document = yield from step_document(
+                    log, scope, show_result, block.elses
                 )
                 trace = block.model_copy(
                     update={
@@ -229,8 +294,8 @@ def process_block_body(
             context_init = scope_init["context"]
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, document = process_document(
-                    log, scope, block.repeat
+                result, iteration_output, scope, document = yield from step_document(
+                    log, scope, show_result, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
@@ -258,9 +323,12 @@ def process_block_body(
                     scope = scope | {"context": context_init + output}
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
-                    result, iteration_output, scope, document = process_document(
-                        log, scope, block.repeat
-                    )
+                    (
+                        result,
+                        iteration_output,
+                        scope,
+                        document,
+                    ) = yield from step_document(log, scope, show_result, block.repeat)
                     output += iteration_output
                     iter_trace.append(document)
                     if contains_error(document):
@@ -275,8 +343,8 @@ def process_block_body(
             context_init = scope_init["context"]
             while not stop:
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, document = process_document(
-                    log, scope, block.repeat
+                result, iteration_output, scope, document = yield from step_document(
+                    log, scope, show_result, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
@@ -286,8 +354,13 @@ def process_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block)
+            if show_result:
+                yield output
+
         case IncludeBlock():
-            result, output, scope, trace = process_include(log, scope, block)
+            result, output, scope, trace = yield from step_include(
+                log, scope, show_result, block
+            )
         case FunctionBlock():
             closure = block.model_copy()
             if block.assign is not None:
@@ -308,7 +381,9 @@ def process_block_body(
             else:
                 f_body = closure.document
                 f_scope = closure.scope | {"context": scope["context"]} | args
-                result, output, _, f_trace = process_document(log, f_scope, f_body)
+                result, output, _, f_trace = yield from step_document(
+                    log, f_scope, show_result, f_body
+                )
                 trace = block.model_copy(update={"trace": f_trace})
         case EmptyBlock():
             result = ""
@@ -334,6 +409,14 @@ def process_defs(
 def process_document(
     log, scope: ScopeType, document: DocumentType
 ) -> tuple[Any, str, ScopeType, DocumentType]:
+    return step_to_completion(
+        step_document(log, scope, show_result=False, document=document)
+    )
+
+
+def step_document(
+    log, scope: ScopeType, show_result: bool, document: DocumentType
+) -> Generator[str, Any, tuple[Any, str, ScopeType, DocumentType]]:
     result: Any
     output: str
     trace: DocumentType
@@ -344,11 +427,13 @@ def process_document(
         context_init = scope["context"]
         for block in document:
             scope = scope | {"context": context_init + output}
-            result, o, scope, t = process_block(log, scope, block)
+            result, o, scope, t = yield from step_block(log, scope, show_result, block)
             output += o
             trace.append(t)  # type: ignore
     else:
-        result, output, scope, trace = process_block(log, scope, document)
+        result, output, scope, trace = yield from step_block(
+            log, scope, show_result, document
+        )
     return result, output, scope, trace
 
 
@@ -421,9 +506,9 @@ def _get_bam_client() -> Optional[Client]:
     return client
 
 
-def call_model(
-    log, scope: ScopeType, block: ModelBlock
-) -> tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]:
+def step_call_model(
+    log, scope: ScopeType, show_result: bool, block: ModelBlock
+) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = process_document(log, scope, block.input)
     else:
@@ -441,32 +526,10 @@ def call_model(
             )
             return None, "", scope, trace
         params = block.parameters
-        if params is None:
-            params = empty_text_generation_parameters
-        if params.decoding_method is None:
-            params.decoding_method = DecodingMethod.GREEDY
-        if params.max_new_tokens is None:
-            params.max_new_tokens = MAX_NEW_TOKENS
-        if params.min_new_tokens is None:
-            params.min_new_tokens = MIN_NEW_TOKENS
-        if params.repetition_penalty is None:
-            params.repetition_penalty = REPETITION_PENATLY
-        if params.decoding_method == DecodingMethod.SAMPLE:
-            if params.temperature is None:
-                params.temperature = TEMPERATURE_SAMPLING
-            if params.top_k is None:
-                params.top_k = TOP_K_SAMPLING
-            if params.top_p is None:
-                params.top_p = TOP_P_SAMPLING
-        response = client.text.generation.create(
-            model_id=block.model,
-            prompt_id=block.prompt_id,
-            inputs=model_input,
-            parameters=params.__dict__,
-            moderations=block.moderations,
-            data=block.data,
+        params = set_default_model_params(params)
+        gen = yield from generate_client_response(
+            log, client, block, model_input, params, show_result
         )
-        gen = next(response).results[0].generated_text
         debug("model output: " + gen)
         append_log(log, "Model Output", gen)
         trace = block.model_copy(update={"result": gen, "input": input_trace})
@@ -478,6 +541,58 @@ def call_model(
             msg=msg, document=block.model_copy(update={"input": input_trace})
         )
         return None, "", scope, trace
+
+
+def set_default_model_params(
+    params: Optional[PDLTextGenerationParameters],
+) -> PDLTextGenerationParameters:
+    if params is None:
+        params = empty_text_generation_parameters
+    if params.decoding_method is None:
+        params.decoding_method = DecodingMethod.GREEDY
+    if params.max_new_tokens is None:
+        params.max_new_tokens = MAX_NEW_TOKENS
+    if params.min_new_tokens is None:
+        params.min_new_tokens = MIN_NEW_TOKENS
+    if params.repetition_penalty is None:
+        params.repetition_penalty = REPETITION_PENATLY
+    if params.decoding_method == DecodingMethod.SAMPLE:
+        if params.temperature is None:
+            params.temperature = TEMPERATURE_SAMPLING
+        if params.top_k is None:
+            params.top_k = TOP_K_SAMPLING
+        if params.top_p is None:
+            params.top_p = TOP_P_SAMPLING
+    return params
+
+
+def generate_client_response(  # pylint: disable=too-many-arguments
+    log,
+    client: Client,
+    block: ModelBlock,
+    model_input: str,
+    params: Optional[PDLTextGenerationParameters],
+    show_result: bool,
+) -> Generator[str, Any, str]:
+    gen = ""
+    for response in client.text.generation.create_stream(
+        model_id=block.model,
+        prompt_id=block.prompt_id,
+        input=model_input,
+        parameters=params.__dict__,
+        moderations=block.moderations,
+        data=block.data,
+    ):
+        if not response.results:
+            if response.moderation is not None:
+                append_log(log, "Hate speech:", response.moderation.hap)
+            continue
+        for result in response.results:
+            if result.generated_text:
+                if show_result:
+                    yield result.generated_text
+                gen += result.generated_text
+    return gen
 
 
 def call_api(
@@ -577,22 +692,21 @@ def process_input(
     else:
         result = s
 
-    if block.assign is not None:
-        scope = scope | {block.assign: s}
-
     trace = block.model_copy(update={"result": s})
     return result, s, scope, trace
 
 
-def process_include(
-    log, scope: ScopeType, block: IncludeBlock
-) -> tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]:
+def step_include(
+    log, scope: ScopeType, show_result: bool, block: IncludeBlock
+) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
     with open(block.include, "r", encoding="utf-8") as infile:
         data = yaml.safe_load(infile)
         trace = None
         try:
             prog = Program.model_validate(data)
-            result, output, scope, trace = process_block(log, scope, prog.root)
+            result, output, scope, trace = yield from step_block(
+                log, scope, show_result, prog.root
+            )
             include_trace = block.model_copy(update={"trace": trace})
             return result, output, scope, include_trace
         except ValidationError as e:
