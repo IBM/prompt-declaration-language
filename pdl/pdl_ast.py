@@ -161,6 +161,7 @@ class ForBlock(Block):
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
     repeat: "DocumentType"
+    trace: list["DocumentType"] = []
 
 
 class RepeatBlock(Block):
@@ -218,12 +219,12 @@ AdvancedBlockType: TypeAlias = (
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | ForBlock
 )
 
 BlockType: TypeAlias = str | AdvancedBlockType

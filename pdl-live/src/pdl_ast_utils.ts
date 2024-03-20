@@ -14,6 +14,7 @@ export function map_block_children(
 ): string | PdlBlock {
   const new_block = match(block)
     .with(P.string, s => s)
+    .with({kind: 'empty'}, block => block)
     .with({kind: 'function'}, block => {
       const document = map_document(f, block.document);
       return {...block, document: document};
@@ -54,6 +55,10 @@ export function map_block_children(
       const repeat = map_document(f, block.repeat);
       const until = map_condition(f, block.until);
       return {...block, repeat: repeat, until: until};
+    })
+    .with({kind: 'for'}, block => {
+      const repeat = map_document(f, block.repeat);
+      return {...block, repeat: repeat};
     })
     .with({kind: 'error'}, block => {
       const doc = map_document(f, block.document);
@@ -101,6 +106,7 @@ export function iter_block_children(
 ): void {
   match(block)
     .with(P.string, () => {})
+    .with({kind: 'empty'}, () => {})
     .with({kind: 'function'}, block => {
       iter_document(f, block.document);
     })
@@ -130,6 +136,9 @@ export function iter_block_children(
     .with({kind: 'repeat_until'}, block => {
       iter_document(f, block.repeat);
       iter_condition(f, block.until);
+    })
+    .with({kind: 'for'}, block => {
+      iter_document(f, block.repeat);
     })
     .with({kind: 'error'}, block => iter_document(f, block.document))
     .with({kind: 'read'}, () => {})

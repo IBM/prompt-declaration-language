@@ -20,10 +20,12 @@ export type Program =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
-  | ErrorBlock;
+  | ErrorBlock
+  | EmptyBlock;
 export type Description = string | null;
 export type Description1 = string | null;
 export type Description2 = string | null;
@@ -38,9 +40,14 @@ export type Description10 = string | null;
 export type Description11 = string | null;
 export type Description12 = string | null;
 export type Description13 = string | null;
+export type Description14 = string | null;
+export type Description15 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
-export type Kind = "error";
+export type Kind = "empty";
+export type Def1 = string | null;
+export type ShowResult1 = boolean;
+export type Kind1 = "error";
 export type Msg = string;
 export type Document =
   | string
@@ -54,10 +61,12 @@ export type Document =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -70,14 +79,16 @@ export type Document =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
-export type Def1 = string | null;
-export type ShowResult1 = boolean;
-export type Kind1 = "include";
+export type Def2 = string | null;
+export type ShowResult2 = boolean;
+export type Kind2 = "include";
 export type Include = string;
 export type Trace =
   | string
@@ -91,21 +102,23 @@ export type Trace =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | null;
-export type Def2 = string | null;
-export type ShowResult2 = boolean;
-export type Kind2 = "read";
+export type Def3 = string | null;
+export type ShowResult3 = boolean;
+export type Kind3 = "read";
 export type Read = string | null;
 export type Message = string | null;
 export type Multiline = boolean;
 export type Parser = string | null;
-export type Def3 = string | null;
-export type ShowResult3 = boolean;
-export type Kind3 = "document";
+export type Def4 = string | null;
+export type ShowResult4 = boolean;
+export type Kind4 = "document";
 export type Document1 =
   | string
   | FunctionBlock
@@ -118,10 +131,12 @@ export type Document1 =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -134,14 +149,16 @@ export type Document1 =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
-export type Def4 = string | null;
-export type ShowResult4 = boolean;
-export type Kind4 = "repeat_until";
+export type Def5 = string | null;
+export type ShowResult5 = boolean;
+export type Kind5 = "for";
 export type Repeat =
   | string
   | FunctionBlock
@@ -154,10 +171,12 @@ export type Repeat =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -170,79 +189,12 @@ export type Repeat =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
-    )[];
-export type Until = string | EndsWithCondition | ContainsCondition;
-export type Result5 = boolean | null;
-export type Arg0 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | ModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-    )[];
-export type Result6 = boolean | null;
-export type Arg01 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | ModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
+      | EmptyBlock
     )[];
 export type Trace1 = (
   | string
@@ -256,10 +208,12 @@ export type Trace1 = (
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -272,15 +226,17 @@ export type Trace1 = (
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[]
 )[];
-export type Def5 = string | null;
-export type ShowResult5 = boolean;
-export type Kind5 = "repeat";
+export type Def6 = string | null;
+export type ShowResult6 = boolean;
+export type Kind6 = "repeat_until";
 export type Repeat1 =
   | string
   | FunctionBlock
@@ -293,10 +249,12 @@ export type Repeat1 =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -309,12 +267,90 @@ export type Repeat1 =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
-export type NumIterations = number;
+export type Until = string | EndsWithCondition | ContainsCondition;
+export type Result7 = boolean | null;
+export type Arg0 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Result8 = boolean | null;
+export type Arg01 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
 export type Trace2 = (
   | string
   | FunctionBlock
@@ -327,10 +363,12 @@ export type Trace2 = (
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -343,15 +381,96 @@ export type Trace2 = (
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[]
 )[];
-export type Def6 = string | null;
-export type ShowResult6 = boolean;
-export type Kind6 = "if";
+export type Def7 = string | null;
+export type ShowResult7 = boolean;
+export type Kind7 = "repeat";
+export type Repeat2 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type NumIterations = number;
+export type Trace3 = (
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+)[];
+export type Def8 = string | null;
+export type ShowResult8 = boolean;
+export type Kind8 = "if";
 export type If = string | EndsWithCondition | ContainsCondition;
 export type Then =
   | string
@@ -365,10 +484,12 @@ export type Then =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -381,10 +502,12 @@ export type Then =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
 export type Else =
   | string
@@ -398,10 +521,12 @@ export type Else =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -414,23 +539,25 @@ export type Else =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[]
   | null;
 export type IfResult = boolean | null;
-export type Def7 = string | null;
-export type ShowResult7 = boolean;
-export type Kind7 = "data";
-export type Def8 = string | null;
-export type ShowResult8 = boolean;
-export type Kind8 = "get";
-export type Get = string;
 export type Def9 = string | null;
 export type ShowResult9 = boolean;
-export type Kind9 = "api";
+export type Kind9 = "data";
+export type Def10 = string | null;
+export type ShowResult10 = boolean;
+export type Kind10 = "get";
+export type Get = string;
+export type Def11 = string | null;
+export type ShowResult11 = boolean;
+export type Kind11 = "api";
 export type Api = string;
 export type Url = string;
 export type Input =
@@ -445,10 +572,12 @@ export type Input =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -461,14 +590,16 @@ export type Input =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
-export type Def10 = string | null;
-export type ShowResult10 = boolean;
-export type Kind10 = "code";
+export type Def12 = string | null;
+export type ShowResult12 = boolean;
+export type Kind12 = "code";
 export type Lan = string;
 export type Code =
   | string
@@ -482,10 +613,12 @@ export type Code =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -498,14 +631,16 @@ export type Code =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
-export type Def11 = string | null;
-export type ShowResult11 = boolean;
-export type Kind11 = "model";
+export type Def13 = string | null;
+export type ShowResult13 = boolean;
+export type Kind13 = "model";
 export type Model = string;
 export type Input1 =
   | string
@@ -519,10 +654,12 @@ export type Input1 =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -535,10 +672,12 @@ export type Input1 =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[]
   | null;
 export type PromptId = string | null;
@@ -595,13 +734,13 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
-export type Def12 = string | null;
-export type ShowResult12 = boolean;
-export type Kind12 = "call";
+export type Def14 = string | null;
+export type ShowResult14 = boolean;
+export type Kind14 = "call";
 export type Call = string;
-export type Def13 = string | null;
-export type ShowResult13 = boolean;
-export type Kind13 = "function";
+export type Def15 = string | null;
+export type ShowResult15 = boolean;
+export type Kind15 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
@@ -617,10 +756,12 @@ export type Document2 =
   | IfBlock
   | RepeatBlock
   | RepeatUntilBlock
+  | ForBlock
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
+  | EmptyBlock
   | (
       | string
       | FunctionBlock
@@ -633,10 +774,12 @@ export type Document2 =
       | IfBlock
       | RepeatBlock
       | RepeatUntilBlock
+      | ForBlock
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
+      | EmptyBlock
     )[];
 export type Scope = {
   [k: string]: unknown;
@@ -646,10 +789,10 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def13;
-  show_result?: ShowResult13;
+  def?: Def15;
+  show_result?: ShowResult15;
   result?: unknown;
-  kind?: Kind13;
+  kind?: Kind15;
   function: Function;
   document: Document2;
   scope?: Scope;
@@ -670,10 +813,12 @@ export interface Defs {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -686,20 +831,22 @@ export interface Defs {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def12;
-  show_result?: ShowResult12;
+  def?: Def14;
+  show_result?: ShowResult14;
   result?: unknown;
-  kind?: Kind12;
+  kind?: Kind14;
   call: Call;
   args?: Args;
 }
@@ -719,10 +866,12 @@ export interface Defs1 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -735,20 +884,22 @@ export interface Defs1 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface ModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def11;
-  show_result?: ShowResult11;
+  def?: Def13;
+  show_result?: ShowResult13;
   result?: unknown;
-  kind?: Kind11;
+  kind?: Kind13;
   model: Model;
   input?: Input1;
   prompt_id?: PromptId;
@@ -773,10 +924,12 @@ export interface Defs2 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -789,20 +942,22 @@ export interface Defs2 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface CodeBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def10;
-  show_result?: ShowResult10;
+  def?: Def12;
+  show_result?: ShowResult12;
   result?: unknown;
-  kind?: Kind10;
+  kind?: Kind12;
   lan: Lan;
   code: Code;
 }
@@ -822,10 +977,12 @@ export interface Defs3 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -838,20 +995,22 @@ export interface Defs3 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface ApiBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
-  def?: Def9;
-  show_result?: ShowResult9;
+  def?: Def11;
+  show_result?: ShowResult11;
   result?: unknown;
-  kind?: Kind9;
+  kind?: Kind11;
   api: Api;
   url: Url;
   input: Input;
@@ -872,10 +1031,12 @@ export interface Defs4 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -888,20 +1049,22 @@ export interface Defs4 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface GetBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
-  def?: Def8;
-  show_result?: ShowResult8;
+  def?: Def10;
+  show_result?: ShowResult10;
   result?: unknown;
-  kind?: Kind8;
+  kind?: Kind10;
   get: Get;
 }
 export interface Spec5 {
@@ -920,10 +1083,12 @@ export interface Defs5 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -936,20 +1101,22 @@ export interface Defs5 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface DataBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
-  def?: Def7;
-  show_result?: ShowResult7;
+  def?: Def9;
+  show_result?: ShowResult9;
   result?: unknown;
-  kind?: Kind7;
+  kind?: Kind9;
   data: Data;
 }
 export interface Spec6 {
@@ -968,10 +1135,12 @@ export interface Defs6 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -984,20 +1153,22 @@ export interface Defs6 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface IfBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
-  def?: Def6;
-  show_result?: ShowResult6;
+  def?: Def8;
+  show_result?: ShowResult8;
   result?: unknown;
-  kind?: Kind6;
+  kind?: Kind8;
   if: If;
   then: Then;
   else?: Else;
@@ -1019,10 +1190,12 @@ export interface Defs7 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1035,23 +1208,25 @@ export interface Defs7 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface RepeatBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
-  def?: Def5;
-  show_result?: ShowResult5;
+  def?: Def7;
+  show_result?: ShowResult7;
   result?: unknown;
-  kind?: Kind5;
-  repeat: Repeat1;
+  kind?: Kind7;
+  repeat: Repeat2;
   num_iterations: NumIterations;
-  trace?: Trace2;
+  trace?: Trace3;
 }
 export interface Spec8 {
   [k: string]: unknown;
@@ -1069,10 +1244,12 @@ export interface Defs8 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1085,23 +1262,25 @@ export interface Defs8 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
 export interface RepeatUntilBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
-  def?: Def4;
-  show_result?: ShowResult4;
+  def?: Def6;
+  show_result?: ShowResult6;
   result?: unknown;
-  kind?: Kind4;
-  repeat: Repeat;
+  kind?: Kind6;
+  repeat: Repeat1;
   until: Until;
-  trace?: Trace1;
+  trace?: Trace2;
 }
 export interface Spec9 {
   [k: string]: unknown;
@@ -1119,10 +1298,12 @@ export interface Defs9 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1135,21 +1316,25 @@ export interface Defs9 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
-export interface DocumentBlock {
+export interface ForBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
-  def?: Def3;
-  show_result?: ShowResult3;
+  def?: Def5;
+  show_result?: ShowResult5;
   result?: unknown;
-  kind?: Kind3;
-  document: Document1;
+  kind?: Kind5;
+  for: For;
+  repeat: Repeat;
+  trace?: Trace1;
 }
 export interface Spec10 {
   [k: string]: unknown;
@@ -1167,10 +1352,12 @@ export interface Defs10 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1183,24 +1370,23 @@ export interface Defs10 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
-export interface ReadBlock {
+export interface DocumentBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
-  def?: Def2;
-  show_result?: ShowResult2;
+  def?: Def4;
+  show_result?: ShowResult4;
   result?: unknown;
-  kind?: Kind2;
-  read: Read;
-  message?: Message;
-  multiline?: Multiline;
-  parser?: Parser;
+  kind?: Kind4;
+  document: Document1;
 }
 export interface Spec11 {
   [k: string]: unknown;
@@ -1218,10 +1404,12 @@ export interface Defs11 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1234,22 +1422,26 @@ export interface Defs11 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
-export interface IncludeBlock {
+export interface ReadBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
-  def?: Def1;
-  show_result?: ShowResult1;
+  def?: Def3;
+  show_result?: ShowResult3;
   result?: unknown;
-  kind?: Kind1;
-  include: Include;
-  trace?: Trace;
+  kind?: Kind3;
+  read: Read;
+  message?: Message;
+  multiline?: Multiline;
+  parser?: Parser;
 }
 export interface Spec12 {
   [k: string]: unknown;
@@ -1267,10 +1459,12 @@ export interface Defs12 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1283,22 +1477,24 @@ export interface Defs12 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
-export interface ErrorBlock {
+export interface IncludeBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
-  def?: Def;
-  show_result?: ShowResult;
+  def?: Def2;
+  show_result?: ShowResult2;
   result?: unknown;
-  kind?: Kind;
-  msg: Msg;
-  document: Document;
+  kind?: Kind2;
+  include: Include;
+  trace?: Trace;
 }
 export interface Spec13 {
   [k: string]: unknown;
@@ -1316,10 +1512,12 @@ export interface Defs13 {
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
+    | ForBlock
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
+    | EmptyBlock
     | (
         | string
         | FunctionBlock
@@ -1332,14 +1530,123 @@ export interface Defs13 {
         | IfBlock
         | RepeatBlock
         | RepeatUntilBlock
+        | ForBlock
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
+        | EmptyBlock
       )[];
 }
+export interface ErrorBlock {
+  description?: Description14;
+  spec?: Spec14;
+  defs?: Defs14;
+  def?: Def1;
+  show_result?: ShowResult1;
+  result?: unknown;
+  kind?: Kind1;
+  msg: Msg;
+  document: Document;
+}
+export interface Spec14 {
+  [k: string]: unknown;
+}
+export interface Defs14 {
+  [k: string]:
+    | string
+    | FunctionBlock
+    | CallBlock
+    | ModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | string
+        | FunctionBlock
+        | CallBlock
+        | ModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface EmptyBlock {
+  description?: Description15;
+  spec?: Spec15;
+  defs?: Defs15;
+  def?: Def;
+  show_result?: ShowResult;
+  result?: unknown;
+  kind?: Kind;
+}
+export interface Spec15 {
+  [k: string]: unknown;
+}
+export interface Defs15 {
+  [k: string]:
+    | string
+    | FunctionBlock
+    | CallBlock
+    | ModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | string
+        | FunctionBlock
+        | CallBlock
+        | ModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface For {
+  [k: string]: unknown;
+}
 export interface EndsWithCondition {
-  result?: Result5;
+  result?: Result7;
   ends_with: EndsWithArgs;
 }
 export interface EndsWithArgs {
@@ -1350,7 +1657,7 @@ export interface Arg1 {
   [k: string]: unknown;
 }
 export interface ContainsCondition {
-  result?: Result6;
+  result?: Result8;
   contains: ContainsArgs;
 }
 export interface ContainsArgs {

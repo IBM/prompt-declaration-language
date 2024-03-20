@@ -129,14 +129,23 @@ export function show_block(data: PdlBlock) {
       div.appendChild(doc_child);
     })
     .with({kind: 'repeat'}, data => {
-      div.classList.add('pdl_repeats');
+      div.classList.add('pdl_repeat');
       const body = show_loop_trace(data.trace ?? []);
       div.appendChild(body);
     })
     .with({kind: 'repeat_until'}, data => {
-      div.classList.add('pdl_repeats_until');
+      div.classList.add('pdl_repeat_until');
       const body = show_loop_trace(data.trace ?? []);
       div.appendChild(body);
+    })
+    .with({kind: 'for'}, data => {
+      div.classList.add('pdl_for');
+      const body = show_loop_trace(data.trace ?? []);
+      div.appendChild(body);
+    })
+    .with({kind: 'empty'}, () => {
+      div.classList.add('pdl_empty');
+      div.innerHTML = htmlize('');
     })
     .with({kind: 'error'}, data => {
       div.classList.add('pdl_error');
