@@ -45,6 +45,7 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_document
 from .pdl_dumper import block_to_dict, dump_yaml
+from .pdl_schema_checker import analyze_errors
 
 DEBUG = False
 
@@ -102,13 +103,13 @@ def generate(
     with open(pdl, "r", encoding="utf-8") as infile:
         with open(logging, "w", encoding="utf-8") as logfile:
             log: list[str] = []
-            data = yaml.safe_load(infile)
+            prog_yaml = yaml.safe_load(infile)
             trace = None
             try:
-                prog = Program.model_validate(data)
+                prog = Program.model_validate(prog_yaml)
                 trace = prog.root
                 doc_generator = GeneratorWrapper(
-                    step_block(log, scope, show_result=True, block=prog.root)
+                    step_block(log, scope, yield_output=True, block=prog.root)
                 )
                 incremental_document = ""
                 for output in doc_generator:
@@ -123,7 +124,7 @@ def generate(
                 with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
                     schema = json.load(schemafile)
                     defs = schema["$defs"]
-                    errors = analyze_errors(defs, schema, data)
+                    errors = analyze_errors(defs, schema, prog_yaml)
                     for item in errors:
                         print(item)
             finally:
@@ -181,16 +182,16 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
 def process_block(
     log, scope: ScopeType, block: BlockType
 ) -> tuple[Any, str, ScopeType, BlockType]:
-    return step_to_completion(step_block(log, scope, show_result=False, block=block))
+    return step_to_completion(step_block(log, scope, yield_output=False, block=block))
 
 
 def step_block(
-    log, scope: ScopeType, show_result: bool, block: BlockType
+    log, scope: ScopeType, yield_output: bool, block: BlockType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
         result = process_expr(scope, block)
         output = result if isinstance(result, str) else json.dumps(result)
-        if show_result:
+        if yield_output:
             yield output
         trace = output
         append_log(log, "Document", output)
@@ -199,9 +200,9 @@ def step_block(
         scope, defs_trace = process_defs(log, scope, block.defs)
     else:
         defs_trace = block.defs
-    show_result &= block.show_result
+    yield_output &= block.show_result
     result, output, scope, trace = yield from step_block_body(
-        log, scope, show_result, block
+        log, scope, yield_output, block
     )
     if block.assign is not None:
         var = block.assign
@@ -215,7 +216,7 @@ def step_block(
 
 
 def step_block_body(
-    log, scope: ScopeType, show_result: bool, block: AdvancedBlockType
+    log, scope: ScopeType, yield_output: bool, block: AdvancedBlockType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
@@ -224,11 +225,11 @@ def step_block_body(
     match block:
         case ModelBlock():
             result, output, scope, trace = yield from step_call_model(
-                log, scope, show_result, block
+                log, scope, yield_output, block
             )
         case CodeBlock():
             result, output, scope, trace = call_code(log, scope, block)
-            if show_result:
+            if yield_output:
                 yield output
         case GetBlock(get=var):
             result = get_var(var, scope)
@@ -240,21 +241,21 @@ def step_block_body(
             else:
                 output = result if isinstance(result, str) else json.dumps(result)
                 trace = block.model_copy()
-            if show_result:
+            if yield_output:
                 yield output
         case DataBlock(data=v):
             result = process_expr(scope, v)
             output = result if isinstance(result, str) else json.dumps(result)
-            if show_result:
+            if yield_output:
                 yield output
             trace = block.model_copy()
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block)
-            if show_result:
+            if yield_output:
                 yield output
         case DocumentBlock():
             result, output, scope, document = yield from step_document(
-                log, scope, show_result, block.document
+                log, scope, yield_output, block.document
             )
             trace = block.model_copy(update={"document": document})
         case IfBlock():
@@ -262,7 +263,7 @@ def step_block_body(
             # scope = scope | {"context": scope_init["context"]}
             if b:
                 result, output, scope, document = yield from step_document(
-                    log, scope, show_result, block.then
+                    log, scope, yield_output, block.then
                 )
                 trace = block.model_copy(
                     update={
@@ -273,7 +274,7 @@ def step_block_body(
                 )
             elif block.elses is not None:
                 result, output, scope, document = yield from step_document(
-                    log, scope, show_result, block.elses
+                    log, scope, yield_output, block.elses
                 )
                 trace = block.model_copy(
                     update={
@@ -295,7 +296,7 @@ def step_block_body(
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, document = yield from step_document(
-                    log, scope, show_result, block.repeat
+                    log, scope, yield_output, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
@@ -328,7 +329,7 @@ def step_block_body(
                         iteration_output,
                         scope,
                         document,
-                    ) = yield from step_document(log, scope, show_result, block.repeat)
+                    ) = yield from step_document(log, scope, yield_output, block.repeat)
                     output += iteration_output
                     iter_trace.append(document)
                     if contains_error(document):
@@ -344,7 +345,7 @@ def step_block_body(
             while not stop:
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, document = yield from step_document(
-                    log, scope, show_result, block.repeat
+                    log, scope, yield_output, block.repeat
                 )
                 output += iteration_output
                 iterations_trace.append(document)
@@ -354,12 +355,12 @@ def step_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block)
-            if show_result:
+            if yield_output:
                 yield output
 
         case IncludeBlock():
             result, output, scope, trace = yield from step_include(
-                log, scope, show_result, block
+                log, scope, yield_output, block
             )
         case FunctionBlock():
             closure = block.model_copy()
@@ -382,7 +383,7 @@ def step_block_body(
                 f_body = closure.document
                 f_scope = closure.scope | {"context": scope["context"]} | args
                 result, output, _, f_trace = yield from step_document(
-                    log, f_scope, show_result, f_body
+                    log, f_scope, yield_output, f_body
                 )
                 trace = block.model_copy(update={"trace": f_trace})
         case EmptyBlock():
@@ -410,12 +411,12 @@ def process_document(
     log, scope: ScopeType, document: DocumentType
 ) -> tuple[Any, str, ScopeType, DocumentType]:
     return step_to_completion(
-        step_document(log, scope, show_result=False, document=document)
+        step_document(log, scope, yield_output=False, document=document)
     )
 
 
 def step_document(
-    log, scope: ScopeType, show_result: bool, document: DocumentType
+    log, scope: ScopeType, yield_output: bool, document: DocumentType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, DocumentType]]:
     result: Any
     output: str
@@ -427,12 +428,12 @@ def step_document(
         context_init = scope["context"]
         for block in document:
             scope = scope | {"context": context_init + output}
-            result, o, scope, t = yield from step_block(log, scope, show_result, block)
+            result, o, scope, t = yield from step_block(log, scope, yield_output, block)
             output += o
             trace.append(t)  # type: ignore
     else:
         result, output, scope, trace = yield from step_block(
-            log, scope, show_result, document
+            log, scope, yield_output, document
         )
     return result, output, scope, trace
 
@@ -507,7 +508,7 @@ def _get_bam_client() -> Optional[Client]:
 
 
 def step_call_model(
-    log, scope: ScopeType, show_result: bool, block: ModelBlock
+    log, scope: ScopeType, yield_output: bool, block: ModelBlock
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = process_document(log, scope, block.input)
@@ -528,7 +529,7 @@ def step_call_model(
         params = block.parameters
         params = set_default_model_params(params)
         gen = yield from generate_client_response(
-            log, client, block, model_input, params, show_result
+            log, client, block, model_input, params, yield_output
         )
         debug("model output: " + gen)
         append_log(log, "Model Output", gen)
@@ -572,7 +573,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     block: ModelBlock,
     model_input: str,
     params: Optional[PDLTextGenerationParameters],
-    show_result: bool,
+    yield_output: bool,
 ) -> Generator[str, Any, str]:
     gen = ""
     for response in client.text.generation.create_stream(
@@ -589,7 +590,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
             continue
         for result in response.results:
             if result.generated_text:
-                if show_result:
+                if yield_output:
                     yield result.generated_text
                 gen += result.generated_text
     return gen
@@ -697,15 +698,15 @@ def process_input(
 
 
 def step_include(
-    log, scope: ScopeType, show_result: bool, block: IncludeBlock
+    log, scope: ScopeType, yield_output: bool, block: IncludeBlock
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
     with open(block.include, "r", encoding="utf-8") as infile:
-        data = yaml.safe_load(infile)
+        prog_yaml = yaml.safe_load(infile)
         trace = None
         try:
-            prog = Program.model_validate(data)
+            prog = Program.model_validate(prog_yaml)
             result, output, scope, trace = yield from step_block(
-                log, scope, show_result, prog.root
+                log, scope, yield_output, prog.root
             )
             include_trace = block.model_copy(update={"trace": trace})
             return result, output, scope, include_trace
@@ -756,177 +757,3 @@ def contains_error(document: DocumentType) -> bool:
         return False
     except StopIteration:
         return True
-
-
-def is_base_type(schema):
-    if "type" in schema:
-        the_type = schema["type"]
-        if the_type in set(["string", "boolean", "integer", "number"]):
-            return True
-    if "enum" in schema:
-        return True
-    return False
-
-
-def is_array(schema):
-    if "type" in schema:
-        return schema["type"] == "array"
-    return False
-
-
-def is_object(schema):
-    if "type" in schema:
-        return schema["type"] == "object"
-    return False
-
-
-def is_any_of(schema):
-    if "anyOf" in schema:
-        return True
-    return False
-
-
-def nullable(schema):
-    if "anyOf" in schema:
-        for item in schema["anyOf"]:
-            if "type" in item and item["type"] == "null":
-                return True
-    return False
-
-
-def get_non_null_type(schema):
-    if "anyOf" in schema and len(schema["anyOf"]) == 2:
-        for item in schema["anyOf"]:
-            if "type" not in item or "type" in item and item["type"] != "null":
-                return item
-    return None
-
-
-json_types_convert = {
-    "string": str,
-    "boolean": bool,
-    "integer": int,
-    "number": float,
-    "array": list,
-    "object": dict,
-}
-
-
-def convert_to_json_type(a_type):
-    for k, v in json_types_convert.items():
-        if a_type == v:
-            return k
-    return None
-
-
-def match(ref_type, data):
-    all_fields = ref_type["properties"].keys()
-    intersection = list(set(data.keys()) & set(all_fields))
-    return len(intersection)
-
-
-def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
-    ret = []
-    if schema == {}:
-        return []  # anything matches type Any
-
-    if is_base_type(schema):
-        if "type" in schema:
-            the_type = json_types_convert[schema["type"]]
-            if not isinstance(data, the_type):  # pyright: ignore
-                ret.append(
-                    "Error0: " + str(data) + " should be of type " + str(the_type)
-                )
-        if "enum" in schema:
-            if data not in schema["enum"]:
-                ret.append(
-                    "Error: " + str(data) + " should be one of: " + str(schema["enum"])
-                )
-
-    elif "$ref" in schema:
-        ref_string = schema["$ref"].split("/")[2]
-        ref_type = defs[ref_string]
-        ret += analyze_errors(defs, ref_type, data)
-
-    elif is_array(schema):
-        if not isinstance(data, list):
-            ret.append("Error: " + str(data) + " should be a list")
-        else:
-            for item in data:
-                ret += analyze_errors(defs, schema["items"], item)
-
-    elif is_object(schema):
-        if not isinstance(data, dict):
-            ret.append("Error: " + str(data) + " should be an object")
-        else:
-            if "required" in schema.keys():
-                required_fields = schema["required"]
-                for missing in list(set(required_fields) - set(data.keys())):
-                    ret.append("Error: Missing required field: " + missing)
-            if "properties" in schema.keys():
-                all_fields = schema["properties"].keys()
-                extras = list(set(data.keys()) - set(all_fields))
-                if (
-                    "additionalProperties" in schema
-                    and schema["additionalProperties"] is False
-                ):
-                    for field in extras:
-                        ret.append("Error: Field not allowed: " + field)
-
-                valid_fields = list(set(all_fields) & set(data.keys()))
-                for field in valid_fields:
-                    ret += analyze_errors(
-                        defs, schema["properties"][field], data[field]
-                    )
-
-    elif is_any_of(schema):
-        if len(schema["anyOf"]) == 2 and nullable(schema):
-            ret += analyze_errors(defs, get_non_null_type(schema), data)
-
-        elif not isinstance(data, dict) and not isinstance(data, list):
-            the_type = convert_to_json_type(type(data))
-            the_type_exists = False
-            for item in schema["anyOf"]:
-                if "type" in item and item["type"] == the_type:
-                    the_type_exists = True
-                if "enum" in item and data in item["enum"]:
-                    the_type_exists = True
-            if not the_type_exists:
-                ret.append("Error1: " + str(data) + " should be of type " + str(schema))
-
-        elif isinstance(data, list):
-            found = None
-            for item in schema["anyOf"]:
-                if is_array(item):
-                    found = item
-            if found is not None:
-                ret += analyze_errors(defs, found, data)
-            else:
-                ret.append("Error: " + str(data) + " should not be a list")
-
-        elif isinstance(data, dict):
-            match_ref = {}
-            highest_match = 0
-            for item in schema["anyOf"]:
-                field_matches = 0
-                if "type" in item and item["type"] == "object":
-                    field_matches = match(item, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = item
-                if "$ref" in item:
-                    ref_string = item["$ref"].split("/")[2]
-                    ref_type = defs[ref_string]
-                    field_matches = match(ref_type, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = ref_type
-
-            if match_ref == {}:
-                ret.append(
-                    "Error2: " + str(data) + " should be of type: " + str(schema)
-                )
-
-            else:
-                ret += analyze_errors(defs, match_ref, data)
-    return ret
