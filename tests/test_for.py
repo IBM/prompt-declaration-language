@@ -84,7 +84,7 @@ for_data4 = {
         {
             "def": "x",
             "for": {"i": [1, 2, 3, 4]},
-            "repeat": "{{ i }}",
+            "repeat": "{{ i + 1 }}",
         }
     ],
 }
@@ -94,9 +94,9 @@ def test_for_data4():
     log = []
     data = Program.model_validate(for_data4)
     result, output, scope, _ = process_block(log, empty_scope, data.root)
-    assert result == "1234"
-    assert output == "1234"
-    assert scope["x"] == 4
+    assert result == "2345"
+    assert output == "2345"
+    assert scope["x"] == [2, 3, 4, 5]
 
 
 for_data5 = {

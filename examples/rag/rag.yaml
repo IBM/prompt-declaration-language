@@ -9,7 +9,7 @@ defs:
       import requests
       genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
       def embed(text):
-          endpoint = f"{genai_api}v2/text/embeddings?version=2023-11-22"
+          endpoint = f"{genai_api}/v2/text/embeddings?version=2023-11-22"
           headers = {
               "Content-Type": "application/json",
               "Authorization": f"Bearer {genai_key}",
@@ -32,15 +32,15 @@ defs:
       key = PDL_SESSION.embed("{{ TEST.prompt }}")
       nearest = PDL_SESSION.index.get_nearest_examples("embeddings", key, 3)
       result = {col: nearest.examples[col] for col in ["prompt", "code"]}
-  AUGMENTATION: |-
-    Q: {{ RETRIEVED.prompt[0] }}
-    A: ```{{ RETRIEVED.code[0] }}```
-
-    Q: {{ RETRIEVED.prompt[1] }}
-    A: ```{{ RETRIEVED.code[1] }}```
-
-    Q: {{ RETRIEVED.prompt[2] }}
-    A: ```{{ RETRIEVED.code[2] }}```
+  AUGMENTATION:
+    document:
+      for:
+        prompt: "{{ RETRIEVED.prompt }}"
+        code: "{{ RETRIEVED.code }}"
+      repeat:
+      - |
+        Q: {{ prompt }}
+        A: ```{{ code }}```
   GENERATED:
     model: ibm/granite-20b-code-instruct-v1
     input: |-

@@ -305,7 +305,7 @@ def step_block_body(
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
-            result = None
+            result = []
             output = ""
             iter_trace: list[BlocksType] = []
             context_init = scope_init["context"]
@@ -326,12 +326,13 @@ def step_block_body(
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
                     (
-                        result,
+                        iteration_result,
                         iteration_output,
                         scope,
                         body_trace,
                     ) = yield from step_blocks(log, scope, yield_output, block.repeat)
                     output += iteration_output
+                    result.append(iteration_result)
                     iter_trace.append(body_trace)
                     if contains_error(body_trace):
                         break
