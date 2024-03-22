@@ -8,7 +8,7 @@ document:
     - '!'
     include_stop_sequence: true
 - def: translate
-  params:
+  function:
     sentence: str
     language: str
   return:
