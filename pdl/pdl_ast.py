@@ -87,7 +87,7 @@ class FunctionBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
-    document: "BlocksType"
+    returns: "BlocksType" = Field(..., alias="return")
     scope: Optional[ScopeType] = None
 
 

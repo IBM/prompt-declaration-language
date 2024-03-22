@@ -118,7 +118,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["repeat"] = block.repeat
         case FunctionBlock():
             d["function"] = block.function
-            d["document"] = blocks_to_dict(block.document)
+            d["return"] = blocks_to_dict(block.returns)
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope)
         case CallBlock():

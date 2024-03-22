@@ -27,8 +27,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case s if isinstance(s, str):
             pass
         case FunctionBlock():
-            if block.document is not None:
-                iter_blocks(f, block.document)
+            if block.returns is not None:
+                iter_blocks(f, block.returns)
         case CallBlock():
             pass
         case ModelBlock():

@@ -6,7 +6,7 @@ hello_def = {
     "def": "hello",
     "description": "Define hello",
     "function": None,
-    "document": "Hello world!",
+    "return": "Hello world!",
 }
 
 hello_call = {"description": "Call hello", "document": [hello_def, {"call": "hello"}]}
@@ -33,7 +33,7 @@ hello_params = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "str"},
-            "document": ["Hello ", {"get": "name"}, "!"],
+            "return": ["Hello ", {"get": "name"}, "!"],
         },
         {"call": "hello", "args": {"name": "World"}},
     ],
@@ -50,7 +50,7 @@ def test_function_params():
 hello_stutter = {
     "description": "Repeat the context",
     "document": [
-        {"def": "stutter", "function": None, "document": {"get": "context"}},
+        {"def": "stutter", "function": None, "return": {"get": "context"}},
         "Hello World!\n",
         {"call": "stutter"},
     ],
@@ -67,7 +67,7 @@ def test_function_implicit_context():
 hello_bye = {
     "description": "Repeat the context",
     "document": [
-        {"def": "stutter", "function": {}, "document": {"get": "context"}},
+        {"def": "stutter", "function": {}, "return": {"get": "context"}},
         "Hello World!\n",
         {"call": "stutter", "args": {"context": "Bye!"}},
     ],

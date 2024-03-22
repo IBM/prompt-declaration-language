@@ -2624,7 +2624,7 @@
           ],
           "title": "Function"
         },
-        "document": {
+        "return": {
           "anyOf": [
             {
               "type": "string"
@@ -2736,7 +2736,7 @@
               "type": "array"
             }
           ],
-          "title": "Document"
+          "title": "Return"
         },
         "scope": {
           "anyOf": [
@@ -2753,7 +2753,7 @@
       },
       "required": [
         "function",
-        "document"
+        "return"
       ],
       "title": "FunctionBlock",
       "type": "object"

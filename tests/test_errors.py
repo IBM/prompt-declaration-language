@@ -16,7 +16,7 @@ def error(raw_data, assertion):
         with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)
             defs = schema["$defs"]
-            errors = analyze_errors(defs, schema["$defs"]["Program"], raw_data)
+            errors = analyze_errors(defs, schema["$defs"]["PdlBlock"], raw_data)
             assert set(errors) == set(assertion)
 
 
@@ -30,7 +30,7 @@ def test_error1():
     error(
         error1,
         [
-            "Error: Missing required field: document",
+            "Error: Missing required field: return",
             "Error: Missing required field: function",
             "Error: Field not allowed: documents",
         ],
@@ -58,7 +58,6 @@ def test_error2():
     error(
         error2,
         [
-            "Error: Missing required field: function",
             "Error: Field not allowed: parameterss",
         ],
     )
@@ -85,7 +84,6 @@ def test_error3():
     error(
         error3,
         [
-            "Error: Missing required field: function",
             "Error: Field not allowed: decoding_methods",
         ],
     )
@@ -112,7 +110,6 @@ def test_error4():
     error(
         error4,
         [
-            "Error: Missing required field: function",
             "Error: Field not allowed: decoding_methods",
             "Error: Field not allowed: stop_sequencess",
         ],
@@ -136,7 +133,6 @@ def test_error5():
     error(
         error5,
         [
-            "Error: Missing required field: function",
             "Error: Missing required field: lan",
             "Error: Field not allowed: lans",
         ],

@@ -685,7 +685,7 @@ export type Kind14 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
-export type Document1 =
+export type Return =
   | string
   | FunctionBlock
   | CallBlock
@@ -929,7 +929,7 @@ export interface FunctionBlock {
   result?: unknown;
   kind?: Kind14;
   function: Function;
-  document: Document1;
+  return: Return;
   scope?: Scope;
 }
 export interface Spec1 {

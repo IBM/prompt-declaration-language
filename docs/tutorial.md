@@ -183,7 +183,7 @@ document:
   function:
     sentence: str
     language: str
-  document:
+  return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate
@@ -196,7 +196,7 @@ document:
     language: Spanish
 ```
 
-In this program, the third block defines a function `translate` that takes as parameters `sentence` and `language`, both of which are of type string. The body of the function is defined by its inner `document` field. In this case, we formulate a translation prompt using the parameters and send it to a falcon model.
+In this program, the third block defines a function `translate` that takes as parameters `sentence` and `language`, both of which are of type string. The body of the function is defined by its `return` field. In this case, we formulate a translation prompt using the parameters and send it to a falcon model.
 
 The last two blocks are calls to this function, as indicated by `call: translate`. This block specifies the arguments to be passed. When we execute this program, we obtain:
 
@@ -221,7 +221,7 @@ defs:
     function:
       sentence: str
       language: str
-    document:
+    return:
       - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
       - model: ibm/falcon-40b-8lang-instruct
 document:
@@ -269,7 +269,7 @@ document:
   function:
     sentence: str
     language: str
-  document:
+  return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate
@@ -534,7 +534,7 @@ defs:
       preamble: str
       question: str
       notes: str
-    document:
+    return:
     - |
       {{ preamble }}
       ### Question: {{ question }}

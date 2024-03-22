@@ -380,7 +380,7 @@ def step_block_body(
                 result = None
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                f_body = closure.document
+                f_body = closure.returns
                 f_scope = closure.scope | {"context": scope["context"]} | args
                 result, output, _, f_trace = yield from step_blocks(
                     log, f_scope, yield_output, f_body

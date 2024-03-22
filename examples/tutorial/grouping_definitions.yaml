@@ -4,7 +4,7 @@ defs:
     params:
       sentence: str
       language: str
-    document:
+    return:
       - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
       - model: ibm/falcon-40b-8lang-instruct
 document:

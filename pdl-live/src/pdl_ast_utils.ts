@@ -16,8 +16,8 @@ export function map_block_children(
     .with(P.string, s => s)
     .with({kind: 'empty'}, block => block)
     .with({kind: 'function'}, block => {
-      const document = map_blocks(f, block.document);
-      return {...block, document: document};
+      const returns = map_blocks(f, block.return);
+      return {...block, return: returns};
     })
     .with({kind: 'call'}, block => block)
     .with({kind: 'model'}, block => {
@@ -108,7 +108,7 @@ export function iter_block_children(
     .with(P.string, () => {})
     .with({kind: 'empty'}, () => {})
     .with({kind: 'function'}, block => {
-      iter_blocks(f, block.document);
+      iter_blocks(f, block.return);
     })
     .with({kind: 'call'}, () => {})
     .with({kind: 'model'}, block => {
