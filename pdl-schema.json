@@ -1909,7 +1909,7 @@
           "title": "Msg",
           "type": "string"
         },
-        "document": {
+        "program": {
           "anyOf": [
             {
               "type": "string"
@@ -2021,12 +2021,12 @@
               "type": "array"
             }
           ],
-          "title": "Document"
+          "title": "Program"
         }
       },
       "required": [
         "msg",
-        "document"
+        "program"
       ],
       "title": "ErrorBlock",
       "type": "object"
@@ -4445,6 +4445,233 @@
       "title": "PDLTextGenerationParameters",
       "type": "object"
     },
+    "PdlBlock": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/FunctionBlock"
+        },
+        {
+          "$ref": "#/$defs/CallBlock"
+        },
+        {
+          "$ref": "#/$defs/ModelBlock"
+        },
+        {
+          "$ref": "#/$defs/CodeBlock"
+        },
+        {
+          "$ref": "#/$defs/ApiBlock"
+        },
+        {
+          "$ref": "#/$defs/GetBlock"
+        },
+        {
+          "$ref": "#/$defs/DataBlock"
+        },
+        {
+          "$ref": "#/$defs/IfBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatUntilBlock"
+        },
+        {
+          "$ref": "#/$defs/ForBlock"
+        },
+        {
+          "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/ReadBlock"
+        },
+        {
+          "$ref": "#/$defs/IncludeBlock"
+        },
+        {
+          "$ref": "#/$defs/ErrorBlock"
+        },
+        {
+          "$ref": "#/$defs/EmptyBlock"
+        }
+      ],
+      "title": "PdlBlock"
+    },
+    "PdlBlocks": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/FunctionBlock"
+        },
+        {
+          "$ref": "#/$defs/CallBlock"
+        },
+        {
+          "$ref": "#/$defs/ModelBlock"
+        },
+        {
+          "$ref": "#/$defs/CodeBlock"
+        },
+        {
+          "$ref": "#/$defs/ApiBlock"
+        },
+        {
+          "$ref": "#/$defs/GetBlock"
+        },
+        {
+          "$ref": "#/$defs/DataBlock"
+        },
+        {
+          "$ref": "#/$defs/IfBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatUntilBlock"
+        },
+        {
+          "$ref": "#/$defs/ForBlock"
+        },
+        {
+          "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/ReadBlock"
+        },
+        {
+          "$ref": "#/$defs/IncludeBlock"
+        },
+        {
+          "$ref": "#/$defs/ErrorBlock"
+        },
+        {
+          "$ref": "#/$defs/EmptyBlock"
+        },
+        {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/ModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              }
+            ]
+          },
+          "type": "array"
+        }
+      ],
+      "title": "PdlBlocks"
+    },
+    "Program": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/FunctionBlock"
+        },
+        {
+          "$ref": "#/$defs/CallBlock"
+        },
+        {
+          "$ref": "#/$defs/ModelBlock"
+        },
+        {
+          "$ref": "#/$defs/CodeBlock"
+        },
+        {
+          "$ref": "#/$defs/ApiBlock"
+        },
+        {
+          "$ref": "#/$defs/GetBlock"
+        },
+        {
+          "$ref": "#/$defs/DataBlock"
+        },
+        {
+          "$ref": "#/$defs/IfBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatUntilBlock"
+        },
+        {
+          "$ref": "#/$defs/ForBlock"
+        },
+        {
+          "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/ReadBlock"
+        },
+        {
+          "$ref": "#/$defs/IncludeBlock"
+        },
+        {
+          "$ref": "#/$defs/ErrorBlock"
+        },
+        {
+          "$ref": "#/$defs/EmptyBlock"
+        }
+      ],
+      "description": "Prompt Description Program (PDL)",
+      "title": "Program"
+    },
     "PromptTemplateData": {
       "additionalProperties": true,
       "properties": {
@@ -5615,59 +5842,5 @@
       "type": "object"
     }
   },
-  "anyOf": [
-    {
-      "type": "string"
-    },
-    {
-      "$ref": "#/$defs/FunctionBlock"
-    },
-    {
-      "$ref": "#/$defs/CallBlock"
-    },
-    {
-      "$ref": "#/$defs/ModelBlock"
-    },
-    {
-      "$ref": "#/$defs/CodeBlock"
-    },
-    {
-      "$ref": "#/$defs/ApiBlock"
-    },
-    {
-      "$ref": "#/$defs/GetBlock"
-    },
-    {
-      "$ref": "#/$defs/DataBlock"
-    },
-    {
-      "$ref": "#/$defs/IfBlock"
-    },
-    {
-      "$ref": "#/$defs/RepeatBlock"
-    },
-    {
-      "$ref": "#/$defs/RepeatUntilBlock"
-    },
-    {
-      "$ref": "#/$defs/ForBlock"
-    },
-    {
-      "$ref": "#/$defs/DocumentBlock"
-    },
-    {
-      "$ref": "#/$defs/ReadBlock"
-    },
-    {
-      "$ref": "#/$defs/IncludeBlock"
-    },
-    {
-      "$ref": "#/$defs/ErrorBlock"
-    },
-    {
-      "$ref": "#/$defs/EmptyBlock"
-    }
-  ],
-  "description": "Prompt Description Program (PDL)",
-  "title": "Program"
+  "title": "PDL Schemas"
 }

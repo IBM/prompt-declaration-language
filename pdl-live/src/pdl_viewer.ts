@@ -1,5 +1,5 @@
 import {stringify} from 'yaml';
-import {Document as PdlDocument, Program as PdlBlock} from './pdl_ast';
+import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
@@ -21,7 +21,7 @@ export const hello = {
 
 export const data = hello;
 
-export function show_output(data: PdlDocument) {
+export function show_output(data: PdlBlocks) {
   const div = document.createElement('div');
   div.classList.add('pdl_block');
   match(data)
@@ -38,16 +38,16 @@ export function show_output(data: PdlDocument) {
     .otherwise(() => {
       div.innerHTML = '☐';
     });
-  switch_div_on_click(div, show_document, data);
+  switch_div_on_click(div, show_blocks, data);
   return div;
 }
 
-export function show_document(data: PdlDocument) {
+export function show_blocks(blocks: PdlBlocks) {
   const doc_fragment = document.createDocumentFragment();
-  match(data)
+  match(blocks)
     .with(P.array(P._), data => {
       for (const doc of data) {
-        const child = show_document(doc);
+        const child = show_blocks(doc);
         doc_fragment.appendChild(child);
       }
     })
@@ -97,9 +97,9 @@ export function show_block(data: PdlBlock) {
       div.classList.add('pdl_if');
       let if_child: DocumentFragment;
       if (!(data.if_result ?? true)) {
-        if_child = show_document(data.then ?? '');
+        if_child = show_blocks(data.then ?? '');
       } else {
-        if_child = show_document(data.else ?? '');
+        if_child = show_blocks(data.else ?? '');
       }
       div.append(if_child);
     })
@@ -125,7 +125,7 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'document'}, data => {
       div.classList.add('pdl_document');
-      const doc_child = show_document(data.document);
+      const doc_child = show_blocks(data.document);
       div.appendChild(doc_child);
     })
     .with({kind: 'repeat'}, data => {
@@ -159,7 +159,7 @@ export function show_block(data: PdlBlock) {
   return div;
 }
 
-export function show_loop_trace(trace: PdlDocument[]) {
+export function show_loop_trace(trace: PdlBlocks[]) {
   const doc_fragment = document.createDocumentFragment();
   if (trace.length > 1) {
     const dot_dot_dot = document.createElement('div');
@@ -173,29 +173,29 @@ export function show_loop_trace(trace: PdlDocument[]) {
   if (trace.length > 0) {
     const iteration = document.createElement('div');
     iteration.classList.add('pdl_block', 'pdl_sequence');
-    const child = show_document(trace.slice(-1)[0]);
+    const child = show_blocks(trace.slice(-1)[0]);
     iteration.appendChild(child);
     doc_fragment.appendChild(iteration);
   }
   return doc_fragment;
 }
 
-export function add_def(block_div: Element, data: PdlDocument) {
-  match(data).with({def: P.string}, data => {
+export function add_def(block_div: Element, blocks: PdlBlocks) {
+  match(blocks).with({def: P.string}, data => {
     const legend = document.createElement('legend');
     legend.innerHTML = data.def;
     block_div.appendChild(legend);
   });
 }
 
-export function show_code(data: PdlDocument) {
+export function show_code(blocks: PdlBlocks) {
   const code = document.createElement('pre');
-  data = document_code_cleanup(data);
-  code.innerHTML = stringify(data);
+  blocks = blocks_code_cleanup(blocks);
+  code.innerHTML = stringify(blocks);
   replace_div('code', code);
 }
 
-export function document_code_cleanup(data: PdlDocument): PdlDocument {
+export function blocks_code_cleanup(data: PdlBlocks): PdlBlocks {
   const new_data = match(data)
     .with(P.array(P._), data => data.map(block_code_cleanup))
     .otherwise(data => block_code_cleanup(data));
@@ -233,8 +233,8 @@ export function htmlize(x: unknown) {
 
 function switch_div_on_click(
   div: Element,
-  show: (data: PdlDocument) => string | Node,
-  data: PdlDocument
+  show: (data: PdlBlocks) => string | Node,
+  data: PdlBlocks
 ) {
   div.addEventListener('click', e => {
     div.replaceWith(show(data));

@@ -2,6 +2,7 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     ApiBlock,
+    BlocksType,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -9,7 +10,6 @@ from .pdl_ast import (
     ContainsCondition,
     DataBlock,
     DocumentBlock,
-    DocumentType,
     EndsWithCondition,
     ErrorBlock,
     FunctionBlock,
@@ -28,34 +28,34 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case FunctionBlock():
             if block.document is not None:
-                iter_document(f, block.document)
+                iter_blocks(f, block.document)
         case CallBlock():
             pass
         case ModelBlock():
             if block.input is not None:
-                iter_document(f, block.input)
+                iter_blocks(f, block.input)
         case CodeBlock():
-            iter_document(f, block.code)
+            iter_blocks(f, block.code)
         case ApiBlock():
-            iter_document(f, block.input)
+            iter_blocks(f, block.input)
         case GetBlock():
             pass
         case DataBlock():
             pass
         case DocumentBlock():
-            iter_document(f, block.document)
+            iter_blocks(f, block.document)
         case IfBlock():
             iter_condition(f, block.condition)
-            iter_document(f, block.then)
+            iter_blocks(f, block.then)
             if block.elses is not None:
-                iter_document(f, block.elses)
+                iter_blocks(f, block.elses)
         case RepeatBlock():
-            iter_document(f, block.repeat)
+            iter_blocks(f, block.repeat)
         case RepeatUntilBlock():
-            iter_document(f, block.repeat)
+            iter_blocks(f, block.repeat)
             iter_condition(f, block.until)
         case ErrorBlock():
-            iter_document(f, block.document)
+            iter_blocks(f, block.program)
         case ReadBlock():
             pass
         case _:
@@ -64,12 +64,12 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             ), f"Internal error (missing case iter_block_children({type(block)}))"
 
 
-def iter_document(f: Callable[[BlockType], None], document: DocumentType) -> None:
-    if not isinstance(document, str) and isinstance(document, Sequence):
-        for block in document:
+def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:
+    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        for block in blocks:
             f(block)
     else:
-        f(document)
+        f(blocks)
 
 
 def iter_condition(f: Callable[[BlockType], None], cond: ConditionType) -> None:
@@ -77,8 +77,8 @@ def iter_condition(f: Callable[[BlockType], None], cond: ConditionType) -> None:
         case cond if isinstance(cond, str):
             pass
         case EndsWithCondition():
-            iter_document(f, cond.ends_with.arg0)
+            iter_blocks(f, cond.ends_with.arg0)
         case ContainsCondition():
-            iter_document(f, cond.contains.arg0)
+            iter_blocks(f, cond.contains.arg0)
         case _:
             assert False, f"Internal error (missing case iter_condition({type(cond)}))"

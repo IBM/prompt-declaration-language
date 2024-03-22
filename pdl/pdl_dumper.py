@@ -6,12 +6,12 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
+    BlocksType,
     CallBlock,
     CodeBlock,
     ConditionExpr,
     DataBlock,
     DocumentBlock,
-    DocumentType,
     ErrorBlock,
     ForBlock,
     FunctionBlock,
@@ -68,7 +68,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         case ModelBlock():
             d["model"] = block.model
             if block.input is not None:
-                d["input"] = document_to_dict(block.input)
+                d["input"] = blocks_to_dict(block.input)
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
@@ -81,7 +81,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
                 d["constraints"] = block.constraints
         case CodeBlock():
             d["lan"] = block.lan
-            d["code"] = document_to_dict(block.code)
+            d["code"] = blocks_to_dict(block.code)
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
@@ -90,9 +90,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["api"] = block.api
             d["url"] = block.url
             if block.input is not None:
-                d["input"] = document_to_dict(block.input)
+                d["input"] = blocks_to_dict(block.input)
         case DocumentBlock():
-            d["document"] = document_to_dict(block.document)
+            d["document"] = blocks_to_dict(block.document)
         case ReadBlock():
             d["read"] = block.read
             d["message"] = block.message
@@ -102,30 +102,30 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["include"] = block.include
         case IfBlock():
             d["condition"] = condition_to_dict(block.condition)
-            d["then"] = document_to_dict(block.then)
+            d["then"] = blocks_to_dict(block.then)
             if block.elses is not None:
-                d["else"] = document_to_dict(block.elses)
+                d["else"] = blocks_to_dict(block.elses)
         case RepeatBlock():
-            d["repeat"] = document_to_dict(block.repeat)
+            d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
-            d["trace"] = [document_to_dict(document) for document in block.trace]
+            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case RepeatUntilBlock():
-            d["repeat"] = document_to_dict(block.repeat)
+            d["repeat"] = blocks_to_dict(block.repeat)
             d["until"] = condition_to_dict(block.until)
-            d["trace"] = [document_to_dict(document) for document in block.trace]
+            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = block.repeat
         case FunctionBlock():
             d["function"] = block.function
-            d["document"] = document_to_dict(block.document)
+            d["document"] = blocks_to_dict(block.document)
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope)
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
         case ErrorBlock():
-            d["document"] = block.document
+            d["program"] = block.program
     if block.assign is not None:
         d["def"] = block.assign
     if block.show_result is False:
@@ -135,14 +135,14 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
     return d
 
 
-def document_to_dict(
-    document: DocumentType,
+def blocks_to_dict(
+    blocks: BlocksType,
 ) -> str | dict[str, Any] | list[str | dict[str, Any]]:
     result: str | dict[str, Any] | list[str | dict[str, Any]]
-    if not isinstance(document, str) and isinstance(document, Sequence):
-        result = [block_to_dict(block) for block in document]
+    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        result = [block_to_dict(block) for block in blocks]
     else:
-        result = block_to_dict(document)
+        result = block_to_dict(blocks)
     return result
 
 

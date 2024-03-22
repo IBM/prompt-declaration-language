@@ -16,7 +16,7 @@ def error(raw_data, assertion):
         with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)
             defs = schema["$defs"]
-            errors = analyze_errors(defs, schema, raw_data)
+            errors = analyze_errors(defs, schema["$defs"]["Program"], raw_data)
             assert set(errors) == set(assertion)
 
 

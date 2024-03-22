@@ -29,7 +29,7 @@ class ConditionExpr(BaseModel):
 
 class EndsWithArgs(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    arg0: "DocumentType"
+    arg0: "BlocksType"
     arg1: ExpressionType
 
 
@@ -40,7 +40,7 @@ class EndsWithCondition(ConditionExpr):
 
 class ContainsArgs(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    arg0: "DocumentType"
+    arg0: "BlocksType"
     arg1: ExpressionType
 
 
@@ -77,7 +77,7 @@ class Block(BaseModel):
     model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
     spec: Any = None  # TODO
-    defs: dict[str, "DocumentType"] = {}
+    defs: dict[str, "BlocksType"] = {}
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
@@ -87,7 +87,7 @@ class FunctionBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
-    document: "DocumentType"
+    document: "BlocksType"
     scope: Optional[ScopeType] = None
 
 
@@ -106,7 +106,7 @@ class ModelBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str
-    input: Optional["DocumentType"] = None
+    input: Optional["BlocksType"] = None
     prompt_id: Optional[str] = None
     parameters: Optional[PDLTextGenerationParameters] = None
     moderations: Optional[ModerationParameters] = None
@@ -118,7 +118,7 @@ class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lan: str
-    code: "DocumentType"
+    code: "BlocksType"
 
 
 class ApiBlock(Block):
@@ -126,7 +126,7 @@ class ApiBlock(Block):
     kind: Literal[BlockKind.API] = BlockKind.API
     api: str
     url: str
-    input: "DocumentType"
+    input: "BlocksType"
 
 
 class GetBlock(Block):
@@ -144,15 +144,15 @@ class DataBlock(Block):
 class DocumentBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
-    document: "DocumentType"
+    document: "BlocksType"
 
 
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: "ConditionType" = Field(alias="if")
-    then: "DocumentType"
-    elses: Optional["DocumentType"] = Field(default=None, alias="else")
+    then: "BlocksType"
+    elses: Optional["BlocksType"] = Field(default=None, alias="else")
     if_result: Optional[bool] = None
 
 
@@ -160,24 +160,24 @@ class ForBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
-    repeat: "DocumentType"
-    trace: list["DocumentType"] = []
+    repeat: "BlocksType"
+    trace: list["BlocksType"] = []
 
 
 class RepeatBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    repeat: "DocumentType"
+    repeat: "BlocksType"
     num_iterations: int
-    trace: list["DocumentType"] = []
+    trace: list["BlocksType"] = []
 
 
 class RepeatUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
-    repeat: "DocumentType"
+    repeat: "BlocksType"
     until: ConditionType
-    trace: list["DocumentType"] = []
+    trace: list["BlocksType"] = []
 
 
 class ReadBlock(Block):
@@ -200,7 +200,7 @@ class ErrorBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
-    document: "DocumentType"
+    program: "BlocksType"
 
 
 class EmptyBlock(Block):
@@ -228,7 +228,7 @@ AdvancedBlockType: TypeAlias = (
 )
 
 BlockType: TypeAlias = str | AdvancedBlockType
-DocumentType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
+BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 
 
 class Program(RootModel):
@@ -238,3 +238,13 @@ class Program(RootModel):
 
     # root: dict[str, BlockType]
     root: BlockType
+
+
+class PdlBlock(RootModel):
+    # This class is used to introduce that a type in the generate JsonSchema
+    root: BlockType
+
+
+class PdlBlocks(RootModel):
+    # This class is used to introduce that a type in the generate JsonSchema
+    root: BlocksType

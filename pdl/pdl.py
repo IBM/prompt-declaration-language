@@ -1,8 +1,10 @@
 import argparse
 import json
 
+from pydantic.json_schema import models_json_schema
+
 from . import pdl_interpreter
-from .pdl_ast import Program
+from .pdl_ast import PdlBlock, PdlBlocks, Program
 
 
 def main():
@@ -38,7 +40,15 @@ def main():
 
     args = parser.parse_args()
     if args.schema:
-        print(json.dumps(Program.model_json_schema(), indent=2))
+        _, top_level_schema = models_json_schema(
+            [
+                (Program, "validation"),
+                (PdlBlock, "validation"),
+                (PdlBlocks, "validation"),
+            ],
+            title="PDL Schemas",
+        )
+        print(json.dumps(top_level_schema, indent=2))
     if args.pdl is None:
         return
     pdl_interpreter.generate(

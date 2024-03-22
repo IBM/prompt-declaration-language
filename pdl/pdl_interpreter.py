@@ -17,6 +17,7 @@ from pydantic import ValidationError
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
+    BlocksType,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -25,7 +26,6 @@ from .pdl_ast import (
     ContainsCondition,
     DataBlock,
     DocumentBlock,
-    DocumentType,
     EmptyBlock,
     EndsWithArgs,
     EndsWithCondition,
@@ -43,7 +43,7 @@ from .pdl_ast import (
     RepeatUntilBlock,
     ScopeType,
 )
-from .pdl_ast_utils import iter_block_children, iter_document
+from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_schema_checker import analyze_errors
 
@@ -124,7 +124,7 @@ def generate(
                 with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
                     schema = json.load(schemafile)
                     defs = schema["$defs"]
-                    errors = analyze_errors(defs, schema, prog_yaml)
+                    errors = analyze_errors(defs, defs["Program"], prog_yaml)
                     for item in errors:
                         print(item)
             finally:
@@ -237,7 +237,7 @@ def step_block_body(
                 msg = "Variable is undefined: " + var
                 error(msg)
                 output = ""
-                trace = ErrorBlock(msg=msg, document=block.model_copy())
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
                 output = result if isinstance(result, str) else json.dumps(result)
                 trace = block.model_copy()
@@ -254,7 +254,7 @@ def step_block_body(
             if yield_output:
                 yield output
         case DocumentBlock():
-            result, output, scope, document = yield from step_document(
+            result, output, scope, document = yield from step_blocks(
                 log, scope, yield_output, block.document
             )
             trace = block.model_copy(update={"document": document})
@@ -262,25 +262,25 @@ def step_block_body(
             b, _, cond_trace = process_condition(log, scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
-                result, output, scope, document = yield from step_document(
+                result, output, scope, then_trace = yield from step_blocks(
                     log, scope, yield_output, block.then
                 )
                 trace = block.model_copy(
                     update={
                         "if_result": b,
                         "condition": cond_trace,
-                        "then": document,
+                        "then": then_trace,
                     }
                 )
             elif block.elses is not None:
-                result, output, scope, document = yield from step_document(
+                result, output, scope, else_trace = yield from step_blocks(
                     log, scope, yield_output, block.elses
                 )
                 trace = block.model_copy(
                     update={
                         "if_result": b,
                         "condition": cond_trace,
-                        "elses": document,
+                        "elses": else_trace,
                     }
                 )
             else:
@@ -291,22 +291,22 @@ def step_block_body(
         case RepeatBlock(num_iterations=n):
             result = None
             output = ""
-            iterations_trace: list[DocumentType] = []
+            iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             for _ in range(n):
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, document = yield from step_document(
+                result, iteration_output, scope, body_trace = yield from step_blocks(
                     log, scope, yield_output, block.repeat
                 )
                 output += iteration_output
-                iterations_trace.append(document)
-                if contains_error(document):
+                iterations_trace.append(body_trace)
+                if contains_error(body_trace):
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
             result = None
             output = ""
-            iter_trace: list[DocumentType] = []
+            iter_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             items: dict[str, Any] = {}
             lengths = []
@@ -318,7 +318,7 @@ def step_block_body(
                 msg = "Lists inside the For block must be of the same length"
                 error(msg)
                 output = ""
-                trace = ErrorBlock(msg=msg, document=block.model_copy())
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
                 for i in range(lengths[0]):
                     scope = scope | {"context": context_init + output}
@@ -328,11 +328,11 @@ def step_block_body(
                         result,
                         iteration_output,
                         scope,
-                        document,
-                    ) = yield from step_document(log, scope, yield_output, block.repeat)
+                        body_trace,
+                    ) = yield from step_blocks(log, scope, yield_output, block.repeat)
                     output += iteration_output
-                    iter_trace.append(document)
-                    if contains_error(document):
+                    iter_trace.append(body_trace)
+                    if contains_error(body_trace):
                         break
                 trace = block.model_copy(update={"trace": iter_trace})
 
@@ -344,12 +344,12 @@ def step_block_body(
             context_init = scope_init["context"]
             while not stop:
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, document = yield from step_document(
+                result, iteration_output, scope, body_trace = yield from step_blocks(
                     log, scope, yield_output, block.repeat
                 )
                 output += iteration_output
-                iterations_trace.append(document)
-                if contains_error(document):
+                iterations_trace.append(body_trace)
+                if contains_error(body_trace):
                     break
                 stop, scope, _ = process_condition(log, scope, cond_trace)
             trace = block.model_copy(update={"trace": iterations_trace})
@@ -378,11 +378,11 @@ def step_block_body(
                 error(msg)
                 output = ""
                 result = None
-                trace = ErrorBlock(msg=msg, document=block.model_copy())
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
                 f_body = closure.document
                 f_scope = closure.scope | {"context": scope["context"]} | args
-                result, output, _, f_trace = yield from step_document(
+                result, output, _, f_trace = yield from step_blocks(
                     log, f_scope, yield_output, f_body
                 )
                 trace = block.model_copy(update={"trace": f_trace})
@@ -397,43 +397,43 @@ def step_block_body(
 
 
 def process_defs(
-    log, scope: ScopeType, defs: dict[str, DocumentType]
-) -> tuple[ScopeType, dict[str, DocumentType]]:
-    defs_trace: dict[str, DocumentType] = {}
-    for x, document in defs.items():
-        result, _, _, document_trace = process_document(log, scope, document)
+    log, scope: ScopeType, defs: dict[str, BlocksType]
+) -> tuple[ScopeType, dict[str, BlocksType]]:
+    defs_trace: dict[str, BlocksType] = {}
+    for x, blocks in defs.items():
+        result, _, _, blocks_trace = process_blocks(log, scope, blocks)
         scope = scope | {x: result}
-        defs_trace[x] = document_trace
+        defs_trace[x] = blocks_trace
     return scope, defs_trace
 
 
-def process_document(
-    log, scope: ScopeType, document: DocumentType
-) -> tuple[Any, str, ScopeType, DocumentType]:
+def process_blocks(
+    log, scope: ScopeType, blocks: BlocksType
+) -> tuple[Any, str, ScopeType, BlocksType]:
     return step_to_completion(
-        step_document(log, scope, yield_output=False, document=document)
+        step_blocks(log, scope, yield_output=False, blocks=blocks)
     )
 
 
-def step_document(
-    log, scope: ScopeType, yield_output: bool, document: DocumentType
-) -> Generator[str, Any, tuple[Any, str, ScopeType, DocumentType]]:
+def step_blocks(
+    log, scope: ScopeType, yield_output: bool, blocks: BlocksType
+) -> Generator[str, Any, tuple[Any, str, ScopeType, BlocksType]]:
     result: Any
     output: str
-    trace: DocumentType
-    if not isinstance(document, str) and isinstance(document, Sequence):
+    trace: BlocksType
+    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = None
         output = ""
         trace = []
         context_init = scope["context"]
-        for block in document:
+        for block in blocks:
             scope = scope | {"context": context_init + output}
             result, o, scope, t = yield from step_block(log, scope, yield_output, block)
             output += o
             trace.append(t)  # type: ignore
     else:
         result, output, scope, trace = yield from step_block(
-            log, scope, yield_output, document
+            log, scope, yield_output, blocks
         )
     return result, output, scope, trace
 
@@ -483,7 +483,7 @@ def ends_with(
     log, scope: ScopeType, cond: EndsWithArgs
 ) -> tuple[bool, ScopeType, EndsWithArgs]:
     context_init = scope["context"]
-    _, output, scope, arg0_trace = process_document(log, scope, cond.arg0)
+    _, output, scope, arg0_trace = process_blocks(log, scope, cond.arg0)
     arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
     result = output.endswith(arg1)
@@ -494,7 +494,7 @@ def contains(
     log, scope: ScopeType, cond: ContainsArgs
 ) -> tuple[bool, ScopeType, ContainsArgs]:
     context_init = scope["context"]
-    _, output, scope, arg0_trace = process_document(log, scope, cond.arg0)
+    _, output, scope, arg0_trace = process_blocks(log, scope, cond.arg0)
     arg1 = process_expr(scope, cond.arg1)
     scope = scope | {"context": context_init}
     result = arg1 in output
@@ -511,7 +511,7 @@ def step_call_model(
     log, scope: ScopeType, yield_output: bool, block: ModelBlock
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
-        _, model_input, _, input_trace = process_document(log, scope, block.input)
+        _, model_input, _, input_trace = process_blocks(log, scope, block.input)
     else:
         model_input = scope["context"]
         input_trace = None
@@ -523,7 +523,7 @@ def step_call_model(
             msg = "Fail to get a BAM client"
             error(msg)
             trace = ErrorBlock(
-                msg=msg, document=block.model_copy(update={"input": input_trace})
+                msg=msg, program=block.model_copy(update={"input": input_trace})
             )
             return None, "", scope, trace
         params = block.parameters
@@ -539,7 +539,7 @@ def step_call_model(
         msg = f"Model error: {e}"
         error(msg)
         trace = ErrorBlock(
-            msg=msg, document=block.model_copy(update={"input": input_trace})
+            msg=msg, program=block.model_copy(update={"input": input_trace})
         )
         return None, "", scope, trace
 
@@ -599,7 +599,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 def call_api(
     log, scope: ScopeType, block: ApiBlock
 ) -> tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]:
-    _, input_str, _, input_trace = process_document(log, scope, block.input)
+    _, input_str, _, input_trace = process_blocks(log, scope, block.input)
     input_str = block.url + input_str
     try:
         append_log(log, "API Input", input_str)
@@ -615,7 +615,7 @@ def call_api(
         result = None
         output = ""
         trace = ErrorBlock(
-            msg=msg, document=block.model_copy(update={"input": input_trace})
+            msg=msg, program=block.model_copy(update={"input": input_trace})
         )
     return result, output, scope, trace
 
@@ -623,7 +623,7 @@ def call_api(
 def call_code(
     log, scope: ScopeType, block: CodeBlock
 ) -> tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]:
-    _, code_s, _, code_trace = process_document(log, scope, block.code)
+    _, code_s, _, code_trace = process_blocks(log, scope, block.code)
     append_log(log, "Code Input", code_s)
     debug("code string: " + code_s)
     match block.lan:
@@ -635,7 +635,7 @@ def call_code(
             error(msg)
             result = None
             output = ""
-            trace = ErrorBlock(msg=msg, document=block.model_copy())
+            trace = ErrorBlock(msg=msg, program=block.model_copy())
             return result, output, scope, trace
     append_log(log, "Code Output", result)
     trace = block.model_copy(update={"result": result, "code": code_trace})
@@ -688,7 +688,7 @@ def process_input(
         except Exception:
             msg = "Attempted to parse ill-formed JSON"
             error(msg)
-            trace = ErrorBlock(msg=msg, document=block.model_copy())
+            trace = ErrorBlock(msg=msg, program=block.model_copy())
             return None, "", scope, trace
     else:
         result = s
@@ -714,7 +714,7 @@ def step_include(
             print(e)
             msg = "Attempting to include invalid yaml: " + block.include
             error(msg)
-            trace = ErrorBlock(msg=msg, document=block.model_copy())
+            trace = ErrorBlock(msg=msg, program=block.model_copy())
             return None, "", scope, trace
 
 
@@ -746,14 +746,14 @@ def error(somestring):
     print("Error: " + somestring)
 
 
-def contains_error(document: DocumentType) -> bool:
+def contains_error(blocks: BlocksType) -> bool:
     def raise_on_error(block):
         if isinstance(block, ErrorBlock):
             raise StopIteration
         iter_block_children(raise_on_error, block)
 
     try:
-        iter_document(raise_on_error, document)
+        iter_blocks(raise_on_error, blocks)
         return False
     except StopIteration:
         return True

@@ -5,27 +5,6 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-/**
- * Prompt Description Program (PDL)
- */
-export type Program =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock;
 export type Description = string | null;
 export type Description1 = string | null;
 export type Description2 = string | null;
@@ -49,7 +28,7 @@ export type Def1 = string | null;
 export type ShowResult1 = boolean;
 export type Kind1 = "error";
 export type Msg = string;
-export type Document =
+export type Program =
   | string
   | FunctionBlock
   | CallBlock
@@ -119,7 +98,7 @@ export type Parser = string | null;
 export type Def4 = string | null;
 export type ShowResult4 = boolean;
 export type Kind4 = "document";
-export type Document1 =
+export type Document =
   | string
   | FunctionBlock
   | CallBlock
@@ -557,49 +536,7 @@ export type Kind10 = "get";
 export type Get = string;
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
-export type Kind11 = "api";
-export type Api = string;
-export type Url = string;
-export type Input =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | ModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
-export type Def12 = string | null;
-export type ShowResult12 = boolean;
-export type Kind12 = "code";
+export type Kind11 = "code";
 export type Lan = string;
 export type Code =
   | string
@@ -638,11 +575,11 @@ export type Code =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Def13 = string | null;
-export type ShowResult13 = boolean;
-export type Kind13 = "model";
+export type Def12 = string | null;
+export type ShowResult12 = boolean;
+export type Kind12 = "model";
 export type Model = string;
-export type Input1 =
+export type Input =
   | string
   | FunctionBlock
   | CallBlock
@@ -682,6 +619,10 @@ export type Input1 =
   | null;
 export type PromptId = string | null;
 export type BeamWidth = number | null;
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "DecodingMethod".
+ */
 export type DecodingMethod = "greedy" | "sample";
 export type IncludeStopSequence = boolean | null;
 export type DecayFactor = number | null;
@@ -712,17 +653,17 @@ export type TopPNucleusSampling = number | null;
 export type TruncateInputTokens = number | null;
 export type TypicalP = number | null;
 export type Hap = boolean | ModerationHAP | null;
-export type Input2 = boolean | null;
+export type Input1 = boolean | null;
 export type Output = boolean | null;
 export type SendTokens = boolean | null;
 export type Threshold = number | null;
 export type ImplicitHate = boolean | ModerationImplicitHate | null;
-export type Input3 = boolean | null;
+export type Input2 = boolean | null;
 export type Output1 = boolean | null;
 export type SendTokens1 = boolean | null;
 export type Threshold1 = number | null;
 export type Stigma = boolean | ModerationStigma | null;
-export type Input4 = boolean | null;
+export type Input3 = boolean | null;
 export type Output2 = boolean | null;
 export type SendTokens2 = boolean | null;
 export type Threshold2 = number | null;
@@ -734,17 +675,17 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
+export type Def13 = string | null;
+export type ShowResult13 = boolean;
+export type Kind13 = "call";
+export type Call = string;
 export type Def14 = string | null;
 export type ShowResult14 = boolean;
-export type Kind14 = "call";
-export type Call = string;
-export type Def15 = string | null;
-export type ShowResult15 = boolean;
-export type Kind15 = "function";
+export type Kind14 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
-export type Document2 =
+export type Document1 =
   | string
   | FunctionBlock
   | CallBlock
@@ -784,8 +725,144 @@ export type Document2 =
 export type Scope = {
   [k: string]: unknown;
 } | null;
+export type Def15 = string | null;
+export type ShowResult15 = boolean;
+export type Kind15 = "api";
+export type Api = string;
+export type Url = string;
+export type Input4 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "PdlBlock".
+ */
+export type PdlBlock =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock;
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "PdlBlocks".
+ */
+export type PdlBlocks =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+/**
+ * Prompt Description Program (PDL)
+ *
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "Program".
+ */
+export type Program1 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock;
 
-export interface FunctionBlock {
+export interface PDLSchemas {
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ApiBlock".
+ */
+export interface ApiBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
@@ -793,9 +870,9 @@ export interface FunctionBlock {
   show_result?: ShowResult15;
   result?: unknown;
   kind?: Kind15;
-  function: Function;
-  document: Document2;
-  scope?: Scope;
+  api: Api;
+  url: Url;
+  input: Input4;
 }
 export interface Spec {
   [k: string]: unknown;
@@ -839,7 +916,11 @@ export interface Defs {
         | EmptyBlock
       )[];
 }
-export interface CallBlock {
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "FunctionBlock".
+ */
+export interface FunctionBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
@@ -847,8 +928,9 @@ export interface CallBlock {
   show_result?: ShowResult14;
   result?: unknown;
   kind?: Kind14;
-  call: Call;
-  args?: Args;
+  function: Function;
+  document: Document1;
+  scope?: Scope;
 }
 export interface Spec1 {
   [k: string]: unknown;
@@ -892,7 +974,11 @@ export interface Defs1 {
         | EmptyBlock
       )[];
 }
-export interface ModelBlock {
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "CallBlock".
+ */
+export interface CallBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
@@ -900,13 +986,8 @@ export interface ModelBlock {
   show_result?: ShowResult13;
   result?: unknown;
   kind?: Kind13;
-  model: Model;
-  input?: Input1;
-  prompt_id?: PromptId;
-  parameters?: PDLTextGenerationParameters | null;
-  moderations?: ModerationParameters | null;
-  data?: PromptTemplateData | null;
-  constraints?: Constraints;
+  call: Call;
+  args?: Args;
 }
 export interface Spec2 {
   [k: string]: unknown;
@@ -950,7 +1031,11 @@ export interface Defs2 {
         | EmptyBlock
       )[];
 }
-export interface CodeBlock {
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModelBlock".
+ */
+export interface ModelBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
@@ -958,8 +1043,13 @@ export interface CodeBlock {
   show_result?: ShowResult12;
   result?: unknown;
   kind?: Kind12;
-  lan: Lan;
-  code: Code;
+  model: Model;
+  input?: Input;
+  prompt_id?: PromptId;
+  parameters?: PDLTextGenerationParameters | null;
+  moderations?: ModerationParameters | null;
+  data?: PromptTemplateData | null;
+  constraints?: Constraints;
 }
 export interface Spec3 {
   [k: string]: unknown;
@@ -1003,7 +1093,11 @@ export interface Defs3 {
         | EmptyBlock
       )[];
 }
-export interface ApiBlock {
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "CodeBlock".
+ */
+export interface CodeBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
@@ -1011,9 +1105,8 @@ export interface ApiBlock {
   show_result?: ShowResult11;
   result?: unknown;
   kind?: Kind11;
-  api: Api;
-  url: Url;
-  input: Input;
+  lan: Lan;
+  code: Code;
 }
 export interface Spec4 {
   [k: string]: unknown;
@@ -1057,6 +1150,10 @@ export interface Defs4 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "GetBlock".
+ */
 export interface GetBlock {
   description?: Description5;
   spec?: Spec5;
@@ -1109,6 +1206,10 @@ export interface Defs5 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "DataBlock".
+ */
 export interface DataBlock {
   description?: Description6;
   spec?: Spec6;
@@ -1161,6 +1262,10 @@ export interface Defs6 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "IfBlock".
+ */
 export interface IfBlock {
   description?: Description7;
   spec?: Spec7;
@@ -1216,6 +1321,10 @@ export interface Defs7 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "RepeatBlock".
+ */
 export interface RepeatBlock {
   description?: Description8;
   spec?: Spec8;
@@ -1270,6 +1379,10 @@ export interface Defs8 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "RepeatUntilBlock".
+ */
 export interface RepeatUntilBlock {
   description?: Description9;
   spec?: Spec9;
@@ -1324,6 +1437,10 @@ export interface Defs9 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ForBlock".
+ */
 export interface ForBlock {
   description?: Description10;
   spec?: Spec10;
@@ -1378,6 +1495,10 @@ export interface Defs10 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "DocumentBlock".
+ */
 export interface DocumentBlock {
   description?: Description11;
   spec?: Spec11;
@@ -1386,7 +1507,7 @@ export interface DocumentBlock {
   show_result?: ShowResult4;
   result?: unknown;
   kind?: Kind4;
-  document: Document1;
+  document: Document;
 }
 export interface Spec11 {
   [k: string]: unknown;
@@ -1430,6 +1551,10 @@ export interface Defs11 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ReadBlock".
+ */
 export interface ReadBlock {
   description?: Description12;
   spec?: Spec12;
@@ -1485,6 +1610,10 @@ export interface Defs12 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "IncludeBlock".
+ */
 export interface IncludeBlock {
   description?: Description13;
   spec?: Spec13;
@@ -1538,6 +1667,10 @@ export interface Defs13 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ErrorBlock".
+ */
 export interface ErrorBlock {
   description?: Description14;
   spec?: Spec14;
@@ -1547,7 +1680,7 @@ export interface ErrorBlock {
   result?: unknown;
   kind?: Kind1;
   msg: Msg;
-  document: Document;
+  program: Program;
 }
 export interface Spec14 {
   [k: string]: unknown;
@@ -1591,6 +1724,10 @@ export interface Defs14 {
         | EmptyBlock
       )[];
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "EmptyBlock".
+ */
 export interface EmptyBlock {
   description?: Description15;
   spec?: Spec15;
@@ -1645,10 +1782,18 @@ export interface Defs15 {
 export interface For {
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "EndsWithCondition".
+ */
 export interface EndsWithCondition {
   result?: Result7;
   ends_with: EndsWithArgs;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "EndsWithArgs".
+ */
 export interface EndsWithArgs {
   arg0: Arg0;
   arg1: Arg1;
@@ -1656,10 +1801,18 @@ export interface EndsWithArgs {
 export interface Arg1 {
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ContainsCondition".
+ */
 export interface ContainsCondition {
   result?: Result8;
   contains: ContainsArgs;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ContainsArgs".
+ */
 export interface ContainsArgs {
   arg0: Arg01;
   arg1: Arg11;
@@ -1670,6 +1823,10 @@ export interface Arg11 {
 export interface Data {
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "PDLTextGenerationParameters".
+ */
 export interface PDLTextGenerationParameters {
   beam_width?: BeamWidth;
   decoding_method?: DecodingMethod | null;
@@ -1688,11 +1845,19 @@ export interface PDLTextGenerationParameters {
   truncate_input_tokens?: TruncateInputTokens;
   typical_p?: TypicalP;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "LengthPenalty".
+ */
 export interface LengthPenalty {
   decay_factor?: DecayFactor;
   start_index?: StartIndex;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "TextGenerationReturnOptions".
+ */
 export interface TextGenerationReturnOptions {
   generated_tokens?: GeneratedTokens;
   input_parameters?: InputParameters;
@@ -1703,33 +1868,53 @@ export interface TextGenerationReturnOptions {
   top_n_tokens?: TopNTokens;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationParameters".
+ */
 export interface ModerationParameters {
   hap?: Hap;
   implicit_hate?: ImplicitHate;
   stigma?: Stigma;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationHAP".
+ */
 export interface ModerationHAP {
-  input?: Input2;
+  input?: Input1;
   output?: Output;
   send_tokens?: SendTokens;
   threshold?: Threshold;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationImplicitHate".
+ */
 export interface ModerationImplicitHate {
-  input?: Input3;
+  input?: Input2;
   output?: Output1;
   send_tokens?: SendTokens1;
   threshold?: Threshold1;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationStigma".
+ */
 export interface ModerationStigma {
-  input?: Input4;
+  input?: Input3;
   output?: Output2;
   send_tokens?: SendTokens2;
   threshold?: Threshold2;
   [k: string]: unknown;
 }
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "PromptTemplateData".
+ */
 export interface PromptTemplateData {
   example_file_ids?: ExampleFileIds;
   [k: string]: unknown;
