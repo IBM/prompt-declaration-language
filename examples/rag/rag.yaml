@@ -41,30 +41,33 @@ defs:
       - |
         Q: {{ prompt }}
         A: ```{{ code }}```
+      - "\n"
   GENERATED:
     model: ibm/granite-20b-code-instruct-v1
-    input: |-
+    input:
+    - |-
       Given the text after "Q:", generate a Python function after "A:".
 
       Here are some examples, complete the last one:
 
       {{ AUGMENTATION }}
-
+    - |-
       Q: {{ TEST.prompt }}
       A: ```
     parameters:
       stop_sequences:
       - "```"
       include_stop_sequence: false
-document: |
+document:
+- |-
   input text:
   {{ TEST.prompt }}
 
   retrieved exemplars:
   {{ AUGMENTATION }}
+- |-
+  generated code:
+  ```{{ GENERATED }}```
 
-  generated code: ```
-  {{ GENERATED }}```
-
-  ground truth: ```
-  {{ TEST.code }}```
+  ground truth:
+  ```{{ TEST.code }}```
