@@ -39,12 +39,8 @@ code_var_data = {
     "document": [
         {
             "def": "I",
-            "document": [
-                {
-                    "lan": "python",
-                    "code": ["result = 0"],
-                }
-            ],
+            "lan": "python",
+            "code": ["result = 0"],
             "show_result": True,
         },
     ],

@@ -76,3 +76,47 @@ def test_for_data3():
     data = Program.model_validate(for_data3)
     _, _, _, trace = process_block(log, empty_scope, data.root)
     assert contains_error(trace)
+
+
+for_data4 = {
+    "description": "For block def",
+    "document": [
+        {
+            "def": "x",
+            "for": {"i": [1, 2, 3, 4]},
+            "repeat": "{{ i }}",
+        }
+    ],
+}
+
+
+def test_for_data4():
+    log = []
+    data = Program.model_validate(for_data4)
+    result, output, scope, _ = process_block(log, empty_scope, data.root)
+    assert result == "1234"
+    assert output == "1234"
+    assert scope["x"] == 4
+
+
+for_data5 = {
+    "description": "For block def",
+    "document": [
+        {
+            "def": "x",
+            "document": {
+                "for": {"i": [1, 2, 3, 4]},
+                "repeat": "{{ i }}",
+            },
+        }
+    ],
+}
+
+
+def test_for_data5():
+    log = []
+    data = Program.model_validate(for_data5)
+    result, output, scope, _ = process_block(log, empty_scope, data.root)
+    assert result == "1234"
+    assert output == "1234"
+    assert scope["x"] == "1234"

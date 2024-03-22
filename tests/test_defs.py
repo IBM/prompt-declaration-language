@@ -40,7 +40,7 @@ defs_chain_data = {
     "defs": {
         "X": {"data": "a"},
         "Y": {"data": "b"},
-        "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
+        "Z": [{"get": "X"}, {"get": "Y"}, "c"],
     },
     "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
 }

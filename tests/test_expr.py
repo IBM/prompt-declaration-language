@@ -4,16 +4,18 @@ from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
 
 arith_data = {
     "description": "Test arith",
-    "document": "{{ 1 + 1 }}",
+    "defs": {"X": "{{ 1 + 1 }}"},
+    "document": "{{ X }}",
 }
 
 
 def test_arith():
     log = []
     data = Program.model_validate(arith_data)
-    result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert result == 2
+    result, document, scope, _ = process_block(log, empty_scope, data.root)
+    assert result == "2"
     assert document == "2"
+    assert scope["X"] == 2
 
 
 var_data = {
@@ -26,7 +28,7 @@ def test_var():
     log = []
     data = Program.model_validate(var_data)
     result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert result == 3
+    assert result == "3"
     assert document == "3"
 
 
@@ -39,7 +41,7 @@ def test_true():
     log = []
     data = Program.model_validate(true_data)
     result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert result
+    assert result == "true"
     assert document == "true"
 
 
@@ -52,7 +54,7 @@ def test_false():
     log = []
     data = Program.model_validate(false_data)
     result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert not result
+    assert result == "false"
     assert document == "false"
 
 
@@ -76,17 +78,21 @@ var_data2 = {
 def test_var2():
     log = []
     data = Program.model_validate(var_data2)
-    result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert result == ["something", "something else"]
+    result, document, scope, _ = process_block(log, empty_scope, data.root)
+    assert result == '["something", "something else"]'
     assert document == '["something", "something else"]'
+    assert scope["X"] == "something"
+    assert scope["Y"] == "something else"
 
 
-list_data = {"defs": {"X": {"data": [1, 2, 3]}}, "document": "{{ X }}"}
+list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "{{ X }}"}, "document": "{{ X }}"}
 
 
 def test_list():
     log = []
     data = Program.model_validate(list_data)
-    result, document, _, _ = process_block(log, empty_scope, data.root)
-    assert result == [1, 2, 3]
+    result, document, scope, _ = process_block(log, empty_scope, data.root)
+    assert result == "[1, 2, 3]"
     assert document == "[1, 2, 3]"
+    assert scope["X"] == [1, 2, 3]
+    assert scope["Y"] == [1, 2, 3]

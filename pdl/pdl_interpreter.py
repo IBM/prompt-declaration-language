@@ -254,9 +254,10 @@ def step_block_body(
             if yield_output:
                 yield output
         case DocumentBlock():
-            result, output, scope, document = yield from step_blocks(
+            _, output, scope, document = yield from step_blocks(
                 log, scope, yield_output, block.document
             )
+            result = output
             trace = block.model_copy(update={"document": document})
         case IfBlock():
             b, _, cond_trace = process_condition(log, scope, block.condition)
