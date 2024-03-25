@@ -595,10 +595,7 @@ document:
         stop_sequences:
         - '<<'
         include_stop_sequence: true
-    - if:
-        ends_with:
-          arg0: '{{ REASON_OR_CALC }}'
-          arg1: '<<'
+    - if: '{{ REASON_OR_CALC.endswith("<<") }}'
       then:
       - def: EXPR
         model: ibm/granite-20b-code-instruct-v1
@@ -613,10 +610,7 @@ document:
         code:
         - result = {{ EXPR }}
       - ' >>'
-    until:
-      contains:
-        arg0: '{{ REASON_OR_CALC }}'
-        arg1: The answer is  
+    until: '{{ "The answer is" in REASON_OR_CALC }}'
     
   - "\n\n"
   num_iterations: 3

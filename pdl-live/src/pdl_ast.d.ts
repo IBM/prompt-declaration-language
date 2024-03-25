@@ -253,83 +253,6 @@ export type Repeat1 =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Until = string | EndsWithCondition | ContainsCondition;
-export type Result7 = boolean | null;
-export type Arg0 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | ModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
-export type Result8 = boolean | null;
-export type Arg01 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | ModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
 export type Trace2 = (
   | string
   | FunctionBlock
@@ -450,7 +373,6 @@ export type Trace3 = (
 export type Def8 = string | null;
 export type ShowResult8 = boolean;
 export type Kind8 = "if";
-export type If = string | EndsWithCondition | ContainsCondition;
 export type Then =
   | string
   | FunctionBlock
@@ -652,21 +574,18 @@ export type TopK = number | null;
 export type TopPNucleusSampling = number | null;
 export type TruncateInputTokens = number | null;
 export type TypicalP = number | null;
-export type Hap = boolean | ModerationHAP | null;
-export type Input1 = boolean | null;
-export type Output = boolean | null;
+export type Enabled = boolean | null;
 export type SendTokens = boolean | null;
 export type Threshold = number | null;
-export type ImplicitHate = boolean | ModerationImplicitHate | null;
-export type Input2 = boolean | null;
-export type Output1 = boolean | null;
+export type Enabled1 = boolean | null;
 export type SendTokens1 = boolean | null;
 export type Threshold1 = number | null;
-export type Stigma = boolean | ModerationStigma | null;
-export type Input3 = boolean | null;
-export type Output2 = boolean | null;
+export type Enabled2 = boolean | null;
 export type SendTokens2 = boolean | null;
 export type Threshold2 = number | null;
+export type Enabled3 = boolean | null;
+export type SendTokens3 = boolean | null;
+export type Threshold3 = number | null;
 export type ExampleFileIds =
   | []
   | [string]
@@ -730,7 +649,7 @@ export type ShowResult15 = boolean;
 export type Kind15 = "api";
 export type Api = string;
 export type Url = string;
-export type Input4 =
+export type Input1 =
   | string
   | FunctionBlock
   | CallBlock
@@ -872,7 +791,7 @@ export interface ApiBlock {
   kind?: Kind15;
   api: Api;
   url: Url;
-  input: Input4;
+  input: Input1;
 }
 export interface Spec {
   [k: string]: unknown;
@@ -1782,42 +1701,10 @@ export interface Defs15 {
 export interface For {
   [k: string]: unknown;
 }
-/**
- * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "EndsWithCondition".
- */
-export interface EndsWithCondition {
-  result?: Result7;
-  ends_with: EndsWithArgs;
-}
-/**
- * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "EndsWithArgs".
- */
-export interface EndsWithArgs {
-  arg0: Arg0;
-  arg1: Arg1;
-}
-export interface Arg1 {
+export interface Until {
   [k: string]: unknown;
 }
-/**
- * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "ContainsCondition".
- */
-export interface ContainsCondition {
-  result?: Result8;
-  contains: ContainsArgs;
-}
-/**
- * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "ContainsArgs".
- */
-export interface ContainsArgs {
-  arg0: Arg01;
-  arg1: Arg11;
-}
-export interface Arg11 {
+export interface If {
   [k: string]: unknown;
 }
 export interface Data {
@@ -1873,9 +1760,8 @@ export interface TextGenerationReturnOptions {
  * via the `definition` "ModerationParameters".
  */
 export interface ModerationParameters {
-  hap?: Hap;
-  implicit_hate?: ImplicitHate;
-  stigma?: Stigma;
+  hap?: ModerationHAP | null;
+  social_bias?: ModerationSocialBias | null;
   [k: string]: unknown;
 }
 /**
@@ -1883,32 +1769,57 @@ export interface ModerationParameters {
  * via the `definition` "ModerationHAP".
  */
 export interface ModerationHAP {
-  input?: Input1;
-  output?: Output;
+  input?: ModerationHAPInput | null;
+  output?: ModerationHAPOutput | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationHAPInput".
+ */
+export interface ModerationHAPInput {
+  enabled?: Enabled;
   send_tokens?: SendTokens;
   threshold?: Threshold;
   [k: string]: unknown;
 }
 /**
  * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "ModerationImplicitHate".
+ * via the `definition` "ModerationHAPOutput".
  */
-export interface ModerationImplicitHate {
-  input?: Input2;
-  output?: Output1;
+export interface ModerationHAPOutput {
+  enabled?: Enabled1;
   send_tokens?: SendTokens1;
   threshold?: Threshold1;
   [k: string]: unknown;
 }
 /**
  * This interface was referenced by `PDLSchemas`'s JSON-Schema
- * via the `definition` "ModerationStigma".
+ * via the `definition` "ModerationSocialBias".
  */
-export interface ModerationStigma {
-  input?: Input3;
-  output?: Output2;
+export interface ModerationSocialBias {
+  input?: ModerationSocialBiasInput | null;
+  output?: ModerationSocialBiasOutput | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationSocialBiasInput".
+ */
+export interface ModerationSocialBiasInput {
+  enabled?: Enabled2;
   send_tokens?: SendTokens2;
   threshold?: Threshold2;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `PDLSchemas`'s JSON-Schema
+ * via the `definition` "ModerationSocialBiasOutput".
+ */
+export interface ModerationSocialBiasOutput {
+  enabled?: Enabled3;
+  send_tokens?: SendTokens3;
+  threshold?: Threshold3;
   [k: string]: unknown;
 }
 /**

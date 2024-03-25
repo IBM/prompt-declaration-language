@@ -21,15 +21,11 @@ from .pdl_ast import (
     BlockType,
     CallBlock,
     CodeBlock,
-    ConditionType,
-    ContainsArgs,
-    ContainsCondition,
     DataBlock,
     DocumentBlock,
     EmptyBlock,
-    EndsWithArgs,
-    EndsWithCondition,
     ErrorBlock,
+    ExpressionType,
     ForBlock,
     FunctionBlock,
     GetBlock,
@@ -260,7 +256,7 @@ def step_block_body(
             result = output
             trace = block.model_copy(update={"document": document})
         case IfBlock():
-            b, _, cond_trace = process_condition(log, scope, block.condition)
+            b = process_condition(scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
                 result, output, scope, then_trace = yield from step_blocks(
@@ -269,7 +265,6 @@ def step_block_body(
                 trace = block.model_copy(
                     update={
                         "if_result": b,
-                        "condition": cond_trace,
                         "then": then_trace,
                     }
                 )
@@ -280,14 +275,13 @@ def step_block_body(
                 trace = block.model_copy(
                     update={
                         "if_result": b,
-                        "condition": cond_trace,
                         "elses": else_trace,
                     }
                 )
             else:
                 result = None
                 output = ""
-                trace = block.model_copy(update={"condition": cond_trace})
+                trace = block.model_copy(update={"if_result": b})
 
         case RepeatBlock(num_iterations=n):
             result = None
@@ -338,7 +332,7 @@ def step_block_body(
                         break
                 trace = block.model_copy(update={"trace": iter_trace})
 
-        case RepeatUntilBlock(until=cond_trace):
+        case RepeatUntilBlock(until=cond):
             result = None
             stop = False
             output = ""
@@ -353,7 +347,7 @@ def step_block_body(
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
-                stop, scope, _ = process_condition(log, scope, cond_trace)
+                stop = process_condition(scope, cond)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block)
@@ -464,43 +458,9 @@ def process_expr(scope: ScopeType, e: Any) -> Any:
     return e
 
 
-def process_condition(
-    log, scope: ScopeType, cond: ConditionType
-) -> tuple[bool, ScopeType, ConditionType]:
-    trace: ConditionType
-    match cond:
-        case EndsWithCondition(ends_with=args):
-            result, scope, args_trace = ends_with(log, scope, args)
-            trace = cond.model_copy(update={"result": result, "ends_with": args_trace})
-        case ContainsCondition(contains=args):
-            result, scope, args_trace = contains(log, scope, args)
-            trace = cond.model_copy(update={"result": result, "contains": args_trace})
-        case _:
-            result = False
-            trace = cond
-    return result, scope, trace
-
-
-def ends_with(
-    log, scope: ScopeType, cond: EndsWithArgs
-) -> tuple[bool, ScopeType, EndsWithArgs]:
-    context_init = scope["context"]
-    _, output, scope, arg0_trace = process_blocks(log, scope, cond.arg0)
-    arg1 = process_expr(scope, cond.arg1)
-    scope = scope | {"context": context_init}
-    result = output.endswith(arg1)
-    return result, scope, cond.model_copy(update={"arg0": arg0_trace})
-
-
-def contains(
-    log, scope: ScopeType, cond: ContainsArgs
-) -> tuple[bool, ScopeType, ContainsArgs]:
-    context_init = scope["context"]
-    _, output, scope, arg0_trace = process_blocks(log, scope, cond.arg0)
-    arg1 = process_expr(scope, cond.arg1)
-    scope = scope | {"context": context_init}
-    result = arg1 in output
-    return result, scope, cond.model_copy(update={"arg0": arg0_trace})
+def process_condition(scope: ScopeType, cond: ExpressionType) -> bool:
+    b = process_expr(scope, cond)
+    return b
 
 
 def _get_bam_client() -> Optional[Client]:
@@ -588,7 +548,11 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     ):
         if not response.results:
             if response.moderation is not None:
-                append_log(log, "Hate speech:", response.moderation.hap)
+                append_log(
+                    log,
+                    "Hate speech",
+                    f"Generate from: {model_input}",
+                )
             continue
         for result in response.results:
             if result.generated_text:

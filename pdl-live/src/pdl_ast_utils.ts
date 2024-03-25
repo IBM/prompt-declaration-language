@@ -1,12 +1,8 @@
 import {
   PdlBlocks,
   PdlBlock,
-  EndsWithCondition,
-  ContainsCondition,
 } from './pdl_ast';
 import {match, P} from 'ts-pattern';
-
-type PdlCondition = string | EndsWithCondition | ContainsCondition;
 
 export function map_block_children(
   f: (block: string | PdlBlock) => string | PdlBlock,
@@ -42,10 +38,9 @@ export function map_block_children(
       return {...block, document: document};
     })
     .with({kind: 'if'}, block => {
-      const if_ = map_condition(f, block.if);
       const then_ = map_blocks(f, block.then);
       const else_ = block.else ? map_blocks(f, block.else) : undefined;
-      return {...block, if: if_, then: then_, else: else_};
+      return {...block, then: then_, else: else_};
     })
     .with({kind: 'repeat'}, block => {
       const repeat = map_blocks(f, block.repeat);
@@ -53,8 +48,7 @@ export function map_block_children(
     })
     .with({kind: 'repeat_until'}, block => {
       const repeat = map_blocks(f, block.repeat);
-      const until = map_condition(f, block.until);
-      return {...block, repeat: repeat, until: until};
+      return {...block, repeat: repeat};
     })
     .with({kind: 'for'}, block => {
       const repeat = map_blocks(f, block.repeat);
@@ -82,23 +76,6 @@ export function map_blocks(
   return blocks;
 }
 
-export function map_condition(
-  f: (block: string | PdlBlock) => string | PdlBlock,
-  cond: PdlCondition
-): PdlCondition {
-  cond = match(cond)
-    .with(P.string, s => s)
-    .with({ends_with: P._}, cond => {
-      const arg0 = map_blocks(f, cond.ends_with.arg0);
-      return {...cond, ends_with: {...cond.ends_with, arg0: arg0}};
-    })
-    .with({contains: P._}, cond => {
-      const arg0 = map_blocks(f, cond.contains.arg0);
-      return {...cond, contains: {...cond.contains, arg0: arg0}};
-    })
-    .exhaustive();
-  return cond;
-}
 
 export function iter_block_children(
   f: (block: PdlBlock) => void,
@@ -126,7 +103,6 @@ export function iter_block_children(
       iter_blocks(f, block.document);
     })
     .with({kind: 'if'}, block => {
-      iter_condition(f, block.if);
       if (block.then) iter_blocks(f, block.then);
       if (block.else) iter_blocks(f, block.else);
     })
@@ -135,7 +111,6 @@ export function iter_block_children(
     })
     .with({kind: 'repeat_until'}, block => {
       iter_blocks(f, block.repeat);
-      iter_condition(f, block.until);
     })
     .with({kind: 'for'}, block => {
       iter_blocks(f, block.repeat);
@@ -157,19 +132,4 @@ export function iter_blocks(
       sequence.forEach(doc => iter_blocks(f, doc));
     })
     .otherwise(block => f(block));
-}
-
-export function iter_condition(
-  f: (block: PdlBlock) => void,
-  cond: PdlCondition
-): void {
-  match(cond)
-    .with(P.string, () => {})
-    .with({ends_with: P._}, cond => {
-      iter_blocks(f, cond.ends_with.arg0);
-    })
-    .with({contains: P._}, cond => {
-      iter_blocks(f, cond.contains.arg0);
-    })
-    .exhaustive();
 }

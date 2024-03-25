@@ -22,36 +22,6 @@ ExpressionType: TypeAlias = Any
 # )
 
 
-class ConditionExpr(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    result: Optional[bool] = None
-
-
-class EndsWithArgs(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    arg0: "BlocksType"
-    arg1: ExpressionType
-
-
-class EndsWithCondition(ConditionExpr):
-    model_config = ConfigDict(extra="forbid")
-    ends_with: EndsWithArgs
-
-
-class ContainsArgs(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    arg0: "BlocksType"
-    arg1: ExpressionType
-
-
-class ContainsCondition(ConditionExpr):
-    model_config = ConfigDict(extra="forbid")
-    contains: ContainsArgs
-
-
-ConditionType: TypeAlias = str | EndsWithCondition | ContainsCondition
-
-
 class BlockKind(StrEnum):
     FUNCTION = "function"
     CALL = "call"
@@ -150,7 +120,7 @@ class DocumentBlock(Block):
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
-    condition: "ConditionType" = Field(alias="if")
+    condition: ExpressionType = Field(alias="if")
     then: "BlocksType"
     elses: Optional["BlocksType"] = Field(default=None, alias="else")
     if_result: Optional[bool] = None
@@ -176,7 +146,7 @@ class RepeatUntilBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
-    until: ConditionType
+    until: ExpressionType
     trace: list["BlocksType"] = []
 
 

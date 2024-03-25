@@ -30,13 +30,5 @@ document:
       - 'result = '
       - get: EXPR
     - ' >>'
-    if:
-      ends_with:
-        arg0:
-          get: REASON_OR_CALC
-        arg1: '<<'
-  until:
-    contains:
-      arg0:
-        get: REASON_OR_CALC
-      arg1: The answer is
+    if: '{{ REASON_OR_CALC.endswith("<<") }}'
+  until: '{{ "The answer is" in REASON_OR_CALC }}'

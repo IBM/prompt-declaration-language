@@ -780,159 +780,6 @@
       "title": "CodeBlock",
       "type": "object"
     },
-    "ContainsArgs": {
-      "additionalProperties": false,
-      "properties": {
-        "arg0": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "title": "Arg0"
-        },
-        "arg1": {
-          "title": "Arg1"
-        }
-      },
-      "required": [
-        "arg0",
-        "arg1"
-      ],
-      "title": "ContainsArgs",
-      "type": "object"
-    },
-    "ContainsCondition": {
-      "additionalProperties": false,
-      "properties": {
-        "result": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "contains": {
-          "$ref": "#/$defs/ContainsArgs"
-        }
-      },
-      "required": [
-        "contains"
-      ],
-      "title": "ContainsCondition",
-      "type": "object"
-    },
     "DataBlock": {
       "additionalProperties": false,
       "properties": {
@@ -1581,159 +1428,6 @@
         }
       },
       "title": "EmptyBlock",
-      "type": "object"
-    },
-    "EndsWithArgs": {
-      "additionalProperties": false,
-      "properties": {
-        "arg0": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "title": "Arg0"
-        },
-        "arg1": {
-          "title": "Arg1"
-        }
-      },
-      "required": [
-        "arg0",
-        "arg1"
-      ],
-      "title": "EndsWithArgs",
-      "type": "object"
-    },
-    "EndsWithCondition": {
-      "additionalProperties": false,
-      "properties": {
-        "result": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "ends_with": {
-          "$ref": "#/$defs/EndsWithArgs"
-        }
-      },
-      "required": [
-        "ends_with"
-      ],
-      "title": "EndsWithCondition",
       "type": "object"
     },
     "ErrorBlock": {
@@ -3108,17 +2802,6 @@
           "title": "Kind"
         },
         "if": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/EndsWithCondition"
-            },
-            {
-              "$ref": "#/$defs/ContainsCondition"
-            }
-          ],
           "title": "If"
         },
         "then": {
@@ -3999,62 +3682,33 @@
         "input": {
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/$defs/ModerationHAPInput"
             },
             {
               "type": "null"
             }
           ],
-          "default": true,
-          "title": "Input"
+          "default": null
         },
         "output": {
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/$defs/ModerationHAPOutput"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Output"
-        },
-        "send_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Send Tokens"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "maximum": 0.99,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0.75,
-          "title": "Threshold"
+          "default": null
         }
       },
       "title": "ModerationHAP",
       "type": "object"
     },
-    "ModerationImplicitHate": {
+    "ModerationHAPInput": {
       "additionalProperties": true,
       "properties": {
-        "input": {
+        "enabled": {
           "anyOf": [
             {
               "type": "boolean"
@@ -4063,20 +3717,8 @@
               "type": "null"
             }
           ],
-          "default": true,
-          "title": "Input"
-        },
-        "output": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Output"
+          "default": false,
+          "title": "Enabled"
         },
         "send_tokens": {
           "anyOf": [
@@ -4106,7 +3748,53 @@
           "title": "Threshold"
         }
       },
-      "title": "ModerationImplicitHate",
+      "title": "ModerationHAPInput",
+      "type": "object"
+    },
+    "ModerationHAPOutput": {
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "title": "Enabled"
+        },
+        "send_tokens": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "title": "Send Tokens"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "maximum": 0.99,
+              "minimum": 0.01,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0.75,
+          "title": "Threshold"
+        }
+      },
+      "title": "ModerationHAPOutput",
       "type": "object"
     },
     "ModerationParameters": {
@@ -4115,68 +3803,62 @@
         "hap": {
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
               "$ref": "#/$defs/ModerationHAP"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Hap"
+          "default": null
         },
-        "implicit_hate": {
+        "social_bias": {
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/ModerationImplicitHate"
+              "$ref": "#/$defs/ModerationSocialBias"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Implicit Hate"
-        },
-        "stigma": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/ModerationStigma"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Stigma"
+          "default": null
         }
       },
       "title": "ModerationParameters",
       "type": "object"
     },
-    "ModerationStigma": {
+    "ModerationSocialBias": {
       "additionalProperties": true,
       "properties": {
         "input": {
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/$defs/ModerationSocialBiasInput"
             },
             {
               "type": "null"
             }
           ],
-          "default": true,
-          "title": "Input"
+          "default": null
         },
         "output": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModerationSocialBiasOutput"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ModerationSocialBias",
+      "type": "object"
+    },
+    "ModerationSocialBiasInput": {
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
           "anyOf": [
             {
               "type": "boolean"
@@ -4185,8 +3867,8 @@
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Output"
+          "default": false,
+          "title": "Enabled"
         },
         "send_tokens": {
           "anyOf": [
@@ -4216,7 +3898,53 @@
           "title": "Threshold"
         }
       },
-      "title": "ModerationStigma",
+      "title": "ModerationSocialBiasInput",
+      "type": "object"
+    },
+    "ModerationSocialBiasOutput": {
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "title": "Enabled"
+        },
+        "send_tokens": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "title": "Send Tokens"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "maximum": 0.99,
+              "minimum": 0.01,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0.75,
+          "title": "Threshold"
+        }
+      },
+      "title": "ModerationSocialBiasOutput",
       "type": "object"
     },
     "PDLTextGenerationParameters": {
@@ -4273,7 +4001,6 @@
         "max_new_tokens": {
           "anyOf": [
             {
-              "maximum": 4096,
               "minimum": 0,
               "type": "integer"
             },
@@ -5609,17 +5336,6 @@
           "title": "Repeat"
         },
         "until": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/EndsWithCondition"
-            },
-            {
-              "$ref": "#/$defs/ContainsCondition"
-            }
-          ],
           "title": "Until"
         },
         "trace": {

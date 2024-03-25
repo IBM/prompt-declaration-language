@@ -9,7 +9,6 @@ from .pdl_ast import (
     BlocksType,
     CallBlock,
     CodeBlock,
-    ConditionExpr,
     DataBlock,
     DocumentBlock,
     ErrorBlock,
@@ -101,7 +100,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         case IncludeBlock():
             d["include"] = block.include
         case IfBlock():
-            d["condition"] = condition_to_dict(block.condition)
+            d["condition"] = block.condition
             d["then"] = blocks_to_dict(block.then)
             if block.elses is not None:
                 d["else"] = blocks_to_dict(block.elses)
@@ -111,7 +110,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
-            d["until"] = condition_to_dict(block.until)
+            d["until"] = block.until
             d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case ForBlock():
             d["for"] = block.fors
@@ -143,17 +142,6 @@ def blocks_to_dict(
         result = [block_to_dict(block) for block in blocks]
     else:
         result = block_to_dict(blocks)
-    return result
-
-
-def condition_to_dict(cond: pdl_ast.ConditionType) -> str | dict[str, Any]:
-    result: str | dict[str, Any]
-    if isinstance(cond, str):
-        result = cond
-    elif isinstance(cond, ConditionExpr):
-        result = cond.model_dump()
-    else:
-        assert False
     return result
 
 

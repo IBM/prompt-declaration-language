@@ -25,11 +25,7 @@ document:
       constraints:
       - words_len: '>2'
         not_contains: Tho
-    until:
-      ends_with:
-        arg0:
-          get: THOUGHT
-        arg1: 'Act:'
+    until: '{{ THOUGHT.endswith("Act:") }}'
   - def: SUBJECT
     model: ibm/granite-20b-code-instruct-v1
     parameters:
@@ -59,8 +55,4 @@ document:
       - Act
       - Obs
       include_stop_sequence: false
-  until:
-    contains:
-      arg0:
-        get: THOUGHT
-      arg1: headquarters
+  until: '{{ "headquarters" in THOUGHT }}'

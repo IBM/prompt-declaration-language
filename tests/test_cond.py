@@ -92,12 +92,7 @@ cond_data = {
                                 },
                                 " >>",
                             ],
-                            "if": {
-                                "ends_with": {
-                                    "arg0": {"get": "REASON_OR_CALC"},
-                                    "arg1": "<<",
-                                }
-                            },
+                            "if": '{{ REASON_OR_CALC.endswith("<<") }}',
                         },
                     ]
                 },
@@ -179,7 +174,7 @@ def cond_data1(show, name):
             },
             {
                 "then": [", hello there!\n"],
-                "if": {"ends_with": {"arg0": {"get": "NAME"}, "arg1": name}},
+                "if": '{{ NAME.endswith("' + name + '") }}',
             },
         ],
     }
@@ -212,6 +207,53 @@ repeat_until_data = {
             "repeat": [
                 {
                     "def": "I",
+                    "lan": "python",
+                    "code": ["result = ", {"get": "I"}, " + 1"],
+                    "show_result": True,
+                },
+                "\n",
+            ],
+            "until": "{{ I == 5 }}",
+        },
+    ],
+}
+
+
+def test_repeat_until():
+    log = []
+    data = Program.model_validate(repeat_until_data)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "".join(
+        [
+            "0",
+            "\n",
+            "1",
+            "\n",
+            "2",
+            "\n",
+            "3",
+            "\n",
+            "4",
+            "\n",
+            "5",
+            "\n",
+        ]
+    )
+
+
+repeat_until_str_data = {
+    "description": "Hello world showing call out to python code with condition",
+    "document": [
+        {
+            "def": "I",
+            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "show_result": True,
+        },
+        "\n",
+        {
+            "repeat": [
+                {
+                    "def": "I",
                     "document": [
                         {
                             "lan": "python",
@@ -222,15 +264,15 @@ repeat_until_data = {
                 },
                 "\n",
             ],
-            "until": {"contains": {"arg0": {"get": "I"}, "arg1": "5"}},
+            "until": '{{ I in "5" }}',
         },
     ],
 }
 
 
-def test_repeat_until():
+def test_repeat_until_str():
     log = []
-    data = Program.model_validate(repeat_until_data)
+    data = Program.model_validate(repeat_until_str_data)
     _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "".join(
         [
