@@ -7,6 +7,7 @@ from pdl.pdl.pdl_ast import Program  # pyright: ignore
 
 EXPECTED_INVALID = [
     pathlib.Path(".pre-commit-config.yaml"),
+    pathlib.Path("examples") / "teacher" / "qna.yaml",
 ]
 
 

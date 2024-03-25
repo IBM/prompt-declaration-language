@@ -648,9 +648,9 @@ def process_input(
             s = "".join(contents)
             append_log(log, "Input from stdin: ", s)
 
-    if block.parser == "json":
+    if block.parser in ["json", "yaml"]:
         try:
-            result = json.loads(s)
+            result = yaml.safe_load(s)
         except Exception:
             msg = "Attempted to parse ill-formed JSON"
             error(msg)

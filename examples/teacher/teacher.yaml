@@ -1,0 +1,105 @@
+defs:
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/configs/teacher_config.yaml
+  teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
+  teacher_model: mistralai/mixtral-8x7b-instruct-v0-1
+  teacher_template:
+    function:
+      sys_prompt: str
+      prompt: str
+    return: <s> [INST] {{sys_prompt}} {{prompt}} [/INST]
+  teacher_stop_token: </s>
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/configs/question_template_freeform.yaml
+  question_template_freeform:
+    function:
+      num_samples: int
+      task_description: str
+      icl_question: str
+    return:
+      data:
+        introduction: |
+          You are asked to come up with a set of {{num_samples}} diverse questions - {{task_description}}.
+        principles: |
+          Please follow these guiding principles when generating responses:
+          * Use proper grammar and punctuation.
+          * Always generate safe and respectful content. Do not generate content that is harmful, abusive, or offensive.
+          * Always generate content that is factually accurate and relevant to the prompt.
+          * The questions should be clear and human-like.
+          * The questions should be diverse and cover a wide range of topics.
+          * The questions should not be template-based or generic, it should be very diverse.
+          * Simply return the questions, do not return any answers or explanations.
+          * Strictly adhere to the prompt and generate responses in the same style and format as the example.
+          Use this format to generate the questions: 
+          ### Question 1: 
+        examples: |
+          To better assist you with this task, here is an example:
+          ### Question 1: {{icl_question}}
+        generation: |
+          Now generate {{num_samples}} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
+        max_new_tokens: 10000
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/gen_questions_freeform.py
+  question_template:
+    function:
+      introduction: str
+      principles: str
+      examples: str
+      generation: str
+    return: |-
+      {{introduction}}
+      {{principles}}
+      {{examples}}
+      {{generation}}
+  gen_question_freeform:
+    function:
+      num_samples: int
+      task_description: str
+      icl_question: str
+    return:
+    - defs:
+        prompt_data:
+          call: question_template_freeform
+          args:
+            num_samples: "{{num_samples}}"
+            task_description: "{{task_description}}"
+            icl_question: "{{icl_question}}"
+        prompt_text:
+          call: question_template
+          args:
+            introduction: "{{prompt_data.introduction}}"
+            principles: "{{prompt_data.principles}}"
+            examples: "{{prompt_data.examples}}"
+            generation: "{{prompt_data.generation}}"
+        teacher_input:
+          call: teacher_template
+          args:
+            sys_prompt: "{{teacher_sys_prompt}}"
+            prompt: "{{prompt_text}}"
+        teacher_output:
+          # TODO: model: "{{teacher_model}}"
+          model: mistralai/mixtral-8x7b-instruct-v0-1
+          input: "{{teacher_input}}"
+          parameters:
+            stop_sequences:
+            - "{{teacher_stop_token}}"
+            include_stop_sequence: false
+            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: 4096
+    - "{{teacher_output}}"
+
+  # https://github.com/instruct-lab/taxonomy/blob/main/compositional_skills/writing/freeform/jokes/puns/general/qna.yaml
+  seed_examples:
+    read: examples/teacher/qna.yaml
+    parser: yaml
+
+document:
+  for:
+    example: "{{seed_examples.seed_examples}}"
+  repeat:
+  - "Seed example question: {{example.question}}\n\n"
+  - call: gen_question_freeform
+    args:
+      num_samples: 2
+      task_description: "{{seed_examples.task_description}}"
+      icl_question: "{{example.question}}"
+  - "\n\n"
