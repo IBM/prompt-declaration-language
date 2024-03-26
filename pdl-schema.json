@@ -4623,6 +4623,10 @@
         "parser": {
           "anyOf": [
             {
+              "enum": [
+                "json",
+                "yaml"
+              ],
               "type": "string"
             },
             {

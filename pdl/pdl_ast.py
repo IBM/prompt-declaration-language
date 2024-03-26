@@ -156,7 +156,7 @@ class ReadBlock(Block):
     read: str | None
     message: Optional[str] = None
     multiline: bool = False
-    parser: Optional[str] = None  # json
+    parser: Optional[Literal["json", "yaml"]] = None
 
 
 class IncludeBlock(Block):
