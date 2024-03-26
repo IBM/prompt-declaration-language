@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from genai.client import Client
 from genai.credentials import Credentials
 from genai.schema import DecodingMethod
-from jinja2 import Template
+from jinja2 import StrictUndefined, Template, UndefinedError
 from pydantic import ValidationError
 
 from .pdl_ast import (
@@ -185,13 +185,20 @@ def step_block(
     log, scope: ScopeType, yield_output: bool, block: BlockType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
-        result = process_expr(scope, block)
-        output = result if isinstance(result, str) else json.dumps(result)
+        try:
+            result = process_expr(scope, block)
+            output = result if isinstance(result, str) else json.dumps(result)
+            trace = output
+        except UndefinedError as e:
+            msg = f"Error {e} in {block}"
+            error(msg)
+            result = block
+            output = block
+            trace = ErrorBlock(msg=msg, program=block)
         if yield_output:
             yield output
-        trace = output
         append_log(log, "Document", output)
-        return result, output, scope, block
+        return result, output, scope, trace
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(log, scope, block.defs)
     else:
@@ -438,11 +445,13 @@ def process_expr(scope: ScopeType, e: Any) -> Any:
     if isinstance(e, str):
         template = Template(
             e,
-            keep_trailing_newline=True
-            # block_start_string="",
-            # block_end_string="",
+            keep_trailing_newline=True,
+            block_start_string="{%%%%%PDL%%%%%%%%%%",
+            block_end_string="%%%%%PDL%%%%%%%%%%}",
             # comment_start_string="",
             # comment_end_string="",
+            autoescape=False,
+            undefined=StrictUndefined,
         )
         s = template.render(scope)
         if e.startswith("{{") and e.endswith("}}"):

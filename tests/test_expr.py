@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ignore
 
 arith_data = {
     "description": "Test arith",
@@ -58,6 +58,27 @@ def test_false():
     assert document == "false"
 
 
+undefined_var_data = {"document": "Hello {{ X }}"}
+
+
+def test_undefined_var():
+    log = []
+    data = Program.model_validate(undefined_var_data)
+    _, document, _, trace = process_block(log, empty_scope, data.root)
+    assert contains_error(trace)
+    assert document == "Hello {{ X }}"
+
+
+autoescape_data = {"document": "<|system|>"}
+
+
+def test_autoescape():
+    log = []
+    data = Program.model_validate(autoescape_data)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "<|system|>"
+
+
 var_data1 = {"defs": {"X": "something"}, "document": "{{ X }}"}
 
 
@@ -96,3 +117,27 @@ def test_list():
     assert document == "[1, 2, 3]"
     assert scope["X"] == [1, 2, 3]
     assert scope["Y"] == [1, 2, 3]
+
+
+disable_jinja_block_data = {"document": '{% for x in ["hello", "bye"]%} X {% endfor %}'}
+
+
+def test_disable_jinja_block():
+    log = []
+    data = Program.model_validate(disable_jinja_block_data)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == '{% for x in ["hello", "bye"]%} X {% endfor %}'
+
+
+jinja_block_data = {
+    "document": '{%%%%%PDL%%%%%%%%%% for x in ["hello", "bye"]%%%%%PDL%%%%%%%%%%}'
+    + " X "
+    + "{%%%%%PDL%%%%%%%%%% endfor %%%%%PDL%%%%%%%%%%}"
+}
+
+
+def test_jinja_block():
+    log = []
+    data = Program.model_validate(jinja_block_data)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == " X  X "
