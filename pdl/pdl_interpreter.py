@@ -685,11 +685,16 @@ def step_include(
             )
             include_trace = block.model_copy(update={"trace": trace})
             return result, output, scope, include_trace
-        except ValidationError as e:
-            print(e)
+        except ValidationError:
             msg = "Attempting to include invalid yaml: " + block.include
             error(msg)
             trace = ErrorBlock(msg=msg, program=block.model_copy())
+            with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
+                schema = json.load(schemafile)
+                defs = schema["$defs"]
+                errors = analyze_errors(defs, defs["Program"], prog_yaml)
+                for item in errors:
+                    print(item)
             return None, "", scope, trace
 
 
