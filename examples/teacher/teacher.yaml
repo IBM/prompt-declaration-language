@@ -1,5 +1,5 @@
 defs:
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/configs/teacher_config.yaml
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/teacher_config.yaml
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
   teacher_model: mistralai/mixtral-8x7b-instruct-v0-1
   teacher_template:
@@ -9,7 +9,7 @@ defs:
     return: <s> [INST] {{sys_prompt}} {{prompt}} [/INST]
   teacher_stop_token: </s>
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/configs/question_template_freeform.yaml
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/question_template_freeform.yaml
   question_template_freeform:
     function:
       num_samples: int
@@ -38,7 +38,7 @@ defs:
           Now generate {{num_samples}} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
         max_new_tokens: 10000
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/gen_questions_freeform.py
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_questions_freeform.py
   question_template:
     function:
       introduction: str
@@ -50,7 +50,8 @@ defs:
       {{principles}}
       {{examples}}
       {{generation}}
-  gen_question_freeform:
+
+  gen_questions_freeform_inner:
     function:
       num_samples: int
       task_description: str
@@ -85,21 +86,32 @@ defs:
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
-    - "{{teacher_output}}"
+    - lan: python
+      code: |
+        import re
+        raw = """{{teacher_output}}"""
+        result = re.findall(r"### Question [0-9]+:\s*([^#\n]+)", raw)
 
-  # https://github.com/instruct-lab/taxonomy/blob/main/compositional_skills/writing/freeform/jokes/puns/general/qna.yaml
-  seed_examples:
-    read: examples/teacher/qna.yaml
-    parser: yaml
+  gen_questions_freeform:
+    function: {}
+    return:
+    - defs:
+        # https://github.com/instruct-lab/taxonomy/blob/main/compositional_skills/writing/freeform/jokes/puns/general/qna.yaml
+        seed_examples:
+          read: examples/teacher/qna.yaml
+          parser: yaml
+        list_of_lists:
+          for:
+            example: "{{seed_examples.seed_examples}}"
+          repeat:
+            call: gen_questions_freeform_inner
+            args:
+              num_samples: 5
+              task_description: "{{seed_examples.task_description}}"
+              icl_question: "{{example.question}}"
+    - lan: python
+      code: result = [q for qs in {{list_of_lists}} for q in qs]
 
 document:
-  for:
-    example: "{{seed_examples.seed_examples}}"
-  repeat:
-  - "Seed example question: {{example.question}}\n\n"
-  - call: gen_question_freeform
-    args:
-      num_samples: 2
-      task_description: "{{seed_examples.task_description}}"
-      icl_question: "{{example.question}}"
-  - "\n\n"
+  call: gen_questions_freeform
+  args: {}
