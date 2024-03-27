@@ -63,6 +63,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         d["description"] = block.description
     if block.spec is not None:
         d["spec"] = block.spec
+    if block.defs is not None:
+        d["defs"] = {x: blocks_to_dict(b) for x, b in block.defs.items()}
     match block:
         case ModelBlock():
             d["model"] = block.model
@@ -114,7 +116,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case ForBlock():
             d["for"] = block.fors
-            d["repeat"] = block.repeat
+            d["repeat"] = blocks_to_dict(block.repeat)
+            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case FunctionBlock():
             d["function"] = block.function
             d["return"] = blocks_to_dict(block.returns)

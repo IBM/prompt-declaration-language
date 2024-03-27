@@ -1,7 +1,4 @@
-import {
-  PdlBlocks,
-  PdlBlock,
-} from './pdl_ast';
+import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 
 export function map_block_children(
@@ -75,7 +72,6 @@ export function map_blocks(
     .otherwise(block => f(block));
   return blocks;
 }
-
 
 export function iter_block_children(
   f: (block: PdlBlock) => void,

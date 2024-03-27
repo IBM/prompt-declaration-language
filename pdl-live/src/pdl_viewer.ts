@@ -62,104 +62,121 @@ export function show_block(data: PdlBlock) {
   if (typeof data === 'string') {
     return show_output(data);
   }
-  const div = document.createElement('fieldset');
-  div.classList.add('pdl_block');
+  const div = document.createElement('div');
   switch_div_on_click(div, show_output, data);
-  if (data?.show_result === false) {
-    div.classList.add('pdl_show_result_false');
-  }
   div.addEventListener('mouseover', e => {
     show_code(data);
     if (e.stopPropagation) e.stopPropagation();
   });
+  if (data.defs) {
+    div.appendChild(show_defs(data.defs));
+  }
+  const body = document.createElement('fieldset');
+  div.appendChild(body);
+  add_def(body, data.def);
+  body.classList.add('pdl_block');
+  if (data?.show_result === false) {
+    body.classList.add('pdl_show_result_false');
+  }
   match(data)
     .with({kind: 'model'}, data => {
-      div.classList.add('pdl_model');
-      div.innerHTML = htmlize(data?.result);
+      body.classList.add('pdl_model');
+      body.innerHTML = htmlize(data?.result);
     })
     .with({kind: 'code'}, data => {
-      div.classList.add('pdl_code');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_code');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'api'}, data => {
-      div.classList.add('pdl_api');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_api');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'get'}, data => {
-      div.classList.add('pdl_get');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_get');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'data'}, data => {
-      div.classList.add('pdl_data');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_data');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'if'}, data => {
-      div.classList.add('pdl_if');
+      body.classList.add('pdl_if');
       let if_child: DocumentFragment;
       if (!(data.if_result ?? true)) {
         if_child = show_blocks(data.then ?? '');
       } else {
         if_child = show_blocks(data.else ?? '');
       }
-      div.append(if_child);
+      body.append(if_child);
     })
     .with({kind: 'read'}, data => {
       // TODO
-      div.classList.add('pdl_read');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_read');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'include'}, data => {
       // TODO
-      div.classList.add('pdl_include');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_include');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'function'}, data => {
       // TODO
-      div.classList.add('pdl_function');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_function');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'call'}, data => {
       // TODO
-      div.classList.add('pdl_call');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_call');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: 'document'}, data => {
-      div.classList.add('pdl_document');
+      body.classList.add('pdl_document');
       const doc_child = show_blocks(data.document);
-      div.appendChild(doc_child);
+      body.appendChild(doc_child);
     })
     .with({kind: 'repeat'}, data => {
-      div.classList.add('pdl_repeat');
-      const body = show_loop_trace(data.trace ?? []);
-      div.appendChild(body);
+      body.classList.add('pdl_repeat');
+      const loop_body = show_loop_trace(data.trace ?? []);
+      body.appendChild(loop_body);
     })
     .with({kind: 'repeat_until'}, data => {
-      div.classList.add('pdl_repeat_until');
-      const body = show_loop_trace(data.trace ?? []);
-      div.appendChild(body);
+      body.classList.add('pdl_repeat_until');
+      const loop_body = show_loop_trace(data.trace ?? []);
+      body.appendChild(loop_body);
     })
     .with({kind: 'for'}, data => {
-      div.classList.add('pdl_for');
-      const body = show_loop_trace(data.trace ?? []);
-      div.appendChild(body);
+      body.classList.add('pdl_for');
+      const loop_body = show_loop_trace(data.trace ?? []);
+      body.appendChild(loop_body);
     })
     .with({kind: 'empty'}, () => {
-      div.classList.add('pdl_empty');
-      div.innerHTML = htmlize('');
+      body.classList.add('pdl_empty');
+      body.innerHTML = htmlize('');
     })
     .with({kind: 'error'}, data => {
-      div.classList.add('pdl_error');
-      div.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_error');
+      body.innerHTML = htmlize(data.result);
     })
     .with({kind: undefined}, () => {
-      throw Error('Missing kind:\n' + stringify(data));
+      throw Error('Missing kind:\n' + htmlize(data));
     })
     .exhaustive();
-  add_def(div, data);
   return div;
 }
 
-export function show_loop_trace(trace: PdlBlocks[]) {
+export function show_defs(defs: {[k: string]: PdlBlocks}): DocumentFragment {
+  const doc_fragment = document.createDocumentFragment();
+  for (const x in defs) {
+    const div = document.createElement('fieldset');
+    doc_fragment.appendChild(div);
+    div.classList.add('pdl_show_result_false');
+    add_def(div, x);
+    div.appendChild(show_blocks(defs[x]));
+  }
+  return doc_fragment;
+}
+
+export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();
   if (trace.length > 1) {
     const dot_dot_dot = document.createElement('div');
@@ -180,18 +197,18 @@ export function show_loop_trace(trace: PdlBlocks[]) {
   return doc_fragment;
 }
 
-export function add_def(block_div: Element, blocks: PdlBlocks) {
-  match(blocks).with({def: P.string}, data => {
+export function add_def(block_div: Element, name: string | null | undefined) {
+  if (name) {
     const legend = document.createElement('legend');
-    legend.innerHTML = data.def;
+    legend.innerHTML = name;
     block_div.appendChild(legend);
-  });
+  }
 }
 
 export function show_code(blocks: PdlBlocks) {
   const code = document.createElement('pre');
   blocks = blocks_code_cleanup(blocks);
-  code.innerHTML = stringify(blocks);
+  code.innerHTML = htmlize(stringify(blocks));
   replace_div('code', code);
 }
 
@@ -223,11 +240,23 @@ export function replace_div(id: string, elem: Element) {
   document.getElementById(id)?.replaceWith(div);
 }
 
-export function htmlize(x: unknown) {
+export function htmlize(x: unknown): string {
   const html = match(x)
     .with(P.nullish, () => '☐')
-    .with(P.string, s => (s === '' ? '☐' : s.split('\n').join('<br>')))
-    .otherwise(x => JSON.stringify(x));
+    .with(P.string, s => {
+      if (s === '') {
+        return '☐';
+      }
+      s = s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+      s = s.split('\n').join('<br>');
+      return s;
+    })
+    .otherwise(x => htmlize(JSON.stringify(x)));
   return html;
 }
 
