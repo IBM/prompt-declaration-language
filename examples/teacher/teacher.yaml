@@ -40,23 +40,12 @@ defs:
         max_new_tokens: 10000
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_questions_freeform.py
-  question_template:
-    function:
-      introduction: str
-      principles: str
-      examples: str
-      generation: str
-    return: |-
-      {{introduction}}
-      {{principles}}
-      {{examples}}
-      {{generation}}
-
   gen_questions_freeform_inner:
     function:
       num_samples: int
       task_description: str
       icl_question: str
+      icl_answer: str
     return:
     - defs:
         prompt_data:
@@ -65,18 +54,15 @@ defs:
             num_samples: "{{num_samples}}"
             task_description: "{{task_description}}"
             icl_question: "{{icl_question}}"
-        prompt_text:
-          call: question_template
-          args:
-            introduction: "{{prompt_data.introduction}}"
-            principles: "{{prompt_data.principles}}"
-            examples: "{{prompt_data.examples}}"
-            generation: "{{prompt_data.generation}}"
         teacher_input:
           call: teacher_template
           args:
             sys_prompt: "{{teacher_sys_prompt}}"
-            prompt: "{{prompt_text}}"
+            prompt: |-
+              {{prompt_data.introduction}}
+              {{prompt_data.principles}}
+              {{prompt_data.examples}}
+              {{prompt_data.generation}}
         teacher_output:
           # TODO: model: "{{teacher_model}}"
           model: mistralai/mixtral-8x7b-instruct-v0-1
@@ -86,15 +72,23 @@ defs:
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
-    - lan: python
-      code: |
-        import re
-        raw = """ {{teacher_output}} """
-        result = re.findall(r"### Question [0-9]+:\s*([^#\n]+)", raw)
+        generated_questions:
+          lan: python
+          code: |
+            import re
+            raw = """ {{teacher_output}} """
+            result = re.findall(r"### Question [0-9]+:\s*([^#\n]+)", raw)
+    - for:
+        question: "{{generated_questions}}"
+      repeat:
+        data:
+          icl_question: "{{icl_question}}"
+          icl_answer: "{{icl_answer}}"
+          question: "{{question}}"
 
   gen_questions_freeform:
     function:
-      seed_examples: Any # TODO: provide meaningful schema
+      seed_examples: dict # TODO: provide more meaningful schema
     return:
     - defs:
         list_of_lists:
@@ -103,15 +97,12 @@ defs:
           repeat:
             call: gen_questions_freeform_inner
             args:
-              num_samples: 5
+              num_samples: 2
               task_description: "{{seed_examples.task_description}}"
               icl_question: "{{example.question}}"
-        flattened:
-          lan: python
-          code: result = [q for qs in {{list_of_lists}} for q in qs]
-    - data:
-        task_description: "{{seed_examples.task_description}}"
-        questions: "{{flattened}}"
+              icl_answer: "{{example.answer}}"
+    - lan: python # flatten
+      code: result = [q for qs in {{list_of_lists}} for q in qs]
 
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_questions_template.yaml
@@ -138,16 +129,6 @@ defs:
         max_new_tokens: 256
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/filter_questions.py
-  filterq_template:
-    function:
-      introduction: str
-      principles: str
-      generation: str
-    return: |-
-      {{introduction}}
-      {{principles}}
-      {{generation}}
-
   filter_questions_inner:
     function:
       task_description: str
@@ -159,17 +140,14 @@ defs:
           args:
             task_description: "{{task_description}}"
             question: "{{question}}"
-        prompt_text:
-          call: filterq_template
-          args:
-            introduction: "{{prompt_data.introduction}}"
-            principles: "{{prompt_data.principles}}"
-            generation: "{{prompt_data.generation}}"
         teacher_input:
           call: teacher_template
           args:
             sys_prompt: "{{teacher_sys_prompt}}"
-            prompt: "{{prompt_text}}"
+            prompt: |-
+              {{prompt_data.introduction}}
+              {{prompt_data.principles}}
+              {{prompt_data.generation}}
         teacher_output:
           # TODO: model: "{{teacher_model}}"
           model: mistralai/mixtral-8x7b-instruct-v0-1
@@ -180,7 +158,7 @@ defs:
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 256
     - lan: python
-      code: |
+      code: | # parse model output
         import re
         raw = """ {{teacher_output}} """
         match = re.search(r"Rating.*\[\[(\d+\.?\d*)\]\]", raw)
@@ -189,7 +167,7 @@ defs:
   filter_questions:
     function:
       task_description: str
-      questions: list[str]
+      questions: list[dict] # TODO: provide more meaningful schema
     return:
     - defs:
         list_of_pairs:
@@ -200,13 +178,187 @@ defs:
             call: filter_questions_inner
             args:
               task_description: "{{task_description}}"
-              question: "{{question}}"
+              question: "{{question.question}}"
           - data:
               question: "{{question}}"
               keep: "{{filter_output}}"
         filtered:
           lan: python
           code: result = [p["question"] for p in {{list_of_pairs}} if p["keep"]]
+    - "{{filtered}}"
+
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/answer_template.yaml
+  answer_template:
+    function:
+      icl_question: str
+      icl_response: str
+      question: str
+    return:
+      data:
+        introduction: Your task is to faithfully follow the user's prompt and generate a response. 
+        principles: |
+          Please follow these guiding principles when generating responses:
+          * Use proper grammar and punctuation.
+          * Always generate safe and respectful content. Do not generate content that is harmful, abusive, or offensive.
+          * Always generate content that is factually accurate and relevant to the prompt.
+          * Strictly adhere to the prompt and generate responses in the same style and format as the example.
+        examples: |
+          To better assist you with this task, here is an example:
+          [Question]
+          {{icl_question}}
+          [Response]
+          {{icl_response}}
+        generation: |
+          Now generate a response to the following prompt. Remember to use the same style and format as the example above.
+          [Question]
+          {{question}}
+          [Response]
+        max_new_tokens: 2048
+        additional_stop_tokens: |
+          - [Question]
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_answers.py
+  gen_answers_inner:
+    function:
+      question: dict
+    return:
+    - defs:
+        prompt_data:
+          call: answer_template
+          args:
+            icl_question: "{{question.icl_question}}"
+            icl_response: "{{question.icl_answer}}"
+            question: "{{question.question}}"
+        teacher_input:
+          call: teacher_template
+          args:
+            sys_prompt: "{{teacher_sys_prompt}}"
+            prompt: |-
+              {{prompt_data.introduction}}
+              {{prompt_data.principles}}
+              {{prompt_data.examples}}
+              {{prompt_data.generation}}
+        teacher_output:
+          # TODO: model: "{{teacher_model}}"
+          model: mistralai/mixtral-8x7b-instruct-v0-1
+          input: "{{teacher_input}}"
+          parameters:
+            stop_sequences:
+            - "{{teacher_stop_token}}"
+            - "{{prompt_data.additional_stop_tokens}}"
+            include_stop_sequence: false
+            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: 4096
+        parsed_answer:
+          lan: python
+          code: | # parse model output
+            result = """ {{teacher_output}} """.strip()
+            if "[Response]" in result:
+              result = result[result.find("[Response]") + len("[Response]"):]
+            if "[Question]" in result:
+              result = result[:result.find("[Question]")]
+    - data:
+        question: "{{question.question}}"
+        answer: "{{parsed_answer}}"
+
+  gen_answers:
+    function:
+      questions: list[dict] # TODO: provide more meaningful schema
+    return:
+    - defs:
+        all_results:
+          for:
+            question: "{{ questions }}"
+          repeat:
+            call: gen_answers_inner
+            args:
+              question: "{{question}}"
+    - lan: python # keep only if answer non-empty
+      code: result = [r for r in {{all_results}} if len(r["answer"]) > 0]
+
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_qa_template.yaml
+  filter_qa_template:
+    function:
+      question: str
+      answer: str
+    return:
+      data:
+        introduction: |
+          Please act as an impartial judge and evaluate the quality of the answer provided by an AI assistant to the questions displayed below. Evaluate whether or not the answer is a good example of how AI Assistant should respond to the user's instruction. Please assign a score using the following 3-point scale.
+        principles: |
+          1: It means the answer is incorrect, irrelevant, unsafe or provides incomplete and garbage information. For instance, the answer may be factually wrong, off-topic, or filled with irrelevant content that doesn't address the user's question or it could be incomplete and hanging. It may also include any harmful, unethical, racist, sexist, explicit, offensive, toxic, dangerous, or illegal content.  
+
+          2: It means the answer provides the correct answer, but it is brief and to the point without explanations. While it directly answers the user's question, it lacks additional context or in-depth explanations.
+
+          3: It means the answer is a perfect answer from an AI Assistant. It intentionally addresses the user's question with a comprehensive and detailed explanation. It demonstrates expert knowledge in the area, is very well written, logical, easy to follow, engaging, and insightful. And the answer is safe and does not include any harmful content.
+        generation: |
+          Begin your evaluation by providing a short explanation. Be as objective as possible. After providing your explanation, you must rate the answer on a scale of 1 to 3 as mentioned above by strictly following this format: \"[[rating]]\", for example: \"Rating: [[1]]\"
+
+          Here's the question and the answer you need to evaluate:
+          [Question]
+          {{question}}
+          [Answer]
+          {{answer}}
+        max_new_tokens: 256
+
+  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/filter_question_answer_pair.py
+  filter_question_answer_pair_inner:
+    function:
+      question: str
+      answer: str
+    return:
+    - defs:
+        prompt_data:
+          call: filter_qa_template
+          args:
+            question: "{{question}}"
+            answer: "{{answer}}"
+        teacher_input:
+          call: teacher_template
+          args:
+            sys_prompt: "{{teacher_sys_prompt}}"
+            prompt: |-
+              {{prompt_data.introduction}}
+              {{prompt_data.principles}}
+              {{prompt_data.generation}}
+        teacher_output:
+          # TODO: model: "{{teacher_model}}"
+          model: mistralai/mixtral-8x7b-instruct-v0-1
+          input: "{{teacher_input}}"
+          parameters:
+            stop_sequences: ["{{teacher_stop_token}}"]
+            include_stop_sequence: false
+            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: 256
+    - lan: python
+      code: | # parse model output
+        import re
+        raw = """ {{teacher_output}} """
+        match = re.search(r"Rating.*\[\[(\d+\.?\d*)\]\]", raw)
+        result = float(match.group(1)) if match else 0.0
+
+  filter_question_answer_pair:
+    function:
+      qa_pairs: list[dict] # TODO: provide more meaningful schema
+    return:
+    - defs:
+        ratings:
+          for:
+            qa_pair: "{{qa_pairs}}"
+          repeat:
+          - def: filter_output
+            call: filter_question_answer_pair_inner
+            args:
+              question: "{{qa_pair.question}}"
+              answer: "{{qa_pair.answer}}"
+          - data:
+              qa_pair: "{{qa_pair}}"
+              rating: "{{filter_output}}"
+        filtered:
+          lan: python
+          code: result = [p["qa_pair"] for p in {{ratings}} if p["rating"] >= 2]
     - "{{filtered}}"
 
 
@@ -229,7 +381,23 @@ document:
 
   Filtering questions
   -------------------
-- call: filter_questions
+- def: filtered_questions
+  call: filter_questions
   args:
-    task_description: "{{generated_questions.task_description}}"
-    questions: "{{generated_questions.questions}}"
+    task_description: "{{seed_examples.task_description}}"
+    questions: "{{generated_questions}}"
+- |
+
+  Generating answers
+  ------------------
+- def: qa_pairs
+  call: gen_answers
+  args:
+    questions: "{{generated_questions}}"
+- |
+
+  Filtering QA pairs
+  ------------------
+- call: filter_question_answer_pair
+  args:
+    qa_pairs: "{{qa_pairs}}"
