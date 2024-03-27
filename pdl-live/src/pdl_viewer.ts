@@ -65,7 +65,7 @@ export function show_block(data: PdlBlock) {
   const div = document.createElement('div');
   switch_div_on_click(div, show_output, data);
   div.addEventListener('mouseover', e => {
-    show_code(data);
+    update_code(data);
     if (e.stopPropagation) e.stopPropagation();
   });
   if (data.defs) {
@@ -81,53 +81,61 @@ export function show_block(data: PdlBlock) {
   match(data)
     .with({kind: 'model'}, data => {
       body.classList.add('pdl_model');
-      body.innerHTML = htmlize(data?.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'code'}, data => {
       body.classList.add('pdl_code');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'api'}, data => {
       body.classList.add('pdl_api');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'get'}, data => {
       body.classList.add('pdl_get');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'data'}, data => {
       body.classList.add('pdl_data');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'if'}, data => {
       body.classList.add('pdl_if');
-      let if_child: DocumentFragment;
-      if (!(data.if_result ?? true)) {
-        if_child = show_blocks(data.then ?? '');
+      if (data.if_result === undefined) {
+        body.appendChild(show_result_or_code(data));
       } else {
-        if_child = show_blocks(data.else ?? '');
+        let if_child: DocumentFragment;
+        if (data.if_result) {
+          if_child = show_blocks(data.then ?? '');
+        } else {
+          if_child = show_blocks(data.else ?? '');
+        }
+        body.appendChild(if_child);
       }
-      body.append(if_child);
     })
     .with({kind: 'read'}, data => {
       // TODO
       body.classList.add('pdl_read');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'include'}, data => {
       // TODO
       body.classList.add('pdl_include');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'function'}, data => {
       // TODO
       body.classList.add('pdl_function');
-      body.innerHTML = htmlize(data.result);
+      body.classList.add('pdl_show_result_false');
+      const args = document.createElement('pre');
+      args.innerHTML = htmlize(stringify({function: data.function}));
+      body.appendChild(args);
+      body.appendChild(show_blocks(data.return));
     })
     .with({kind: 'call'}, data => {
       // TODO
       body.classList.add('pdl_call');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'document'}, data => {
       body.classList.add('pdl_document');
@@ -136,17 +144,17 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'repeat'}, data => {
       body.classList.add('pdl_repeat');
-      const loop_body = show_loop_trace(data.trace ?? []);
+      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'repeat_until'}, data => {
       body.classList.add('pdl_repeat_until');
-      const loop_body = show_loop_trace(data.trace ?? []);
+      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'for'}, data => {
       body.classList.add('pdl_for');
-      const loop_body = show_loop_trace(data.trace ?? []);
+      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'empty'}, () => {
@@ -155,7 +163,7 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'error'}, data => {
       body.classList.add('pdl_error');
-      body.innerHTML = htmlize(data.result);
+      body.appendChild(show_result_or_code(data));
     })
     .with({kind: undefined}, () => {
       throw Error('Missing kind:\n' + htmlize(data));
@@ -209,7 +217,26 @@ export function show_code(blocks: PdlBlocks) {
   const code = document.createElement('pre');
   blocks = blocks_code_cleanup(blocks);
   code.innerHTML = htmlize(stringify(blocks));
+  return code;
+}
+
+export function update_code(blocks: PdlBlocks) {
+  const code = show_code(blocks);
   replace_div('code', code);
+}
+
+export function show_result_or_code(block: PdlBlock): Element {
+  const div: Element = match(block)
+    .with(P.string, data => show_string(data))
+    .with({result: P.string}, data => show_string(data.result))
+    .otherwise(data => show_code(data));
+  return div;
+}
+
+export function show_string(s: string) {
+  const div = document.createElement('div');
+  div.innerHTML = htmlize(s);
+  return div;
 }
 
 export function blocks_code_cleanup(data: PdlBlocks): PdlBlocks {
