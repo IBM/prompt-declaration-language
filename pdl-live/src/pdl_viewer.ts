@@ -106,9 +106,9 @@ export function show_block(data: PdlBlock) {
       } else {
         let if_child: DocumentFragment;
         if (data.if_result) {
-          if_child = show_blocks(data.then ?? '');
+          if_child = show_blocks(data?.then ?? '');
         } else {
-          if_child = show_blocks(data.else ?? '');
+          if_child = show_blocks(data?.else ?? '');
         }
         body.appendChild(if_child);
       }
@@ -133,9 +133,15 @@ export function show_block(data: PdlBlock) {
       body.appendChild(show_blocks(data.return));
     })
     .with({kind: 'call'}, data => {
-      // TODO
       body.classList.add('pdl_call');
-      body.appendChild(show_result_or_code(data));
+      if (data.trace) {
+        const args = document.createElement('pre');
+        args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
+        body.appendChild(args);
+        body.appendChild(show_blocks(data.trace));
+      } else {
+        body.appendChild(show_result_or_code(data));
+      }
     })
     .with({kind: 'document'}, data => {
       body.classList.add('pdl_document');
@@ -144,17 +150,17 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'repeat'}, data => {
       body.classList.add('pdl_repeat');
-      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'repeat_until'}, data => {
       body.classList.add('pdl_repeat_until');
-      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'for'}, data => {
       body.classList.add('pdl_for');
-      const loop_body = show_loop_trace(data.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
       body.appendChild(loop_body);
     })
     .with({kind: 'empty'}, () => {
@@ -252,12 +258,16 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   }
   // remove result
   const new_data = {...data, result: undefined};
+  // remove trace
+  match(new_data).with({trace: P._}, data => {
+    data.trace = undefined;
+  });
   // remove show_result: true
   if (new_data?.show_result) {
     new_data.show_result = undefined;
   }
   // remove empty defs list
-  if (Object.keys(data.defs ?? {}).length === 0) {
+  if (Object.keys(data?.defs ?? {}).length === 0) {
     new_data.defs = undefined;
   }
   // recursive cleanup

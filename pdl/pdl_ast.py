@@ -66,6 +66,7 @@ class CallBlock(Block):
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
     call: str
     args: dict[str, Any] = {}
+    trace: Optional["BlocksType"] = None
 
 
 class PDLTextGenerationParameters(TextGenerationParameters):

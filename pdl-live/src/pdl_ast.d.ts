@@ -604,6 +604,44 @@ export type Def13 = string | null;
 export type ShowResult13 = boolean;
 export type Kind13 = "call";
 export type Call = string;
+export type Trace4 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
 export type Def14 = string | null;
 export type ShowResult14 = boolean;
 export type Kind14 = "function";
@@ -913,6 +951,7 @@ export interface CallBlock {
   kind?: Kind13;
   call: Call;
   args?: Args;
+  trace?: Trace4;
 }
 export interface Spec2 {
   [k: string]: unknown;

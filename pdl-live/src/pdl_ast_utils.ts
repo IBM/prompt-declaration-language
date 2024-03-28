@@ -13,7 +13,7 @@ export function map_block_children(
     new_block = {...block};
   } else {
     const defs: {[k: string]: PdlBlocks} = {};
-    for (const x in Object.keys(block.defs)) {
+    for (const x in block.defs) {
       defs[x] = map_blocks(f, block.defs[x]);
     }
     new_block = {...block, defs: defs};
@@ -94,7 +94,7 @@ export function iter_block_children(
     return;
   }
   if (block?.defs) {
-    for (const x in Object.keys(block.defs)) {
+    for (const x in block.defs) {
       iter_blocks(f, block.defs[x]);
     }
   }

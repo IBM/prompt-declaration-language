@@ -129,6 +129,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
+            if block.trace is not None:
+                d["trace"] = blocks_to_dict(block.trace)
         case ErrorBlock():
             d["program"] = block.program
     if block.assign is not None:
