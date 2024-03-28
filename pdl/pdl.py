@@ -40,7 +40,7 @@ def main():
 
     args = parser.parse_args()
     if args.schema:
-        _, top_level_schema = models_json_schema(
+        schema, top_level_schema = models_json_schema(
             [
                 (Program, "validation"),
                 (PdlBlock, "validation"),
@@ -48,6 +48,7 @@ def main():
             ],
             title="PDL Schemas",
         )
+        top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
     if args.pdl is None:
         return

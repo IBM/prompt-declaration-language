@@ -6,7 +6,7 @@ from pdl.pdl.pdl_ast import PdlBlock, PdlBlocks, Program  # pyright: ignore
 
 
 def test_saved_schema():
-    _, current_schema = models_json_schema(
+    top, current_schema = models_json_schema(
         [
             (Program, "validation"),
             (PdlBlock, "validation"),
@@ -14,7 +14,7 @@ def test_saved_schema():
         ],
         title="PDL Schemas",
     )
-
+    current_schema["anyOf"] = list(top.values())
     with open("pdl-schema.json", "r", encoding="utf-8") as fd:
         saved_schema = json.load(fd)
     assert current_schema == saved_schema

@@ -5701,5 +5701,16 @@
       "type": "object"
     }
   },
-  "title": "PDL Schemas"
+  "title": "PDL Schemas",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/Program"
+    },
+    {
+      "$ref": "#/$defs/PdlBlock"
+    },
+    {
+      "$ref": "#/$defs/PdlBlocks"
+    }
+  ]
 }
