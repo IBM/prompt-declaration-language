@@ -109,15 +109,18 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
-            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+            if block.trace is not None:
+                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["until"] = block.until
-            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+            if block.trace is not None:
+                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat)
-            d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+            if block.trace is not None:
+                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case FunctionBlock():
             d["function"] = block.function
             d["return"] = blocks_to_dict(block.returns)

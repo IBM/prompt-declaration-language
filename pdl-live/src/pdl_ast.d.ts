@@ -175,24 +175,7 @@ export type Repeat =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Trace1 = (
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
+export type Trace1 =
   | (
       | string
       | FunctionBlock
@@ -211,8 +194,27 @@ export type Trace1 = (
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | (
+          | string
+          | FunctionBlock
+          | CallBlock
+          | ModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
     )[]
-)[];
+  | null;
 export type Def6 = string | null;
 export type ShowResult6 = boolean;
 export type Kind6 = "repeat_until";
@@ -253,24 +255,7 @@ export type Repeat1 =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Trace2 = (
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
+export type Trace2 =
   | (
       | string
       | FunctionBlock
@@ -289,8 +274,27 @@ export type Trace2 = (
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | (
+          | string
+          | FunctionBlock
+          | CallBlock
+          | ModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
     )[]
-)[];
+  | null;
 export type Def7 = string | null;
 export type ShowResult7 = boolean;
 export type Kind7 = "repeat";
@@ -332,24 +336,7 @@ export type Repeat2 =
       | EmptyBlock
     )[];
 export type NumIterations = number;
-export type Trace3 = (
-  | string
-  | FunctionBlock
-  | CallBlock
-  | ModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
+export type Trace3 =
   | (
       | string
       | FunctionBlock
@@ -368,8 +355,27 @@ export type Trace3 = (
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | (
+          | string
+          | FunctionBlock
+          | CallBlock
+          | ModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
     )[]
-)[];
+  | null;
 export type Def8 = string | null;
 export type ShowResult8 = boolean;
 export type Kind8 = "if";

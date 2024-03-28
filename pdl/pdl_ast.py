@@ -131,7 +131,7 @@ class ForBlock(Block):
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
     repeat: "BlocksType"
-    trace: list["BlocksType"] = []
+    trace: Optional[list["BlocksType"]] = None
 
 
 class RepeatBlock(Block):
@@ -139,7 +139,7 @@ class RepeatBlock(Block):
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "BlocksType"
     num_iterations: int
-    trace: list["BlocksType"] = []
+    trace: Optional[list["BlocksType"]] = None
 
 
 class RepeatUntilBlock(Block):
@@ -147,7 +147,7 @@ class RepeatUntilBlock(Block):
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
     until: ExpressionType
-    trace: list["BlocksType"] = []
+    trace: Optional[list["BlocksType"]] = None
 
 
 class ReadBlock(Block):
