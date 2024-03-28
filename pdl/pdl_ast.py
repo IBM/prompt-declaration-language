@@ -166,6 +166,13 @@ class IncludeBlock(Block):
     trace: Optional["BlockType"] = None
 
 
+# class ParseBlock(Block):
+#     parse: dict[str, json_schema]
+#     from_: "BlocksType" | str = "{{ context }}"
+#     with_: "BlocksType"
+#     parser: Literal["pdl", "regex"] = "pdl"
+
+
 class ErrorBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR

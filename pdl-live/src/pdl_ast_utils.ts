@@ -2,11 +2,24 @@ import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 
 export function map_block_children(
-  f: (block: string | PdlBlock) => string | PdlBlock,
-  block: string | PdlBlock
-): string | PdlBlock {
-  const new_block = match(block)
-    .with(P.string, s => s)
+  f: (block: PdlBlock) => PdlBlock,
+  block: PdlBlock
+): PdlBlock {
+  if (typeof block === 'string') {
+    return block;
+  }
+  let new_block;
+  if (block?.defs === undefined) {
+    new_block = {...block};
+  } else {
+    const defs: {[k: string]: PdlBlocks} = {};
+    for (const x in Object.keys(block.defs)) {
+      defs[x] = map_blocks(f, block.defs[x]);
+    }
+    new_block = {...block, defs: defs};
+  }
+  new_block = match(new_block)
+    // .with(P.string, s => s)
     .with({kind: 'empty'}, block => block)
     .with({kind: 'function'}, block => {
       const returns = map_blocks(f, block.return);
@@ -63,7 +76,7 @@ export function map_block_children(
 }
 
 export function map_blocks(
-  f: (block: string | PdlBlock) => string | PdlBlock,
+  f: (block: PdlBlock) => PdlBlock,
   blocks: PdlBlocks
 ): PdlBlocks {
   blocks = match(blocks)
@@ -77,6 +90,14 @@ export function iter_block_children(
   f: (block: PdlBlock) => void,
   block: PdlBlock
 ): void {
+  if (typeof block === 'string') {
+    return;
+  }
+  if (block?.defs) {
+    for (const x in Object.keys(block.defs)) {
+      iter_blocks(f, block.defs[x]);
+    }
+  }
   match(block)
     .with(P.string, () => {})
     .with({kind: 'empty'}, () => {})

@@ -256,6 +256,10 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   if (new_data?.show_result) {
     new_data.show_result = undefined;
   }
+  // remove empty defs list
+  if (Object.keys(data.defs ?? {}).length === 0) {
+    new_data.defs = undefined;
+  }
   // recursive cleanup
   return map_block_children(block_code_cleanup, new_data);
 }
