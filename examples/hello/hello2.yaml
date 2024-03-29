@@ -1,7 +1,9 @@
 description: Hello world to call into a model
+defs:
+  model: ibm/granite-20b-code-instruct-v1
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v1
+- model: "{{ model }}"
   parameters:
     decoding_method: greedy
     stop_sequences:

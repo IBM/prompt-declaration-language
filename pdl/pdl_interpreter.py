@@ -486,6 +486,8 @@ def step_call_model(
     else:
         model_input = scope["context"]
         input_trace = None
+
+    model = process_expr(scope, block.model)
     try:
         debug("model input: " + model_input)
         append_log(log, "Model Input", model_input)
@@ -500,7 +502,7 @@ def step_call_model(
         params = block.parameters
         params = set_default_model_params(params)
         gen = yield from generate_client_response(
-            log, client, block, model_input, params, yield_output
+            log, client, block, model, model_input, params, yield_output
         )
         debug("model output: " + gen)
         append_log(log, "Model Output", gen)
@@ -542,13 +544,14 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     log,
     client: Client,
     block: ModelBlock,
+    model: str,
     model_input: str,
     params: Optional[PDLTextGenerationParameters],
     yield_output: bool,
 ) -> Generator[str, Any, str]:
     gen = ""
     for response in client.text.generation.create_stream(
-        model_id=block.model,
+        model_id=model,
         prompt_id=block.prompt_id,
         input=model_input,
         parameters=params.__dict__,

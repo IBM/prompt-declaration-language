@@ -141,3 +141,47 @@ def test_data_missing_parameters():
     data = Program.model_validate(model_data_missing_parameters)
     _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == "Hello,\n\nI am a student at the University of Toronto."
+
+
+model_parameter = {
+    "description": "Hello world with a variable",
+    "defs": {"model": "ibm/granite-20b-code-instruct-v1"},
+    "document": [
+        "Hello,",
+        {
+            "model": "{{ model }}",
+            "parameters": {
+                "stop_sequences": ["!"],
+            },
+        },
+    ],
+}
+
+
+def test_model_parameter():
+    log = []
+    data = Program.model_validate(model_parameter)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "Hello, world!"
+
+
+model_parameter1 = {
+    "description": "Hello world with a variable",
+    "defs": {"model": "granite-20b-code-instruct-v1"},
+    "document": [
+        "Hello,",
+        {
+            "model": "ibm/{{ model }}",
+            "parameters": {
+                "stop_sequences": ["!"],
+            },
+        },
+    ],
+}
+
+
+def test_model_parameter1():
+    log = []
+    data = Program.model_validate(model_parameter1)
+    _, document, _, _ = process_block(log, empty_scope, data.root)
+    assert document == "Hello, world!"
