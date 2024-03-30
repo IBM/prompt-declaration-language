@@ -12,6 +12,7 @@ install_requires = [
     "PyYAML",
     "datasets",
     "faiss-cpu",
+    "jsonschema",
 ]
 
 dev = ["black", "pre-commit", "pytest"]

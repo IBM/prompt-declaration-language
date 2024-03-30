@@ -167,7 +167,7 @@ defs:
   filter_questions:
     function:
       task_description: str
-      questions: list[dict] # TODO: provide more meaningful schema
+      questions: list  # list[dict] TODO: provide more meaningful schema
     return:
     - defs:
         list_of_pairs:
@@ -264,7 +264,7 @@ defs:
 
   gen_answers:
     function:
-      questions: list[dict] # TODO: provide more meaningful schema
+      questions: list # list[dict] TODO: provide more meaningful schema
     return:
     - defs:
         all_results:
@@ -341,7 +341,7 @@ defs:
 
   filter_question_answer_pair:
     function:
-      qa_pairs: list[dict] # TODO: provide more meaningful schema
+      qa_pairs: list # list[dict] TODO: provide more meaningful schema
     return:
     - defs:
         ratings:

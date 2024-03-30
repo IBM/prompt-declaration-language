@@ -1,3 +1,6 @@
+from .pdl_schema_utils import convert_to_json_type, json_types_convert
+
+
 def is_base_type(schema):
     if "type" in schema:
         the_type = schema["type"]
@@ -42,23 +45,6 @@ def get_non_null_type(schema):
     return None
 
 
-json_types_convert = {
-    "string": str,
-    "boolean": bool,
-    "integer": int,
-    "number": float,
-    "array": list,
-    "object": dict,
-}
-
-
-def convert_to_json_type(a_type):
-    for k, v in json_types_convert.items():
-        if a_type == v:
-            return k
-    return None
-
-
 def match(ref_type, data):
     all_fields = ref_type["properties"].keys()
     intersection = list(set(data.keys()) & set(all_fields))
@@ -75,7 +61,7 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
             the_type = json_types_convert[schema["type"]]
             if not isinstance(data, the_type):  # pyright: ignore
                 ret.append(
-                    "Error0: " + str(data) + " should be of type " + str(the_type)
+                    "Error: " + str(data) + " should be of type " + str(the_type)
                 )
         if "enum" in schema:
             if data not in schema["enum"]:
@@ -132,7 +118,7 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                 if "enum" in item and data in item["enum"]:
                     the_type_exists = True
             if not the_type_exists:
-                ret.append("Error1: " + str(data) + " should be of type " + str(schema))
+                ret.append("Error: " + str(data) + " should be of type " + str(schema))
 
         elif isinstance(data, list):
             found = None
@@ -163,9 +149,7 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                         match_ref = ref_type
 
             if match_ref == {}:
-                ret.append(
-                    "Error2: " + str(data) + " should be of type: " + str(schema)
-                )
+                ret.append("Error: " + str(data) + " should be of type: " + str(schema))
 
             else:
                 ret += analyze_errors(defs, match_ref, data)

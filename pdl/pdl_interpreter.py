@@ -41,7 +41,8 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_schema_checker import analyze_errors
+from .pdl_schema_error_analyzer import analyze_errors
+from .pdl_schema_validator import type_check_args
 
 DEBUG = False
 
@@ -383,12 +384,22 @@ def step_block_body(
                 result = None
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                f_body = closure.returns
-                f_scope = closure.scope | {"context": scope["context"]} | args
-                result, output, _, f_trace = yield from step_blocks(
-                    log, f_scope, yield_output, f_body
-                )
-                trace = block.model_copy(update={"trace": f_trace})
+                type_errors = type_check_args(args, closure.function)
+                if len(type_errors) > 0:
+                    msg = "Type errors during function call to " + f
+                    for e in type_errors:
+                        msg += "\n" + e
+                    error(msg)
+                    output = ""
+                    result = None
+                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+                else:
+                    f_body = closure.returns
+                    f_scope = closure.scope | {"context": scope["context"]} | args
+                    result, output, _, f_trace = yield from step_blocks(
+                        log, f_scope, yield_output, f_body
+                    )
+                    trace = block.model_copy(update={"trace": f_trace})
         case EmptyBlock():
             result = ""
             output = ""

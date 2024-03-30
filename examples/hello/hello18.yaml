@@ -1,0 +1,16 @@
+description: Hello world
+document:
+- def: stutter
+  function: 
+    some: list[int]
+  return:
+    for:
+      elem: "{{ some }}"
+    repeat:
+      "Element: {{ elem }}\n"
+- call: stutter
+  args: 
+    some: [1, 2, 3, 4]
+
+
+
