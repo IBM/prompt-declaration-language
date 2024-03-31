@@ -9,10 +9,13 @@ from .pdl_ast import (
     CodeBlock,
     DataBlock,
     DocumentBlock,
+    EmptyBlock,
     ErrorBlock,
+    ForBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
+    IncludeBlock,
     ModelBlock,
     ReadBlock,
     RepeatBlock,
@@ -31,7 +34,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             if block.returns is not None:
                 iter_blocks(f, block.returns)
         case CallBlock():
-            pass
+            if block.trace is not None:
+                iter_blocks(f, block.trace)
         case ModelBlock():
             if block.input is not None:
                 iter_blocks(f, block.input)
@@ -51,11 +55,27 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 iter_blocks(f, block.elses)
         case RepeatBlock():
             iter_blocks(f, block.repeat)
+            if block.trace is not None:
+                for trace in block.trace:
+                    iter_blocks(f, trace)
         case RepeatUntilBlock():
             iter_blocks(f, block.repeat)
+            if block.trace is not None:
+                for trace in block.trace:
+                    iter_blocks(f, trace)
+        case ForBlock():
+            iter_blocks(f, block.repeat)
+            if block.trace is not None:
+                for trace in block.trace:
+                    iter_blocks(f, trace)
         case ErrorBlock():
             iter_blocks(f, block.program)
         case ReadBlock():
+            pass
+        case IncludeBlock():
+            if block.trace is not None:
+                iter_blocks(f, block.trace)
+        case EmptyBlock():
             pass
         case _:
             assert (

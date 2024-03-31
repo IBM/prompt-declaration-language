@@ -304,3 +304,24 @@ def test_function_call13():
     data = Program.model_validate(function_call13)
     _, _, _, trace = process_block(log, empty_scope, data.root)
     assert contains_error(trace)
+
+
+function_call14 = {
+    "description": "Call hello",
+    "document": [
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {},
+            "return": ["Hello ", "{{ something }}", "!"],
+        },
+        {"call": "hello", "args": {}},
+    ],
+}
+
+
+def test_function_call14():
+    log = []
+    data = Program.model_validate(function_call14)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
+    assert contains_error(trace)
