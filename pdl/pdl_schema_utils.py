@@ -30,7 +30,7 @@ _PDLTYPE_TO_JSONSCHEMA_NAME = {
 
 
 def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
-    pdl_type: str | dict[str, Any]
+    pdl_type: str | dict[str, Any] | list
 ) -> dict[str, Any]:
     match pdl_type:
         case {"enum": choices}:
@@ -58,22 +58,35 @@ def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
                 "items": pdltype_to_jsonschema(items_details),
                 **other_details,
             }
-        case {"obj": dict() as pdl_props}:
-            props = {}
-            required = []
-            for name, prop_type in pdl_props.items():
-                if isinstance(prop_type, dict) and "optional" in prop_type:
-                    props[name] = pdltype_to_jsonschema(prop_type["optional"])
-                else:
-                    props[name] = pdltype_to_jsonschema(prop_type)
-                    required.append(name)
+        case list() as type_list:
+            if len(type_list) != 1:
+                raise ValueError(f"invalid PDL type {pdl_type}")
             return {
-                "type": "object",
-                "properties": props,
-                "required": required,
-                "additionalProperties": False,
+                "type": "array",
+                "items": pdltype_to_jsonschema(type_list[0]),
             }
+        case {"obj": dict() as pdl_props}:
+            return get_json_schema_object(pdl_props)
+        case dict() as pdl_props:
+            return get_json_schema_object(pdl_props)
     raise ValueError(f"invalid PDL type {pdl_type}")
+
+
+def get_json_schema_object(pdl_props: dict) -> dict[str, Any]:
+    props = {}
+    required = []
+    for name, prop_type in pdl_props.items():
+        if isinstance(prop_type, dict) and "optional" in prop_type:
+            props[name] = pdltype_to_jsonschema(prop_type["optional"])
+        else:
+            props[name] = pdltype_to_jsonschema(prop_type)
+            required.append(name)
+    return {
+        "type": "object",
+        "properties": props,
+        "required": required,
+        "additionalProperties": False,
+    }
 
 
 def get_json_schema(params: dict[str, Any]) -> Optional[dict[str, Any]]:

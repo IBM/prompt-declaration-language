@@ -35,7 +35,15 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         "json_schema": {"type": "array", "items": {"type": "integer"}},
     },
     {
+        "pdl_type": "[int]",
+        "json_schema": {"type": "array", "items": {"type": "integer"}},
+    },
+    {
         "pdl_type": "{list: {int: {minimum: 0}}}",
+        "json_schema": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+    },
+    {
+        "pdl_type": "[{int: {minimum: 0}}]",
         "json_schema": {"type": "array", "items": {"type": "integer", "minimum": 0}},
     },
     {
@@ -44,6 +52,18 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
     },
     {
         "pdl_type": "{obj: {latitude: float, longitude: float}}",
+        "json_schema": {
+            "type": "object",
+            "properties": {
+                "latitude": {"type": "number"},
+                "longitude": {"type": "number"},
+            },
+            "required": ["latitude", "longitude"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "pdl_type": "{latitude: float, longitude: float}",
         "json_schema": {
             "type": "object",
             "properties": {
@@ -68,7 +88,35 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
+        "pdl_type": "{question: str, answer: str, context: {optional: str}}",
+        "json_schema": {
+            "type": "object",
+            "properties": {
+                "question": {"type": "string"},
+                "answer": {"type": "string"},
+                "context": {"type": "string"},
+            },
+            "required": ["question", "answer"],
+            "additionalProperties": False,
+        },
+    },
+    {
         "pdl_type": "{list: {obj: {question: str, answer: str}}}",
+        "json_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {"type": "string"},
+                    "answer": {"type": "string"},
+                },
+                "required": ["question", "answer"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "pdl_type": "[{question: str, answer: str}]",
         "json_schema": {
             "type": "array",
             "items": {

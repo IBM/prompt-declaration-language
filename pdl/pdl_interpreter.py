@@ -786,7 +786,7 @@ def debug(somestring):
 
 
 def error(somestring):
-    print("Error: " + somestring)
+    print("\nError: " + somestring)
 
 
 def contains_error(blocks: BlocksType) -> bool:
