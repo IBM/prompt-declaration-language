@@ -73,7 +73,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
-                d["parameters"] = block.parameters.model_dump_json()
+                d["parameters"] = block.parameters.model_dump()
             if block.moderations is not None:
                 d["moderations"] = block.moderations
             if block.data is True:
