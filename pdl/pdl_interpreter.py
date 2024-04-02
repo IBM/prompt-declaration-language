@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import types
 from ast import literal_eval
 from pathlib import Path
@@ -32,6 +33,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
+    ParseBlock,
     PDLTextGenerationParameters,
     Program,
     ReadBlock,
@@ -188,7 +190,7 @@ def step_block(
     if isinstance(block, str):
         try:
             result = process_expr(scope, block)
-            output = result if isinstance(result, str) else json.dumps(result)
+            output = stringify(result)
             trace = output
         except UndefinedError as e:
             msg = f"Error {e} in {block}"
@@ -243,13 +245,13 @@ def step_block_body(
                 output = ""
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                output = result if isinstance(result, str) else json.dumps(result)
+                output = stringify(result)
                 trace = block.model_copy()
             if yield_output:
                 yield output
         case DataBlock(data=v):
             result = process_expr(scope, v)
-            output = result if isinstance(result, str) else json.dumps(result)
+            output = stringify(result)
             if yield_output:
                 yield output
             trace = block.model_copy()
@@ -366,6 +368,12 @@ def step_block_body(
             result, output, scope, trace = yield from step_include(
                 log, scope, yield_output, block
             )
+
+        case ParseBlock():
+            result, output, scope, trace = process_parse(log, scope, block)
+            if yield_output:
+                yield output
+
         case FunctionBlock():
             closure = block.model_copy()
             if block.assign is not None:
@@ -408,6 +416,10 @@ def step_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, output, scope, trace
+
+
+def stringify(result):
+    return result if isinstance(result, str) else json.dumps(result)
 
 
 def process_defs(
@@ -594,7 +606,7 @@ def call_api(
         append_log(log, "API Input", input_str)
         response = requests.get(input_str)
         result = response.json()
-        output = result if isinstance(result, str) else json.dumps(result)
+        output = stringify(result)
         debug(output)
         append_log(log, "API Output", output)
         trace = block.model_copy(update={"input": input_trace})
@@ -710,6 +722,43 @@ def step_include(
                 for item in errors:
                     print(item)
             return None, "", scope, trace
+
+
+def process_parse(
+    log, scope: ScopeType, block: ParseBlock
+) -> tuple[Any, str, ScopeType, ParseBlock | ErrorBlock]:
+    if block.from_ is not None:
+        _, from_, _, from_trace = process_blocks(log, scope, block.from_)
+    else:
+        from_ = scope["context"]
+        from_trace = None
+    match block.parser:
+        case "pdl":
+            assert False, "TODO"
+        case "regex":
+            assert isinstance(block.with_, str)
+            regex = block.with_
+    parse_trace = block.model_copy(update={"from_": from_trace})
+    m = re.fullmatch(regex, from_)
+    if m is None:
+        msg = f"No match found for {regex} in {from_}"
+        error(msg)
+        trace = ErrorBlock(msg=msg, program=parse_trace)
+        return None, "", scope, trace
+    current_group_name = ""
+    try:
+        result = {}
+        for x in block.parse.keys():
+            current_group_name = x
+            result[x] = m.group(x)
+        output = stringify(result)
+        trace = parse_trace
+        return result, output, scope, trace
+    except IndexError:
+        msg = f"No group named {current_group_name} found by {regex} in {from_}"
+        error(msg)
+        trace = ErrorBlock(msg=msg, program=parse_trace)
+        return None, "", scope, trace
 
 
 def get_var(var: str, scope: ScopeType) -> Any:

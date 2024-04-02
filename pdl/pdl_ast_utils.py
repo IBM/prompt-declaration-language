@@ -17,6 +17,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
+    ParseBlock,
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
@@ -75,6 +76,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case IncludeBlock():
             if block.trace is not None:
                 iter_blocks(f, block.trace)
+        case ParseBlock():
+            if block.from_ is not None:
+                iter_blocks(f, block.from_)
         case EmptyBlock():
             pass
         case _:

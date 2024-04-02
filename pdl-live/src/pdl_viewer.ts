@@ -123,6 +123,11 @@ export function show_block(data: PdlBlock) {
       body.classList.add('pdl_include');
       body.appendChild(show_result_or_code(data));
     })
+    .with({kind: 'parse'}, data => {
+      // TODO
+      body.classList.add('pdl_parse');
+      body.appendChild(show_result_or_code(data));
+    })
     .with({kind: 'function'}, data => {
       // TODO
       body.classList.add('pdl_function');

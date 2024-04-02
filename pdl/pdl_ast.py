@@ -36,9 +36,10 @@ class BlockKind(StrEnum):
     REPEAT_UNTIL = "repeat_until"
     READ = "read"
     INCLUDE = "include"
-    ERROR = "error"
+    PARSE = "parse"
     EMPTY = "empty"
     FOR = "for"
+    ERROR = "error"
 
 
 class Block(BaseModel):
@@ -167,11 +168,13 @@ class IncludeBlock(Block):
     trace: Optional["BlockType"] = None
 
 
-# class ParseBlock(Block):
-#     parse: dict[str, json_schema]
-#     from_: "BlocksType" | str = "{{ context }}"
-#     with_: "BlocksType"
-#     parser: Literal["pdl", "regex"] = "pdl"
+class ParseBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.PARSE] = BlockKind.PARSE
+    parse: dict[str, Any]
+    from_: Optional["BlocksType"] = Field(default=None, alias="from")
+    with_: "BlocksType" = Field(..., alias="with")
+    parser: Literal["pdl", "regex"] = "pdl"
 
 
 class ErrorBlock(Block):
@@ -201,6 +204,7 @@ AdvancedBlockType: TypeAlias = (
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
 )

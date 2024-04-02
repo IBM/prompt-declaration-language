@@ -25,6 +25,7 @@ export type Program =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock;
 export type Description = string | null;
@@ -43,6 +44,7 @@ export type Description12 = string | null;
 export type Description13 = string | null;
 export type Description14 = string | null;
 export type Description15 = string | null;
+export type Description16 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
 export type Kind = "empty";
@@ -66,6 +68,7 @@ export type Program1 =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -84,12 +87,96 @@ export type Program1 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
 export type Def2 = string | null;
 export type ShowResult2 = boolean;
-export type Kind2 = "include";
+export type Kind2 = "parse";
+export type From =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ParseBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ParseBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type With =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | ModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | ReadBlock
+  | IncludeBlock
+  | ParseBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | ModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | ReadBlock
+      | IncludeBlock
+      | ParseBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Parser = "pdl" | "regex";
+export type Def3 = string | null;
+export type ShowResult3 = boolean;
+export type Kind3 = "include";
 export type Include = string;
 export type Trace =
   | string
@@ -107,19 +194,20 @@ export type Trace =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | null;
-export type Def3 = string | null;
-export type ShowResult3 = boolean;
-export type Kind3 = "read";
+export type Def4 = string | null;
+export type ShowResult4 = boolean;
+export type Kind4 = "read";
 export type Read = string | null;
 export type Message = string | null;
 export type Multiline = boolean;
-export type Parser = ("json" | "yaml") | null;
-export type Def4 = string | null;
-export type ShowResult4 = boolean;
-export type Kind4 = "document";
+export type Parser1 = ("json" | "yaml") | null;
+export type Def5 = string | null;
+export type ShowResult5 = boolean;
+export type Kind5 = "document";
 export type Document =
   | string
   | FunctionBlock
@@ -136,6 +224,7 @@ export type Document =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -154,12 +243,13 @@ export type Document =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Def5 = string | null;
-export type ShowResult5 = boolean;
-export type Kind5 = "for";
+export type Def6 = string | null;
+export type ShowResult6 = boolean;
+export type Kind6 = "for";
 export type Repeat =
   | string
   | FunctionBlock
@@ -176,6 +266,7 @@ export type Repeat =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -194,6 +285,7 @@ export type Repeat =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -214,6 +306,7 @@ export type Trace1 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
       | (
@@ -232,14 +325,15 @@ export type Trace1 =
           | DocumentBlock
           | ReadBlock
           | IncludeBlock
+          | ParseBlock
           | ErrorBlock
           | EmptyBlock
         )[]
     )[]
   | null;
-export type Def6 = string | null;
-export type ShowResult6 = boolean;
-export type Kind6 = "repeat_until";
+export type Def7 = string | null;
+export type ShowResult7 = boolean;
+export type Kind7 = "repeat_until";
 export type Repeat1 =
   | string
   | FunctionBlock
@@ -256,6 +350,7 @@ export type Repeat1 =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -274,6 +369,7 @@ export type Repeat1 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -294,6 +390,7 @@ export type Trace2 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
       | (
@@ -312,14 +409,15 @@ export type Trace2 =
           | DocumentBlock
           | ReadBlock
           | IncludeBlock
+          | ParseBlock
           | ErrorBlock
           | EmptyBlock
         )[]
     )[]
   | null;
-export type Def7 = string | null;
-export type ShowResult7 = boolean;
-export type Kind7 = "repeat";
+export type Def8 = string | null;
+export type ShowResult8 = boolean;
+export type Kind8 = "repeat";
 export type Repeat2 =
   | string
   | FunctionBlock
@@ -336,6 +434,7 @@ export type Repeat2 =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -354,6 +453,7 @@ export type Repeat2 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -375,6 +475,7 @@ export type Trace3 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
       | (
@@ -393,14 +494,15 @@ export type Trace3 =
           | DocumentBlock
           | ReadBlock
           | IncludeBlock
+          | ParseBlock
           | ErrorBlock
           | EmptyBlock
         )[]
     )[]
   | null;
-export type Def8 = string | null;
-export type ShowResult8 = boolean;
-export type Kind8 = "if";
+export type Def9 = string | null;
+export type ShowResult9 = boolean;
+export type Kind9 = "if";
 export type Then =
   | string
   | FunctionBlock
@@ -417,6 +519,7 @@ export type Then =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -435,6 +538,7 @@ export type Then =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -454,6 +558,7 @@ export type Else =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -472,21 +577,22 @@ export type Else =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
 export type IfResult = boolean | null;
-export type Def9 = string | null;
-export type ShowResult9 = boolean;
-export type Kind9 = "data";
 export type Def10 = string | null;
 export type ShowResult10 = boolean;
-export type Kind10 = "get";
-export type Get = string;
+export type Kind10 = "data";
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
-export type Kind11 = "api";
+export type Kind11 = "get";
+export type Get = string;
+export type Def12 = string | null;
+export type ShowResult12 = boolean;
+export type Kind12 = "api";
 export type Api = string;
 export type Url = string;
 export type Input =
@@ -505,6 +611,7 @@ export type Input =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -523,12 +630,13 @@ export type Input =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Def12 = string | null;
-export type ShowResult12 = boolean;
-export type Kind12 = "code";
+export type Def13 = string | null;
+export type ShowResult13 = boolean;
+export type Kind13 = "code";
 export type Lan = string;
 export type Code =
   | string
@@ -546,6 +654,7 @@ export type Code =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -564,12 +673,13 @@ export type Code =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Def13 = string | null;
-export type ShowResult13 = boolean;
-export type Kind13 = "model";
+export type Def14 = string | null;
+export type ShowResult14 = boolean;
+export type Kind14 = "model";
 export type Model = string;
 export type Input1 =
   | string
@@ -587,6 +697,7 @@ export type Input1 =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -605,6 +716,7 @@ export type Input1 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[]
@@ -660,9 +772,9 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
-export type Def14 = string | null;
-export type ShowResult14 = boolean;
-export type Kind14 = "call";
+export type Def15 = string | null;
+export type ShowResult15 = boolean;
+export type Kind15 = "call";
 export type Call = string;
 export type Trace4 =
   | string
@@ -680,6 +792,7 @@ export type Trace4 =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -698,13 +811,14 @@ export type Trace4 =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Def15 = string | null;
-export type ShowResult15 = boolean;
-export type Kind15 = "function";
+export type Def16 = string | null;
+export type ShowResult16 = boolean;
+export type Kind16 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
@@ -724,6 +838,7 @@ export type Return =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -742,6 +857,7 @@ export type Return =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -764,6 +880,7 @@ export type PdlBlock =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock;
 export type PdlBlocks =
@@ -782,6 +899,7 @@ export type PdlBlocks =
   | DocumentBlock
   | ReadBlock
   | IncludeBlock
+  | ParseBlock
   | ErrorBlock
   | EmptyBlock
   | (
@@ -800,6 +918,7 @@ export type PdlBlocks =
       | DocumentBlock
       | ReadBlock
       | IncludeBlock
+      | ParseBlock
       | ErrorBlock
       | EmptyBlock
     )[];
@@ -808,10 +927,10 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def15;
-  show_result?: ShowResult15;
+  def?: Def16;
+  show_result?: ShowResult16;
   result?: unknown;
-  kind?: Kind15;
+  kind?: Kind16;
   function: Function;
   return: Return;
   scope?: Scope;
@@ -836,6 +955,7 @@ export interface Defs {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -854,6 +974,7 @@ export interface Defs {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -862,10 +983,10 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def14;
-  show_result?: ShowResult14;
+  def?: Def15;
+  show_result?: ShowResult15;
   result?: unknown;
-  kind?: Kind14;
+  kind?: Kind15;
   call: Call;
   args?: Args;
   trace?: Trace4;
@@ -890,6 +1011,7 @@ export interface Defs1 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -908,6 +1030,7 @@ export interface Defs1 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -916,10 +1039,10 @@ export interface ModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def13;
-  show_result?: ShowResult13;
+  def?: Def14;
+  show_result?: ShowResult14;
   result?: unknown;
-  kind?: Kind13;
+  kind?: Kind14;
   model: Model;
   input?: Input1;
   prompt_id?: PromptId;
@@ -948,6 +1071,7 @@ export interface Defs2 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -966,6 +1090,7 @@ export interface Defs2 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -974,10 +1099,10 @@ export interface CodeBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def12;
-  show_result?: ShowResult12;
+  def?: Def13;
+  show_result?: ShowResult13;
   result?: unknown;
-  kind?: Kind12;
+  kind?: Kind13;
   lan: Lan;
   code: Code;
 }
@@ -1001,6 +1126,7 @@ export interface Defs3 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1019,6 +1145,7 @@ export interface Defs3 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1027,10 +1154,10 @@ export interface ApiBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
-  def?: Def11;
-  show_result?: ShowResult11;
+  def?: Def12;
+  show_result?: ShowResult12;
   result?: unknown;
-  kind?: Kind11;
+  kind?: Kind12;
   api: Api;
   url: Url;
   input: Input;
@@ -1055,6 +1182,7 @@ export interface Defs4 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1073,6 +1201,7 @@ export interface Defs4 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1081,10 +1210,10 @@ export interface GetBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
-  def?: Def10;
-  show_result?: ShowResult10;
+  def?: Def11;
+  show_result?: ShowResult11;
   result?: unknown;
-  kind?: Kind10;
+  kind?: Kind11;
   get: Get;
 }
 export interface Spec5 {
@@ -1107,6 +1236,7 @@ export interface Defs5 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1125,6 +1255,7 @@ export interface Defs5 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1133,10 +1264,10 @@ export interface DataBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
-  def?: Def9;
-  show_result?: ShowResult9;
+  def?: Def10;
+  show_result?: ShowResult10;
   result?: unknown;
-  kind?: Kind9;
+  kind?: Kind10;
   data: Data;
 }
 export interface Spec6 {
@@ -1159,6 +1290,7 @@ export interface Defs6 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1177,6 +1309,7 @@ export interface Defs6 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1185,10 +1318,10 @@ export interface IfBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
-  def?: Def8;
-  show_result?: ShowResult8;
+  def?: Def9;
+  show_result?: ShowResult9;
   result?: unknown;
-  kind?: Kind8;
+  kind?: Kind9;
   if: If;
   then: Then;
   else?: Else;
@@ -1214,6 +1347,7 @@ export interface Defs7 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1232,6 +1366,7 @@ export interface Defs7 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1240,10 +1375,10 @@ export interface RepeatBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
-  def?: Def7;
-  show_result?: ShowResult7;
+  def?: Def8;
+  show_result?: ShowResult8;
   result?: unknown;
-  kind?: Kind7;
+  kind?: Kind8;
   repeat: Repeat2;
   num_iterations: NumIterations;
   trace?: Trace3;
@@ -1268,6 +1403,7 @@ export interface Defs8 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1286,6 +1422,7 @@ export interface Defs8 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1294,10 +1431,10 @@ export interface RepeatUntilBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
-  def?: Def6;
-  show_result?: ShowResult6;
+  def?: Def7;
+  show_result?: ShowResult7;
   result?: unknown;
-  kind?: Kind6;
+  kind?: Kind7;
   repeat: Repeat1;
   until: Until;
   trace?: Trace2;
@@ -1322,6 +1459,7 @@ export interface Defs9 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1340,6 +1478,7 @@ export interface Defs9 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1348,10 +1487,10 @@ export interface ForBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
-  def?: Def5;
-  show_result?: ShowResult5;
+  def?: Def6;
+  show_result?: ShowResult6;
   result?: unknown;
-  kind?: Kind5;
+  kind?: Kind6;
   for: For;
   repeat: Repeat;
   trace?: Trace1;
@@ -1376,6 +1515,7 @@ export interface Defs10 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1394,6 +1534,7 @@ export interface Defs10 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1402,10 +1543,10 @@ export interface DocumentBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
-  def?: Def4;
-  show_result?: ShowResult4;
+  def?: Def5;
+  show_result?: ShowResult5;
   result?: unknown;
-  kind?: Kind4;
+  kind?: Kind5;
   document: Document;
 }
 export interface Spec11 {
@@ -1428,6 +1569,7 @@ export interface Defs11 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1446,6 +1588,7 @@ export interface Defs11 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1454,14 +1597,14 @@ export interface ReadBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
-  def?: Def3;
-  show_result?: ShowResult3;
+  def?: Def4;
+  show_result?: ShowResult4;
   result?: unknown;
-  kind?: Kind3;
+  kind?: Kind4;
   read: Read;
   message?: Message;
   multiline?: Multiline;
-  parser?: Parser;
+  parser?: Parser1;
 }
 export interface Spec12 {
   [k: string]: unknown;
@@ -1483,6 +1626,7 @@ export interface Defs12 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1501,6 +1645,7 @@ export interface Defs12 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
@@ -1509,10 +1654,10 @@ export interface IncludeBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
-  def?: Def2;
-  show_result?: ShowResult2;
+  def?: Def3;
+  show_result?: ShowResult3;
   result?: unknown;
-  kind?: Kind2;
+  kind?: Kind3;
   include: Include;
   trace?: Trace;
 }
@@ -1536,6 +1681,7 @@ export interface Defs13 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1554,20 +1700,23 @@ export interface Defs13 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface ErrorBlock {
+export interface ParseBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
-  def?: Def1;
-  show_result?: ShowResult1;
+  def?: Def2;
+  show_result?: ShowResult2;
   result?: unknown;
-  kind?: Kind1;
-  msg: Msg;
-  program: Program1;
+  kind?: Kind2;
+  parse: Parse;
+  from?: From;
+  with: With;
+  parser?: Parser;
 }
 export interface Spec14 {
   [k: string]: unknown;
@@ -1589,6 +1738,7 @@ export interface Defs14 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1607,18 +1757,21 @@ export interface Defs14 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface EmptyBlock {
+export interface ErrorBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
-  def?: Def;
-  show_result?: ShowResult;
+  def?: Def1;
+  show_result?: ShowResult1;
   result?: unknown;
-  kind?: Kind;
+  kind?: Kind1;
+  msg: Msg;
+  program: Program1;
 }
 export interface Spec15 {
   [k: string]: unknown;
@@ -1640,6 +1793,7 @@ export interface Defs15 {
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
+    | ParseBlock
     | ErrorBlock
     | EmptyBlock
     | (
@@ -1658,9 +1812,66 @@ export interface Defs15 {
         | DocumentBlock
         | ReadBlock
         | IncludeBlock
+        | ParseBlock
         | ErrorBlock
         | EmptyBlock
       )[];
+}
+export interface EmptyBlock {
+  description?: Description16;
+  spec?: Spec16;
+  defs?: Defs16;
+  def?: Def;
+  show_result?: ShowResult;
+  result?: unknown;
+  kind?: Kind;
+}
+export interface Spec16 {
+  [k: string]: unknown;
+}
+export interface Defs16 {
+  [k: string]:
+    | string
+    | FunctionBlock
+    | CallBlock
+    | ModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | ReadBlock
+    | IncludeBlock
+    | ParseBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | string
+        | FunctionBlock
+        | CallBlock
+        | ModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | ReadBlock
+        | IncludeBlock
+        | ParseBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface Parse {
+  [k: string]: unknown;
 }
 export interface For {
   [k: string]: unknown;

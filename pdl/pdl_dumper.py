@@ -18,6 +18,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
+    ParseBlock,
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
@@ -101,6 +102,13 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["parser"] = block.parser
         case IncludeBlock():
             d["include"] = block.include
+        case ParseBlock():
+            d["parse"] = block.parse
+            if block.from_ is not None:
+                d["from"] = blocks_to_dict(block.from_)
+            d["with"] = block.with_
+            if block.parser != "pdl":
+                d["parser"] = block.parser
         case IfBlock():
             d["condition"] = block.condition
             d["then"] = blocks_to_dict(block.then)
@@ -132,7 +140,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             if block.trace is not None:
                 d["trace"] = blocks_to_dict(block.trace)
         case ErrorBlock():
-            d["program"] = block.program
+            d["program"] = blocks_to_dict(block.program)
     if block.assign is not None:
         d["def"] = block.assign
     if block.show_result is False:

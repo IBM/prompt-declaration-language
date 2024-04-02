@@ -70,6 +70,13 @@ export function map_block_children(
     })
     .with({kind: 'read'}, block => block)
     .with({kind: 'include'}, block => block)
+    .with({kind: 'parse'}, data => {
+      if (data.from) {
+        const from = map_blocks(f, data.from);
+        return {...block, from: from};
+      }
+      return data;
+    })
     .with({kind: undefined}, block => block)
     .exhaustive();
   return new_block;
@@ -135,6 +142,11 @@ export function iter_block_children(
     .with({kind: 'error'}, block => iter_blocks(f, block.program))
     .with({kind: 'read'}, () => {})
     .with({kind: 'include'}, () => {})
+    .with({kind: 'parse'}, data => {
+      if (data.from) {
+        iter_blocks(f, data.from);
+      }
+    })
     .with({kind: undefined}, () => {})
     .exhaustive();
 }
