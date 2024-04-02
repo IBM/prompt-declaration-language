@@ -46,6 +46,7 @@ defs:
       task_description: str
       icl_question: str
       icl_answer: str
+    spec: {list: {obj: {icl_question: str, icl_answer: str, question: str}}}
     return:
     - defs:
         prompt_data:
@@ -74,7 +75,7 @@ defs:
             max_new_tokens: 4096
         generated_questions:
           lan: python
-          code: |
+          code: | # parse model output
             import re
             raw = """ {{teacher_output}} """
             result = re.findall(r"### Question [0-9]+:\s*([^#\n]+)", raw)
@@ -88,21 +89,24 @@ defs:
 
   gen_questions_freeform:
     function:
-      seed_examples: dict # TODO: provide more meaningful schema
+      task_description: str
+      seed_examples: {list: {obj: {question: str, answer: str}}}
+    spec: {list: {obj: {icl_question: str, icl_answer: str, question: str}}}
     return:
     - defs:
         list_of_lists:
           for:
-            example: "{{seed_examples.seed_examples}}"
+            example: "{{seed_examples}}"
           repeat:
             call: gen_questions_freeform_inner
             args:
               num_samples: 2
-              task_description: "{{seed_examples.task_description}}"
+              task_description: "{{task_description}}"
               icl_question: "{{example.question}}"
               icl_answer: "{{example.answer}}"
-    - lan: python # flatten
-      code: result = [q for qs in {{list_of_lists}} for q in qs]
+    - lan: python
+      code: | # flatten list_of_lists into simple list
+          result = [q for qs in {{list_of_lists}} for q in qs]
 
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_questions_template.yaml
@@ -133,6 +137,7 @@ defs:
     function:
       task_description: str
       question: str
+    spec: float
     return:
     - defs:
         prompt_data:
@@ -162,12 +167,18 @@ defs:
         import re
         raw = """ {{teacher_output}} """
         match = re.search(r"Rating.*\[\[(\d+\.?\d*)\]\]", raw)
-        result = float(match.group(1)) if match else None
+        result = float(match.group(1)) if match else 0.0
 
   filter_questions:
     function:
       task_description: str
-      questions: list  # list[dict] TODO: provide more meaningful schema
+      questions:
+        list: {obj: {icl_question: str, icl_answer: str, question: str}}
+    spec:
+      list:
+        obj:
+          keep: float
+          question: {obj: {icl_question: str, icl_answer: str, question: str}}
     return:
     - defs:
         list_of_pairs:
@@ -184,7 +195,8 @@ defs:
               keep: "{{filter_output}}"
         filtered:
           lan: python
-          code: result = [p["question"] for p in {{list_of_pairs}} if p["keep"]]
+          code: | # keep only if "keep" column is non-zero
+              result = [p["question"] for p in {{list_of_pairs}} if p["keep"]]
     - "{{filtered}}"
 
 
@@ -221,7 +233,8 @@ defs:
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_answers.py
   gen_answers_inner:
     function:
-      question: dict
+      question: {obj: {icl_question: str, icl_answer: str, question: str}}
+    spec: {obj: {question: str, answer: str}}
     return:
     - defs:
         prompt_data:
@@ -264,7 +277,9 @@ defs:
 
   gen_answers:
     function:
-      questions: list # list[dict] TODO: provide more meaningful schema
+      questions:
+        list: {obj: {icl_question: str, icl_answer: str, question: str}}
+    spec: {list: {obj: {question: str, answer: str}}}
     return:
     - defs:
         all_results:
@@ -274,8 +289,9 @@ defs:
             call: gen_answers_inner
             args:
               question: "{{question}}"
-    - lan: python # keep only if answer non-empty
-      code: result = [r for r in {{all_results}} if len(r["answer"]) > 0]
+    - lan: python
+      code: | # keep only if answer non-empty
+          result = [r for r in {{all_results}} if len(r["answer"]) > 0]
 
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_qa_template.yaml
@@ -308,6 +324,7 @@ defs:
     function:
       question: str
       answer: str
+    spec: float
     return:
     - defs:
         prompt_data:
@@ -341,7 +358,8 @@ defs:
 
   filter_question_answer_pair:
     function:
-      qa_pairs: list # list[dict] TODO: provide more meaningful schema
+      qa_pairs: {list: {obj: {question: str, answer: str}}}
+    spec: {list: {obj: {question: str, answer: str}}}
     return:
     - defs:
         ratings:
@@ -358,7 +376,8 @@ defs:
               rating: "{{filter_output}}"
         filtered:
           lan: python
-          code: result = [p["qa_pair"] for p in {{ratings}} if p["rating"] >= 2]
+          code: | # keep only if rating is at least two
+              result = [p["qa_pair"] for p in {{ratings}} if p["rating"] >= 2]
     - "{{filtered}}"
 
 
@@ -376,7 +395,8 @@ document:
 - def: generated_questions
   call: gen_questions_freeform
   args:
-    seed_examples: "{{seed_examples}}"
+    task_description: "{{seed_examples.task_description}}"
+    seed_examples: "{{seed_examples.seed_examples}}"
 - |
 
   Filtering questions

@@ -1,6 +1,100 @@
+import yaml
+
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ignore
+from pdl.pdl.pdl_schema_utils import pdltype_to_jsonschema  # pyright: ignore
+
+_PDLTYPE_TO_JSONSCHEMA_TESTS = [
+    {
+        "pdl_type": "null",
+        "json_schema": {"type": "null"},
+    },
+    {
+        "pdl_type": "bool",
+        "json_schema": {"type": "boolean"},
+    },
+    {
+        "pdl_type": "{str: {pattern: '^[A-Za-z][A-Za-z0-9_]*$'}}",
+        "json_schema": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"},
+    },
+    {
+        "pdl_type": "float",
+        "json_schema": {"type": "number"},
+    },
+    {
+        "pdl_type": "{float: {minimum: 0, exclusiveMaximum: 1}}",
+        "json_schema": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+    },
+    {
+        "pdl_type": "int",
+        "json_schema": {"type": "integer"},
+    },
+    {
+        "pdl_type": "{list: int}",
+        "json_schema": {"type": "array", "items": {"type": "integer"}},
+    },
+    {
+        "pdl_type": "{list: {int: {minimum: 0}}}",
+        "json_schema": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+    },
+    {
+        "pdl_type": "{list: {minItems: 1, int: {}}}",
+        "json_schema": {"type": "array", "items": {"type": "integer"}, "minItems": 1},
+    },
+    {
+        "pdl_type": "{obj: {latitude: float, longitude: float}}",
+        "json_schema": {
+            "type": "object",
+            "properties": {
+                "latitude": {"type": "number"},
+                "longitude": {"type": "number"},
+            },
+            "required": ["latitude", "longitude"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "pdl_type": "{obj: {question: str, answer: str, context: {optional: str}}}",
+        "json_schema": {
+            "type": "object",
+            "properties": {
+                "question": {"type": "string"},
+                "answer": {"type": "string"},
+                "context": {"type": "string"},
+            },
+            "required": ["question", "answer"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "pdl_type": "{list: {obj: {question: str, answer: str}}}",
+        "json_schema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {"type": "string"},
+                    "answer": {"type": "string"},
+                },
+                "required": ["question", "answer"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "pdl_type": "{enum: [red, green, blue]}",
+        "json_schema": {"enum": ["red", "green", "blue"]},
+    },
+]
+
+
+def test_pdltype_to_jsonschema():
+    for t in _PDLTYPE_TO_JSONSCHEMA_TESTS:
+        pdl_type = yaml.safe_load(t["pdl_type"])
+        json_schema = pdltype_to_jsonschema(pdl_type)
+        assert json_schema == t["json_schema"]
+
 
 function_call = {
     "description": "Call hello",
@@ -97,7 +191,7 @@ function_call4 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "dict"},
+            "function": {"name": "obj"},
             "return": ["Hello ", {"get": "name"}, "!"],
         },
         {"call": "hello", "args": {"name": {"bob": "caroll"}}},
