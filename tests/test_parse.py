@@ -7,7 +7,7 @@ regex_data = {
     "parse": {"first_name": "str", "last_name": "str"},
     "from": "Malcolm Reynolds",
     "with": "(?P<first_name>\\w+) (?P<last_name>\\w+)",
-    "parser": "regex",
+    "mode": "regex",
 }
 
 

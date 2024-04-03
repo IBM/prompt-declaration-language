@@ -210,11 +210,19 @@ def step_block(
     result, output, scope, trace = yield from step_block_body(
         log, scope, yield_output, block
     )
+    trace = trace.model_copy(update={"defs": defs_trace, "result": output})
+    if block.parser is not None and isinstance(result, str):
+        try:
+            result = yaml.safe_load(result)
+        except Exception:
+            msg = "Attempted to parse ill-formed JSON or YAML"
+            error(msg)
+            trace = ErrorBlock(msg=msg, program=trace)
+            return result, output, scope, trace
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
         debug("Storing model result for " + var + ": " + str(trace.result))
-    trace = trace.model_copy(update={"defs": defs_trace, "result": output})
     if block.spec is not None and not isinstance(block, FunctionBlock):
         errors = type_check_spec(result, block.spec)
         if len(errors) > 0:
@@ -704,7 +712,7 @@ def process_input(
         try:
             result = yaml.safe_load(s)
         except Exception:
-            msg = "Attempted to parse ill-formed JSON"
+            msg = "Attempted to parse ill-formed JSON or YAML"
             error(msg)
             trace = ErrorBlock(msg=msg, program=block.model_copy())
             return None, "", scope, trace
@@ -749,7 +757,7 @@ def process_parse(
     else:
         from_ = scope["context"]
         from_trace = None
-    match block.parser:
+    match block.mode:
         case "pdl":
             assert False, "TODO"
         case "regex":

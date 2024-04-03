@@ -170,6 +170,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "api",
           "default": "api",
@@ -481,6 +497,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "call",
@@ -797,6 +829,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "code",
           "default": "code",
@@ -1104,6 +1152,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -1296,6 +1360,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "document",
@@ -1599,6 +1679,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -1777,6 +1873,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "error",
@@ -2084,6 +2196,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "for",
@@ -2523,6 +2651,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "function",
           "default": "function",
@@ -2849,6 +2993,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -3034,6 +3194,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "if",
@@ -3477,6 +3653,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "include",
           "default": "include",
@@ -3758,6 +3950,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "model",
@@ -4614,6 +4822,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "parse",
           "default": "parse",
@@ -4867,13 +5091,13 @@
           ],
           "title": "With"
         },
-        "parser": {
+        "mode": {
           "default": "pdl",
           "enum": [
             "pdl",
             "regex"
           ],
-          "title": "Parser",
+          "title": "Mode",
           "type": "string"
         }
       },
@@ -5317,6 +5541,22 @@
           "default": null,
           "title": "Result"
         },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -5349,22 +5589,6 @@
           "default": false,
           "title": "Multiline",
           "type": "boolean"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Parser"
         }
       },
       "required": [
@@ -5542,6 +5766,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "repeat",
@@ -5980,6 +6220,22 @@
           ],
           "default": null,
           "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
         },
         "kind": {
           "const": "repeat_until",

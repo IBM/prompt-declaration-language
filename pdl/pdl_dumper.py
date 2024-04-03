@@ -99,7 +99,6 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["read"] = block.read
             d["message"] = block.message
             d["multiline"] = block.multiline
-            d["parser"] = block.parser
         case IncludeBlock():
             d["include"] = block.include
         case ParseBlock():
@@ -107,8 +106,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             if block.from_ is not None:
                 d["from"] = blocks_to_dict(block.from_)
             d["with"] = block.with_
-            if block.parser != "pdl":
-                d["parser"] = block.parser
+            if block.mode != "pdl":
+                d["mode"] = block.mode
         case IfBlock():
             d["condition"] = block.condition
             d["then"] = blocks_to_dict(block.then)

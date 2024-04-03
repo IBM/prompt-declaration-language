@@ -1,7 +1,8 @@
 description: Parse using regex
 parse:
   name: str
-parser: regex
+mode: regex
+spec: {"name": str}
 from:
   model: ibm/granite-20b-code-instruct-v1
   input: "Hello,"

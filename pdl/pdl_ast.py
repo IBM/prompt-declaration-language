@@ -47,11 +47,12 @@ class Block(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
-    spec: Any = None  # TODO
+    spec: Any = None
     defs: dict[str, "BlocksType"] = {}
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
+    parser: Optional[Literal["json", "yaml"]] = None
 
 
 class FunctionBlock(Block):
@@ -158,7 +159,6 @@ class ReadBlock(Block):
     read: str | None
     message: Optional[str] = None
     multiline: bool = False
-    parser: Optional[Literal["json", "yaml"]] = None
 
 
 class IncludeBlock(Block):
@@ -174,7 +174,7 @@ class ParseBlock(Block):
     parse: dict[str, Any]
     from_: Optional["BlocksType"] = Field(default=None, alias="from")
     with_: "BlocksType" = Field(..., alias="with")
-    parser: Literal["pdl", "regex"] = "pdl"
+    mode: Literal["pdl", "regex"] = "pdl"
 
 
 class ErrorBlock(Block):
