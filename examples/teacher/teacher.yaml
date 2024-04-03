@@ -176,9 +176,7 @@ defs:
         list: {obj: {icl_question: str, icl_answer: str, question: str}}
     spec:
       list:
-        obj:
-          keep: float
-          question: {obj: {icl_question: str, icl_answer: str, question: str}}
+        obj: {icl_question: str, icl_answer: str, question: str}
     return:
     - defs:
         list_of_pairs:

@@ -3,7 +3,7 @@ from typing import Any
 from jsonschema import ValidationError, validate
 
 from .pdl_schema_error_analyzer import analyze_errors
-from .pdl_schema_utils import get_json_schema
+from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
 
 
 def type_check_args(args: dict[str, Any], params: dict[str, Any]) -> list[str]:
@@ -22,8 +22,19 @@ def type_check_args(args: dict[str, Any], params: dict[str, Any]) -> list[str]:
     schema = get_json_schema(params_copy)
     if schema is None:
         return ["Error obtaining a valid schema from function parameters definition"]
+    return type_check(args_copy, schema)
+
+
+def type_check_spec(result: Any, spec: str | dict[str, Any] | list) -> list[str]:
+    schema = pdltype_to_jsonschema(spec)
+    if schema is None:
+        return ["Error obtaining a valid schema from spec"]
+    return type_check(result, schema)
+
+
+def type_check(result: Any, schema: dict[str, Any]) -> list[str]:
     try:
-        validate(instance=args_copy, schema=schema)
+        validate(instance=result, schema=schema)
     except ValidationError:
-        return analyze_errors({}, schema, args_copy)
+        return analyze_errors({}, schema, result)
     return []

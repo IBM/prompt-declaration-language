@@ -467,3 +467,123 @@ def test_function_call14():
     data = Program.model_validate(function_call14)
     _, _, _, trace = process_block(log, empty_scope, data.root)
     assert contains_error(trace)
+
+
+function_call15 = {
+    "description": "Call hello",
+    "document": [
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {"name": "float", "address": "str"},
+            "spec": "str",
+            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+        },
+        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+    ],
+}
+
+
+def test_function_call15():
+    log = []
+    data = Program.model_validate(function_call15)
+    _, document, _, trace = process_block(log, empty_scope, data.root)
+    assert not contains_error(trace)
+    assert document == "Hello 6.6 street!"
+
+
+function_call16 = {
+    "description": "Call hello",
+    "document": [
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {"name": "float", "address": "str"},
+            "spec": "int",
+            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+        },
+        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+    ],
+}
+
+
+def test_function_call16():
+    log = []
+    data = Program.model_validate(function_call16)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
+    assert contains_error(trace)
+
+
+function_call17 = {
+    "description": "Call hello",
+    "document": [
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {"name": "float", "address": "str"},
+            "spec": {"list": "int"},
+            "return": {"data": [1, 2, 3]},
+        },
+        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+    ],
+}
+
+
+def test_function_call17():
+    log = []
+    data = Program.model_validate(function_call17)
+    _, document, _, trace = process_block(log, empty_scope, data.root)
+    assert not contains_error(trace)
+    assert document == "[1, 2, 3]"
+
+
+function_call18 = {
+    "description": "Call hello",
+    "document": [
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {"name": "float", "address": "str"},
+            "spec": {"list": "int"},
+            "return": {"data": [1, 2, "foo"]},
+        },
+        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+    ],
+}
+
+
+def test_function_call18():
+    log = []
+    data = Program.model_validate(function_call18)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
+    assert contains_error(trace)
+
+
+hello = {
+    "description": "Hello world!",
+    "spec": "str",
+    "document": ["Hello, world!"],
+}
+
+
+def test_hello():
+    log = []
+    data = Program.model_validate(hello)
+    _, document, _, trace = process_block(log, empty_scope, data.root)
+    assert not contains_error(trace)
+    assert document == "Hello, world!"
+
+
+hello1 = {
+    "description": "Hello world!",
+    "spec": {"obj": {"a": "str", "b": "str"}},
+    "data": {"a": "Hello", "b": "World"},
+}
+
+
+def test_hello1():
+    log = []
+    data = Program.model_validate(hello1)
+    _, document, _, trace = process_block(log, empty_scope, data.root)
+    assert not contains_error(trace)
+    assert document == '{"a": "Hello", "b": "World"}'

@@ -11,10 +11,12 @@ document:
   function:
     sentence: str
     language: str
+  spec: int
   return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/falcon-40b-8lang-instruct
 - call: translate
+  spec: str
   args:
     sentence: Hello,{{ GEN }}
     language: French

@@ -4,6 +4,7 @@ defs:
 document:
 - Hello,
 - model: "{{ model }}"
+  spec: int
   parameters:
     decoding_method: greedy
     stop_sequences:

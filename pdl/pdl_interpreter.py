@@ -44,7 +44,7 @@ from .pdl_ast import (
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_schema_error_analyzer import analyze_errors
-from .pdl_schema_validator import type_check_args
+from .pdl_schema_validator import type_check_args, type_check_spec
 
 DEBUG = False
 
@@ -215,6 +215,15 @@ def step_block(
         scope = scope | {var: result}
         debug("Storing model result for " + var + ": " + str(trace.result))
     trace = trace.model_copy(update={"defs": defs_trace, "result": output})
+    if block.spec is not None and not isinstance(block, FunctionBlock):
+        errors = type_check_spec(result, block.spec)
+        if len(errors) > 0:
+            msg = "Type errors during spec checking"
+            for err in errors:
+                msg += "\n" + err
+            error(msg)
+            trace = ErrorBlock(msg=msg, program=trace)
+            return result, output, scope, trace
     if block.show_result is False:
         output = ""
     scope = scope | {"context": output}
@@ -408,6 +417,14 @@ def step_block_body(
                         log, f_scope, yield_output, f_body
                     )
                     trace = block.model_copy(update={"trace": f_trace})
+                    if closure.spec is not None:
+                        errors = type_check_spec(result, closure.spec)
+                        if len(errors) > 0:
+                            msg = "Type errors in result of function call to " + f
+                            for e in errors:
+                                msg += "\n" + e
+                            error(msg)
+                            trace = ErrorBlock(msg=msg, program=trace)
         case EmptyBlock():
             result = ""
             output = ""
