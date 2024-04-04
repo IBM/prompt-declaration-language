@@ -35,6 +35,9 @@ def type_check_spec(result: Any, spec: str | dict[str, Any] | list) -> list[str]
 def type_check(result: Any, schema: dict[str, Any]) -> list[str]:
     try:
         validate(instance=result, schema=schema)
-    except ValidationError:
-        return analyze_errors({}, schema, result)
+    except ValidationError as e:
+        errors = analyze_errors({}, schema, result)
+        if len(errors) == 0:
+            errors = [e.message]
+        return errors
     return []

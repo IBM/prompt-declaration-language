@@ -1,19 +1,22 @@
 description: Hello world to call into a model
-defs:
-  model: ibm/granite-20b-code-instruct-v1
 document:
-- model: "{{ model }}"
+- read: examples/hello/data_hello21.json
+  parser: json
+  def: data
+  show_result: false
+  spec: { "questions": ["str"], "answers": ["obj"] }
+- model: ibm/granite-20b-code-instruct-v1
   def: model_output
   spec: {"bob": int, "carol": str}
   input: 
-  - |
-    Question: Write a JSON object with 2 fields "a" and "b" of type int and set to 0.
-    {"a": 0, "b": 0}
-
-    Question: Write a JSON object with 3 fields "x" and "y" and "z" set to "1", "2", "3" respectively.
-    {"x": 1, "y": 2, "z": 3}
-
-    Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.
+    - for: 
+        question: "{{ data.questions }}"
+        answer: "{{ data.answers }}"
+      repeat:
+        - |
+          {{ question }}
+          {{ answer }}
+    - "Question: Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively."
   parser: json
   parameters:
     decoding_method: greedy

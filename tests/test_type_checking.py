@@ -587,3 +587,17 @@ def test_hello1():
     _, document, _, trace = process_block(log, empty_scope, data.root)
     assert not contains_error(trace)
     assert document == '{"a": "Hello", "b": "World"}'
+
+
+hello2 = {
+    "description": "Hello world!",
+    "spec": {"list": {"minItems": 0, "maxItems": 0, "str": {}}},
+    "data": ["Hello", "World"],
+}
+
+
+def test_hello2():
+    log = []
+    data = Program.model_validate(hello2)
+    _, _, _, trace = process_block(log, empty_scope, data.root)
+    assert contains_error(trace)

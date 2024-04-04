@@ -16,6 +16,7 @@ defs:
       num_samples: int
       task_description: str
       icl_question: str
+    spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
     return:
       data:
         introduction: |
@@ -46,11 +47,12 @@ defs:
       task_description: str
       icl_question: str
       icl_answer: str
-    spec: {list: {obj: {icl_question: str, icl_answer: str, question: str}}}
+    spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
     - defs:
         prompt_data:
           call: question_template_freeform
+          spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
           args:
             num_samples: "{{num_samples}}"
             task_description: "{{task_description}}"
@@ -65,8 +67,7 @@ defs:
               {{prompt_data.examples}}
               {{prompt_data.generation}}
         teacher_output:
-          # TODO: model: "{{teacher_model}}"
-          model: mistralai/mixtral-8x7b-instruct-v0-1
+          model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
@@ -74,6 +75,7 @@ defs:
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
         generated_questions:
+          spec: {list: {"minItems": 2, "maxItems": 2, str: {}}}  # TODO: {list: {minItems: {{ num_samples }}, maxItems: {{ num_samples }}, str: {}}}
           lan: python
           code: | # parse model output
             import re
@@ -90,8 +92,8 @@ defs:
   gen_questions_freeform:
     function:
       task_description: str
-      seed_examples: {list: {obj: {question: str, answer: str}}}
-    spec: {list: {obj: {icl_question: str, icl_answer: str, question: str}}}
+      seed_examples: [{question: str, answer: str}]
+    spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
     - defs:
         list_of_lists:
@@ -114,6 +116,7 @@ defs:
     function:
       task_description: str
       question: str
+    spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
     return:
       data:
         introduction: |
@@ -142,6 +145,7 @@ defs:
     - defs:
         prompt_data:
           call: filter_questions_template
+          spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             task_description: "{{task_description}}"
             question: "{{question}}"
@@ -154,8 +158,7 @@ defs:
               {{prompt_data.principles}}
               {{prompt_data.generation}}
         teacher_output:
-          # TODO: model: "{{teacher_model}}"
-          model: mistralai/mixtral-8x7b-instruct-v0-1
+          model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
@@ -172,11 +175,8 @@ defs:
   filter_questions:
     function:
       task_description: str
-      questions:
-        list: {obj: {icl_question: str, icl_answer: str, question: str}}
-    spec:
-      list:
-        obj: {icl_question: str, icl_answer: str, question: str}
+      questions: [{icl_question: str, icl_answer: str, question: str}]
+    spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
     - defs:
         list_of_pairs:
@@ -204,6 +204,7 @@ defs:
       icl_question: str
       icl_response: str
       question: str
+    spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
     return:
       data:
         introduction: Your task is to faithfully follow the user's prompt and generate a response. 
@@ -225,18 +226,19 @@ defs:
           {{question}}
           [Response]
         max_new_tokens: 2048
-        additional_stop_tokens: |
-          - [Question]
+        additional_stop_tokens:
+          - "[Question]"
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_answers.py
   gen_answers_inner:
     function:
-      question: {obj: {icl_question: str, icl_answer: str, question: str}}
-    spec: {obj: {question: str, answer: str}}
+      question: {icl_question: str, icl_answer: str, question: str}
+    spec: {question: str, answer: str}
     return:
     - defs:
         prompt_data:
           call: answer_template
+          spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
           args:
             icl_question: "{{question.icl_question}}"
             icl_response: "{{question.icl_answer}}"
@@ -251,13 +253,12 @@ defs:
               {{prompt_data.examples}}
               {{prompt_data.generation}}
         teacher_output:
-          # TODO: model: "{{teacher_model}}"
-          model: mistralai/mixtral-8x7b-instruct-v0-1
+          model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
             stop_sequences:
             - "{{teacher_stop_token}}"
-            - "{{prompt_data.additional_stop_tokens}}"
+            - "{{prompt_data.additional_stop_tokens}}" # TODO: this is list -- we need "addAll"
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
@@ -275,12 +276,12 @@ defs:
 
   gen_answers:
     function:
-      questions:
-        list: {obj: {icl_question: str, icl_answer: str, question: str}}
-    spec: {list: {obj: {question: str, answer: str}}}
+      questions: [{icl_question: str, icl_answer: str, question: str}]
+    spec: [{question: str, answer: str}]
     return:
     - defs:
         all_results:
+          spec: [{question: str, answer: str}]
           for:
             question: "{{ questions }}"
           repeat:
@@ -288,6 +289,7 @@ defs:
             args:
               question: "{{question}}"
     - lan: python
+      spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
           result = [r for r in {{all_results}} if len(r["answer"]) > 0]
 
@@ -297,6 +299,7 @@ defs:
     function:
       question: str
       answer: str
+    spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
     return:
       data:
         introduction: |
@@ -327,6 +330,7 @@ defs:
     - defs:
         prompt_data:
           call: filter_qa_template
+          spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             question: "{{question}}"
             answer: "{{answer}}"
@@ -339,8 +343,7 @@ defs:
               {{prompt_data.principles}}
               {{prompt_data.generation}}
         teacher_output:
-          # TODO: model: "{{teacher_model}}"
-          model: mistralai/mixtral-8x7b-instruct-v0-1
+          model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
@@ -348,6 +351,7 @@ defs:
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 256
     - lan: python
+      spec: float
       code: | # parse model output
         import re
         raw = """ {{teacher_output}} """
@@ -356,8 +360,8 @@ defs:
 
   filter_question_answer_pair:
     function:
-      qa_pairs: {list: {obj: {question: str, answer: str}}}
-    spec: {list: {obj: {question: str, answer: str}}}
+      qa_pairs: [{question: str, answer: str}]
+    spec: [{question: str, answer: str}]
     return:
     - defs:
         ratings:
@@ -366,6 +370,7 @@ defs:
           repeat:
           - def: filter_output
             call: filter_question_answer_pair_inner
+            spec: float
             args:
               question: "{{qa_pair.question}}"
               answer: "{{qa_pair.answer}}"
@@ -374,6 +379,7 @@ defs:
               rating: "{{filter_output}}"
         filtered:
           lan: python
+          spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in {{ratings}} if p["rating"] >= 2]
     - "{{filtered}}"
@@ -392,6 +398,7 @@ document:
   --------------------
 - def: generated_questions
   call: gen_questions_freeform
+  spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: "{{seed_examples.task_description}}"
     seed_examples: "{{seed_examples.seed_examples}}"
@@ -401,6 +408,7 @@ document:
   -------------------
 - def: filtered_questions
   call: filter_questions
+  spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: "{{seed_examples.task_description}}"
     questions: "{{generated_questions}}"
@@ -411,7 +419,7 @@ document:
 - def: qa_pairs
   call: gen_answers
   args:
-    questions: "{{generated_questions}}"
+    questions: "{{filtered_questions}}" # TODO - verify
 - |
 
   Filtering QA pairs
