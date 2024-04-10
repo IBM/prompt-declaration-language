@@ -2,7 +2,7 @@ import json
 
 from pydantic import ValidationError
 
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl.pdl_ast import Program, empty_block_location  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import analyze_errors, process_block  # pyright: ignore
 
@@ -16,7 +16,9 @@ def error(raw_data, assertion):
         with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)
             defs = schema["$defs"]
-            errors = analyze_errors(defs, schema["$defs"]["PdlBlock"], raw_data)
+            errors = analyze_errors(
+                defs, schema["$defs"]["PdlBlock"], raw_data, empty_block_location
+            )
             assert set(errors) == set(assertion)
 
 
@@ -30,9 +32,9 @@ def test_error1():
     error(
         error1,
         [
-            "Error: Missing required field: return",
-            "Error: Missing required field: function",
-            "Error: Field not allowed: documents",
+            ":0 - Missing required field: return",
+            ":0 - Missing required field: function",
+            ":0 - Field not allowed: documents",
         ],
     )
 
@@ -58,7 +60,7 @@ def test_error2():
     error(
         error2,
         [
-            "Error: Field not allowed: parameterss",
+            ":0 - Field not allowed: parameterss",
         ],
     )
 
@@ -84,7 +86,7 @@ def test_error3():
     error(
         error3,
         [
-            "Error: Field not allowed: decoding_methods",
+            ":0 - Field not allowed: decoding_methods",
         ],
     )
 
@@ -110,8 +112,8 @@ def test_error4():
     error(
         error4,
         [
-            "Error: Field not allowed: decoding_methods",
-            "Error: Field not allowed: stop_sequencess",
+            ":0 - Field not allowed: decoding_methods",
+            ":0 - Field not allowed: stop_sequencess",
         ],
     )
 
@@ -133,8 +135,8 @@ def test_error5():
     error(
         error5,
         [
-            "Error: Missing required field: lan",
-            "Error: Field not allowed: lans",
+            ":0 - Missing required field: lan",
+            ":0 - Field not allowed: lans",
         ],
     )
 

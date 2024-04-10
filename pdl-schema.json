@@ -186,6 +186,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "api",
           "default": "api",
@@ -326,6 +337,36 @@
         "input"
       ],
       "title": "ApiBlock",
+      "type": "object"
+    },
+    "BlockLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "table": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Table",
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "file",
+        "table"
+      ],
+      "title": "BlockLocation",
       "type": "object"
     },
     "CallBlock": {
@@ -513,6 +554,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "call",
@@ -845,6 +897,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "code",
           "default": "code",
@@ -1168,6 +1231,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -1376,6 +1450,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "document",
@@ -1695,6 +1780,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -1889,6 +1985,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "error",
@@ -2212,6 +2319,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "for",
@@ -2667,6 +2785,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "function",
           "default": "function",
@@ -3009,6 +3138,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -3210,6 +3350,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "if",
@@ -3669,6 +3820,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "include",
           "default": "include",
@@ -3966,6 +4128,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "model",
@@ -4838,6 +5011,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "parse",
           "default": "parse",
@@ -5557,6 +5741,17 @@
           "default": null,
           "title": "Parser"
         },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -5782,6 +5977,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "repeat",
@@ -6236,6 +6442,17 @@
           ],
           "default": null,
           "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BlockLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "kind": {
           "const": "repeat_until",

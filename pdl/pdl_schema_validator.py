@@ -2,11 +2,12 @@ from typing import Any
 
 from jsonschema import ValidationError, validate
 
+from .pdl_location_utils import get_loc_string
 from .pdl_schema_error_analyzer import analyze_errors
 from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
 
 
-def type_check_args(args: dict[str, Any], params: dict[str, Any]) -> list[str]:
+def type_check_args(args: dict[str, Any], params: dict[str, Any], loc) -> list[str]:
     if (args == {} or args is None) and (params is None or params == {}):
         return []
     args_copy = args.copy()
@@ -22,22 +23,22 @@ def type_check_args(args: dict[str, Any], params: dict[str, Any]) -> list[str]:
     schema = get_json_schema(params_copy)
     if schema is None:
         return ["Error obtaining a valid schema from function parameters definition"]
-    return type_check(args_copy, schema)
+    return type_check(args_copy, schema, loc)
 
 
-def type_check_spec(result: Any, spec: str | dict[str, Any] | list) -> list[str]:
+def type_check_spec(result: Any, spec: str | dict[str, Any] | list, loc) -> list[str]:
     schema = pdltype_to_jsonschema(spec)
     if schema is None:
         return ["Error obtaining a valid schema from spec"]
-    return type_check(result, schema)
+    return type_check(result, schema, loc)
 
 
-def type_check(result: Any, schema: dict[str, Any]) -> list[str]:
+def type_check(result: Any, schema: dict[str, Any], loc) -> list[str]:
     try:
         validate(instance=result, schema=schema)
     except ValidationError as e:
-        errors = analyze_errors({}, schema, result)
+        errors = analyze_errors({}, schema, result, loc)
         if len(errors) == 0:
-            errors = [e.message]
+            errors = [get_loc_string(loc) + e.message]
         return errors
     return []

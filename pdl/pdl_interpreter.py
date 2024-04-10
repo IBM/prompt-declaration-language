@@ -18,6 +18,7 @@ from pydantic import ValidationError
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
+    BlockLocation,
     BlocksType,
     BlockType,
     CallBlock,
@@ -40,9 +41,11 @@ from .pdl_ast import (
     RepeatBlock,
     RepeatUntilBlock,
     ScopeType,
+    empty_block_location,
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
+from .pdl_location_utils import append, get_line_map, get_loc_string
 from .pdl_schema_error_analyzer import analyze_errors
 from .pdl_schema_validator import type_check_args, type_check_spec
 
@@ -99,51 +102,59 @@ def generate(
         initial_scope = yaml.safe_load(scope_data)
         scope = scope | initial_scope
 
-    with open(pdl, "r", encoding="utf-8") as infile:
-        with open(logging, "w", encoding="utf-8") as logfile:
-            log: list[str] = []
-            prog_yaml = yaml.safe_load(infile)
-            trace = None
-            try:
-                prog = Program.model_validate(prog_yaml)
-                trace = prog.root
-                doc_generator = GeneratorWrapper(
-                    step_block(log, scope, yield_output=True, block=prog.root)
-                )
-                incremental_document = ""
-                for output in doc_generator:
-                    print(output, end="")
-                    assert output is not None
-                    incremental_document += output
-                print()
-                _, document, scope, trace = doc_generator.value
-                assert document == incremental_document
-            except ValidationError:
-                print("Invalid yaml")
-                with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
-                    schema = json.load(schemafile)
-                    defs = schema["$defs"]
-                    errors = analyze_errors(defs, defs["Program"], prog_yaml)
-                    for item in errors:
-                        print(item)
-            finally:
-                for line in log:
-                    logfile.write(line)
-                if trace is not None:
-                    if mode == "json":
-                        if output_file is None:
-                            output_file = (
-                                str(Path(pdl).with_suffix("")) + "_result.json"
-                            )
-                        with open(output_file, "w", encoding="utf-8") as fp:
-                            json.dump(block_to_dict(trace), fp)
-                    if mode == "yaml":
-                        if output_file is None:
-                            output_file = (
-                                str(Path(pdl).with_suffix("")) + "_result.yaml"
-                            )
-                        with open(output_file, "w", encoding="utf-8") as fp:
-                            dump_yaml(block_to_dict(trace), stream=fp)
+    with open(pdl, "r", encoding="utf-8") as tablefile:
+        line_table = get_line_map(tablefile)
+        with open(pdl, "r", encoding="utf-8") as infile:
+            with open(logging, "w", encoding="utf-8") as logfile:
+                log: list[str] = []
+                prog_yaml = yaml.safe_load(infile)
+                trace = None
+                loc = BlockLocation(path=[], file=pdl, table=line_table)
+                try:
+                    prog = Program.model_validate(prog_yaml)
+                    trace = prog.root
+                    doc_generator = GeneratorWrapper(
+                        step_block(
+                            log, scope, yield_output=True, block=prog.root, loc=loc
+                        )
+                    )
+                    incremental_document = ""
+                    for output in doc_generator:
+                        print(output, end="")
+                        assert output is not None
+                        incremental_document += output
+                    print()
+                    _, document, scope, trace = doc_generator.value
+                    assert document == incremental_document
+                except ValidationError:
+                    msg = "Invalid YAML"
+                    print(msg)
+                    with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
+                        schema = json.load(schemafile)
+                        defs = schema["$defs"]
+                        errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
+                        # if len(errors) == 0:
+                        #    errors = [msg]
+                        for item in errors:
+                            print(item)
+                finally:
+                    for line in log:
+                        logfile.write(line)
+                    if trace is not None:
+                        if mode == "json":
+                            if output_file is None:
+                                output_file = (
+                                    str(Path(pdl).with_suffix("")) + "_result.json"
+                                )
+                            with open(output_file, "w", encoding="utf-8") as fp:
+                                json.dump(block_to_dict(trace), fp)
+                        if mode == "yaml":
+                            if output_file is None:
+                                output_file = (
+                                    str(Path(pdl).with_suffix("")) + "_result.yaml"
+                                )
+                            with open(output_file, "w", encoding="utf-8") as fp:
+                                dump_yaml(block_to_dict(trace), stream=fp)
 
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
@@ -179,13 +190,15 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
 
 
 def process_block(
-    log, scope: ScopeType, block: BlockType
+    log, scope: ScopeType, block: BlockType, loc=empty_block_location
 ) -> tuple[Any, str, ScopeType, BlockType]:
-    return step_to_completion(step_block(log, scope, yield_output=False, block=block))
+    return step_to_completion(
+        step_block(log, scope, yield_output=False, block=block, loc=loc)
+    )
 
 
 def step_block(
-    log, scope: ScopeType, yield_output: bool, block: BlockType
+    log, scope: ScopeType, yield_output: bool, block: BlockType, loc: BlockLocation
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
         try:
@@ -194,7 +207,7 @@ def step_block(
             trace = output
         except UndefinedError as e:
             msg = f"Error {e} in {block}"
-            error(msg)
+            error(msg, loc)
             result = block
             output = block
             trace = ErrorBlock(msg=msg, program=block)
@@ -203,12 +216,12 @@ def step_block(
         append_log(log, "Document", output)
         return result, output, scope, trace
     if len(block.defs) > 0:
-        scope, defs_trace = process_defs(log, scope, block.defs)
+        scope, defs_trace = process_defs(log, scope, block.defs, loc)
     else:
         defs_trace = block.defs
     yield_output &= block.show_result
     result, output, scope, trace = yield from step_block_body(
-        log, scope, yield_output, block
+        log, scope, yield_output, block, loc
     )
     trace = trace.model_copy(update={"defs": defs_trace, "result": output})
     if block.parser is not None and isinstance(result, str):
@@ -216,7 +229,7 @@ def step_block(
             result = yaml.safe_load(result)
         except Exception:
             msg = "Attempted to parse ill-formed JSON or YAML"
-            error(msg)
+            error(msg, loc)
             trace = ErrorBlock(msg=msg, program=trace)
             return result, output, scope, trace
     if block.assign is not None:
@@ -224,12 +237,12 @@ def step_block(
         scope = scope | {var: result}
         debug("Storing model result for " + var + ": " + str(trace.result))
     if block.spec is not None and not isinstance(block, FunctionBlock):
-        errors = type_check_spec(result, block.spec)
+        errors = type_check_spec(result, block.spec, block.location)
         if len(errors) > 0:
             msg = "Type errors during spec checking"
             for err in errors:
                 msg += "\n" + err
-            error(msg)
+            error(msg, block.location)
             trace = ErrorBlock(msg=msg, program=trace)
             return result, output, scope, trace
     if block.show_result is False:
@@ -239,26 +252,31 @@ def step_block(
 
 
 def step_block_body(
-    log, scope: ScopeType, yield_output: bool, block: AdvancedBlockType
+    log,
+    scope: ScopeType,
+    yield_output: bool,
+    block: AdvancedBlockType,
+    loc: BlockLocation,
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
     output: str
     trace: AdvancedBlockType
+    block.location = loc
     match block:
         case ModelBlock():
             result, output, scope, trace = yield from step_call_model(
-                log, scope, yield_output, block
+                log, scope, yield_output, block, loc
             )
         case CodeBlock():
-            result, output, scope, trace = call_code(log, scope, block)
+            result, output, scope, trace = call_code(log, scope, block, loc)
             if yield_output:
                 yield output
         case GetBlock(get=var):
             result = get_var(var, scope)
             if result is None:
                 msg = "Variable is undefined: " + var
-                error(msg)
+                error(msg, append(loc, "get"))
                 output = ""
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
@@ -267,18 +285,20 @@ def step_block_body(
             if yield_output:
                 yield output
         case DataBlock(data=v):
+            block.location = append(loc, "data")
             result = process_expr(scope, v)
+            print(result)
             output = stringify(result)
             if yield_output:
                 yield output
             trace = block.model_copy()
         case ApiBlock():
-            result, output, scope, trace = call_api(log, scope, block)
+            result, output, scope, trace = call_api(log, scope, block, loc)
             if yield_output:
                 yield output
         case DocumentBlock():
             _, output, scope, document = yield from step_blocks(
-                log, scope, yield_output, block.document
+                log, scope, yield_output, block.document, append(loc, "document")
             )
             result = output
             trace = block.model_copy(update={"document": document})
@@ -286,8 +306,9 @@ def step_block_body(
             b = process_condition(scope, block.condition)
             # scope = scope | {"context": scope_init["context"]}
             if b:
+                thenloc = append(loc, "then")
                 result, output, scope, then_trace = yield from step_blocks(
-                    log, scope, yield_output, block.then
+                    log, scope, yield_output, block.then, thenloc
                 )
                 trace = block.model_copy(
                     update={
@@ -296,8 +317,9 @@ def step_block_body(
                     }
                 )
             elif block.elses is not None:
+                elseloc = append(loc, "else")
                 result, output, scope, else_trace = yield from step_blocks(
-                    log, scope, yield_output, block.elses
+                    log, scope, yield_output, block.elses, elseloc
                 )
                 trace = block.model_copy(
                     update={
@@ -316,9 +338,10 @@ def step_block_body(
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             for _ in range(n):
+                repeatloc = append(loc, "repeat")
                 scope = scope | {"context": context_init + output}
                 result, iteration_output, scope, body_trace = yield from step_blocks(
-                    log, scope, yield_output, block.repeat
+                    log, scope, yield_output, block.repeat, repeatloc
                 )
                 output += iteration_output
                 iterations_trace.append(body_trace)
@@ -338,7 +361,7 @@ def step_block_body(
                 lengths.append(len(klist))
             if len(set(lengths)) != 1:  # Not all the lists are of the same length
                 msg = "Lists inside the For block must be of the same length"
-                error(msg)
+                error(msg, loc)
                 output = ""
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
@@ -346,12 +369,15 @@ def step_block_body(
                     scope = scope | {"context": context_init + output}
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
+                    newloc = append(loc, "repeat")
                     (
                         iteration_result,
                         iteration_output,
                         scope,
                         body_trace,
-                    ) = yield from step_blocks(log, scope, yield_output, block.repeat)
+                    ) = yield from step_blocks(
+                        log, scope, yield_output, block.repeat, newloc
+                    )
                     output += iteration_output
                     result.append(iteration_result)
                     iter_trace.append(body_trace)
@@ -367,8 +393,9 @@ def step_block_body(
             context_init = scope_init["context"]
             while not stop:
                 scope = scope | {"context": context_init + output}
+                repeatloc = append(loc, "repeat")
                 result, iteration_output, scope, body_trace = yield from step_blocks(
-                    log, scope, yield_output, block.repeat
+                    log, scope, yield_output, block.repeat, repeatloc
                 )
                 output += iteration_output
                 iterations_trace.append(body_trace)
@@ -377,17 +404,17 @@ def step_block_body(
                 stop = process_condition(scope, cond)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
-            result, output, scope, trace = process_input(log, scope, block)
+            result, output, scope, trace = process_input(log, scope, block, loc)
             if yield_output:
                 yield output
 
         case IncludeBlock():
             result, output, scope, trace = yield from step_include(
-                log, scope, yield_output, block
+                log, scope, yield_output, block, loc
             )
 
         case ParseBlock():
-            result, output, scope, trace = process_parse(log, scope, block)
+            result, output, scope, trace = process_parse(log, scope, block, loc)
             if yield_output:
                 yield output
 
@@ -404,34 +431,40 @@ def step_block_body(
             closure = get_var(f, scope)
             if closure is None:
                 msg = "Function is undefined: " + f
-                error(msg)
+                error(msg, append(loc, "call"))
                 output = ""
                 result = None
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                type_errors = type_check_args(args, closure.function)
+                argsloc = append(loc, "args")
+                type_errors = type_check_args(args, closure.function, argsloc)
                 if len(type_errors) > 0:
                     msg = "Type errors during function call to " + f
                     for e in type_errors:
                         msg += "\n" + e
-                    error(msg)
+                    error(msg, argsloc)
                     output = ""
                     result = None
                     trace = ErrorBlock(msg=msg, program=block.model_copy())
                 else:
                     f_body = closure.returns
                     f_scope = closure.scope | {"context": scope["context"]} | args
+                    funloc = BlockLocation(
+                        file=closure.location.file,
+                        path=closure.location.path + ["return"],
+                        table=loc.table,
+                    )
                     result, output, _, f_trace = yield from step_blocks(
-                        log, f_scope, yield_output, f_body
+                        log, f_scope, yield_output, f_body, funloc
                     )
                     trace = block.model_copy(update={"trace": f_trace})
                     if closure.spec is not None:
-                        errors = type_check_spec(result, closure.spec)
+                        errors = type_check_spec(result, closure.spec, funloc)
                         if len(errors) > 0:
                             msg = "Type errors in result of function call to " + f
                             for e in errors:
                                 msg += "\n" + e
-                            error(msg)
+                            error(msg, loc)
                             trace = ErrorBlock(msg=msg, program=trace)
         case EmptyBlock():
             result = ""
@@ -448,26 +481,28 @@ def stringify(result):
 
 
 def process_defs(
-    log, scope: ScopeType, defs: dict[str, BlocksType]
+    log, scope: ScopeType, defs: dict[str, BlocksType], loc: BlockLocation
 ) -> tuple[ScopeType, dict[str, BlocksType]]:
     defs_trace: dict[str, BlocksType] = {}
+    defloc = append(loc, "defs")
     for x, blocks in defs.items():
-        result, _, _, blocks_trace = process_blocks(log, scope, blocks)
+        newloc = append(defloc, x)
+        result, _, _, blocks_trace = process_blocks(log, scope, blocks, newloc)
         scope = scope | {x: result}
         defs_trace[x] = blocks_trace
     return scope, defs_trace
 
 
 def process_blocks(
-    log, scope: ScopeType, blocks: BlocksType
+    log, scope: ScopeType, blocks: BlocksType, loc: BlockLocation
 ) -> tuple[Any, str, ScopeType, BlocksType]:
     return step_to_completion(
-        step_blocks(log, scope, yield_output=False, blocks=blocks)
+        step_blocks(log, scope, yield_output=False, blocks=blocks, loc=loc)
     )
 
 
 def step_blocks(
-    log, scope: ScopeType, yield_output: bool, blocks: BlocksType
+    log, scope: ScopeType, yield_output: bool, blocks: BlocksType, loc: BlockLocation
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlocksType]]:
     result: Any
     output: str
@@ -477,14 +512,17 @@ def step_blocks(
         output = ""
         trace = []
         context_init = scope["context"]
-        for block in blocks:
+        for i, block in enumerate(blocks):
             scope = scope | {"context": context_init + output}
-            result, o, scope, t = yield from step_block(log, scope, yield_output, block)
+            newloc = append(loc, "[" + str(i) + "]")
+            result, o, scope, t = yield from step_block(
+                log, scope, yield_output, block, newloc
+            )
             output += o
             trace.append(t)  # type: ignore
     else:
         result, output, scope, trace = yield from step_block(
-            log, scope, yield_output, blocks
+            log, scope, yield_output, blocks, loc
         )
     return result, output, scope, trace
 
@@ -527,10 +565,12 @@ def _get_bam_client() -> Optional[Client]:
 
 
 def step_call_model(
-    log, scope: ScopeType, yield_output: bool, block: ModelBlock
+    log, scope: ScopeType, yield_output: bool, block: ModelBlock, loc: BlockLocation
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
-        _, model_input, _, input_trace = process_blocks(log, scope, block.input)
+        _, model_input, _, input_trace = process_blocks(
+            log, scope, block.input, append(loc, "input")
+        )
     else:
         model_input = scope["context"]
         input_trace = None
@@ -542,13 +582,14 @@ def step_call_model(
         client = _get_bam_client()
         if client is None:
             msg = "Fail to get a BAM client"
-            error(msg)
+            error(msg, append(loc, "model"))
             trace = ErrorBlock(
                 msg=msg, program=block.model_copy(update={"input": input_trace})
             )
             return None, "", scope, trace
         params = block.parameters
         params = set_default_model_params(params)
+        append_log(log, "Model Params", params)
         gen = yield from generate_client_response(
             log, client, block, model, model_input, params, yield_output
         )
@@ -558,7 +599,7 @@ def step_call_model(
         return gen, gen, scope, trace
     except Exception as e:
         msg = f"Model error: {e}"
-        error(msg)
+        error(msg, loc)
         trace = ErrorBlock(
             msg=msg, program=block.model_copy(update={"input": input_trace})
         )
@@ -623,9 +664,11 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 
 def call_api(
-    log, scope: ScopeType, block: ApiBlock
+    log, scope: ScopeType, block: ApiBlock, loc: BlockLocation
 ) -> tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]:
-    _, input_str, _, input_trace = process_blocks(log, scope, block.input)
+    _, input_str, _, input_trace = process_blocks(
+        log, scope, block.input, append(loc, "input")
+    )
     input_str = block.url + input_str
     try:
         append_log(log, "API Input", input_str)
@@ -637,7 +680,7 @@ def call_api(
         trace = block.model_copy(update={"input": input_trace})
     except Exception as e:
         msg = f"API error: {e}"
-        error(msg)
+        error(msg, loc)
         result = None
         output = ""
         trace = ErrorBlock(
@@ -647,9 +690,11 @@ def call_api(
 
 
 def call_code(
-    log, scope: ScopeType, block: CodeBlock
+    log, scope: ScopeType, block: CodeBlock, loc: BlockLocation
 ) -> tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]:
-    _, code_s, _, code_trace = process_blocks(log, scope, block.code)
+    _, code_s, _, code_trace = process_blocks(
+        log, scope, block.code, append(loc, "code")
+    )
     append_log(log, "Code Input", code_s)
     debug("code string: " + code_s)
     match block.lan:
@@ -658,7 +703,7 @@ def call_code(
             output = str(result)
         case _:
             msg = f"Unsupported language: {block.lan}"
-            error(msg)
+            error(msg, append(loc, "lan"))
             result = None
             output = ""
             trace = ErrorBlock(msg=msg, program=block.model_copy())
@@ -679,7 +724,7 @@ def call_python(code: str) -> Any:
 
 
 def process_input(
-    log, scope: ScopeType, block: ReadBlock
+    log, scope: ScopeType, block: ReadBlock, loc: BlockLocation
 ) -> tuple[Any, str, ScopeType, ReadBlock | ErrorBlock]:
     if block.read is not None:
         with open(block.read, encoding="utf-8") as f:
@@ -713,7 +758,7 @@ def process_input(
             result = yaml.safe_load(s)
         except Exception:
             msg = "Attempted to parse ill-formed JSON or YAML"
-            error(msg)
+            error(msg, loc)
             trace = ErrorBlock(msg=msg, program=block.model_copy())
             return None, "", scope, trace
     else:
@@ -724,36 +769,43 @@ def process_input(
 
 
 def step_include(
-    log, scope: ScopeType, yield_output: bool, block: IncludeBlock
+    log, scope: ScopeType, yield_output: bool, block: IncludeBlock, loc: BlockLocation
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
-    with open(block.include, "r", encoding="utf-8") as infile:
-        prog_yaml = yaml.safe_load(infile)
-        trace = None
-        try:
-            prog = Program.model_validate(prog_yaml)
-            result, output, scope, trace = yield from step_block(
-                log, scope, yield_output, prog.root
-            )
-            include_trace = block.model_copy(update={"trace": trace})
-            return result, output, scope, include_trace
-        except ValidationError:
-            msg = "Attempting to include invalid yaml: " + block.include
-            error(msg)
-            trace = ErrorBlock(msg=msg, program=block.model_copy())
-            with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
-                schema = json.load(schemafile)
-                defs = schema["$defs"]
-                errors = analyze_errors(defs, defs["Program"], prog_yaml)
-                for item in errors:
-                    print(item)
-            return None, "", scope, trace
+    with open(block.include, "r", encoding="utf-8") as tablefile:
+        linetable = get_line_map(tablefile)
+        with open(block.include, "r", encoding="utf-8") as infile:
+            prog_yaml = yaml.safe_load(infile)
+            trace = None
+            newloc = BlockLocation(file=block.include, path=[], table=linetable)
+            try:
+                prog = Program.model_validate(prog_yaml)
+                result, output, scope, trace = yield from step_block(
+                    log, scope, yield_output, prog.root, newloc
+                )
+                include_trace = block.model_copy(update={"trace": trace})
+                return result, output, scope, include_trace
+            except ValidationError:
+                msg = "Attempting to include invalid yaml: " + block.include
+                with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
+                    schema = json.load(schemafile)
+                    defs = schema["$defs"]
+                    errors = analyze_errors(defs, defs["Program"], prog_yaml, newloc)
+                    if len(errors) == 0:
+                        errors = ["Invalid yaml in included file"]
+                    for err in errors:
+                        msg += "\n" + err
+                    error(msg, loc)
+                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+                    return None, "", scope, trace
 
 
 def process_parse(
-    log, scope: ScopeType, block: ParseBlock
+    log, scope: ScopeType, block: ParseBlock, loc: BlockLocation
 ) -> tuple[Any, str, ScopeType, ParseBlock | ErrorBlock]:
     if block.from_ is not None:
-        _, from_, _, from_trace = process_blocks(log, scope, block.from_)
+        _, from_, _, from_trace = process_blocks(
+            log, scope, block.from_, append(loc, "from")
+        )
     else:
         from_ = scope["context"]
         from_trace = None
@@ -767,7 +819,7 @@ def process_parse(
     m = re.fullmatch(regex, from_)
     if m is None:
         msg = f"No match found for {regex} in {from_}"
-        error(msg)
+        error(msg, append(loc, "from"))
         trace = ErrorBlock(msg=msg, program=parse_trace)
         return None, "", scope, trace
     current_group_name = ""
@@ -781,7 +833,7 @@ def process_parse(
         return result, output, scope, trace
     except IndexError:
         msg = f"No group named {current_group_name} found by {regex} in {from_}"
-        error(msg)
+        error(msg, append(loc, "from"))
         trace = ErrorBlock(msg=msg, program=parse_trace)
         return None, "", scope, trace
 
@@ -810,8 +862,11 @@ def debug(somestring):
         print("******")
 
 
-def error(somestring):
-    print("\nError: " + somestring)
+def error(somestring, loc: BlockLocation | None):
+    if loc is not None:
+        print("\n" + get_loc_string(loc) + "Error: " + somestring + "\n")
+    else:
+        print("\n" + "Error: " + somestring + "\n")
 
 
 def contains_error(blocks: BlocksType) -> bool:

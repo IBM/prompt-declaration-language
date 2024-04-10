@@ -1,3 +1,5 @@
+from .pdl_ast import BlockLocation
+from .pdl_location_utils import append, get_loc_string
 from .pdl_schema_utils import convert_to_json_type, json_types_convert
 
 
@@ -51,7 +53,7 @@ def match(ref_type, data):
     return len(intersection)
 
 
-def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
+def analyze_errors(defs, schema, data, loc: BlockLocation) -> list[str]:  # noqa: C901
     ret = []
     if schema == {}:
         return []  # anything matches type Any
@@ -61,34 +63,43 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
             the_type = json_types_convert[schema["type"]]
             if not isinstance(data, the_type):  # pyright: ignore
                 ret.append(
-                    "Error: " + str(data) + " should be of type " + str(the_type)
+                    get_loc_string(loc)
+                    + str(data)
+                    + " should be of type "
+                    + str(the_type)
                 )
         if "enum" in schema:
             if data not in schema["enum"]:
                 ret.append(
-                    "Error: " + str(data) + " should be one of: " + str(schema["enum"])
+                    get_loc_string(loc)
+                    + str(data)
+                    + " should be one of: "
+                    + str(schema["enum"])
                 )
 
     elif "$ref" in schema:
         ref_string = schema["$ref"].split("/")[2]
         ref_type = defs[ref_string]
-        ret += analyze_errors(defs, ref_type, data)
+        ret += analyze_errors(defs, ref_type, data, loc)
 
     elif is_array(schema):
         if not isinstance(data, list):
-            ret.append("Error: " + str(data) + " should be a list")
+            ret.append(get_loc_string(loc) + str(data) + " should be a list")
         else:
-            for item in data:
-                ret += analyze_errors(defs, schema["items"], item)
+            for i, item in enumerate(data):
+                newloc = append(loc, "[" + str(i) + "]")
+                ret += analyze_errors(defs, schema["items"], item, newloc)
 
     elif is_object(schema):
         if not isinstance(data, dict):
-            ret.append("Error: " + str(data) + " should be an object")
+            ret.append(get_loc_string(loc) + str(data) + " should be an object")
         else:
             if "required" in schema.keys():
                 required_fields = schema["required"]
                 for missing in list(set(required_fields) - set(data.keys())):
-                    ret.append("Error: Missing required field: " + missing)
+                    ret.append(
+                        get_loc_string(loc) + "Missing required field: " + missing
+                    )
             if "properties" in schema.keys():
                 all_fields = schema["properties"].keys()
                 extras = list(set(data.keys()) - set(all_fields))
@@ -97,17 +108,19 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                     and schema["additionalProperties"] is False
                 ):
                     for field in extras:
-                        ret.append("Error: Field not allowed: " + field)
+                        nloc = append(loc, field)
+                        ret.append(get_loc_string(nloc) + "Field not allowed: " + field)
 
                 valid_fields = list(set(all_fields) & set(data.keys()))
                 for field in valid_fields:
+                    newloc = append(loc, field)
                     ret += analyze_errors(
-                        defs, schema["properties"][field], data[field]
+                        defs, schema["properties"][field], data[field], newloc
                     )
 
     elif is_any_of(schema):
         if len(schema["anyOf"]) == 2 and nullable(schema):
-            ret += analyze_errors(defs, get_non_null_type(schema), data)
+            ret += analyze_errors(defs, get_non_null_type(schema), data, loc)
 
         elif not isinstance(data, dict) and not isinstance(data, list):
             the_type = convert_to_json_type(type(data))
@@ -118,7 +131,12 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                 if "enum" in item and data in item["enum"]:
                     the_type_exists = True
             if not the_type_exists:
-                ret.append("Error: " + str(data) + " should be of type " + str(schema))
+                ret.append(
+                    get_loc_string(loc)
+                    + str(data)
+                    + " should be of type "
+                    + str(schema)
+                )
 
         elif isinstance(data, list):
             found = None
@@ -126,9 +144,9 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                 if is_array(item):
                     found = item
             if found is not None:
-                ret += analyze_errors(defs, found, data)
+                ret += analyze_errors(defs, found, data, loc)
             else:
-                ret.append("Error: " + str(data) + " should not be a list")
+                ret.append(get_loc_string(loc) + str(data) + " should not be a list")
 
         elif isinstance(data, dict):
             match_ref = {}
@@ -149,8 +167,13 @@ def analyze_errors(defs, schema, data) -> list[str]:  # noqa: C901
                         match_ref = ref_type
 
             if match_ref == {}:
-                ret.append("Error: " + str(data) + " should be of type: " + str(schema))
+                ret.append(
+                    get_loc_string(loc)
+                    + str(data)
+                    + " should be of type: "
+                    + str(schema)
+                )
 
             else:
-                ret += analyze_errors(defs, match_ref, data)
+                ret += analyze_errors(defs, match_ref, data, loc)
     return ret

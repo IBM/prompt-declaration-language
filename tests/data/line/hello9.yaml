@@ -1,0 +1,7 @@
+description: Hello world showing call out to python code
+document:
+- lan: python
+  spec: int
+  code: |
+    import string
+    result = "hello"

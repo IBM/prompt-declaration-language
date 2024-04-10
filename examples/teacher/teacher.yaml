@@ -227,7 +227,7 @@ defs:
           [Response]
         max_new_tokens: 2048
         additional_stop_tokens:
-          - "[Question]"
+        - "[Question]"
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_answers.py
   gen_answers_inner:
@@ -256,9 +256,9 @@ defs:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
-            stop_sequences:
+            stop_sequences:  # TODO -- Need "{{ prompt_data.additional_stop_tokens.append(teacher_stop_token) }}"
             - "{{teacher_stop_token}}"
-            - "{{prompt_data.additional_stop_tokens}}" # TODO: this is list -- we need "addAll"
+            - "{{prompt_data.additional_stop_tokens}}"
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
@@ -419,7 +419,7 @@ document:
 - def: qa_pairs
   call: gen_answers
   args:
-    questions: "{{filtered_questions}}" # TODO - verify
+    questions: "{{filtered_questions}}" 
 - |
 
   Filtering QA pairs

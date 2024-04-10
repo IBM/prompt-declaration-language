@@ -5,4 +5,3 @@ document:
 - model: ibm/granite-20b-code-instruct-v1
   parameters:
     decoding_method: greedy
-spec: GraniteQuestionAnswerSpec

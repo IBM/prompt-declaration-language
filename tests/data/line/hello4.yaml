@@ -1,0 +1,7 @@
+description: Hello world!
+document:
+    - Hello, world!
+    - "\n"
+    - repeats:
+        "This is your first PDL program\n"
+      num_iterations: 3

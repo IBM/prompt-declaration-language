@@ -1,0 +1,11 @@
+description: Hello world showing call out to python code with condition
+document:
+- 'Hello! '
+- lan: python
+  code: |
+    result = True
+  def: QUESTION
+  show_result: false
+- if: '{{ QUESTION }}'
+  then: How are you?
+  spec: bool

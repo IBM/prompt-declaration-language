@@ -42,6 +42,16 @@ class BlockKind(StrEnum):
     ERROR = "error"
 
 
+class BlockLocation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    path: list[str]
+    file: str
+    table: dict[str, int]
+
+
+empty_block_location = BlockLocation(file="", path=[], table={})
+
+
 class Block(BaseModel):
     """PDL program block"""
 
@@ -53,6 +63,7 @@ class Block(BaseModel):
     show_result: bool = True
     result: Optional[Any] = None
     parser: Optional[Literal["json", "yaml"]] = None
+    location: Optional[BlockLocation] = None
 
 
 class FunctionBlock(Block):
