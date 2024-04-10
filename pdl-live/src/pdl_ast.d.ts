@@ -652,7 +652,7 @@ export type Def13 = string | null;
 export type ShowResult13 = boolean;
 export type Parser13 = ("json" | "yaml") | null;
 export type Kind13 = "code";
-export type Lan = string;
+export type Lan = "python" | "command";
 export type Code =
   | string
   | FunctionBlock

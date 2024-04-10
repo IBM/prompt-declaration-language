@@ -1,6 +1,8 @@
 import json
 import os
 import re
+import shlex
+import subprocess
 import types
 from ast import literal_eval
 from pathlib import Path
@@ -700,6 +702,8 @@ def call_code(
         case "python":
             result = call_python(code_s)
             output = str(result)
+        case "command":
+            result, output = call_command(code_s)
         case _:
             msg = f"Unsupported language: {block.lan}"
             error(msg, append(loc, "lan"))
@@ -720,6 +724,16 @@ def call_python(code: str) -> Any:
     exec(code, my_namespace.__dict__)
     result = my_namespace.result
     return result
+
+
+def call_command(code: str) -> tuple[int, str]:
+    args = shlex.split(code)
+    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    if p.stderr != "":
+        error(p.stderr, None)
+    result = p.returncode
+    output = p.stdout
+    return result, output
 
 
 def process_input(

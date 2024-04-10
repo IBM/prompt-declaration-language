@@ -914,6 +914,10 @@
           "title": "Kind"
         },
         "lan": {
+          "enum": [
+            "python",
+            "command"
+          ],
           "title": "Lan",
           "type": "string"
         },

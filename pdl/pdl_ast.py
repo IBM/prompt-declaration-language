@@ -101,7 +101,7 @@ class ModelBlock(Block):
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: str
+    lan: Literal["python", "command"]
     code: "BlocksType"
 
 
