@@ -236,6 +236,8 @@ def step_block(
         var = block.assign
         scope = scope | {var: result}
         debug("Storing model result for " + var + ": " + str(trace.result))
+    if block.show_result is False:
+        output = ""
     if block.spec is not None and not isinstance(block, FunctionBlock):
         errors = type_check_spec(result, block.spec, block.location)
         if len(errors) > 0:
@@ -245,8 +247,6 @@ def step_block(
             error(msg, block.location)
             trace = ErrorBlock(msg=msg, program=trace)
             return result, output, scope, trace
-    if block.show_result is False:
-        output = ""
     scope = scope | {"context": output}
     return result, output, scope, trace
 
@@ -287,7 +287,6 @@ def step_block_body(
         case DataBlock(data=v):
             block.location = append(loc, "data")
             result = process_expr(scope, v)
-            print(result)
             output = stringify(result)
             if yield_output:
                 yield output

@@ -274,3 +274,21 @@ line16 = {
 
 def test_line16(capsys):
     do_test(line16, capsys)
+
+
+line17 = {
+    "file": "tests/data/line/hello17.pdl",
+    "errors": [
+        "",
+        "",
+        "",
+        "tests/data/line/hello17.pdl:3 - Error: Type errors during spec checking",
+        "tests/data/line/hello17.pdl:3 - hello should be of type <class 'int'>",
+        "",
+        "",
+    ],
+}
+
+
+def test_line17(capsys):
+    do_test(line17, capsys)
