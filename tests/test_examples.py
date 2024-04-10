@@ -6,24 +6,22 @@ import yaml
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 
 EXPECTED_INVALID = [
-    pathlib.Path(".pre-commit-config.yaml"),
-    pathlib.Path("examples") / "teacher" / "qna.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello1.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello2.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello4.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello5.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello6.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello7.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello8.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello10.yaml",
-    pathlib.Path("tests") / "data" / "line" / "hello11.yaml",
+    pathlib.Path("tests") / "data" / "line" / "hello.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello1.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello2.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello4.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello5.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello6.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello7.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello8.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello10.pdl",
+    pathlib.Path("tests") / "data" / "line" / "hello11.pdl",
 ]
 
 
 def test_valid_programs() -> None:
     actual_invalid: set[str] = set()
-    for yaml_file_name in pathlib.Path(".").glob("**/*.yaml"):
+    for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
         with open(yaml_file_name, "r", encoding="utf-8") as pdl_file:
             try:
                 data = yaml.safe_load(pdl_file)

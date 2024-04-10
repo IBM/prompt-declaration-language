@@ -6,7 +6,7 @@ include_data = {
     "description": "Include test",
     "document": [
         "Start\n",
-        {"include": "tests/data/hello.yaml"},
+        {"include": "tests/data/hello.pdl"},
         "End",
     ],
 }
@@ -29,7 +29,7 @@ End"""
 biz = {
     "description": "Include test",
     "document": [
-        {"include": "tests/data/function.yaml"},
+        {"include": "tests/data/function.pdl"},
         {
             "call": "template",
             "args": {

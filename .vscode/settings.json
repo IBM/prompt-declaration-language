@@ -1,5 +1,5 @@
 {
     "yaml.schemas": {
-        "./pdl-schema.json": "*.yaml"
+        "./pdl-schema.json": "*.pdl"
     }
 }
