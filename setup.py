@@ -5,18 +5,17 @@ with open("README.md", "r", encoding="utf-8") as fp:
 
 
 install_requires = [
+    "pydantic",
     "ibm-generative-ai",
     "requests",
     "python-dotenv",
     "jinja2",
     "PyYAML",
-    "datasets",
-    "faiss-cpu",
     "jsonschema",
 ]
 
 dev = ["black", "pre-commit", "pytest"]
-examples = ["wikipedia", "textdistance"]
+examples = ["wikipedia", "textdistance", "faiss-cpu", "datasets"]
 
 extras_require = {"dev": dev, "examples": examples, "all": dev + examples}
 setup(
