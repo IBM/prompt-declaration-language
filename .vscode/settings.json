@@ -1,5 +1,8 @@
 {
     "yaml.schemas": {
         "./pdl-schema.json": "*.pdl"
+    },
+    "files.associations": {
+        "*.pdl": "yaml",
     }
 }
