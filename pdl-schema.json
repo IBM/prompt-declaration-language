@@ -200,7 +200,11 @@
         "kind": {
           "const": "api",
           "default": "api",
-          "title": "Kind"
+          "enum": [
+            "api"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "api": {
           "title": "Api",
@@ -569,7 +573,11 @@
         "kind": {
           "const": "call",
           "default": "call",
-          "title": "Kind"
+          "enum": [
+            "call"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "call": {
           "title": "Call",
@@ -911,7 +919,11 @@
         "kind": {
           "const": "code",
           "default": "code",
-          "title": "Kind"
+          "enum": [
+            "code"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "lan": {
           "enum": [
@@ -1249,7 +1261,11 @@
         "kind": {
           "const": "data",
           "default": "data",
-          "title": "Kind"
+          "enum": [
+            "data"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "data": {
           "title": "Data"
@@ -1469,7 +1485,11 @@
         "kind": {
           "const": "document",
           "default": "document",
-          "title": "Kind"
+          "enum": [
+            "document"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "document": {
           "anyOf": [
@@ -1798,7 +1818,11 @@
         "kind": {
           "const": "empty",
           "default": "empty",
-          "title": "Kind"
+          "enum": [
+            "empty"
+          ],
+          "title": "Kind",
+          "type": "string"
         }
       },
       "title": "EmptyBlock",
@@ -2004,7 +2028,11 @@
         "kind": {
           "const": "error",
           "default": "error",
-          "title": "Kind"
+          "enum": [
+            "error"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "msg": {
           "title": "Msg",
@@ -2338,7 +2366,11 @@
         "kind": {
           "const": "for",
           "default": "for",
-          "title": "Kind"
+          "enum": [
+            "for"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "for": {
           "title": "For",
@@ -2803,7 +2835,11 @@
         "kind": {
           "const": "function",
           "default": "function",
-          "title": "Kind"
+          "enum": [
+            "function"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "function": {
           "anyOf": [
@@ -3156,7 +3192,11 @@
         "kind": {
           "const": "get",
           "default": "get",
-          "title": "Kind"
+          "enum": [
+            "get"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "get": {
           "title": "Get",
@@ -3369,7 +3409,11 @@
         "kind": {
           "const": "if",
           "default": "if",
-          "title": "Kind"
+          "enum": [
+            "if"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "if": {
           "title": "If"
@@ -3838,7 +3882,11 @@
         "kind": {
           "const": "include",
           "default": "include",
-          "title": "Kind"
+          "enum": [
+            "include"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "include": {
           "title": "Include",
@@ -4147,7 +4195,11 @@
         "kind": {
           "const": "model",
           "default": "model",
-          "title": "Kind"
+          "enum": [
+            "model"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "model": {
           "title": "Model",
@@ -5029,7 +5081,11 @@
         "kind": {
           "const": "parse",
           "default": "parse",
-          "title": "Kind"
+          "enum": [
+            "parse"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "parse": {
           "title": "Parse",
@@ -5759,7 +5815,11 @@
         "kind": {
           "const": "read",
           "default": "read",
-          "title": "Kind"
+          "enum": [
+            "read"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "read": {
           "anyOf": [
@@ -5996,7 +6056,11 @@
         "kind": {
           "const": "repeat",
           "default": "repeat",
-          "title": "Kind"
+          "enum": [
+            "repeat"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "repeat": {
           "anyOf": [
@@ -6461,7 +6525,11 @@
         "kind": {
           "const": "repeat_until",
           "default": "repeat_until",
-          "title": "Kind"
+          "enum": [
+            "repeat_until"
+          ],
+          "title": "Kind",
+          "type": "string"
         },
         "repeat": {
           "anyOf": [
