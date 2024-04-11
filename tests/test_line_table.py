@@ -247,7 +247,7 @@ line15 = {
         "tests/data/line/hello15.pdl:6 - Error: Variable is undefined: boolean",
         "",
         "",
-        "tests/data/line/hello15.pdl:7 - Error: Error 'something' is undefined in {{ something }}",
+        "tests/data/line/hello15.pdl:7 - Error: 'something' is undefined in {{ something }}",
         "",
         "{{ something }}",
     ],
@@ -292,3 +292,21 @@ line17 = {
 
 def test_line17(capsys):
     do_test(line17, capsys)
+
+
+line18 = {
+    "file": "tests/data/line/hello18.pdl",
+    "errors": [
+        "",
+        "0",
+        "1",
+        "",
+        "tests/data/line/hello18.pdl:14 - Error: 'J' is undefined in {{ J == 5 }}",
+        "",
+        "",
+    ],
+}
+
+
+def test_line18(capsys):
+    do_test(line18, capsys)

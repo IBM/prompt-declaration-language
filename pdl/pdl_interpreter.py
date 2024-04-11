@@ -208,7 +208,7 @@ def step_block(
             output = stringify(result)
             trace = output
         except UndefinedError as e:
-            msg = f"Error {e} in {block}"
+            msg = f"{e} in {block}"
             error(msg, loc)
             result = block
             output = block
@@ -288,11 +288,18 @@ def step_block_body(
                 yield output
         case DataBlock(data=v):
             block.location = append(loc, "data")
-            result = process_expr(scope, v)
-            output = stringify(result)
+            try:
+                result = process_expr(scope, v)
+                output = stringify(result)
+                trace = block.model_copy()
+            except UndefinedError as e:
+                msg = f"{e} in {v}"
+                error(msg, block.location)
+                result = None
+                output = ""
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
             if yield_output:
                 yield output
-            trace = block.model_copy()
         case ApiBlock():
             result, output, scope, trace = call_api(log, scope, block, loc)
             if yield_output:
@@ -304,35 +311,39 @@ def step_block_body(
             result = output
             trace = block.model_copy(update={"document": document})
         case IfBlock():
-            b = process_condition(scope, block.condition)
-            # scope = scope | {"context": scope_init["context"]}
-            if b:
-                thenloc = append(loc, "then")
-                result, output, scope, then_trace = yield from step_blocks(
-                    log, scope, yield_output, block.then, thenloc
-                )
-                trace = block.model_copy(
-                    update={
-                        "if_result": b,
-                        "then": then_trace,
-                    }
-                )
-            elif block.elses is not None:
-                elseloc = append(loc, "else")
-                result, output, scope, else_trace = yield from step_blocks(
-                    log, scope, yield_output, block.elses, elseloc
-                )
-                trace = block.model_copy(
-                    update={
-                        "if_result": b,
-                        "elses": else_trace,
-                    }
-                )
-            else:
-                result = None
-                output = ""
-                trace = block.model_copy(update={"if_result": b})
-
+            result = None
+            output = ""
+            b = None
+            try:
+                b = process_condition(scope, block.condition)
+                if b:
+                    thenloc = append(loc, "then")
+                    result, output, scope, then_trace = yield from step_blocks(
+                        log, scope, yield_output, block.then, thenloc
+                    )
+                    trace = block.model_copy(
+                        update={
+                            "if_result": b,
+                            "then": then_trace,
+                        }
+                    )
+                elif block.elses is not None:
+                    elseloc = append(loc, "else")
+                    result, output, scope, else_trace = yield from step_blocks(
+                        log, scope, yield_output, block.elses, elseloc
+                    )
+                    trace = block.model_copy(
+                        update={
+                            "if_result": b,
+                            "elses": else_trace,
+                        }
+                    )
+                else:
+                    trace = block.model_copy(update={"if_result": b})
+            except UndefinedError as e:
+                msg = f"{e} in {block.condition}"
+                error(msg, append(block.location, "if"))
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
         case RepeatBlock(num_iterations=n):
             result = None
             output = ""
@@ -356,35 +367,40 @@ def step_block_body(
             context_init = scope_init["context"]
             items: dict[str, Any] = {}
             lengths = []
-            for k, v in block.fors.items():
-                klist = process_expr(scope, v)
-                items = items | {k: klist}
-                lengths.append(len(klist))
-            if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                msg = "Lists inside the For block must be of the same length"
-                error(msg, loc)
-                output = ""
+            try:
+                for k, v in block.fors.items():
+                    klist = process_expr(scope, v)
+                    items = items | {k: klist}
+                    lengths.append(len(klist))
+                if len(set(lengths)) != 1:  # Not all the lists are of the same length
+                    msg = "Lists inside the For block must be of the same length"
+                    error(msg, loc)
+                    output = ""
+                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+                else:
+                    for i in range(lengths[0]):
+                        scope = scope | {"context": context_init + output}
+                        for k in items.keys():
+                            scope = scope | {k: items[k][i]}
+                        newloc = append(loc, "repeat")
+                        (
+                            iteration_result,
+                            iteration_output,
+                            scope,
+                            body_trace,
+                        ) = yield from step_blocks(
+                            log, scope, yield_output, block.repeat, newloc
+                        )
+                        output += iteration_output
+                        result.append(iteration_result)
+                        iter_trace.append(body_trace)
+                        if contains_error(body_trace):
+                            break
+                    trace = block.model_copy(update={"trace": iter_trace})
+            except UndefinedError as e:
+                msg = f"{e}"
+                error(msg, append(block.location, "for"))
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
-            else:
-                for i in range(lengths[0]):
-                    scope = scope | {"context": context_init + output}
-                    for k in items.keys():
-                        scope = scope | {k: items[k][i]}
-                    newloc = append(loc, "repeat")
-                    (
-                        iteration_result,
-                        iteration_output,
-                        scope,
-                        body_trace,
-                    ) = yield from step_blocks(
-                        log, scope, yield_output, block.repeat, newloc
-                    )
-                    output += iteration_output
-                    result.append(iteration_result)
-                    iter_trace.append(body_trace)
-                    if contains_error(body_trace):
-                        break
-                trace = block.model_copy(update={"trace": iter_trace})
 
         case RepeatUntilBlock(until=cond):
             result = None
@@ -402,7 +418,14 @@ def step_block_body(
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
-                stop = process_condition(scope, cond)
+                try:
+                    stop = process_condition(scope, cond)
+                except UndefinedError as e:
+                    msg = f"{e} in {cond}"
+                    error(msg, append(loc, "until"))
+                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+                    iterations_trace.append(trace)
+                    break
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, output, scope, trace = process_input(log, scope, block, loc)
@@ -428,45 +451,53 @@ def step_block_body(
             output = ""
             trace = closure.model_copy(update={})
         case CallBlock(call=f):
-            args = process_expr(scope, block.args)
-            closure = get_var(f, scope)
-            if closure is None:
-                msg = "Function is undefined: " + f
-                error(msg, append(loc, "call"))
-                output = ""
-                result = None
-                trace = ErrorBlock(msg=msg, program=block.model_copy())
-            else:
-                argsloc = append(loc, "args")
-                type_errors = type_check_args(args, closure.function, argsloc)
-                if len(type_errors) > 0:
-                    msg = "Type errors during function call to " + f
-                    for e in type_errors:
-                        msg += "\n" + e
-                    error(msg, argsloc)
+            args = {}
+            try:  # pylint: disable=too-many-nested-blocks
+                args = process_expr(scope, block.args)
+                closure = get_var(f, scope)
+                if closure is None:
+                    msg = "Function is undefined: " + f
+                    error(msg, append(loc, "call"))
                     output = ""
                     result = None
                     trace = ErrorBlock(msg=msg, program=block.model_copy())
                 else:
-                    f_body = closure.returns
-                    f_scope = closure.scope | {"context": scope["context"]} | args
-                    funloc = BlockLocation(
-                        file=closure.location.file,
-                        path=closure.location.path + ["return"],
-                        table=loc.table,
-                    )
-                    result, output, _, f_trace = yield from step_blocks(
-                        log, f_scope, yield_output, f_body, funloc
-                    )
-                    trace = block.model_copy(update={"trace": f_trace})
-                    if closure.spec is not None:
-                        errors = type_check_spec(result, closure.spec, funloc)
-                        if len(errors) > 0:
-                            msg = "Type errors in result of function call to " + f
-                            for e in errors:
-                                msg += "\n" + e
-                            error(msg, loc)
-                            trace = ErrorBlock(msg=msg, program=trace)
+                    argsloc = append(loc, "args")
+                    type_errors = type_check_args(args, closure.function, argsloc)
+                    if len(type_errors) > 0:
+                        msg = "Type errors during function call to " + f
+                        for err in type_errors:
+                            msg += "\n" + err
+                        error(msg, argsloc)
+                        output = ""
+                        result = None
+                        trace = ErrorBlock(msg=msg, program=block.model_copy())
+                    else:
+                        f_body = closure.returns
+                        f_scope = closure.scope | {"context": scope["context"]} | args
+                        funloc = BlockLocation(
+                            file=closure.location.file,
+                            path=closure.location.path + ["return"],
+                            table=loc.table,
+                        )
+                        result, output, _, f_trace = yield from step_blocks(
+                            log, f_scope, yield_output, f_body, funloc
+                        )
+                        trace = block.model_copy(update={"trace": f_trace})
+                        if closure.spec is not None:
+                            errors = type_check_spec(result, closure.spec, funloc)
+                            if len(errors) > 0:
+                                msg = "Type errors in result of function call to " + f
+                                for err in errors:
+                                    msg += "\n" + err
+                                error(msg, loc)
+                                trace = ErrorBlock(msg=msg, program=trace)
+            except UndefinedError as e:
+                msg = f"{e}"
+                error(msg, append(loc, "args"))
+                result = None
+                output = ""
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
         case EmptyBlock():
             result = ""
             output = ""
@@ -575,8 +606,16 @@ def step_call_model(
     else:
         model_input = scope["context"]
         input_trace = None
-
-    model = process_expr(scope, block.model)
+    model = ""
+    try:
+        model = process_expr(scope, block.model)
+    except UndefinedError as e:
+        msg = f"{e} in {block.model}"
+        error(msg, append(loc, "model"))
+        trace = ErrorBlock(
+            msg=msg, program=block.model_copy(update={"input": input_trace})
+        )
+        return None, "", scope, trace
     try:
         debug("model input: " + model_input)
         append_log(log, "Model Input", model_input)

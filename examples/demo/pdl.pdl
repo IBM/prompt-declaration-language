@@ -144,5 +144,7 @@ document:
     _, result, _, _ = process_block(log, empty_scope, data.root)
   def: RESULT
   show_result: true
+- "\n"
+- model: ibm/granite-13b-instruct-v2
 
 
