@@ -49,3 +49,23 @@ def test_show_result_false():
     data = Program.model_validate(show_result_data(False))
     _, document, _, _ = process_block(log, empty_scope, data.root)
     assert document == ""
+
+
+command_data = {
+    "document": [
+        {
+            "def": "world",
+            "document": {"lan": "command", "code": "echo -n World"},
+            "show_result": False,
+        },
+        "Hello {{ world }}!",
+    ]
+}
+
+
+def test_command():
+    log = []
+    data = Program.model_validate(command_data)
+    _, document, scope, _ = process_block(log, empty_scope, data.root)
+    assert document == "Hello World!"
+    assert scope["world"] == "World"
