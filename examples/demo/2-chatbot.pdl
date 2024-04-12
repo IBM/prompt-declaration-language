@@ -1,0 +1,23 @@
+description: chatbot
+document:
+- read:
+  def: data
+  multiline: true
+  message: ""
+- repeat:
+  - model: ibm/granite-20b-code-instruct-v1
+    def: answer
+    parameters:
+      decoding_method: sample
+  - read:
+    def: eval
+    message: "\nIs this a good answer[yes/no]?\n"
+    show_result: false
+  - if: "{{ eval == 'no' }}"
+    then:
+      - read:
+        message: "How should this be different?"
+  until: "{{ eval == 'yes'}}"
+
+
+

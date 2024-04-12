@@ -1,13 +1,13 @@
-description: Hello world to call into a model
+description: Creating JSON Data
 document:
-- read: tests/data/line/hello16_data.json
+- read: examples/demo/data.json
   parser: json
   def: data
   show_result: false
   spec: { "questions": ["str"], "answers": ["obj"] }
 - model: ibm/granite-20b-code-instruct-v1
   def: model_output
-  spec: {"bob": int, "carol": str}
+  spec: {"name": str, "age": int}
   input: 
     - for: 
         question: "{{ data.questions }}"
@@ -16,10 +16,15 @@ document:
         - |
           {{ question }}
           {{ answer }}
-    - "Question: Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively."
+    - > 
+      Question: Create a JSON object with fields 'name' 
+      and 'age' and set them appropriately. Write the age in letters
   parser: json
   parameters:
     decoding_method: greedy
     stop_sequences:
     - '}'
     include_stop_sequence: true
+
+
+

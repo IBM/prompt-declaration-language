@@ -1,6 +1,6 @@
 description: Creating JSON Data
 document:
-- read: examples/hello/data_hello21.json
+- read: examples/hello/hello21_data.json
   parser: json
   def: data
   show_result: false

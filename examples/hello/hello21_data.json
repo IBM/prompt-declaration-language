@@ -1,0 +1,10 @@
+{
+    "questions": [
+        "Question: Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
+        "Question: Write a JSON object with 3 fields 'number' and 'street' and 'town' set to '10', 'Miller Road', 'Armonk' respectively."
+    ],
+    "answers": [
+        {"a": 0, "b": 0},
+        {"number": 10, "street": "Miller Road", "town": "Armonk"}
+    ]
+}
