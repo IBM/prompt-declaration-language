@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 from genai.schema import (
     ModerationParameters,
@@ -36,7 +36,6 @@ class BlockKind(StrEnum):
     REPEAT_UNTIL = "repeat_until"
     READ = "read"
     INCLUDE = "include"
-    PARSE = "parse"
     EMPTY = "empty"
     FOR = "for"
     ERROR = "error"
@@ -52,6 +51,13 @@ class BlockLocation(BaseModel):
 empty_block_location = BlockLocation(file="", path=[], table={})
 
 
+class Parser(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    spec: dict[str, Any]
+    with_: Union["BlocksType", str] = Field(..., alias="with")
+    mode: Literal["pdl", "regex"] = "pdl"
+
+
 class Block(BaseModel):
     """PDL program block"""
 
@@ -62,7 +68,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
-    parser: Optional[Literal["json", "yaml"]] = None
+    parser: Optional[Literal["json", "yaml"] | Parser] = None
     location: Optional[BlockLocation] = None
 
 
@@ -179,15 +185,6 @@ class IncludeBlock(Block):
     trace: Optional["BlockType"] = None
 
 
-class ParseBlock(Block):
-    model_config = ConfigDict(extra="forbid")
-    kind: Literal[BlockKind.PARSE] = BlockKind.PARSE
-    parse: dict[str, Any]
-    from_: Optional["BlocksType"] = Field(default=None, alias="from")
-    with_: "BlocksType" = Field(..., alias="with")
-    mode: Literal["pdl", "regex"] = "pdl"
-
-
 class ErrorBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
@@ -215,7 +212,6 @@ AdvancedBlockType: TypeAlias = (
     | DocumentBlock
     | ReadBlock
     | IncludeBlock
-    | ParseBlock
     | ErrorBlock
     | EmptyBlock
 )

@@ -36,7 +36,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
-    ParseBlock,
+    Parser,
     PDLTextGenerationParameters,
     Program,
     ReadBlock,
@@ -226,14 +226,29 @@ def step_block(
         log, scope, yield_output, block, loc
     )
     trace = trace.model_copy(update={"defs": defs_trace, "result": output})
-    if block.parser is not None and isinstance(result, str):
-        try:
-            result = yaml.safe_load(result)
-        except Exception:
-            msg = "Attempted to parse ill-formed JSON or YAML"
-            error(msg, loc)
-            trace = ErrorBlock(msg=msg, program=trace)
-            return result, output, scope, trace
+    match block.parser:
+        case None:
+            pass
+        case "json":
+            try:
+                result = json.loads(result)
+            except Exception:
+                msg = "Attempted to parse ill-formed YAML"
+                error(msg, loc)
+                trace = ErrorBlock(msg=msg, program=trace)
+                return result, output, scope, trace
+        case "yaml":
+            try:
+                result = yaml.safe_load(result)
+            except Exception:
+                msg = "Attempted to parse ill-formed YAML"
+                error(msg, loc)
+                trace = ErrorBlock(msg=msg, program=trace)
+                return result, output, scope, trace
+        case Parser():
+            result = process_parse(block.parser, result, loc)
+        case _:
+            assert False
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
@@ -428,19 +443,15 @@ def step_block_body(
                     break
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
-            result, output, scope, trace = process_input(log, scope, block, loc)
+            output, scope, trace = process_input(log, scope, block, loc)
             if yield_output:
                 yield output
+            result = output
 
         case IncludeBlock():
             result, output, scope, trace = yield from step_include(
                 log, scope, yield_output, block, loc
             )
-
-        case ParseBlock():
-            result, output, scope, trace = process_parse(log, scope, block, loc)
-            if yield_output:
-                yield output
 
         case FunctionBlock():
             closure = block.model_copy()
@@ -777,7 +788,7 @@ def call_command(code: str) -> tuple[int, str]:
 
 def process_input(
     log, scope: ScopeType, block: ReadBlock, loc: BlockLocation
-) -> tuple[Any, str, ScopeType, ReadBlock | ErrorBlock]:
+) -> tuple[str, ScopeType, ReadBlock | ErrorBlock]:
     if block.read is not None:
         with open(block.read, encoding="utf-8") as f:
             s = f.read()
@@ -804,20 +815,8 @@ def process_input(
                 contents.append(line + "\n")
             s = "".join(contents)
             append_log(log, "Input from stdin: ", s)
-
-    if block.parser in ["json", "yaml"]:
-        try:
-            result = yaml.safe_load(s)
-        except Exception:
-            msg = "Attempted to parse ill-formed JSON or YAML"
-            error(msg, loc)
-            trace = ErrorBlock(msg=msg, program=block.model_copy())
-            return None, "", scope, trace
-    else:
-        result = s
-
     trace = block.model_copy(update={"result": s})
-    return result, s, scope, trace
+    return s, scope, trace
 
 
 def step_include(
@@ -852,42 +851,30 @@ def step_include(
 
 
 def process_parse(
-    log, scope: ScopeType, block: ParseBlock, loc: BlockLocation
-) -> tuple[Any, str, ScopeType, ParseBlock | ErrorBlock]:
-    if block.from_ is not None:
-        _, from_, _, from_trace = process_blocks(
-            log, scope, block.from_, append(loc, "from")
-        )
-    else:
-        from_ = scope["context"]
-        from_trace = None
-    match block.mode:
+    parser: Parser, text: str, loc: BlockLocation
+) -> Optional[dict[str, Any]]:
+    match parser.mode:
         case "pdl":
             assert False, "TODO"
         case "regex":
-            assert isinstance(block.with_, str)
-            regex = block.with_
-    parse_trace = block.model_copy(update={"from_": from_trace})
-    m = re.fullmatch(regex, from_)
+            assert isinstance(parser.with_, str)
+            regex = parser.with_
+    m = re.fullmatch(regex, text)
     if m is None:
-        msg = f"No match found for {regex} in {from_}"
+        msg = f"No match found for {regex} in {text}"
         error(msg, append(loc, "from"))
-        trace = ErrorBlock(msg=msg, program=parse_trace)
-        return None, "", scope, trace
+        return None
     current_group_name = ""
     try:
         result = {}
-        for x in block.parse.keys():
+        for x in parser.spec.keys():
             current_group_name = x
             result[x] = m.group(x)
-        output = stringify(result)
-        trace = parse_trace
-        return result, output, scope, trace
+        return result
     except IndexError:
-        msg = f"No group named {current_group_name} found by {regex} in {from_}"
+        msg = f"No group named {current_group_name} found by {regex} in {text}"
         error(msg, append(loc, "from"))
-        trace = ErrorBlock(msg=msg, program=parse_trace)
-        return None, "", scope, trace
+        return None
 
 
 def get_var(var: str, scope: ScopeType) -> Any:

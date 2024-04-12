@@ -263,7 +263,7 @@ line16 = {
     "errors": [
         "",
         "",
-        "{'bob': 20, 'carol': 30}",
+        '{"bob": 20, "carol": 30}',
         "tests/data/line/hello16.pdl:8 - Error: Type errors during spec checking",
         "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
         "",

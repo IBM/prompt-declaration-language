@@ -8,7 +8,7 @@ export function map_block_children(
   if (typeof block === 'string') {
     return block;
   }
-  let new_block;
+  let new_block: PdlBlock;
   if (block?.defs === undefined) {
     new_block = {...block};
   } else {
@@ -70,15 +70,13 @@ export function map_block_children(
     })
     .with({kind: 'read'}, block => block)
     .with({kind: 'include'}, block => block)
-    .with({kind: 'parse'}, data => {
-      if (data.from) {
-        const from = map_blocks(f, data.from);
-        return {...block, from: from};
-      }
-      return data;
-    })
     .with({kind: undefined}, block => block)
     .exhaustive();
+  match(new_block)
+    .with({parser: {mode: 'pdl'}}, block => {
+      block.parser.with = map_blocks(f, block.parser.with);
+    })
+    .otherwise(() => {});
   return new_block;
 }
 
@@ -142,13 +140,13 @@ export function iter_block_children(
     .with({kind: 'error'}, block => iter_blocks(f, block.program))
     .with({kind: 'read'}, () => {})
     .with({kind: 'include'}, () => {})
-    .with({kind: 'parse'}, data => {
-      if (data.from) {
-        iter_blocks(f, data.from);
-      }
-    })
     .with({kind: undefined}, () => {})
     .exhaustive();
+  match(block)
+    .with({parser: {mode: 'pdl'}}, block => {
+      iter_blocks(f, block.parser.with);
+    })
+    .otherwise(() => {});
 }
 
 export function iter_blocks(

@@ -18,7 +18,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
-    ParseBlock,
+    Parser,
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
@@ -101,13 +101,6 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             d["multiline"] = block.multiline
         case IncludeBlock():
             d["include"] = block.include
-        case ParseBlock():
-            d["parse"] = block.parse
-            if block.from_ is not None:
-                d["from"] = blocks_to_dict(block.from_)
-            d["with"] = block.with_
-            if block.mode != "pdl":
-                d["mode"] = block.mode
         case IfBlock():
             d["condition"] = block.condition
             d["then"] = blocks_to_dict(block.then)
@@ -146,6 +139,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         d["show_result"] = block.show_result
     if block.result is not None:
         d["result"] = block.result
+    if block.parser is not None and block.parser != "json" and block.parser != "yaml":
+        d["parser"] = parser_to_dict(block.parser)
     return d
 
 
@@ -158,6 +153,18 @@ def blocks_to_dict(
     else:
         result = block_to_dict(blocks)
     return result
+
+
+def parser_to_dict(parser: Parser) -> dict[str, Any]:
+    d: dict[str, Any] = {}
+    d["spec"] = parser.spec
+    if isinstance(parser.with_, str):
+        d["with"] = parser.with_
+    else:
+        d["with"] = blocks_to_dict(parser.with_)
+    if parser.mode != "pdl":
+        d["mode"] = parser.mode
+    return d
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:

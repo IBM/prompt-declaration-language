@@ -58,7 +58,7 @@ get_parser = {"get": "x", "parser": "json", "def": "y", "show_result": False}
 def test_get_parser():
     log = []
     data = Program.model_validate(get_parser)
-    scope = {"x": "{'a': 'foo', 'b': 'bar'}"}
+    scope = {"x": '{"a": "foo", "b": "bar"}'}
     result, _, _, trace = process_block(log, scope, data.root)
     assert not contains_error(trace)
     assert result == {"a": "foo", "b": "bar"}
@@ -67,7 +67,7 @@ def test_get_parser():
 code_parser = {
     "lan": "python",
     "parser": "json",
-    "code": ["r = {'a':'b', 'c':'d'}\n", "result=str(r)"],
+    "code": ["import json\n", "r = {'a':'b', 'c':'d'}\n", "result=json.dumps(r)"],
 }
 
 
