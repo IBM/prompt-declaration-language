@@ -17,6 +17,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LocationType,
     ModelBlock,
     ParserType,
     PdlParser,
@@ -143,6 +144,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         d["result"] = block.result
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
+    if block.location is not None:
+        d["location"] = location_to_dict(block.location)
     return d
 
 
@@ -172,6 +175,10 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
         case _:
             assert False
     return p
+
+
+def location_to_dict(location: LocationType) -> dict[str, Any]:
+    return {"path": location.path, "file": location.file, "table": location.table}
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:

@@ -1,10 +1,10 @@
 import re
 
-from .pdl_ast import BlockLocation
+from .pdl_ast import LocationType
 
 
-def append(loc: BlockLocation, seg: str) -> BlockLocation:
-    return BlockLocation(file=loc.file, path=loc.path + [seg], table=loc.table)
+def append(loc: LocationType, seg: str) -> LocationType:
+    return LocationType(file=loc.file, path=loc.path + [seg], table=loc.table)
 
 
 def normalize(indentation: list[int], is_array_item: list[bool]) -> list[int]:
@@ -91,7 +91,7 @@ def get_line_map(file) -> dict[str, int]:
     return paths
 
 
-def get_loc_string(loc: BlockLocation) -> str:
+def get_loc_string(loc: LocationType) -> str:
     return loc.file + ":" + str(get_line(loc.table, loc.path)) + " - "
 
 

@@ -1,4 +1,4 @@
-from .pdl_ast import BlockLocation
+from .pdl_ast import LocationType
 from .pdl_location_utils import append, get_loc_string
 from .pdl_schema_utils import convert_to_json_type, json_types_convert
 
@@ -53,7 +53,7 @@ def match(ref_type, data):
     return len(intersection)
 
 
-def analyze_errors(defs, schema, data, loc: BlockLocation) -> list[str]:  # noqa: C901
+def analyze_errors(defs, schema, data, loc: LocationType) -> list[str]:  # noqa: C901
     ret = []
     if schema == {}:
         return []  # anything matches type Any

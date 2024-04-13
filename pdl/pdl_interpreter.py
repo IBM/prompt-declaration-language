@@ -20,7 +20,6 @@ from pydantic import ValidationError
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
-    BlockLocation,
     BlocksType,
     BlockType,
     CallBlock,
@@ -35,6 +34,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LocationType,
     ModelBlock,
     ParserType,
     PdlParser,
@@ -113,7 +113,7 @@ def generate(
                 log: list[str] = []
                 prog_yaml = yaml.safe_load(infile)
                 trace = None
-                loc = BlockLocation(path=[], file=pdl, table=line_table)
+                loc = LocationType(path=[], file=pdl, table=line_table)
                 try:
                     prog = Program.model_validate(prog_yaml)
                     trace = prog.root
@@ -202,7 +202,7 @@ def process_block(
 
 
 def step_block(
-    log, scope: ScopeType, yield_output: bool, block: BlockType, loc: BlockLocation
+    log, scope: ScopeType, yield_output: bool, block: BlockType, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
         try:
@@ -260,7 +260,7 @@ def step_block_body(
     scope: ScopeType,
     yield_output: bool,
     block: AdvancedBlockType,
-    loc: BlockLocation,
+    loc: LocationType,
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
@@ -473,7 +473,7 @@ def step_block_body(
                     else:
                         f_body = closure.returns
                         f_scope = closure.scope | {"context": scope["context"]} | args
-                        funloc = BlockLocation(
+                        funloc = LocationType(
                             file=closure.location.file,
                             path=closure.location.path + ["return"],
                             table=loc.table,
@@ -511,7 +511,7 @@ def stringify(result):
 
 
 def process_defs(
-    log, scope: ScopeType, defs: dict[str, BlocksType], loc: BlockLocation
+    log, scope: ScopeType, defs: dict[str, BlocksType], loc: LocationType
 ) -> tuple[ScopeType, dict[str, BlocksType]]:
     defs_trace: dict[str, BlocksType] = {}
     defloc = append(loc, "defs")
@@ -524,7 +524,7 @@ def process_defs(
 
 
 def process_blocks(
-    log, scope: ScopeType, blocks: BlocksType, loc: BlockLocation
+    log, scope: ScopeType, blocks: BlocksType, loc: LocationType
 ) -> tuple[Any, str, ScopeType, BlocksType]:
     return step_to_completion(
         step_blocks(log, scope, yield_output=False, blocks=blocks, loc=loc)
@@ -532,7 +532,7 @@ def process_blocks(
 
 
 def step_blocks(
-    log, scope: ScopeType, yield_output: bool, blocks: BlocksType, loc: BlockLocation
+    log, scope: ScopeType, yield_output: bool, blocks: BlocksType, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlocksType]]:
     result: Any
     output: str
@@ -595,7 +595,7 @@ def _get_bam_client() -> Optional[Client]:
 
 
 def step_call_model(
-    log, scope: ScopeType, yield_output: bool, block: ModelBlock, loc: BlockLocation
+    log, scope: ScopeType, yield_output: bool, block: ModelBlock, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = process_blocks(
@@ -702,7 +702,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 
 def call_api(
-    log, scope: ScopeType, block: ApiBlock, loc: BlockLocation
+    log, scope: ScopeType, block: ApiBlock, loc: LocationType
 ) -> tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]:
     _, input_str, _, input_trace = process_blocks(
         log, scope, block.input, append(loc, "input")
@@ -728,7 +728,7 @@ def call_api(
 
 
 def call_code(
-    log, scope: ScopeType, block: CodeBlock, loc: BlockLocation
+    log, scope: ScopeType, block: CodeBlock, loc: LocationType
 ) -> tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]:
     _, code_s, _, code_trace = process_blocks(
         log, scope, block.code, append(loc, "code")
@@ -774,7 +774,7 @@ def call_command(code: str) -> tuple[int, str]:
 
 
 def process_input(
-    log, scope: ScopeType, block: ReadBlock, loc: BlockLocation
+    log, scope: ScopeType, block: ReadBlock, loc: LocationType
 ) -> tuple[str, ScopeType, ReadBlock | ErrorBlock]:
     if block.read is not None:
         with open(block.read, encoding="utf-8") as f:
@@ -807,14 +807,14 @@ def process_input(
 
 
 def step_include(
-    log, scope: ScopeType, yield_output: bool, block: IncludeBlock, loc: BlockLocation
+    log, scope: ScopeType, yield_output: bool, block: IncludeBlock, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
     with open(block.include, "r", encoding="utf-8") as tablefile:
         linetable = get_line_map(tablefile)
         with open(block.include, "r", encoding="utf-8") as infile:
             prog_yaml = yaml.safe_load(infile)
             trace = None
-            newloc = BlockLocation(file=block.include, path=[], table=linetable)
+            newloc = LocationType(file=block.include, path=[], table=linetable)
             try:
                 prog = Program.model_validate(prog_yaml)
                 result, output, scope, trace = yield from step_block(
@@ -838,7 +838,7 @@ def step_include(
 
 
 def parse_result(
-    parser: ParserType, text: str, loc: BlockLocation
+    parser: ParserType, text: str, loc: LocationType
 ) -> Optional[dict[str, Any] | list[Any]]:
     result: Optional[dict[str, Any] | list[Any]]
     match parser:
@@ -920,7 +920,7 @@ def debug(somestring):
         print("******")
 
 
-def error(somestring, loc: BlockLocation | None):
+def error(somestring, loc: LocationType | None):
     if loc is not None:
         print("\n" + get_loc_string(loc) + "Error: " + somestring + "\n")
     else:

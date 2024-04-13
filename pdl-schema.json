@@ -189,7 +189,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -335,36 +335,6 @@
         "input"
       ],
       "title": "ApiBlock",
-      "type": "object"
-    },
-    "BlockLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "path": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Path",
-          "type": "array"
-        },
-        "file": {
-          "title": "File",
-          "type": "string"
-        },
-        "table": {
-          "additionalProperties": {
-            "type": "integer"
-          },
-          "title": "Table",
-          "type": "object"
-        }
-      },
-      "required": [
-        "path",
-        "file",
-        "table"
-      ],
-      "title": "BlockLocation",
       "type": "object"
     },
     "CallBlock": {
@@ -556,7 +526,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -896,7 +866,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -1232,7 +1202,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -1456,7 +1426,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -1783,7 +1753,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -1993,7 +1963,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -2325,7 +2295,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -2782,7 +2752,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -3133,7 +3103,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -3350,7 +3320,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -3811,7 +3781,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -3930,6 +3900,36 @@
         }
       },
       "title": "LengthPenalty",
+      "type": "object"
+    },
+    "LocationType": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "table": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Table",
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "file",
+        "table"
+      ],
+      "title": "LocationType",
       "type": "object"
     },
     "ModelBlock": {
@@ -4121,7 +4121,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -5400,7 +5400,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -5691,7 +5691,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
@@ -6148,7 +6148,7 @@
         "location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/BlockLocation"
+              "$ref": "#/$defs/LocationType"
             },
             {
               "type": "null"
