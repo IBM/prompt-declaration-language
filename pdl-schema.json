@@ -174,7 +174,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -538,7 +541,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -875,7 +881,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -1208,7 +1217,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -1429,7 +1441,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -1753,7 +1768,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -1960,7 +1978,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -2289,7 +2310,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -2743,7 +2767,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -3091,7 +3118,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -3305,7 +3335,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -3763,7 +3796,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -4070,7 +4106,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -4773,144 +4812,6 @@
       "title": "PDLTextGenerationParameters",
       "type": "object"
     },
-    "Parser": {
-      "additionalProperties": false,
-      "properties": {
-        "spec": {
-          "title": "Spec",
-          "type": "object"
-        },
-        "with": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "title": "With"
-        },
-        "mode": {
-          "default": "pdl",
-          "enum": [
-            "pdl",
-            "regex"
-          ],
-          "title": "Mode",
-          "type": "string"
-        }
-      },
-      "required": [
-        "spec",
-        "with"
-      ],
-      "title": "Parser",
-      "type": "object"
-    },
     "PdlBlock": {
       "anyOf": [
         {
@@ -5080,6 +4981,154 @@
         }
       ],
       "title": "PdlBlocks"
+    },
+    "PdlParser": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spec"
+        },
+        "pdl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/ModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Pdl"
+        }
+      },
+      "required": [
+        "pdl"
+      ],
+      "title": "PdlParser",
+      "type": "object"
     },
     "Program": {
       "anyOf": [
@@ -5336,7 +5385,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -5398,6 +5450,56 @@
         "read"
       ],
       "title": "ReadBlock",
+      "type": "object"
+    },
+    "RegexParser": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spec"
+        },
+        "regex": {
+          "title": "Regex",
+          "type": "string"
+        },
+        "mode": {
+          "default": "fullmatch",
+          "enum": [
+            "search",
+            "match",
+            "fullmatch",
+            "split",
+            "findall"
+          ],
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "regex"
+      ],
+      "title": "RegexParser",
       "type": "object"
     },
     "RepeatBlock": {
@@ -5574,7 +5676,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"
@@ -6028,7 +6133,10 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/Parser"
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
             },
             {
               "type": "null"

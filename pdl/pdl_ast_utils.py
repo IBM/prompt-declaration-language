@@ -16,8 +16,9 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
-    Parser,
+    PdlParser,
     ReadBlock,
+    RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
 )
@@ -80,8 +81,11 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             assert (
                 False
             ), f"Internal error (missing case iter_block_children({type(block)}))"
-    if isinstance(block.parser, Parser):
-        iter_blocks(f, block.parser.with_)
+    match (block.parser):
+        case "json" | "yaml" | RegexParser():
+            pass
+        case PdlParser():
+            iter_blocks(f, block.parser.pdl)
 
 
 def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:

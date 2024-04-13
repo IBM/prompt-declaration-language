@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, Union
+from typing import Any, Literal, Optional, TypeAlias
 
 from genai.schema import (
     ModerationParameters,
@@ -53,9 +53,22 @@ empty_block_location = BlockLocation(file="", path=[], table={})
 
 class Parser(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    spec: dict[str, Any]
-    with_: Union["BlocksType", str] = Field(..., alias="with")
-    mode: Literal["pdl", "regex"] = "pdl"
+    description: Optional[str] = None
+    spec: Optional[dict[str, Any]] = None
+
+
+class PdlParser(Parser):
+    model_config = ConfigDict(extra="forbid")
+    pdl: "BlocksType"
+
+
+class RegexParser(Parser):
+    model_config = ConfigDict(extra="forbid")
+    regex: str
+    mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
+
+
+ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
 
 
 class Block(BaseModel):
@@ -68,7 +81,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     show_result: bool = True
     result: Optional[Any] = None
-    parser: Optional[Literal["json", "yaml"] | Parser] = None
+    parser: Optional[ParserType] = None
     location: Optional[BlockLocation] = None
 
 

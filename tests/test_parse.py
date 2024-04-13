@@ -7,8 +7,7 @@ regex_data = {
     "document": "Malcolm Reynolds",
     "parser": {
         "spec": {"first_name": "str", "last_name": "str"},
-        "with": "(?P<first_name>\\w+) (?P<last_name>\\w+)",
-        "mode": "regex",
+        "regex": "(?P<first_name>\\w+) (?P<last_name>\\w+)",
     },
 }
 

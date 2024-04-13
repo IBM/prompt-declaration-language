@@ -73,8 +73,8 @@ export function map_block_children(
     .with({kind: undefined}, block => block)
     .exhaustive();
   match(new_block)
-    .with({parser: {mode: 'pdl'}}, block => {
-      block.parser.with = map_blocks(f, block.parser.with);
+    .with({parser: {pdl: P._}}, block => {
+      block.parser.pdl = map_blocks(f, block.parser.pdl);
     })
     .otherwise(() => {});
   return new_block;
@@ -143,8 +143,8 @@ export function iter_block_children(
     .with({kind: undefined}, () => {})
     .exhaustive();
   match(block)
-    .with({parser: {mode: 'pdl'}}, block => {
-      iter_blocks(f, block.parser.with);
+    .with({parser: {pdl: P._}}, block => {
+      iter_blocks(f, block.parser.pdl);
     })
     .otherwise(() => {});
 }

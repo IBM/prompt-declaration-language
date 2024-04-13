@@ -45,8 +45,12 @@ export type Description14 = string | null;
 export type Description15 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
-export type Parser = ("json" | "yaml") | Parser1 | null;
-export type With =
+export type Parser = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Description16 = string | null;
+export type Spec16 = {
+  [k: string]: unknown;
+} | null;
+export type Pdl =
   | string
   | FunctionBlock
   | CallBlock
@@ -83,13 +87,18 @@ export type With =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Mode = "pdl" | "regex";
+export type Description17 = string | null;
+export type Spec17 = {
+  [k: string]: unknown;
+} | null;
+export type Regex = string;
+export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
 export type Path = string[];
 export type File = string;
 export type Kind = "empty";
 export type Def1 = string | null;
 export type ShowResult1 = boolean;
-export type Parser2 = ("json" | "yaml") | Parser1 | null;
+export type Parser1 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -131,7 +140,7 @@ export type Program1 =
     )[];
 export type Def2 = string | null;
 export type ShowResult2 = boolean;
-export type Parser3 = ("json" | "yaml") | Parser1 | null;
+export type Parser2 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind2 = "include";
 export type Include = string;
 export type Trace =
@@ -155,14 +164,14 @@ export type Trace =
   | null;
 export type Def3 = string | null;
 export type ShowResult3 = boolean;
-export type Parser4 = ("json" | "yaml") | Parser1 | null;
+export type Parser3 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind3 = "read";
 export type Read = string | null;
 export type Message = string | null;
 export type Multiline = boolean;
 export type Def4 = string | null;
 export type ShowResult4 = boolean;
-export type Parser5 = ("json" | "yaml") | Parser1 | null;
+export type Parser4 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind4 = "document";
 export type Document =
   | string
@@ -203,7 +212,7 @@ export type Document =
     )[];
 export type Def5 = string | null;
 export type ShowResult5 = boolean;
-export type Parser6 = ("json" | "yaml") | Parser1 | null;
+export type Parser5 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind5 = "for";
 export type Repeat =
   | string
@@ -284,7 +293,7 @@ export type Trace1 =
   | null;
 export type Def6 = string | null;
 export type ShowResult6 = boolean;
-export type Parser7 = ("json" | "yaml") | Parser1 | null;
+export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind6 = "repeat_until";
 export type Repeat1 =
   | string
@@ -365,7 +374,7 @@ export type Trace2 =
   | null;
 export type Def7 = string | null;
 export type ShowResult7 = boolean;
-export type Parser8 = ("json" | "yaml") | Parser1 | null;
+export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind7 = "repeat";
 export type Repeat2 =
   | string
@@ -447,7 +456,7 @@ export type Trace3 =
   | null;
 export type Def8 = string | null;
 export type ShowResult8 = boolean;
-export type Parser9 = ("json" | "yaml") | Parser1 | null;
+export type Parser8 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind8 = "if";
 export type Then =
   | string
@@ -527,16 +536,16 @@ export type Else =
 export type IfResult = boolean | null;
 export type Def9 = string | null;
 export type ShowResult9 = boolean;
-export type Parser10 = ("json" | "yaml") | Parser1 | null;
+export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind9 = "data";
 export type Def10 = string | null;
 export type ShowResult10 = boolean;
-export type Parser11 = ("json" | "yaml") | Parser1 | null;
+export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind10 = "get";
 export type Get = string;
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
-export type Parser12 = ("json" | "yaml") | Parser1 | null;
+export type Parser11 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind11 = "api";
 export type Api = string;
 export type Url = string;
@@ -579,7 +588,7 @@ export type Input =
     )[];
 export type Def12 = string | null;
 export type ShowResult12 = boolean;
-export type Parser13 = ("json" | "yaml") | Parser1 | null;
+export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind12 = "code";
 export type Lan = "python" | "command";
 export type Code =
@@ -621,7 +630,7 @@ export type Code =
     )[];
 export type Def13 = string | null;
 export type ShowResult13 = boolean;
-export type Parser14 = ("json" | "yaml") | Parser1 | null;
+export type Parser13 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind13 = "model";
 export type Model = string;
 export type Input1 =
@@ -715,7 +724,7 @@ export type ExampleFileIds =
   | null;
 export type Def14 = string | null;
 export type ShowResult14 = boolean;
-export type Parser15 = ("json" | "yaml") | Parser1 | null;
+export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind14 = "call";
 export type Call = string;
 export type Trace4 =
@@ -758,7 +767,7 @@ export type Trace4 =
   | null;
 export type Def15 = string | null;
 export type ShowResult15 = boolean;
-export type Parser16 = ("json" | "yaml") | Parser1 | null;
+export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Kind15 = "function";
 export type Function = {
   [k: string]: unknown;
@@ -866,7 +875,7 @@ export interface FunctionBlock {
   def?: Def15;
   show_result?: ShowResult15;
   result?: unknown;
-  parser?: Parser16;
+  parser?: Parser15;
   location?: BlockLocation | null;
   kind?: Kind15;
   function: Function;
@@ -922,7 +931,7 @@ export interface CallBlock {
   def?: Def14;
   show_result?: ShowResult14;
   result?: unknown;
-  parser?: Parser15;
+  parser?: Parser14;
   location?: BlockLocation | null;
   kind?: Kind14;
   call: Call;
@@ -978,7 +987,7 @@ export interface ModelBlock {
   def?: Def13;
   show_result?: ShowResult13;
   result?: unknown;
-  parser?: Parser14;
+  parser?: Parser13;
   location?: BlockLocation | null;
   kind?: Kind13;
   model: Model;
@@ -1038,7 +1047,7 @@ export interface CodeBlock {
   def?: Def12;
   show_result?: ShowResult12;
   result?: unknown;
-  parser?: Parser13;
+  parser?: Parser12;
   location?: BlockLocation | null;
   kind?: Kind12;
   lan: Lan;
@@ -1093,7 +1102,7 @@ export interface ApiBlock {
   def?: Def11;
   show_result?: ShowResult11;
   result?: unknown;
-  parser?: Parser12;
+  parser?: Parser11;
   location?: BlockLocation | null;
   kind?: Kind11;
   api: Api;
@@ -1149,7 +1158,7 @@ export interface GetBlock {
   def?: Def10;
   show_result?: ShowResult10;
   result?: unknown;
-  parser?: Parser11;
+  parser?: Parser10;
   location?: BlockLocation | null;
   kind?: Kind10;
   get: Get;
@@ -1203,7 +1212,7 @@ export interface DataBlock {
   def?: Def9;
   show_result?: ShowResult9;
   result?: unknown;
-  parser?: Parser10;
+  parser?: Parser9;
   location?: BlockLocation | null;
   kind?: Kind9;
   data: Data;
@@ -1257,7 +1266,7 @@ export interface IfBlock {
   def?: Def8;
   show_result?: ShowResult8;
   result?: unknown;
-  parser?: Parser9;
+  parser?: Parser8;
   location?: BlockLocation | null;
   kind?: Kind8;
   if: If;
@@ -1314,7 +1323,7 @@ export interface RepeatBlock {
   def?: Def7;
   show_result?: ShowResult7;
   result?: unknown;
-  parser?: Parser8;
+  parser?: Parser7;
   location?: BlockLocation | null;
   kind?: Kind7;
   repeat: Repeat2;
@@ -1370,7 +1379,7 @@ export interface RepeatUntilBlock {
   def?: Def6;
   show_result?: ShowResult6;
   result?: unknown;
-  parser?: Parser7;
+  parser?: Parser6;
   location?: BlockLocation | null;
   kind?: Kind6;
   repeat: Repeat1;
@@ -1426,7 +1435,7 @@ export interface ForBlock {
   def?: Def5;
   show_result?: ShowResult5;
   result?: unknown;
-  parser?: Parser6;
+  parser?: Parser5;
   location?: BlockLocation | null;
   kind?: Kind5;
   for: For;
@@ -1482,7 +1491,7 @@ export interface DocumentBlock {
   def?: Def4;
   show_result?: ShowResult4;
   result?: unknown;
-  parser?: Parser5;
+  parser?: Parser4;
   location?: BlockLocation | null;
   kind?: Kind4;
   document: Document;
@@ -1536,7 +1545,7 @@ export interface ReadBlock {
   def?: Def3;
   show_result?: ShowResult3;
   result?: unknown;
-  parser?: Parser4;
+  parser?: Parser3;
   location?: BlockLocation | null;
   kind?: Kind3;
   read: Read;
@@ -1592,7 +1601,7 @@ export interface IncludeBlock {
   def?: Def2;
   show_result?: ShowResult2;
   result?: unknown;
-  parser?: Parser3;
+  parser?: Parser2;
   location?: BlockLocation | null;
   kind?: Kind2;
   include: Include;
@@ -1647,7 +1656,7 @@ export interface ErrorBlock {
   def?: Def1;
   show_result?: ShowResult1;
   result?: unknown;
-  parser?: Parser2;
+  parser?: Parser1;
   location?: BlockLocation | null;
   kind?: Kind1;
   msg: Msg;
@@ -1748,13 +1757,16 @@ export interface Defs15 {
         | EmptyBlock
       )[];
 }
-export interface Parser1 {
-  spec: Spec16;
-  with: With;
-  mode?: Mode;
+export interface PdlParser {
+  description?: Description16;
+  spec?: Spec16;
+  pdl: Pdl;
 }
-export interface Spec16 {
-  [k: string]: unknown;
+export interface RegexParser {
+  description?: Description17;
+  spec?: Spec17;
+  regex: Regex;
+  mode?: Mode;
 }
 export interface BlockLocation {
   path: Path;

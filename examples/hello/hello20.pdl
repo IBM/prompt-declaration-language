@@ -10,5 +10,4 @@ spec: {"name": str}
 parser:
   spec:
     name: str
-  mode: regex
-  with: '\s*(?P<name>.*)\s*'
+  regex: '\s*(?P<name>.*)\s*'

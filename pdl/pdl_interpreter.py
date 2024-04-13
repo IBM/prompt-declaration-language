@@ -36,10 +36,12 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
-    Parser,
+    ParserType,
+    PdlParser,
     PDLTextGenerationParameters,
     Program,
     ReadBlock,
+    RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
     ScopeType,
@@ -226,29 +228,14 @@ def step_block(
         log, scope, yield_output, block, loc
     )
     trace = trace.model_copy(update={"defs": defs_trace, "result": output})
-    match block.parser:
-        case None:
-            pass
-        case "json":
-            try:
-                result = json.loads(result)
-            except Exception:
-                msg = "Attempted to parse ill-formed YAML"
-                error(msg, loc)
-                trace = ErrorBlock(msg=msg, program=trace)
-                return result, output, scope, trace
-        case "yaml":
-            try:
-                result = yaml.safe_load(result)
-            except Exception:
-                msg = "Attempted to parse ill-formed YAML"
-                error(msg, loc)
-                trace = ErrorBlock(msg=msg, program=trace)
-                return result, output, scope, trace
-        case Parser():
-            result = process_parse(block.parser, result, loc)
-        case _:
-            assert False
+    if block.parser is not None:
+        parsed_result = parse_result(block.parser, result, loc)
+        if parse_result is None:
+            msg = f"Fail to parse: '{result}'"
+            error(msg, loc)
+            trace = ErrorBlock(msg=msg, program=trace)
+            return result, output, scope, trace
+        result = parsed_result
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
@@ -850,31 +837,63 @@ def step_include(
                     return None, "", scope, trace
 
 
-def process_parse(
-    parser: Parser, text: str, loc: BlockLocation
-) -> Optional[dict[str, Any]]:
-    match parser.mode:
-        case "pdl":
+def parse_result(
+    parser: ParserType, text: str, loc: BlockLocation
+) -> Optional[dict[str, Any] | list[Any]]:
+    result: Optional[dict[str, Any] | list[Any]]
+    match parser:
+        case "json":
+            try:
+                result = json.loads(text)
+            except Exception:
+                result = None
+        case "yaml":
+            try:
+                result = yaml.safe_load(text)
+            except Exception:
+                result = None
+        case PdlParser():
             assert False, "TODO"
-        case "regex":
-            assert isinstance(parser.with_, str)
-            regex = parser.with_
-    m = re.fullmatch(regex, text)
-    if m is None:
-        msg = f"No match found for {regex} in {text}"
-        error(msg, append(loc, "from"))
-        return None
-    current_group_name = ""
-    try:
-        result = {}
-        for x in parser.spec.keys():
-            current_group_name = x
-            result[x] = m.group(x)
-        return result
-    except IndexError:
-        msg = f"No group named {current_group_name} found by {regex} in {text}"
-        error(msg, append(loc, "from"))
-        return None
+        case RegexParser(mode="search" | "match" | "fullmatch"):
+            regex = parser.regex
+            match parser.mode:
+                case "search":
+                    matcher = re.search
+                case "match":
+                    matcher = re.match
+                case "fullmatch":
+                    matcher = re.fullmatch
+                case _:
+                    assert False
+            m = matcher(regex, text, flags=re.M)
+            if m is None:
+                return None
+            if parser.spec is None:
+                result = list(m.groups())
+            else:
+                current_group_name = ""
+                try:
+                    result = {}
+                    for x in parser.spec.keys():
+                        current_group_name = x
+                        result[x] = m.group(x)
+                    return result
+                except IndexError:
+                    msg = f"No group named {current_group_name} found by {regex} in {text}"
+                    error(msg, append(loc, "from"))
+                    return None
+        case RegexParser(mode="split" | "findall"):
+            regex = parser.regex
+            match parser.mode:
+                case "split":
+                    result = re.split(regex, text, flags=re.M)
+                case "findall":
+                    result = re.findall(regex, text, flags=re.M)
+                case _:
+                    assert False
+        case _:
+            assert False
+    return result
 
 
 def get_var(var: str, scope: ScopeType) -> Any:

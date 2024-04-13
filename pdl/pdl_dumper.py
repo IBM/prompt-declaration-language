@@ -18,8 +18,10 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     ModelBlock,
-    Parser,
+    ParserType,
+    PdlParser,
     ReadBlock,
+    RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
 )
@@ -139,7 +141,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         d["show_result"] = block.show_result
     if block.result is not None:
         d["result"] = block.result
-    if block.parser is not None and block.parser != "json" and block.parser != "yaml":
+    if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     return d
 
@@ -155,16 +157,21 @@ def blocks_to_dict(
     return result
 
 
-def parser_to_dict(parser: Parser) -> dict[str, Any]:
-    d: dict[str, Any] = {}
-    d["spec"] = parser.spec
-    if isinstance(parser.with_, str):
-        d["with"] = parser.with_
-    else:
-        d["with"] = blocks_to_dict(parser.with_)
-    if parser.mode != "pdl":
-        d["mode"] = parser.mode
-    return d
+def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
+    p: str | dict[str, Any]
+    match parser:
+        case "json" | "yaml":
+            p = parser
+        case RegexParser():
+            p = parser.model_dump()
+        case PdlParser():
+            p = {}
+            p["description"] = parser.description
+            p["spec"] = parser.spec
+            p["pdl"] = blocks_to_dict(parser.pdl)
+        case _:
+            assert False
+    return p
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
