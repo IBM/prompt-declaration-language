@@ -1,0 +1,15 @@
+description: Hello world showing call out to python code with condition
+document:
+- 'Hello! '
+- lan: python
+  code: |
+    result = True
+  def: QUESTION
+  show_result: false
+- data:
+    x: "{{ QUESTION1 }}"
+    y: "{{ QUESTION2 }}"
+    z: 
+      a: "{{ QUESTION3 }}"
+      b: 
+        c: "{{ QUESTION4 }}"

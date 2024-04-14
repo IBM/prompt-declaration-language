@@ -1,0 +1,3 @@
+description: Hello world showing model chaining
+document:
+- Who is{{ NAME }}?

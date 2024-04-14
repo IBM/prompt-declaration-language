@@ -60,7 +60,7 @@ line3 = {
     "errors": [
         "",
         "Hello, world!",
-        "tests/data/line/hello3.pdl:6 - Error: Type errors during spec checking",
+        "tests/data/line/hello3.pdl:6 - Type errors during spec checking",
         "tests/data/line/hello3.pdl:6 -  world! should be of type <class 'int'>",
     ],
 }
@@ -150,9 +150,8 @@ line9 = {
     "errors": [
         "",
         "hello",
-        "tests/data/line/hello9.pdl:3 - Error: Type errors during spec checking",
+        "tests/data/line/hello9.pdl:3 - Type errors during spec checking",
         "tests/data/line/hello9.pdl:3 - hello should be of type <class 'int'>",
-        "",
     ],
 }
 
@@ -194,7 +193,7 @@ line12 = {
     "errors": [
         "",
         "Hello! How are you?",
-        "tests/data/line/hello12.pdl:9 - Error: Type errors during spec checking",
+        "tests/data/line/hello12.pdl:9 - Type errors during spec checking",
         "tests/data/line/hello12.pdl:9 - How are you? should be of type <class 'bool'>",
     ],
 }
@@ -210,7 +209,7 @@ line13 = {
         "",
         "0",
         "1",
-        "tests/data/line/hello13.pdl:9 - Error: Type errors during spec checking",
+        "tests/data/line/hello13.pdl:9 - Type errors during spec checking",
         "tests/data/line/hello13.pdl:9 - 1 should be of type <class 'str'>",
     ],
 }
@@ -227,9 +226,8 @@ line14 = {
         "Hello, world!",
         "Translate the sentence 'Hello, world!' to French",
         "Hello, world!",
-        "tests/data/line/hello14.pdl:18 - Error: Type errors in result of function call to translate",  # pylint: disable=line-too-long
+        "tests/data/line/hello14.pdl:18 - Type errors in result of function call to translate",  # pylint: disable=line-too-long
         "tests/data/line/hello14.pdl:15 - Hello, world! should be of type <class 'int'>",
-        "",
     ],
 }
 
@@ -243,12 +241,8 @@ line15 = {
     "errors": [
         "",
         "Hello World!",
-        "",
-        "tests/data/line/hello15.pdl:6 - Error: Variable is undefined: boolean",
-        "",
-        "",
-        "tests/data/line/hello15.pdl:7 - Error: 'something' is undefined in {{ something }}",
-        "",
+        "tests/data/line/hello15.pdl:6 - Variable is undefined: boolean",
+        "tests/data/line/hello15.pdl:7 - 'something' is undefined",
         "{{ something }}",
     ],
 }
@@ -262,12 +256,9 @@ line16 = {
     "file": "tests/data/line/hello16.pdl",
     "errors": [
         "",
-        "",
         '{"bob": 20, "carol": 30}',
-        "tests/data/line/hello16.pdl:8 - Error: Type errors during spec checking",
+        "tests/data/line/hello16.pdl:8 - Type errors during spec checking",
         "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
-        "",
-        "",
     ],
 }
 
@@ -280,12 +271,8 @@ line17 = {
     "file": "tests/data/line/hello17.pdl",
     "errors": [
         "",
-        "",
-        "",
-        "tests/data/line/hello17.pdl:3 - Error: Type errors during spec checking",
+        "tests/data/line/hello17.pdl:3 - Type errors during spec checking",
         "tests/data/line/hello17.pdl:3 - hello should be of type <class 'int'>",
-        "",
-        "",
     ],
 }
 
@@ -296,17 +283,168 @@ def test_line17(capsys):
 
 line18 = {
     "file": "tests/data/line/hello18.pdl",
+    "errors": ["", "0", "1", "tests/data/line/hello18.pdl:14 - 'J' is undefined"],
+}
+
+
+def test_line18(capsys):
+    do_test(line18, capsys)
+
+
+line19 = {
+    "file": "tests/data/line/hello19.pdl",
     "errors": [
         "",
-        "0",
-        "1",
+        "Hello,",
+        "tests/data/line/hello19.pdl:6 - 'models' is undefined",
+        "tests/data/line/hello19.pdl:6 - Type errors during spec checking",
+        "tests/data/line/hello19.pdl:6 - None should be of type <class 'int'>",
+    ],
+}
+
+
+def test_line19(capsys):
+    do_test(line19, capsys)
+
+
+line20 = {
+    "file": "tests/data/line/hello20.pdl",
+    "errors": [
         "",
-        "tests/data/line/hello18.pdl:14 - Error: 'J' is undefined in {{ J == 5 }}",
+        "tests/data/line/hello20.pdl:3 - 'NAME' is undefined",
+        "Who is{{ NAME }}?",
+    ],
+}
+
+
+def test_line20(capsys):
+    do_test(line20, capsys)
+
+
+line21 = {
+    "file": "tests/data/line/hello21.pdl",
+    "errors": ["", "tests/data/line/hello21.pdl:3 - 'QUESTION' is undefined"],
+}
+
+
+def test_line21(capsys):
+    do_test(line21, capsys)
+
+
+line22 = {
+    "file": "tests/data/line/hello22.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello22.pdl:4 - 'I' is undefined",
+        "{{ I }}",
+    ],
+}
+
+
+def test_line22(capsys):
+    do_test(line22, capsys)
+
+
+line23 = {
+    "file": "tests/data/line/hello23.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello23.pdl:5 - 'I' is undefined",
+        "{{ I }}",
+    ],
+}
+
+
+def test_line23(capsys):
+    do_test(line23, capsys)
+
+
+line24 = {
+    "file": "tests/data/line/hello24.pdl",
+    "errors": [
+        "",
+        "Hello, world!",
+        "tests/data/line/hello24.pdl:21 - 'GEN1' is undefined",
+        "tests/data/line/hello24.pdl:22 - 'GEN2' is undefined",
+        "tests/data/line/hello24.pdl:20 - Type errors during function call to translate",
+        "tests/data/line/hello24.pdl:20 - Missing required field: sentence",
+        "tests/data/line/hello24.pdl:20 - Missing required field: language",
+        "tests/data/line/hello24.pdl:18 - Type errors during spec checking",
+        "tests/data/line/hello24.pdl:18 - None should be of type <class 'str'>",
+    ],
+}
+
+
+def test_line24(capsys):
+    do_test(line24, capsys)
+
+
+line25 = {
+    "file": "tests/data/line/hello25.pdl",
+    "errors": [
+        "",
+        "Hello, world!",
+        "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
+        "Translate the sentence '{{ sentence1 }}' to {{ language }}",
+        "{{ result }}",
+    ],
+}
+
+
+def test_line25(capsys):
+    do_test(line25, capsys)
+
+
+line26 = {
+    "file": "tests/data/line/hello26.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
+        "tests/data/line/hello26.pdl:16 - 'question' is undefined",
+        "tests/data/line/hello26.pdl:17 - 'answers' is undefined",
+        "Answer: {",
+        '    "bob": 20,',
+        '    "carol": 30',
+        "}",
+        "tests/data/line/hello26.pdl:8 - Type errors during spec checking",
+        "tests/data/line/hello26.pdl:8 - None should be an object",
+    ],
+}
+
+
+def test_line26(capsys):
+    do_test(line26, capsys)
+
+
+line27 = {
+    "file": "tests/data/line/hello27.pdl",
+    "errors": [
+        "",
+        "",
+        "tests/data/line/hello27.pdl:3 - Attempting to include invalid yaml: tests/data/line/hello2.pdl",  # pylint: disable=line-too-long
+        "tests/data/line/hello2.pdl:9 - Field not allowed: decoding_methods",
+        "tests/data/line/hello2.pdl:10 - Field not allowed: stop_sequencess",
         "",
         "",
     ],
 }
 
 
-def test_line18(capsys):
-    do_test(line18, capsys)
+def test_line27(capsys):
+    do_test(line27, capsys)
+
+
+line28 = {
+    "file": "tests/data/line/hello28.pdl",
+    "errors": [
+        "",
+        "Hello! ",
+        "tests/data/line/hello28.pdl:9 - Variable is undefined: QUESTION1",
+        "",
+        "",
+    ],
+}
+
+
+def test_line28(capsys):
+    do_test(line28, capsys)
