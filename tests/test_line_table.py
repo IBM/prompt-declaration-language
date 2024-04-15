@@ -367,8 +367,8 @@ line24 = {
         "tests/data/line/hello24.pdl:21 - 'GEN1' is undefined",
         "tests/data/line/hello24.pdl:22 - 'GEN2' is undefined",
         "tests/data/line/hello24.pdl:20 - Type errors during function call to translate",
-        "tests/data/line/hello24.pdl:20 - Missing required field: sentence",
-        "tests/data/line/hello24.pdl:20 - Missing required field: language",
+        "tests/data/line/hello24.pdl:21 - None should be of type <class 'str'>",
+        "tests/data/line/hello24.pdl:22 - None should be of type <class 'str'>",
         "tests/data/line/hello24.pdl:18 - Type errors during spec checking",
         "tests/data/line/hello24.pdl:18 - None should be of type <class 'str'>",
     ],
@@ -401,11 +401,7 @@ line26 = {
         "",
         "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
         "tests/data/line/hello26.pdl:16 - 'question' is undefined",
-        "tests/data/line/hello26.pdl:17 - 'answers' is undefined",
-        "Answer: {",
-        '    "bob": 20,',
-        '    "carol": 30',
-        "}",
+        'Answer: {"bob": "20", "carol": "30"}',
         "tests/data/line/hello26.pdl:8 - Type errors during spec checking",
         "tests/data/line/hello26.pdl:8 - None should be an object",
     ],
@@ -448,3 +444,20 @@ line28 = {
 
 def test_line28(capsys):
     do_test(line28, capsys)
+
+
+line29 = {
+    "file": "tests/data/line/hello29.pdl",
+    "errors": [
+        "",
+        "Hello! ",
+        "tests/data/line/hello29.pdl:10 - 'QUESTION1' is undefined",
+        "tests/data/line/hello29.pdl:11 - 'QUESTION2' is undefined",
+        "tests/data/line/hello29.pdl:13 - 'QUESTION3' is undefined",
+        "tests/data/line/hello29.pdl:15 - 'QUESTION4' is undefined",
+    ],
+}
+
+
+def test_line29(capsys):
+    do_test(line29, capsys)

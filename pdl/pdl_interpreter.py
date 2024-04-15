@@ -205,16 +205,17 @@ def step_block(
     log, scope: ScopeType, yield_output: bool, block: BlockType, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if isinstance(block, str):
-        try:
-            result = process_expr(scope, block)
-            output = stringify(result)
-            trace = output
-        except UndefinedError as e:
-            msg = f"{get_loc_string(loc)}{e}"
+        trace: BlockType
+        result, errors = process_expr(scope, block, loc)
+        if len(errors) != 0:
+            msg = "\n".join(errors)
             error(msg)
             result = block
             output = block
             trace = ErrorBlock(msg=msg, program=block)
+        else:
+            output = stringify(result)
+            trace = output
         if yield_output:
             yield output
         append_log(log, "Document", output)
@@ -239,7 +240,6 @@ def step_block(
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
-        debug("Storing model result for " + var + ": " + str(trace.result))
     if block.show_result is False:
         output = ""
     if block.spec is not None and not isinstance(block, FunctionBlock):
@@ -292,16 +292,16 @@ def step_block_body(
                 yield output
         case DataBlock(data=v):
             block.location = append(loc, "data")
-            try:
-                result = process_expr(scope, v)
-                output = stringify(result)
-                trace = block.model_copy()
-            except UndefinedError as e:
-                msg = f"{get_loc_string(block.location)}{e}"
+            result, errors = process_expr(scope, v, append(loc, "data"))
+            if len(errors) != 0:
+                msg = "\n".join(errors)
                 error(msg)
                 result = None
                 output = ""
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
+            else:
+                output = stringify(result)
+                trace = block.model_copy()
             if yield_output:
                 yield output
         case ApiBlock():
@@ -317,9 +317,14 @@ def step_block_body(
         case IfBlock():
             result = None
             output = ""
-            b = None
-            try:
-                b = process_condition(scope, block.condition)
+            b, errors = process_condition(
+                scope, block.condition, append(block.location, "if")
+            )
+            if len(errors) != 0:
+                msg = "\n".join(errors)
+                error(msg)
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
+            else:
                 if b:
                     thenloc = append(loc, "then")
                     result, output, scope, then_trace = yield from step_blocks(
@@ -344,10 +349,6 @@ def step_block_body(
                     )
                 else:
                     trace = block.model_copy(update={"if_result": b})
-            except UndefinedError as e:
-                msg = f"{get_loc_string(append(block.location, 'if'))}{e}"
-                error(msg)
-                trace = ErrorBlock(msg=msg, program=block.model_copy())
         case RepeatBlock(num_iterations=n):
             result = None
             output = ""
@@ -372,42 +373,45 @@ def step_block_body(
             items: dict[str, Any] = {}
             lengths = []
             for k, v in block.fors.items():
-                try:
-                    klist = process_expr(scope, v)
-                    items = items | {k: klist}
-                    lengths.append(len(klist))
-                except UndefinedError as e:
-                    msg = (
-                        f"{get_loc_string(append(append(block.location, 'for'), k))}{e}"
-                    )
+                klist, errors = process_expr(
+                    scope, v, append(append(block.location, "for"), k)
+                )
+                if len(errors) != 0:
+                    msg = "\n".join(errors)
                     error(msg)
                     trace = ErrorBlock(msg=msg, program=block.model_copy())
-            if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                msg = f"{get_loc_string(loc)}Lists inside the For block must be of the same length"
+                if klist is not None:
+                    items = items | {k: klist}
+                    lengths.append(len(klist))
+            if len(set(lengths)) not in [
+                0,
+                1,
+            ]:  # Not all the lists are of the same length
+                msg = f"{get_loc_string(append(block.location, 'for'))}Lists inside the For block must be of the same length"  # pylint:disable=line-too-long
                 error(msg)
-                output = ""
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                for i in range(lengths[0]):
-                    scope = scope | {"context": context_init + output}
-                    for k in items.keys():
-                        scope = scope | {k: items[k][i]}
-                    newloc = append(loc, "repeat")
-                    (
-                        iteration_result,
-                        iteration_output,
-                        scope,
-                        body_trace,
-                    ) = yield from step_blocks(
-                        log, scope, yield_output, block.repeat, newloc
-                    )
-                    output += iteration_output
-                    result.append(iteration_result)
-                    iter_trace.append(body_trace)
-                    if contains_error(body_trace):
-                        break
+                iter_trace = []
+                if len(lengths) != 0:
+                    for i in range(lengths[0]):
+                        scope = scope | {"context": context_init + output}
+                        for k in items.keys():
+                            scope = scope | {k: items[k][i]}
+                        newloc = append(loc, "repeat")
+                        (
+                            iteration_result,
+                            iteration_output,
+                            scope,
+                            body_trace,
+                        ) = yield from step_blocks(
+                            log, scope, yield_output, block.repeat, newloc
+                        )
+                        output += iteration_output
+                        result.append(iteration_result)
+                        iter_trace.append(body_trace)
+                        if contains_error(body_trace):
+                            break
                 trace = block.model_copy(update={"trace": iter_trace})
-
         case RepeatUntilBlock(until=cond):
             result = None
             stop = False
@@ -424,10 +428,9 @@ def step_block_body(
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
-                try:
-                    stop = process_condition(scope, cond)
-                except UndefinedError as e:
-                    msg = f"{get_loc_string(append(loc, 'until'))}{e}"
+                stop, errors = process_condition(scope, cond, append(loc, "until"))
+                if len(errors) != 0:
+                    msg = "\n".join(errors)
                     error(msg)
                     trace = ErrorBlock(msg=msg, program=block.model_copy())
                     iterations_trace.append(trace)
@@ -453,16 +456,13 @@ def step_block_body(
             output = ""
             trace = closure.model_copy(update={})
         case CallBlock(call=f):
-            args = {}
             result = None
             output = ""
-            for k, v in block.args.items():
-                try:
-                    args[k] = process_expr(scope, v)
-                except UndefinedError as e:
-                    msg = f"{get_loc_string(append(append(loc, 'args'), k))}{e}"
-                    error(msg)
-                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+            args, errors = process_expr(scope, block.args, append(loc, "args"))
+            if len(errors) != 0:
+                msg = "\n".join(errors)
+                error(msg)
+                trace = ErrorBlock(msg=msg, program=block.model_copy())
             closure = get_var(f, scope)
             if closure is None:
                 msg = f"{get_loc_string(append(loc, 'call'))}Function is undefined: {f}"
@@ -558,10 +558,12 @@ def step_blocks(
     return result, output, scope, trace
 
 
-def process_expr(scope: ScopeType, e: Any) -> Any:
-    if isinstance(e, str):
+def process_expr(
+    scope: ScopeType, expr: Any, loc: LocationType
+) -> tuple[Any, list[str]]:
+    if isinstance(expr, str):
         template = Template(
-            e,
+            expr,
             keep_trailing_newline=True,
             block_start_string="{%%%%%PDL%%%%%%%%%%",
             block_end_string="%%%%%PDL%%%%%%%%%%}",
@@ -570,23 +572,43 @@ def process_expr(scope: ScopeType, e: Any) -> Any:
             autoescape=False,
             undefined=StrictUndefined,
         )
-        s = template.render(scope)
-        if e.startswith("{{") and e.endswith("}}"):
-            try:
-                return literal_eval(s)
-            except Exception:
-                pass
-        return s
-    if isinstance(e, list):
-        return [process_expr(scope, x) for x in e]  # type: ignore
-    if isinstance(e, dict):
-        return {k: process_expr(scope, x) for k, x in e.items()}  # type: ignore
-    return e
+        try:
+            s = template.render(scope)
+            if expr.startswith("{{") and expr.endswith("}}"):
+                try:
+                    return literal_eval(s), []
+                except Exception:
+                    pass
+        except UndefinedError as e:
+            msg = f"{get_loc_string(loc)}{e}"
+            return (None, [msg])
+        return (s, [])
+    if isinstance(expr, list):
+        errors = []
+        result = []
+        for index, x in enumerate(expr):
+            res, errs = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
+            if len(errs) != 0:
+                errors += errs
+            result.append(res)
+        return (result, errors)  # type: ignore
+    if isinstance(expr, dict):
+        errors = []
+        result_dict: dict[str, Any] = {}
+        for k, x in expr.items():
+            r, errs = process_expr(scope, x, append(loc, k))
+            if len(errs) != 0:
+                errors += errs
+            result_dict[k] = r
+        return (result_dict, errors)  # type: ignore
+    return (expr, [])
 
 
-def process_condition(scope: ScopeType, cond: ExpressionType) -> bool:
-    b = process_expr(scope, cond)
-    return b
+def process_condition(
+    scope: ScopeType, cond: ExpressionType, loc: LocationType
+) -> tuple[bool, list[str]]:
+    b, errors = process_expr(scope, cond, loc)
+    return b, errors
 
 
 def _get_bam_client() -> Optional[Client]:
@@ -605,11 +627,9 @@ def step_call_model(
     else:
         model_input = scope["context"]
         input_trace = None
-    model = ""
-    try:
-        model = process_expr(scope, block.model)
-    except UndefinedError as e:
-        msg = f"{get_loc_string(append(loc, 'model'))}{e}"
+    model, errors = process_expr(scope, block.model, append(loc, "model"))
+    if len(errors) != 0:
+        msg = "\n".join(errors)
         error(msg)
         trace = ErrorBlock(
             msg=msg, program=block.model_copy(update={"input": input_trace})
