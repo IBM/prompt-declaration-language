@@ -402,8 +402,7 @@ line26 = {
         "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
         "tests/data/line/hello26.pdl:16 - 'question' is undefined",
         'Answer: {"bob": "20", "carol": "30"}',
-        "tests/data/line/hello26.pdl:8 - Type errors during spec checking",
-        "tests/data/line/hello26.pdl:8 - None should be an object",
+        "tests/data/line/hello26.pdl:8 - Attempted to parse ill-formed JSON",
     ],
 }
 

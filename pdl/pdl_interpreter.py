@@ -67,6 +67,15 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
+class PDLException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+class PDLParserError(PDLException):
+    pass
+
+
 empty_scope: ScopeType = {"context": ""}
 empty_text_generation_parameters = PDLTextGenerationParameters(
     beam_width=None,
@@ -230,13 +239,13 @@ def step_block(
     )
     trace = trace.model_copy(update={"defs": defs_trace, "result": output})
     if block.parser is not None:
-        parsed_result = parse_result(block.parser, result, loc)
-        if parse_result is None:
-            msg = f"{get_loc_string(loc)}Fail to parse: '{result}'"
+        try:
+            result = parse_result(block.parser, result)
+        except PDLParserError as e:
+            msg = f"{get_loc_string(loc)}{e.msg}"
             error(msg)
             trace = ErrorBlock(msg=msg, program=trace)
             return result, output, scope, trace
-        result = parsed_result
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
@@ -860,21 +869,19 @@ def step_include(
                     return None, "", scope, trace
 
 
-def parse_result(
-    parser: ParserType, text: str, loc: LocationType
-) -> Optional[dict[str, Any] | list[Any]]:
+def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
     result: Optional[dict[str, Any] | list[Any]]
     match parser:
         case "json":
             try:
                 result = json.loads(text)
-            except Exception:
-                result = None
+            except Exception as exc:
+                raise PDLParserError("Attempted to parse ill-formed JSON") from exc
         case "yaml":
             try:
                 result = yaml.safe_load(text)
-            except Exception:
-                result = None
+            except Exception as exc:
+                raise PDLParserError("Attempted to parse ill-formed YAML") from exc
         case PdlParser():
             assert False, "TODO"
         case RegexParser(mode="search" | "match" | "fullmatch"):
@@ -901,10 +908,9 @@ def parse_result(
                         current_group_name = x
                         result[x] = m.group(x)
                     return result
-                except IndexError:
-                    msg = f"{get_loc_string(append(loc, 'from'))}No group named {current_group_name} found by {regex} in {text}"  # pylint: disable=line-too-long
-                    error(msg)
-                    return None
+                except IndexError as exc:
+                    msg = f"No group named {current_group_name} found by {regex} in {text}"
+                    raise PDLParserError(msg) from exc
         case RegexParser(mode="split" | "findall"):
             regex = parser.regex
             match parser.mode:

@@ -74,15 +74,11 @@ defs:
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
-        generated_questions:
-          spec: {list: {"minItems": 2, "maxItems": 2, str: {}}}  # TODO: {list: {minItems: {{ num_samples }}, maxItems: {{ num_samples }}, str: {}}}
-          lan: python
-          code: | # parse model output
-            import re
-            raw = """ {{teacher_output}} """
-            result = re.findall(r"### Question [0-9]+:\s*([^#\n]+)", raw)
+          parser:
+            regex: '### Question [0-9]+:\s*([^#\n]+)'
+            mode: findall
     - for:
-        question: "{{generated_questions}}"
+        question: "{{teacher_output}}"
       repeat:
         data:
           icl_question: "{{icl_question}}"
@@ -165,12 +161,12 @@ defs:
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 256
-    - lan: python
-      code: | # parse model output
-        import re
-        raw = """ {{teacher_output}} """
-        match = re.search(r"Rating.*\[\[(\d+\.?\d*)\]\]", raw)
-        result = float(match.group(1)) if match else 0.0
+          parser:
+            spec: { "rating": str }
+            # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
+            regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
+            mode: search
+    - "{{ teacher_output.rating }}"
 
   filter_questions:
     function:
@@ -350,13 +346,11 @@ defs:
             include_stop_sequence: false
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 256
-    - lan: python
-      spec: float
-      code: | # parse model output
-        import re
-        raw = """ {{teacher_output}} """
-        match = re.search(r"Rating.*\[\[(\d+\.?\d*)\]\]", raw)
-        result = float(match.group(1)) if match else 0.0
+          parser:
+            spec: { "rating": str }
+            regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
+            mode: search
+    - "{{ teacher_output.rating if teacher_output.rating is not none else 0.0 | float}}"
 
   filter_question_answer_pair:
     function:
