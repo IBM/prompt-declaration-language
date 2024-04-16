@@ -270,6 +270,8 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   if (Object.keys(data?.defs ?? {}).length === 0) {
     new_data.defs = undefined;
   }
+  // remove location info
+  new_data.location = undefined;
   // recursive cleanup
   return map_block_children(block_code_cleanup, new_data);
 }
