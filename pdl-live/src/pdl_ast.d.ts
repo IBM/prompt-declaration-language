@@ -876,7 +876,7 @@ export interface FunctionBlock {
   show_result?: ShowResult15;
   result?: unknown;
   parser?: Parser15;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind15;
   function: Function;
   return: Return;
@@ -932,7 +932,7 @@ export interface CallBlock {
   show_result?: ShowResult14;
   result?: unknown;
   parser?: Parser14;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind14;
   call: Call;
   args?: Args;
@@ -988,7 +988,7 @@ export interface ModelBlock {
   show_result?: ShowResult13;
   result?: unknown;
   parser?: Parser13;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind13;
   model: Model;
   input?: Input1;
@@ -1048,7 +1048,7 @@ export interface CodeBlock {
   show_result?: ShowResult12;
   result?: unknown;
   parser?: Parser12;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind12;
   lan: Lan;
   code: Code;
@@ -1103,7 +1103,7 @@ export interface ApiBlock {
   show_result?: ShowResult11;
   result?: unknown;
   parser?: Parser11;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind11;
   api: Api;
   url: Url;
@@ -1159,7 +1159,7 @@ export interface GetBlock {
   show_result?: ShowResult10;
   result?: unknown;
   parser?: Parser10;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind10;
   get: Get;
 }
@@ -1213,7 +1213,7 @@ export interface DataBlock {
   show_result?: ShowResult9;
   result?: unknown;
   parser?: Parser9;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind9;
   data: Data;
 }
@@ -1267,7 +1267,7 @@ export interface IfBlock {
   show_result?: ShowResult8;
   result?: unknown;
   parser?: Parser8;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind8;
   if: If;
   then: Then;
@@ -1324,7 +1324,7 @@ export interface RepeatBlock {
   show_result?: ShowResult7;
   result?: unknown;
   parser?: Parser7;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind7;
   repeat: Repeat2;
   num_iterations: NumIterations;
@@ -1380,7 +1380,7 @@ export interface RepeatUntilBlock {
   show_result?: ShowResult6;
   result?: unknown;
   parser?: Parser6;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind6;
   repeat: Repeat1;
   until: Until;
@@ -1436,7 +1436,7 @@ export interface ForBlock {
   show_result?: ShowResult5;
   result?: unknown;
   parser?: Parser5;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind5;
   for: For;
   repeat: Repeat;
@@ -1492,7 +1492,7 @@ export interface DocumentBlock {
   show_result?: ShowResult4;
   result?: unknown;
   parser?: Parser4;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind4;
   document: Document;
 }
@@ -1546,7 +1546,7 @@ export interface ReadBlock {
   show_result?: ShowResult3;
   result?: unknown;
   parser?: Parser3;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind3;
   read: Read;
   message?: Message;
@@ -1602,7 +1602,7 @@ export interface IncludeBlock {
   show_result?: ShowResult2;
   result?: unknown;
   parser?: Parser2;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind2;
   include: Include;
   trace?: Trace;
@@ -1657,7 +1657,7 @@ export interface ErrorBlock {
   show_result?: ShowResult1;
   result?: unknown;
   parser?: Parser1;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind1;
   msg: Msg;
   program: Program1;
@@ -1712,7 +1712,7 @@ export interface EmptyBlock {
   show_result?: ShowResult;
   result?: unknown;
   parser?: Parser;
-  location?: BlockLocation | null;
+  location?: LocationType | null;
   kind?: Kind;
 }
 export interface Spec15 {
@@ -1768,7 +1768,7 @@ export interface RegexParser {
   regex: Regex;
   mode?: Mode;
 }
-export interface BlockLocation {
+export interface LocationType {
   path: Path;
   file: File;
   table: Table;

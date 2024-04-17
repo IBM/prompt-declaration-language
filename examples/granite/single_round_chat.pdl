@@ -1,6 +1,6 @@
 description: Granite Single-Round Chat
 document:
-- include: examples/granite/granite_defs.yaml
+- include: examples/granite/granite_defs.pdl
 - |
   {{ SYSTEM_CONTENT_CHAT }}
   {{ USER_TAG }}

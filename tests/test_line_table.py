@@ -399,10 +399,15 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
-        "tests/data/line/hello26.pdl:16 - 'question' is undefined",
-        'Answer: {"bob": "20", "carol": "30"}',
-        "tests/data/line/hello26.pdl:8 - Attempted to parse ill-formed JSON",
+        "tests/data/line/hello26.pdl:12 - 'questions2' is undefined",
+        "tests/data/line/hello26.pdl:12 - Values inside the For block must be lists",
+        "tests/data/line/hello26.pdl:11 - Lists inside the For block must be of the same length",
+        "Answer: Here's an example of how you can create a JSON object in "
+        "JavaScript using the built-in JSON.stringify() function:",
+        "const obj = {",
+        "  bob: 20,",
+        "  carol: 30",
+        "}",
     ],
 }
 
@@ -460,3 +465,16 @@ line29 = {
 
 def test_line29(capsys):
     do_test(line29, capsys)
+
+
+line30 = {
+    "file": "tests/data/line/hello30.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists",
+    ],
+}
+
+
+def test_line30(capsys):
+    do_test(line30, capsys)

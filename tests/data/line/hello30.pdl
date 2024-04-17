@@ -1,0 +1,10 @@
+description: hello with bad for loop
+defs:
+  val:
+    data:
+      p: 1
+for:
+  k: "{{ val }}"
+repeat:
+  hello
+  

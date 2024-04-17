@@ -1,9 +1,14 @@
 description: Granite Multi-Round Chat
 document:
-- include: examples/granite/granite_defs.yaml
+- include: examples/granite/granite_defs.pdl
+- read: examples/granite/multi-prompts.json
+  parser: json
+  def: prompts
+  spec: {prompts: [str]}
+  show_result:  false
 - "{{ SYSTEM_CONTENT_CHAT }}"
 - for:
-    prompt: "{{ prompts }}"
+    prompt: "{{ prompts.prompts }}"
   repeat:
   - |
     {{ USER_TAG }}

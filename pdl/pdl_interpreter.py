@@ -382,44 +382,43 @@ def step_block_body(
             items: dict[str, Any] = {}
             lengths = []
             for k, v in block.fors.items():
-                klist, errors = process_expr(
-                    scope, v, append(append(block.location, "for"), k)
-                )
+                klist: list[Any] = []
+                kloc = append(append(block.location, "for"), k)
+                klist, errors = process_expr(scope, v, kloc)
                 if len(errors) != 0:
                     msg = "\n".join(errors)
                     error(msg)
                     trace = ErrorBlock(msg=msg, program=block.model_copy())
-                if klist is not None:
-                    items = items | {k: klist}
-                    lengths.append(len(klist))
-            if len(set(lengths)) not in [
-                0,
-                1,
-            ]:  # Not all the lists are of the same length
+                if not isinstance(klist, list):
+                    msg = f"{get_loc_string(kloc)}Values inside the For block must be lists"
+                    error(msg)
+                    trace = ErrorBlock(msg=msg, program=block.model_copy())
+                    klist = []
+                items = items | {k: klist}
+                lengths.append(len(klist))
+            if len(set(lengths)) != 1:  # Not all the lists are of the same length
                 msg = f"{get_loc_string(append(block.location, 'for'))}Lists inside the For block must be of the same length"  # pylint:disable=line-too-long
                 error(msg)
                 trace = ErrorBlock(msg=msg, program=block.model_copy())
             else:
-                iter_trace = []
-                if len(lengths) != 0:
-                    for i in range(lengths[0]):
-                        scope = scope | {"context": context_init + output}
-                        for k in items.keys():
-                            scope = scope | {k: items[k][i]}
-                        newloc = append(loc, "repeat")
-                        (
-                            iteration_result,
-                            iteration_output,
-                            scope,
-                            body_trace,
-                        ) = yield from step_blocks(
-                            log, scope, yield_output, block.repeat, newloc
-                        )
-                        output += iteration_output
-                        result.append(iteration_result)
-                        iter_trace.append(body_trace)
-                        if contains_error(body_trace):
-                            break
+                for i in range(lengths[0]):
+                    scope = scope | {"context": context_init + output}
+                    for k in items.keys():
+                        scope = scope | {k: items[k][i]}
+                    newloc = append(loc, "repeat")
+                    (
+                        iteration_result,
+                        iteration_output,
+                        scope,
+                        body_trace,
+                    ) = yield from step_blocks(
+                        log, scope, yield_output, block.repeat, newloc
+                    )
+                    output += iteration_output
+                    result.append(iteration_result)
+                    iter_trace.append(body_trace)
+                    if contains_error(body_trace):
+                        break
                 trace = block.model_copy(update={"trace": iter_trace})
         case RepeatUntilBlock(until=cond):
             result = None

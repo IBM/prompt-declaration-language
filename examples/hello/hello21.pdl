@@ -1,11 +1,11 @@
 description: Creating JSON Data
+defs:
+  data:
+    read: examples/hello/hello21_data.yaml
+    parser: yaml
+    spec: { "questions": ["str"], "answers": ["obj"] }
 document:
-- read: examples/hello/hello21_data.json
-  parser: json
-  def: data
-  show_result: false
-  spec: { "questions": ["str"], "answers": ["obj"] }
-- model: ibm/granite-20b-code-instruct-v1
+  model: ibm/granite-20b-code-instruct-v1
   def: model_output
   spec: {"name": str, "age": int}
   input: 
@@ -17,9 +17,9 @@ document:
           {{ question }}
           {{ answer }}
     - > 
-      Question: Create a JSON object with fields 'name' 
-      and 'age' and set them appropriately. Write the age in letters
-  parser: json
+      Question: Create a JSON object with fields 'name' and 'age' 
+      and set them appropriately.
+  parser: yaml
   parameters:
     decoding_method: greedy
     stop_sequences:
