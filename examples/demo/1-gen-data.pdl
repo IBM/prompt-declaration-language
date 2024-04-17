@@ -3,11 +3,11 @@ defs:
   data:
     read: examples/demo/data.yaml
     parser: yaml
-    spec: { "questions": ["str"], "answers": ["obj"] }
+    spec: { questions: [str], answers: [obj] }
 document:
   model: ibm/granite-20b-code-instruct-v1
   def: model_output
-  spec: {"name": str, "age": int}
+  spec: {name: str, age: int}
   input: 
     - for: 
         question: "{{ data.questions }}"
