@@ -197,6 +197,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "api",
           "default": "api",
@@ -533,6 +538,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "call",
@@ -874,6 +884,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "code",
           "default": "code",
@@ -1210,6 +1225,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -1433,6 +1453,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "document",
@@ -1761,6 +1786,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -1970,6 +2000,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "error",
@@ -2302,6 +2337,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "for",
@@ -2760,6 +2800,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "function",
           "default": "function",
@@ -3111,6 +3156,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -3327,6 +3377,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "if",
@@ -3789,6 +3844,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "include",
           "default": "include",
@@ -4128,6 +4188,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -5408,6 +5473,11 @@
           ],
           "default": null
         },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -5698,6 +5768,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "repeat",
@@ -6155,6 +6230,11 @@
             }
           ],
           "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "repeat_until",

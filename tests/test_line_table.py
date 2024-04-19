@@ -13,7 +13,6 @@ line = {
     "file": "tests/data/line/hello.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello.pdl:0 - Missing required field: return",
         "tests/data/line/hello.pdl:0 - Missing required field: function",
         "tests/data/line/hello.pdl:2 - Field not allowed: documents",
@@ -29,7 +28,6 @@ line1 = {
     "file": "tests/data/line/hello1.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello1.pdl:5 - Missing required field: num_iterations",
         "tests/data/line/hello1.pdl:7 - Field not allowed: num_iterationss",
     ],
@@ -44,7 +42,6 @@ line2 = {
     "file": "tests/data/line/hello2.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello2.pdl:9 - Field not allowed: decoding_methods",
         "tests/data/line/hello2.pdl:10 - Field not allowed: stop_sequencess",
     ],
@@ -74,7 +71,6 @@ line4 = {
     "file": "tests/data/line/hello4.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello4.pdl:5 - Missing required field: repeat",
         "tests/data/line/hello4.pdl:5 - Field not allowed: repeats",
     ],
@@ -89,7 +85,6 @@ line5 = {
     "file": "tests/data/line/hello5.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello5.pdl:19 - Field not allowed: include_stop_sequences",
     ],
 }
@@ -103,7 +98,6 @@ line6 = {
     "file": "tests/data/line/hello6.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello6.pdl:7 - Field not allowed: foo",
         "tests/data/line/hello6.pdl:6 - Field not allowed: decoding_methoda",
         "tests/data/line/hello6.pdl:20 - Field not allowed: include_stop_sequences",
@@ -119,7 +113,6 @@ line7 = {
     "file": "tests/data/line/hello7.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello7.pdl:4 - Missing required field: lan",
         "tests/data/line/hello7.pdl:4 - Field not allowed: lans",
     ],
@@ -134,7 +127,6 @@ line8 = {
     "file": "tests/data/line/hello8.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello8.pdl:4 - Missing required field: code",
         "tests/data/line/hello8.pdl:5 - Field not allowed: codea",
     ],
@@ -164,7 +156,6 @@ line10 = {
     "file": "tests/data/line/hello10.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello10.pdl:7 - QUESTION should be an object",
     ],
 }
@@ -178,7 +169,6 @@ line11 = {
     "file": "tests/data/line/hello11.pdl",
     "errors": [
         "",
-        "Invalid YAML",
         "tests/data/line/hello11.pdl:7 - Field not allowed: defss",
     ],
 }

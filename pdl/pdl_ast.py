@@ -83,6 +83,7 @@ class Block(BaseModel):
     result: Optional[Any] = None
     parser: Optional[ParserType] = None
     location: Optional[LocationType] = None
+    has_error: bool = False
 
 
 class FunctionBlock(Block):
