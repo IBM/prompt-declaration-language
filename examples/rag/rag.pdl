@@ -2,11 +2,9 @@ description: Retrieval-augmented generation for NL-to-Code generation task.
 defs:
   TEST:
     lan: python
+    spec: {prompt: str, code: str, task_id: int, source_file: str, test_imports: list, test_list: list}
     code: |
-      import datasets
-      import numpy as np
-      import os
-      import requests
+      import datasets, numpy, os, requests
       genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
       def embed(text):
           endpoint = f"{genai_api}/v2/text/embeddings?version=2023-11-22"
@@ -19,7 +17,7 @@ defs:
               "input": text,
           }
           response = requests.post(endpoint, headers=headers, json=json_data)
-          return np.asarray(response.json()["results"][0])
+          return numpy.asarray(response.json()["results"][0])
       PDL_SESSION.embed = embed
       train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
       train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
@@ -28,46 +26,28 @@ defs:
       result = test_in[0]
   RETRIEVED:
     lan: python
+    spec: {prompt: [str], code: [str]}
     code: |
       key = PDL_SESSION.embed("{{ TEST.prompt }}")
       nearest = PDL_SESSION.index.get_nearest_examples("embeddings", key, 3)
       result = {col: nearest.examples[col] for col in ["prompt", "code"]}
-  AUGMENTATION:
-    document:
-      for:
-        prompt: "{{ RETRIEVED.prompt }}"
-        code: "{{ RETRIEVED.code }}"
-      repeat:
-      - |
-        Q: {{ prompt }}
-        A: ```{{ code }}```
-      - "\n"
-  GENERATED:
-    model: ibm/granite-20b-code-instruct-v1
-    input:
-    - |-
-      Given the text after "Q:", generate a Python function after "A:".
-
-      Here are some examples, complete the last one:
-
-      {{ AUGMENTATION }}
-    - |-
-      Q: {{ TEST.prompt }}
-      A: ```
-    parameters:
-      stop_sequences:
-      - "```"
-      include_stop_sequence: false
 document:
-- |-
-  input text:
-  {{ TEST.prompt }}
+  - |
+    Given the text after "Q:", generate a Python function after "A:".
 
-  retrieved exemplars:
-  {{ AUGMENTATION }}
-- |-
-  generated code:
-  ```{{ GENERATED }}```
-
-  ground truth:
-  ```{{ TEST.code }}```
+    Here are some examples, complete the last one:
+  - for:
+      prompt: "{{ RETRIEVED.prompt }}"
+      code: "{{ RETRIEVED.code }}"
+    repeat:
+    - |
+      Q: {{ prompt }}
+      A: ```{{ code }}```
+    - "\n"
+  - |-
+    Q: {{ TEST.prompt }}
+    A: ```
+  - model: codellama/codellama-70b-instruct
+    parameters:
+      stop_sequences: ["```"]
+  - "\n\nground_truth: ```{{ TEST.code }}```"
