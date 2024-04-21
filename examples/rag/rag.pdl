@@ -1,53 +1,55 @@
 description: Retrieval-augmented generation for NL-to-Code generation task.
-defs:
-  TEST:
-    lan: python
-    spec: {prompt: str, code: str, task_id: int, source_file: str, test_imports: list, test_list: list}
-    code: |
-      import datasets, numpy, os, requests
-      genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
-      def embed(text):
-          endpoint = f"{genai_api}/v2/text/embeddings?version=2023-11-22"
-          headers = {
-              "Content-Type": "application/json",
-              "Authorization": f"Bearer {genai_key}",
-          }
-          json_data = {
-              "model_id": "sentence-transformers/all-minilm-l6-v2",
-              "input": text,
-          }
-          response = requests.post(endpoint, headers=headers, json=json_data)
-          return numpy.asarray(response.json()["results"][0])
-      PDL_SESSION.embed = embed
-      train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
-      train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
-      PDL_SESSION.index = train_em.add_faiss_index("embeddings")
-      test_in = datasets.load_dataset("mbpp", "sanitized", split="test")
-      result = test_in[0]
-  RETRIEVED:
-    lan: python
-    spec: {prompt: [str], code: [str]}
-    code: |
-      key = PDL_SESSION.embed("{{ TEST.prompt }}")
-      nearest = PDL_SESSION.index.get_nearest_examples("embeddings", key, 3)
-      result = {col: nearest.examples[col] for col in ["prompt", "code"]}
 document:
-  - |
+- lan: python
+  code: | # initialize PDL_SESSION.vec_db and PDL_SESSION.embed() function
+    import datasets, numpy, os, requests
+    genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
+    def embed(text):
+        endpoint = f"{genai_api}/v2/text/embeddings?version=2023-11-22"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {genai_key}",
+        }
+        json_data = {
+            "model_id": "sentence-transformers/all-minilm-l6-v2",
+            "input": text,
+        }
+        response = requests.post(endpoint, headers=headers, json=json_data)
+        return numpy.asarray(response.json()["results"][0])
+    train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
+    train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
+    PDL_SESSION.vec_db = train_em.add_faiss_index("embeddings")
+    PDL_SESSION.embed = embed
+    result = ""
+- def: TEST_PROMPT
+  document: >-
+    Write a python function to remove first and last occurrence of a
+    given character from the string.
+  show_result: false
+- def: RETRIEVED
+  lan: python
+  spec: {prompt: [str], code: [str]}
+  code: |
+    key = PDL_SESSION.embed("{{ TEST_PROMPT }}")
+    nearest = PDL_SESSION.vec_db.get_nearest_examples("embeddings", key, 5)
+    result = {col: nearest.examples[col] for col in ["prompt", "code"]}
+  show_result: false
+- |
     Given the text after "Q:", generate a Python function after "A:".
 
     Here are some examples, complete the last one:
-  - for:
-      prompt: "{{ RETRIEVED.prompt }}"
-      code: "{{ RETRIEVED.code }}"
-    repeat:
-    - |
-      Q: {{ prompt }}
-      A: ```{{ code }}```
-    - "\n"
-  - |-
-    Q: {{ TEST.prompt }}
+- for:
+    prompt: "{{ RETRIEVED.prompt }}"
+    code: "{{ RETRIEVED.code }}"
+  repeat:
+  - |
+
+    Q: {{ prompt }}
+    A: ```{{ code }}```
+- |-
+
+    Q: {{ TEST_PROMPT }}
     A: ```
-  - model: codellama/codellama-70b-instruct
-    parameters:
-      stop_sequences: ["```"]
-  - "\n\nground_truth: ```{{ TEST.code }}```"
+- model: codellama/codellama-70b-instruct
+  parameters:
+    stop_sequences: ["```"]
