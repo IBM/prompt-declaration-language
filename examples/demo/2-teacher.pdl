@@ -75,7 +75,7 @@ defs:
             # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
             max_new_tokens: 4096
         generated_questions:
-          spec: {list: {"minItems": 1, "maxItems": 1, str: {}}}  # TODO: {list: {minItems: {{ num_samples }}, maxItems: {{ num_samples }}, str: {}}}
+          spec: {list: {"minItems": 2, "maxItems": 2, str: {}}}  # TODO: {list: {minItems: {{ num_samples }}, maxItems: {{ num_samples }}, str: {}}}
           lan: python
           code: | # parse model output
             import re
