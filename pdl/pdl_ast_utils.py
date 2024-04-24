@@ -86,6 +86,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case PdlParser():
             iter_blocks(f, block.parser.pdl)
+    if block.fallback is not None:
+        iter_blocks(f, block.fallback)
 
 
 def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:

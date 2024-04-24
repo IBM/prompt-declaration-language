@@ -11,6 +11,7 @@ disable=
     # Conventions
     missing-module-docstring,missing-class-docstring,missing-function-docstring,
     use-implicit-booleaness-not-comparison,
+    too-many-lines,
     # Refactors
     too-many-locals,
     too-many-branches,

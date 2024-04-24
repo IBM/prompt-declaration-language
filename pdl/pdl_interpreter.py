@@ -100,7 +100,6 @@ def generate(
     scope_data: Optional[str],
 ):  # pylint: disable=too-many-arguments
     scope: ScopeType = empty_scope
-    document = ""
     if logging is None:
         logging = "log.txt"
 
@@ -124,19 +123,7 @@ def generate(
                 try:
                     prog = Program.model_validate(prog_yaml)
                     trace = prog.root
-                    doc_generator = GeneratorWrapper(
-                        step_block(
-                            log, scope, yield_output=True, block=prog.root, loc=loc
-                        )
-                    )
-                    incremental_document = ""
-                    for output in doc_generator:
-                        print(output, end="")
-                        assert output is not None
-                        incremental_document += output
-                    print()
-                    _, document, scope, trace = doc_generator.value
-                    assert document == incremental_document
+                    _, _, _, trace = process_prog(log, scope, prog, loc)
                 except ValidationError:
                     with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
                         schema = json.load(schemafile)
@@ -194,6 +181,23 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     for _ in w:
         pass
     return w.value
+
+
+def process_prog(
+    log, scope: ScopeType, prog: Program, loc=empty_block_location
+) -> tuple[Any, str, ScopeType, BlockType]:
+    doc_generator = GeneratorWrapper(
+        step_block(log, scope, yield_output=True, block=prog.root, loc=loc)
+    )
+    incremental_document = ""
+    for output in doc_generator:
+        print(output, end="")
+        assert output is not None
+        incremental_document += output
+    print()
+    result, document, scope, trace = doc_generator.value
+    assert document == incremental_document
+    return result, document, scope, trace
 
 
 def process_block(
@@ -514,8 +518,19 @@ def step_block_body(
 
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
-    if contains_error(trace):
-        block.has_error = True
+    if isinstance(trace, ErrorBlock) or children_contain_error(trace):
+        if block.fallback is None:
+            trace.has_error = True
+        else:
+            result, fallback_output, scope, fallback_trace = yield from step_blocks(
+                log,
+                scope,
+                yield_output,
+                blocks=block.fallback,
+                loc=append(loc, "fallback"),
+            )
+            output = output + fallback_output
+            trace.fallback = fallback_trace
     return result, output, scope, trace
 
 
@@ -962,14 +977,25 @@ def handle_error(
     return ErrorBlock(msg=msg, program=subtrace)
 
 
-def contains_error(blocks: BlocksType) -> bool:
-    def raise_on_error(block):
-        if isinstance(block, ErrorBlock):
-            raise StopIteration
-        iter_block_children(raise_on_error, block)
+def _raise_on_error(block: BlockType):
+    if isinstance(block, str) or block.fallback is not None:
+        return
+    if isinstance(block, ErrorBlock):
+        raise StopIteration
+    iter_block_children(_raise_on_error, block)
 
+
+def children_contain_error(block: AdvancedBlockType) -> bool:
     try:
-        iter_blocks(raise_on_error, blocks)
+        iter_block_children(_raise_on_error, block)
+        return False
+    except StopIteration:
+        return True
+
+
+def contains_error(blocks: BlocksType) -> bool:
+    try:
+        iter_blocks(_raise_on_error, blocks)
         return False
     except StopIteration:
         return True

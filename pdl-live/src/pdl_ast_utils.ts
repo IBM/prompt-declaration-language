@@ -77,6 +77,9 @@ export function map_block_children(
       block.parser.pdl = map_blocks(f, block.parser.pdl);
     })
     .otherwise(() => {});
+  if (block.fallback) {
+    block.fallback = map_blocks(f, block.fallback);
+  }
   return new_block;
 }
 
@@ -147,6 +150,9 @@ export function iter_block_children(
       iter_blocks(f, block.parser.pdl);
     })
     .otherwise(() => {});
+  if (block.fallback) {
+    iter_blocks(f, block.fallback);
+  }
 }
 
 export function iter_blocks(

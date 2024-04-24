@@ -146,7 +146,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         d["parser"] = parser_to_dict(block.parser)
     if block.location is not None:
         d["location"] = location_to_dict(block.location)
-    d["has_error"] = block.has_error
+    if block.has_error:
+        d["has_error"] = block.has_error
+    if block.fallback is not None:
+        d["fallback"] = blocks_to_dict(block.fallback)
     return d
 
 
