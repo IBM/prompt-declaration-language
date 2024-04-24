@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
 
 python_data = {
     "description": "Hello world showing call out to python code",
@@ -18,7 +18,7 @@ python_data = {
 def test_python():
     log = []
     data = Program.model_validate(python_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello, Tracy!\n"
 
 
@@ -40,14 +40,14 @@ def show_result_data(show):
 def test_show_result():
     log = []
     data = Program.model_validate(show_result_data(True))
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "How can I help you?: "
 
 
 def test_show_result_false():
     log = []
     data = Program.model_validate(show_result_data(False))
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == ""
 
 
@@ -66,6 +66,6 @@ command_data = {
 def test_command():
     log = []
     data = Program.model_validate(command_data)
-    _, document, scope, _ = process_block(log, empty_scope, data.root)
+    _, document, scope, _ = process_prog(log, empty_scope, data)
     assert document == "Hello World!"
     assert scope["world"] == "World"

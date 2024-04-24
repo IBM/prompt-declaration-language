@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
 
 for_data = {
     "description": "For block example",
@@ -18,7 +18,7 @@ for_data = {
 def test_for_data():
     log = []
     data = Program.model_validate(for_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "1\n2\n3\n4\n"
 
 
@@ -36,7 +36,7 @@ for_data1 = {
 def test_for_data1():
     log = []
     data = Program.model_validate(for_data1)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "1: A\n2: B\n3: C\n4: D\n"
 
 
@@ -55,7 +55,7 @@ for_data2 = {
 def test_for_data2():
     log = []
     data = Program.model_validate(for_data2)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "1: A: 5\n2: B: 6\n3: C: 7\n4: D: 8\n"
 
 
@@ -74,7 +74,7 @@ for_data3 = {
 def test_for_data3():
     log = []
     data = Program.model_validate(for_data3)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_prog(log, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -93,7 +93,7 @@ for_data4 = {
 def test_for_data4():
     log = []
     data = Program.model_validate(for_data4)
-    result, output, scope, _ = process_block(log, empty_scope, data.root)
+    result, output, scope, _ = process_prog(log, empty_scope, data)
     assert result == "2345"
     assert output == "2345"
     assert scope["x"] == [2, 3, 4, 5]
@@ -116,7 +116,7 @@ for_data5 = {
 def test_for_data5():
     log = []
     data = Program.model_validate(for_data5)
-    result, output, scope, _ = process_block(log, empty_scope, data.root)
+    result, output, scope, _ = process_prog(log, empty_scope, data)
     assert result == "1234"
     assert output == "1234"
     assert scope["x"] == "1234"

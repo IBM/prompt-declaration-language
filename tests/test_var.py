@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
 
 var_data = {
     "description": "Hello world with variable use",
@@ -30,7 +30,7 @@ var_data = {
 def test_var():
     log = []
     data = Program.model_validate(var_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello, world!\nTell me about world?\n"
 
 
@@ -50,7 +50,7 @@ code_var_data = {
 def test_code_var():
     log = []
     data = Program.model_validate(code_var_data)
-    _, document, scope, _ = process_block(log, empty_scope, data.root)
+    _, document, scope, _ = process_prog(log, empty_scope, data)
     assert scope == {"context": document, "I": 0}
     assert document == "0"
 
@@ -64,7 +64,7 @@ missing_var = {
 def test_missing_var():
     log = []
     data = Program.model_validate(missing_var)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_prog(log, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -77,5 +77,5 @@ missing_call = {
 def test_missing_call():
     log = []
     data = Program.model_validate(missing_call)
-    _, _, _, trace = process_block(log, empty_scope, data.root)
+    _, _, _, trace = process_prog(log, empty_scope, data)
     assert contains_error(trace)

@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
 
 cond_data = {
     "description": "Arithmetic Expressions",
@@ -150,7 +150,7 @@ assert_data = [
 def test_cond():
     log = []
     data = Program.model_validate(cond_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "".join(assert_data)
 
 
@@ -183,14 +183,14 @@ def cond_data1(show, name):
 def test_cond1():
     log = []
     data = Program.model_validate(cond_data1(False, "blah"))
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == ""
 
 
 def test_cond2():
     log = []
     data = Program.model_validate(cond_data1(True, "acy"))
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Tracy, hello there!\n"
 
 
@@ -222,7 +222,7 @@ repeat_until_data = {
 def test_repeat_until():
     log = []
     data = Program.model_validate(repeat_until_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "".join(
         [
             "0",
@@ -273,7 +273,7 @@ repeat_until_str_data = {
 def test_repeat_until_str():
     log = []
     data = Program.model_validate(repeat_until_str_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "".join(
         [
             "0",

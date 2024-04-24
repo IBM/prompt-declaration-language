@@ -4,14 +4,14 @@ from pydantic import ValidationError
 
 from pdl.pdl.pdl_ast import Program, empty_block_location  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import analyze_errors, process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import analyze_errors, process_prog  # pyright: ignore
 
 
 def error(raw_data, assertion):
     log = []
     try:
         data = Program.model_validate(raw_data)
-        _, _, _, _ = process_block(log, empty_scope, data.root)
+        _, _, _, _ = process_prog(log, empty_scope, data)
     except ValidationError:
         with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)

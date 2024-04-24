@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_block  # pyright: ignore
+from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
@@ -22,7 +22,7 @@ model_data = {
 def test_model():
     log = []
     data = Program.model_validate(model_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -68,7 +68,7 @@ model_chain_data = {
 def test_model_chain():
     log = []
     data = Program.model_validate(model_chain_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "".join(
         [
             "Hello,",
@@ -118,7 +118,7 @@ multi_shot_data = {
 def test_multi_shot():
     log = []
     data = Program.model_validate(multi_shot_data)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Armonk, NY\n"
 
 
@@ -139,7 +139,7 @@ model_data_missing_parameters = {
 def test_data_missing_parameters():
     log = []
     data = Program.model_validate(model_data_missing_parameters)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello,\n\nI am a student at the University of Toronto."
 
 
@@ -161,7 +161,7 @@ model_parameter = {
 def test_model_parameter():
     log = []
     data = Program.model_validate(model_parameter)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello, world!"
 
 
@@ -183,5 +183,5 @@ model_parameter1 = {
 def test_model_parameter1():
     log = []
     data = Program.model_validate(model_parameter1)
-    _, document, _, _ = process_block(log, empty_scope, data.root)
+    _, document, _, _ = process_prog(log, empty_scope, data)
     assert document == "Hello, world!"
