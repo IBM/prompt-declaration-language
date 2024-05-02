@@ -885,7 +885,7 @@ def step_include(
                         f"Attempting to include invalid yaml: {block.include}",
                         errors,
                         block.model_copy(),
-                    )  # pylint: disable=line-too-long
+                    )
                     return None, "", scope, trace
 
 
