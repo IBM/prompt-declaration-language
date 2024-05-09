@@ -12,6 +12,7 @@ disable=
     missing-module-docstring,missing-class-docstring,missing-function-docstring,
     use-implicit-booleaness-not-comparison,
     too-many-lines,
+    line-too-long,
     # Refactors
     too-many-locals,
     too-many-branches,
