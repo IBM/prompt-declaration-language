@@ -1,0 +1,45 @@
+description: my answer
+document:
+- Let's call Mrs. Snyder's original income x.
+- lan: python
+  def: original_rent
+  code: 
+  - |
+    from sympy import symbols, solve
+    x = symbols('x')
+    result = 0.4 * x
+- "Her original rent was {{ original_rent }}.\n"
+- "Now her income is x + 600.\n"
+- lan: python
+  def: new_rent
+  code: 
+  - |
+    from sympy import symbols, solve
+    x = symbols('x')
+    result = 0.25 * (x + 600)
+- "Her new rent is {{ new_rent }}.\n"
+- "Since her rent didn't change, we know that {{ original_rent }} = {{ new_rent }}.\n"
+- lan: python
+  def: equation
+  code: 
+  - |
+    from sympy import symbols, solve
+    x = symbols('x')
+    result = "0.4*x = 0.25*(x + 600)"
+- "The equation is {{ equation }}.\n"
+- "Solving for x, we get "
+- lan: python
+  def: RESULT
+  code:
+  - |
+    from sympy import symbols, solve
+    x = symbols('x')
+    result = solve(0.4*x - 0.25*(x + 600), x)[0]
+- "\nThe answer is {{RESULT}}."
+- lan: python
+  def: FINAL
+  code:
+  - |
+    result = {{ RESULT }}
+- "\n#### "
+- "{{ FINAL }}"

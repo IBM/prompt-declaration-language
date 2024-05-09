@@ -12,6 +12,7 @@ install_requires = [
     "jinja2",
     "PyYAML",
     "jsonschema",
+    "sympy",
 ]
 
 dev = ["black", "pre-commit", "pytest"]
