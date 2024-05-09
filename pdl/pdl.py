@@ -1,6 +1,7 @@
 import argparse
 import json
 
+import yaml
 from pydantic.json_schema import models_json_schema
 
 from . import pdl_interpreter
@@ -52,13 +53,20 @@ def main():
         print(json.dumps(top_level_schema, indent=2))
     if args.pdl is None:
         return
+
+    initial_scope = {}
+    if args.data_file is not None:
+        with open(args.data_file, "r", encoding="utf-8") as scope_fp:
+            initial_scope = yaml.safe_load(scope_fp)
+    if args.data is not None:
+        initial_scope = initial_scope | yaml.safe_load(args.data)
+
     pdl_interpreter.generate(
         args.pdl,
         args.log,
+        initial_scope,
         args.mode,
         args.output,
-        scope_file=args.data_file,
-        scope_data=args.data,
     )
 
 

@@ -252,3 +252,8 @@ class PdlBlock(RootModel):
 class PdlBlocks(RootModel):
     # This class is used to introduce that a type in the generate JsonSchema
     root: BlocksType
+
+
+class PDLException(Exception):
+    def __init__(self, msg):
+        self.msg = msg

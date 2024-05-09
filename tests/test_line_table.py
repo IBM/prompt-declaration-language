@@ -2,7 +2,7 @@ from pdl.pdl.pdl_interpreter import generate  # pyright: ignore
 
 
 def do_test(t, capsys):
-    generate(t["file"], None, "json", None, None, None)
+    generate(t["file"], None, {}, "json", None)
     captured = capsys.readouterr()
     output = captured.out.split("\n")
     print(output)

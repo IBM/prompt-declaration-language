@@ -6,7 +6,7 @@ import subprocess
 import types
 from ast import literal_eval
 from pathlib import Path
-from typing import Any, Generator, Generic, Literal, Optional, Sequence, TypeVar
+from typing import Any, Generator, Literal, Optional, Sequence
 
 import requests
 import yaml
@@ -15,8 +15,8 @@ from genai.client import Client
 from genai.credentials import Credentials
 from genai.schema import DecodingMethod
 from jinja2 import StrictUndefined, Template, UndefinedError
-from pydantic import ValidationError
 
+from .generators_utils import GeneratorWrapper, step_to_completion
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
@@ -37,6 +37,7 @@ from .pdl_ast import (
     LocationType,
     ModelBlock,
     ParserType,
+    PDLException,
     PdlParser,
     PDLTextGenerationParameters,
     Program,
@@ -49,8 +50,8 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_location_utils import append, get_line_map, get_loc_string
-from .pdl_schema_error_analyzer import analyze_errors
+from .pdl_location_utils import append, get_loc_string
+from .pdl_parser import PDLParseError, parse_program
 from .pdl_schema_validator import type_check_args, type_check_spec
 
 MAX_NEW_TOKENS = 1024
@@ -65,12 +66,7 @@ GENAI_KEY = os.getenv("GENAI_KEY")
 GENAI_API = os.getenv("GENAI_API")
 
 
-class PDLException(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-
-class PDLParserError(PDLException):
+class PDLRuntimeParserError(PDLException):
     pass
 
 
@@ -92,100 +88,48 @@ empty_text_generation_parameters = PDLTextGenerationParameters(
 
 
 def generate(
-    pdl: str,
-    logging: Optional[str],
+    pdl_file: str,
+    log_file: Optional[str],
+    initial_scope: ScopeType,
+    output_mode: Literal["json", "yaml"],
+    output_file: Optional[str],
+):
+    if log_file is None:
+        log_file = "log.txt"
+    log: list[str] = []
+    try:
+        prog, line_table = parse_program(pdl_file)
+        loc = LocationType(path=[], file=pdl_file, table=line_table)
+        _, _, _, trace = process_prog(log, initial_scope, prog, loc)
+        with open(log_file, "w", encoding="utf-8") as log_fp:
+            for line in log:
+                log_fp.write(line)
+        if trace is not None:
+            write_trace(pdl_file, output_mode, output_file, trace)
+    except PDLParseError as e:
+        print("\n".join(e.msg))
+
+
+def write_trace(
+    pdl_file: str,
     mode: Literal["json", "yaml"],
     output_file: Optional[str],
-    scope_file: Optional[str],
-    scope_data: Optional[str],
-):  # pylint: disable=too-many-arguments
-    scope: ScopeType = empty_scope
-    if logging is None:
-        logging = "log.txt"
-
-    if scope_file is not None:
-        with open(scope_file, "r", encoding="utf-8") as scopefile:
-            initial_scope = yaml.safe_load(scopefile)
-            scope = scope | initial_scope
-
-    if scope_data is not None:
-        initial_scope = yaml.safe_load(scope_data)
-        scope = scope | initial_scope
-
-    with open(pdl, "r", encoding="utf-8") as tablefile:
-        line_table = get_line_map(tablefile)
-        with open(pdl, "r", encoding="utf-8") as infile:
-            with open(logging, "w", encoding="utf-8") as logfile:
-                log: list[str] = []
-                prog_yaml = yaml.safe_load(infile)
-                trace = None
-                loc = LocationType(path=[], file=pdl, table=line_table)
-                try:
-                    prog = Program.model_validate(prog_yaml)
-                    trace = prog.root
-                    _, _, _, trace = process_prog(log, scope, prog, loc)
-                except ValidationError:
-                    with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
-                        schema = json.load(schemafile)
-                        defs = schema["$defs"]
-                        errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
-                        for item in errors:
-                            print(item + "\n")
-                finally:
-                    for line in log:
-                        logfile.write(line)
-                    if trace is not None:
-                        if mode == "json":
-                            if output_file is None:
-                                output_file = (
-                                    str(Path(pdl).with_suffix("")) + "_result.json"
-                                )
-                            with open(output_file, "w", encoding="utf-8") as fp:
-                                json.dump(block_to_dict(trace), fp)
-                        if mode == "yaml":
-                            if output_file is None:
-                                output_file = (
-                                    str(Path(pdl).with_suffix("")) + "_result.yaml"
-                                )
-                            with open(output_file, "w", encoding="utf-8") as fp:
-                                dump_yaml(block_to_dict(trace), stream=fp)
-
-
-GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
-GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
-GeneratorWrapperReturnT = TypeVar("GeneratorWrapperReturnT")
-
-
-class GeneratorWrapper(
-    Generic[GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT]
+    trace: BlockType,
 ):
-    value: GeneratorWrapperReturnT
-
-    def __init__(
-        self,
-        gen: Generator[
-            GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT
-        ],
-    ):
-        self.gen = gen
-
-    def __iter__(self):
-        self.value = yield from self.gen
-
-
-GeneratorReturnT = TypeVar("GeneratorReturnT")
-
-
-def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorReturnT:
-    w = GeneratorWrapper(gen)
-    for _ in w:
-        pass
-    return w.value
+    if output_file is None:
+        output_file = str(Path(pdl_file).with_suffix("")) + f"_result.{mode}"
+    with open(output_file, "w", encoding="utf-8") as fp:
+        match mode:
+            case "json":
+                json.dump(block_to_dict(trace), fp)
+            case "yaml":
+                dump_yaml(block_to_dict(trace), stream=fp)
 
 
 def process_prog(
-    log, scope: ScopeType, prog: Program, loc=empty_block_location
+    log, initial_scope: ScopeType, prog: Program, loc=empty_block_location
 ) -> tuple[Any, str, ScopeType, BlockType]:
+    scope: ScopeType = empty_scope | initial_scope
     doc_generator = GeneratorWrapper(
         step_block(log, scope, yield_output=True, block=prog.root, loc=loc)
     )
@@ -211,8 +155,10 @@ def process_block(
 def step_block(
     log, scope: ScopeType, yield_output: bool, block: BlockType, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
+    result: Any
+    output: str
+    trace: BlockType
     if isinstance(block, str):
-        trace: BlockType
         result, errors = process_expr(scope, block, loc)
         if len(errors) != 0:
             trace = handle_error(block, loc, None, errors, block)
@@ -224,7 +170,21 @@ def step_block(
         if yield_output:
             yield output
         append_log(log, "Document", output)
-        return result, output, scope, trace
+    else:
+        result, output, scope, trace = yield from step_advanced_block(
+            log, scope, yield_output, block, loc
+        )
+    scope = scope | {"context": output}
+    return result, output, scope, trace
+
+
+def step_advanced_block(
+    log,
+    scope: ScopeType,
+    yield_output: bool,
+    block: AdvancedBlockType,
+    loc: LocationType,
+) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(log, scope, block.defs, loc)
     else:
@@ -237,9 +197,8 @@ def step_block(
     if block.parser is not None:
         try:
             result = parse_result(block.parser, result)
-        except PDLParserError as e:
+        except PDLRuntimeParserError as e:
             trace = handle_error(block, loc, e.msg, [], trace)
-            return result, output, scope, trace
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
@@ -251,8 +210,6 @@ def step_block(
             trace = handle_error(
                 block, loc, "Type errors during spec checking", errors, trace
             )
-            return result, output, scope, trace
-    scope = scope | {"context": output}
     return result, output, scope, trace
 
 
@@ -861,32 +818,23 @@ def process_input(
 def step_include(
     log, scope: ScopeType, yield_output: bool, block: IncludeBlock, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
-    with open(block.include, "r", encoding="utf-8") as tablefile:
-        linetable = get_line_map(tablefile)
-        with open(block.include, "r", encoding="utf-8") as infile:
-            prog_yaml = yaml.safe_load(infile)
-            trace = None
-            newloc = LocationType(file=block.include, path=[], table=linetable)
-            try:
-                prog = Program.model_validate(prog_yaml)
-                result, output, scope, trace = yield from step_block(
-                    log, scope, yield_output, prog.root, newloc
-                )
-                include_trace = block.model_copy(update={"trace": trace})
-                return result, output, scope, include_trace
-            except ValidationError:
-                with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
-                    schema = json.load(schemafile)
-                    defs = schema["$defs"]
-                    errors = analyze_errors(defs, defs["Program"], prog_yaml, newloc)
-                    trace = handle_error(
-                        block,
-                        append(loc, "include"),
-                        f"Attempting to include invalid yaml: {block.include}",
-                        errors,
-                        block.model_copy(),
-                    )
-                    return None, "", scope, trace
+    try:
+        prog, line_table = parse_program(block.include)
+        newloc = LocationType(file=block.include, path=[], table=line_table)
+        result, output, scope, trace = yield from step_block(
+            log, scope, yield_output, prog.root, newloc
+        )
+        include_trace = block.model_copy(update={"trace": trace})
+        return result, output, scope, include_trace
+    except PDLParseError as e:
+        trace = handle_error(
+            block,
+            append(loc, "include"),
+            f"Attempting to include invalid yaml: {block.include}",
+            e.msg,
+            block.model_copy(),
+        )
+        return None, "", scope, trace
 
 
 def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
@@ -896,12 +844,16 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
             try:
                 result = json.loads(text)
             except Exception as exc:
-                raise PDLParserError("Attempted to parse ill-formed JSON") from exc
+                raise PDLRuntimeParserError(
+                    "Attempted to parse ill-formed JSON"
+                ) from exc
         case "yaml":
             try:
                 result = yaml.safe_load(text)
             except Exception as exc:
-                raise PDLParserError("Attempted to parse ill-formed YAML") from exc
+                raise PDLRuntimeParserError(
+                    "Attempted to parse ill-formed YAML"
+                ) from exc
         case PdlParser():
             assert False, "TODO"
         case RegexParser(mode="search" | "match" | "fullmatch"):
@@ -930,7 +882,7 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
                     return result
                 except IndexError as exc:
                     msg = f"No group named {current_group_name} found by {regex} in {text}"
-                    raise PDLParserError(msg) from exc
+                    raise PDLRuntimeParserError(msg) from exc
         case RegexParser(mode="split" | "findall"):
             regex = parser.regex
             match parser.mode:
