@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
 
 input_data = {
     "description": "Input block example",
@@ -31,9 +31,9 @@ input_json_data = {
 
 
 def test_input_json():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(input_json_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == "Bob lives at the following address:\n87 Smith Road in the town of Armonk NY"
@@ -54,9 +54,9 @@ input_json_data_defs = {
 
 
 def test_input_json_defs():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(input_json_data_defs)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "The name in the input is: Carol"
 
 
@@ -73,7 +73,7 @@ input_json_data_defs1 = {
 
 
 def test_input_json_defs1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(input_json_data_defs1)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"

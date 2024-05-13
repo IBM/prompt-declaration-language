@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
 
 include_data = {
     "description": "Include test",
@@ -13,9 +13,9 @@ include_data = {
 
 
 def test_include():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(include_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == """Start
@@ -43,9 +43,9 @@ biz = {
 
 
 def test_biz():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(biz)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"

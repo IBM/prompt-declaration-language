@@ -2,7 +2,11 @@ import yaml
 
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+    InterpreterState,
+    contains_error,
+    process_prog,
+)
 from pdl.pdl.pdl_schema_utils import pdltype_to_jsonschema  # pyright: ignore
 
 _PDLTYPE_TO_JSONSCHEMA_TESTS = [
@@ -160,9 +164,9 @@ function_call = {
 
 
 def test_function_call():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello Bob!"
 
@@ -182,9 +186,9 @@ function_call1 = {
 
 
 def test_function_call1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call1)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello Bob!"
 
@@ -204,9 +208,9 @@ function_call2 = {
 
 
 def test_function_call2():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call2)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 42!"
 
@@ -226,9 +230,9 @@ function_call3 = {
 
 
 def test_function_call3():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call3)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == 'Hello ["Bob", "Carrol"]!'
 
@@ -248,9 +252,9 @@ function_call4 = {
 
 
 def test_function_call4():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call4)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == 'Hello {"bob": "caroll"}!'
 
@@ -270,9 +274,9 @@ function_call5 = {
 
 
 def test_function_call5():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call5)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello true!"
 
@@ -292,9 +296,9 @@ function_call6 = {
 
 
 def test_function_call6():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call6)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6!"
 
@@ -314,9 +318,9 @@ function_call7 = {
 
 
 def test_function_call7():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call7)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6!"
 
@@ -336,9 +340,9 @@ function_call8 = {
 
 
 def test_function_call8():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call8)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -357,9 +361,9 @@ function_call9 = {
 
 
 def test_function_call9():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call9)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6 street!"
 
@@ -379,9 +383,9 @@ function_call10 = {
 
 
 def test_function_call10():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call10)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -400,9 +404,9 @@ function_call11 = {
 
 
 def test_function_call11():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call11)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -421,9 +425,9 @@ function_call12 = {
 
 
 def test_function_call12():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call12)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -442,9 +446,9 @@ function_call13 = {
 
 
 def test_function_call13():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call13)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -463,9 +467,9 @@ function_call14 = {
 
 
 def test_function_call14():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call14)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -485,9 +489,9 @@ function_call15 = {
 
 
 def test_function_call15():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call15)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6 street!"
 
@@ -508,9 +512,9 @@ function_call16 = {
 
 
 def test_function_call16():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call16)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -530,9 +534,9 @@ function_call17 = {
 
 
 def test_function_call17():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call17)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "[1, 2, 3]"
 
@@ -553,9 +557,9 @@ function_call18 = {
 
 
 def test_function_call18():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(function_call18)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -567,9 +571,9 @@ hello = {
 
 
 def test_hello():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello, world!"
 
@@ -582,9 +586,9 @@ hello1 = {
 
 
 def test_hello1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello1)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == '{"a": "Hello", "b": "World"}'
 
@@ -597,7 +601,7 @@ hello2 = {
 
 
 def test_hello2():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello2)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)

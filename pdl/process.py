@@ -3,7 +3,7 @@ import json
 import yaml
 
 from .pdl_ast import Program
-from .pdl_interpreter import empty_scope, process_prog
+from .pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 
 def extract_answer(result: str) -> float:
@@ -38,10 +38,10 @@ if __name__ == "__main__":
                 document = ""  # pylint: disable=invalid-name
                 answer = 0.0  # pylint: disable=invalid-name
                 try:
-                    log: list[str] = []
+                    state = InterpreterState(yield_output=False)
                     scope = empty_scope
                     scope["question"] = qna["question"]
-                    _, document, _, _ = process_prog(log, scope, data)
+                    _, document, _, _ = process_prog(state, scope, data)
                     answer = extract_answer(document)
                 except Exception:
                     print("EXCEPTION at: " + str(index))

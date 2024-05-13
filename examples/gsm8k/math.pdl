@@ -87,6 +87,7 @@ document:
     from pdl import pdl_ast, pdl_interpreter
     from pdl.pdl_ast import Program
     from pdl.pdl_interpreter import process_prog
+    from pdl.pdl_interpreter import InterpreterState
     from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
@@ -96,8 +97,8 @@ document:
     '"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(obj)
     
-    result, _, _, _ = process_prog(log, empty_scope, data)
+    result, _, _, _ = process_prog(state, empty_scope, data)
   def: RESULT

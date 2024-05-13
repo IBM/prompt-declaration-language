@@ -1,6 +1,10 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+    InterpreterState,
+    contains_error,
+    process_prog,
+)
 
 model_parser = {
     "model": "ibm/granite-20b-code-instruct-v1",
@@ -20,9 +24,9 @@ model_parser = {
 
 
 def test_model_parser():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(model_parser)
-    result, document, _, trace = process_prog(log, empty_scope, data)
+    result, document, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert result == {"bob": 20, "carol": 30}
     assert document == '{"bob": 20, "carol": 30}'
@@ -46,9 +50,9 @@ model_parser1 = {
 
 
 def test_model_parser1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(model_parser1)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
 
 
@@ -56,10 +60,10 @@ get_parser = {"get": "x", "parser": "json", "def": "y", "show_result": False}
 
 
 def test_get_parser():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(get_parser)
     scope = {"x": '{"a": "foo", "b": "bar"}'}
-    result, _, _, trace = process_prog(log, scope, data)
+    result, _, _, trace = process_prog(state, scope, data)
     assert not contains_error(trace)
     assert result == {"a": "foo", "b": "bar"}
 
@@ -72,9 +76,9 @@ code_parser = {
 
 
 def test_code_parser():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(code_parser)
-    result, _, _, trace = process_prog(log, empty_scope, data)
+    result, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert result == {"a": "b", "c": "d"}
 
@@ -86,8 +90,8 @@ code_parser1 = {
 
 
 def test_code_parser1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(code_parser1)
-    result, _, _, trace = process_prog(log, empty_scope, data)
+    result, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert result == "{'a': 'b', 'c': 'd'}"

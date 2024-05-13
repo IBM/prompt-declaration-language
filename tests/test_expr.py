@@ -1,6 +1,10 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+    InterpreterState,
+    contains_error,
+    process_prog,
+)
 
 arith_data = {
     "description": "Test arith",
@@ -10,9 +14,9 @@ arith_data = {
 
 
 def test_arith():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(arith_data)
-    result, document, scope, _ = process_prog(log, empty_scope, data)
+    result, document, scope, _ = process_prog(state, empty_scope, data)
     assert result == "2"
     assert document == "2"
     assert scope["X"] == 2
@@ -25,9 +29,9 @@ var_data = {
 
 
 def test_var():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(var_data)
-    result, document, _, _ = process_prog(log, empty_scope, data)
+    result, document, _, _ = process_prog(state, empty_scope, data)
     assert result == "3"
     assert document == "3"
 
@@ -38,9 +42,9 @@ true_data = {
 
 
 def test_true():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(true_data)
-    result, document, _, _ = process_prog(log, empty_scope, data)
+    result, document, _, _ = process_prog(state, empty_scope, data)
     assert result == "true"
     assert document == "true"
 
@@ -51,9 +55,9 @@ false_data = {
 
 
 def test_false():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(false_data)
-    result, document, _, _ = process_prog(log, empty_scope, data)
+    result, document, _, _ = process_prog(state, empty_scope, data)
     assert result == "false"
     assert document == "false"
 
@@ -62,9 +66,9 @@ undefined_var_data = {"document": "Hello {{ X }}"}
 
 
 def test_undefined_var():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(undefined_var_data)
-    _, document, _, trace = process_prog(log, empty_scope, data)
+    _, document, _, trace = process_prog(state, empty_scope, data)
     assert contains_error(trace)
     assert document == "Hello {{ X }}"
 
@@ -73,9 +77,9 @@ autoescape_data = {"document": "<|system|>"}
 
 
 def test_autoescape():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(autoescape_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "<|system|>"
 
 
@@ -83,9 +87,9 @@ var_data1 = {"defs": {"X": "something"}, "document": "{{ X }}"}
 
 
 def test_var1():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(var_data1)
-    result, document, _, _ = process_prog(log, empty_scope, data)
+    result, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "something"
     assert result == "something"
 
@@ -97,9 +101,9 @@ var_data2 = {
 
 
 def test_var2():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(var_data2)
-    result, document, scope, _ = process_prog(log, empty_scope, data)
+    result, document, scope, _ = process_prog(state, empty_scope, data)
     assert result == '["something", "something else"]'
     assert document == '["something", "something else"]'
     assert scope["X"] == "something"
@@ -110,9 +114,9 @@ list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "{{ X }}"}, "document": "{{
 
 
 def test_list():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(list_data)
-    result, document, scope, _ = process_prog(log, empty_scope, data)
+    result, document, scope, _ = process_prog(state, empty_scope, data)
     assert result == "[1, 2, 3]"
     assert document == "[1, 2, 3]"
     assert scope["X"] == [1, 2, 3]
@@ -123,9 +127,9 @@ disable_jinja_block_data = {"document": '{% for x in ["hello", "bye"]%} X {% end
 
 
 def test_disable_jinja_block():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(disable_jinja_block_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == '{% for x in ["hello", "bye"]%} X {% endfor %}'
 
 
@@ -137,7 +141,7 @@ jinja_block_data = {
 
 
 def test_jinja_block():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(jinja_block_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == " X  X "

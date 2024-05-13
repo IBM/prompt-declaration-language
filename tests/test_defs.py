@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
 
 defs_data = {
     "description": "Hello world with variable use",
@@ -29,9 +29,9 @@ defs_data = {
 
 
 def test_defs():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(defs_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -47,9 +47,9 @@ defs_chain_data = {
 
 
 def test_defs_chain():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "abc"
 
 
@@ -57,7 +57,7 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 
 
 def test_defs_only():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(defs_only)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

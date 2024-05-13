@@ -1,6 +1,6 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
 
 hello_def = {
     "def": "hello",
@@ -13,16 +13,16 @@ hello_call = {"description": "Call hello", "document": [hello_def, {"call": "hel
 
 
 def test_function_def():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello_def)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == ""
 
 
 def test_function_call():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello_call)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello world!"
 
 
@@ -41,9 +41,9 @@ hello_params = {
 
 
 def test_function_params():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello_params)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!"
 
 
@@ -58,9 +58,9 @@ hello_stutter = {
 
 
 def test_function_implicit_context():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello_stutter)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!\nHello World!\n"
 
 
@@ -75,7 +75,7 @@ hello_bye = {
 
 
 def test_function_explicit_context():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello_bye)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!\nBye!"

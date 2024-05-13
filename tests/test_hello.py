@@ -1,6 +1,10 @@
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import contains_error, process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+    InterpreterState,
+    contains_error,
+    process_prog,
+)
 
 hello = {
     "description": "Hello world!",
@@ -31,16 +35,16 @@ def nested_repeat_data(n):
 
 
 def test_hello():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(hello)
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
 def repeat(n):
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(repeat_data(n))
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -69,9 +73,9 @@ def test_repeat3():
 
 
 def repeat_nested(n):
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(nested_repeat_data(n))
-    _, document, _, _ = process_prog(log, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")
@@ -105,9 +109,9 @@ repeat_data_error = {
 
 
 def test_repeat_error():
-    log = []
+    state = InterpreterState()
     data = Program.model_validate(repeat_data_error)
-    _, _, _, trace = process_prog(log, empty_scope, data)
+    _, _, _, trace = process_prog(state, empty_scope, data)
     errors = 0
     print(trace)
     for document in trace.trace:

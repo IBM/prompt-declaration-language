@@ -3,15 +3,19 @@ import json
 from pydantic import ValidationError
 
 from pdl.pdl.pdl_ast import Program, empty_block_location  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope, process_prog  # pyright: ignore
+from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+    InterpreterState,
+    empty_scope,
+    process_prog,
+)
 from pdl.pdl.pdl_schema_error_analyzer import analyze_errors  # pyright: ignore
 
 
 def error(raw_data, assertion):
-    log = []
+    state = InterpreterState()
     try:
         data = Program.model_validate(raw_data)
-        _, _, _, _ = process_prog(log, empty_scope, data)
+        _, _, _, _ = process_prog(state, empty_scope, data)
     except ValidationError:
         with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)

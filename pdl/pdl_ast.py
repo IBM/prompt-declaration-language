@@ -2,6 +2,7 @@ from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias
 
 from genai.schema import (
+    DecodingMethod,
     ModerationParameters,
     PromptTemplateData,
     TextGenerationParameters,
@@ -257,3 +258,65 @@ class PdlBlocks(RootModel):
 class PDLException(Exception):
     def __init__(self, msg):
         self.msg = msg
+
+
+MAX_NEW_TOKENS = 1024
+MIN_NEW_TOKENS = 1
+REPETITION_PENATLY = 1.05
+TEMPERATURE_SAMPLING = 0.7
+TOP_P_SAMPLING = 0.85
+TOP_K_SAMPLING = 50
+
+
+def empty_text_generation_parameters() -> PDLTextGenerationParameters:
+    return PDLTextGenerationParameters(
+        beam_width=None,
+        max_new_tokens=None,
+        min_new_tokens=None,
+        random_seed=None,
+        repetition_penalty=None,
+        stop_sequences=None,
+        temperature=None,
+        time_limit=None,
+        top_k=None,
+        top_p=None,
+        truncate_input_tokens=None,
+        typical_p=None,
+    )
+
+
+def set_default_model_params(
+    params: Optional[PDLTextGenerationParameters],
+) -> PDLTextGenerationParameters:
+    if params is None:
+        params = empty_text_generation_parameters()
+    if params.decoding_method is None:
+        params.decoding_method = (  # pylint: disable=attribute-defined-outside-init
+            DecodingMethod.GREEDY
+        )
+    if params.max_new_tokens is None:
+        params.max_new_tokens = (  # pylint: disable=attribute-defined-outside-init
+            MAX_NEW_TOKENS
+        )
+    if params.min_new_tokens is None:
+        params.min_new_tokens = (  # pylint: disable=attribute-defined-outside-init
+            MIN_NEW_TOKENS
+        )
+    if params.repetition_penalty is None:
+        params.repetition_penalty = (  # pylint: disable=attribute-defined-outside-init
+            REPETITION_PENATLY
+        )
+    if params.decoding_method == DecodingMethod.SAMPLE:
+        if params.temperature is None:
+            params.temperature = (  # pylint: disable=attribute-defined-outside-init
+                TEMPERATURE_SAMPLING
+            )
+        if params.top_k is None:
+            params.top_k = (  # pylint: disable=attribute-defined-outside-init
+                TOP_K_SAMPLING
+            )
+        if params.top_p is None:
+            params.top_p = (  # pylint: disable=attribute-defined-outside-init
+                TOP_P_SAMPLING
+            )
+    return params
