@@ -70,6 +70,9 @@ empty_scope: ScopeType = {"context": ""}
 class InterpreterState(BaseModel):
     yield_output: bool = True
     log: list[str] = []
+    batch: int = 0
+    # batch=0: streaming
+    # batch=1: call to generate with `input`
 
     def with_yield_output(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_output": b})
@@ -646,6 +649,29 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     model_input: str,
     params: Optional[PDLTextGenerationParameters],
 ) -> Generator[str, Any, str]:
+    match state.batch:
+        case 0:
+            output = yield from generate_client_response_streaming(
+                state, client, block, model, model_input, params
+            )
+        case 1:
+            output = yield from generate_client_response_single(
+                state, client, block, model, model_input, params
+            )
+        case _:
+            assert False  # XXX TODO
+
+    return output
+
+
+def generate_client_response_streaming(  # pylint: disable=too-many-arguments
+    state: InterpreterState,
+    client: Client,
+    block: ModelBlock,
+    model: str,
+    model_input: str,
+    params: Optional[PDLTextGenerationParameters],
+) -> Generator[str, Any, str]:
     gen = ""
     for response in client.text.generation.create_stream(
         model_id=model,
@@ -663,6 +689,32 @@ def generate_client_response(  # pylint: disable=too-many-arguments
                     f"Generate from: {model_input}",
                 )
             continue
+        for result in response.results:
+            if result.generated_text:
+                if state.yield_output:
+                    yield result.generated_text
+                gen += result.generated_text
+    return gen
+
+
+def generate_client_response_single(  # pylint: disable=too-many-arguments
+    state: InterpreterState,
+    client: Client,
+    block: ModelBlock,
+    model: str,
+    model_input: str,
+    params: Optional[PDLTextGenerationParameters],
+) -> Generator[str, Any, str]:
+    gen = ""
+    for response in client.text.generation.create(
+        model_id=model,
+        prompt_id=block.prompt_id,
+        input=model_input,
+        parameters=params.__dict__,
+        moderations=block.moderations,
+        data=block.data,
+    ):
+        # XXX TODO: moderation
         for result in response.results:
             if result.generated_text:
                 if state.yield_output:
