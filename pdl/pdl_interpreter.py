@@ -16,7 +16,7 @@ from genai.credentials import Credentials
 from jinja2 import StrictUndefined, Template, UndefinedError
 from pydantic import BaseModel
 
-from .generators_utils import GeneratorWrapper, step_to_completion
+from .generators_utils import GeneratorWrapper
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
@@ -125,6 +125,7 @@ def process_prog(
 ) -> tuple[Any, str, ScopeType, BlockType]:
     scope: ScopeType = empty_scope | initial_scope
     doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
+    # result, document, scope, trace = schedule(doc_generator)
     incremental_document = ""
     for output in doc_generator:
         print(output, end="")
@@ -134,17 +135,6 @@ def process_prog(
     result, document, scope, trace = doc_generator.value
     assert document == incremental_document
     return result, document, scope, trace
-
-
-def process_block(
-    state: InterpreterState,
-    scope: ScopeType,
-    block: BlockType,
-    loc=empty_block_location,
-) -> tuple[Any, str, ScopeType, BlockType]:
-    return step_to_completion(
-        step_block(state.with_yield_output(False), scope, block=block, loc=loc)
-    )
 
 
 def step_block(
@@ -180,7 +170,7 @@ def step_advanced_block(
     loc: LocationType,
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
     if len(block.defs) > 0:
-        scope, defs_trace = process_defs(state, scope, block.defs, loc)
+        scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
     else:
         defs_trace = block.defs
     state = state.with_yield_output(state.yield_output and block.show_result)
@@ -222,7 +212,9 @@ def step_block_body(
                 state, scope, block, loc
             )
         case CodeBlock():
-            result, output, scope, trace = process_call_code(state, scope, block, loc)
+            result, output, scope, trace = yield from step_call_code(
+                state, scope, block, loc
+            )
             if state.yield_output:
                 yield output
         case GetBlock(get=var):
@@ -256,7 +248,9 @@ def step_block_body(
             if state.yield_output:
                 yield output
         case ApiBlock():
-            result, output, scope, trace = process_call_api(state, scope, block, loc)
+            result, output, scope, trace = yield from step_call_api(
+                state, scope, block, loc
+            )
             if state.yield_output:
                 yield output
         case DocumentBlock():
@@ -483,30 +477,23 @@ def stringify(result):
     return result if isinstance(result, str) else json.dumps(result)
 
 
-def process_defs(
+def step_defs(
     state: InterpreterState,
     scope: ScopeType,
     defs: dict[str, BlocksType],
     loc: LocationType,
-) -> tuple[ScopeType, dict[str, BlocksType]]:
+) -> Generator[str, Any, tuple[ScopeType, dict[str, BlocksType]]]:
     defs_trace: dict[str, BlocksType] = {}
     defloc = append(loc, "defs")
     for x, blocks in defs.items():
         newloc = append(defloc, x)
-        result, _, _, blocks_trace = process_blocks(state, scope, blocks, newloc)
+        state = state.with_yield_output(False)
+        result, _, _, blocks_trace = yield from step_blocks(
+            state, scope, blocks, newloc
+        )
         scope = scope | {x: result}
         defs_trace[x] = blocks_trace
     return scope, defs_trace
-
-
-def process_blocks(
-    state: InterpreterState,
-    scope: ScopeType,
-    blocks: BlocksType,
-    loc: LocationType,
-) -> tuple[Any, str, ScopeType, BlocksType]:
-    state = state.with_yield_output(False)
-    return step_to_completion(step_blocks(state, scope, blocks=blocks, loc=loc))
 
 
 def step_blocks(
@@ -597,8 +584,8 @@ def step_call_model(
     state: InterpreterState, scope: ScopeType, block: ModelBlock, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
-        _, model_input, _, input_trace = process_blocks(
-            state, scope, block.input, append(loc, "input")
+        _, model_input, _, input_trace = yield from step_blocks(
+            state.with_yield_output(False), scope, block.input, append(loc, "input")
         )
     else:
         model_input = scope["context"]
@@ -723,11 +710,11 @@ def generate_client_response_single(  # pylint: disable=too-many-arguments
     return gen
 
 
-def process_call_api(
+def step_call_api(
     state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
-) -> tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]:
-    _, input_str, _, input_trace = process_blocks(
-        state, scope, block.input, append(loc, "input")
+) -> Generator[str, Any, tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]]:
+    _, input_str, _, input_trace = yield from step_blocks(
+        state.with_yield_output(False), scope, block.input, append(loc, "input")
     )
     input_str = block.url + input_str
     try:
@@ -750,11 +737,11 @@ def process_call_api(
     return result, output, scope, trace
 
 
-def process_call_code(
+def step_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
-) -> tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]:
-    _, code_s, _, code_trace = process_blocks(
-        state, scope, block.code, append(loc, "code")
+) -> Generator[str, Any, tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]]:
+    _, code_s, _, code_trace = yield from step_blocks(
+        state.with_yield_output(False), scope, block.code, append(loc, "code")
     )
     append_log(state, "Code Input", code_s)
     match block.lan:
