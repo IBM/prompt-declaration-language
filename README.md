@@ -20,7 +20,7 @@ See below for installation notes, followed by an [overview](#overview) of the la
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python version 3.11.6.
+The interpreter has been tested with Python version 3.12.
 
 To install the requirements for `pdl`, execute the command:
 

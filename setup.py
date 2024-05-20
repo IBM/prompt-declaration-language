@@ -26,7 +26,7 @@ setup(
     long_description_content_type="text/markdown",
     version="0.0.0",
     url="https://github.ibm.com/ml4code/pdl",
-    python_requires=">=3.11",
+    python_requires=">=3.12",
     packages=find_packages(),
     install_requires=install_requires,
     extras_require=extras_require,
