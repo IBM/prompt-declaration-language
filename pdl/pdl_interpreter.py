@@ -668,13 +668,12 @@ def generate_client_response_streaming(  # pylint: disable=too-many-arguments
         moderations=block.moderations,
         data=block.data,
     ):
-        if not response.results:
-            if response.moderation is not None:
-                append_log(
-                    state,
-                    "Hate speech",
-                    f"Generate from: {model_input}",
-                )
+        if response.results is None:
+            append_log(
+                state,
+                "Moderation",
+                f"Generate from: {model_input}",
+            )
             continue
         for result in response.results:
             if result.generated_text:

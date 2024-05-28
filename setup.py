@@ -12,11 +12,10 @@ install_requires = [
     "jinja2",
     "PyYAML",
     "jsonschema",
-    "sympy",
 ]
 
 dev = ["black", "pre-commit", "pytest"]
-examples = ["wikipedia", "textdistance", "faiss-cpu", "datasets"]
+examples = ["wikipedia", "textdistance", "faiss-cpu", "datasets", "sympy"]
 
 extras_require = {"dev": dev, "examples": examples, "all": dev + examples}
 setup(
