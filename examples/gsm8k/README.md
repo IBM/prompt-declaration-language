@@ -7,5 +7,10 @@ git clone git@github.com:openai/grade-school-math.git
 
 To run the benchmark:
 ```
-python3 -m pdl.process
+python3 -m pdl.process --file <pdl-file> --mode [python, pdl]
 ```
+
+The choices of pdl-files are:
+- math.pdl: PDL implementation of PaL with sympy (run with --mode pdl)
+- math-python.pdl: Python implementation of PaL with sympy (run with --mode python)
+- math-jinja.pdl: PDL implementation with jinja for arithmetic expressions and python for symbolic engine (run with --mode pdl)

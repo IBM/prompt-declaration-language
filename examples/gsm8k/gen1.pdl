@@ -1,0 +1,28 @@
+description: my answer
+document:
+- "Jack has already made:"
+- lan: python
+  def: money_made_so_far
+  code: 
+  - |
+    result = 4 * 3 + 5 * 2
+- "\nJack wants to make $50, so he still needs:\n"
+- lan: python
+  def: money_still_needed
+  code: 
+  - |
+    result = 50 - {{ money_made_so_far }}
+- "\nIf he sells cookies for $4 each, then he needs to sell:\n"
+- lan: python
+  def: cookies_to_sell
+  code: 
+  - |
+    result = {{ money_still_needed }} // 4
+- "\nThe answer is {{ cookies_to_sell }}."
+- lan: python
+  def: FINAL
+  code:
+  - |
+    result = {{ cookies_to_sell }}
+- "\n#### "
+- "{{ FINAL }}"

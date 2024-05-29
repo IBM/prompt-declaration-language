@@ -48,23 +48,14 @@ document:
     description: my answer
     document:
     - Roger started with 5 tennis balls
-    - lan: python
-      def: tennis_balls
-      code: 
-      - |
-        result = 5
+    - def: tennis_balls
+      data: 5
     - "\n2 cans of 3 tennis balls each is\n"
-    - lan: python
-      def: bought_balls
-      code: 
-      - |
-        result = 2 * 3
+    - def: bought_balls
+      data: "{{ 2 * 3 }}"
     - "\ntennis balls. The answer is\n"
-    - lan: python
-      def: RESULT
-      code:
-      - |
-        result = {{ tennis_balls }} + {{ bought_balls }}
+    - def: RESULT
+      data: "{{ tennis_balls + bought_balls }}"
     - lan: python
       def: FINAL
       code:
@@ -74,65 +65,6 @@ document:
     - "{{ FINAL }}"
     ```
 
-    Question: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. 
-    Her parents decided to give her $15 for that purpose, 
-    and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?
-
-    Answer:
-    ```
-    description: my answer
-    document:
-    - Betty needs $100 for the wallet.
-    - lan: python
-      def: cost
-      code: 
-      - |
-        result = 100
-    - "Betty already has:\n"
-    - lan: python
-      def: betty_already_has
-      code: 
-      - |
-        result = {{ cost }} / 2
-    - "\nHalf of the money she needs is\n"
-    - lan: python
-      def: half_cost
-      code: 
-      - |
-        result = {{ cost }} / 2
-    - "\nBetty's parents gave her:\n"
-    - lan: python
-      def: money_from_parents
-      code:
-      - |
-        result = 15
-    - "\nBetty's grandparents gave her:\n"
-    - lan: python
-      def: money_from_grandparents
-      code: 
-      - |
-        result = {{money_from_parents}} * 2
-    - "\nSo Betty has:\n"
-    - lan: python
-      def: money_betty_has
-      code: 
-      - |
-        result = {{ betty_already_has }} + {{ money_from_parents }} + {{ money_from_grandparents }}
-    - "\nTo buy the wallet, Betty needs\n"
-    - lan: python
-      def: money_needed
-      code: 
-      - |
-        result = {{ cost }} - {{ money_betty_has }}
-    - "\nThe answer is {{ money_needed }}."
-    - lan: python
-      def: FINAL
-      code:
-      - |
-        result = {{ money_needed }}
-    - "\n#### "
-    - "{{ FINAL }}"
-    ```
    
 
   - "Question: {{ question }}"

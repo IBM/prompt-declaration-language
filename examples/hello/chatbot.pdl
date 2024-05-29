@@ -1,14 +1,12 @@
 description: chatbot
 document:
 - read:
-  def: data
-  multiline: true
-  message: ""
+  message: "What is your query?\n"
 - repeat:
-  - model: ibm/granite-20b-code-instruct-v1
-    def: answer
+  - model: ibm/granite-13b-lab-incubation
+    spec: str
     parameters:
-      decoding_method: sample
+      stop_sequences: ["."]
   - read:
     def: eval
     message: "\nIs this a good answer[yes/no]?\n"
@@ -16,7 +14,7 @@ document:
   - if: "{{ eval == 'no' }}"
     then:
       - read:
-        message: "How should this be different?"
+        message: "Why not?\n"
   until: "{{ eval == 'yes'}}"
 
 

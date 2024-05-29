@@ -1,4 +1,7 @@
+import argparse
 import json
+import sys
+from io import StringIO
 
 import yaml
 
@@ -21,12 +24,26 @@ def extract_answer(result: str) -> float:
         return 0.0
 
 
-if __name__ == "__main__":
+def process_answer(document: str) -> str:
+    program = document.split("```")[1]
+    old_stdout = sys.stdout
+    redirected_output = sys.stdout = StringIO()
+    try:
+        exec(program)
+    except Exception as e:
+        print(e)
+        return "No answer"
+    finally:
+        sys.stdout = old_stdout
+    return redirected_output.getvalue()
+
+
+def process(file, mode):
     with open(
         "../grade-school-math/grade_school_math/data/train.jsonl", "r", encoding="utf-8"
     ) as json_file:
         json_list = list(json_file)
-        with open("./examples/gsm8k/math.pdl", "r", encoding="utf-8") as math_file:
+        with open(file, "r", encoding="utf-8") as math_file:
             obj = yaml.safe_load(math_file)
             data = Program.model_validate(obj)
             matches = 0  # pylint: disable=invalid-name
@@ -38,13 +55,19 @@ if __name__ == "__main__":
                 document = ""  # pylint: disable=invalid-name
                 answer = 0.0  # pylint: disable=invalid-name
                 try:
-                    state = InterpreterState(yield_output=False)
+                    state = InterpreterState(yield_output=True)
                     scope = empty_scope
-                    scope["question"] = qna["question"]
+                    scope["question"] = question
                     _, document, _, _ = process_prog(state, scope, data)
-                    answer = extract_answer(document)
-                except Exception:
+                    print(document)
+                    if mode == "python":
+                        answer = extract_answer(process_answer(document))
+                    else:
+                        answer = extract_answer(document)
+
+                except Exception as e:
                     print("EXCEPTION at: " + str(index))
+                    print(e)
                     exceptions += 1
 
                 if answer == truth or document.endswith(str(truth)):
@@ -61,3 +84,16 @@ if __name__ == "__main__":
                     + str(index + 1)
                     + " completed)"
                 )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("")
+    parser.add_argument(
+        "--file",
+        "-f",
+        help="PDL file",
+    )
+    parser.add_argument("-m", "--mode", help="output mode", choices=["python", "pdl"])
+
+    args = parser.parse_args()
+    process(args.file, args.mode)

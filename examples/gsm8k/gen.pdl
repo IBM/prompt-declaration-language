@@ -1,45 +1,52 @@
 description: my answer
 document:
-- Let's call Mrs. Snyder's original income x.
+- Betty needs $100 for the wallet.
 - lan: python
-  def: original_rent
+  def: cost
   code: 
   - |
-    from sympy import symbols, solve
-    x = symbols('x')
-    result = 0.4 * x
-- "Her original rent was {{ original_rent }}.\n"
-- "Now her income is x + 600.\n"
+    result = 100
+- "Betty already has:\n"
 - lan: python
-  def: new_rent
+  def: betty_already_has
   code: 
   - |
-    from sympy import symbols, solve
-    x = symbols('x')
-    result = 0.25 * (x + 600)
-- "Her new rent is {{ new_rent }}.\n"
-- "Since her rent didn't change, we know that {{ original_rent }} = {{ new_rent }}.\n"
+    result = {{ cost }} / 2
+- "\nHalf of the money she needs is\n"
 - lan: python
-  def: equation
+  def: half_cost
   code: 
   - |
-    from sympy import symbols, solve
-    x = symbols('x')
-    result = "0.4*x = 0.25*(x + 600)"
-- "The equation is {{ equation }}.\n"
-- "Solving for x, we get "
+    result = {{ cost }} / 2
+- "\nBetty's parents gave her:\n"
 - lan: python
-  def: RESULT
+  def: money_from_parents
   code:
   - |
-    from sympy import symbols, solve
-    x = symbols('x')
-    result = solve(0.4*x - 0.25*(x + 600), x)[0]
-- "\nThe answer is {{RESULT}}."
+    result = 15
+- "\nBetty's grandparents gave her:\n"
+- lan: python
+  def: money_from_grandparents
+  code: 
+  - |
+    result = {{money_from_parents}} * 2
+- "\nSo Betty has:\n"
+- lan: python
+  def: money_betty_has
+  code: 
+  - |
+    result = {{ betty_already_has }} + {{ money_from_parents }} + {{ money_from_grandparents }}
+- "\nTo buy the wallet, Betty needs\n"
+- lan: python
+  def: money_needed
+  code: 
+  - |
+    result = {{ cost }} - {{ money_betty_has }}
+- "\nThe answer is {{ money_needed }}."
 - lan: python
   def: FINAL
   code:
   - |
-    result = {{ RESULT }}
+    result = {{ money_needed }}
 - "\n#### "
 - "{{ FINAL }}"
