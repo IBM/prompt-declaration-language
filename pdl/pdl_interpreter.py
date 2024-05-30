@@ -130,7 +130,7 @@ def process_prog(
         incremental_document += output
     print()
     result, document, scope, trace = doc_generator.value
-    assert document == incremental_document
+    assert document == incremental_document or not state.yield_output
     return result, document, scope, trace
 
 
