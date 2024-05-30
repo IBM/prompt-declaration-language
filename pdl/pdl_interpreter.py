@@ -11,8 +11,6 @@ from typing import Any, Generator, Literal, Optional, Sequence
 import requests
 import yaml
 from dotenv import load_dotenv
-from genai.client import Client
-from genai.credentials import Credentials
 from jinja2 import StrictUndefined, Template, UndefinedError
 from pydantic import BaseModel
 
@@ -39,7 +37,6 @@ from .pdl_ast import (
     ParserType,
     PDLException,
     PdlParser,
-    PDLTextGenerationParameters,
     Program,
     ReadBlock,
     RegexParser,
@@ -47,10 +44,10 @@ from .pdl_ast import (
     RepeatUntilBlock,
     ScopeType,
     empty_block_location,
-    set_default_model_params,
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
+from .pdl_llms import BamModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
 from .pdl_schema_validator import type_check_args, type_check_spec
@@ -574,12 +571,6 @@ def process_condition(
     return b, errors
 
 
-def _get_bam_client() -> Optional[Client]:
-    credentials = Credentials.from_env()
-    client = Client(credentials=credentials)
-    return client
-
-
 def step_call_model(
     state: InterpreterState, scope: ScopeType, block: ModelBlock, loc: LocationType
 ) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
@@ -598,22 +589,7 @@ def step_call_model(
         return None, "", scope, trace
     try:
         append_log(state, "Model Input", model_input)
-        client = _get_bam_client()
-        if client is None:
-            trace = handle_error(
-                block,
-                append(loc, "model"),
-                "Fail to get a BAM client",
-                [],
-                block.model_copy(update={"input": input_trace}),
-            )
-            return None, "", scope, trace
-        params = block.parameters
-        params = set_default_model_params(params)
-        append_log(state, "Model Params", params)
-        gen = yield from generate_client_response(
-            state, client, block, model, model_input, params
-        )
+        gen = yield from generate_client_response(state, block, model, model_input)
         append_log(state, "Model Output", gen)
         trace = block.model_copy(update={"result": gen, "input": input_trace})
         return gen, gen, scope, trace
@@ -630,20 +606,18 @@ def step_call_model(
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    client: Client,
     block: ModelBlock,
     model: str,
     model_input: str,
-    params: Optional[PDLTextGenerationParameters],
 ) -> Generator[str, Any, str]:
     match state.batch:
         case 0:
             output = yield from generate_client_response_streaming(
-                state, client, block, model, model_input, params
+                state, block, model, model_input
             )
         case 1:
             output = yield from generate_client_response_single(
-                state, client, block, model, model_input, params
+                state, block, model, model_input
             )
         case _:
             assert False  # XXX TODO
@@ -651,62 +625,44 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     return output
 
 
-def generate_client_response_streaming(  # pylint: disable=too-many-arguments
+def generate_client_response_streaming(
     state: InterpreterState,
-    client: Client,
     block: ModelBlock,
     model: str,
     model_input: str,
-    params: Optional[PDLTextGenerationParameters],
 ) -> Generator[str, Any, str]:
-    gen = ""
-    for response in client.text.generation.create_stream(
+    text = ""
+    for chunk in BamModel.generate_text_stream(
         model_id=model,
         prompt_id=block.prompt_id,
-        input=model_input,
-        parameters=params.__dict__,
+        model_input=model_input,
+        parameters=block.parameters,
         moderations=block.moderations,
         data=block.data,
     ):
-        if response.results is None:
-            append_log(
-                state,
-                "Moderation",
-                f"Generate from: {model_input}",
-            )
-            continue
-        for result in response.results:
-            if result.generated_text:
-                if state.yield_output:
-                    yield result.generated_text
-                gen += result.generated_text
-    return gen
+        if state.yield_output:
+            yield chunk
+        text += chunk
+    return text
 
 
-def generate_client_response_single(  # pylint: disable=too-many-arguments
+def generate_client_response_single(
     state: InterpreterState,
-    client: Client,
     block: ModelBlock,
     model: str,
     model_input: str,
-    params: Optional[PDLTextGenerationParameters],
 ) -> Generator[str, Any, str]:
-    gen = ""
-    for response in client.text.generation.create(
+    text = BamModel.generate_text(
         model_id=model,
         prompt_id=block.prompt_id,
-        input=model_input,
-        parameters=params.__dict__,
+        model_input=model_input,
+        parameters=block.parameters,
         moderations=block.moderations,
         data=block.data,
-    ):
-        # XXX TODO: moderation
-        for result in response.results:
-            if result.generated_text:
-                if state.yield_output:
-                    yield result.generated_text
-                gen += result.generated_text
-    return gen
+    )
+    if state.yield_output:
+        yield text
+    return text
 
 
 def step_call_api(
