@@ -5,7 +5,7 @@ defs:
     parser: yaml
     spec: { "questions": ["str"], "answers": ["obj"] }
 document:
-  model: ibm/granite-20b-code-instruct-v1
+  model: ibm/granite-20b-code-instruct-v2
   def: model_output
   spec: {"name": str, "age": int}
   input: 

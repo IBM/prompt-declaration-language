@@ -10,7 +10,7 @@ export const hello = {
     'Hello,',
     {
       kind: 'model',
-      model: 'ibm/granite-20b-code-instruct-v1',
+      model: 'ibm/granite-20b-code-instruct-v2',
       parameters:
         '{"beam_width":null,"decoding_method":"greedy","include_stop_sequence":true,"length_penalty":null,"max_new_tokens":1024,"min_new_tokens":1,"random_seed":null,"repetition_penalty":1.07,"return_options":null,"stop_sequences":["!"],"temperature":null,"time_limit":null,"top_k":null,"top_p":null,"truncate_input_tokens":null,"typical_p":null}',
       result: ' world!',

@@ -14,7 +14,7 @@ document:
     result = ''.join(contents)
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_method: greedy
   input:
@@ -105,7 +105,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v1
+      - model: ibm/granite-20b-code-instruct-v2
         parameters:
           decoding_method: greedy
       ```
@@ -116,7 +116,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v1
+      - model: ibm/granite-20b-code-instruct-v2
         parameters:
           decoding_method: greedy
           stop_sequences:
@@ -142,7 +142,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v1
+      - model: ibm/granite-20b-code-instruct-v2
         parameters:
           decoding_method: greedy
           stop_sequences:

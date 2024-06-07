@@ -7,7 +7,7 @@ from pdl.pdl.pdl_interpreter import (  # pyright: ignore
 )
 
 model_parser = {
-    "model": "ibm/granite-20b-code-instruct-v1",
+    "model": "ibm/granite-20b-code-instruct-v2",
     "spec": {"bob": "int", "carol": "int"},
     "input": [
         "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
@@ -33,7 +33,7 @@ def test_model_parser():
 
 
 model_parser1 = {
-    "model": "ibm/granite-20b-code-instruct-v1",
+    "model": "ibm/granite-20b-code-instruct-v2",
     "spec": {"bob": "int", "carol": "int"},
     "input": [
         "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",

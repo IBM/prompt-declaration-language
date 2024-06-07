@@ -4,7 +4,7 @@ document:
   multiline: True
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_method: greedy
   input:
@@ -42,7 +42,7 @@ document:
   show_result: false
 
 
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_method: greedy
   input:

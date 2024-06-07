@@ -6,10 +6,10 @@ defs:
       language: str
     return:
       - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
-      - model: ibm/falcon-40b-8lang-instruct
+      - model: ibm/granite-20b-multilingual
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   def: GEN
   parameters:
     stop_sequences:

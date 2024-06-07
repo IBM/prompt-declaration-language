@@ -5,7 +5,7 @@ document:
   def: data
   show_result: false
   spec: { "questions": ["str"], "answers": ["obj"] }
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   def: model_output
   input: 
     - for: 

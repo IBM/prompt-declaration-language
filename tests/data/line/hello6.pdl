@@ -1,7 +1,7 @@
 description: Hello world showing model chaining
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_methoda: greedy
     foo: bar

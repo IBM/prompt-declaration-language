@@ -10,14 +10,14 @@ document:
       - phone
       - keys
     - words_len: <=2
-    model: ibm/granite-20b-code-instruct-v1
+    model: ibm/granite-20b-code-instruct-v2
     parameters:
       decoding_method: greedy
   - "\n"
   num_iterations: 2
 - 'The most important of these is '
 - def: ITEM
-  model: ibm/granite-20b-code-instruct-v1
+  model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_method: greedy
 - .

@@ -11,7 +11,7 @@ document:
   - def: JOKE
     constraints:
     - len(words(JOKE)) < 20
-    model: ibm/granite-20b-code-instruct-v1
+    model: ibm/granite-20b-code-instruct-v2
     parameters:
       decoding_method: sample
       stop_sequences:
@@ -19,7 +19,7 @@ document:
       - "\n"
       include_stop_sequence: false
   - "\nA: "
-  - model: ibm/granite-20b-code-instruct-v1
+  - model: ibm/granite-20b-code-instruct-v2
     parameters:
       decoding_method: sample
       stop_sequences:

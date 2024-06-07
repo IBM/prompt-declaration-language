@@ -37,7 +37,7 @@ cond_data = {
                     "def": "QUESTION",
                     "document": [
                         {
-                            "model": "ibm/granite-20b-code-instruct-v1",
+                            "model": "ibm/granite-20b-code-instruct-v2",
                             "parameters": {
                                 "decoding_method": "greedy",
                                 "max_new_tokens": 2048,
@@ -54,7 +54,7 @@ cond_data = {
                             "def": "REASON_OR_CALC",
                             "document": [
                                 {
-                                    "model": "ibm/granite-20b-code-instruct-v1",
+                                    "model": "ibm/granite-20b-code-instruct-v2",
                                     "parameters": {
                                         "decoding_method": "greedy",
                                         "max_new_tokens": 2048,
@@ -70,7 +70,7 @@ cond_data = {
                                     "def": "EXPR",
                                     "document": [
                                         {
-                                            "model": "ibm/granite-20b-code-instruct-v1",
+                                            "model": "ibm/granite-20b-code-instruct-v2",
                                             "parameters": {
                                                 "decoding_method": "greedy",
                                                 "max_new_tokens": 2048,

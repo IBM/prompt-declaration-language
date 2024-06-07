@@ -215,9 +215,13 @@ line14 = {
         "",
         "Hello, world!",
         "Translate the sentence 'Hello, world!' to French",
-        "Hello, world!",
+        "Bonjour le monde !",
+        "Translate the sentence 'Hello, world!' to German",
+        "Hallo Welt!",
         "tests/data/line/hello14.pdl:18 - Type errors in result of function call to translate",  # pylint: disable=line-too-long
-        "tests/data/line/hello14.pdl:15 - Hello, world! should be of type <class 'int'>",
+        "tests/data/line/hello14.pdl:15 - Bonjour le monde !",
+        "Translate the sentence 'Hello, world!' to German",
+        "Hallo Welt! should be of type <class 'int'>",
     ],
 }
 
@@ -246,7 +250,7 @@ line16 = {
     "file": "tests/data/line/hello16.pdl",
     "errors": [
         "",
-        '{"bob": 20, "carol": 30}',
+        "{'bob': 20, 'carol': 30}",
         "tests/data/line/hello16.pdl:8 - Type errors during spec checking",
         "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
     ],
@@ -376,7 +380,7 @@ line25 = {
         "Hello, world!",
         "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
         "Translate the sentence '{{ sentence1 }}' to {{ language }}",
-        "{{ result }}",
+        "Hello, world!",
     ],
 }
 
@@ -392,12 +396,11 @@ line26 = {
         "tests/data/line/hello26.pdl:12 - 'questions2' is undefined",
         "tests/data/line/hello26.pdl:12 - Values inside the For block must be lists",
         "tests/data/line/hello26.pdl:11 - Lists inside the For block must be of the same length",
-        "Answer: Here's an example of how you can create a JSON object in "
-        "JavaScript using the built-in JSON.stringify() function:",
-        "const obj = {",
-        "  bob: 20,",
-        "  carol: 30",
-        "}",
+        "Answer: Here's an example of how you can create a JSON object in Python using the json library:",
+        "```python",
+        "import json",
+        '# Create a dictionary with two fields, "bob" and "carol", each set to a value of 20 and 30 respectively',
+        'data = {"bob": 20, "carol": 30}',
     ],
 }
 

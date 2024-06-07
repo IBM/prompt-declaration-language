@@ -1,6 +1,6 @@
 description: Hello world to call into a model
 defs:
-  model: ibm/granite-20b-code-instruct-v1
+  model: ibm/granite-20b-code-instruct-v2
 document:
 - Hello,
 - model: "{{ models }}"

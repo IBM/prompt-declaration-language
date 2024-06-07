@@ -1,5 +1,5 @@
 description: Parse using regex
-model: ibm/granite-20b-code-instruct-v1
+model: ibm/granite-20b-code-instruct-v2
 input: "Hello,"
 parameters:
   decoding_method: greedy

@@ -4,7 +4,7 @@ document:
   def: QUERY
   message: "Ask a query: "
   show_result: false
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   input: 
     - |
       Question: What is the weather in London?
@@ -27,7 +27,7 @@ document:
   input: '{{ LOCATION }}'
   def: WEATHER
   show_result: false
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   input: 
     - |
       Explain what the weather is from the following JSON:

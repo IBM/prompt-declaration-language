@@ -1,10 +1,10 @@
 description: Hello world with model chainings
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     stop_sequences:
     - '!'
     include_stop_sequence: true
 - "\nTranslate the above sentence to French\n"
-- model: ibm/falcon-40b-8lang-instruct
+- model: ibm/granite-20b-multilingual

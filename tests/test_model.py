@@ -7,7 +7,7 @@ model_data = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-20b-code-instruct-v1",
+            "model": "ibm/granite-20b-code-instruct-v2",
             "parameters": {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
@@ -34,7 +34,7 @@ model_chain_data = {
             "def": "SOMEONE",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "model": "ibm/granite-20b-code-instruct-v2",
                     "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
@@ -90,7 +90,7 @@ multi_shot_data = {
             "def": "LOCATION",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v1",
+                    "model": "ibm/granite-20b-code-instruct-v2",
                     "input": {
                         "document": [
                             "Question: What is the weather in London?\n",
@@ -127,7 +127,7 @@ model_data_missing_parameters = {
     "document": [
         "Hello,\n",
         {
-            "model": "ibm/granite-20b-code-instruct-v1",
+            "model": "ibm/granite-20b-code-instruct-v2",
             "parameters": {
                 "stop_sequences": ["."],
             },
@@ -140,12 +140,15 @@ def test_data_missing_parameters():
     state = InterpreterState()
     data = Program.model_validate(model_data_missing_parameters)
     _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello,\n\nI am a student at the University of Toronto."
+    assert (
+        document
+        == "Hello,\n\nI am writing to inquire about the possibility of a partnership with you."
+    )
 
 
 model_parameter = {
     "description": "Hello world with a variable",
-    "defs": {"model": "ibm/granite-20b-code-instruct-v1"},
+    "defs": {"model": "ibm/granite-20b-code-instruct-v2"},
     "document": [
         "Hello,",
         {
@@ -167,7 +170,7 @@ def test_model_parameter():
 
 model_parameter1 = {
     "description": "Hello world with a variable",
-    "defs": {"model": "granite-20b-code-instruct-v1"},
+    "defs": {"model": "granite-20b-code-instruct-v2"},
     "document": [
         "Hello,",
         {

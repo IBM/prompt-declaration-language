@@ -2,7 +2,7 @@ description: Math Problem
 document:
 - 'Question: '
 - def: QUESTION
-  model: ibm/granite-20b-code-instruct-v1
+  model: ibm/granite-20b-code-instruct-v2
   parameters:
     stop_sequences:
     - Answer
@@ -10,14 +10,14 @@ document:
 - "Answer: Let's think step by step.\n"
 - repeat:
   - def: REASON_OR_CALC
-    model: ibm/granite-20b-code-instruct-v1
+    model: ibm/granite-20b-code-instruct-v2
     parameters:
       stop_sequences:
       - '<<'
       include_stop_sequence: true
   - then:
     - def: EXPR
-      model: ibm/granite-20b-code-instruct-v1
+      model: ibm/granite-20b-code-instruct-v2
       parameters:
         stop_sequences:
         - '='

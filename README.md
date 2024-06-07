@@ -75,7 +75,7 @@ In PDL, we can write some YAML to create a prompt and call an LLM:
 description: Hello world calling a model
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     decoding_method: greedy
     stop_sequences:
@@ -83,7 +83,7 @@ document:
     include_stop_sequence: true
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello,"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-20b-code-instruct-v1` from BAM, with the indicated parameters. The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output. The input to the model call is everything that has been produced so far in the document.
+The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello,"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-20b-code-instruct-v2` from BAM, with the indicated parameters. The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output. The input to the model call is everything that has been produced so far in the document.
 
 When we execute this program using the PDL interpreter:
 
@@ -148,7 +148,7 @@ document:
   def: CODE
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -205,7 +205,7 @@ document:
   def: TRUTH
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   def: EXPLANATION
   parameters:
     decoding_method: greedy
@@ -284,7 +284,7 @@ document:
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   def: EXPLANATION
   show_result: False
   parameters:

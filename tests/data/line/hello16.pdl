@@ -5,7 +5,7 @@ document:
   def: data
   show_result: false
   spec: { "questions": ["str"], "answers": ["obj"] }
-- model: ibm/granite-20b-code-instruct-v1
+- model: ibm/granite-20b-code-instruct-v2
   def: model_output
   spec: {"bob": int, "carol": str}
   input: 
@@ -17,7 +17,7 @@ document:
           {{ question }}
           {{ answer }}
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
-  parser: json
+  parser: yaml
   parameters:
     decoding_method: greedy
     stop_sequences:

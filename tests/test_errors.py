@@ -48,7 +48,7 @@ error2 = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-20b-code-instruct-v1",
+            "model": "ibm/granite-20b-code-instruct-v2",
             "parameterss": {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
@@ -74,7 +74,7 @@ error3 = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-20b-code-instruct-v1",
+            "model": "ibm/granite-20b-code-instruct-v2",
             "parameters": {
                 "decoding_methods": "greedy",
                 "stop_sequences": ["!"],
@@ -100,7 +100,7 @@ error4 = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-20b-code-instruct-v1",
+            "model": "ibm/granite-20b-code-instruct-v2",
             "parameters": {
                 "decoding_methods": "greedy",
                 "stop_sequencess": ["!"],
