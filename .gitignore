@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 log.txt
+log.out
 
 # UI
 ui/node_modules/
