@@ -88,3 +88,35 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     yield result.generated_text
+
+    # @staticmethod
+    # def generate_text_lazy(  # pylint: disable=too-many-arguments
+    #     model_id: str,
+    #     prompt_id: Optional[str],
+    #     model_input: Optional[str],
+    #     parameters: Optional[PDLTextGenerationParameters],
+    #     moderations: Optional[BamModerationParameters],
+    #     data: Optional[BamPromptTemplateData],
+    # ) -> Generator[None, Any, str]:
+    #     client = BamModel.get_model()
+    #     params = parameters
+    #     params = set_default_model_params(params)
+    #     gen = client.text.generation.create(
+    #         model_id=model_id,
+    #         prompt_id=prompt_id,
+    #         input=model_input,
+    #         parameters=params.__dict__,
+    #         moderations=moderations,
+    #         data=data,
+    #     )
+
+    #     def get_text():
+    #         text = ""
+    #         for response in gen:
+    #             # XXX TODO: moderation
+    #             for result in response.results:
+    #                 if result.generated_text:
+    #                     text += result.generated_text
+    #         return text
+
+    #     return gen_text

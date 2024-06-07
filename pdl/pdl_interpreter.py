@@ -5,8 +5,9 @@ import shlex
 import subprocess
 import types
 from ast import literal_eval
+from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Literal, Optional, Sequence
+from typing import Any, Generator, Iterable, Literal, Optional, Sequence
 
 import requests
 import yaml
@@ -14,7 +15,6 @@ from dotenv import load_dotenv
 from jinja2 import StrictUndefined, Template, UndefinedError
 from pydantic import BaseModel
 
-from .generators_utils import GeneratorWrapper
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
@@ -50,6 +50,7 @@ from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_llms import BamModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
+from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
 
 load_dotenv()
@@ -121,22 +122,45 @@ def process_prog(
     loc=empty_block_location,
 ) -> tuple[Any, str, ScopeType, BlockType]:
     scope: ScopeType = empty_scope | initial_scope
-    doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
-    # result, document, scope, trace = schedule(doc_generator)
-    incremental_document = ""
-    for output in doc_generator:
-        print(output, end="")
-        assert output is not None
-        incremental_document += output
-    print()
-    result, document, scope, trace = doc_generator.value
-    assert document == incremental_document or not state.yield_output
-    return result, document, scope, trace
+    doc_generator = step_block(state, scope, block=prog.root, loc=loc)
+    for result, document, scope, trace in schedule([doc_generator]):
+        return result, document, scope, trace
+    assert False
+    # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
+    # # result, document, scope, trace = schedule(doc_generator)
+    # incremental_document = ""
+    # for output in doc_generator:
+    #     print(output, end="")
+    #     assert output is not None
+    #     incremental_document += output
+    # print()
+    # result, document, scope, trace = doc_generator.value
+    # assert document == incremental_document or not state.yield_output
+    # return result, document, scope, trace
+
+
+def process_progs(
+    state: InterpreterState,
+    initial_scopes: Iterable[ScopeType],
+    prog: Program,
+    loc=empty_block_location,
+) -> Iterable[tuple[Any, str, ScopeType, BlockType]]:
+    if state.batch > 1:
+        batch_size = state.batch
+    else:
+        batch_size = 1
+    for batch in batched(initial_scopes, batch_size):
+        doc_generators = [
+            step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
+            for initial_scope in batch
+        ]
+        for result, document, scope, trace in schedule(doc_generators):
+            yield result, document, scope, trace
 
 
 def step_block(
     state: InterpreterState, scope: ScopeType, block: BlockType, loc: LocationType
-) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlockType]]:
     result: Any
     output: str
     trace: BlockType
@@ -150,7 +174,7 @@ def step_block(
             output = stringify(result)
             trace = output
         if state.yield_output:
-            yield output
+            yield OutputMessage(output)
         append_log(state, "Document", output)
     else:
         result, output, scope, trace = yield from step_advanced_block(
@@ -165,7 +189,7 @@ def step_advanced_block(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[str, Any, tuple[Any, str, ScopeType, BlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlockType]]:
     if len(block.defs) > 0:
         scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
     else:
@@ -197,7 +221,7 @@ def step_block_body(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[str, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
     output: str
@@ -213,7 +237,7 @@ def step_block_body(
                 state, scope, block, loc
             )
             if state.yield_output:
-                yield output
+                yield OutputMessage(output)
         case GetBlock(get=var):
             result = get_var(var, scope)
             if result is None:
@@ -229,7 +253,7 @@ def step_block_body(
                 output = stringify(result)
                 trace = block.model_copy()
             if state.yield_output:
-                yield output
+                yield OutputMessage(output)
         case DataBlock(data=v):
             block.location = append(loc, "data")
             result, errors = process_expr(scope, v, append(loc, "data"))
@@ -243,13 +267,13 @@ def step_block_body(
                 output = stringify(result)
                 trace = block.model_copy()
             if state.yield_output:
-                yield output
+                yield OutputMessage(output)
         case ApiBlock():
             result, output, scope, trace = yield from step_call_api(
                 state, scope, block, loc
             )
             if state.yield_output:
-                yield output
+                yield OutputMessage(output)
         case DocumentBlock():
             _, output, scope, document = yield from step_blocks(
                 state, scope, block.document, append(loc, "document")
@@ -382,7 +406,7 @@ def step_block_body(
         case ReadBlock():
             output, scope, trace = process_input(state, scope, block, loc)
             if state.yield_output:
-                yield output
+                yield OutputMessage(output)
             result = output
 
         case IncludeBlock():
@@ -479,7 +503,7 @@ def step_defs(
     scope: ScopeType,
     defs: dict[str, BlocksType],
     loc: LocationType,
-) -> Generator[str, Any, tuple[ScopeType, dict[str, BlocksType]]]:
+) -> Generator[YieldMessage, Any, tuple[ScopeType, dict[str, BlocksType]]]:
     defs_trace: dict[str, BlocksType] = {}
     defloc = append(loc, "defs")
     for x, blocks in defs.items():
@@ -498,7 +522,7 @@ def step_blocks(
     scope: ScopeType,
     blocks: BlocksType,
     loc: LocationType,
-) -> Generator[str, Any, tuple[Any, str, ScopeType, BlocksType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlocksType]]:
     result: Any
     output: str
     trace: BlocksType
@@ -573,7 +597,7 @@ def process_condition(
 
 def step_call_model(
     state: InterpreterState, scope: ScopeType, block: ModelBlock, loc: LocationType
-) -> Generator[str, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
             state.with_yield_output(False), scope, block.input, append(loc, "input")
@@ -609,7 +633,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     block: ModelBlock,
     model: str,
     model_input: str,
-) -> Generator[str, Any, str]:
+) -> Generator[YieldMessage, Any, str]:
     match state.batch:
         case 0:
             output = yield from generate_client_response_streaming(
@@ -620,8 +644,9 @@ def generate_client_response(  # pylint: disable=too-many-arguments
                 state, block, model, model_input
             )
         case _:
-            assert False  # XXX TODO
-
+            output = yield from generate_client_response_batching(
+                state, block, model, model_input
+            )
     return output
 
 
@@ -630,7 +655,7 @@ def generate_client_response_streaming(
     block: ModelBlock,
     model: str,
     model_input: str,
-) -> Generator[str, Any, str]:
+) -> Generator[YieldMessage, Any, str]:
     text = ""
     for chunk in BamModel.generate_text_stream(
         model_id=model,
@@ -641,7 +666,7 @@ def generate_client_response_streaming(
         data=block.data,
     ):
         if state.yield_output:
-            yield chunk
+            yield OutputMessage(chunk)
         text += chunk
     return text
 
@@ -651,7 +676,7 @@ def generate_client_response_single(
     block: ModelBlock,
     model: str,
     model_input: str,
-) -> Generator[str, Any, str]:
+) -> Generator[YieldMessage, Any, str]:
     text = BamModel.generate_text(
         model_id=model,
         prompt_id=block.prompt_id,
@@ -661,13 +686,32 @@ def generate_client_response_single(
         data=block.data,
     )
     if state.yield_output:
-        yield text
+        yield OutputMessage(text)
+    return text
+
+
+def generate_client_response_batching(  # pylint: disable=too-many-arguments
+    state: InterpreterState,
+    block: ModelBlock,
+    model: str,
+    model_input: str,
+) -> Generator[YieldMessage, Any, str]:
+    text = yield ModelCallMessage(
+        model_id=model,
+        prompt_id=block.prompt_id,
+        model_input=model_input,
+        parameters=block.parameters,
+        moderations=block.moderations,
+        data=block.data,
+    )
+    if state.yield_output:
+        yield OutputMessage(text)
     return text
 
 
 def step_call_api(
     state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
-) -> Generator[str, Any, tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]]:
     _, input_str, _, input_trace = yield from step_blocks(
         state.with_yield_output(False), scope, block.input, append(loc, "input")
     )
@@ -694,28 +738,40 @@ def step_call_api(
 
 def step_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
-) -> Generator[str, Any, tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]]:
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]]:
     _, code_s, _, code_trace = yield from step_blocks(
         state.with_yield_output(False), scope, block.code, append(loc, "code")
     )
     append_log(state, "Code Input", code_s)
-    match block.lan:
-        case "python":
-            result = call_python(code_s)
-            output = str(result)
-        case "command":
-            result, output = call_command(code_s)
-        case _:
-            trace = handle_error(
-                block,
-                append(loc, "lan"),
-                f"Unsupported language: {block.lan}",
-                [],
-                block.model_copy(),
-            )
-            result = None
-            output = ""
-            return result, output, scope, trace
+    try:
+        match block.lan:
+            case "python":
+                result = call_python(code_s)
+                output = str(result)
+            case "command":
+                result, output = call_command(code_s)
+            case _:
+                trace = handle_error(
+                    block,
+                    append(loc, "lan"),
+                    f"Unsupported language: {block.lan}",
+                    [],
+                    block.model_copy(),
+                )
+                result = None
+                output = ""
+                return result, output, scope, trace
+    except Exception as e:
+        trace = handle_error(
+            block,
+            loc,
+            f"Code error: {e}",
+            [],
+            block.model_copy(update={"code": code_s}),
+        )
+        result = None
+        output = ""
+
     append_log(state, "Code Output", result)
     trace = block.model_copy(update={"result": result, "code": code_trace})
     return result, output, scope, trace
@@ -779,7 +835,9 @@ def step_include(
     scope: ScopeType,
     block: IncludeBlock,
     loc: LocationType,
-) -> Generator[str, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]]:
+) -> Generator[
+    YieldMessage, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]
+]:
     try:
         prog, line_table = parse_program(block.include)
         newloc = LocationType(file=block.include, path=[], table=line_table)
