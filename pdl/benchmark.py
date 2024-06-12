@@ -44,6 +44,7 @@ class BaseProcessor:
                             scope["question"] = question
                             _, document, _, _ = process_prog(state, scope, data)
                             answer = self.extract_answer(document)
+                            print(answer)
 
                         except Exception as e:
                             print("EXCEPTION at: " + str(index))
