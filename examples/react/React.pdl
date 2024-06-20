@@ -23,7 +23,7 @@ document:
 - repeat:
   - repeat:
     - def: THOUGHT
-      model: meta-llama/llama-2-70b-chat
+      model: meta-llama/llama-3-70b-instruct
       parameters:
         decoding_method: sample
         stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
@@ -33,14 +33,14 @@ document:
         not_contains: Tho
     until: '{{ THOUGHT.endswith("Act:") }}'
   - def: ACTION
-    model: meta-llama/llama-2-70b-chat
+    model: meta-llama/llama-3-70b-instruct
     parameters:
       decoding_method: sample
       stop_sequences: ["[", "\n"]
       include_stop_sequence: false
   - "["
   - def: SUBJECT
-    model: meta-llama/llama-2-70b-chat
+    model: meta-llama/llama-3-70b-instruct
     parameters:
       decoding_method: sample
       stop_sequences: ["]", "\n"]
@@ -56,7 +56,7 @@ document:
             result = wikipedia.summary("{{ SUBJECT }}")
         except wikipedia.WikipediaException as e:
             result = str(error)
-    - model: meta-llama/llama-2-70b-chat
+    - model: meta-llama/llama-3-70b-instruct
       parameters:
         decoding_method: sample
         stop_sequences: ["\n", Tho, Act, Obs]

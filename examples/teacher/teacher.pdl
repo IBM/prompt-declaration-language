@@ -1,7 +1,7 @@
 defs:
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/teacher_config.yaml
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: mistralai/mixtral-8x7b-instruct-v0-1
+  teacher_model: mistralai/mixtral-8x7b-instruct-v01
   teacher_template:
     function:
       sys_prompt: str

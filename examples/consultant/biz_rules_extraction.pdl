@@ -13,7 +13,7 @@ defs:
     * Strictly include all relevant parameters related to each of the above categories
 
 document:
-  - include: examples/consultant/function.yaml
+  - include: examples/consultant/function.pdl
   - call: template
     args:
       preamble: "jsp: {{ input_data }}"

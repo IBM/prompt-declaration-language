@@ -50,6 +50,6 @@ document:
 
     Q: {{ TEST_PROMPT }}
     A: ```
-- model: codellama/codellama-70b-instruct
+- model: ibm/granite-20b-code-instruct-v2
   parameters:
     stop_sequences: ["```"]

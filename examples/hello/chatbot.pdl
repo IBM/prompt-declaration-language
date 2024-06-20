@@ -3,7 +3,7 @@ document:
 - read:
   message: "What is your query?\n"
 - repeat:
-  - model: ibm/granite-13b-lab-incubation
+  - model: ibm/granite-13b-chat-v2
     spec: str
     parameters:
       stop_sequences: ["."]
