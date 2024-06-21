@@ -218,7 +218,7 @@ line14 = {
         "Bonjour le monde !",
         "Translate the sentence 'Hello, world!' to German",
         "Hallo Welt!",
-        "tests/data/line/hello14.pdl:18 - Type errors in result of function call to translate",  # pylint: disable=line-too-long
+        "tests/data/line/hello14.pdl:19 - Type errors in result of function call to translate",  # pylint: disable=line-too-long
         "tests/data/line/hello14.pdl:15 - Bonjour le monde !",
         "Translate the sentence 'Hello, world!' to German",
         "Hallo Welt! should be of type <class 'int'>",

@@ -6,6 +6,7 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
+    BamModelBlock,
     BlocksType,
     CallBlock,
     CodeBlock,
@@ -18,13 +19,13 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     LocationType,
-    ModelBlock,
     ParserType,
     PdlParser,
     ReadBlock,
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    WatsonxModelBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -70,7 +71,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
     if block.defs is not None:
         d["defs"] = {x: blocks_to_dict(b) for x, b in block.defs.items()}
     match block:
-        case ModelBlock():
+        case BamModelBlock():
+            d["platform"] = block.platform
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input)
@@ -84,6 +86,17 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
                 d["data"] = block.data
             if block.constraints is not None:
                 d["constraints"] = block.constraints
+        case WatsonxModelBlock():
+            d["platform"] = block.platform
+            d["model"] = block.model
+            if block.input is not None:
+                d["input"] = blocks_to_dict(block.input)
+            if block.params is not None:
+                d["params"] = block.params
+            if block.guardrails is not None:
+                d["guardrails"] = block.guardrails
+            if block.guardrails_hap_params is not None:
+                d["guardrails_hap_params"] = block.guardrails_hap_params
         case CodeBlock():
             d["lan"] = block.lan
             d["code"] = blocks_to_dict(block.code)

@@ -1,3 +1,7 @@
-description: Hello world!
+description: Hello world with watsonx
 document:
-    Hello, world!
+- Hello
+- model: ibm/granite-3b-code-instruct
+  params:
+    STOP_SEQUENCES:
+    - '!'

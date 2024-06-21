@@ -3,8 +3,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TypeAlias
 
+from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as WatsonxGenParams
+
 from ..pdl_ast import (
     ApiBlock,
+    BamModelBlock,
     BlocksType,
     BlockType,
     CallBlock,
@@ -21,6 +24,7 @@ from ..pdl_ast import (
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
+    WatsonxModelBlock,
 )
 
 
@@ -258,21 +262,38 @@ def compile_block(
         return ReConst(block), scope
     match block:
         case ModelBlock():
-            if block.parameters is None:
+            stop_sequences: list[str]
+            include_stop_sequence: bool
+            match block:
+                case BamModelBlock():
+                    if block.parameters is None:
+                        stop_sequences = []
+                        include_stop_sequence = False
+                    else:
+                        stop_sequences = block.parameters.stop_sequences or []
+                        include_stop_sequence = (
+                            block.parameters.include_stop_sequence is None
+                            or block.parameters.include_stop_sequence
+                        )
+                case WatsonxModelBlock():
+                    if block.params is None:
+                        stop_sequences = []
+                    else:
+                        stop_sequences = block.params.get(
+                            WatsonxGenParams.STOP_SEQUENCES, []
+                        )
+                    include_stop_sequence = False
+                case _:
+                    assert False
+
+            if len(stop_sequences) == 0:
                 regex = ReStar(ReAnyChar())
             else:
-                stop_sequences = block.parameters.stop_sequences
-                if stop_sequences and len(stop_sequences) > 0:
-                    regex_stop_sequences = ReOr([ReConst(s) for s in stop_sequences])
-                    if (
-                        block.parameters.include_stop_sequence is None
-                        or block.parameters.include_stop_sequence
-                    ):
-                        regex = ReSeq([ReStar(ReAnyChar()), regex_stop_sequences])
-                    else:
-                        regex = ReAnyUpto(regex_stop_sequences)
+                regex_stop_sequences = ReOr([ReConst(s) for s in stop_sequences])
+                if include_stop_sequence:
+                    regex = ReSeq([ReStar(ReAnyChar()), regex_stop_sequences])
                 else:
-                    regex = ReStar(ReAnyChar())
+                    regex = ReAnyUpto(regex_stop_sequences)
         case CodeBlock():
             regex = ReStar(ReAnyChar())
         case GetBlock():

@@ -108,16 +108,33 @@ class PDLTextGenerationParameters(TextGenerationParameters):
     model_config = ConfigDict(extra="forbid")
 
 
+class ModelPlatform(StrEnum):
+    BAM = "bam"
+    WATSONX = "watsonx"
+
+
 class ModelBlock(Block):
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str
     input: Optional["BlocksType"] = None
+
+
+class BamModelBlock(ModelBlock):
+    model_config = ConfigDict(extra="forbid")
+    platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
     prompt_id: Optional[str] = None
     parameters: Optional[PDLTextGenerationParameters] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
+
+
+class WatsonxModelBlock(ModelBlock):
+    model_config = ConfigDict(extra="forbid")
+    platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
+    params: Optional[dict] = None
+    guardrails: Optional[bool] = None
+    guardrails_hap_params: Optional[dict] = None
 
 
 class CodeBlock(Block):
@@ -216,7 +233,8 @@ class EmptyBlock(Block):
 AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
-    | ModelBlock
+    | WatsonxModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock

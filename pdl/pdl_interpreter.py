@@ -1,5 +1,4 @@
 import json
-import os
 import re
 import shlex
 import subprocess
@@ -11,13 +10,13 @@ from typing import Any, Generator, Iterable, Literal, Optional, Sequence
 
 import requests
 import yaml
-from dotenv import load_dotenv
 from jinja2 import StrictUndefined, Template, UndefinedError
 from pydantic import BaseModel
 
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
+    BamModelBlock,
     BlocksType,
     BlockType,
     CallBlock,
@@ -43,19 +42,16 @@ from .pdl_ast import (
     RepeatBlock,
     RepeatUntilBlock,
     ScopeType,
+    WatsonxModelBlock,
     empty_block_location,
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_llms import BamModel
+from .pdl_llms import BamModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
-
-load_dotenv()
-GENAI_KEY = os.getenv("GENAI_KEY")
-GENAI_API = os.getenv("GENAI_API")
 
 
 class PDLRuntimeParserError(PDLException):
@@ -596,8 +592,15 @@ def process_condition(
 
 
 def step_call_model(
-    state: InterpreterState, scope: ScopeType, block: ModelBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, ModelBlock | ErrorBlock]]:
+    state: InterpreterState,
+    scope: ScopeType,
+    block: BamModelBlock | WatsonxModelBlock,
+    loc: LocationType,
+) -> Generator[
+    YieldMessage,
+    Any,
+    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | ErrorBlock],
+]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
             state.with_yield_output(False), scope, block.input, append(loc, "input")
@@ -630,7 +633,7 @@ def step_call_model(
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: ModelBlock,
+    block: BamModelBlock | WatsonxModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
@@ -652,19 +655,33 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: ModelBlock,
+    block: BamModelBlock | WatsonxModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
+    text_stream: Generator[str, Any, None]
+    match block:
+        case BamModelBlock():
+            text_stream = BamModel.generate_text_stream(
+                model_id=model,
+                prompt_id=block.prompt_id,
+                model_input=model_input,
+                parameters=block.parameters,
+                moderations=block.moderations,
+                data=block.data,
+            )
+        case WatsonxModelBlock():
+            text_stream = WatsonxModel.generate_text_stream(
+                model_id=model,
+                prompt=model_input,
+                params=block.params,
+                guardrails=block.guardrails,
+                guardrails_hap_params=block.guardrails_hap_params,
+            )
+        case _:
+            assert False
     text = ""
-    for chunk in BamModel.generate_text_stream(
-        model_id=model,
-        prompt_id=block.prompt_id,
-        model_input=model_input,
-        parameters=block.parameters,
-        moderations=block.moderations,
-        data=block.data,
-    ):
+    for chunk in text_stream:
         if state.yield_output:
             yield OutputMessage(chunk)
         text += chunk
@@ -673,18 +690,29 @@ def generate_client_response_streaming(
 
 def generate_client_response_single(
     state: InterpreterState,
-    block: ModelBlock,
+    block: BamModelBlock | WatsonxModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
-    text = BamModel.generate_text(
-        model_id=model,
-        prompt_id=block.prompt_id,
-        model_input=model_input,
-        parameters=block.parameters,
-        moderations=block.moderations,
-        data=block.data,
-    )
+    text: str
+    match block:
+        case BamModelBlock():
+            text = BamModel.generate_text(
+                model_id=model,
+                prompt_id=block.prompt_id,
+                model_input=model_input,
+                parameters=block.parameters,
+                moderations=block.moderations,
+                data=block.data,
+            )
+        case WatsonxModelBlock():
+            text = WatsonxModel.generate_text(
+                model_id=model,
+                prompt=model_input,
+                params=block.params,
+                guardrails=block.guardrails,
+                guardrails_hap_params=block.guardrails_hap_params,
+            )
     if state.yield_output:
         yield OutputMessage(text)
     return text
@@ -692,20 +720,26 @@ def generate_client_response_single(
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: ModelBlock,
+    block: BamModelBlock | WatsonxModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
-    text = yield ModelCallMessage(
-        model_id=model,
-        prompt_id=block.prompt_id,
-        model_input=model_input,
-        parameters=block.parameters,
-        moderations=block.moderations,
-        data=block.data,
-    )
-    if state.yield_output:
-        yield OutputMessage(text)
+    match block:
+        case BamModelBlock():
+            text = yield ModelCallMessage(
+                model_id=model,
+                prompt_id=block.prompt_id,
+                model_input=model_input,
+                parameters=block.parameters,
+                moderations=block.moderations,
+                data=block.data,
+            )
+            if state.yield_output:
+                yield OutputMessage(text)
+        case WatsonxModelBlock():
+            assert False  # XXX TODO
+        case _:
+            assert False
     return text
 
 

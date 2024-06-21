@@ -7,6 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fp:
 install_requires = [
     "pydantic",
     "ibm-generative-ai",
+    "ibm-watsonx-ai",
     "requests",
     "python-dotenv",
     "jinja2",

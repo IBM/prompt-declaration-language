@@ -32,7 +32,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -86,7 +89,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -214,7 +220,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -268,7 +277,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -349,7 +361,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -403,7 +418,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -460,7 +478,7 @@
       "title": "ApiBlock",
       "type": "object"
     },
-    "CallBlock": {
+    "BamModelBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -492,7 +510,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -546,7 +567,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -674,7 +698,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -728,7 +755,544 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "model",
+          "default": "model",
+          "enum": [
+            "model"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input"
+        },
+        "platform": {
+          "const": "bam",
+          "default": "bam",
+          "enum": [
+            "bam"
+          ],
+          "title": "Platform",
+          "type": "string"
+        },
+        "prompt_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Id"
+        },
+        "parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PDLTextGenerationParameters"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "moderations": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModerationParameters"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PromptTemplateData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "constraints": {
+          "default": null,
+          "title": "Constraints"
+        }
+      },
+      "required": [
+        "model"
+      ],
+      "title": "BamModelBlock",
+      "type": "object"
+    },
+    "CallBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -810,7 +1374,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -864,7 +1431,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -955,7 +1525,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -1009,7 +1582,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -1137,7 +1713,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1191,7 +1770,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1272,7 +1854,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1326,7 +1911,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1414,7 +2002,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -1468,7 +2059,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -1596,7 +2190,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1650,7 +2247,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1761,7 +2361,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -1815,7 +2418,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -1943,7 +2549,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1997,7 +2606,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2070,7 +2682,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2124,7 +2739,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2211,7 +2829,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -2265,7 +2886,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -2393,7 +3017,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2447,7 +3074,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2544,7 +3174,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -2598,7 +3231,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -2726,7 +3362,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2780,7 +3419,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2857,7 +3499,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2911,7 +3556,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2999,7 +3647,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -3053,7 +3704,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3181,7 +3835,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3235,7 +3892,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3312,7 +3972,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3366,7 +4029,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3429,7 +4095,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3483,7 +4152,10 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
-                          "$ref": "#/$defs/ModelBlock"
+                          "$ref": "#/$defs/WatsonxModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/BamModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -3579,7 +4251,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -3633,7 +4308,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3761,7 +4439,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3815,7 +4496,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3899,7 +4583,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3953,7 +4640,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4053,7 +4743,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4107,7 +4800,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4235,7 +4931,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4289,7 +4988,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4393,7 +5095,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4447,7 +5152,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4575,7 +5283,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4629,7 +5340,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4705,7 +5419,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4759,7 +5476,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4819,7 +5539,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4873,7 +5596,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4977,7 +5703,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -5031,7 +5760,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -5159,7 +5891,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5213,7 +5948,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5290,7 +6028,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5406,513 +6147,6 @@
         "table"
       ],
       "title": "LocationType",
-      "type": "object"
-    },
-    "ModelBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/ModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/ForBlock"
-              },
-              {
-                "$ref": "#/$defs/DocumentBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ForBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DocumentBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ReadBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/EmptyBlock"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Fallback"
-        },
-        "kind": {
-          "const": "model",
-          "default": "model",
-          "enum": [
-            "model"
-          ],
-          "title": "Kind",
-          "type": "string"
-        },
-        "model": {
-          "title": "Model",
-          "type": "string"
-        },
-        "input": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/ModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Input"
-        },
-        "prompt_id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Prompt Id"
-        },
-        "parameters": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PDLTextGenerationParameters"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "moderations": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationParameters"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "data": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PromptTemplateData"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "constraints": {
-          "default": null,
-          "title": "Constraints"
-        }
-      },
-      "required": [
-        "model"
-      ],
-      "title": "ModelBlock",
       "type": "object"
     },
     "ModerationHAP": {
@@ -6423,7 +6657,10 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
-          "$ref": "#/$defs/ModelBlock"
+          "$ref": "#/$defs/WatsonxModelBlock"
+        },
+        {
+          "$ref": "#/$defs/BamModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -6479,7 +6716,10 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
-          "$ref": "#/$defs/ModelBlock"
+          "$ref": "#/$defs/WatsonxModelBlock"
+        },
+        {
+          "$ref": "#/$defs/BamModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -6533,7 +6773,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -6620,7 +6863,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6674,7 +6920,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6741,7 +6990,10 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
-          "$ref": "#/$defs/ModelBlock"
+          "$ref": "#/$defs/WatsonxModelBlock"
+        },
+        {
+          "$ref": "#/$defs/BamModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -6842,7 +7094,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -6896,7 +7151,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7024,7 +7282,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7078,7 +7339,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7256,7 +7520,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -7310,7 +7577,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7438,7 +7708,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7492,7 +7765,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7565,7 +7841,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7619,7 +7898,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7686,7 +7968,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7740,7 +8025,10 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
-                          "$ref": "#/$defs/ModelBlock"
+                          "$ref": "#/$defs/WatsonxModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/BamModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -7836,7 +8124,10 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
-                "$ref": "#/$defs/ModelBlock"
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -7890,7 +8181,10 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
-                      "$ref": "#/$defs/ModelBlock"
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -8018,7 +8312,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8072,7 +8369,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8145,7 +8445,10 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
-              "$ref": "#/$defs/ModelBlock"
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8199,7 +8502,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8265,7 +8571,10 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
-                    "$ref": "#/$defs/ModelBlock"
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8319,7 +8628,10 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
-                          "$ref": "#/$defs/ModelBlock"
+                          "$ref": "#/$defs/WatsonxModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/BamModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -8474,6 +8786,527 @@
         }
       },
       "title": "TextGenerationReturnOptions",
+      "type": "object"
+    },
+    "WatsonxModelBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "model",
+          "default": "model",
+          "enum": [
+            "model"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input"
+        },
+        "platform": {
+          "const": "watsonx",
+          "default": "watsonx",
+          "enum": [
+            "watsonx"
+          ],
+          "title": "Platform",
+          "type": "string"
+        },
+        "params": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Params"
+        },
+        "guardrails": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guardrails"
+        },
+        "guardrails_hap_params": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guardrails Hap Params"
+        }
+      },
+      "required": [
+        "model"
+      ],
+      "title": "WatsonxModelBlock",
       "type": "object"
     }
   },

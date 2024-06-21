@@ -33,7 +33,12 @@ To install the dependencies for development of PDL and execute all the example, 
 pip3 install '.[all]'
 ```
 
-In order to run the examples that use BAM models, you need to set up 2 environment variables:
+In order to run the examples that use foundation models hosted on [watsonx](https://www.ibm.com/watsonx), you need an account (a free plan is available) and set up the following environment variables:
+- `WATSONX_API`, the API url (set to `https://{region}.ml.cloud.ibm.com`)
+- `WATSONX_KEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
+- `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
+
+Internal IBM users can use models hosted on [BAM](https://bam.res.ibm.com/). You need to set up 2 environment variables:
 - `GENAI_API` set to `https://bam-api.res.ibm.com/`
 - `GENAI_KEY` set to your BAM API key. To obtain your key, go to the [BAM](https://bam.res.ibm.com/) main page. On the right and under the "Documentation" section, you will see a button to copy your API key.
 
@@ -72,23 +77,21 @@ python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
 In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```yaml
-description: Hello world calling a model
+description: Hello world with watsonx
 document:
-- Hello,
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
+- Hello
+- model: ibm/granite-3b-code-instruct
+  params:
+    STOP_SEQUENCES:
     - '!'
-    include_stop_sequence: true
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello,"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-20b-code-instruct-v2` from BAM, with the indicated parameters. The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output. The input to the model call is everything that has been produced so far in the document.
+The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-3b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), with the indicated parameter: the stop sequence is `!`. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
 ```
-python3 -m pdl.pdl examples/hello/hello2.yaml
+python3 -m pdl.pdl examples/hello/hello.yaml
 ```
 
 we obtain the following document:
@@ -97,7 +100,24 @@ we obtain the following document:
 Hello, world!
 ```
 
-where the portion ` world!` was produced by granite. In general, PDL provides blocks for calling to models, Python code, as well as APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
+where the portion `, world!` was produced by granite. In general, PDL provides blocks for calling to models, Python code, as well as APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
+
+The equivalent program using a model hosted on BAM can be written as follows:
+
+```yaml
+description: Hello world with BAM
+document:
+- Hello
+- model: ibm/granite-3b-code-instruct
+  parameters:
+    decoding_method: greedy
+    stop_sequences:
+    - '!'
+    include_stop_sequence: true
+```
+
+The only difference is that the parameters of the model now follows the [BAM calling convention](https://bam.res.ibm.com/docs/api-reference#text-generation). The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output.
+
 
 Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.
