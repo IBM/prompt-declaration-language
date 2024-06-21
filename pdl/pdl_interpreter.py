@@ -76,7 +76,7 @@ def generate(
     pdl_file: str,
     log_file: Optional[str],
     initial_scope: ScopeType,
-    output_mode: Literal["json", "yaml"],
+    output_mode: Optional[Literal["json", "yaml"]],
     output_file: Optional[str],
 ):
     if log_file is None:
@@ -89,7 +89,7 @@ def generate(
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
                 log_fp.write(line)
-        if trace is not None:
+        if output_mode is not None and trace is not None:
             write_trace(pdl_file, output_mode, output_file, trace)
     except PDLParseError as e:
         print("\n".join(e.msg))
