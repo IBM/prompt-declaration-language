@@ -1,0 +1,177 @@
+description: NorthStar Assitant
+document: 
+- read:
+  def: project
+  message: "Please enter the path to your Java project:\n"
+  show_result: false
+- "***Analyzing..."
+- lan: python
+  def: analysis
+  show_result: false
+  code:
+  - |
+    import os
+    from rich import print  # Optional, for pretty printing.
+    from northstar import Northstar
+    from northstar.models.java.models import *
+
+    # Initialize the Northstar object with the project directory, language, and backend.
+    ns = Northstar(
+        project_dir="{{ project }}",   #os.getenv("DAYTRADER8_DIR"),  # Change this to the path of the project you want to analyze.
+        language="java",  # The language of the project.
+        backend="codeanalyzer",  # The backend to use for the analysis.
+        analysis_db="/tmp",  # A temporary directory to store the analysis results.
+        sdg=True, # Generate the System Dependence Graph (SDG) for the project.
+    )
+    PDL_SESSION.ns = ns
+    result = ns
+    # Get the java application view for the project. The application view is a representation of the project as a graph with all the classes, methods, and fields.
+    #app: JApplication = ns.preprocessing.get_application_view()
+
+    # Get all the classes in the project.
+    #classes_dict = ns.preprocessing.get_all_classes()
+    #result = classes_dict.keys()
+- " done!"
+- repeat:
+  - read:
+    def: query
+    message: "\n\nHow can I help you [Type 'quit' to quit]?\n"
+    show_result: false
+  - "\n***Generating PDL code for your query:\n"
+  - if: "{{ query != 'quit'}}"
+    then: 
+    - model: ibm/granite-34b-code-instruct
+      def: PDL
+      show_result: true
+      input: 
+        - |
+          Question: What are all the classes?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              classes = PDL_SESSION.ns.preprocessing.get_all_classes().keys()
+              result = ", ".join(classes)
+          ```
+
+          Question: What are all the constructors of class org.ibm.App?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              constructors = PDL_SESSION.ns.preprocessing.get_all_constructors("org.ibm.App")
+              result = ", ".join(constructors)
+          ```
+
+          Question: What are all the fields of class org.ibm.App?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              fields = PDL_SESSION.ns.preprocessing.get_all_fields("org.ibm.App")
+              names = sum([f.variables for f in fields], [])
+              result = ", ".join(names)
+          ```
+
+          Question: What are all the methods of class org.ibm.App?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              methods = PDL_SESSION.ns.preprocessing.get_all_methods_in_class("org.ibm.App")
+              result = ", ".join(methods)
+          ```
+
+          Question: Show me the call graph of class "org.ibm.App"
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              graph =  PDL_SESSION.ns.preprocessing.get_class_call_graph("org.ibm.App", method_name=None) 
+              result = graph
+          ```
+
+          Question: What is the code of method Foo(string) of class org.ibm.App?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              result = method.code
+          ```
+
+          Question: Generate a summary for method Foo(string) of class org.ibm.App
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              result = method
+          - "\n\nGenerate a summary of method Foo\n\n"
+          - model: meta-llama/llama-3-70b-instruct
+          ```
+
+          Question: Generate a different comment for method Foo(string) in class org.ibm.App?
+          Answer:
+          ```
+          document:
+          - lan: python
+            code: 
+            - |
+              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              result = method
+          - "\n\nGenerate a different comment for method Foo(string)\n\n"
+          - model: meta-llama/llama-3-70b-instruct
+          ```
+
+          If the query contains something about a field be sure to call a model.
+          
+          Question: {{ query }}
+
+
+      parameters:
+        stop_sequences: ["Question"]
+        include_stop_sequence: false
+    - "\n\n***Executing the above PDL code:\n\n"
+    - lan: python
+      show_result: false
+      code:
+      - | 
+        from pdl import pdl_ast, pdl_interpreter
+        from pdl.pdl_ast import Program
+        from pdl.pdl_interpreter import process_prog
+        from pdl.pdl_interpreter import InterpreterState
+        from pdl.pdl_interpreter import empty_scope
+        import re
+        import yaml
+        s = """'
+      - get: PDL
+      - |
+        '"""
+        pdl = s.split("```")[1]
+        obj = yaml.safe_load(pdl)
+        state = InterpreterState()
+        data = Program.model_validate(obj)
+        
+        result, _, _, _ = process_prog(state, empty_scope, data)
+  until: "{{ query == 'quit' }}"
+
+  
+
+   
+
+

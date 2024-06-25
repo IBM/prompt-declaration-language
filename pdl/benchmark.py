@@ -35,6 +35,7 @@ class BaseProcessor:
                     for index, json_str in enumerate(json_list):
                         qna = json.loads(json_str)
                         question = self.get_question(qna)
+                        print("\nQuestion: " + question)
                         truth, solution = self.get_truth_answer(qna)
                         document = ""  # pylint: disable=invalid-name
                         answer = 0.0  # pylint: disable=invalid-name

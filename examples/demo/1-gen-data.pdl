@@ -18,7 +18,7 @@ document:
           {{ answer }}
     - > 
       Question: Create a JSON object with fields 'name' and 'age' 
-      and set them appropriately. 
+      and set them appropriately. Write the age in letters.
   parser: yaml
   parameters:
     decoding_method: greedy
