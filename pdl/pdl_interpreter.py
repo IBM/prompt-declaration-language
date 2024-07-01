@@ -419,55 +419,9 @@ def step_block_body(
             output = ""
             trace = closure.model_copy(update={})
         case CallBlock(call=f):
-            result = None
-            output = ""
-            args, errors = process_expr(scope, block.args, append(loc, "args"))
-            if len(errors) != 0:
-                trace = handle_error(
-                    block, append(loc, "args"), None, errors, block.model_copy()
-                )
-            closure = get_var(f, scope)
-            if closure is None:
-                trace = handle_error(
-                    block,
-                    append(loc, "call"),
-                    f"Function is undefined: {f}",
-                    [],
-                    block.model_copy(),
-                )
-            else:
-                argsloc = append(loc, "args")
-                type_errors = type_check_args(args, closure.function, argsloc)
-                if len(type_errors) > 0:
-                    trace = handle_error(
-                        block,
-                        argsloc,
-                        f"Type errors during function call to {f}",
-                        type_errors,
-                        block.model_copy(),
-                    )
-                else:
-                    f_body = closure.returns
-                    f_scope = closure.scope | {"context": scope["context"]} | args
-                    funloc = LocationType(
-                        file=closure.location.file,
-                        path=closure.location.path + ["return"],
-                        table=loc.table,
-                    )
-                    result, output, _, f_trace = yield from step_blocks(
-                        state, f_scope, f_body, funloc
-                    )
-                    trace = block.model_copy(update={"trace": f_trace})
-                    if closure.spec is not None:
-                        errors = type_check_spec(result, closure.spec, funloc)
-                        if len(errors) > 0:
-                            trace = handle_error(
-                                block,
-                                loc,
-                                f"Type errors in result of function call to {f}",
-                                errors,
-                                trace,
-                            )
+            result, output, scope, trace = yield from step_call(
+                state, scope, block, loc
+            )
         case EmptyBlock():
             result = ""
             output = ""
@@ -829,6 +783,61 @@ def call_command(code: str) -> tuple[int, str]:
     result = p.returncode
     output = p.stdout
     return result, output
+
+
+def step_call(
+    state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
+) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, CallBlock | ErrorBlock]]:
+    result = None
+    output = ""
+    args, errors = process_expr(scope, block.args, append(loc, "args"))
+    if len(errors) != 0:
+        trace = handle_error(
+            block, append(loc, "args"), None, errors, block.model_copy()
+        )
+    closure = get_var(f, scope)
+    if closure is None:
+        trace = handle_error(
+            block,
+            append(loc, "call"),
+            f"Function is undefined: {f}",
+            [],
+            block.model_copy(),
+        )
+    else:
+        argsloc = append(loc, "args")
+        type_errors = type_check_args(args, closure.function, argsloc)
+        if len(type_errors) > 0:
+            trace = handle_error(
+                block,
+                argsloc,
+                f"Type errors during function call to {f}",
+                type_errors,
+                block.model_copy(),
+            )
+        else:
+            f_body = closure.returns
+            f_scope = closure.scope | {"context": scope["context"]} | args
+            funloc = LocationType(
+                file=closure.location.file,
+                path=closure.location.path + ["return"],
+                table=loc.table,
+            )
+            result, output, _, f_trace = yield from step_blocks(
+                state, f_scope, f_body, funloc
+            )
+            trace = block.model_copy(update={"trace": f_trace})
+            if closure.spec is not None:
+                errors = type_check_spec(result, closure.spec, funloc)
+                if len(errors) > 0:
+                    trace = handle_error(
+                        block,
+                        loc,
+                        f"Type errors in result of function call to {f}",
+                        errors,
+                        trace,
+                    )
+    return result, output, scope, trace
 
 
 def process_input(

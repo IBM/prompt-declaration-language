@@ -1,11 +1,39 @@
 import argparse
 import json
+from typing import Any
 
 import yaml
 from pydantic.json_schema import models_json_schema
 
 from . import pdl_interpreter
-from .pdl_ast import PdlBlock, PdlBlocks, Program
+from .pdl_ast import CallBlock, LocationType, PdlBlock, PdlBlocks, Program, ScopeType
+from .pdl_interpreter import InterpreterState, process_prog, step_call
+from .pdl_parser import parse_program
+
+
+class PDL:
+    state: InterpreterState
+    result: Any
+    document: str
+    scope: ScopeType
+    trace: Program
+
+    def __init__(self, pdl_file: str) -> None:
+        prog, line_table = parse_program(pdl_file)
+        state = InterpreterState(yield_output=False)
+        loc = LocationType(path=[], file=pdl_file, table=line_table)
+        result, document, scope, trace = process_prog(state, {}, prog, loc)
+        self.state = state
+        self.result = result
+        self.document = document
+        self.scope = scope
+        self.trace = trace
+
+    def call(self, f: str, args: dict[str, Any]):
+        block = CallBlock(call=f, args=args)
+        result, document, scope, trace = yield from step_call(self.state, self.scope, block)
+        self.scope = scope
+        return result, document, scope, trace
 
 
 def main():
