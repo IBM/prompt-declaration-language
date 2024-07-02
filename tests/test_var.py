@@ -38,6 +38,75 @@ def test_var():
     assert document == "Hello, world!\nTell me about world?\n"
 
 
+var_shared_scope_data = {
+    "description": "Hello world with variable use",
+    "document": [
+        "Hello,",
+        {
+            "def": "NAME",
+            "document": [
+                {
+                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "show_result": True,
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["!"],
+                        "include_stop_sequence": False,
+                    },
+                }
+            ],
+        },
+        {
+            "def": "I",
+            "lan": "python",
+            "code": ["result = NAME[::-1] + '!\\n'"],
+            "show_result": False,
+        },
+        {"get": "I"},
+    ],
+}
+
+
+def test_code_shared_scope():
+    state = InterpreterState()
+    data = Program.model_validate(var_shared_scope_data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, worlddlrow !\n"
+
+
+var_shared_scope_mutate_data = {
+    "description": "Hello world with variable use",
+    "document": [
+        "Hello, ",
+        {
+            "def": "NAME",
+            "document": "foo",
+            "show_result": False,
+        },
+        {
+            "def": "I",
+            "lan": "python",
+            "code": ["NAME = NAME[::-1]\n", "result = NAME"],
+            "show_result": False,
+        },
+        {"get": "NAME"},
+        {"get": "I"},
+    ],
+}
+
+
+def test_code_shared_scope_no_mutate():
+    """
+    Python should be able to access variables in the PDL document scope,
+    but any modifications should _not_ affect the document scope.
+    """
+
+    state = InterpreterState()
+    data = Program.model_validate(var_shared_scope_mutate_data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, foooof"
+
+
 code_var_data = {
     "description": "simple python",
     "document": [
