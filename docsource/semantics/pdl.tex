@@ -1,0 +1,302 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpartir}
+
+
+\title{PDL: Prompt Description Language}
+\author{Martin Hirzel \and Louis Mandel \and Mandana Vaziri}
+
+
+\begin{document}
+\maketitle
+
+\section{Semantics}
+
+% Language
+
+\renewcommand{\mit}[1]{\mathit{#1}}
+\newcommand{\mtt}[1]{\texttt{#1}}
+
+% \newcommand{\True}{\mit{tt}}
+% \newcommand{\False}{\mit{ff}}
+% \newcommand{\pdldef}[2]{#1 \texttt{:} {#2} }
+% \newcommand{\pdlblock}[3][\True]{#2 ~\texttt{=}^{#1}~ #3 }
+% \newcommand{\pdlmodel}[2]{\ensuremath{\mtt{model}({#1},{#2})}}
+% \newcommand{\pdlcode}[1]{\ensuremath{\mtt{code}({#1})}}
+% \newcommand{\pdlapi}[3]{\ensuremath{\mtt{api}({#1}, {#2},{#3})}}
+% \newcommand{\pdlget}[1]{\ensuremath{\mtt{get}({#1})}}
+% \newcommand{\pdldata}[1]{\ensuremath{\mtt{data}({#1})}}
+% \newcommand{\pdldatap}[2]{\ensuremath{\mtt{data}({#1}, {#2})}}
+% \newcommand{\pdlsequence}[2]{\ensuremath{\mtt{document}({#1},{#2})}}
+% \newcommand{\pdlif}[2]{\ensuremath{\mtt{if}({#1},{#2})}}
+% \newcommand{\pdlrepeat}[2]{\ensuremath{\mtt{repeats}({#1},{#2})}}
+% \newcommand{\pdlrepeatuntil}[2]{\ensuremath{\mtt{repeats\_until}({#1},{#2})}}
+% \newcommand{\pdlinput}[1]{\ensuremath{\mtt{input}({#1})}}
+% \newcommand{\pdlfunction}[2]{\ensuremath{\mtt{function}({#1}) \rightarrow {#2}}}
+% \newcommand{\pdlclosure}[3]{\ensuremath{<\mtt{function}({#1}) \rightarrow {#2}, {#3}>}}
+% \newcommand{\pdlcall}[2]{\ensuremath{\mtt{call}({#1}, {#2})}}
+% \newcommand{\pdlreturns}[2]{\ensuremath{\mtt{returns}({#1}, {#2})}}
+
+
+\newcommand{\True}{\mit{tt}}
+\newcommand{\False}{\mit{ff}}
+
+\newcommand{\jsnull}{\ensuremath{\mtt{null}}}
+\newcommand{\jsstr}[1]{\ensuremath{\texttt{"}{#1}\texttt{"}}}
+\newcommand{\jsobj}[1]{\ensuremath{\texttt{\{}{#1}\texttt{\}}}}
+\newcommand{\jsarr}[1]{\ensuremath{\texttt{[}{#1}\texttt{]}}}
+
+
+\newcommand{\pdldef}[2]{#1 \texttt{:} {#2} }
+\newcommand{\pdlblockstar}[3][\True]{\mtt{def:}{#2}\mtt{,} \mtt{show:}{#1}\mtt{,} {#3} }
+\newcommand{\pdlblock}[3][\True]{\jsobj{\pdlblockstar[#1]{#2}{#3}}}
+\newcommand{\pdlblockdefs}[2]{\jsobj{\mtt{defs:}{#1}\mtt{,} {#2} }}
+\newcommand{\pdlmodel}[2]{\ensuremath{\jsobj{\mtt{model:}{#1}\mtt{,}\mtt{input:}{#2}}}}
+\newcommand{\pdlcode}[1]{\ensuremath{\jsobj{\mtt{code:}{#1}}}}
+\newcommand{\pdlapi}[3]{\ensuremath{\jsobj{\mtt{url:}{#1}\mtt{,} \mtt{api:}{#2}\mtt{,} \mtt{input:}{#3}}}}
+\newcommand{\pdlget}[1]{\ensuremath{\jsobj{\mtt{get:}{#1}}}}
+\newcommand{\pdldata}[1]{\ensuremath{\jsobj{\mtt{data:}{#1}}}}
+% \newcommand{\pdldatap}[2]{\ensuremath{\jsobj{\mtt{data:}{#1}\mtt{,} \mtt{output:}{#2}}}}
+\newcommand{\pdlsequence}[1]{\ensuremath{\jsobj{\mtt{document:}{#1}}}}
+\newcommand{\pdlif}[2]{\ensuremath{\jsobj{\mtt{if:}{#1}\mtt{,} \mtt{then:}{#2}}}}
+\newcommand{\pdlrepeat}[2]{\ensuremath{\jsobj{\mtt{repeat:}{#1}\mtt{,} \mtt{ntimes:}{#2}}}}
+\newcommand{\pdlrepeatuntil}[2]{\ensuremath{\jsobj{\mtt{repeat:}{#1}\mtt{,} \mtt{until:}{#2}}}}
+\newcommand{\pdlinput}[1]{\ensuremath{\jsobj{\mtt{input:}{#1}}}}
+\newcommand{\pdlfunction}[2]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  \mtt{document:}{#2}}}}
+\newcommand{\pdlclosure}[3]{\ensuremath{\jsobj{\mtt{function:}{#1}\mtt{,}  \mtt{document:}{#2}, \mtt{scope:}{#3}}}}
+\newcommand{\pdlcall}[2]{\ensuremath{\jsobj{\mtt{call:}{#1}\mtt{,} \mtt{args:}{#2}}}}
+
+
+
+% Semantics
+
+\newcommand{\pdlsemp}[5]{\ensuremath{{#1}, {#2} \Rightarrow {#3}, {#4}, {#5}}}
+\newcommand{\pdlsembb}[5]{\ensuremath{{#1}, {#2} \rightarrow {#3}, {#4}, {#5}}}
+\newcommand{\pdlsemc}[3]{\ensuremath{{#1}, {#2} \downarrow {#3}}}
+\newcommand{\pdlseme}[3]{\ensuremath{{#1} \vdash {#2} \Downarrow {#3}}}
+
+\newcommand{\pdlstr}[1]{\ensuremath{\mit{str}({#1})}}
+
+
+Language:
+$$
+\begin{array}{lcl}
+    \mit{document} & ::= &\ 
+        \jsarr{\mit{block}\mtt{,} \dots\mtt{,} \mit{block}}
+    \\
+    \mit{block} & ::= &\
+    \mit{string}
+    \\ &&\mid
+    \pdlblock[\mit{show}]{x}{\mit{block\_body}}
+    \\ &&\mid
+    \pdlblockdefs{\mit{defs}}{\pdlblockstar[\mit{show}]{x}{\mit{block\_body}}}
+    \\
+    \mit{defs} & ::= &\
+    \jsobj{\pdldef{x}{\mit{block\_body}}\mtt{,} \dots\mtt{,}\pdldef{x}{\mit{block\_body}}}
+    \\
+    \mit{block\_body} & ::= &\ 
+    \pdlmodel{\mit{model}}{\mit{block}}
+    \\ &&\mid
+    \pdlcode{\mit{block}}
+    \\ &&\mid
+    \pdlapi{\mit{url}}{\mit{api}}{\mit{block}}
+    \\ &&\mid
+    \pdlget{\mit{x}}
+    \\ &&\mid
+    \pdldata{\mit{json}}
+    % \\ &&\mid
+    % \pdldatap{\mit{json}}{\mit{string}}
+    \\ &&\mid
+    \pdlsequence{\mit{document}}
+    \\ &&\mid
+    \pdlif{\mit{condition}}{\mit{document}}
+    \\ &&\mid
+    \pdlrepeat{\mit{document}}{\mit{n}}
+    \\ &&\mid
+    \pdlrepeatuntil{\mit{document}}{\mit{condition}}
+    \\ &&\mid
+    \pdlinput{\mit{msg}}
+    \\ &&\mid
+    \pdlfunction{\mit{json\_schema}}{\mit{block\_body}}
+    \\ &&\mid
+    \pdlcall{f}{\mit{json}}
+    \\
+    \mit{condition} & ::= &\ \dots
+
+\end{array}
+$$
+
+\subsection*{Big Step Semantics}
+
+The semantics of a document~$d$ is defined by the reduction $\pdlsemp{S}{d}{S'}{v}{s}$ which evaluates~$d$ in the environment~$S$ to return the updated environment~$S'$, the value~$v$, and the string~$s$.
+
+The semantics of a block body~$b$ is defined by the reductions $\pdlsembb{S}{b}{S'}{v}{s}$ which evaluates~$b$ in the environment~$S$ to return the updated environment~$S'$, the value~$v$, and the string~$s$.
+
+\begin{mathpar}
+% String
+\inferrule%
+{ \\
+}
+{\pdlsemp{S}{s}{S}{s}{s}}
+
+
+% Block show = true
+\inferrule%
+{\pdlsembb{S}{b}{S'}{v}{s} \\
+}
+{\pdlsemp{S}{\pdlblock[\True]{x}{b}}{S'[x \leftarrow (v, s)]}{v}{s}}
+
+% Block show = false
+\inferrule%
+{\pdlsembb{S}{b}{S'}{v}{s} \\
+}
+{\pdlsemp{S}{\pdlblock[\False]{x}{b}}{S'[x \leftarrow (v, s)]}{v}{\jsstr{}}}
+
+% Defs empty
+\inferrule%
+{\pdlsemp{S}{\mit{block}}{S'}{v}{s}
+}
+{\pdlsemp{S}{\pdlblockdefs{\jsobj{}}{\mit{block}}}{S'}{v}{s}}
+
+% Defs
+\inferrule%
+{\pdlsembb{S}{b_x}{S_x}{v_x}{s_x} \\
+ \pdlsemp{S[x \leftarrow (v_x, s_x)]}{\pdlblockdefs{\jsobj{\mit{defs}}}{\mit{block}}}{S'}{v}{s}
+}
+{\pdlsemp{S}{\pdlblockdefs{\jsobj{\pdldef{x}{b_x}\mtt{,} \mit{defs}}}{\mit{block}}}{S'}{v}{s}}
+
+\end{mathpar}
+
+\begin{mathpar}
+% Sequence empty
+\inferrule%
+{
+}
+{\pdlsemp{S}{\jsarr{}}
+          {S}{\jsarr{}}{\jsstr{}}}
+
+% Sequence one
+\inferrule%
+{\pdlsemp{S}{p}{S'}{v}{s}
+}
+{\pdlsemp{S}{\jsarr{p}}{S'}{\jsarr{v}}{s}}
+
+% Sequence
+\inferrule%
+{\pdlsemp{S}{p_1}{S_1}{v_1}{s_1} \\
+ \mit{ctx} = S(\mit{context}) + s_1 \\
+ \pdlsemp{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\mit{document}}{S'}{\mit{vs}}{s}
+}
+{\pdlsemp{S}{\jsarr{p_1} + \mit{document}}
+          {S'}{\jsarr{v_1} + \mit{vs}}{s_1 + s}}
+
+\end{mathpar}
+
+\begin{mathpar}
+% Model
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
+  m(s) = v
+}
+{\pdlsembb{S}{\pdlmodel{m}{\mit{doc}}}{S}{v}{\pdlstr{v}}}
+
+% Code
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
+ s \Downarrow v
+}
+{\pdlsembb{S}{\pdlcode{\mit{doc}}}{S}{v}{\pdlstr{v}}}
+
+% API
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S'}{\_}{s}\\
+  \mit{url}/\mit{api}(s) = v
+}
+{\pdlsembb{S}{\pdlapi{\mit{url}}{\mit{api}}{\mit{doc}}}{S}{v}{\pdlstr{v}}}
+
+% Get
+\inferrule%
+{S(x) = v, s
+}
+{\pdlsembb{S}{\pdlget{x}}{S}{v}{s}}
+
+% Data
+\inferrule%
+{
+  \pdlseme{S}{e}{v}
+}
+{\pdlsembb{S}{\pdldata{e}}{S}{v}{\pdlstr{v}}}
+
+% % datap
+% \inferrule%
+% {
+% }
+% {\pdlsembb{S}{\pdldatap{v}{s}}{S}{v}{s}}
+
+
+% Sequence one
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S'}{v}{s}
+}
+{\pdlsembb{S}{\pdlsequence{\mit{doc}}}{S'}{v}{s}}
+
+
+% If true
+\inferrule%
+{\pdlsemc{S}{c}{\True} \\
+ \pdlsemp{S}{\mit{doc}}{S'}{v}{s}
+}
+{\pdlsembb{S}{\pdlif{c}{\mit{doc}}}{S'}{v}{s}}
+
+% If false
+\inferrule%
+{\pdlsemc{S}{c}{\False}}
+{\pdlsembb{S}{\pdlif{c}{\mit{doc}}}{S'}{\jsnull}{\jsstr{}}}
+
+% Repeats true
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S_1}{v_1}{s_1}\\
+ n > 1 \\
+ \mit{ctx} = S(\mit{context})+s_1 \\
+ \pdlsembb{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\pdlrepeat{p}{n-1}}{S'}{v}{s}
+}
+{\pdlsembb{S}{\pdlrepeat{\mit{doc}}{n}}{S'}{v}{s}}
+
+% Repeats false
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S'}{v}{s}\\
+ n \le 1
+}
+{\pdlsembb{S}{\pdlrepeat{\mit{doc}}{n}}{S'}{v}{s}}
+
+% Repeats_until true
+\inferrule%
+{\pdlsemp{S}{\mit{doc}}{S_1}{v_1}{s_1}\\
+ \pdlsemc{S_1}{c}{\True} \\
+ \mit{ctx} = S(\mit{context})+s_1 \\
+ \pdlsembb{S_1[\mit{context} \leftarrow (\mit{ctx}, \mit{ctx})]}{\pdlrepeatuntil{\mit{doc}}{c}}{S'}{v}{s}
+}
+{\pdlsembb{S}{\pdlrepeatuntil{\mit{doc}}{c}}{S'}{v}{s}}
+
+% Repeats_until false
+\inferrule%
+{\pdlsemp{S}{p}{S'}{v}{s}\\
+ \pdlsemc{S'}{c}{\False}
+}
+{\pdlsembb{S}{\pdlrepeatuntil{p}{c}}{S'}{v}{s}}
+
+% Function
+\inferrule%
+{
+}
+{\pdlsembb{S}{\pdlfunction{x}{\mit{doc}}}{S}{\pdlclosure{x}{\mit{doc}}{S}}{\jsstr{}}}
+
+% Call
+\inferrule%
+{S(f) = \pdlclosure{x}{\mit{doc}}{S'}\\
+ \pdlsemp{S'[\mit{context} \leftarrow S(\mit{context})] + \mit{args}}{\mit{doc}}{S''}{v}{s}}
+{\pdlsembb{S}{\pdlcall{f}{\mit{args}}}{S}{v}{s}}
+
+\end{mathpar}
+
+\end{document}

@@ -1,0 +1,81 @@
+# Config for MkDocs
+# To build:
+# 1. Ensure you have MkDocs and friends: `pip install -e ".[docs]"`
+# 2. `mkdocs serve` to view site locally with live refresh
+# 3. `mkdocs build` to build the static site.
+#    In the future, a GitHub action should do this.
+
+site_name: Prompt Description Language
+# repo_url: https://github.com/ibm/pdl # Uncomment when open sourced
+site_url: https://pages.github.ibm.com/ml4code/pdl/
+
+# This unusual configuration of docs/site directories
+# is due to GitHub not presenting /site/ as an option
+# when selecting the dir for Pages.
+docs_dir: docsource
+site_dir: docs
+
+copyright: Copyright &copy; 2024 IBM
+
+theme:
+  name: material
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  icon:
+    repo: fontawesome/brands/github
+  features: # see https://squidfunk.github.io/mkdocs-material/setup/
+    - search.highlight
+    - search.suggest
+    - navigation.sections
+    - navigation.path
+    - navigation.footer
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - toc.integrate
+    - navigation.tabs
+  logo: assets/ai-governance--prompt.svg
+  palette:
+    - primary: custom
+nav:
+  - Home: README.md
+  - Tutorial: tutorial.md
+  - API Reference: api_reference.md
+  - Contribute: contrib.md
+  - Viewer: viewer.md
+
+# Define some IBM colors
+extra_css:
+  - stylesheets/extra.css
+
+plugins:
+- search
+- mkdocstrings: # see https://mkdocstrings.github.io/python/usage/
+    handlers:
+      python:
+        options:
+          allow_inspection: true
+          show_source: true
+          show_bases: true
+          show_symbol_type_toc: true
+          show_submodules: false
+          show_root_toc_entry: false
+          docstring_section_style: table
+          inherited_members: false
+          summary: true
+          docstring_style: null
+          show_if_no_docstring: true
+          show_labels: false
+          heading_level: 3
+
+
+markdown_extensions:
+  - admonition
+  - toc:
+      toc_depth: 3
+  - pymdownx.superfences: # Mermaid diagrams
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
