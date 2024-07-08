@@ -1,0 +1,9 @@
+description: Demo of ReAct template
+document:
+  - include: examples/prompt_library/ReWOO.pdl
+  - call: rewoo
+    args:
+      task: "When did the Battle of White Plains take place?"
+      model: ibm/granite-34b-code-instruct
+      tools: "{{ default_tools }}"
+      show_plans: true

@@ -1,0 +1,8 @@
+description: Demo of ReAct template
+document:
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: "When did the Battle of White Plains take place?"
+     model: meta-llama/llama-3-70b-instruct
+     tools: "{{ default_tools }}"
