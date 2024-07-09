@@ -426,7 +426,12 @@ def step_block_body(
                 trace = handle_error(
                     block, append(loc, "args"), None, errors, block.model_copy()
                 )
-            closure = get_var(f, scope)
+            closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
+            if len(errors) != 0:
+                trace = handle_error(
+                    block, append(loc, "call"), None, errors, block.model_copy()
+                )
+            closure = get_var(closure_expr, scope)
             if closure is None:
                 trace = handle_error(
                     block,

@@ -79,3 +79,25 @@ def test_function_explicit_context():
     data = Program.model_validate(hello_bye)
     _, document, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!\nBye!"
+
+
+hello_call_template = {
+    "description": "Call hello template",
+    "document": [
+        {"defs": {"alias": "hello"}},
+        {
+            "description": "Define hello",
+            "def": "hello",
+            "function": {"name": "str"},
+            "return": ["Hello ", {"get": "name"}, "!"],
+        },
+        {"call": "{{ alias }}", "args": {"name": "World"}},
+    ],
+}
+
+
+def test_call_template():
+    state = InterpreterState()
+    data = Program.model_validate(hello_call_template)
+    _, document, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello World!"
