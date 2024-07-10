@@ -8,7 +8,7 @@ from genai.schema import ModerationParameters as BamModerationParameters
 from genai.schema import PromptTemplateData as BamPromptTemplateData
 from ibm_watsonx_ai import Credentials as WatsonxCredentials
 from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
-
+from openai import OpenAI
 from .pdl_ast import PDLTextGenerationParameters, set_default_model_params
 
 # Load environment variables
@@ -182,3 +182,64 @@ class WatsonxModel:
             guardrails_hap_params=guardrails_hap_params,
         )
         return text_stream
+
+
+class OpenAIModel:
+    oai_client: Optional[OpenAI] = None
+
+    @staticmethod
+    def get_model() -> OpenAI:
+        if OpenAIModel.oai_client is not None:
+            return OpenAIModel.oai_client
+        OpenAIModel.oai_client = OpenAI(
+            base_url=os.environ["OPENAI_BASE_URL"],
+            api_key=os.environ["OPENAI_API_KEY"],
+        )
+        return OpenAIModel.oai_client
+
+    @staticmethod
+    def generate_text(  # pylint: disable=too-many-arguments
+        model_id: str,
+        model_input: Optional[str],
+        parameters: Optional[dict],
+    ) -> str:
+        client = OpenAIModel.get_model()
+        parameters = parameters or {}
+        text = ""
+        response = client.chat.completions.create(
+            model=model_id,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": model_input},
+            ],
+            **parameters,
+        )
+        # print(response)
+
+        for result in response.choices:
+            if result.message:
+                text += result.message.content
+        return text
+
+    @staticmethod
+    def generate_text_stream(  # pylint: disable=too-many-arguments
+        model_id: str,
+        model_input: Optional[str],
+        parameters: Optional[dict],
+    ) -> Generator[str, Any, None]:
+        client = OpenAIModel.get_model()
+        parameters = parameters or {}
+        for chunk in client.chat.completions.create(
+            model=model_id,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant based off IBM Granite."},
+                {"role": "user", "content": model_input},
+            ],
+            stream=True,
+            **parameters,
+        ):
+            # print(chunk)
+
+            for result in chunk.choices:
+                if result.delta.content:
+                    yield result.delta.content

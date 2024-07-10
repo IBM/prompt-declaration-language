@@ -33,6 +33,7 @@ from .pdl_ast import (
     IncludeBlock,
     LocationType,
     ModelBlock,
+    OpenAIModelBlock,
     ParserType,
     PDLException,
     PdlParser,
@@ -47,7 +48,7 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_llms import BamModel, WatsonxModel
+from .pdl_llms import BamModel, OpenAIModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
@@ -594,12 +595,12 @@ def process_condition(
 def step_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
     loc: LocationType,
 ) -> Generator[
     YieldMessage,
     Any,
-    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | ErrorBlock],
+    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | OpenAIModelBlock | ErrorBlock],
 ]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
@@ -633,7 +634,7 @@ def step_call_model(
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
@@ -655,7 +656,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
@@ -678,6 +679,12 @@ def generate_client_response_streaming(
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
+        case OpenAIModelBlock():
+            text_stream = OpenAIModel.generate_text_stream(
+                model_id=model,
+                model_input=model_input,
+                parameters=block.params,
+            )
         case _:
             assert False
     text = ""
@@ -690,7 +697,7 @@ def generate_client_response_streaming(
 
 def generate_client_response_single(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
@@ -713,6 +720,12 @@ def generate_client_response_single(
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
+        case OpenAIModelBlock():
+            text = OpenAIModel.generate_text(
+                model_id=model,
+                model_input=model_input,
+                parameters=block.params,
+            )
     if state.yield_output:
         yield OutputMessage(text)
     return text
@@ -720,7 +733,7 @@ def generate_client_response_single(
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
     model: str,
     model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
@@ -737,6 +750,8 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
             if state.yield_output:
                 yield OutputMessage(text)
         case WatsonxModelBlock():
+            assert False  # XXX TODO
+        case OpenAIModelBlock():
             assert False  # XXX TODO
         case _:
             assert False

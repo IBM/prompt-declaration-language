@@ -13,6 +13,7 @@ install_requires = [
     "jinja2",
     "PyYAML",
     "jsonschema",
+    "openai",
 ]
 
 dev = ["black", "pre-commit", "pytest"]

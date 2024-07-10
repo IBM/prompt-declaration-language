@@ -83,7 +83,7 @@ class Block(BaseModel):
     show_result: bool = True
     result: Optional[Any] = None
     parser: Optional[ParserType] = None
-    location: Optional[LocationType] = None
+    location: Optional[LocationType] = Field(default=None, exclude=True)
     has_error: bool = False
     fallback: Optional["BlocksType"] = None
 
@@ -111,6 +111,7 @@ class PDLTextGenerationParameters(TextGenerationParameters):
 class ModelPlatform(StrEnum):
     BAM = "bam"
     WATSONX = "watsonx"
+    OPENAI = "openai"
 
 
 class ModelBlock(Block):
@@ -136,6 +137,10 @@ class WatsonxModelBlock(ModelBlock):
     guardrails: Optional[bool] = None
     guardrails_hap_params: Optional[dict] = None
 
+class OpenAIModelBlock(ModelBlock):
+    model_config = ConfigDict(extra="forbid")
+    platform: Literal[ModelPlatform.OPENAI] = ModelPlatform.OPENAI
+    params: Optional[dict] = None
 
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
@@ -235,6 +240,7 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | OpenAIModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
