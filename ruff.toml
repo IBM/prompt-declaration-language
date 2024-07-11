@@ -1,0 +1,237 @@
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.8
+target-version = "py312"
+unsafe-fixes = true
+
+[lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["ALL"]
+ignore = [
+        # missing-type-function-argument (ANN001)
+    "ANN001",
+
+    # missing-type-args (ANN002)
+    "ANN002",
+
+    # missing-type-kwargs (ANN003)
+    "ANN003",
+
+    # missing-type-self (ANN101)
+    "ANN101",
+
+    # missing-type-cls (ANN102)
+    "ANN102",
+
+    # missing-return-type-undocumented-public-function (ANN201)
+    "ANN201",
+
+    # missing-return-type-private-function (ANN202)
+    "ANN202",
+
+    # missing-return-type-special-method (ANN204)
+    "ANN204",
+
+    # any-type (ANN401)
+    "ANN401",
+
+    # unused-function-argument (ARG001)
+    # "ARG001",
+
+    # # unused-method-argument (ARG002)
+    # "ARG002",
+
+    # # blind-except (BLE001)
+    "BLE001",
+
+    # undocumented-public-module (D100)
+    "D100",
+
+    # undocumented-public-class (D101)
+    "D101",
+
+    # undocumented-public-method (D102)
+    "D102",
+
+    # undocumented-public-function (D103)
+    "D103",
+
+    # undocumented-public-package (D104)
+    "D104",
+
+    # undocumented-magic-method (D105)
+    "D105",
+
+    # undocumented-public-nested-class (D106)
+    "D106",
+
+    # undocumented-public-init (D107)
+    "D107",
+
+    # one-blank-line-before-class (D203)
+    "D203",
+
+    # blank-line-after-summary (D205)
+    "D205",
+
+    # multi-line-summary-first-line (D212)
+    "D212",
+
+    # non-imperative-mood (D401)
+    "D401",
+
+    # # line-too-long (E501)
+    # "E501",
+
+    # # boolean-positional-arg-in-function-definition (FBT001)
+    # "FBT001",
+
+    # # boolean-default-value-in-function-definition (FBT002)
+    # "FBT002",
+
+    # # implicit-namespace-package (INP001)
+    # "INP001",
+
+    # # try-except-in-loop (PERF203)
+    # "PERF203",
+
+    # # too-many-branches (PLR0912)
+    # "PLR0912",
+
+    # # too-many-arguments (PLR0913)
+    # "PLR0913",
+
+    # # too-many-statements (PLR0915)
+    # "PLR0915",
+
+    # # magic-value-comparison (PLR2004)
+    # "PLR2004",
+
+    # # assert (S101)
+    # "S101",
+
+    # # exec-builtin (S102)
+    # "S102",
+
+    # # suspicious-xml-element-tree-usage (S314)
+    # "S314",
+
+    # # start-process-with-a-shell (S605)
+    # "S605",
+
+    # # private-member-access (SLF001)
+    # "SLF001",
+
+    # # raise-vanilla-class (TRY002)
+    # "TRY002",
+
+    # # ends-in-period (D400)
+    # "D400",
+
+    # # ends-in-punctuation (D415)
+    # "D415",
+
+    # # suspicious-non-cryptographic-random-usage (S311)
+    # "S311",
+
+    # # subprocess-without-shell-equals-true (S603)
+    # "S603",
+
+    # # start-process-with-partial-path (S607)
+    # "S607",
+
+    # # suspicious-xmle-tree-usage (S320)
+    # "S320",
+
+    # # suspicious-xml-mini-dom-usage (S318)
+    # "S318",
+
+    # # Commented out code
+    "ERA001",
+
+    # No space after block comment
+    "E265",
+
+    # blank-line-with-whitespace (W293)
+    # Was breaking some tests of code output
+    # "W293",
+
+    # single-line-implicit-string-concatenation (ISC001)
+    # "ISC001",
+
+    # missing-trailing-comma (COM812)
+    # "COM812",
+    "T201",
+
+    "PLR0913",
+
+    "UP007"
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+# skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"

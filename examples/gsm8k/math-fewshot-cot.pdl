@@ -1,0 +1,26 @@
+description: math problem
+defs:
+  demos:
+    document:
+      - for:
+          demonstration: "{{ demonstrations }}"
+        repeat: |+
+          Question: {{ demonstration.question }}
+          Answer: Let's think step by step. {{ demonstration.reasoning|trim }}
+          The answer is {{ demonstration.answer }}
+
+document:
+- |
+  {{ demos }}Question: {{ question }}
+  Answer: Let's think step by step. 
+- Answer the questions to the best of your abilities.
+- model: "{{ model }}"
+  def: PDL
+  platform: bam
+  # input: |-
+  #   {{ demos }}Question: {{ question }}
+  #   Answer: Let's think step by step. 
+  parameters:
+    stop_sequences: ["<|endoftext|>"]
+    include_stop_sequence: false
+  show_result: true

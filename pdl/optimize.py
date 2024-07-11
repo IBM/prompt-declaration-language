@@ -1,19 +1,27 @@
 import argparse
-from concurrent.futures import ThreadPoolExecutor
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Thread
 
 import numpy as np
+from pydantic import BaseModel
 import yaml
-from genai.schema import DecodingMethod, TextGenerationReturnOptions, LengthPenalty
+from genai.schema import DecodingMethod, LengthPenalty, TextGenerationReturnOptions
+from scipy.stats import entropy, gmean
 from tqdm import tqdm
 
+from pdl.pdl_dumper import dump_yaml, program_to_dict
 from pdl.pdl_llms import BamModel
 
-from .pdl_ast import PDLTextGenerationParameters, Program, set_default_model_params
+from .pdl_ast import (
+    Block,
+    DocumentBlock,
+    PDLTextGenerationParameters,
+    Program,
+    set_default_model_params,
+)
 from .pdl_interpreter import InterpreterState, empty_scope, process_prog
-from scipy.stats import gmean, entropy
 
 
 class BaseProcessor:
@@ -117,8 +125,6 @@ def extract_math_answer(result: str) -> float:
         return 0.0
 
 
-# TODO:
-# get sequence logprob
 def get_seq_logprobs(
     model: str, sequence: str, prepend: bool = False, max_new_tokens: int | None = 1
 ):
@@ -138,8 +144,8 @@ def get_seq_logprobs(
             token_ranks=True,
         ),
         max_new_tokens=max_new_tokens,
-        # length_penalty=LengthPenalty(decay_factor=10),
     )
+
     params = set_default_model_params(params)
     for response in client.text.generation.create(
         model_id=model,
@@ -154,11 +160,33 @@ def get_seq_logprobs(
     return input_logprobs, output_logprobs
 
 
+def get_mutation(model: str, sequence: str):
+    client = BamModel.get_model()
+    params = PDLTextGenerationParameters(
+        decoding_method=DecodingMethod.SAMPLE,
+        temperature=0.9,
+    )
+
+    sequence = f"Say that instruction again in another way. DON'T use any of the words in the original instruction there's a good chap. INSTRUCTION: {sequence} INSTRUCTION MUTANT: "
+    params = set_default_model_params(params)
+    text = ""
+    for response in client.text.generation.create(
+        model_id=model,
+        input=sequence,
+        parameters=params.__dict__,
+    ):
+        for result in response.results:
+            if result.generated_text:
+                text += result.generated_text
+
+    return text
+
+
 class PDLThread(Thread):
     def __init__(self):
-        pass
+        super().__init__()
 
-    def run():
+    def run(self):
         pass
 
 
@@ -181,12 +209,6 @@ def execute_threads(max_threads: int, programs: list):
 class Gsm8kFewshotProcessor(BaseProcessor):
     def __init__(self, pdl_file: Path, trials: int, k: int, test_set_size: int) -> None:
         from datasets import load_from_disk
-
-        # input_logprobs, output_logprobs = get_seq_logprobs(
-        #     "ibm/granite-34b-code-instruct",
-        #     "Let's think step by step",
-        #     max_new_tokens=1,
-        # )
 
         self.dataset = load_from_disk("gsm8k")
         self.pdl_file = pdl_file
@@ -236,6 +258,49 @@ class Gsm8kFewshotProcessor(BaseProcessor):
                 log_fp.write(line)
 
         return result, document, scope, trace
+
+    def traverse(self, program: Program):
+        if program is None:
+            return
+
+        if isinstance(program, str):
+            print(program)
+            return
+
+        if isinstance(program, tuple):
+            print(program)
+            name, value = program
+            self.traverse(value)
+
+        if isinstance(program, list | Block):
+            for i in program:
+                self.traverse(i)
+
+    def evolve(self):
+        with (
+            # open("log.out", "w", encoding="utf-8") as log,
+            # open(self.dataset, encoding="utf-8") as json_file,
+            self.pdl_file.open(encoding="utf-8") as pdl,
+        ):
+            obj = yaml.safe_load(pdl)
+
+        program = Program.model_validate(obj)
+        print("Original:", program.root.document[1])
+        for i in range(2):
+            print(get_mutation(self.model, program.root.document[1]))
+        program.root.document[1] = get_mutation(self.model, program.root.document[1])
+        Path("test_evolve.pdl").write_text(
+            dump_yaml(
+                program.model_dump(
+                    mode="json",
+                    exclude_defaults=True,
+                    exclude_none=True,
+                    # exclude=["kind", "location"],
+                    by_alias=True,
+                )
+            )
+        )
+        print(program)
 
     def process(self):
         with (
@@ -304,25 +369,41 @@ class Gsm8kFewshotProcessor(BaseProcessor):
                 if percent_passing > max_percent_passing:
                     self.best_demos = scope["demos"]
                     # data.root.defs["demonstrations"] = "test world"
-                    # prog = program_to_dict(data)
+                    prog = program_to_dict(data)
                     # Path("test_dump.pdl").write_text(dump_yaml(prog))
         tqdm.write("Best few shots")
         print(self.best_demos)
         print("accuracies =", self.trial_metrics)
-        input_probs = [ np.exp(s) for s in self.trial_logprobs ]
-        print("Shape =", [ s.shape[0] for s in input_probs])
-        print("Min =", [ np.min(s) for s in input_probs])
+        input_probs = [np.exp(s) for s in self.trial_logprobs]
+        print("Shape =", [s.shape[0] for s in input_probs])
+        print("Min =", [np.min(s) for s in input_probs])
         # print("Max =", [ np.max(s) for s in input_probs])
-        print("Mean =", [ np.mean(s) for s in input_probs])
-        print("Gmean =", [ gmean(s) for s in input_probs])
-        print("Entropy =", [ entropy(s) for s in input_probs])
+        print("Mean =", [np.mean(s) for s in input_probs])
+        print("Gmean =", [gmean(s) for s in input_probs])
+        print("Entropy =", [entropy(s) for s in input_probs])
 
-        input_probs = [ s/s.sum(0) for s in input_probs ]
-        print("norm_Min =", [ np.min(s) for s in input_probs])
-        print("norm_Max =", [ np.max(s) for s in input_probs])
-        print("norm_Mean =", [ np.mean(s) for s in input_probs])
-        print("norm_Gmean =", [ gmean(s) for s in input_probs])
-        print("norm_Entropy =", [ entropy(s) for s in input_probs])
+        input_probs = [s / s.sum(0) for s in input_probs]
+        print("norm_Min =", [np.min(s) for s in input_probs])
+        print("norm_Max =", [np.max(s) for s in input_probs])
+        print("norm_Mean =", [np.mean(s) for s in input_probs])
+        print("norm_Gmean =", [gmean(s) for s in input_probs])
+        print("norm_Entropy =", [entropy(s) for s in input_probs])
+        data.root.description = "evolved"
+        Path("test_dump_pydantic.pdl").write_text(
+            dump_yaml(
+                data.model_dump(
+                    mode="json",
+                    exclude_defaults=True,
+                    exclude_none=True,
+                    # exclude=["kind", "location"],
+                    by_alias=True,
+                )
+            )
+        )
+
+        obj["defs"]["demos"] = self.best_demos
+        Path("test_dump.pdl").write_text(dump_yaml(obj))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("")
@@ -367,7 +448,7 @@ if __name__ == "__main__":
             trials=args.trials,
             k=args.num_demos,
             test_set_size=args.test_set_size,
-        ).process()
+        ).evolve()
 
     # from datasets import load_dataset
     # ds = load_dataset("openai/gsm8k", "main")
