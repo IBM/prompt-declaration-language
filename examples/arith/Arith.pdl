@@ -30,29 +30,23 @@ document:
 - repeat:
   - "\nQuestion: "
   - def: QUESTION
-    model: ibm/granite-20b-code-instruct-v2
-    parameters:
-      decoding_method: greedy
-      max_new_tokens: 1024
+    model: ibm/granite-20b-code-instruct
+    params:
       stop_sequences:
       - Answer
       include_stop_sequence: false
   - "Answer: Let's think step by step.\n"
   - repeat:
     - def: REASON_OR_CALC
-      model: ibm/granite-20b-code-instruct-v2
-      parameters:
-        decoding_method: greedy
-        max_new_tokens: 1024
+      model: ibm/granite-20b-code-instruct
+      params:
         stop_sequences:
         - '<<'
         include_stop_sequence: true
     - then:
       - def: EXPR
-        model: ibm/granite-20b-code-instruct-v2
-        parameters:
-          decoding_method: greedy
-          max_new_tokens: 1024
+        model: ibm/granite-20b-code-instruct
+        params:
           stop_sequences:
           - '='
           - "\n"

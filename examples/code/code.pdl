@@ -5,7 +5,7 @@ document:
   def: CODE
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-20b-code-instruct
   input:
       |
       Here is some info about the location of the function in the repo.

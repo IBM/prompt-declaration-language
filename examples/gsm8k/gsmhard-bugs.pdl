@@ -5,6 +5,6 @@ document:
 - "Does the following code accurately solve this problem?\n\n"
 - "{{ code }}"
 - model: meta-llama/llama-3-70b-instruct
-  parameters:
+  params:
     stop_sequences: ["def"]
     include_stop_sequence: false

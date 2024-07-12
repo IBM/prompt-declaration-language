@@ -7,12 +7,9 @@ document:
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-20b-code-instruct
   def: EXPLANATION
   show_result: False
-  parameters:
-    decoding_method: greedy
-    max_new_tokens: 1024
   input:
      |
       Here is some info about the location of the function in the repo.

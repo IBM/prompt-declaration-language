@@ -28,13 +28,9 @@ document:
   def: WEATHER
   show_result: false
 - model: ibm/granite-20b-code-instruct-v2
+  platform: bam
   input: 
     - |
-      Explain what the weather is from the following JSON:
+      Explain the weather from the following JSON:
       `{{ WEATHER }}`
-  parameters:
-    max_new_tokens: 100
-    stop_sequences:
-    - What
-    - '!'
-    include_stop_sequence: false
+  

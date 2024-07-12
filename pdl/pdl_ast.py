@@ -284,6 +284,7 @@ REPETITION_PENATLY = 1.05
 TEMPERATURE_SAMPLING = 0.7
 TOP_P_SAMPLING = 0.85
 TOP_K_SAMPLING = 50
+DECODING_METHOD = "greedy"
 
 
 def empty_text_generation_parameters() -> PDLTextGenerationParameters:
@@ -338,3 +339,42 @@ def set_default_model_params(
                 TOP_P_SAMPLING
             )
     return params
+
+
+# See: https://cloud.ibm.com/apidocs/watsonx-ai#deployments-text-generation
+def set_default_model_parameters(
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, str]:
+    if parameters is None:
+        parameters = {}
+
+    if "decoding_method" not in parameters:
+        parameters[
+            "decoding_method"
+        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+    if "max_new_tokens" not in parameters:
+        parameters[
+            "max_new_tokens"
+        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "min_new_tokens" not in parameters:
+        parameters[
+            "min_new_tokens"
+        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "repetition_penalty" not in parameters:
+        parameters[
+            "repetition_penalty"
+        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+    if parameters["decoding_method"] == "sample":
+        if "temperature" not in parameters:
+            parameters[
+                "temperature"
+            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_k" not in parameters:
+            parameters[
+                "top_k"
+            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_p" not in parameters:
+            parameters[
+                "top_p"
+            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    return parameters

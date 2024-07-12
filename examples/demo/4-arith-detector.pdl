@@ -5,8 +5,6 @@ document:
   def: QUERY
   show_result: false
 - model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
   input:
     document:
     - |-
@@ -42,9 +40,7 @@ document:
   show_result: false
 
 
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
+- model: ibm/granite-20b-code-instruct
   input:
     document:
     - |-
@@ -144,6 +140,4 @@ document:
     data = Program.model_validate(obj)
     _, result, _, _ = process_prog(state, empty_scope, data)
   def: RESULT
-  show_result: true
-- "\n"
-- model: ibm/granite-13b-instruct-v2
+  show_result: false
