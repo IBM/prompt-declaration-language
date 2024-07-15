@@ -52,6 +52,17 @@ def dump_yaml(data, **kwargs):
     )
 
 
+def dump_program(program):
+    return dump_yaml(
+        program.model_dump(
+            mode="json",
+            exclude_defaults=True,
+            exclude_none=True,
+            by_alias=True,
+        )
+    )
+
+
 def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 

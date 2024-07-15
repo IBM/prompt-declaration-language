@@ -11,7 +11,7 @@ from genai.schema import DecodingMethod, LengthPenalty, TextGenerationReturnOpti
 from scipy.stats import entropy, gmean
 from tqdm import tqdm
 
-from pdl.pdl_dumper import dump_yaml, program_to_dict
+from pdl.pdl_dumper import dump_program, dump_yaml, program_to_dict
 from pdl.pdl_llms import BamModel
 
 from .pdl_ast import (
@@ -22,6 +22,10 @@ from .pdl_ast import (
     set_default_model_params,
 )
 from .pdl_interpreter import InterpreterState, empty_scope, process_prog
+from datasets import load_from_disk, Dataset
+from numpy.random import default_rng
+
+rng = default_rng()
 
 
 class BaseProcessor:
@@ -128,10 +132,11 @@ def extract_math_answer(result: str) -> float:
 def get_seq_logprobs(
     model: str, sequence: str, prepend: bool = False, max_new_tokens: int | None = 1
 ):
-    if prepend:
-        sequence = "<|endoftext|>" + sequence
     if max_new_tokens < 1:
         raise ValueError("Max new tokens has to be 1 or greater unfortunately.")
+
+    if prepend:
+        sequence = "<|endoftext|>" + sequence
 
     client = BamModel.get_model()
     params = PDLTextGenerationParameters(
@@ -183,16 +188,67 @@ def get_mutation(model: str, sequence: str):
 
 
 class PDLThread(Thread):
-    def __init__(self):
+    def __init__(
+        self,
+        pdl_obj: any,
+        qna: dict,
+        demonstrations: list[dict],
+        index: int,
+        trial: int,
+        model: str,
+    ):
         super().__init__()
+        self.pdl_obj = pdl_obj
+        self.qna = qna
+        self.demonstrations = demonstrations
+        self.index = index
+        self.trial = trial
+        self.model = model
 
-    def run(self):
-        pass
+    def run(
+        self,
+    ):
+        data = Program.model_validate(self.pdl_obj)
+        document = ""
+        answer = 0.0
+        exception = 0
+        match = 0
+        truth = self.qna["answer"]
+        input_logprobs = False
+        try:
+            state = InterpreterState(yield_output=False)
+            scope = empty_scope
+            scope["demonstrations"] = [
+                {
+                    "question": q["question"],
+                    "reasoning": q["reasoning"],
+                    "answer": q["answer"],
+                }
+                for q in self.demonstrations
+            ]
+            scope["question"] = self.qna["question"]
+            scope["reasoning"] = self.qna["reasoning"]
+            scope["model"] = self.model
+
+            result, document, scope, trace = process_prog(state, scope, data)
+            if self.index == 0:
+                input_logprobs, _ = get_seq_logprobs(
+                    self.model,
+                    scope["demos"],
+                )
+            answer = extract_math_answer(document)
+        except Exception as e:
+            print(e)
+            exception = 1
+
+        if answer == truth or document.endswith(str(truth)):
+            match = 1
+        # tqdm.write("True answer: %d" % truth)
+        # tqdm.write("Given answer: %d" % answer)
+        return match, exception, input_logprobs, scope
 
 
-def execute_threads(max_threads: int, programs: list):
-    pdl_threads = (PDLThread() for program in programs)
-
+def execute_threads(max_threads: int, pdl_threads: list):
     with ThreadPoolExecutor(max_workers=max_threads) as service:
         futures = [
             service.submit(
@@ -200,17 +256,17 @@ def execute_threads(max_threads: int, programs: list):
             )
             for thread in pdl_threads
         ]
-        for future in tqdm(futures):
+        for future in futures:
             yield future.result(timeout=259200)
 
         service.shutdown()
 
 
 class Gsm8kFewshotProcessor(BaseProcessor):
-    def __init__(self, pdl_file: Path, trials: int, k: int, test_set_size: int) -> None:
-        from datasets import load_from_disk
-
-        self.dataset = load_from_disk("gsm8k")
+    def __init__(
+        self, dataset: Dataset, pdl_file: Path, trials: int, k: int, test_set_size: int
+    ) -> None:
+        self.dataset = dataset
         self.pdl_file = pdl_file
         self.trials = trials
         self.k = k
@@ -253,9 +309,9 @@ class Gsm8kFewshotProcessor(BaseProcessor):
 
         result, document, scope, trace = process_prog(state, scope, program)
 
-        with Path("gsm8k.log").open("a", encoding="utf-8") as log_fp:
-            for line in state.log:
-                log_fp.write(line)
+        # with Path("gsm8k.log").open("a", encoding="utf-8") as log_fp:
+        #     for line in state.log:
+        #         log_fp.write(line)
 
         return result, document, scope, trace
 
@@ -277,132 +333,184 @@ class Gsm8kFewshotProcessor(BaseProcessor):
                 self.traverse(i)
 
     def evolve(self):
-        with (
-            # open("log.out", "w", encoding="utf-8") as log,
-            # open(self.dataset, encoding="utf-8") as json_file,
-            self.pdl_file.open(encoding="utf-8") as pdl,
-        ):
-            obj = yaml.safe_load(pdl)
+        pdl_obj = self.load_pdl()
 
-        program = Program.model_validate(obj)
+        program = Program.model_validate(pdl_obj)
         print("Original:", program.root.document[1])
         for i in range(2):
             print(get_mutation(self.model, program.root.document[1]))
         program.root.document[1] = get_mutation(self.model, program.root.document[1])
-        Path("test_evolve.pdl").write_text(
-            dump_yaml(
-                program.model_dump(
-                    mode="json",
-                    exclude_defaults=True,
-                    exclude_none=True,
-                    # exclude=["kind", "location"],
-                    by_alias=True,
-                )
-            )
-        )
+        Path("test_evolve.pdl").write_text(dump_program(program))
         print(program)
 
-    def process(self):
+    def load_pdl(self) -> any:
         with (
-            # open("log.out", "w", encoding="utf-8") as log,
-            # open(self.dataset, encoding="utf-8") as json_file,
             self.pdl_file.open(encoding="utf-8") as pdl,
         ):
-            obj = yaml.safe_load(pdl)
+            return yaml.safe_load(pdl)
 
+    def process_parallel(self, parallelism: int = 5):
+        train_ds = self.dataset["train"]
+        pdl_obj = self.load_pdl()
         max_percent_passing = -1
+        total = self.trials * self.test_set_size
         with tqdm(
-            total=self.trials * self.test_set_size,
+            total=total,
             colour="green",
             smoothing=0.3,
-        ) as pbar:
+        ) as t:
+            t.write(
+                f"Starting optimization: {self.trials:,} trials, "
+                f"{self.test_set_size:,} test set, "
+                f"{self.k:,} demonstrations, {len(train_ds):,} training examples"
+            )
             for trial in range(self.trials):
-                demo_indices = np.random.randint(
-                    0,
-                    len(self.dataset["train"]),
+                demo_indices = rng.choice(
+                    len(train_ds),
                     size=self.k,
+                    replace=False,
                 )
-                demonstrations = self.dataset["train"].select(demo_indices)
 
+                demonstrations = train_ds.select(demo_indices)
+                threads = []
+                for index, qna in enumerate(self.test_set):
+                    threads.append(
+                        PDLThread(
+                            pdl_obj,
+                            qna,
+                            demonstrations,
+                            index,
+                            trial,
+                            self.model,
+                        )
+                    )
                 matches = 0
                 exceptions = 0
-
-                for index, qna in enumerate(self.test_set):
-                    data = Program.model_validate(obj)
-                    document = ""
-                    answer = 0.0
-                    truth = qna["answer"]
-                    try:
-                        _, document, scope, _ = self.evaluate_pdl(
-                            data, demonstrations, qna
-                        )
-                        if index == 0:
-                            input_logprobs, _ = get_seq_logprobs(
-                                self.model, scope["demos"]
-                            )
-                            self.trial_logprobs.append(input_logprobs)
-                        answer = self.extract_answer(document)
-                    except Exception as e:
-                        print(e)
-                        exceptions += 1
-                    pbar.update(1)
-
-                    tqdm.write("----\nTrial (%d / %d)" % (trial, self.trials))
-                    if answer == truth or document.endswith(str(truth)):
-                        matches += 1
-                        tqdm.write("Answer correct")
-                    else:
-                        tqdm.write("Answer incorrect")
-                    percent_passing = matches / (index + 1)
-                    tqdm.write("True answer: %d" % truth)
-                    tqdm.write("Given answer: %d" % answer)
-
-                    tqdm.write(
-                        "Percentage passing: "
-                        + f"{percent_passing:.0%}"
-                        + " ("
-                        + str(index + 1)
-                        + f" completed) ({exceptions} exceptions)",
-                    )
-                self.trial_metrics.append(percent_passing)
-
-                if percent_passing > max_percent_passing:
-                    self.best_demos = scope["demos"]
-                    # data.root.defs["demonstrations"] = "test world"
-                    prog = program_to_dict(data)
-                    # Path("test_dump.pdl").write_text(dump_yaml(prog))
-        tqdm.write("Best few shots")
-        print(self.best_demos)
-        print("accuracies =", self.trial_metrics)
-        input_probs = [np.exp(s) for s in self.trial_logprobs]
-        print("Shape =", [s.shape[0] for s in input_probs])
-        print("Min =", [np.min(s) for s in input_probs])
-        # print("Max =", [ np.max(s) for s in input_probs])
-        print("Mean =", [np.mean(s) for s in input_probs])
-        print("Gmean =", [gmean(s) for s in input_probs])
-        print("Entropy =", [entropy(s) for s in input_probs])
-
-        input_probs = [s / s.sum(0) for s in input_probs]
-        print("norm_Min =", [np.min(s) for s in input_probs])
-        print("norm_Max =", [np.max(s) for s in input_probs])
-        print("norm_Mean =", [np.mean(s) for s in input_probs])
-        print("norm_Gmean =", [gmean(s) for s in input_probs])
-        print("norm_Entropy =", [entropy(s) for s in input_probs])
-        data.root.description = "evolved"
-        Path("test_dump_pydantic.pdl").write_text(
-            dump_yaml(
-                data.model_dump(
-                    mode="json",
-                    exclude_defaults=True,
-                    exclude_none=True,
-                    # exclude=["kind", "location"],
-                    by_alias=True,
+                input_logprobs = []
+                for index, result in enumerate(execute_threads(parallelism, threads)):
+                    match, exception, logprobs, scope = result
+                    matches += match
+                    exceptions += exception
+                    if logprobs is not False:
+                        input_logprobs.append(logprobs)
+                    p_passing = matches / (index + 1)
+                    t.update(1)
+                t.write(f"----\nTrial ({trial} / {self.trials})")
+                t.write(
+                    f"Percentage passing: {p_passing:.0%} ({exceptions} exceptions)"
                 )
-            )
-        )
+                self.trial_metrics.append(p_passing)
 
-        obj["defs"]["demos"] = self.best_demos
-        Path("test_dump.pdl").write_text(dump_yaml(obj))
+                if p_passing > max_percent_passing:
+                    self.best_demos = scope["demos"] # TODO: hardcoded
+
+    def process(self):
+        return self.process_parallel(1)
+    # def process(self):
+    #     pdl_obj = self.load_pdl()
+    #     max_percent_passing = -1
+    #     total = self.trials * self.test_set_size
+
+    #     with tqdm(
+    #         total=total,
+    #         colour="green",
+    #         smoothing=0.3,
+    #     ) as pbar:
+    #         for trial in range(self.trials):
+    #             demo_indices = rng.choice(
+    #                 len(self.dataset["train"]),
+    #                 size=self.k,
+    #                 replace=False,
+    #             )
+    #             # np.random.randint(
+    #             #     0,
+    #             #     len(self.dataset["train"]),
+    #             #     size=self.k,
+    #             # )
+    #             demonstrations = self.dataset["train"].select(demo_indices)
+
+    #             matches = 0
+    #             exceptions = 0
+
+    #             for index, qna in enumerate(self.test_set):
+    #                 data = Program.model_validate(pdl_obj)
+    #                 document = ""
+    #                 answer = 0.0
+    #                 truth = qna["answer"]
+    #                 try:
+    #                     _, document, scope, _ = self.evaluate_pdl(
+    #                         data,
+    #                         demonstrations,
+    #                         qna,
+    #                     )
+    #                     if index == 0:
+    #                         input_logprobs, _ = get_seq_logprobs(
+    #                             self.model,
+    #                             scope["demos"],
+    #                         )
+    #                         self.trial_logprobs.append(input_logprobs)
+    #                     answer = self.extract_answer(document)
+    #                 except Exception as e:
+    #                     print(e)
+    #                     exceptions += 1
+    #                 pbar.update(1)
+
+    #                 tqdm.write("----\nTrial (%d / %d)" % (trial, self.trials))
+    #                 if answer == truth or document.endswith(str(truth)):
+    #                     matches += 1
+    #                     tqdm.write("Answer correct")
+    #                 else:
+    #                     tqdm.write("Answer incorrect")
+    #                 percent_passing = matches / (index + 1)
+    #                 tqdm.write("True answer: %d" % truth)
+    #                 tqdm.write("Given answer: %d" % answer)
+
+    #                 tqdm.write(
+    #                     "Percentage passing: "
+    #                     + f"{percent_passing:.0%}"
+    #                     + " ("
+    #                     + str(index + 1)
+    #                     + f" completed) ({exceptions} exceptions)",
+    #                 )
+    #             self.trial_metrics.append(percent_passing)
+
+    #             if percent_passing > max_percent_passing:
+    #                 self.best_demos = scope["demos"]
+    #                 # data.root.defs["demonstrations"] = "test world"
+    #                 # prog = program_to_dict(data)
+    #                 # Path("test_dump.pdl").write_text(dump_yaml(prog))
+    #     tqdm.write("Best few shots")
+    #     print(self.best_demos)
+    #     print("accuracies =", self.trial_metrics)
+    #     input_probs = [np.exp(s) for s in self.trial_logprobs]
+    #     print("Shape =", [s.shape[0] for s in input_probs])
+    #     print("Min =", [np.min(s) for s in input_probs])
+    #     # print("Max =", [ np.max(s) for s in input_probs])
+    #     print("Mean =", [np.mean(s) for s in input_probs])
+    #     print("Gmean =", [gmean(s) for s in input_probs])
+    #     print("Entropy =", [entropy(s) for s in input_probs])
+
+    #     input_probs = [s / s.sum(0) for s in input_probs]
+    #     print("norm_Min =", [np.min(s) for s in input_probs])
+    #     print("norm_Max =", [np.max(s) for s in input_probs])
+    #     print("norm_Mean =", [np.mean(s) for s in input_probs])
+    #     print("norm_Gmean =", [gmean(s) for s in input_probs])
+    #     print("norm_Entropy =", [entropy(s) for s in input_probs])
+    #     data.root.description = "evolved"
+    #     data.root.defs.demos = self.best_demos
+    #     Path("test_dump_pydantic.pdl").write_text(dump_program(data))
+            # dump_yaml(
+            #     data.model_dump(
+            #         mode="json",
+            #         exclude_defaults=True,
+            #         exclude_none=True,
+            #         by_alias=True,
+            #     )
+            # )
+        # )
+
+        # obj["defs"]["demos"] = self.best_demos
+        # Path("test_dump.pdl").write_text(dump_yaml(obj))
 
 
 if __name__ == "__main__":
@@ -444,6 +552,26 @@ if __name__ == "__main__":
 
     if args.bench == "gsm-fewshot":
         Gsm8kFewshotProcessor(
+            dataset=load_from_disk("gsm8k"),
+            pdl_file=args.pdl_file,
+            trials=args.trials,
+            k=args.num_demos,
+            test_set_size=args.test_set_size,
+        ).process()
+    if args.bench == "gsm-pal":
+        gsm8k = load_from_disk("gsm8k")
+        gsm8k["train"] = Dataset.from_json("examples/gsm8k/demos.json")
+
+        Gsm8kFewshotProcessor(
+            dataset=gsm8k,
+            pdl_file=args.pdl_file,
+            trials=args.trials,
+            k=args.num_demos,
+            test_set_size=args.test_set_size,
+        ).process_parallel()
+    if args.bench == "gsm-evolve":
+        Gsm8kFewshotProcessor(
+            dataset=load_from_disk("gsm8k"),
             pdl_file=args.pdl_file,
             trials=args.trials,
             k=args.num_demos,

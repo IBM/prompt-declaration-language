@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run gsm-pal",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pdl.optimize",
+            "args": [
+                "-b",
+                "gsm-pal",
+                "-k",
+                "8",
+                "-t",
+                "5",
+                "-s",
+                "10",
+                "examples/gsm8k/math-fewshot-cot.pdl"
+            ]
+        },
+        {
+            "name": "Run gsm-evolve",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pdl.optimize",
+            "args": [
+                "-b",
+                "gsm-evolve",
+                "-k",
+                "8",
+                "-t",
+                "5",
+                "-s",
+                "10",
+                "examples/gsm8k/math-fewshot-cot.pdl"
+            ]
+        }
+    ]
+}
