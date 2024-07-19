@@ -65,7 +65,7 @@ plugins:
           inherited_members: false
           summary: true
           docstring_style: null
-          show_if_no_docstring: true
+          show_if_no_docstring: false
           show_labels: false
           heading_level: 3
 

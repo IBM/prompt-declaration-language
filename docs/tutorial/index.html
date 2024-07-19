@@ -790,7 +790,7 @@ Adiós, mundo!
 <p>This program has the same output has the one from the previous section.</p>
 <p>Notice that moving the <code>GEN</code> variable in <code>defs</code> would change the semantics of the program. This is because that model call is dependent on its context. Since it does not have an <code>input</code> field, it depends on what was produced in the document up to that point. Moving it to <code>defs</code> means that it would be executed immediately with an empty context. </p>
 <h2 id="muting-block-output-with-show_result">Muting Block Output with Show_result</h2>
-<p>By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting <code>show_result</code> to <code>false</code> for any block. This feature allows the computation of intermediate values that are not necessarily output in the document.</p>
+<p>By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting <code>show_result</code> to <code>false</code> for any block. This feature allows the computation of intermediate values that are not necessarily output in the document. The value of the variable specified in <code>def</code> is still set to the result of the block.</p>
 <p>Consider the same example as above, but with <code>show_result</code> set to <code>false</code> (<a href="../examples/tutorial/muting_block_output.yaml">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with functions</span>
 <span class="nt">document</span><span class="p">:</span>
@@ -826,6 +826,47 @@ Translate the sentence &#39;Bye, world!&#39; to Spanish
 Nos vemos, mundo!
 The french sentence was: Bonjour, monde!
 </code></pre></div>
+<p>An important detail to be mindful of is where <code>show_result</code> is set. Here is an example of mistake that is easy to make:
+<div class="highlight"><pre><span></span><code>description: Test
+document:
+  - def: NAME
+    document:
+      - model: &quot;ibm/granite-20b-code-instruct-v2&quot;
+        show_result: false # &lt;-- MISTAKE:
+        # `show_result` is specified on the document,
+        # resulting in an _empty_ document and thus
+        # an empty `NAME`
+        platform: bam
+        input: Hello,
+        parameters:
+          decoding_method: &quot;greedy&quot;
+          stop_sequences:
+            - &quot;!&quot;
+          include_stop_sequence: false
+  - &quot;The variable will be empty: `&quot;
+  - get: NAME
+  - &quot;`!\n&quot;
+  - def: TWO
+    show_result: false # &lt;-- CORRECT:
+    # `show_result` is set at the root of the block,
+    # which behaves as expected.
+    document:
+      - model: &quot;ibm/granite-20b-code-instruct-v2&quot;
+        platform: bam
+        input: Hello,
+        parameters:
+          decoding_method: &quot;greedy&quot;
+          stop_sequences:
+            - &quot;!&quot;
+          include_stop_sequence: false
+  - &quot;But not this one: `&quot;
+  - get: TWO
+  - &quot;`!\n&quot;
+</code></pre></div></p>
+<p>The output is:
+<div class="highlight"><pre><span></span><code>The variable will be empty: ``!
+But not this one: ` world`!
+</code></pre></div></p>
 <h2 id="input-from-file-or-stdin">Input from File or Stdin</h2>
 <p>PDL can accept textual input from a file or stdin. In the following example (<a href="../examples/tutorial/input_file.yaml">file</a>), the contents of this <a href="../examples/input/data.txt">file</a> are read by PDL and incorporated in the document. The result is also assigned to a variable <code>HELLO</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PDL code with input block</span>
@@ -877,7 +918,7 @@ The french sentence was: Bonjour, monde!
 87 Smith Road in the town of Armonk, NY
 </code></pre></div></p>
 <h2 id="calling-code">Calling code</h2>
-<p>The following script shows how to execute python code (<a href="../examples/tutorial/calling_code.yaml">file</a>). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. The result of the code must be assigned to the variable <code>result</code> internally to be propagated to the result of the block.</p>
+<p>The following script shows how to execute python code (<a href="../examples/tutorial/calling_code.yaml">file</a>). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. Variables defined in PDL are copied into the global scope of the Python code, as such, mutating variables in Python has no effect on the variables in the document. The result of the code must be assigned to the variable <code>result</code> internally to be propagated to the result of the block.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world showing call to python code</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">&quot;</span>
