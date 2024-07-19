@@ -52,6 +52,7 @@ from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
+from .python_exec import safer_exec  # type: ignore
 
 
 class PDLRuntimeParserError(PDLException):
@@ -821,9 +822,8 @@ __PDL_SESSION = types.SimpleNamespace()
 
 def call_python(code: str, scope: dict) -> Any:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
-    exec(code, my_namespace.__dict__)
-    result = my_namespace.result
-    return result
+    safer_exec(code, my_namespace.__dict__)
+    return my_namespace.result
 
 
 def call_command(code: str) -> tuple[int, str]:
