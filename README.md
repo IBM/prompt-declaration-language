@@ -15,7 +15,7 @@ PDL provides the following features:
 
 The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
 
-See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](./docs/tutorial/index.html).
+See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/).
 
 
 ## Interpreter Installation
@@ -345,7 +345,7 @@ The data block takes various variables and combines their values into a JSON obj
 
 ## PDL Language Tutorial
 
-See [PDL Language Tutorial](docs/tutorial/index.htlm)
+See [PDL Language Tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/)
 
 
 
