@@ -149,7 +149,7 @@ def extract_math_answer(result: str) -> float:
 class Gsm8kProcessor(BaseProcessor):
     def __init__(self, n):
         super().__init__(
-            "../grade-school-math/grade_school_math/data/train_small.jsonl",
+            "../grade-school-math/grade_school_math/data/train.jsonl",
             "examples/gsm8k/math.pdl",
             n,
         )
