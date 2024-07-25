@@ -2,6 +2,7 @@ import argparse
 import json
 import sys
 from io import StringIO
+from multiprocessing import Pool
 
 import yaml
 
@@ -10,9 +11,10 @@ from .pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 
 class BaseProcessor:
-    def __init__(self, dataset, pdl_file):
+    def __init__(self, dataset, pdl_file, n):
         self.dataset = dataset
         self.pdl_file = pdl_file
+        self.nb_processes = n
 
     def get_question(self, qna) -> str:
         return ""
@@ -23,70 +25,95 @@ class BaseProcessor:
     def extract_answer(self, document) -> float:
         return 0.0
 
-    def process(self):
+    def process_all(self):
         with open("log.out", "w", encoding="utf-8") as log:
             with open(self.dataset, "r", encoding="utf-8") as json_file:
                 json_list = list(json_file)
-                with open(self.pdl_file, "r", encoding="utf-8") as pdl:
-                    obj = yaml.safe_load(pdl)
-                    data = Program.model_validate(obj)
-                    matches = 0  # pylint: disable=invalid-name
-                    exceptions = 0  # pylint: disable=invalid-name
-                    for index, json_str in enumerate(json_list):
-                        qna = json.loads(json_str)
-                        question = self.get_question(qna)
-                        print("\nQuestion: " + question)
-                        truth, solution = self.get_truth_answer(qna)
-                        document = ""  # pylint: disable=invalid-name
-                        answer = 0.0  # pylint: disable=invalid-name
-                        try:
-                            state = InterpreterState(yield_output=True)
-                            scope = empty_scope
-                            scope["question"] = question
-                            _, document, _, _ = process_prog(state, scope, data)
-                            answer = self.extract_answer(document)
-                            print(answer)
-
-                        except Exception as e:
-                            print("EXCEPTION at: " + str(index))
-                            print(e)
-                            exceptions += 1
-                            write_log(
-                                log,
-                                index,
-                                question,
-                                truth,
-                                answer,
-                                solution,
-                                document,
-                                e,
-                            )
-
-                        if answer == truth or document.endswith(str(truth)):
-                            print("MATCH!")
-                            matches += 1
-                        else:
-                            print("NO MATCH!")
-                            print("Truth: " + str(truth))
-                            print("Question: " + question)
-                            write_log(
-                                log,
-                                index,
-                                question,
-                                truth,
-                                answer,
-                                solution,
-                                document,
-                                None,
-                            )
-
-                        print(
-                            "Percentage passing: "
-                            + str(matches / (index + 1))
-                            + " ("
-                            + str(index + 1)
-                            + " completed)"
+            with open(self.pdl_file, "r", encoding="utf-8") as pdl:
+                obj = yaml.safe_load(pdl)
+                data = Program.model_validate(obj)
+                matches = 0  # pylint: disable=invalid-name
+                exceptions = 0  # pylint: disable=invalid-name
+                with Pool(processes=self.nb_processes) as pool:
+                    jobs = [
+                        pool.apply_async(self.process_sample, (data, index, json_str))
+                        for index, json_str in enumerate(json_list)
+                    ]
+                    answers = [res.get() for res in jobs]
+                for (
+                    index,
+                    question,
+                    truth,
+                    answer,
+                    solution,
+                    document,
+                    exception,
+                ) in answers:
+                    print("\nQuestion: " + question)
+                    print(answer)
+                    if exception is not None:
+                        print("EXCEPTION at: " + str(index))
+                        print(exception)
+                        exceptions += 1
+                        write_log(
+                            log,
+                            index,
+                            question,
+                            truth,
+                            answer,
+                            solution,
+                            document,
+                            exception,
                         )
+                    if answer == truth or document.endswith(str(truth)):
+                        print("MATCH!")
+                        matches += 1
+                    else:
+                        print("NO MATCH!")
+                        print("Truth: " + str(truth))
+                        print("Question: " + question)
+                        write_log(
+                            log,
+                            index,
+                            question,
+                            truth,
+                            answer,
+                            solution,
+                            document,
+                            None,
+                        )
+                    print(
+                        "Percentage passing: "
+                        + str(matches / (index + 1))
+                        + " ("
+                        + str(index + 1)
+                        + " completed)"
+                    )
+
+    def process_sample(self, data, index, json_str):
+        qna = json.loads(json_str)
+        question = self.get_question(qna)
+        truth, solution = self.get_truth_answer(qna)
+        document = ""  # pylint: disable=invalid-name
+        answer = 0.0  # pylint: disable=invalid-name
+        exception = None
+        try:
+            state = InterpreterState(yield_output=False)
+            scope = empty_scope
+            scope["question"] = question
+            _, document, _, _ = process_prog(state, scope, data)
+            answer = self.extract_answer(document)
+        except Exception as e:
+            exception = e
+        return (
+            index,
+            question,
+            truth,
+            answer,
+            solution,
+            document,
+            exception,
+        )
 
 
 def write_log(  # pylint: disable=too-many-arguments
@@ -120,10 +147,11 @@ def extract_math_answer(result: str) -> float:
 
 
 class Gsm8kProcessor(BaseProcessor):
-    def __init__(self):
+    def __init__(self, n):
         super().__init__(
-            "../grade-school-math/grade_school_math/data/train.jsonl",
+            "../grade-school-math/grade_school_math/data/train_small.jsonl",
             "examples/gsm8k/math.pdl",
+            n,
         )
 
     def get_question(self, qna):
@@ -137,10 +165,11 @@ class Gsm8kProcessor(BaseProcessor):
 
 
 class Gsm8kJinjaProcessor(BaseProcessor):
-    def __init__(self):
+    def __init__(self, n):
         super().__init__(
             "../grade-school-math/grade_school_math/data/train.jsonl",
             "examples/gsm8k/math-jinja.pdl",
+            n,
         )
 
     def get_question(self, qna):
@@ -167,10 +196,11 @@ def exec_python_answer(program: str) -> str:
 
 
 class Gsm8kPalProcessor(BaseProcessor):
-    def __init__(self):
+    def __init__(self, n):
         super().__init__(
             "../grade-school-math/grade_school_math/data/train.jsonl",
             "examples/gsm8k/math-python.pdl",
+            n,
         )
 
     def get_question(self, qna):
@@ -185,9 +215,11 @@ class Gsm8kPalProcessor(BaseProcessor):
 
 
 class GsmHardlPalProcessor(BaseProcessor):
-    def __init__(self):
+    def __init__(self, n):
         super().__init__(
-            "../pal/datasets/gsmhardv2.jsonl", "examples/gsm8k/math-python.pdl"
+            "../pal/datasets/gsmhardv2.jsonl",
+            "examples/gsm8k/math-python.pdl",
+            n,
         )
 
     def get_question(self, qna):
@@ -204,8 +236,10 @@ class GsmHardlPalProcessor(BaseProcessor):
 
 
 class GsmHardlProcessor(BaseProcessor):
-    def __init__(self):
-        super().__init__("../pal/datasets/gsmhardv2.jsonl", "examples/gsm8k/math.pdl")
+    def __init__(self, n):
+        super().__init__(
+            "../pal/datasets/gsmhardv2.jsonl", "examples/gsm8k/math.pdl", n
+        )
 
     def get_question(self, qna):
         return qna["input"]
@@ -226,19 +260,23 @@ if __name__ == "__main__":
         "-b",
         help="benchmark",
     )
+    parser.add_argument(
+        "--processes", "-n", const=10, type=int, help="number of processes"
+    )
 
     args = parser.parse_args()
+    processes = args.processes
     if args.bench == "gsm8k":
-        Gsm8kProcessor().process()
+        Gsm8kProcessor(processes).process_all()
 
     if args.bench == "gsm8k-pal":
-        Gsm8kPalProcessor().process()
+        Gsm8kPalProcessor(processes).process_all()
 
     if args.bench == "gsm8k-jinja":
-        Gsm8kJinjaProcessor().process()
+        Gsm8kJinjaProcessor(processes).process_all()
 
     if args.bench == "gsm-hard":
-        GsmHardlProcessor().process()
+        GsmHardlProcessor(processes).process_all()
 
     if args.bench == "gsm-hard-pal":
-        GsmHardlPalProcessor().process()
+        GsmHardlPalProcessor(processes).process_all()
