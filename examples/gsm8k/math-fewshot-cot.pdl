@@ -9,17 +9,16 @@ defs:
           Answer: Let's think step by step. {{ demonstration.reasoning|trim }}
           The answer is {{ demonstration.answer }}
 
+# try all examples and collect which ones _fail_
+# cluster by similarity, or classify e.g. 5 classes that don't work
+
 document:
 - |
   {{ demos }}Question: {{ question }}
   Answer: Let's think step by step. 
-- Answer the questions to the best of your abilities.
 - model: "{{ model }}"
   def: PDL
   platform: bam
-  # input: |-
-  #   {{ demos }}Question: {{ question }}
-  #   Answer: Let's think step by step. 
   parameters:
     stop_sequences: ["<|endoftext|>"]
     include_stop_sequence: false

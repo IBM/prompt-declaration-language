@@ -1,5 +1,77 @@
 description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
+# See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
 defs:
+  langchain: |
+    Answer the following questions as best you can. You have access to the following tools:
+
+    {tools}
+
+    Use the following format:
+
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of [{tool_names}]
+    Action Input: the input to the action
+    Observation: the result of the action
+    ... (this Thought/Action/Action Input/Observation can repeat N times)
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
+
+    Begin!
+
+    Question: {input}
+    Thought:{agent_scratchpad}
+
+  langsmith: |
+    Assistant is a large language model trained by OpenAI.
+
+    Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
+    
+    Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
+    
+    Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
+    
+    TOOLS:
+    
+    ------
+    
+    Assistant has access to the following tools:
+    
+    {tools}
+    
+    To use a tool, please use the following format:
+    
+    ```
+    
+    Thought: Do I need to use a tool? Yes
+    
+    Action: the action to take, should be one of [{tool_names}]
+    
+    Action Input: the input to the action
+    
+    Observation: the result of the action
+    
+    ```
+    
+    When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:
+    
+    ```
+    
+    Thought: Do I need to use a tool? No
+    
+    Final Answer: [your response here]
+    
+    ```
+    
+    Begin!
+    
+    Previous conversation history:
+    
+    {chat_history}
+    
+    New input: {input}
+    
+    {agent_scratchpad}
   # By abstracting the pattern, the naming and formatting of the individual steps can
   # be more easily changed.
   # Example usage:
@@ -40,6 +112,20 @@ defs:
       - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
         then: "{{ type }}: {{ content }}"
 
+  load_tools:
+    read: examples/prompt_library/tool.json
+    parser: json
+    def: TOOLS
+
+  describe_tools:
+    function:
+      tools: {list: obj}
+    return:
+      - for:
+          tool: "{{ tools }}" 
+        repeat: |
+          {{ tool.name }}: {{ tool.description }}
+
   default_tools: |
     import wikipedia
     match ACTION.strip():
@@ -50,6 +136,29 @@ defs:
           result = str(error)
       case _:
         result = "Invalid Action. Valid Actions are Search[<topic>] and Finish[<answer>]."
+  tool:
+    function:
+      name: str
+      description: str
+      parameters: obj
+      example: str
+    return: |
+      {
+          "name": "{{ name }}",
+          "description": "{{ description }}",
+          "parameters": {
+              {{ parameters }}
+              "type": "object",
+              "properties": {
+                  "location": {
+                      "type": "string",
+                      "description": "The city and state, e.g. San Francisco, CA"
+                  }
+              },
+              "required": ["location"]
+          },
+          "example": {{ example }}
+      }
 
   react:
     function:
@@ -57,26 +166,29 @@ defs:
       model: str
       tools: str
     return:
-    - |
-      Question: What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
-      Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
-      Act: Search[Colorado orogeny]
-      Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
-      Tho: It does not mention the eastern sector. So I need to look up eastern sector.
-      Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
-      Act: Finish[1,800 to 7,000 ft]
-
-      Question: What profession does Nicholas Ray and Elia Kazan have in common?
-      Tho: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
-      Act: Search[Nicholas Ray]
-      Obs: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
-      Tho: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
-      Act: Search[Elia Kazan]
-      Obs: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
-      Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-      Act: Finish[director, screenwriter, actor]
-
-      Question: {{ question }}
+    - call: react_block
+      args:
+        trajectory:
+        - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+        - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+        - action: "Search[Colorado orogeny]"
+        - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+        - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+        - action: "Finish[1,800 to 7,000 ft]"
+    - "\n\n"
+    - call: react_block
+      args:
+        trajectory:
+        - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+        - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+        - action: "Search[Nicholas Ray]"
+        - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+        - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+        - action: "Search[Elia Kazan]"
+        - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+        - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+        - action: "Finish[director, screenwriter, actor]"
+    - "Question: {{ question }}"
     - repeat:
       - repeat:
         - def: THOUGHT
@@ -106,11 +218,39 @@ defs:
       - if: '{{ (ACTION | trim) != "Finish" }}'
         then:
         - "\nObs: "
-        - lan: python
-          code: "{{ tools }}"
+        - call: "{{ ACTION }}"
+          args:
+            subject: "{{ SUBJECT }}"
         - model: "{{ model }}"
           parameters:
             decoding_method: sample
             stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
             include_stop_sequence: false
       until: '{{ (ACTION | trim) == "Finish" }}'
+document:
+# - "{{ load_tools }}"
+- "You have access to the following tools:\n"
+- call: describe_tools
+  args:
+    tools: "{{ load_tools  }}"
+- |
+  You can use the tools by outputing the tool name followed by its arguments in square brackets, delimited by commas. You should begin your tool invocation with 'Act:'. Example: 'Action: tool_name[argument_1]' You can only invoke one tool at a time.
+# - "{{ load_tools }}"
+# - call: react
+#   args:
+#     question: "Who are you?"
+#     model: ""
+#     tools: ""
+# - call: tool
+#   args:
+#     name: "get_current_weather"
+#     description: "Get the current weather"
+#     parameters:
+#       type: object
+#       properties:
+#         location:
+#           type: string
+#           description: The city and state, e.g. San Francisco, CA
+#       required:
+#       - location
+#     example: hello world!
