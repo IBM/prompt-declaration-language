@@ -801,7 +801,7 @@ def step_call_code(
                 result = None
                 output = ""
                 return result, output, scope, trace
-    except ValueError as e:
+    except Exception as e:
         trace = handle_error(
             block,
             loc,
