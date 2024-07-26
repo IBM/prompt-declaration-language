@@ -1,5 +1,3 @@
-import pytest
-
 from pdl.pdl.pdl_ast import Program  # pyright: ignore
 from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
 from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
@@ -30,6 +28,11 @@ python_exit_data = {
             "lan": "python",
             "code": ["open('')\n", "result = 'Tracy'"],
         },
+        "Hello, ",
+        {
+            "lan": "python",
+            "code": ["result = 'Tracy'"],
+        },
     ],
 }
 
@@ -37,8 +40,8 @@ python_exit_data = {
 def test_python_sandbox():
     state = InterpreterState()
     data = Program.model_validate(python_exit_data)
-    with pytest.raises(NotImplementedError):
-        process_prog(state, empty_scope, data)
+    _, document, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, Tracy"
 
 
 def show_result_data(show):
