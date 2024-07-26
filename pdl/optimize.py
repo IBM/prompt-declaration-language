@@ -1,16 +1,18 @@
 import argparse
+import json
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
 from functools import cached_property
-import json
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Thread
 
 import numpy as np
-from pydantic import BaseModel
 import yaml
+from datasets import Dataset, load_dataset, load_from_disk
 from genai.schema import DecodingMethod, LengthPenalty, TextGenerationReturnOptions
+from numpy.random import default_rng
+from pydantic import BaseModel
 from scipy.stats import entropy, gmean
 from tqdm import tqdm
 
@@ -26,10 +28,9 @@ from .pdl_ast import (
     set_default_model_params,
 )
 from .pdl_interpreter import InterpreterState, empty_scope, process_prog
-from datasets import load_from_disk, Dataset, load_dataset
-from numpy.random import default_rng
 
 rng = default_rng()
+
 
 def extract_math_answer(result: str) -> float:
     try:
@@ -336,7 +337,7 @@ class Optimizer:
         self.trials = trials
         self.k = k
         self.model = (
-            "ibm/granite-34b-code-instruct" # "ibm/granite-20b-code-instruct-v2"
+            "ibm/granite-34b-code-instruct"  # "ibm/granite-20b-code-instruct-v2"
         )
         self.best_demos = []
         self.budget = "1"
@@ -387,9 +388,7 @@ class Optimizer:
         # print(program)
 
     def load_pdl(self) -> Program:
-        with (
-            self.pdl_file.open(encoding="utf-8") as pdl,
-        ):
+        with (self.pdl_file.open(encoding="utf-8") as pdl,):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample(self, dataset, method: SamplingMethods):
@@ -600,7 +599,7 @@ if __name__ == "__main__":
             return {
                 "generated_probs": lp.generated_probs,
                 "generated_text": lp.generated_text,
-                "generated_tokens": [ t.text for t in lp.generated_tokens ],
+                "generated_tokens": [t.text for t in lp.generated_tokens],
                 "gen_answer": answer,
             }
 
@@ -617,12 +616,14 @@ if __name__ == "__main__":
     # ds = ds.map(parse_answers)
     # ds.save_to_disk("gsm8k")
 
+
 @dataclass
 class Tool:
     name: str
     description: str
     parameters: str | dict
     examples: list[str]
+
 
 class PDLOptimizer:
     def __init__(
@@ -631,7 +632,7 @@ class PDLOptimizer:
         dataset_name: str,
         split: str,
         signature: str,
-        metric: callable[[str], float], # metric takes model output
+        metric: callable[[str], float],  # metric takes model output
         prompt_patterns: list[str],
         tools: list[Tool],
     ):
@@ -649,11 +650,11 @@ class PDLOptimizer:
 
     def parse_signature(self):
         inputs, _, outputs = self.signature.partition("->")
-        self._inputs = [ i.trim() for i in inputs.split(",") ]
-        self._outputs = [ i.trim() for i in inputs.split(",") ]
+        self._inputs = [i.trim() for i in inputs.split(",")]
+        self._outputs = [i.trim() for i in inputs.split(",")]
 
     def verify_dataset(self):
-        cols = [ *self._inputs, *self._outputs ]
+        cols = [*self._inputs, *self._outputs]
         assert all(c in self.dataset["train"].column_names for c in cols)
         assert all(c in self.dataset["test"].column_names for c in cols)
 
@@ -664,6 +665,6 @@ class PDLOptimizer:
         3. Run the PDL program i.e. evaluate it (threaded) against subset of test
         4. Run the output through the metric function
         5. Discard half the combinations, double the test set size
-        6. Repeat 
+        6. Repeat
         """
         pass
