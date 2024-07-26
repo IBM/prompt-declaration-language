@@ -1150,7 +1150,7 @@ export type Fallback12 =
     )[]
   | null;
 export type Kind12 = "code";
-export type Lan = "python" | "command";
+export type Lan = "python";
 export type Code =
   | string
   | FunctionBlock

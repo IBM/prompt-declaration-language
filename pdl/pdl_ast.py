@@ -140,7 +140,7 @@ class WatsonxModelBlock(ModelBlock):
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: Literal["python", "command"]
+    lan: Literal["python"]
     code: "BlocksType"
 
 

@@ -1835,9 +1835,9 @@
           "type": "string"
         },
         "lan": {
+          "const": "python",
           "enum": [
-            "python",
-            "command"
+            "python"
           ],
           "title": "Lan",
           "type": "string"
