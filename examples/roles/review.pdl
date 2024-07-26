@@ -1,0 +1,34 @@
+description: Movie review with roles
+document | sequence | array | object:
+- role: system
+  document:
+  - |
+    You are Granite Chat, an AI language model developed by IBM. You are a cautious assistant. 
+    You carefully follow instructions. You are helpful and harmless and you follow ethical guidelines and promote positive behavior.
+
+- role: user
+  document:
+  - |
+    Classify the sentiment of the movie reviews as positive or negative.
+    Your response should only include the answer. Do not provide any further explanation.
+
+    Here are some examples, complete the last one:
+    Review:
+    Oh, where do I even begin? Barbie 2023 is a tour de force that has left me utterly captivated, enchanted, and spellbound. Every moment of this cinematic marvel was nothing short of pure excellence, deserving nothing less than a perfect 10 out of 10 rating!
+    Sentiment:
+    positive
+
+    Review:
+    It's a shame because I love Little Women and Lady Bird. Barbie did not serve.  It's a long ramble about how matriarchy is perfect and patriarchy is stupid. I agree with the latter, but the execution is just awful. Mattel's CEO and corporate people started as a mockery of men having all the top positions in a company; as the movie goes, they're just there at the back of your mind, and it's an unpleasant experience because they did nothing after. There were so many unnecessary scenes that could have been meaningful. For example, what's the scene where Allan fights other Kens for? I'm also surprised that there were no gay Barbies and Kens. And I thought this was supposed to "break" gender norms. So many seeds were planted at once, but none reached their full potential. 
+    Sentiment:
+    negative
+
+    Review:
+    Russell Crowe's new action movie Land of Bad can't break the star's recent streak of poor Rotten Tomatoes ratings. Co-starring Liam and Luke Hemsworth, Crowe’s latest action effort concerns a special ops mission in the Philippines that goes wrong, leading to a harrowing fight for survival. Crowe plays Reaper, a drone pilot who must guide a group of outnumbered and stranded soldiers back to safety.
+
+    Despite the Land of Bad cast including big names like Crowe and two of the Hemsworths, the action film has failed to impress critics, currently sitting at 52% fresh on Rotten Tomatoes on 24 reviews, becoming the fifth straight Crowe-starring film to be certified rotten by the review aggregator.
+    Sentiment: 
+
+- role: assistant
+  document:
+  - model: ibm/granite-13b-chat-v2

@@ -1,0 +1,8 @@
+description: Openai calls with roles
+document: 
+- role: system
+  document: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required. 
+- role: user
+  document: Who are you?
+- model: granite-20b-functioncalling
+  platform: openai

@@ -28,9 +28,6 @@ document:
         decoding_method: sample
         stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
         include_stop_sequence: true
-      constraints:
-      - words_len: ">2"
-        not_contains: Tho
     until: '{{ THOUGHT.endswith("Act:") }}'
   - def: ACTION
     model: meta-llama/llama-3-70b-instruct
