@@ -176,9 +176,16 @@ def reliability_guard(maximum_memory_bytes: int | None = None):
     os_chown = os.chown
     os_chroot = os.chroot
     os_fchdir = os.fchdir
-    # os_lchflags = os.lchflags
-    os_lchmod = os.lchmod
-    os_lchown = os.lchown
+
+    if hasattr(os, "lchflags"):
+        os_lchflags = os.lchflags
+
+    if hasattr(os, "lchmod"):
+        os_lchmod = os.lchmod
+
+    if hasattr(os, "lchown"):
+        os_lchown = os.lchown
+
     os_getcwd = os.getcwd
     os_chdir = os.chdir
     shutil_rmtree = shutil.rmtree
@@ -212,9 +219,15 @@ def reliability_guard(maximum_memory_bytes: int | None = None):
     os.chown = raise_disabled
     os.chroot = raise_disabled
     os.fchdir = raise_disabled
-    # os.lchflags = raise_disabled
-    os.lchmod = raise_disabled
-    os.lchown = raise_disabled
+
+    if hasattr(os, "lchflags"):
+        os.lchflags = raise_disabled
+
+    if hasattr(os, "lchmod"):
+        os.lchmod = raise_disabled
+
+    if hasattr(os, "lchown"):
+        os.lchown = raise_disabled
     os.getcwd = raise_disabled
     os.chdir = raise_disabled
     shutil.rmtree = raise_disabled
@@ -251,9 +264,15 @@ def reliability_guard(maximum_memory_bytes: int | None = None):
         os.chown = os_chown
         os.chroot = os_chroot
         os.fchdir = os_fchdir
-        # os.lchflags = os_lchflags
-        os.lchmod = os_lchmod
-        os.lchown = os_lchown
+
+        if hasattr(os, "lchflags"):
+            os.lchflags = os_lchflags
+
+        if hasattr(os, "lchmod"):
+            os.lchmod = os_lchmod
+
+        if hasattr(os, "lchown"):
+            os.lchown = os_lchown
         os.getcwd = os_getcwd
         os.chdir = os_chdir
         shutil.rmtree = shutil_rmtree
