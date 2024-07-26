@@ -801,7 +801,7 @@ def step_call_code(
                 result = None
                 output = ""
                 return result, output, scope, trace
-    except Exception as e:
+    except ValueError as e:
         trace = handle_error(
             block,
             loc,
@@ -823,7 +823,8 @@ __PDL_SESSION = types.SimpleNamespace()
 def call_python(code: str, scope: dict) -> Any:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
     safer_exec(code, my_namespace.__dict__)
-    return my_namespace.result
+    result = my_namespace.result
+    return result
 
 
 def call_command(code: str) -> tuple[int, str]:
