@@ -113,9 +113,9 @@ defs:
         then: "{{ type }}: {{ content }}"
 
   load_tools:
-    read: examples/prompt_library/tool.json
-    parser: json
-    def: TOOLS
+    data:
+    - name: test
+    - name: test
 
   describe_tools:
     function:
@@ -228,13 +228,13 @@ defs:
             include_stop_sequence: false
       until: '{{ (ACTION | trim) == "Finish" }}'
 document:
-# - "{{ load_tools }}"
-- "You have access to the following tools:\n"
-- call: describe_tools
-  args:
-    tools: "{{ load_tools  }}"
-- |
-  You can use the tools by outputing the tool name followed by its arguments in square brackets, delimited by commas. You should begin your tool invocation with 'Act:'. Example: 'Action: tool_name[argument_1]' You can only invoke one tool at a time.
+- "{{ load_tools }}"
+# - "You have access to the following tools:\n"
+# - call: describe_tools
+#   args:
+#     tools: "{{ load_tools  }}"
+# - |
+#   You can use the tools by outputing the tool name followed by its arguments in square brackets, delimited by commas. You should begin your tool invocation with 'Act:'. Example: 'Action: tool_name[argument_1]' You can only invoke one tool at a time.
 # - "{{ load_tools }}"
 # - call: react
 #   args:
