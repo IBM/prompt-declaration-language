@@ -137,10 +137,12 @@ class WatsonxModelBlock(ModelBlock):
     guardrails: Optional[bool] = None
     guardrails_hap_params: Optional[dict] = None
 
+
 class OpenAIModelBlock(ModelBlock):
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.OPENAI] = ModelPlatform.OPENAI
     params: Optional[dict] = None
+
 
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")

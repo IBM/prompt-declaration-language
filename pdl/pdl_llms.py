@@ -9,7 +9,12 @@ from genai.schema import PromptTemplateData as BamPromptTemplateData
 from ibm_watsonx_ai import Credentials as WatsonxCredentials
 from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
 from openai import OpenAI
-from .pdl_ast import PDLTextGenerationParameters, set_default_model_params
+
+from .pdl_ast import (
+    PDLTextGenerationParameters,
+    set_default_model_parameters,
+    set_default_model_params,
+)
 
 # Load environment variables
 load_dotenv()
@@ -236,7 +241,10 @@ class OpenAIModel:
         for chunk in client.chat.completions.create(
             model=model_id,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant based off IBM Granite."},
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant based off IBM Granite.",
+                },
                 {"role": "user", "content": model_input},
             ],
             stream=True,

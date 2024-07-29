@@ -605,7 +605,12 @@ def step_call_model(
 ) -> Generator[
     YieldMessage,
     Any,
-    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | OpenAIModelBlock | ErrorBlock],
+    tuple[
+        Any,
+        str,
+        ScopeType,
+        BamModelBlock | WatsonxModelBlock | OpenAIModelBlock | ErrorBlock,
+    ],
 ]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
