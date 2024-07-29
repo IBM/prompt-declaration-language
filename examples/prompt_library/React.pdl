@@ -114,8 +114,17 @@ defs:
 
   load_tools:
     data:
-    - name: test
-    - name: test
+    - name: get_current_weather
+      description: Get the current weather
+      parameters:
+        - name: location
+          type: string
+          description: The city and state, e.g. San Francisco, CA
+      examples:
+        - context: "When was the Battle of White Plains fought?"
+          use: "Search[Battle of White Plains]"
+          output: "The Battle of Whiteplains was fought in 1776"
+          answer: 1776
 
   describe_tools:
     function:
