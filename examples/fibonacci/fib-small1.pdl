@@ -2,15 +2,11 @@ description: Fibonacci
 document:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - def: CODE
-  model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    max_new_tokens: 1024
-    decoding_method: greedy
+  model: ibm/granite-20b-code-instruct
 - "What is the name of the function above?\n"
 - def: FUNCTION
-  model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
+  model: ibm/granite-20b-code-instruct
+  params:
     stop_sequences: [" "]
   input:
     document:
@@ -22,12 +18,10 @@ document:
   - "import random\n"
   - result = random.randint(1, 20)
   show_result: false
-- "\nfib("
+- "\nfibonacci("
 - get: N
 - ') = '
 - lan: python
   code:
   - get: CODE
-  - result = fib(
-  - get: N
-  - )
+  - result = fibonacci(N)

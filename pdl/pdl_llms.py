@@ -157,9 +157,11 @@ class WatsonxModel:
         guardrails_hap_params: Optional[dict],
     ) -> str:
         model_inference = WatsonxModel.get_model(model_id)
+        parameters = params
+        parameters = set_default_model_parameters(parameters)
         text = model_inference.generate_text(
             prompt=prompt,
-            params=params,
+            params=parameters,
             guardrails=guardrails or False,
             guardrails_hap_params=guardrails_hap_params,
         )
@@ -175,9 +177,11 @@ class WatsonxModel:
         guardrails_hap_params: Optional[dict],
     ) -> Generator[str, Any, None]:
         model_inference = WatsonxModel.get_model(model_id)
+        parameters = params
+        parameters = set_default_model_parameters(parameters)
         text_stream = model_inference.generate_text_stream(
             prompt=prompt,
-            params=params,
+            params=parameters,
             guardrails=guardrails or False,
             guardrails_hap_params=guardrails_hap_params,
         )

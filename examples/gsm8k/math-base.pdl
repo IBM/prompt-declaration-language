@@ -5,7 +5,7 @@ document:
   def: PDL
   input:
   - "Question: {{ question }}"
-  parameters:
+  params:
     stop_sequences: ["Question"]
     include_stop_sequence: false
   show_result: true
