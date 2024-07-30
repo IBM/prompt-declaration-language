@@ -2,10 +2,11 @@ import argparse
 import json
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, StrEnum
 from functools import cached_property
 from pathlib import Path
 from threading import Thread
+from typing import Callable
 
 import numpy as np
 import yaml
@@ -84,6 +85,14 @@ class ModelResponse:
         return np.array([t.logprob for t in self.generated_tokens]).astype(float)
 
     @cached_property
+    def input_perplexity(self) -> np.ndarray:
+        return np.exp(np.mean(self.input_logprobs))
+
+    @cached_property
+    def generated_perplexity(self) -> np.ndarray:
+        return np.exp(np.mean(self.generated_logprobs))
+
+    @cached_property
     def input_probs(self) -> np.ndarray:
         return np.exp(self.input_logprobs)
 
@@ -157,7 +166,6 @@ def get_seq_logprobs(
             input_tokens=True,
             token_logprobs=True,
             token_ranks=True,
-            # top_n_tokens=5,
         ),
         max_new_tokens=max_new_tokens,
         stop_sequences=["<|endoftext|>"],
@@ -174,7 +182,7 @@ def get_seq_logprobs(
 
         input_tokens = [
             Token(
-                logprob=t.logprob or 0.0,
+                logprob=-100 if t.logprob is None else t.logprob,
                 rank=t.rank,
                 text=t.text,
                 top_tokens=t.top_tokens,
@@ -183,7 +191,7 @@ def get_seq_logprobs(
         ]
         generated_tokens = [
             Token(
-                logprob=t.logprob or 0.0,
+                logprob=-100 if t.logprob is None else t.logprob,
                 rank=t.rank,
                 text=t.text,
                 top_tokens=t.top_tokens,
@@ -328,6 +336,11 @@ class SamplingMethods(Enum):
     UNCERTAINTY = 4
 
 
+class Models(StrEnum):
+    granite_34b_code_instruct = "ibm/granite-34b-code-instruct"
+    granite_20b_code_instruct_v2 = "ibm/granite-20b-code-instruct-v2"
+
+
 class Optimizer:
     def __init__(
         self, dataset: Dataset, pdl_file: Path, trials: int, k: int, test_set_size: int
@@ -336,9 +349,7 @@ class Optimizer:
         self.pdl_file = pdl_file
         self.trials = trials
         self.k = k
-        self.model = (
-            "ibm/granite-34b-code-instruct"  # "ibm/granite-20b-code-instruct-v2"
-        )
+        self.model = str(Models.granite_34b_code_instruct)
         self.best_demos = []
         self.budget = "1"
         self.test_set_size = test_set_size
@@ -388,7 +399,9 @@ class Optimizer:
         # print(program)
 
     def load_pdl(self) -> Program:
-        with (self.pdl_file.open(encoding="utf-8") as pdl,):
+        with (
+            self.pdl_file.open(encoding="utf-8") as pdl,
+        ):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample(self, dataset, method: SamplingMethods):
@@ -522,7 +535,108 @@ class Gsm8kOptimizer(Optimizer):
         super().__init__(*args, **kwargs)
 
 
+class FEVEROptimizer(Optimizer):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+
+class EvalPlusOptimizer(Optimizer):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+
+@dataclass
+class Tool:
+    name: str
+    description: str
+    parameters: str | dict
+    examples: list[str]
+
+
+class PDLOptimizer:
+    def __init__(
+        self,
+        pdl_program: Path,
+        dataset_name: str,
+        split: str,
+        signature: str,
+        metric: Callable[[str], float],  # metric takes model output
+        prompt_patterns: list[str],
+        tools: list[str],
+    ):
+        self.pdl_program = pdl_program
+        self.dataset_name = dataset_name
+        self.split = split
+        self.signature = signature
+        self.metric = metric
+        self.prompt_patterns = prompt_patterns
+        self.tools = tools
+
+        # Load
+        self.dataset = load_dataset(self.dataset_name, split=self.split)
+        assert {"train", "test"} <= set(self.dataset.keys())
+        self.parse_signature()
+        pass
+
+    def parse_signature(self):
+        inputs, _, outputs = self.signature.partition("->")
+        self._inputs = [i.trim() for i in inputs.split(",")]
+        self._outputs = [i.trim() for i in inputs.split(",")]
+
+    def verify_signature(self):
+        cols = [*self._inputs, *self._outputs]
+        assert all(c in self.dataset["train"].column_names for c in cols)
+        assert all(c in self.dataset["test"].column_names for c in cols)
+
+    def run(self):
+        """
+        1. Determine all optimizable parts of input
+        2. Sample a random combination
+        3. Run the PDL program i.e. evaluate it (threaded) against subset of test
+        4. Run the output through the metric function
+        5. Discard half the combinations, double the test set size
+        6. Repeat
+        """
+        pass
+
+
+class Gsm8kPDLOptimizer(PDLOptimizer):
+    def __init__(self, *args, **kwargs) -> None:
+        # pdl_program: Path,
+        # dataset_name: str,
+        # split: str,
+        # signature: str,
+        # metric: callable[[str], float],  # metric takes model output
+        # prompt_patterns: list[str],
+        # tools: list[str],
+
+        super().__init__(
+            pdl_program="examples/gsm8k/math-fewshot-cot.pdl",
+            dataset_name="./var/gsm8k",
+            split="train[:50]+test[:10]",
+            signature="question->reasoning,answer",
+            metric=self.accuracy,
+            prompt_patterns=["react"],
+            tools=["Search"],
+        )
+
+    def accuracy(self, answer) -> float:
+        pass
+
+
+class FEVERPDLOptimizer(PDLOptimizer):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+
+class EvalPlusPDLOptimizer(PDLOptimizer):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+
 if __name__ == "__main__":
+    Gsm8kPDLOptimizer()
+    exit()
     parser = argparse.ArgumentParser("")
     parser.add_argument(
         "--bench",
@@ -615,56 +729,3 @@ if __name__ == "__main__":
     # return {"answer": answer, "reasoning": reasoning}
     # ds = ds.map(parse_answers)
     # ds.save_to_disk("gsm8k")
-
-
-@dataclass
-class Tool:
-    name: str
-    description: str
-    parameters: str | dict
-    examples: list[str]
-
-
-class PDLOptimizer:
-    def __init__(
-        self,
-        pdl_program: Path,
-        dataset_name: str,
-        split: str,
-        signature: str,
-        metric: callable[[str], float],  # metric takes model output
-        prompt_patterns: list[str],
-        tools: list[Tool],
-    ):
-        self.pdl_program = pdl_program
-        self.dataset_name = dataset_name
-        self.split = split
-        self.signature = signature
-        self.metric = metric
-        self.prompt_patterns = prompt_patterns
-        self.tools = tools
-
-        # Load
-        self.dataset = load_dataset(self.dataset_name, split=self.split)
-        self.parse_signature()
-
-    def parse_signature(self):
-        inputs, _, outputs = self.signature.partition("->")
-        self._inputs = [i.trim() for i in inputs.split(",")]
-        self._outputs = [i.trim() for i in inputs.split(",")]
-
-    def verify_dataset(self):
-        cols = [*self._inputs, *self._outputs]
-        assert all(c in self.dataset["train"].column_names for c in cols)
-        assert all(c in self.dataset["test"].column_names for c in cols)
-
-    def run(self):
-        """
-        1. Determine all optimizable parts of input
-        2. Sample a random combination
-        3. Run the PDL program i.e. evaluate it (threaded) against subset of test
-        4. Run the output through the metric function
-        5. Discard half the combinations, double the test set size
-        6. Repeat
-        """
-        pass
