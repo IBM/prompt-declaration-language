@@ -2,6 +2,7 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     ApiBlock,
+    ArrayBlock,
     BlocksType,
     BlockType,
     CallBlock,
@@ -21,6 +22,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    SequenceBlock,
 )
 
 
@@ -49,6 +51,10 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DocumentBlock():
             iter_blocks(f, block.document)
+        case SequenceBlock():
+            iter_blocks(f, block.sequence)
+        case ArrayBlock():
+            iter_blocks(f, block.array)
         case IfBlock():
             iter_blocks(f, block.then)
             if block.elses is not None:

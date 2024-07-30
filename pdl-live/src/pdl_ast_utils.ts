@@ -47,6 +47,14 @@ export function map_block_children(
       const document = map_blocks(f, block.document);
       return {...block, document: document};
     })
+    .with({kind: 'sequence'}, block => {
+      const sequence = map_blocks(f, block.sequence);
+      return {...block, sequence: sequence};
+    })
+    .with({kind: 'array'}, block => {
+      const array = map_blocks(f, block.array);
+      return {...block, array: array};
+    })
     .with({kind: 'if'}, block => {
       const then_ = map_blocks(f, block.then);
       const else_ = block.else ? map_blocks(f, block.else) : undefined;
@@ -126,6 +134,12 @@ export function iter_block_children(
     .with({kind: 'data'}, () => {})
     .with({kind: 'document'}, block => {
       iter_blocks(f, block.document);
+    })
+    .with({kind: 'sequence'}, block => {
+      iter_blocks(f, block.sequence);
+    })
+    .with({kind: 'array'}, block => {
+      iter_blocks(f, block.array);
     })
     .with({kind: 'if'}, block => {
       if (block.then) iter_blocks(f, block.then);

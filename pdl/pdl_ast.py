@@ -32,6 +32,8 @@ class BlockKind(StrEnum):
     GET = "get"
     DATA = "data"
     DOCUMENT = "document"
+    SEQUENCE = "sequence"
+    ARRAY = "array"
     IF = "if"
     REPEAT = "repeat"
     REPEAT_UNTIL = "repeat_until"
@@ -170,6 +172,18 @@ class DocumentBlock(Block):
     document: "BlocksType"
 
 
+class SequenceBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
+    sequence: "BlocksType"
+
+
+class ArrayBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
+    array: "BlocksType"
+
+
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
@@ -244,6 +258,8 @@ AdvancedBlockType: TypeAlias = (
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock

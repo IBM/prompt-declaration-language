@@ -65,6 +65,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -120,6 +126,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -253,6 +265,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -308,6 +326,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -394,6 +418,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -451,6 +481,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -478,7 +514,7 @@
       "title": "ApiBlock",
       "type": "object"
     },
-    "BamModelBlock": {
+    "ArrayBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -543,6 +579,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -598,6 +640,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -731,6 +779,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -786,6 +840,516 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "array",
+          "default": "array",
+          "enum": [
+            "array"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "array": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Array"
+        }
+      },
+      "required": [
+        "array"
+      ],
+      "title": "ArrayBlock",
+      "type": "object"
+    },
+    "BamModelBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -868,6 +1432,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -923,6 +1493,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1077,6 +1653,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -1132,6 +1714,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -1265,6 +1853,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1320,6 +1914,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1407,6 +2007,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1462,6 +2068,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1558,6 +2170,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -1613,6 +2231,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -1746,6 +2370,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1801,6 +2431,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1887,6 +2523,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1942,6 +2584,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2035,6 +2683,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2090,6 +2744,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -2223,6 +2883,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2278,6 +2944,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2394,6 +3066,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2449,6 +3127,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -2582,6 +3266,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2637,6 +3327,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2715,6 +3411,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2770,6 +3472,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2862,6 +3570,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2917,6 +3631,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3050,6 +3770,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3105,6 +3831,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3207,6 +3939,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -3262,6 +4000,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3395,6 +4139,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3450,6 +4200,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3532,6 +4288,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3587,6 +4349,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3680,6 +4448,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -3735,6 +4509,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3868,6 +4648,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3923,6 +4709,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4005,6 +4797,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4060,6 +4858,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4128,6 +4932,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -4183,6 +4993,12 @@
                         },
                         {
                           "$ref": "#/$defs/DocumentBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
                         },
                         {
                           "$ref": "#/$defs/ReadBlock"
@@ -4284,6 +5100,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -4339,6 +5161,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -4472,6 +5300,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4527,6 +5361,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4616,6 +5456,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4671,6 +5517,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4776,6 +5628,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -4831,6 +5689,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -4964,6 +5828,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5019,6 +5889,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5128,6 +6004,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -5183,6 +6065,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -5316,6 +6204,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5371,6 +6265,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5452,6 +6352,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5507,6 +6413,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5572,6 +6484,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5627,6 +6545,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5736,6 +6660,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -5791,6 +6721,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -5924,6 +6860,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5979,6 +6921,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -6059,6 +7007,12 @@
             },
             {
               "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
             },
             {
               "$ref": "#/$defs/ReadBlock"
@@ -6690,6 +7644,12 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
+        },
+        {
           "$ref": "#/$defs/ReadBlock"
         },
         {
@@ -6749,6 +7709,12 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
+        },
+        {
           "$ref": "#/$defs/ReadBlock"
         },
         {
@@ -6804,6 +7770,12 @@
               },
               {
                 "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
               },
               {
                 "$ref": "#/$defs/ReadBlock"
@@ -6896,6 +7868,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -6951,6 +7929,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -7021,6 +8005,12 @@
         },
         {
           "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
         },
         {
           "$ref": "#/$defs/ReadBlock"
@@ -7127,6 +8117,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -7182,6 +8178,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -7315,6 +8317,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -7370,6 +8378,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -7553,6 +8567,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -7608,6 +8628,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -7741,6 +8767,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -7796,6 +8828,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -7874,6 +8912,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -7929,6 +8973,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8001,6 +9051,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -8056,6 +9112,12 @@
                         },
                         {
                           "$ref": "#/$defs/DocumentBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
                         },
                         {
                           "$ref": "#/$defs/ReadBlock"
@@ -8157,6 +9219,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -8212,6 +9280,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -8345,6 +9419,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -8400,6 +9480,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8478,6 +9564,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -8533,6 +9625,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8604,6 +9702,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -8661,6 +9765,12 @@
                           "$ref": "#/$defs/DocumentBlock"
                         },
                         {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
+                        },
+                        {
                           "$ref": "#/$defs/ReadBlock"
                         },
                         {
@@ -8693,6 +9803,510 @@
         "until"
       ],
       "title": "RepeatUntilBlock",
+      "type": "object"
+    },
+    "SequenceBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "sequence",
+          "default": "sequence",
+          "enum": [
+            "sequence"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "sequence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Sequence"
+        }
+      },
+      "required": [
+        "sequence"
+      ],
+      "title": "SequenceBlock",
       "type": "object"
     },
     "TextGenerationReturnOptions": {
@@ -8853,6 +10467,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -8908,6 +10528,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -9041,6 +10667,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -9096,6 +10728,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -9178,6 +10816,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -9233,6 +10877,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
