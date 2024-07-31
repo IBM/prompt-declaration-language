@@ -1,0 +1,16 @@
+description: PDL examples with messages
+document:
+- role: user
+  document: What is 1+1
+- role: assistant
+  def: output
+  model: ibm/granite-20b-code-instruct-v2
+- role: tool
+  lan: python
+  code: 
+  - |
+    import pdl
+    model_output = """
+    {{ output }}
+    """
+    result = extract_expression(model_output)
