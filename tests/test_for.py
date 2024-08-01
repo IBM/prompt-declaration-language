@@ -100,7 +100,7 @@ def test_for_data4():
     result, output, scope, _ = process_prog(state, empty_scope, data)
     assert result == "2345"
     assert output == "2345"
-    assert scope["x"] == "2345"
+    assert scope["x"] == [2, 3, 4, 5]
 
 
 for_data5 = {
