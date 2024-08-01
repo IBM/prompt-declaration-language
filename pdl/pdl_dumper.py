@@ -6,6 +6,7 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
+    ArrayBlock,
     BamModelBlock,
     BlocksType,
     CallBlock,
@@ -25,6 +26,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    SequenceBlock,
     WatsonxModelBlock,
 )
 
@@ -111,6 +113,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
                 d["input"] = blocks_to_dict(block.input)
         case DocumentBlock():
             d["document"] = blocks_to_dict(block.document)
+        case SequenceBlock():
+            d["sequence"] = blocks_to_dict(block.sequence)
+        case ArrayBlock():
+            d["array"] = blocks_to_dict(block.array)
         case ReadBlock():
             d["read"] = block.read
             d["message"] = block.message

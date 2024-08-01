@@ -24,6 +24,8 @@ export type Program =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -45,11 +47,13 @@ export type Description13 = string | null;
 export type Description14 = string | null;
 export type Description15 = string | null;
 export type Description16 = string | null;
+export type Description17 = string | null;
+export type Description18 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
 export type Parser = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type Description17 = string | null;
-export type Spec17 = {
+export type Description19 = string | null;
+export type Spec19 = {
   [k: string]: unknown;
 } | null;
 export type Pdl =
@@ -67,6 +71,8 @@ export type Pdl =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -86,13 +92,15 @@ export type Pdl =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Description18 = string | null;
-export type Spec18 = {
+export type Description20 = string | null;
+export type Spec20 = {
   [k: string]: unknown;
 } | null;
 export type Regex = string;
@@ -115,6 +123,8 @@ export type Fallback =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -134,6 +144,8 @@ export type Fallback =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -160,6 +172,8 @@ export type Fallback1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -179,6 +193,8 @@ export type Fallback1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -202,6 +218,8 @@ export type Program1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -221,6 +239,8 @@ export type Program1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -245,6 +265,8 @@ export type Fallback2 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -264,6 +286,8 @@ export type Fallback2 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -287,6 +311,8 @@ export type Trace =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -311,6 +337,8 @@ export type Fallback3 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -330,6 +358,8 @@ export type Fallback3 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -359,6 +389,8 @@ export type Fallback4 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -378,14 +410,16 @@ export type Fallback4 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind4 = "document";
-export type Document =
+export type Kind4 = "array";
+export type Array =
   | string
   | FunctionBlock
   | CallBlock
@@ -400,6 +434,8 @@ export type Document =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -419,6 +455,8 @@ export type Document =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -443,6 +481,8 @@ export type Fallback5 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -462,13 +502,199 @@ export type Fallback5 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind5 = "for";
+export type Kind5 = "sequence";
+export type Sequence =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Def6 = string | null;
+export type ShowResult6 = boolean;
+export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError6 = boolean;
+export type Fallback6 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind6 = "document";
+export type Document =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Def7 = string | null;
+export type ShowResult7 = boolean;
+export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError7 = boolean;
+export type Fallback7 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind7 = "for";
 export type Repeat =
   | string
   | FunctionBlock
@@ -484,6 +710,8 @@ export type Repeat =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -503,6 +731,8 @@ export type Repeat =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -524,6 +754,8 @@ export type Trace1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -543,259 +775,8 @@ export type Trace1 =
           | RepeatUntilBlock
           | ForBlock
           | DocumentBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-        )[]
-    )[]
-  | null;
-export type Def6 = string | null;
-export type ShowResult6 = boolean;
-export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError6 = boolean;
-export type Fallback6 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind6 = "repeat_until";
-export type Repeat1 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
-export type Trace2 =
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | (
-          | string
-          | FunctionBlock
-          | CallBlock
-          | WatsonxModelBlock
-          | BamModelBlock
-          | CodeBlock
-          | ApiBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | DocumentBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-        )[]
-    )[]
-  | null;
-export type Def7 = string | null;
-export type ShowResult7 = boolean;
-export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError7 = boolean;
-export type Fallback7 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind7 = "repeat";
-export type Repeat2 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
-export type NumIterations = number;
-export type Trace3 =
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | (
-          | string
-          | FunctionBlock
-          | CallBlock
-          | WatsonxModelBlock
-          | BamModelBlock
-          | CodeBlock
-          | ApiBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | DocumentBlock
+          | SequenceBlock
+          | ArrayBlock
           | ReadBlock
           | IncludeBlock
           | ErrorBlock
@@ -822,6 +803,8 @@ export type Fallback8 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -841,13 +824,292 @@ export type Fallback8 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind8 = "if";
+export type Kind8 = "repeat_until";
+export type Repeat1 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Trace2 =
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+      | (
+          | string
+          | FunctionBlock
+          | CallBlock
+          | WatsonxModelBlock
+          | BamModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | SequenceBlock
+          | ArrayBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
+    )[]
+  | null;
+export type Def9 = string | null;
+export type ShowResult9 = boolean;
+export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError9 = boolean;
+export type Fallback9 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind9 = "repeat";
+export type Repeat2 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type NumIterations = number;
+export type Trace3 =
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+      | (
+          | string
+          | FunctionBlock
+          | CallBlock
+          | WatsonxModelBlock
+          | BamModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | SequenceBlock
+          | ArrayBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
+    )[]
+  | null;
+export type Def10 = string | null;
+export type ShowResult10 = boolean;
+export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError10 = boolean;
+export type Fallback10 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind10 = "if";
 export type Then =
   | string
   | FunctionBlock
@@ -863,6 +1125,8 @@ export type Then =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -882,6 +1146,8 @@ export type Then =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -902,6 +1168,8 @@ export type Else =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -921,6 +1189,8 @@ export type Else =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -928,97 +1198,6 @@ export type Else =
     )[]
   | null;
 export type IfResult = boolean | null;
-export type Def9 = string | null;
-export type ShowResult9 = boolean;
-export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError9 = boolean;
-export type Fallback9 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind9 = "data";
-export type Def10 = string | null;
-export type ShowResult10 = boolean;
-export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError10 = boolean;
-export type Fallback10 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind10 = "get";
-export type Get = string;
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
 export type Parser11 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -1038,6 +1217,8 @@ export type Fallback11 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1057,54 +1238,15 @@ export type Fallback11 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind11 = "api";
-export type Api = string;
-export type Url = string;
-export type Input =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
+export type Kind11 = "data";
 export type Def12 = string | null;
 export type ShowResult12 = boolean;
 export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -1124,6 +1266,8 @@ export type Fallback12 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1143,53 +1287,16 @@ export type Fallback12 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind12 = "code";
-export type Lan = "python";
-export type Code =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[];
+export type Kind12 = "get";
+export type Get = string;
 export type Def13 = string | null;
 export type ShowResult13 = boolean;
 export type Parser13 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -1209,6 +1316,8 @@ export type Fallback13 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1228,13 +1337,202 @@ export type Fallback13 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind13 = "model";
+export type Kind13 = "api";
+export type Api = string;
+export type Url = string;
+export type Input =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Def14 = string | null;
+export type ShowResult14 = boolean;
+export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError14 = boolean;
+export type Fallback14 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind14 = "code";
+export type Lan = "python";
+export type Code =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+export type Def15 = string | null;
+export type ShowResult15 = boolean;
+export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError15 = boolean;
+export type Fallback15 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind15 = "model";
 export type Model = string;
 export type Input1 =
   | string
@@ -1251,6 +1549,8 @@ export type Input1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1270,6 +1570,8 @@ export type Input1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -1328,186 +1630,6 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
-export type Def14 = string | null;
-export type ShowResult14 = boolean;
-export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError14 = boolean;
-export type Fallback14 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind14 = "model";
-export type Model1 = string;
-export type Input2 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Platform1 = "watsonx";
-export type Params = {
-  [k: string]: unknown;
-} | null;
-export type Guardrails = boolean | null;
-export type GuardrailsHapParams = {
-  [k: string]: unknown;
-} | null;
-export type Def15 = string | null;
-export type ShowResult15 = boolean;
-export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError15 = boolean;
-export type Fallback15 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Kind15 = "call";
-export type Call = string;
-export type Trace4 =
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
 export type Def16 = string | null;
 export type ShowResult16 = boolean;
 export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -1527,6 +1649,8 @@ export type Fallback16 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1546,13 +1670,211 @@ export type Fallback16 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[]
   | null;
-export type Kind16 = "function";
+export type Kind16 = "model";
+export type Model1 = string;
+export type Input2 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Platform1 = "watsonx";
+export type Params = {
+  [k: string]: unknown;
+} | null;
+export type Guardrails = boolean | null;
+export type GuardrailsHapParams = {
+  [k: string]: unknown;
+} | null;
+export type Def17 = string | null;
+export type ShowResult17 = boolean;
+export type Parser17 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError17 = boolean;
+export type Fallback17 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind17 = "call";
+export type Call = string;
+export type Trace4 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Def18 = string | null;
+export type ShowResult18 = boolean;
+export type Parser18 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError18 = boolean;
+export type Fallback18 =
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Kind18 = "function";
 export type Function = {
   [k: string]: unknown;
 } | null;
@@ -1571,6 +1893,8 @@ export type Return =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1590,6 +1914,8 @@ export type Return =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -1613,6 +1939,8 @@ export type PdlBlock =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1632,6 +1960,8 @@ export type PdlBlocks =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
@@ -1651,6 +1981,8 @@ export type PdlBlocks =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
@@ -1661,14 +1993,14 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def16;
-  show_result?: ShowResult16;
+  def?: Def18;
+  show_result?: ShowResult18;
   result?: unknown;
-  parser?: Parser16;
+  parser?: Parser18;
   location?: LocationType | null;
-  has_error?: HasError16;
-  fallback?: Fallback16;
-  kind?: Kind16;
+  has_error?: HasError18;
+  fallback?: Fallback18;
+  kind?: Kind18;
   function: Function;
   return: Return;
   scope?: Scope;
@@ -1692,6 +2024,8 @@ export interface Defs {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -1711,6 +2045,8 @@ export interface Defs {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -1721,14 +2057,14 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def15;
-  show_result?: ShowResult15;
+  def?: Def17;
+  show_result?: ShowResult17;
   result?: unknown;
-  parser?: Parser15;
+  parser?: Parser17;
   location?: LocationType | null;
-  has_error?: HasError15;
-  fallback?: Fallback15;
-  kind?: Kind15;
+  has_error?: HasError17;
+  fallback?: Fallback17;
+  kind?: Kind17;
   call: Call;
   args?: Args;
   trace?: Trace4;
@@ -1752,6 +2088,8 @@ export interface Defs1 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -1771,6 +2109,8 @@ export interface Defs1 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -1781,14 +2121,14 @@ export interface WatsonxModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def14;
-  show_result?: ShowResult14;
+  def?: Def16;
+  show_result?: ShowResult16;
   result?: unknown;
-  parser?: Parser14;
+  parser?: Parser16;
   location?: LocationType | null;
-  has_error?: HasError14;
-  fallback?: Fallback14;
-  kind?: Kind14;
+  has_error?: HasError16;
+  fallback?: Fallback16;
+  kind?: Kind16;
   model: Model1;
   input?: Input2;
   platform?: Platform1;
@@ -1815,6 +2155,8 @@ export interface Defs2 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -1834,6 +2176,8 @@ export interface Defs2 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -1844,14 +2188,14 @@ export interface BamModelBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def13;
-  show_result?: ShowResult13;
+  def?: Def15;
+  show_result?: ShowResult15;
   result?: unknown;
-  parser?: Parser13;
+  parser?: Parser15;
   location?: LocationType | null;
-  has_error?: HasError13;
-  fallback?: Fallback13;
-  kind?: Kind13;
+  has_error?: HasError15;
+  fallback?: Fallback15;
+  kind?: Kind15;
   model: Model;
   input?: Input1;
   platform?: Platform;
@@ -1880,6 +2224,8 @@ export interface Defs3 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -1899,6 +2245,8 @@ export interface Defs3 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -1909,14 +2257,14 @@ export interface CodeBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
-  def?: Def12;
-  show_result?: ShowResult12;
+  def?: Def14;
+  show_result?: ShowResult14;
   result?: unknown;
-  parser?: Parser12;
+  parser?: Parser14;
   location?: LocationType | null;
-  has_error?: HasError12;
-  fallback?: Fallback12;
-  kind?: Kind12;
+  has_error?: HasError14;
+  fallback?: Fallback14;
+  kind?: Kind14;
   lan: Lan;
   code: Code;
 }
@@ -1939,6 +2287,8 @@ export interface Defs4 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -1958,6 +2308,8 @@ export interface Defs4 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -1968,14 +2320,14 @@ export interface ApiBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
-  def?: Def11;
-  show_result?: ShowResult11;
+  def?: Def13;
+  show_result?: ShowResult13;
   result?: unknown;
-  parser?: Parser11;
+  parser?: Parser13;
   location?: LocationType | null;
-  has_error?: HasError11;
-  fallback?: Fallback11;
-  kind?: Kind11;
+  has_error?: HasError13;
+  fallback?: Fallback13;
+  kind?: Kind13;
   api: Api;
   url: Url;
   input: Input;
@@ -1999,6 +2351,8 @@ export interface Defs5 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2018,6 +2372,8 @@ export interface Defs5 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2028,14 +2384,14 @@ export interface GetBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
-  def?: Def10;
-  show_result?: ShowResult10;
+  def?: Def12;
+  show_result?: ShowResult12;
   result?: unknown;
-  parser?: Parser10;
+  parser?: Parser12;
   location?: LocationType | null;
-  has_error?: HasError10;
-  fallback?: Fallback10;
-  kind?: Kind10;
+  has_error?: HasError12;
+  fallback?: Fallback12;
+  kind?: Kind12;
   get: Get;
 }
 export interface Spec6 {
@@ -2057,6 +2413,8 @@ export interface Defs6 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2076,6 +2434,8 @@ export interface Defs6 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2086,14 +2446,14 @@ export interface DataBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
-  def?: Def9;
-  show_result?: ShowResult9;
+  def?: Def11;
+  show_result?: ShowResult11;
   result?: unknown;
-  parser?: Parser9;
+  parser?: Parser11;
   location?: LocationType | null;
-  has_error?: HasError9;
-  fallback?: Fallback9;
-  kind?: Kind9;
+  has_error?: HasError11;
+  fallback?: Fallback11;
+  kind?: Kind11;
   data: Data;
 }
 export interface Spec7 {
@@ -2115,6 +2475,8 @@ export interface Defs7 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2134,6 +2496,8 @@ export interface Defs7 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2144,14 +2508,14 @@ export interface IfBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
-  def?: Def8;
-  show_result?: ShowResult8;
+  def?: Def10;
+  show_result?: ShowResult10;
   result?: unknown;
-  parser?: Parser8;
+  parser?: Parser10;
   location?: LocationType | null;
-  has_error?: HasError8;
-  fallback?: Fallback8;
-  kind?: Kind8;
+  has_error?: HasError10;
+  fallback?: Fallback10;
+  kind?: Kind10;
   if: If;
   then: Then;
   else?: Else;
@@ -2176,6 +2540,8 @@ export interface Defs8 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2195,6 +2561,8 @@ export interface Defs8 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2205,14 +2573,14 @@ export interface RepeatBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
-  def?: Def7;
-  show_result?: ShowResult7;
+  def?: Def9;
+  show_result?: ShowResult9;
   result?: unknown;
-  parser?: Parser7;
+  parser?: Parser9;
   location?: LocationType | null;
-  has_error?: HasError7;
-  fallback?: Fallback7;
-  kind?: Kind7;
+  has_error?: HasError9;
+  fallback?: Fallback9;
+  kind?: Kind9;
   repeat: Repeat2;
   num_iterations: NumIterations;
   trace?: Trace3;
@@ -2236,6 +2604,8 @@ export interface Defs9 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2255,6 +2625,8 @@ export interface Defs9 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2265,14 +2637,14 @@ export interface RepeatUntilBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
-  def?: Def6;
-  show_result?: ShowResult6;
+  def?: Def8;
+  show_result?: ShowResult8;
   result?: unknown;
-  parser?: Parser6;
+  parser?: Parser8;
   location?: LocationType | null;
-  has_error?: HasError6;
-  fallback?: Fallback6;
-  kind?: Kind6;
+  has_error?: HasError8;
+  fallback?: Fallback8;
+  kind?: Kind8;
   repeat: Repeat1;
   until: Until;
   trace?: Trace2;
@@ -2296,6 +2668,8 @@ export interface Defs10 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2315,6 +2689,8 @@ export interface Defs10 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2325,14 +2701,14 @@ export interface ForBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
-  def?: Def5;
-  show_result?: ShowResult5;
+  def?: Def7;
+  show_result?: ShowResult7;
   result?: unknown;
-  parser?: Parser5;
+  parser?: Parser7;
   location?: LocationType | null;
-  has_error?: HasError5;
-  fallback?: Fallback5;
-  kind?: Kind5;
+  has_error?: HasError7;
+  fallback?: Fallback7;
+  kind?: Kind7;
   for: For;
   repeat: Repeat;
   trace?: Trace1;
@@ -2356,6 +2732,8 @@ export interface Defs11 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2375,6 +2753,8 @@ export interface Defs11 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2385,14 +2765,14 @@ export interface DocumentBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
-  def?: Def4;
-  show_result?: ShowResult4;
+  def?: Def6;
+  show_result?: ShowResult6;
   result?: unknown;
-  parser?: Parser4;
+  parser?: Parser6;
   location?: LocationType | null;
-  has_error?: HasError4;
-  fallback?: Fallback4;
-  kind?: Kind4;
+  has_error?: HasError6;
+  fallback?: Fallback6;
+  kind?: Kind6;
   document: Document;
 }
 export interface Spec12 {
@@ -2414,6 +2794,8 @@ export interface Defs12 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2433,27 +2815,27 @@ export interface Defs12 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface ReadBlock {
+export interface SequenceBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
-  def?: Def3;
-  show_result?: ShowResult3;
+  def?: Def5;
+  show_result?: ShowResult5;
   result?: unknown;
-  parser?: Parser3;
+  parser?: Parser5;
   location?: LocationType | null;
-  has_error?: HasError3;
-  fallback?: Fallback3;
-  kind?: Kind3;
-  read: Read;
-  message?: Message;
-  multiline?: Multiline;
+  has_error?: HasError5;
+  fallback?: Fallback5;
+  kind?: Kind5;
+  sequence: Sequence;
 }
 export interface Spec13 {
   [k: string]: unknown;
@@ -2474,6 +2856,8 @@ export interface Defs13 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2493,26 +2877,27 @@ export interface Defs13 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface IncludeBlock {
+export interface ArrayBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
-  def?: Def2;
-  show_result?: ShowResult2;
+  def?: Def4;
+  show_result?: ShowResult4;
   result?: unknown;
-  parser?: Parser2;
+  parser?: Parser4;
   location?: LocationType | null;
-  has_error?: HasError2;
-  fallback?: Fallback2;
-  kind?: Kind2;
-  include: Include;
-  trace?: Trace;
+  has_error?: HasError4;
+  fallback?: Fallback4;
+  kind?: Kind4;
+  array: Array;
 }
 export interface Spec14 {
   [k: string]: unknown;
@@ -2533,6 +2918,8 @@ export interface Defs14 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2552,26 +2939,29 @@ export interface Defs14 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface ErrorBlock {
+export interface ReadBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
-  def?: Def1;
-  show_result?: ShowResult1;
+  def?: Def3;
+  show_result?: ShowResult3;
   result?: unknown;
-  parser?: Parser1;
+  parser?: Parser3;
   location?: LocationType | null;
-  has_error?: HasError1;
-  fallback?: Fallback1;
-  kind?: Kind1;
-  msg: Msg;
-  program: Program1;
+  has_error?: HasError3;
+  fallback?: Fallback3;
+  kind?: Kind3;
+  read: Read;
+  message?: Message;
+  multiline?: Multiline;
 }
 export interface Spec15 {
   [k: string]: unknown;
@@ -2592,6 +2982,8 @@ export interface Defs15 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2611,24 +3003,28 @@ export interface Defs15 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
       )[];
 }
-export interface EmptyBlock {
+export interface IncludeBlock {
   description?: Description16;
   spec?: Spec16;
   defs?: Defs16;
-  def?: Def;
-  show_result?: ShowResult;
+  def?: Def2;
+  show_result?: ShowResult2;
   result?: unknown;
-  parser?: Parser;
+  parser?: Parser2;
   location?: LocationType | null;
-  has_error?: HasError;
-  fallback?: Fallback;
-  kind?: Kind;
+  has_error?: HasError2;
+  fallback?: Fallback2;
+  kind?: Kind2;
+  include: Include;
+  trace?: Trace;
 }
 export interface Spec16 {
   [k: string]: unknown;
@@ -2649,6 +3045,8 @@ export interface Defs16 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
@@ -2668,6 +3066,132 @@ export interface Defs16 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface ErrorBlock {
+  description?: Description17;
+  spec?: Spec17;
+  defs?: Defs17;
+  def?: Def1;
+  show_result?: ShowResult1;
+  result?: unknown;
+  parser?: Parser1;
+  location?: LocationType | null;
+  has_error?: HasError1;
+  fallback?: Fallback1;
+  kind?: Kind1;
+  msg: Msg;
+  program: Program1;
+}
+export interface Spec17 {
+  [k: string]: unknown;
+}
+export interface Defs17 {
+  [k: string]:
+    | string
+    | FunctionBlock
+    | CallBlock
+    | WatsonxModelBlock
+    | BamModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | string
+        | FunctionBlock
+        | CallBlock
+        | WatsonxModelBlock
+        | BamModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface EmptyBlock {
+  description?: Description18;
+  spec?: Spec18;
+  defs?: Defs18;
+  def?: Def;
+  show_result?: ShowResult;
+  result?: unknown;
+  parser?: Parser;
+  location?: LocationType | null;
+  has_error?: HasError;
+  fallback?: Fallback;
+  kind?: Kind;
+}
+export interface Spec18 {
+  [k: string]: unknown;
+}
+export interface Defs18 {
+  [k: string]:
+    | string
+    | FunctionBlock
+    | CallBlock
+    | WatsonxModelBlock
+    | BamModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | string
+        | FunctionBlock
+        | CallBlock
+        | WatsonxModelBlock
+        | BamModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
@@ -2675,13 +3199,13 @@ export interface Defs16 {
       )[];
 }
 export interface PdlParser {
-  description?: Description17;
-  spec?: Spec17;
+  description?: Description19;
+  spec?: Spec19;
   pdl: Pdl;
 }
 export interface RegexParser {
-  description?: Description18;
-  spec?: Spec18;
+  description?: Description20;
+  spec?: Spec20;
   regex: Regex;
   mode?: Mode;
 }

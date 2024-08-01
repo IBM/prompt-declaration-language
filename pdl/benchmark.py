@@ -54,7 +54,7 @@ class BaseProcessor:
             state = InterpreterState(yield_output=False)
             scope = empty_scope
             scope["question"] = question
-            _, document, _, _ = process_prog(state, scope, data)
+            document, _, _, _ = process_prog(state, scope, data)
             answer = self.extract_answer(document)
         except Exception as e:
             exception = e

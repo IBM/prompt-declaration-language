@@ -148,6 +148,16 @@ export function show_block(data: PdlBlock) {
       const doc_child = show_blocks(data.document);
       body.appendChild(doc_child);
     })
+    .with({kind: 'sequence'}, data => {
+      body.classList.add('pdl_sequence');
+      const doc_child = show_blocks(data.sequence);
+      body.appendChild(doc_child);
+    })
+    .with({kind: 'array'}, data => {
+      body.classList.add('pdl_array');
+      const doc_child = show_blocks(data.array);
+      body.appendChild(doc_child);
+    })
     .with({kind: 'repeat'}, data => {
       body.classList.add('pdl_repeat');
       const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);

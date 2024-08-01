@@ -128,4 +128,5 @@ document:
   - if: "{{ query != 'quit'}}"
     then: 
     - model: meta-llama/llama-3-70b-instruct
+      platform: bam
   until: "{{ query == 'quit' }}"

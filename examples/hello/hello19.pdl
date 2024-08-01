@@ -3,7 +3,6 @@ document:
 - def: stutter
   function: 
   return:
-    - get: boolean
     - "{{ something }}"
 - "Hello World!\n"
 - call: stutter
