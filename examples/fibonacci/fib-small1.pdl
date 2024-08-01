@@ -2,11 +2,12 @@ description: Fibonacci
 document:
 - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - def: CODE
-  model: ibm/granite-20b-code-instruct
+  model: ibm/granite-20b-code-instruct-v2
+  platform: bam
 - "What is the name of the function above?\n"
 - def: FUNCTION
   model: ibm/granite-20b-code-instruct
-  params:
+  parameters:
     stop_sequences: [" "]
   input:
     document:

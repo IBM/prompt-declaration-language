@@ -15,6 +15,7 @@ document:
   return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/granite-20b-multilingual
+      platform: bam
 - call: translate
   spec: str
   args:

@@ -6,7 +6,7 @@ document:
   - "\nQuestion: "
   - def: QUESTION
     model: ibm/granite-20b-code-instruct
-    params:
+    parameters:
       stop_sequences:
       - Answer
       include_stop_sequence: false
@@ -14,7 +14,7 @@ document:
   - repeat:
     - def: REASON_OR_CALC
       model: ibm/granite-20b-code-instruct
-      params:
+      parameters:
         stop_sequences:
         - '<<'
         include_stop_sequence: true

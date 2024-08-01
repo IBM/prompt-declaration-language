@@ -51,7 +51,7 @@ model_chain_data = {
             "def": "RESULT",
             "document": [
                 {
-                    "model": "google/flan-t5-xl",
+                    "model": "ibm/granite-20b-code-instruct-v2",
                     "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
@@ -77,7 +77,7 @@ def test_model_chain():
             "Who is",
             " world",
             "?\n",
-            "hello world",
+            "I am the one who knows.",
             "\n",
         ]
     )

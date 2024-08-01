@@ -3,7 +3,7 @@ document:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
 - def: EXPERT
   model: ibm/granite-20b-code-instruct
-  params:
+  parameters:
     stop_sequences:
     - .
     include_stop_sequence: false
@@ -11,3 +11,4 @@ document:
 - get: EXPERT
 - ' addressed this question: '
 - model: ibm/granite-20b-code-instruct
+  platform: bam

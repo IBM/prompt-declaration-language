@@ -1,9 +1,0 @@
-description: I ate 42 apples! How many was that?
-document:
-- "I ate "
-- lan: python
-  code:
-  - |
-    result = 5 * 7 + 6
-- " apples! How many was that?"
-
