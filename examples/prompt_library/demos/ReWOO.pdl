@@ -1,9 +1,18 @@
 description: Demo of ReAct template
+defs:
+  available_tools:
+    data: ["Search"]
 document:
   - include: examples/prompt_library/ReWOO.pdl
+  - def: filtered_tools
+    call: filter_tools_by_name
+    show_result: false
+    args:
+      tools: "{{ default_tools }}"
+      tool_names: "{{ available_tools }}"
   - call: rewoo
     args:
       task: "When did the Battle of White Plains take place?"
       model: ibm/granite-34b-code-instruct
-      tools: "{{ default_tools }}"
+      tools: "{{ filtered_tools }}"
       show_plans: true

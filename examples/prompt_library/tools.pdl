@@ -1,0 +1,38 @@
+description: Toolbox of PDL functions for agents
+defs:
+
+  # Note: Although PDL functions can be properly typed,
+  # the input to a function via the LLM is fundamentally a string.
+  # Therefore, parsing the input is the responsibility of the
+  # function, not the caller. In the future, one could
+  # imagine the use of constrained decoding to force
+  # LLM to produce a type-compliant JSON as input.
+  Search:
+    function:
+      subject: str
+    return:
+      - lan: python
+        code: |
+          import wikipedia
+          try:
+            result = wikipedia.summary(subject)
+          except wikipedia.WikipediaException as e:
+            result = str(error)
+
+  default_model: "ibm/granite-34-code-instruct"
+  LLM:
+    function:
+      subject: str
+    return:
+      model: "{{ default_model }}"
+      params:
+        decoding_method: greedy
+
+  Calculator:
+    function:
+      subject: str
+    return:
+      lan: python
+      code: |
+        import math
+        result = {{ subject }}

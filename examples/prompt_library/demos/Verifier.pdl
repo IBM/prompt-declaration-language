@@ -1,0 +1,41 @@
+description: Demo of ReAct template
+defs:
+  available_tools:
+    data: ["Search"]
+document:
+  - include: examples/prompt_library/ReAct.pdl
+  - def: filtered_tools
+    call: filter_tools_by_name
+    show_result: false
+    args:
+      tools: "{{ default_tools }}"
+      tool_names: "{{ available_tools }}"
+  - def: QUESTION
+    show_result: false
+    read: 
+    message: "Please enter a question: "
+  - def: GRANITE_RESULT
+    call: react
+    show_result: true
+    args:
+      context: ""
+      question: "{{ QUESTION }}"
+      model: "ibm/granite-7b-lab"
+      tools: "{{ filtered_tools }}"
+      trajectories: []
+  - "\n\n\u001b[34mVerifying answer...\n\n\u001b[37m"
+  - def: LLAMA_RESULT
+    call: react
+    show_result: true
+    args:
+      context: ""
+      question: |-
+        Is this the right answer to this question?
+        "{{ QUESTION }}"
+        Proposed answer: {{ GRANITE_RESULT.answer }}
+
+        Please answer as True or False.
+      model: "ibm-meta/llama-2-70b-chat-q"
+      tools: "{{ filtered_tools }}"
+      trajectories: []
+  - "\n\nThe answer '{{ GRANITE_RESULT.answer }}' has been verified as '{{LLAMA_RESULT.answer}}'."
