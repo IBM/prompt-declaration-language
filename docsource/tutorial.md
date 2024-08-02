@@ -8,7 +8,7 @@ All the examples in this tutorial can be found in `examples/`.
 
 ##  Simple document
 
-The simplest PDL program is one that generates a small document ([file](./examples/tutorial/simple_program.yaml)):
+The simplest PDL program is one that generates a small document ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/simple_program.yaml)):
 
 ```yaml
 description: Hello world!
@@ -44,7 +44,7 @@ document:
     include_stop_sequence: true
 ```
 
-In this program ([file](./examples/tutorial/calling_llm.yaml)), the `document` starts with the word `Hello,`, and we call a model (`ibm/granite-20b-code-instruct-v2`) with this as input prompt. 
+In this program ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_llm.yaml)), the `document` starts with the word `Hello,`, and we call a model (`ibm/granite-20b-code-instruct-v2`) with this as input prompt. 
 The model is passed some parameters including the `decoding_method` and `stop_sequences`, which are to be included in the output. Since the `input` field is not specified in the model call, the entire document up that point is passed to the model as input context. 
 
 In general, a model call accepts the same parameters as BAM's [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface, with the exception that we provide some default values when the following parameters are missing:
@@ -90,7 +90,7 @@ Hello, Le monde
 
 Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
 
-Consider the following example ([file](./examples/tutorial/variable_def_use.yaml)):
+Consider the following example ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/variable_def_use.yaml)):
 
 ```yaml
 description: Hello world with variable def and use
@@ -116,7 +116,7 @@ GEN is equal to:  world!
 
 ##  Model Chaining
 
-In PDL, we can declaratively chain models together as in the following example ([file](./examples/tutorial/model_chaining.yaml)):
+In PDL, we can declaratively chain models together as in the following example ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/model_chaining.yaml)):
 
 ```yaml
 description: Hello world with model chainings
@@ -146,7 +146,7 @@ Bonjour, monde!
 ## Function Definition
 
 PDL also supports function definitions to make it easier to reuse code.
-Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows ([file](./examples/tutorial/function_definition.yaml)):
+Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/function_definition.yaml)):
 
 ```yaml
 description: Hello world with functions
@@ -191,7 +191,7 @@ A function only contributes to the output document when it is called. So the def
 
 ##  Grouping Variable Definitions in Defs
 
-In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows ([file](./examples/tutorial/grouping_definitions.yaml)):
+In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/grouping_definitions.yaml)):
 
 ```yaml
 description: Hello world with functions
@@ -232,7 +232,7 @@ Notice that moving the `GEN` variable in `defs` would change the semantics of th
 
 By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting `show_result` to `false` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document. The value of the variable specified in `def` is still set to the result of the block.
 
-Consider the same example as above, but with `show_result` set to `false` ([file](./examples/tutorial/muting_block_output.yaml)):
+Consider the same example as above, but with `show_result` set to `false` ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/muting_block_output.yaml)):
 
 ```yaml
 description: Hello world with functions
@@ -320,7 +320,7 @@ But not this one: ` world`!
 
 ##  Input from File or Stdin
 
-PDL can accept textual input from a file or stdin. In the following example ([file](./examples/tutorial/input_file.yaml)), the contents of this [file](./examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
+PDL can accept textual input from a file or stdin. In the following example ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file.yaml)), the contents of this [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/input/data.txt) are read by PDL and incorporated in the document. The result is also assigned to a variable `HELLO`.
 
 
 ```yaml
@@ -330,7 +330,7 @@ document:
   def: HELLO
 ```
 
-In the next example, prompts are obtained from stdin ([file](./examples/tutorial/input_stdin.yaml)). This is indicated by assigning the value `null` to the `read` field.
+In the next example, prompts are obtained from stdin ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin.yaml)). This is indicated by assigning the value `null` to the `read` field.
 
 ```yaml
 description: PDL code with input block
@@ -343,7 +343,7 @@ document:
 
 Notice that when executing programs containing input blocks, the stdin input is obtained first and then the entire document is printed when produced. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see `show_result` feature above). If the `message` field is omitted then one is provided for you.
 
-The following example shows a multiline stdin input ([file](./examples/tutorial/input_stdin_multiline.yaml)). When executing this code and to exit from the multiline input simply press control D (macos).
+The following example shows a multiline stdin input ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin_multiline.yaml)). When executing this code and to exit from the multiline input simply press control D (macos).
 ```yaml
 description: PDL code with input block
 document:
@@ -354,7 +354,7 @@ document:
 
 Finally, the following example shows reading content in JSON format. In this case the block's `assign` field must be defined since the block adds the JSON content in that format to the scope, assigning this content to the named variable.
 
-Consider the JSON content in this [file](../tests/data/input.json):
+Consider the JSON content in this [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input.json):
 ```json
 {
     "name": "Bob",
@@ -368,12 +368,12 @@ Consider the JSON content in this [file](../tests/data/input.json):
 }
 ```
 
-The following PDL program reads this content and assigns it to variable `PERSON` in JSON format ([file](./examples/tutorial/input_file_json.yaml)). The reference `PERSON.address.street` then refers to that field inside the JSON object.
+The following PDL program reads this content and assigns it to variable `PERSON` in JSON format ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file_json.yaml)). The reference `PERSON.address.street` then refers to that field inside the JSON object.
 
 ```yaml
 description: Input block example with json input
 document:
-- read: tests/data/input.json
+- read: examples/tutorial/input.json
   parser: json
   def: PERSON
   show_result: false
@@ -390,7 +390,7 @@ Bob lives at the following address:
 
 ##  Calling code
 
-The following script shows how to execute python code ([file](./examples/tutorial/calling_code.yaml)). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. Variables defined in PDL are copied into the global scope of the Python code, as such, mutating variables in Python has no effect on the variables in the document. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
+The following script shows how to execute python code ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_code.yaml)). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. Variables defined in PDL are copied into the global scope of the Python code, as such, mutating variables in Python has no effect on the variables in the document. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block.
 
 ```yaml
 description: Hello world showing call to python code
@@ -411,7 +411,7 @@ Hello, r!
 
 ## Calling APIs
 
-PDL programs can contain calls to REST APIs. Consider a simple weather app ([file](./examples/tutorial/calling_apis.yaml)):
+PDL programs can contain calls to REST APIs. Consider a simple weather app ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_apis.yaml)):
 
 ```yaml
 description: Using a weather API and LLM to make a small weather app
@@ -468,7 +468,7 @@ Answer: The weather in Anchorage, Alaska, United States of America is currently 
 
 ##  Data Block
 
-PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](../README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse. ([file](./examples/tutorial/data_block.yaml))
+PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](https://github.ibm.com/ml4code/pdl/blob/main/README.md#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse. ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data_block.yaml))
 
 ```yaml
 description: Code explanation example
@@ -520,7 +520,7 @@ document:
 ## Include Block
 
 PDL allows programs to be defined over multiple files. The `include` block allows one file to incorporate another, as shown in the
-following [example](./examples/consultant/biz_rules_extraction.yaml):
+following [example](https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/biz_rules_extraction.yaml):
 
 ```
 description: Business Rules extraction from Jsp pages
@@ -546,7 +546,7 @@ document:
       notes: "{{ PROMPTS2_NOTES }}"
 ```
 
-which includes the following [file](./examples/consultant/function.yaml):
+which includes the following [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/function.yaml):
 
 ```
 description: Function definition
@@ -573,9 +573,9 @@ The `include` block means that the PDL code at that file is executed and its out
 
 ##  Conditionals and Loops
 
-PDL supports conditionals and loops as illustrated in the followin example ([file](./examples/tutorial/conditionals_loops.yaml)).
+PDL supports conditionals and loops as illustrated in the followin example ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/conditionals_loops.yaml)).
 
-The task at hand is to generate math problems that look like the [following](./examples/arith/example1.txt):
+The task at hand is to generate math problems that look like the [following](https://github.ibm.com/ml4code/pdl/blob/main/examples/arith/example1.txt):
 
 ```
 Question: Noah charges $60 for a large painting and $30 for a small painting.
@@ -644,12 +644,12 @@ In the body of the `repeat` block, the program first asks granite to generate a 
 
 The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block. 
 
-When we execute this program, we obtain 3 math problems like the ones in the [examples](./examples/arith/). Try it! 
+When we execute this program, we obtain 3 math problems like the ones in the [examples](https://github.ibm.com/ml4code/pdl/blob/main/examples/arith/). Try it! 
 
 ## For Loops
 
 PDL also offers `for` loops over lists.
-The following [example](./examples/hello/hello17.yaml) simply prints each value in the list followed by a newline:
+The following [example](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/hello.pdl) simply prints each value in the list followed by a newline:
 
 ```
 description: for loop
@@ -691,8 +691,8 @@ Ernest's number is 4
 
 ## Type Checking
 
-Consider the following PDL program ([file](./examples/tutorial/gen-data.pdl)). It first reads the data
-found [here](./examples/tutorial/data.yaml) to form few-shot examples. These demonstrations show how to create
+Consider the following PDL program ([file](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/gen-data.pdl)). It first reads the data
+found [here](https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data.yaml) to form few-shot examples. These demonstrations show how to create
 some JSON data.
 
 ```
@@ -767,7 +767,7 @@ the examples below:
 
 ##  Debugging PDL Programs
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.ibm.com/ml4code/pdl/blob/main/.vscode/settings.json) and [schema](https://github.ibm.com/ml4code/pdl/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 

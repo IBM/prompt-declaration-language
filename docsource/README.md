@@ -20,7 +20,7 @@ PDL provides the following features:
 
 The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
 
-See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](./docs/tutorial.md).
+See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/).
 
 
 ## Interpreter Installation
@@ -55,7 +55,7 @@ python3 -m pdl.pdl <path/to/example.yaml>
 
 The folder `examples` contains some examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.ibm.com/ml4code/pdl/blob/main/.vscode/settings.json) and [schema](https://github.ibm.com/ml4code/pdl/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
@@ -127,7 +127,7 @@ The only difference is that the parameters of the model now follows the [BAM cal
 Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.
 
-For example, given the data in this JSON [file](examples/code/data.json):
+For example, given the data in this JSON [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/data.json):
 ```json
 {
     "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}",
@@ -163,7 +163,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-In PDL, this would be expressed as follows (see [file](examples/code/code.yaml)):
+In PDL, this would be expressed as follows (see [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.yaml)):
 
 ```yaml
 description: Code explanation example
@@ -217,7 +217,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 
 ```
 
-Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](examples/code/ground_truth.txt). See [file](examples/code/code-eval.yaml):
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt). See [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.yaml):
 
 ```yaml
 description: Code explanation example
@@ -370,14 +370,13 @@ that we provide some default values when the following parameters are missing:
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
-- The example `examples/react/React.json` is work-in-progress.
 
 For a complete list of issues see [here](https://github.ibm.com/ml4code/pdl/issues).
 
 
 ## Contributing to the Project
 
-See [Contributing to PDL](contrib.md)
+See [Contributing to PDL](https://github.ibm.com/ml4code/pdl/blob/main/docsource/contrib.md)
 
 
 
