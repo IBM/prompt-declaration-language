@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -673,14 +673,14 @@
 <p>The following sections give a step-by-step overview of PDL language features.
 All the examples in this tutorial can be found in <code>examples/</code>.</p>
 <h2 id="simple-document">Simple document</h2>
-<p>The simplest PDL program is one that generates a small document (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/simple_program.yaml">file</a>):</p>
+<p>The simplest PDL program is one that generates a small document (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/simple_program.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world!</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Hello, world!</span>
 </code></pre></div>
 <p>This program has a <code>description</code> field, which contains a title. It also has a <code>document</code> field, which can be either a string, a <em>block</em>, or a list of strings and blocks. A block is a recipe for how to obtain data (e.g., model call, code call, etc...). In this case, there are no calls to an LLM or other tools, and <code>document</code> consists of a simple string.</p>
 <p>To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:</p>
-<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl ./examples/hello/hello.yaml
+<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl ./examples/hello/hello.pdl
 </code></pre></div>
 <p>This results in the following output:</p>
 <div class="highlight"><pre><span></span><code>Hello, world!
@@ -696,7 +696,7 @@ All the examples in this tutorial can be found in <code>examples/</code>.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;!&#39;</span>
 <span class="w">    </span><span class="nt">include_stop_sequence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-<p>In this program (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_llm.yaml">file</a>), the <code>document</code> starts with the word <code>Hello,</code>, and we call a model (<code>ibm/granite-20b-code-instruct-v2</code>) with this as input prompt. 
+<p>In this program (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_llm.pdl">file</a>), the <code>document</code> starts with the word <code>Hello,</code>, and we call a model (<code>ibm/granite-20b-code-instruct-v2</code>) with this as input prompt. 
 The model is passed some parameters including the <code>decoding_method</code> and <code>stop_sequences</code>, which are to be included in the output. Since the <code>input</code> field is not specified in the model call, the entire document up that point is passed to the model as input context. </p>
 <p>In general, a model call accepts the same parameters as BAM's <a href="https://bam.res.ibm.com/docs/api-reference#text-generation">text generation</a> interface, with the exception that we provide some default values when the following parameters are missing:
   - <code>decoding_method</code>: <code>greedy</code>
@@ -727,7 +727,7 @@ The model is passed some parameters including the <code>decoding_method</code> a
 </code></pre></div>
 <h2 id="variable-definition-and-use">Variable Definition and Use</h2>
 <p>Any block can have a variable definition using a <code>def: &lt;var&gt;</code> field. This means that the output of that block is assigned to the variable <code>&lt;var&gt;</code>, which may be reused at a later point in the document. </p>
-<p>Consider the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/variable_def_use.yaml">file</a>):</p>
+<p>Consider the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/variable_def_use.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with variable def and use</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello,</span>
@@ -746,7 +746,7 @@ The model is passed some parameters including the <code>decoding_method</code> a
 GEN is equal to:  world!
 </code></pre></div></p>
 <h2 id="model-chaining">Model Chaining</h2>
-<p>In PDL, we can declaratively chain models together as in the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/model_chaining.yaml">file</a>):</p>
+<p>In PDL, we can declaratively chain models together as in the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/model_chaining.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with model chainings</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello,</span>
@@ -766,7 +766,7 @@ Bonjour, monde!
 </code></pre></div>
 <h2 id="function-definition">Function Definition</h2>
 <p>PDL also supports function definitions to make it easier to reuse code.
-Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/function_definition.yaml">file</a>):</p>
+Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/function_definition.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with functions</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello,</span>
@@ -802,7 +802,7 @@ Adiós, mundo!
 </code></pre></div>
 <p>A function only contributes to the output document when it is called. So the definition itself results in <code>""</code>. When we call a function, we implicitly pass the current document context, and this is used as input to model calls inside the function body. In the above example, since the <code>input</code> field is omitted, the entire document produced at that point is passed as input to the falcon model. </p>
 <h2 id="grouping-variable-definitions-in-defs">Grouping Variable Definitions in Defs</h2>
-<p>In PDL, the above program can be written more neatly by grouping certain variable definitions into a <code>defs</code> section, as follows (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/grouping_definitions.yaml">file</a>):</p>
+<p>In PDL, the above program can be written more neatly by grouping certain variable definitions into a <code>defs</code> section, as follows (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/grouping_definitions.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with functions</span>
 <span class="nt">defs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">translate</span><span class="p">:</span>
@@ -833,7 +833,7 @@ Adiós, mundo!
 <p>Notice that moving the <code>GEN</code> variable in <code>defs</code> would change the semantics of the program. This is because that model call is dependent on its context. Since it does not have an <code>input</code> field, it depends on what was produced in the document up to that point. Moving it to <code>defs</code> means that it would be executed immediately with an empty context. </p>
 <h2 id="muting-block-output-with-show_result">Muting Block Output with Show_result</h2>
 <p>By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting <code>show_result</code> to <code>false</code> for any block. This feature allows the computation of intermediate values that are not necessarily output in the document. The value of the variable specified in <code>def</code> is still set to the result of the block.</p>
-<p>Consider the same example as above, but with <code>show_result</code> set to <code>false</code> (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/muting_block_output.yaml">file</a>):</p>
+<p>Consider the same example as above, but with <code>show_result</code> set to <code>false</code> (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/muting_block_output.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world with functions</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello,</span>
@@ -910,13 +910,13 @@ document:
 But not this one: ` world`!
 </code></pre></div></p>
 <h2 id="input-from-file-or-stdin">Input from File or Stdin</h2>
-<p>PDL can accept textual input from a file or stdin. In the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file.yaml">file</a>), the contents of this <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/input/data.txt">file</a> are read by PDL and incorporated in the document. The result is also assigned to a variable <code>HELLO</code>.</p>
+<p>PDL can accept textual input from a file or stdin. In the following example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file.pdl">file</a>), the contents of this <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/input/data.txt">file</a> are read by PDL and incorporated in the document. The result is also assigned to a variable <code>HELLO</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PDL code with input block</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/input/data.txt</span>
 <span class="w">  </span><span class="nt">def</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HELLO</span>
 </code></pre></div>
-<p>In the next example, prompts are obtained from stdin (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin.yaml">file</a>). This is indicated by assigning the value <code>null</code> to the <code>read</code> field.</p>
+<p>In the next example, prompts are obtained from stdin (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin.pdl">file</a>). This is indicated by assigning the value <code>null</code> to the <code>read</code> field.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PDL code with input block</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">following</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">prompt</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">stdin.\n&quot;</span>
@@ -925,7 +925,7 @@ But not this one: ` world`!
 <span class="w">  </span><span class="nt">def</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STDIN</span>
 </code></pre></div>
 <p>Notice that when executing programs containing input blocks, the stdin input is obtained first and then the entire document is printed when produced. The document is not printed as it gets produced since there may be portions that are intermediate results and must be hidden (see <code>show_result</code> feature above). If the <code>message</code> field is omitted then one is provided for you.</p>
-<p>The following example shows a multiline stdin input (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin_multiline.yaml">file</a>). When executing this code and to exit from the multiline input simply press control D (macos).
+<p>The following example shows a multiline stdin input (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_stdin_multiline.pdl">file</a>). When executing this code and to exit from the multiline input simply press control D (macos).
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PDL code with input block</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;A</span><span class="nv"> </span><span class="s">multiline</span><span class="nv"> </span><span class="s">stdin</span><span class="nv"> </span><span class="s">input.\n&quot;</span>
@@ -945,7 +945,7 @@ But not this one: ` world`!
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<p>The following PDL program reads this content and assigns it to variable <code>PERSON</code> in JSON format (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file_json.yaml">file</a>). The reference <code>PERSON.address.street</code> then refers to that field inside the JSON object.</p>
+<p>The following PDL program reads this content and assigns it to variable <code>PERSON</code> in JSON format (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/input_file_json.pdl">file</a>). The reference <code>PERSON.address.street</code> then refers to that field inside the JSON object.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Input block example with json input</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/tutorial/input.json</span>
@@ -960,7 +960,7 @@ But not this one: ` world`!
 87 Smith Road in the town of Armonk, NY
 </code></pre></div></p>
 <h2 id="calling-code">Calling code</h2>
-<p>The following script shows how to execute python code (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_code.yaml">file</a>). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. Variables defined in PDL are copied into the global scope of the Python code, as such, mutating variables in Python has no effect on the variables in the document. The result of the code must be assigned to the variable <code>result</code> internally to be propagated to the result of the block.</p>
+<p>The following script shows how to execute python code (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_code.pdl">file</a>). Currently, the python code is executed locally. In the future, we plan to use a serverless cloud engine to execute snippets of code. So in principle, PDL is agnostic of any specific programming language. Variables defined in PDL are copied into the global scope of the Python code, as such, mutating variables in Python has no effect on the variables in the document. The result of the code must be assigned to the variable <code>result</code> internally to be propagated to the result of the block.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello world showing call to python code</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">&quot;</span>
@@ -975,7 +975,7 @@ But not this one: ` world`!
 <div class="highlight"><pre><span></span><code>Hello, r!
 </code></pre></div></p>
 <h2 id="calling-apis">Calling APIs</h2>
-<p>PDL programs can contain calls to REST APIs. Consider a simple weather app (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_apis.yaml">file</a>):</p>
+<p>PDL programs can contain calls to REST APIs. Consider a simple weather app (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/calling_apis.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Using a weather API and LLM to make a small weather app</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span>
@@ -1025,7 +1025,7 @@ But not this one: ` world`!
 Answer: The weather in Anchorage, Alaska, United States of America is currently overcast with a temperature of -2.8°C (-5.0°F). The wind speed is 4.3 mph (6.8 kph) and the humidity is 66%.
 </code></pre></div></p>
 <h2 id="data-block">Data Block</h2>
-<p>PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the <a href="https://github.ibm.com/ml4code/pdl/blob/main/README.md#overview">Overview</a> section). The <code>data</code> block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse. (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data_block.yaml">file</a>)</p>
+<p>PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the <a href="https://github.ibm.com/ml4code/pdl/blob/main/README.md#overview">Overview</a> section). The <code>data</code> block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be bootstrapped with a bash or Python script to generate data en masse. (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data_block.pdl">file</a>)</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Code explanation example</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/code/data.json</span>
@@ -1073,7 +1073,7 @@ Answer: The weather in Anchorage, Alaska, United States of America is currently 
 </code></pre></div>
 <h2 id="include-block">Include Block</h2>
 <p>PDL allows programs to be defined over multiple files. The <code>include</code> block allows one file to incorporate another, as shown in the
-following <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/biz_rules_extraction.yaml">example</a>:</p>
+following <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/biz_rules_extraction.pdl">example</a>:</p>
 <div class="highlight"><pre><span></span><code>description: Business Rules extraction from Jsp pages
 defs:
   PROMPTS2: 
@@ -1089,14 +1089,14 @@ defs:
     * Strictly include all relevant parameters related to each of the above categories
 
 document:
-  - include: examples/consultant/function.yaml
+  - include: examples/consultant/function.pdl
   - call: template
     args:
       preamble: &quot;jsp: {{ input_data }}&quot;
       question: &quot;{{ PROMPTS2 }}&quot;
       notes: &quot;{{ PROMPTS2_NOTES }}&quot;
 </code></pre></div>
-<p>which includes the following <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/function.yaml">file</a>:</p>
+<p>which includes the following <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/consultant/function.pdl">file</a>:</p>
 <div class="highlight"><pre><span></span><code>description: Function definition
 defs:
   template:
@@ -1117,7 +1117,7 @@ document: &quot;&quot;
 </code></pre></div>
 <p>The <code>include</code> block means that the PDL code at that file is executed and its output is included at the point where the <code>include</code> block appears in a document. In this example, the file contains a function definition, which is used in the first program as a template. This feature allows reuse of common templates and patterns and to build libraries.</p>
 <h2 id="conditionals-and-loops">Conditionals and Loops</h2>
-<p>PDL supports conditionals and loops as illustrated in the followin example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/conditionals_loops.yaml">file</a>).</p>
+<p>PDL supports conditionals and loops as illustrated in the followin example (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/conditionals_loops.pdl">file</a>).</p>
 <p>The task at hand is to generate math problems that look like the <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/arith/example1.txt">following</a>:</p>
 <div class="highlight"><pre><span></span><code>Question: Noah charges $60 for a large painting and $30 for a small painting.
 Last month he sold eight large paintings and four small paintings.
@@ -1213,12 +1213,12 @@ Ernest&#39;s number is 4
 </code></pre></div>
 <h2 id="type-checking">Type Checking</h2>
 <p>Consider the following PDL program (<a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/gen-data.pdl">file</a>). It first reads the data
-found <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data.yaml">here</a> to form few-shot examples. These demonstrations show how to create
+found <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/tutorial/data.pdl">here</a> to form few-shot examples. These demonstrations show how to create
 some JSON data.</p>
 <div class="highlight"><pre><span></span><code>description: Creating JSON Data
 defs:
   data:
-    read: examples/demo/data.yaml
+    read: examples/demo/data.pdl
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 document:
@@ -1582,7 +1582,7 @@ result, document, _, _ = process_prog(state, empty_scope, data)
     <script id="__config" type="application/json">{"base": "..", "features": ["search.highlight", "search.suggest", "navigation.sections", "navigation.path", "navigation.footer", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>

@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.3cba04c6.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
@@ -552,7 +552,7 @@ hide:
 - <code>GENAI_API</code> set to <code>https://bam-api.res.ibm.com/</code>
 - <code>GENAI_KEY</code> set to your BAM API key. To obtain your key, go to the <a href="https://bam.res.ibm.com/">BAM</a> main page. On the right and under the "Documentation" section, you will see a button to copy your API key.</p>
 <p>To run the interpreter:</p>
-<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl &lt;path/to/example.yaml&gt;
+<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl &lt;path/to/example.pdl&gt;
 </code></pre></div>
 <p>The folder <code>examples</code> contains some examples of PDL programs. Several of these examples have been adapted from the LMQL <a href="https://arxiv.org/abs/2212.06094">paper</a> by Beurer-Kellner et al. </p>
 <p>We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/.vscode/settings.json">settings</a> and <a href="https://github.ibm.com/ml4code/pdl/blob/main/pdl-schema.json">schema</a>). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.</p>
@@ -578,7 +578,7 @@ hide:
 </code></pre></div>
 <p>The <code>description</code> field is a description for the program. Field <code>document</code> contains a list of either strings or <em>block</em>s which together form the document to be produced. In this example, the document starts with the string <code>"Hello"</code> followed by a block that calls out to a model. In this case, it is model with id <code>ibm/granite-3b-code-instruct</code> from <a href="https://www.ibm.com/watsonx">watsonx</a>, with the indicated parameter: the stop sequence is <code>!</code>. The input to the model call is everything that has been produced so far in the document (here <code>Hello</code>).</p>
 <p>When we execute this program using the PDL interpreter:</p>
-<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl examples/hello/hello.yaml
+<div class="highlight"><pre><span></span><code>python3 -m pdl.pdl examples/hello/hello.pdl
 </code></pre></div>
 <p>we obtain the following document:</p>
 <div class="highlight"><pre><span></span><code>Hello, world!
@@ -629,7 +629,7 @@ public static Map&lt;String, String&gt; deserializeOffsetMap(String lastSourceOf
   return offsetMap;
 }
 </code></pre></div>
-<p>In PDL, this would be expressed as follows (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.yaml">file</a>):</p>
+<p>In PDL, this would be expressed as follows (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.pdl">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Code explanation example</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/code/data.json</span>
@@ -673,7 +673,7 @@ The @SuppressWarnings annotation is used to suppress warnings related to uncheck
 
 The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library&#39;s ObjectMapper class and returned as a map.
 </code></pre></div>
-<p>Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt">ground truth</a>. See <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.yaml">file</a>:</p>
+<p>Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt">ground truth</a>. See <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.pdl">file</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Code explanation example</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/code/data.json</span>
@@ -896,7 +896,7 @@ that we provide some default values when the following parameters are missing:</
     <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "search.suggest", "navigation.sections", "navigation.path", "navigation.footer", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "navigation.tabs"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>

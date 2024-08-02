@@ -53,7 +53,7 @@ Internal IBM users can use models hosted on [BAM](https://bam.res.ibm.com/). You
 To run the interpreter:
 
 ```
-python3 -m pdl.pdl <path/to/example.yaml>
+python3 -m pdl.pdl <path/to/example.pdl>
 ```
 
 The folder `examples` contains some examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
@@ -99,7 +99,7 @@ The `description` field is a description for the program. Field `document` conta
 When we execute this program using the PDL interpreter:
 
 ```
-python3 -m pdl.pdl examples/hello/hello.yaml
+python3 -m pdl.pdl examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -166,7 +166,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-In PDL, this would be expressed as follows (see [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.yaml)):
+In PDL, this would be expressed as follows (see [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.pdl)):
 
 ```yaml
 description: Code explanation example
@@ -220,7 +220,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 
 ```
 
-Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt). See [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.yaml):
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt). See [file](https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.pdl):
 
 ```yaml
 description: Code explanation example
