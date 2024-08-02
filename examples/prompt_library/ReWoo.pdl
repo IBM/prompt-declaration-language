@@ -3,47 +3,195 @@ description: ReWOO (Reasoning without observation) pattern from Xu et al., (http
 # by generating full chain of tools in a single pass
 # see: https://github.com/langchain-ai/langgraph/blob/main/examples/rewoo/rewoo.ipynb
 defs:
-  task: "When did the Battle of White Plains take place?"
+  rewoo_block:
+    function:
+      trajectory: { list: obj }
+    return:
+      - def: i
+        show_result: false
+        data: 1
+      - for:
+          trajectory: "{{ trajectory }}"
+        repeat:
+          - def: type
+            document: "{{ trajectory.keys()|first }}"
+            show_result: false
+          - def: content
+            document: "{{ trajectory.values()|first }}"
+            show_result: false
+          - if: "{{ type == 'question'}}"
+            then: |
+              Task: {{ content }}
+          - if: "{{ type == 'thought'}}"
+            then: |-
+              Plan: {{ content }}
+          - if: "{{ type == 'action'}}"
+            then:
+              - " #E{{ i }} = {{ content }}\n"
+              - def: i
+                show_result: false
+                data: "{{ i+1 }}"
+          - if: "{{ type == 'observation'}}"
+            then: ""
+          - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
+            then: "{{ type }}: {{ content }}"
+      - "\n"
 
-  default_tools: |
-    import wikipedia
-    match plan[2].strip():
-      case 'Wikipedia':
-        try:
-          result = wikipedia.summary(plan[3])
-        except wikipedia.WikipediaException as error:
-          result = str(error)
-      case _:
-        result = "Invalid Action. Valid Actions are Wikipedia[<topic>] and Finish[<answer>]."
+  default_tools:
+    data:
+      - name: get_current_weather
+        description: Get the current weather
+        parameters:
+          - name: location
+            type: string
+            description: The city and state, e.g. San Francisco, CA
+        examples:
+          - - question: "What is the weather in London?"
+            - action: "get_current_weather[London]"
+            - observation: |
+                {"location":{"name":"London","region":"City of London, Greater London","country":"United Kingdom","lat":51.52,"lon":-0.11,"tz_id":"Europe/London","localtime_epoch":1722262564,"localtime":"2024-07-29 15:16"},"current":{"last_updated_epoch":1722262500,"last_updated":"2024-07-29 15:15","temp_c":27.9,"temp_f":82.2,"is_day":1,"condition":{"text":"Sunny","icon":"//cdn.weatherapi.com/weather/64x64/day/113.png","code":1000},"wind_mph":8.1,"wind_kph":13.0,"wind_degree":133,"wind_dir":"SE","pressure_mb":1019.0,"pressure_in":30.09,"precip_mm":0.0,"precip_in":0.0,"humidity":33,"cloud":6,"feelslike_c":27.2,"feelslike_f":80.9,"windchill_c":27.9,"windchill_f":82.2,"heatindex_c":27.2,"heatindex_f":80.9,"dewpoint_c":10.3,"dewpoint_f":50.5,"vis_km":10.0,"vis_miles":6.0,"uv":7.0,"gust_mph":9.3,"gust_kph":14.9}}
+            - action: "Finish[The weather in London is 82.2f and sunny.]"
+      - name: WolframAlpha
+        description: Solve equations using WolframAlpha
+        parameters:
+          - name: query
+            type: string
+            description: The equation
+        examples:
+      - name: LLM
+        description: Call another LLM
+        parameters:
+          - name: query
+            type: string
+            description: The prompt
+        examples:
+      - name: Calculator
+        description: Run a calculator
+        parameters:
+          - name: query
+            type: string
+            description: The equation
+        examples:
+      - name: Wikipedia
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: query
+            type: string
+            description: The topic of interest
+        examples:
+          - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+            - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+            - action: "Search[Colorado orogeny]"
+            - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+            - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+            - action: "Finish[1,800 to 7,000 ft]"
+          - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+            - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+            - action: "Search[Nicholas Ray]"
+            - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+            - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+            - action: "Search[Elia Kazan]"
+            - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+            - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+            - action: "Finish[director, screenwriter, actor]"
+
+  list_tools:
+    function:
+      tools: { list: obj }
+    return:
+      - def: signatures
+        show_result: false
+        for:
+          tool: "{{ tools }}"
+        repeat: "{{ tool.name }}[<{{ tool.parameters|join('>, <', attribute='name') }}>]"
+      - def: typed_signatures
+        show_result: false
+        for:
+          tool: "{{ tools }}"
+        repeat:
+          - def: params
+            show_result: false
+            for:
+              param: "{{ tool.parameters }}"
+            repeat: "{{ param.name}}: {{ param.type }}"
+          - "{{ tool.name }}({{ params|join(', ') }})"
+      - data:
+          names: "{{ tools|map(attribute='name')|list }}"
+          signatures: "{{ signatures }}"
+          typed_signatures: "{{ typed_signatures }}"
+          descriptions: "{{ tools|map(attribute='description')|list }}"
+
+  WolframAlpha:
+    function:
+      subject: str
+    return: "<WOLFRAM RESULT>"
+
+  LLM:
+    function:
+      subject: str
+    return:
+      - model: "ibm-meta/llama-2-70b-chat-q"
+        parameters:
+          stop_sequences:
+            - "<|endoftext|>"
+          include_stop_sequence: false
+        input:
+          document: "{{ subject }}"
+
+  Calculator:
+    function:
+      subject: str
+    return: "<Calculator RESULT>"
+
+  Wikipedia:
+    function:
+      subject: str
+    return:
+      document:
+        - "[Document]\n"
+        - lan: python
+          code: |
+            import wikipedia
+            try:
+              result = wikipedia.summary(subject)
+            except wikipedia.WikipediaException as e:
+              result = str(e)
+        - "\n[End]"
 
   rewoo:
     function:
       task: str
       model: str
-      tools: str
+      tools: { list: obj }
+      trajectories: { list: list }
       show_plans: bool
     return:
+      - def: TOOL_INFO
+        call: list_tools
+        show_result: false
+        args:
+          tools: "{{ tools }}"
       - |
         For the following task, make plans that can solve the problem step by step. For each plan, indicate 
         which external tool together with tool input to retrieve evidence. You can store the evidence into a 
         variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
 
         Tools can be one of the following:
-        (1) Wikipedia[input]: Worker that searches results from Wikipedia. Useful when you need to find short
-        and succinct answers about a specific topic. The input should be a search query.
-        (2) LLM[input]: A pretrained LLM like yourself. Useful when you need to act with general
-        world knowledge and common sense. Prioritize it when you are confident in solving the problem
-        yourself. Input can be any instruction.
-
-        For example,
-        Task: Thomas, Toby, and Rebecca worked a total of 157 hours in one week. Thomas worked x
-        hours. Toby worked 10 hours less than twice what Thomas worked, and Rebecca worked 8 hours
-        less than Toby. How many hours did Rebecca work?
-        Plan: Given Thomas worked x hours, translate the problem into algebraic expressions and solve
-        with Wolfram Alpha. #E1 = WolframAlpha[Solve x + (2x - 10) + ((2x - 10) - 8) = 157]
-        Plan: Find out the number of hours Thomas worked. #E2 = LLM[What is x, given #E1]
-        Plan: Calculate the number of hours Rebecca worked. #E3 = Calculator[(2 * #E2 - 10) - 8]
-
+      - for:
+          i: "{{ range(1, (tools|length)+1)|list }}"
+          name: "{{ TOOL_INFO.names }}"
+          sig: "{{ TOOL_INFO.signatures }}"
+          desc: "{{ TOOL_INFO.descriptions }}"
+        repeat: |
+          ({{i}}) {{ sig }}: {{ desc }}
+      - "\n"
+      - for:
+          traj: "{{ trajectories }}"
+        repeat:
+          call: rewoo_block
+          args:
+            trajectory: "{{ traj }}"
+      - |
         Begin! 
         Describe your plans with rich details. Each Plan should be followed by only one #E.
 
@@ -51,9 +199,9 @@ defs:
       - def: PLANS
         model: "{{ model }}"
         platform: bam
-        show_result: false
+        show_result: true
         parser: # plan, step_name, tool, tool_input
-          regex: 'Plan:\s*(?P<plan>.+)\s*(?P<step_name>#E\d+)\s*=\s*(?P<tool>\w+)\s*\[(?P<tool_input>[^\]]+)\]'
+          regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<tool>\w+)\s*\[(?P<tool_input>[^\]]+)\]'
           mode: findall
         parameters:
           stop_sequences:
@@ -61,24 +209,85 @@ defs:
           include_stop_sequence: false
       - if: "{{ show_plans }}"
         then:
-          - "\u001b[34m--- Extracted Blueprint ---\n"
+          - "\n\n\u001b[34m--- Extracted Blueprint ---\n"
           - for:
               plan: "{{ PLANS }}"
             repeat:
               - "\u001b[31mPlan: {{ plan[0] }}\n"
               - "\u001b[32m{{ plan[1] }} = {{ plan[2] }}[{{ plan[3] }}]\n"
           - "\n\u001b[37m"
-      - def: EVIDENCE
+      - def: output
         show_result: false
-        document:
-          for:
-            plan: "{{ PLANS }}"
-          repeat:
-            - |-
-              Plan: {{ plan[0] }}
-              Evidence:
-            - lan: python
-              code: "{{ tools }}"
+        data: {}
+      - def: plans
+        show_result: false
+        for:
+          plan: "{{ PLANS }}"
+        repeat:
+          - def: PLAN
+            show_result: false
+            document: "{{ plan[0] }}"
+          - def: ID
+            show_result: false
+            document: "{{ plan[1] }}"
+          - def: ACTION
+            show_result: false
+            document: "{{ plan[2] }}"
+          - def: SUBJECT
+            show_result: false
+            document: "{{ plan[3] }}"
+          - def: SUBJECT_REPLACED
+            show_result: false
+            lan: python
+            code: |-
+              for k,v in output.items():
+                if k in SUBJECT:
+                  SUBJECT = SUBJECT.replace(k, v)
+              result = SUBJECT
+          - def: OUTPUT
+            show_result: false
+            if: "{{ ACTION in TOOL_INFO.names }}"
+            then:
+              call: "{{ ACTION }}"
+              args:
+                subject: "{{ SUBJECT_REPLACED }}"
+            else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
+          - def: OUTPUT
+            show_result: false
+            document: "{{ OUTPUT|trim }}"
+          - def: output
+            show_result: false
+            lan: python
+            code: |
+              output[ID] = OUTPUT
+              result = output
+          # - data:
+          #     plan: "{{ PLAN }}"
+          #     key: "{{ ID }}"
+          #     value: "{{ OUTPUT }}"
+          #     subject: "{{ SUBJECT }}"
+          #     subject_replaced: "{{ SUBJECT_REPLACED }}"
+          - |
+            Plan: {{ PLAN }}
+            Evidence: {{ OUTPUT }}
+      # - def: EVIDENCE
+      #   show_result: false
+      #   document:
+      #     for:
+      #       plan: "{{ plans }}"
+      #     repeat:
+      #       - |
+      #         Plan: {{ plan.plan }}
+      #         Evidence: {{ plan.value }}
+      - def: solution_input
+        document: |-
+          Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+
+          {{ plans|join }}
+          Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+
+          Task: {{ task }}
+          Response:
       - def: SOLUTION
         model: "{{ model }}"
         parameters:
@@ -86,13 +295,6 @@ defs:
             - "<|endoftext|>"
           include_stop_sequence: false
         input:
-          document:
-            - |-
-              Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
-
-              {{ EVIDENCE }}
-
-              Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
-
-              Task: {{ task }}
-              Response: 
+          document: "{{ solution_input }}"
+      - data:
+          answer: "{{ SOLUTION }}"

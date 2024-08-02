@@ -518,6 +518,57 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prompt-library-react-rewoo-cot-pot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prompt Library: ReAct, ReWOO, CoT, PoT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompt Library: ReAct, ReWOO, CoT, PoT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chain-of-thought-wei-et-al-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chain of Thought (Wei et al., 2022)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#program-of-thought-chen-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Program of Thought (Chen, 2022)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react-yao-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReAct (Yao, 2023)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rewoo-xu-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReWOO (Xu, 2023)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#calling-pdl-programmatically-from-python" class="md-nav__link">
     <span class="md-ellipsis">
       Calling PDL Programmatically from Python
@@ -1175,6 +1226,195 @@ Ernest&#39;s number is 4
 <p>To change the log filename, you can pass it to the interpreter as follows:</p>
 <div class="highlight"><pre><span></span><code>python3 -m pdl.pdl --log &lt;my-logfile&gt; &lt;my-example&gt;
 </code></pre></div>
+<h2 id="prompt-library-react-rewoo-cot-pot">Prompt Library: ReAct, ReWOO, CoT, PoT</h2>
+<p>Some of the most common prompt patterns/techniques have been implemented as PDL functions. A demo of the ReAct template:</p>
+<iframe src="https://ibm.ent.box.com/embed/s/9ko71cfbybhtn08z29bbkw74unl5faki?sortColumn=date" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+
+<h3 id="chain-of-thought-wei-et-al-2022">Chain of Thought (Wei et al., 2022)</h3>
+<p>The most simple pattern is CoT (Chain of Thought). An example for arithmetic reasoning:</p>
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/CoT.pdl
+  - call: fewshot_cot
+    args:
+      examples:
+        - question: |-
+            Noah charges $60 for a large painting and $30 for a small painting.
+            Last month he sold eight large paintings and four small paintings.
+            If he sold twice as much this month, how much is his sales for this month?
+          reasoning: |-
+            He sold 8 large paintings and 4 small paintings last month.
+            He sold twice as many this month.
+            8 large paintings x $60 = &lt;&lt; 8*60= 480 &gt;&gt; 480
+            4 small paintings x $30 = &lt;&lt; 4*30= 120 &gt;&gt; 120
+            So he sold &lt;&lt; 480+120= 600 &gt;&gt; 600 paintings last month.
+            Therefore he sold &lt;&lt; 600*2= 1200 &gt;&gt; this month.
+          answer: $1200
+        - question: |-
+            Noah charges $30 for a large vases and $10 for a small vases.
+            Last month he sold five large vases and three small vases.
+            If he sold three times as much this month, how much is his sales for this month?
+          reasoning: |-
+            He sold 5 large vases and 3 small vases last month.
+            He sold three times as many this month.
+            5 large vases x $30 = &lt;&lt; 5*30= 150 &gt;&gt; 150
+            3 small vases x $10 = &lt;&lt; 3*10= 30 &gt;&gt; 30
+            So he sold &lt;&lt; 150+30= 180 &gt;&gt; 180 vases last month.
+            Therefore he sold &lt;&lt; 180*3= 540 &gt;&gt; this month.
+          answer: $540
+  - |-
+      Question: Bobby gave Alice 5 apples. Alice has 6 apples. How many apples did she have before?
+
+      Answer: Let&#39;s think step by step. 
+  - model: &quot;ibm/granite-34b-code-instruct&quot;
+    platform: bam
+</code></pre></div>
+<p>This simple template constructs fewshot examples, which should be followed by the query/question and a model call. The output up to the model call (and thus the input to the model) would look as follows:
+<div class="highlight"><pre><span></span><code>Question: Noah charges $60 for a large painting and $30 for a small painting.
+Last month he sold eight large paintings and four small paintings.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let&#39;s think step by step. He sold 8 large paintings and 4 small paintings last month.
+He sold twice as many this month.
+8 large paintings x $60 = &lt;&lt; 8*60= 480 &gt;&gt; 480
+4 small paintings x $30 = &lt;&lt; 4*30= 120 &gt;&gt; 120
+So he sold &lt;&lt; 480+120= 600 &gt;&gt; 600 paintings last month.
+Therefore he sold &lt;&lt; 600*2= 1200 &gt;&gt; this month.
+The answer is $1200.
+
+Question: Noah charges $30 for a large vases and $10 for a small vases.
+Last month he sold five large vases and three small vases.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let&#39;s think step by step. He sold 5 large vases and 3 small vases last month.
+He sold three times as many this month.
+5 large vases x $30 = &lt;&lt; 5*30= 150 &gt;&gt; 150
+3 small vases x $10 = &lt;&lt; 3*10= 30 &gt;&gt; 30
+So he sold &lt;&lt; 150+30= 180 &gt;&gt; 180 vases last month.
+Therefore he sold &lt;&lt; 180*3= 540 &gt;&gt; this month.
+The answer is $540.
+
+Question: Bobby gave Alice 5 apples. Alice has 6 apples. How many apples did she have before?
+
+Answer: Let&#39;s think step by step.
+</code></pre></div></p>
+<h3 id="program-of-thought-chen-2022">Program of Thought (Chen, 2022)</h3>
+<p>The PoT (Program of Thought) template includes the static fewshot prompt from (Chen, 2022). Essentially, the model is prompted to generate Python code to solve its problem, which is then executed.</p>
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/PoT.pdl
+  - def: ANSWER
+    call: program_of_thought
+    args:
+      question: Ketty saves 20000 dollars to the bank. After three years, the sum with compound interest rate is 1000 dollars more than the sum with simple interest rate. What is the interest rate of the bank?
+      model: ibm/granite-34b-code-instruct
+  - &quot;\nAnswer: {{ ANSWER }}&quot;
+</code></pre></div>
+<h3 id="react-yao-2023">ReAct (Yao, 2023)</h3>
+<p>The ReAct agent pattern is essentially a question, followed by a series of thoughts, actions, and observations, collectively called the trajectory. The input question is usually followed by a thought like <code>I need to search for x</code>. This is then followed by an action <code>Search[x]</code>, and the output of this tool cool is the observation. Finally, the agent ends the trajectory with the <code>Finish[answer]</code> action.</p>
+<p>This pattern is provided by <code>examples/prompt_library/React.pdl</code>. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until <code>Finish</code> is reached.</p>
+<p>The first building block is the <code>react_block</code> function. This function renders a trajectory, which consist of a list of single-item maps, into text. For example:</p>
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/React.pdl
+  - call: react_block
+    args:
+      trajectory:
+        - question: &quot;What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?&quot;
+        - thought: &quot;I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...&quot;
+        - action: &quot;Search[Colorado orogeny]&quot;
+        - observation: &quot;The Colorado orogeny was an episode of mountain building (an orogeny) ...&quot;
+        - thought: &quot;High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.&quot;
+        - action: &quot;Finish[1,800 to 7,000 ft]&quot;
+</code></pre></div>
+<p>Renders to:
+<div class="highlight"><pre><span></span><code>Question: What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+Act: Search[Colorado orogeny]
+Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
+Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+Act: Finish[1,800 to 7,000 ft]
+</code></pre></div></p>
+<p>To initiate a ReAct agent, the <code>react</code> function is used. For example:
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: &quot;When did the Battle of White Plains take place?&quot;
+     model: meta-llama/llama-3-70b-instruct
+     tools: &quot;{{ default_tools }}&quot;
+     trajectories: []
+</code></pre></div></p>
+<p>The output of the <code>react</code> function is currently a JSON object with one key, <code>answer</code>, containing the final (<code>Finish[..]</code>) answer.</p>
+<p>The <code>default_tools</code> variable is provided by the ReAct include. <strong>Critically</strong>, it currently only offers <code>Search</code> and <code>get_current_weather</code>. In most cases, one will want to define their own tools. Tools and their metadata must be defined, as the <code>react</code> function uses this information to describe tools to the model, and to execute model tool usage, if the action is included in the list of tool metadata. Tools are defined as follows:
+<div class="highlight"><pre><span></span><code>Search:
+  function:
+    subject: str
+  return:
+    - &quot;[Document]\n&quot;
+    - lan: python
+      code: |
+        import wikipedia
+        try:
+          result = wikipedia.summary(subject)
+        except wikipedia.WikipediaException as e:
+          result = str(e)
+    - &quot;[End]\n&quot;
+
+default_tools:
+  data:
+    - name: Search
+      description: Search Wikipedia for a summary
+      parameters:
+        - name: query
+          type: string
+          description: The topic of interest
+      examples:
+        - - question: &quot;What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?&quot;
+          - thought: &quot;I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...&quot;
+          - action: &quot;Search[Colorado orogeny]&quot;
+          - observation: &quot;The Colorado orogeny was an episode of mountain building (an orogeny) ...&quot;
+          - thought: &quot;High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.&quot;
+          - action: &quot;Finish[1,800 to 7,000 ft]&quot;
+</code></pre></div></p>
+<p>The tool <code>name</code> is the most important, as this must exactly match a defined PDL function. In this example, <code>Search</code> is defined right above the tool (metadata) definition. Note that all PDL tool functions in this template accept one parameter only, a string, which must be split by your function, if multiple parameters are expected. Next, the tool must be described, and its parameters defined. This is used to describe expected input(s) to the model. The parameters are a <em>list</em>, and include types and a description. Finally, a list of example trajectories should be defined to show the model how to use the tool. These trajectories follow the <code>react_block</code> pattern described above.</p>
+<p>Finally, you can also add your own trajectories, for example to demonstrate use of multiple tools in one trajectory:
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: &quot;When did the Battle of White Plains take place?&quot;
+     model: meta-llama/llama-3-70b-instruct
+     tools: &quot;{{ default_tools }}&quot;
+     trajectories:
+      - - question: &quot;What is the minimum elevation for the area that the eastern sector of the Colorado orogeny extends into, in meters?&quot;
+          - thought: &quot;I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...&quot;
+          - action: &quot;Search[Colorado orogeny]&quot;
+          - observation: &quot;The Colorado orogeny was an episode of mountain building (an orogeny) ...&quot;
+          - thought: &quot;High Plains rise in elevation from around 1,800 to 7,000 ft, I need to convert this to meters.&quot;
+          - action: &quot;Calculator[1,800*0.3048]&quot;
+          - observation: &quot;548.64&quot;
+          - thought: &quot;The answer is 548.64 meters&quot;
+          - action: &quot;Finish[548.64]&quot;
+</code></pre></div></p>
+<h3 id="rewoo-xu-2023">ReWOO (Xu, 2023)</h3>
+<p>ReWOO (Reasoning without observation) is very similar to ReAct, but is faster and uses less tokens by having the model generate a trajectory where tool use can be <em>composed</em> by variable reference. In practice, this means the model generates a trajectory in one generation, the PDL program parses this plan and executes tools as needed, and provides all the evidence (tool output) to the model in one request. This is in contrast to ReAct, where each step results in a whole new request to the model API.</p>
+<p>The ReWOO function shares many similarities to the ReAct function described above. An example with a trajectory showing multiple tool use (note that these tools are not all actually defined):</p>
+<div class="highlight"><pre><span></span><code>document:
+  - include: examples/prompt_library/ReWOO.pdl
+  - call: rewoo
+    args:
+      task: &quot;When did the Battle of White Plains take place?&quot;
+      model: ibm/granite-34b-code-instruct
+      tools: &quot;{{ default_tools }}&quot;
+      trajectories:
+        - - question: Thomas, Toby, and Rebecca worked a total of 157 hours in one week. Thomas worked x hours. Toby worked 10 hours less than twice what Thomas worked, and Rebecca worked 8 hours less than Toby. How many hours did Rebecca work?
+          - thought: Given Thomas worked x hours, translate the problem into algebraic expressions and solve with Wolfram Alpha.
+          - action: WolframAlpha[Solve x + (2x - 10) + ((2x - 10) - 8) = 157]
+          - thought: Find out the number of hours Thomas worked.
+          - action: &quot;LLM[What is x, given #E1]&quot;
+          - thought: Calculate the number of hours Rebecca worked.
+          - action: &quot;Calculator[(2 * #E2 - 10) - 8]&quot;
+      show_plans: true
+</code></pre></div>
+<p>The tool definitions are the same as for ReAct, and so are the trajectories. However, one difference is <code>show_plans</code>, which renders the parsed plans (e.g., the function calls), mostly as a debugging feature.</p>
 <h2 id="calling-pdl-programmatically-from-python">Calling PDL Programmatically from Python</h2>
 <p>[[ TODO ]]</p>
 <h2 id="visualization-with-the-live-document">Visualization with the Live Document</h2>

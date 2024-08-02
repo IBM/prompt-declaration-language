@@ -777,6 +777,230 @@ To change the log filename, you can pass it to the interpreter as follows:
 python3 -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
+## Prompt Library: ReAct, ReWOO, CoT, PoT
+
+Some of the most common prompt patterns/techniques have been implemented as PDL functions. A demo of the ReAct template:
+
+<iframe src="https://ibm.ent.box.com/embed/s/9ko71cfbybhtn08z29bbkw74unl5faki?sortColumn=date" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+
+### Chain of Thought (Wei et al., 2022)
+
+The most simple pattern is CoT (Chain of Thought). An example for arithmetic reasoning:
+
+```
+document:
+  - include: examples/prompt_library/CoT.pdl
+  - call: fewshot_cot
+    args:
+      examples:
+        - question: |-
+            Noah charges $60 for a large painting and $30 for a small painting.
+            Last month he sold eight large paintings and four small paintings.
+            If he sold twice as much this month, how much is his sales for this month?
+          reasoning: |-
+            He sold 8 large paintings and 4 small paintings last month.
+            He sold twice as many this month.
+            8 large paintings x $60 = << 8*60= 480 >> 480
+            4 small paintings x $30 = << 4*30= 120 >> 120
+            So he sold << 480+120= 600 >> 600 paintings last month.
+            Therefore he sold << 600*2= 1200 >> this month.
+          answer: $1200
+        - question: |-
+            Noah charges $30 for a large vases and $10 for a small vases.
+            Last month he sold five large vases and three small vases.
+            If he sold three times as much this month, how much is his sales for this month?
+          reasoning: |-
+            He sold 5 large vases and 3 small vases last month.
+            He sold three times as many this month.
+            5 large vases x $30 = << 5*30= 150 >> 150
+            3 small vases x $10 = << 3*10= 30 >> 30
+            So he sold << 150+30= 180 >> 180 vases last month.
+            Therefore he sold << 180*3= 540 >> this month.
+          answer: $540
+  - |-
+      Question: Bobby gave Alice 5 apples. Alice has 6 apples. How many apples did she have before?
+
+      Answer: Let's think step by step. 
+  - model: "ibm/granite-34b-code-instruct"
+    platform: bam
+```
+
+This simple template constructs fewshot examples, which should be followed by the query/question and a model call. The output up to the model call (and thus the input to the model) would look as follows:
+```
+Question: Noah charges $60 for a large painting and $30 for a small painting.
+Last month he sold eight large paintings and four small paintings.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step. He sold 8 large paintings and 4 small paintings last month.
+He sold twice as many this month.
+8 large paintings x $60 = << 8*60= 480 >> 480
+4 small paintings x $30 = << 4*30= 120 >> 120
+So he sold << 480+120= 600 >> 600 paintings last month.
+Therefore he sold << 600*2= 1200 >> this month.
+The answer is $1200.
+
+Question: Noah charges $30 for a large vases and $10 for a small vases.
+Last month he sold five large vases and three small vases.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step. He sold 5 large vases and 3 small vases last month.
+He sold three times as many this month.
+5 large vases x $30 = << 5*30= 150 >> 150
+3 small vases x $10 = << 3*10= 30 >> 30
+So he sold << 150+30= 180 >> 180 vases last month.
+Therefore he sold << 180*3= 540 >> this month.
+The answer is $540.
+
+Question: Bobby gave Alice 5 apples. Alice has 6 apples. How many apples did she have before?
+
+Answer: Let's think step by step.
+```
+
+### Program of Thought (Chen, 2022)
+
+The PoT (Program of Thought) template includes the static fewshot prompt from (Chen, 2022). Essentially, the model is prompted to generate Python code to solve its problem, which is then executed.
+
+```
+document:
+  - include: examples/prompt_library/PoT.pdl
+  - def: ANSWER
+    call: program_of_thought
+    args:
+      question: Ketty saves 20000 dollars to the bank. After three years, the sum with compound interest rate is 1000 dollars more than the sum with simple interest rate. What is the interest rate of the bank?
+      model: ibm/granite-34b-code-instruct
+  - "\nAnswer: {{ ANSWER }}"
+```
+
+### ReAct (Yao, 2023)
+
+The ReAct agent pattern is essentially a question, followed by a series of thoughts, actions, and observations, collectively called the trajectory. The input question is usually followed by a thought like `I need to search for x`. This is then followed by an action `Search[x]`, and the output of this tool cool is the observation. Finally, the agent ends the trajectory with the `Finish[answer]` action.
+
+This pattern is provided by `examples/prompt_library/React.pdl`. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until `Finish` is reached.
+
+The first building block is the `react_block` function. This function renders a trajectory, which consist of a list of single-item maps, into text. For example:
+
+```
+document:
+  - include: examples/prompt_library/React.pdl
+  - call: react_block
+    args:
+      trajectory:
+        - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+        - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+        - action: "Search[Colorado orogeny]"
+        - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+        - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+        - action: "Finish[1,800 to 7,000 ft]"
+```
+
+Renders to:
+```
+Question: What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+Act: Search[Colorado orogeny]
+Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
+Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+Act: Finish[1,800 to 7,000 ft]
+```
+
+To initiate a ReAct agent, the `react` function is used. For example:
+```
+document:
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: "When did the Battle of White Plains take place?"
+     model: meta-llama/llama-3-70b-instruct
+     tools: "{{ default_tools }}"
+     trajectories: []
+```
+
+The output of the `react` function is currently a JSON object with one key, `answer`, containing the final (`Finish[..]`) answer.
+
+The `default_tools` variable is provided by the ReAct include. **Critically**, it currently only offers `Search` and `get_current_weather`. In most cases, one will want to define their own tools. Tools and their metadata must be defined, as the `react` function uses this information to describe tools to the model, and to execute model tool usage, if the action is included in the list of tool metadata. Tools are defined as follows:
+```
+Search:
+  function:
+    subject: str
+  return:
+    - "[Document]\n"
+    - lan: python
+      code: |
+        import wikipedia
+        try:
+          result = wikipedia.summary(subject)
+        except wikipedia.WikipediaException as e:
+          result = str(e)
+    - "[End]\n"
+
+default_tools:
+  data:
+    - name: Search
+      description: Search Wikipedia for a summary
+      parameters:
+        - name: query
+          type: string
+          description: The topic of interest
+      examples:
+        - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+          - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+          - action: "Search[Colorado orogeny]"
+          - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+          - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+          - action: "Finish[1,800 to 7,000 ft]"
+```
+
+The tool `name` is the most important, as this must exactly match a defined PDL function. In this example, `Search` is defined right above the tool (metadata) definition. Note that all PDL tool functions in this template accept one parameter only, a string, which must be split by your function, if multiple parameters are expected. Next, the tool must be described, and its parameters defined. This is used to describe expected input(s) to the model. The parameters are a _list_, and include types and a description. Finally, a list of example trajectories should be defined to show the model how to use the tool. These trajectories follow the `react_block` pattern described above.
+
+Finally, you can also add your own trajectories, for example to demonstrate use of multiple tools in one trajectory:
+```
+document:
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: "When did the Battle of White Plains take place?"
+     model: meta-llama/llama-3-70b-instruct
+     tools: "{{ default_tools }}"
+     trajectories:
+      - - question: "What is the minimum elevation for the area that the eastern sector of the Colorado orogeny extends into, in meters?"
+          - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+          - action: "Search[Colorado orogeny]"
+          - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+          - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, I need to convert this to meters."
+          - action: "Calculator[1,800*0.3048]"
+          - observation: "548.64"
+          - thought: "The answer is 548.64 meters"
+          - action: "Finish[548.64]"
+```
+
+### ReWOO (Xu, 2023)
+
+ReWOO (Reasoning without observation) is very similar to ReAct, but is faster and uses less tokens by having the model generate a trajectory where tool use can be _composed_ by variable reference. In practice, this means the model generates a trajectory in one generation, the PDL program parses this plan and executes tools as needed, and provides all the evidence (tool output) to the model in one request. This is in contrast to ReAct, where each step results in a whole new request to the model API.
+
+The ReWOO function shares many similarities to the ReAct function described above. An example with a trajectory showing multiple tool use (note that these tools are not all actually defined):
+
+```
+document:
+  - include: examples/prompt_library/ReWOO.pdl
+  - call: rewoo
+    args:
+      task: "When did the Battle of White Plains take place?"
+      model: ibm/granite-34b-code-instruct
+      tools: "{{ default_tools }}"
+      trajectories:
+        - - question: Thomas, Toby, and Rebecca worked a total of 157 hours in one week. Thomas worked x hours. Toby worked 10 hours less than twice what Thomas worked, and Rebecca worked 8 hours less than Toby. How many hours did Rebecca work?
+          - thought: Given Thomas worked x hours, translate the problem into algebraic expressions and solve with Wolfram Alpha.
+          - action: WolframAlpha[Solve x + (2x - 10) + ((2x - 10) - 8) = 157]
+          - thought: Find out the number of hours Thomas worked.
+          - action: "LLM[What is x, given #E1]"
+          - thought: Calculate the number of hours Rebecca worked.
+          - action: "Calculator[(2 * #E2 - 10) - 8]"
+      show_plans: true
+```
+
+
+The tool definitions are the same as for ReAct, and so are the trajectories. However, one difference is `show_plans`, which renders the parsed plans (e.g., the function calls), mostly as a debugging feature.
+
 ##  Calling PDL Programmatically from Python
 
 Consider the following PDL program, written as Python object:

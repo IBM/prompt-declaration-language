@@ -557,15 +557,15 @@
 
               <details class="quote">
                 <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InterpreterState</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InterpreterState</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">yield_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">log</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -647,8 +647,8 @@
 
             <details class="quote">
               <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">with_yield_output</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">with_yield_output</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yield_output&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">})</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -684,7 +684,9 @@
 
             <details class="quote">
               <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
@@ -692,9 +694,7 @@
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_prog</span><span class="p">(</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_prog</span><span class="p">(</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">InterpreterState</span><span class="p">,</span>
     <span class="n">initial_scope</span><span class="p">:</span> <span class="n">ScopeType</span><span class="p">,</span>
     <span class="n">prog</span><span class="p">:</span> <span class="n">Program</span><span class="p">,</span>
@@ -726,13 +726,13 @@
 
               <details class="quote">
                 <summary>Source code in <code>pdl/pdl_ast.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Program</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Program</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prompt Description Program (PDL)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
