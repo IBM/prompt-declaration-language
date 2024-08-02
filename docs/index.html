@@ -361,6 +361,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#demo-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      Demo Video
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#interpreter-installation" class="md-nav__link">
     <span class="md-ellipsis">
       Interpreter Installation
@@ -523,7 +532,10 @@ hide:
 - Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle.
 - Ability to call out to REST APIS.</p>
 <p>The PDL interpreter (<code>pdl/pdl.py</code>) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). </p>
-<p>See below for installation notes, followed by an <a href="#overview">overview</a> of the language. A more detailed description of the language features can be found in this <a href="./docs/tutorial.md">tutorial</a>.</p>
+<p>See below for installation notes, followed by an <a href="#overview">overview</a> of the language. A more detailed description of the language features can be found in this <a href="https://pages.github.ibm.com/ml4code/pdl/tutorial/">tutorial</a>.</p>
+<h2 id="demo-video">Demo Video</h2>
+<iframe src="https://ibm.ent.box.com/embed/s/9ko71cfbybhtn08z29bbkw74unl5faki?sortColumn=date" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+
 <h2 id="interpreter-installation">Interpreter Installation</h2>
 <p>The interpreter has been tested with Python version 3.12.</p>
 <p>To install the requirements for <code>pdl</code>, execute the command:</p>
@@ -543,7 +555,7 @@ hide:
 <div class="highlight"><pre><span></span><code>python3 -m pdl.pdl &lt;path/to/example.yaml&gt;
 </code></pre></div>
 <p>The folder <code>examples</code> contains some examples of PDL programs. Several of these examples have been adapted from the LMQL <a href="https://arxiv.org/abs/2212.06094">paper</a> by Beurer-Kellner et al. </p>
-<p>We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see <a href=".vscode/settings.json">settings</a> and <a href="pdl-schema.json">schema</a>). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.</p>
+<p>We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/.vscode/settings.json">settings</a> and <a href="https://github.ibm.com/ml4code/pdl/blob/main/pdl-schema.json">schema</a>). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.</p>
 <p>The interpreter prints out a log by default in the file <code>log.txt</code>. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.</p>
 <p>To change the log filename, you can pass it to the interpreter as follows:</p>
 <div class="highlight"><pre><span></span><code>python3 -m pdl.pdl --log &lt;my-logfile&gt; &lt;my-example&gt;
@@ -586,7 +598,7 @@ hide:
 <p>The only difference is that the parameters of the model now follows the <a href="https://bam.res.ibm.com/docs/api-reference#text-generation">BAM calling convention</a>. The <code>decoding_method</code> is <code>greedy</code> and there is a stop sequence <code>!</code> which must be included in the output.</p>
 <p>Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.</p>
-<p>For example, given the data in this JSON <a href="examples/code/data.json">file</a>:
+<p>For example, given the data in this JSON <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/data.json">file</a>:
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;source_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@SuppressWarnings(\&quot;unchecked\&quot;)\npublic static Map&lt;String, String&gt; deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map&lt;String, String&gt; offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap&lt;&gt;();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;repo_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -617,7 +629,7 @@ public static Map&lt;String, String&gt; deserializeOffsetMap(String lastSourceOf
   return offsetMap;
 }
 </code></pre></div>
-<p>In PDL, this would be expressed as follows (see <a href="examples/code/code.yaml">file</a>):</p>
+<p>In PDL, this would be expressed as follows (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code.yaml">file</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Code explanation example</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/code/data.json</span>
@@ -661,7 +673,7 @@ The @SuppressWarnings annotation is used to suppress warnings related to uncheck
 
 The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library&#39;s ObjectMapper class and returned as a map.
 </code></pre></div>
-<p>Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our <a href="examples/code/ground_truth.txt">ground truth</a>. See <a href="examples/code/code-eval.yaml">file</a>:</p>
+<p>Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/ground_truth.txt">ground truth</a>. See <a href="https://github.ibm.com/ml4code/pdl/blob/main/examples/code/code-eval.yaml">file</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Code explanation example</span>
 <span class="nt">document</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">examples/code/data.json</span>
@@ -796,16 +808,11 @@ that we provide some default values when the following parameters are missing:</
   - <code>top_p</code>: 0.85
   - <code>top_k</code>: 50</p>
 <ul>
-<li>
-<p>Only simple GETs are supported for API calls currently (see example: <code>examples/hello/weather.json</code>). We plan to more fully support API calls in the future.</p>
-</li>
-<li>
-<p>The example <code>examples/react/React.json</code> is work-in-progress.</p>
-</li>
+<li>Only simple GETs are supported for API calls currently (see example: <code>examples/hello/weather.json</code>). We plan to more fully support API calls in the future.</li>
 </ul>
 <p>For a complete list of issues see <a href="https://github.ibm.com/ml4code/pdl/issues">here</a>.</p>
 <h2 id="contributing-to-the-project">Contributing to the Project</h2>
-<p>See <a href="contrib/">Contributing to PDL</a></p>
+<p>See <a href="https://github.ibm.com/ml4code/pdl/blob/main/docsource/contrib.md">Contributing to PDL</a></p>
 
 
 

@@ -22,6 +22,9 @@ The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it i
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/).
 
+## Demo Video
+
+<iframe src="https://ibm.ent.box.com/embed/s/9ko71cfbybhtn08z29bbkw74unl5faki?sortColumn=date" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
 
 ## Interpreter Installation
 
