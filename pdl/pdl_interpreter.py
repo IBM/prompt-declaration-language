@@ -825,10 +825,14 @@ def call_python(code: str, scope: dict) -> Any:
 def process_input(
     state: InterpreterState, scope: ScopeType, block: ReadBlock, loc: LocationType
 ) -> tuple[str, ScopeType, ReadBlock | ErrorBlock]:
-    if block.read is not None:
-        with open(block.read, encoding="utf-8") as f:
+    read, errors = process_expr(scope, block.read, append(loc, "read"))
+    if len(errors) != 0:
+        trace = handle_error(block, loc, None, errors, block.model_copy())
+        return "", scope, trace
+    if read is not None:
+        with open(read, encoding="utf-8") as f:
             s = f.read()
-            append_log(state, "Input from File: " + block.read, s)
+            append_log(state, "Input from File: " + read, s)
     else:
         message = ""
         if block.message is not None:
