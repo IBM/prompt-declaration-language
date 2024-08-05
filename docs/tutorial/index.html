@@ -1256,25 +1256,27 @@ examples/demo/1-gen-data.pdl:7 - thirty-two should be of type &lt;class &#39;int
 <p>Notice that since we asked the age to be produced in letters, this causes a type error indicated above.
 If we modify the prompt not to contain this directive, the type error goes away.</p>
 <p>In general, <code>spec</code> definitions can be a subset of JSON schema, or use a shorthand notation as illustrated by
-the examples below:
-- <code>bool</code>: boolean
-- <code>str</code>: string
-- <code>int</code>: integer
-- <code>float</code>: float
-- <code>{str: {pattern: '^[A-Za-z][A-Za-z0-9_]*$'}}</code>: a string satisfying the indicated pattern
-- <code>{float: {minimum: 0, exclusiveMaximum: 1}}</code>: a float satisfying the indicated constraints
-- <code>{list: int}</code>: a list of integers
-- <code>[int]</code>: a list of integers
-- <code>{list: {int: {minimum: 0}}}</code>: a list of integers satisfying the indicated constraints
-- <code>[{int: {minimum: 0}}]</code>: same as above
-- <code>{list: {minItems: 1, int: {}}}</code>, a list satisfying the indicated constraints
-- <code>{obj: {latitude: float, longitude: float}}</code>: an ibject with fields <code>latitude</code> and <code>longitude</code>
-- <code>{latitude: float, longitude: float}</code>: same as above
-- <code>{obj: {question: str, answer: str, context: {optional: str}}}</code>: an object with an optional field
-- <code>{question: str, answer: str, context: {optional: str}}</code>: same as above
-- <code>{list: {obj: {question: str, answer: str}}}</code>: a list of objects
-- <code>[{question: str, answer: str}]</code>: same as above
-- <code>{enum: [red, green, blue]}</code>: an enumeration</p>
+the examples below:</p>
+<ul>
+<li><code>bool</code>: boolean</li>
+<li><code>str</code>: string</li>
+<li><code>int</code>: integer</li>
+<li><code>float</code>: float</li>
+<li><code>{str: {pattern: '^[A-Za-z][A-Za-z0-9_]*$'}}</code>: a string satisfying the indicated pattern</li>
+<li><code>{float: {minimum: 0, exclusiveMaximum: 1}}</code>: a float satisfying the indicated constraints</li>
+<li><code>{list: int}</code>: a list of integers</li>
+<li><code>[int]</code>: a list of integers</li>
+<li><code>{list: {int: {minimum: 0}}}</code>: a list of integers satisfying the indicated constraints</li>
+<li><code>[{int: {minimum: 0}}]</code>: same as above</li>
+<li><code>{list: {minItems: 1, int: {}}}</code>, a list satisfying the indicated constraints</li>
+<li><code>{obj: {latitude: float, longitude: float}}</code>: an ibject with fields <code>latitude</code> and <code>longitude</code></li>
+<li><code>{latitude: float, longitude: float}</code>: same as above</li>
+<li><code>{obj: {question: str, answer: str, context: {optional: str}}}</code>: an object with an optional field</li>
+<li><code>{question: str, answer: str, context: {optional: str}}</code>: same as above</li>
+<li><code>{list: {obj: {question: str, answer: str}}}</code>: a list of objects</li>
+<li><code>[{question: str, answer: str}]</code>: same as above</li>
+<li><code>{enum: [red, green, blue]}</code>: an enumeration</li>
+</ul>
 <h2 id="debugging-pdl-programs">Debugging PDL Programs</h2>
 <p>We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see <a href="https://github.ibm.com/ml4code/pdl/blob/main/.vscode/settings.json">settings</a> and <a href="https://github.ibm.com/ml4code/pdl/blob/main/pdl-schema.json">schema</a>). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.</p>
 <p>The interpreter prints out a log by default in the file <code>log.txt</code>. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.</p>

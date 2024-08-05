@@ -745,6 +745,7 @@ If we modify the prompt not to contain this directive, the type error goes away.
 
 In general, `spec` definitions can be a subset of JSON schema, or use a shorthand notation as illustrated by
 the examples below:
+
 - `bool`: boolean
 - `str`: string
 - `int`: integer
