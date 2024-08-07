@@ -738,6 +738,7 @@ export type Repeat =
       | ErrorBlock
       | EmptyBlock
     )[];
+export type IterationType = "sequence" | "array" | "document";
 export type Trace1 =
   | (
       | string
@@ -2583,6 +2584,7 @@ export interface RepeatBlock {
   kind?: Kind9;
   repeat: Repeat2;
   num_iterations: NumIterations;
+  as?: IterationType & string;
   trace?: Trace3;
 }
 export interface Spec9 {
@@ -2647,6 +2649,7 @@ export interface RepeatUntilBlock {
   kind?: Kind8;
   repeat: Repeat1;
   until: Until;
+  as?: IterationType & string;
   trace?: Trace2;
 }
 export interface Spec10 {
@@ -2711,6 +2714,7 @@ export interface ForBlock {
   kind?: Kind7;
   for: For;
   repeat: Repeat;
+  as?: IterationType & string;
   trace?: Trace1;
 }
 export interface Spec11 {

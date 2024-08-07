@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
+    ArrayBlock,
     BamModelBlock,
     BlocksType,
     BlockType,
@@ -29,6 +30,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    IterationType,
     LocationType,
     ModelBlock,
     ParserType,
@@ -40,6 +42,7 @@ from .pdl_ast import (
     RepeatBlock,
     RepeatUntilBlock,
     ScopeType,
+    SequenceBlock,
     WatsonxModelBlock,
     empty_block_location,
 )
@@ -269,11 +272,32 @@ def step_block_body(
             if state.yield_output:
                 yield OutputMessage(output)
         case DocumentBlock():
-            _, output, scope, document = yield from step_blocks(
-                state, scope, block.document, append(loc, "document")
+            result, output, scope, document = yield from step_blocks(
+                IterationType.DOCUMENT,
+                state,
+                scope,
+                block.document,
+                append(loc, "document"),
             )
-            result = output
             trace = block.model_copy(update={"document": document})
+        case SequenceBlock():
+            result, output, scope, sequence = yield from step_blocks(
+                IterationType.SEQUENCE,
+                state,
+                scope,
+                block.sequence,
+                append(loc, "sequence"),
+            )
+            trace = block.model_copy(update={"sequence": sequence})
+        case ArrayBlock():
+            result, output, scope, array = yield from step_blocks(
+                IterationType.ARRAY,
+                state,
+                scope,
+                block.array,
+                append(loc, "array"),
+            )
+            trace = block.model_copy(update={"array": array})
         case IfBlock():
             result = None
             output = ""
@@ -286,7 +310,7 @@ def step_block_body(
                 if b:
                     thenloc = append(loc, "then")
                     result, output, scope, then_trace = yield from step_blocks(
-                        state, scope, block.then, thenloc
+                        IterationType.SEQUENCE, state, scope, block.then, thenloc
                     )
                     trace = block.model_copy(
                         update={
@@ -297,7 +321,7 @@ def step_block_body(
                 elif block.elses is not None:
                     elseloc = append(loc, "else")
                     result, output, scope, else_trace = yield from step_blocks(
-                        state, scope, block.elses, elseloc
+                        IterationType.SEQUENCE, state, scope, block.elses, elseloc
                     )
                     trace = block.model_copy(
                         update={
@@ -308,23 +332,30 @@ def step_block_body(
                 else:
                     trace = block.model_copy(update={"if_result": b})
         case RepeatBlock(num_iterations=n):
-            result = None
+            results = []
             output = ""
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             for _ in range(n):
                 repeatloc = append(loc, "repeat")
                 scope = scope | {"context": context_init + output}
-                result, iteration_output, scope, body_trace = yield from step_blocks(
-                    state, scope, block.repeat, repeatloc
+                (
+                    iteration_result,
+                    iteration_output,
+                    scope,
+                    body_trace,
+                ) = yield from step_blocks(
+                    IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
                 )
+                results.append(iteration_result)
                 output += iteration_output
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
+            result = combine_results(block.iteration_type, results)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
-            result = []
+            results = []
             output = ""
             iter_trace: list[BlocksType] = []
             context_init = scope_init["context"]
@@ -348,6 +379,7 @@ def step_block_body(
                 items = items | {k: klist}
                 lengths.append(len(klist))
             if len(set(lengths)) != 1:  # Not all the lists are of the same length
+                result = []
                 trace = handle_error(
                     block,
                     append(block.location, "for"),
@@ -366,15 +398,18 @@ def step_block_body(
                         iteration_output,
                         scope,
                         body_trace,
-                    ) = yield from step_blocks(state, scope, block.repeat, newloc)
+                    ) = yield from step_blocks(
+                        IterationType.SEQUENCE, state, scope, block.repeat, newloc
+                    )
                     output += iteration_output
-                    result.append(iteration_result)
+                    results.append(iteration_result)
                     iter_trace.append(body_trace)
                     if contains_error(body_trace):
                         break
+                result = combine_results(block.iteration_type, results)
                 trace = block.model_copy(update={"trace": iter_trace})
         case RepeatUntilBlock(until=cond):
-            result = None
+            results = []
             stop = False
             output = ""
             iterations_trace = []
@@ -382,9 +417,15 @@ def step_block_body(
             while not stop:
                 scope = scope | {"context": context_init + output}
                 repeatloc = append(loc, "repeat")
-                result, iteration_output, scope, body_trace = yield from step_blocks(
-                    state, scope, block.repeat, repeatloc
+                (
+                    iteration_result,
+                    iteration_output,
+                    scope,
+                    body_trace,
+                ) = yield from step_blocks(
+                    IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
                 )
+                results.append(iteration_result)
                 output += iteration_output
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
@@ -396,6 +437,7 @@ def step_block_body(
                     )
                     iterations_trace.append(trace)
                     break
+            result = combine_results(block.iteration_type, results)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             output, scope, trace = process_input(state, scope, block, loc)
@@ -458,7 +500,7 @@ def step_block_body(
                         table=loc.table,
                     )
                     result, output, _, f_trace = yield from step_blocks(
-                        state, f_scope, f_body, funloc
+                        IterationType.SEQUENCE, state, f_scope, f_body, funloc
                     )
                     trace = block.model_copy(update={"trace": f_trace})
                     if closure.spec is not None:
@@ -483,6 +525,7 @@ def step_block_body(
             trace.has_error = True
         else:
             result, fallback_output, scope, fallback_trace = yield from step_blocks(
+                IterationType.SEQUENCE,
                 state,
                 scope,
                 blocks=block.fallback,
@@ -494,7 +537,13 @@ def step_block_body(
 
 
 def stringify(result):
-    return result if isinstance(result, str) else json.dumps(result)
+    if isinstance(result, str):
+        s = result
+    elif isinstance(result, FunctionBlock):
+        s = ""
+    else:
+        s = json.dumps(result)
+    return s
 
 
 def step_defs(
@@ -509,7 +558,7 @@ def step_defs(
         newloc = append(defloc, x)
         state = state.with_yield_output(False)
         result, _, _, blocks_trace = yield from step_blocks(
-            state, scope, blocks, newloc
+            IterationType.SEQUENCE, state, scope, blocks, newloc
         )
         scope = scope | {x: result}
         defs_trace[x] = blocks_trace
@@ -517,6 +566,7 @@ def step_defs(
 
 
 def step_blocks(
+    iteration_type: IterationType,
     state: InterpreterState,
     scope: ScopeType,
     blocks: BlocksType,
@@ -525,20 +575,56 @@ def step_blocks(
     result: Any
     output: str
     trace: BlocksType
+    results = []
+    iteration_state = state
+    # match iteration_type:
+    #     case IterationType.DOCUMENT:
+    #         iteration_state = state
+    #     case _:
+    #         iteration_state = state.with_yield_output(False)
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        result = None
         output = ""
         trace = []
         context_init = scope["context"]
         for i, block in enumerate(blocks):
             scope = scope | {"context": context_init + output}
             newloc = append(loc, "[" + str(i) + "]")
-            result, o, scope, t = yield from step_block(state, scope, block, newloc)
+            iteration_result, o, scope, t = yield from step_block(
+                iteration_state, scope, block, newloc
+            )
+            results.append(iteration_result)
             output += o
             trace.append(t)  # type: ignore
     else:
-        result, output, scope, trace = yield from step_block(state, scope, blocks, loc)
+        block_result, output, scope, trace = yield from step_block(
+            iteration_state, scope, blocks, loc
+        )
+        results.append(block_result)
+    result = combine_results(iteration_type, results)
+    # match iteration_type:
+    #     case IterationType.DOCUMENT:
+    #         pass
+    #     case _:
+    #         if state.yield_output:
+    #             yield OutputMessage(stringify(result))
     return result, output, scope, trace
+
+
+def combine_results(iteration_type: IterationType, results: list[Any]):
+    result: Any
+    match iteration_type:
+        case IterationType.ARRAY:
+            result = results
+        case IterationType.SEQUENCE:
+            if len(results) > 0:
+                result = results[-1]
+            else:
+                result = None
+        case IterationType.DOCUMENT:
+            result = "".join([stringify(r) for r in results])
+        case _:
+            assert False
+    return result
 
 
 def process_expr(
@@ -606,7 +692,11 @@ def step_call_model(
 ]:
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
-            state.with_yield_output(False), scope, block.input, append(loc, "input")
+            IterationType.DOCUMENT,
+            state.with_yield_output(False),
+            scope,
+            block.input,
+            append(loc, "input"),
         )
     else:
         model_input = scope["context"]
@@ -750,7 +840,11 @@ def step_call_api(
     state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
 ) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]]:
     _, input_str, _, input_trace = yield from step_blocks(
-        state.with_yield_output(False), scope, block.input, append(loc, "input")
+        IterationType.DOCUMENT,
+        state.with_yield_output(False),
+        scope,
+        block.input,
+        append(loc, "input"),
     )
     input_str = block.url + input_str
     try:
@@ -777,7 +871,11 @@ def step_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
 ) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]]:
     _, code_s, _, code_trace = yield from step_blocks(
-        state.with_yield_output(False), scope, block.code, append(loc, "code")
+        IterationType.DOCUMENT,
+        state.with_yield_output(False),
+        scope,
+        block.code,
+        append(loc, "code"),
     )
     append_log(state, "Code Input", code_s)
     try:

@@ -193,11 +193,18 @@ class IfBlock(Block):
     if_result: Optional[bool] = None
 
 
+class IterationType(StrEnum):
+    SEQUENCE = "sequence"
+    ARRAY = "array"
+    DOCUMENT = "document"
+
+
 class ForBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
     repeat: "BlocksType"
+    iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
     trace: Optional[list["BlocksType"]] = None
 
 
@@ -206,6 +213,7 @@ class RepeatBlock(Block):
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "BlocksType"
     num_iterations: int
+    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
     trace: Optional[list["BlocksType"]] = None
 
 
@@ -214,6 +222,7 @@ class RepeatUntilBlock(Block):
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
     until: ExpressionType
+    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
     trace: Optional[list["BlocksType"]] = None
 
 

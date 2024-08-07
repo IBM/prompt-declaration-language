@@ -4884,6 +4884,14 @@
           ],
           "title": "Repeat"
         },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "array"
+        },
         "trace": {
           "anyOf": [
             {
@@ -7040,6 +7048,15 @@
       "title": "IncludeBlock",
       "type": "object"
     },
+    "IterationType": {
+      "enum": [
+        "sequence",
+        "array",
+        "document"
+      ],
+      "title": "IterationType",
+      "type": "string"
+    },
     "LengthPenalty": {
       "additionalProperties": true,
       "properties": {
@@ -9003,6 +9020,14 @@
           "title": "Num Iterations",
           "type": "integer"
         },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "sequence"
+        },
         "trace": {
           "anyOf": [
             {
@@ -9653,6 +9678,14 @@
         },
         "until": {
           "title": "Until"
+        },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "sequence"
         },
         "trace": {
           "anyOf": [
