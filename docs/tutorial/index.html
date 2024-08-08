@@ -401,6 +401,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-scalars" class="md-nav__link">
+    <span class="md-ellipsis">
+      Block Scalars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-scalars" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow Scalars
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#variable-definition-and-use" class="md-nav__link">
     <span class="md-ellipsis">
       Variable Definition and Use
@@ -724,6 +757,205 @@ The model is passed some parameters including the <code>decoding_method</code> a
 </code></pre></div></p>
 <p>In this case, we make a call to a falcon model, and the input passed to the model is the sentence: <code>Translate 'the world' to French</code> and nothing else from the surrounding document. When we execute this program, we obtain:</p>
 <div class="highlight"><pre><span></span><code>Hello, Le monde
+</code></pre></div>
+<h2 id="strings">Strings</h2>
+<p>Multiline strings are commonly used when writing PDL programs. However, their exact semantics are not intuitive. There are two types of formats that YAML supports for strings: block scalar and flow scalar formats. Scalars are what YAML calls basic values like numbers or strings, as opposed to complex types like arrays or objects. Block scalars have more control over how they are interpreted, whereas flow scalars have more limited escaping support. (Explanation here is thanks to <a href="https://yaml-multiline.info/">Wolfgang Faust</a>)</p>
+<h3 id="block-scalars">Block Scalars</h3>
+<p><strong>Block Style Indicator</strong>: The block style indicates how newlines inside the block should behave. If you would like them to be <strong>kept</strong> as newlines, use the literal style, indicated by a pipe <code>|</code>. Note that without a chomping indicator, described next, only the <em>last</em> newline is kept.</p>
+<p>PDL:
+<div class="highlight"><pre><span></span><code>document:
+  - |
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+
+
+  - &quot;End.&quot;
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code>Several lines of text,
+with some &quot;quotes&quot; of various &#39;types&#39;,
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+End.
+</code></pre></div></p>
+<p>If instead you want them to be replaced by spaces, use the folded style, indicated by a right angle bracket <code>&gt;</code>. To get a newline using the folded style, leave a blank line by putting <em>two</em> newlines in. Lines with extra indentation are also not folded.</p>
+<p>PDL:
+<div class="highlight"><pre><span></span><code>document:
+  - &gt;
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+
+
+  - &quot;End.&quot;
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code>Several lines of text, with some &quot;quotes&quot; of various &#39;types&#39;, and also a blank line:
+and some text with
+    extra indentation
+on the next line, plus another line at the end.
+End.
+</code></pre></div></p>
+<p><strong>Block Chomping Indicator</strong>: The chomping indicator controls what should happen with newlines at the end of the string. The default, clip, puts a single newline at the end of the string. To remove all newlines, strip them by putting a minus sign <code>-</code> after the style indicator. Both clip and strip ignore how many newlines are actually at the end of the block; to keep them all put a plus sign <code>+</code> after the style indicator.</p>
+<p>PDL:
+<div class="highlight"><pre><span></span><code>document:
+  - |-
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+
+
+  - &quot;End.&quot;
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code>Several lines of text,
+with some &quot;quotes&quot; of various &#39;types&#39;,
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.End.
+</code></pre></div></p>
+<p>PDL:
+<div class="highlight"><pre><span></span><code>document:
+  - |+
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+
+
+  - &quot;End.&quot;
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code>Several lines of text,
+with some &quot;quotes&quot; of various &#39;types&#39;,
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+
+
+End.
+</code></pre></div></p>
+<p>If you don't have enough newline characters using the above methods, you can always add more like so:
+<div class="highlight"><pre><span></span><code>document:
+  - |-
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+
+
+  - &quot;\n\n\n\n&quot;
+  - &quot;End.&quot;
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code>Several lines of text,
+with some &quot;quotes&quot; of various &#39;types&#39;,
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+
+
+
+End.
+</code></pre></div></p>
+<p><strong>Indentation Indicator</strong>: Ordinarily, the number of spaces you're using to indent a block will be automatically guessed from its first line. You may need a block indentation indicator if the first line of the block starts with extra spaces. In this case, simply put the number of spaces used for indentation (between 1 and 9) at the end of the header.</p>
+<p>PDL:
+<div class="highlight"><pre><span></span><code>document:
+  - |1
+    Several lines of text,
+    with some &quot;quotes&quot; of various &#39;types&#39;,
+    and also a blank line:
+
+    and some text with
+        extra indentation
+    on the next line.
+</code></pre></div></p>
+<p>Output:
+<div class="highlight"><pre><span></span><code> Several lines of text,
+ with some &quot;quotes&quot; of various &#39;types&#39;,
+ and also a blank line:
+
+ and some text with
+     extra indentation
+ on the next line.
+</code></pre></div></p>
+<h3 id="flow-scalars">Flow Scalars</h3>
+<p><strong>Single-quoted</strong>:</p>
+<p>PDL:</p>
+<div class="highlight"><pre><span></span><code>document: &#39;Several lines of text,
+  containing &#39;&#39;single quotes&#39;&#39;. Escapes (like \n) don&#39;&#39;t do anything.
+
+  Newlines can be added by leaving a blank line.
+    Leading whitespace on lines is ignored.&#39;
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>Several lines of text, containing &#39;single quotes&#39;. Escapes (like \n) don&#39;t do anything.
+Newlines can be added by leaving a blank line. Leading whitespace on lines is ignored.
+</code></pre></div>
+<p><strong>Double-quoted</strong>:</p>
+<p>PDL:</p>
+<div class="highlight"><pre><span></span><code>document: &quot;Several lines of text,
+  containing \&quot;double quotes\&quot;. Escapes (like \\n) work.\nIn addition,
+  newlines can be esc\
+  aped to prevent them from being converted to a space.
+
+  Newlines can also be added by leaving a blank line.
+    Leading whitespace on lines is ignored.&quot;
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>Several lines of text, containing &quot;double quotes&quot;. Escapes (like \n) work.
+In addition, newlines can be escaped to prevent them from being converted to a space.
+Newlines can also be added by leaving a blank line. Leading whitespace on lines is ignored.
+</code></pre></div>
+<p><strong>Plain</strong>:</p>
+<p>PDL:</p>
+<div class="highlight"><pre><span></span><code>document: Several lines of text,
+  with some &quot;quotes&quot; of various &#39;types&#39;.
+  Escapes (like \n) don&#39;t do anything.
+
+  Newlines can be added by leaving a blank line.
+    Additional leading whitespace is ignored.
+</code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>Several lines of text, with some &quot;quotes&quot; of various &#39;types&#39;. Escapes (like \n) don&#39;t do anything.
+Newlines can be added by leaving a blank line. Additional leading whitespace is ignored.
 </code></pre></div>
 <h2 id="variable-definition-and-use">Variable Definition and Use</h2>
 <p>Any block can have a variable definition using a <code>def: &lt;var&gt;</code> field. This means that the output of that block is assigned to the variable <code>&lt;var&gt;</code>, which may be reused at a later point in the document. </p>
@@ -1367,10 +1599,10 @@ Answer: Let&#39;s think step by step.
 </code></pre></div>
 <h3 id="react-yao-2023">ReAct (Yao, 2023)</h3>
 <p>The ReAct agent pattern is essentially a question, followed by a series of thoughts, actions, and observations, collectively called the trajectory. The input question is usually followed by a thought like <code>I need to search for x</code>. This is then followed by an action <code>Search[x]</code>, and the output of this tool cool is the observation. Finally, the agent ends the trajectory with the <code>Finish[answer]</code> action.</p>
-<p>This pattern is provided by <code>examples/prompt_library/React.pdl</code>. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until <code>Finish</code> is reached.</p>
+<p>This pattern is provided by <code>examples/prompt_library/ReAct.pdl</code>. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until <code>Finish</code> is reached.</p>
 <p>The first building block is the <code>react_block</code> function. This function renders a trajectory, which consist of a list of single-item maps, into text. For example:</p>
 <div class="highlight"><pre><span></span><code>document:
-  - include: examples/prompt_library/React.pdl
+  - include: examples/prompt_library/ReAct.pdl
   - call: react_block
     args:
       trajectory:

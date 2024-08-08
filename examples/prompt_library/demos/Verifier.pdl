@@ -24,7 +24,7 @@ document:
       model: "ibm/granite-7b-lab"
       tools: "{{ filtered_tools }}"
       trajectories: []
-  - "\n\n\u001b[34mVerifying answer...\n\n\u001b[37m"
+  - "\n\n-------- Verifying answer --------\n\n"
   - def: LLAMA_RESULT
     call: react
     show_result: true

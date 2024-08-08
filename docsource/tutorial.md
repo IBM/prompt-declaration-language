@@ -86,6 +86,258 @@ In this case, we make a call to a falcon model, and the input passed to the mode
 Hello, Le monde
 ```
 
+##  Strings
+
+Multiline strings are commonly used when writing PDL programs. However, their exact semantics are not intuitive. There are two types of formats that YAML supports for strings: block scalar and flow scalar formats. Scalars are what YAML calls basic values like numbers or strings, as opposed to complex types like arrays or objects. Block scalars have more control over how they are interpreted, whereas flow scalars have more limited escaping support. (Explanation here is thanks to [Wolfgang Faust](https://yaml-multiline.info/))
+
+### Block Scalars
+
+**Block Style Indicator**: The block style indicates how newlines inside the block should behave. If you would like them to be **kept** as newlines, use the literal style, indicated by a pipe `|`. Note that without a chomping indicator, described next, only the _last_ newline is kept.
+
+PDL:
+```
+document:
+  - |
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+    
+    
+  - "End."
+```
+
+Output:
+```
+Several lines of text,
+with some "quotes" of various 'types',
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+End.
+```
+
+If instead you want them to be replaced by spaces, use the folded style, indicated by a right angle bracket `>`. To get a newline using the folded style, leave a blank line by putting _two_ newlines in. Lines with extra indentation are also not folded.
+
+PDL:
+```
+document:
+  - >
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+    
+    
+  - "End."
+```
+
+Output:
+```
+Several lines of text, with some "quotes" of various 'types', and also a blank line:
+and some text with
+    extra indentation
+on the next line, plus another line at the end.
+End.
+```
+
+**Block Chomping Indicator**: The chomping indicator controls what should happen with newlines at the end of the string. The default, clip, puts a single newline at the end of the string. To remove all newlines, strip them by putting a minus sign `-` after the style indicator. Both clip and strip ignore how many newlines are actually at the end of the block; to keep them all put a plus sign `+` after the style indicator.
+
+PDL:
+```
+document:
+  - |-
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+    
+    
+  - "End."
+```
+
+Output:
+```
+Several lines of text,
+with some "quotes" of various 'types',
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.End.
+```
+
+PDL:
+```
+document:
+  - |+
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+    
+    
+  - "End."
+```
+
+Output:
+```
+Several lines of text,
+with some "quotes" of various 'types',
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+
+
+End.
+```
+
+If you don't have enough newline characters using the above methods, you can always add more like so:
+```
+document:
+  - |-
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line,
+    plus another line at the end.
+    
+    
+  - "\n\n\n\n"
+  - "End."
+```
+
+Output:
+```
+Several lines of text,
+with some "quotes" of various 'types',
+and also a blank line:
+
+and some text with
+    extra indentation
+on the next line,
+plus another line at the end.
+
+
+
+End.
+```
+
+**Indentation Indicator**: Ordinarily, the number of spaces you're using to indent a block will be automatically guessed from its first line. You may need a block indentation indicator if the first line of the block starts with extra spaces. In this case, simply put the number of spaces used for indentation (between 1 and 9) at the end of the header.
+
+PDL:
+```
+document:
+  - |1
+    Several lines of text,
+    with some "quotes" of various 'types',
+    and also a blank line:
+    
+    and some text with
+        extra indentation
+    on the next line.
+```
+
+Output:
+```
+ Several lines of text,
+ with some "quotes" of various 'types',
+ and also a blank line:
+
+ and some text with
+     extra indentation
+ on the next line.
+```
+
+### Flow Scalars
+
+**Single-quoted**:
+
+PDL:
+
+```
+document: 'Several lines of text,
+  containing ''single quotes''. Escapes (like \n) don''t do anything.
+  
+  Newlines can be added by leaving a blank line.
+    Leading whitespace on lines is ignored.'
+```
+
+Output:
+
+```
+Several lines of text, containing 'single quotes'. Escapes (like \n) don't do anything.
+Newlines can be added by leaving a blank line. Leading whitespace on lines is ignored.
+```
+
+**Double-quoted**:
+
+PDL:
+
+```
+document: "Several lines of text,
+  containing \"double quotes\". Escapes (like \\n) work.\nIn addition,
+  newlines can be esc\
+  aped to prevent them from being converted to a space.
+  
+  Newlines can also be added by leaving a blank line.
+    Leading whitespace on lines is ignored."
+```
+
+Output:
+
+```
+Several lines of text, containing "double quotes". Escapes (like \n) work.
+In addition, newlines can be escaped to prevent them from being converted to a space.
+Newlines can also be added by leaving a blank line. Leading whitespace on lines is ignored.
+```
+
+**Plain**:
+
+PDL:
+
+```
+document: Several lines of text,
+  with some "quotes" of various 'types'.
+  Escapes (like \n) don't do anything.
+  
+  Newlines can be added by leaving a blank line.
+    Additional leading whitespace is ignored.
+```
+
+Output:
+
+```
+Several lines of text, with some "quotes" of various 'types'. Escapes (like \n) don't do anything.
+Newlines can be added by leaving a blank line. Additional leading whitespace is ignored.
+```
+
 ##  Variable Definition and Use
 
 Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
@@ -876,13 +1128,13 @@ document:
 
 The ReAct agent pattern is essentially a question, followed by a series of thoughts, actions, and observations, collectively called the trajectory. The input question is usually followed by a thought like `I need to search for x`. This is then followed by an action `Search[x]`, and the output of this tool cool is the observation. Finally, the agent ends the trajectory with the `Finish[answer]` action.
 
-This pattern is provided by `examples/prompt_library/React.pdl`. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until `Finish` is reached.
+This pattern is provided by `examples/prompt_library/ReAct.pdl`. It describes the tools, renders their examples, renders any user provided trajectories (e.g., multiple tool use), and handles the core loop until `Finish` is reached.
 
 The first building block is the `react_block` function. This function renders a trajectory, which consist of a list of single-item maps, into text. For example:
 
 ```
 document:
-  - include: examples/prompt_library/React.pdl
+  - include: examples/prompt_library/ReAct.pdl
   - call: react_block
     args:
       trajectory:
