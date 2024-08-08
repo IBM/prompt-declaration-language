@@ -1,4 +1,4 @@
-description: NorthStar Assitant
+description: CodeLLM-Devkit Assistant
 document: 
 - read:
   def: project
@@ -12,25 +12,20 @@ document:
   - |
     import os
     from rich import print  # Optional, for pretty printing.
-    from northstar import Northstar
-    from northstar.models.java.models import *
+    from cldk import CLDK
+    from cldk.models.java.models import *
 
-    # Initialize the Northstar object with the project directory, language, and backend.
-    ns = Northstar(
-        project_dir="{{ project }}",   #os.getenv("DAYTRADER8_DIR"),  # Change this to the path of the project you want to analyze.
-        language="java",  # The language of the project.
-        backend="codeanalyzer",  # The backend to use for the analysis.
-        analysis_db="/tmp",  # A temporary directory to store the analysis results.
-        sdg=True, # Generate the System Dependence Graph (SDG) for the project.
+    # Initialize the Codellm-DevKit object with the project directory, language, and backend.
+    cldk = CLDK("java")
+    cldk_state = cldk.analysis(
+        project_path="{{ project }}",   # Change this to the path of the project you want to analyze.
+        # language="java",  # The language of the project.
+        # backend="codeanalyzer",  # The backend to use for the analysis.
+        # analysis_db="/tmp",  # A temporary directory to store the analysis results.
+        # sdg=True, # Generate the System Dependence Graph (SDG) for the project.
     )
-    PDL_SESSION.ns = ns
-    result = ns
-    # Get the java application view for the project. The application view is a representation of the project as a graph with all the classes, methods, and fields.
-    #app: JApplication = ns.preprocessing.get_application_view()
-
-    # Get all the classes in the project.
-    #classes_dict = ns.preprocessing.get_all_classes()
-    #result = classes_dict.keys()
+    PDL_SESSION.cldk_state = cldk_state
+    result = cldk_state
 - " done!"
 - repeat:
   - read:
@@ -52,7 +47,7 @@ document:
           - lan: python
             code: 
             - |
-              classes = PDL_SESSION.ns.preprocessing.get_all_classes().keys()
+              classes = PDL_SESSION.cldk_state.get_classes().keys()
               result = ", ".join(classes)
           ```
 
@@ -63,7 +58,7 @@ document:
           - lan: python
             code: 
             - |
-              constructors = PDL_SESSION.ns.preprocessing.get_all_constructors("org.ibm.App")
+              constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
               result = ", ".join(constructors)
           ```
 
@@ -74,7 +69,7 @@ document:
           - lan: python
             code: 
             - |
-              fields = PDL_SESSION.ns.preprocessing.get_all_fields("org.ibm.App")
+              fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
               names = sum([f.variables for f in fields], [])
               result = ", ".join(names)
           ```
@@ -86,7 +81,7 @@ document:
           - lan: python
             code: 
             - |
-              methods = PDL_SESSION.ns.preprocessing.get_all_methods_in_class("org.ibm.App")
+              methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
               result = ", ".join(methods)
           ```
 
@@ -97,7 +92,7 @@ document:
           - lan: python
             code: 
             - |
-              graph =  PDL_SESSION.ns.preprocessing.get_class_call_graph("org.ibm.App", method_name=None) 
+              graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
               result = graph
           ```
 
@@ -108,7 +103,7 @@ document:
           - lan: python
             code: 
             - |
-              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
               result = method.code
           ```
 
@@ -119,7 +114,7 @@ document:
           - lan: python
             code: 
             - |
-              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
               result = method
           - "\n\nGenerate a summary of method Foo\n\n"
           - model: meta-llama/llama-3-70b-instruct
@@ -132,7 +127,7 @@ document:
           - lan: python
             code: 
             - |
-              method = PDL_SESSION.ns.preprocessing.get_method("org.ibm.App", "Foo(string)")
+              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
               result = method
           - "\n\nGenerate a different comment for method Foo(string)\n\n"
           - model: meta-llama/llama-3-70b-instruct

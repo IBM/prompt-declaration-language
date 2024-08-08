@@ -542,7 +542,10 @@ def stringify(result):
     elif isinstance(result, FunctionBlock):
         s = ""
     else:
-        s = json.dumps(result)
+        try:
+            s = json.dumps(result)
+        except TypeError:
+            s = str(result)
     return s
 
 
