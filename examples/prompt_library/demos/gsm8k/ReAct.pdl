@@ -1,0 +1,35 @@
+description: Demo of ReAct template
+defs:
+  math_tools:
+    data:
+      - name: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expression
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples:
+          - - question: |-
+                Noah charges $60 for a large painting and $30 for a small painting.
+                Last month he sold eight large paintings and four small paintings.
+                If he sold twice as much this month, how much is his sales for this month?
+            - thought: |-
+                He sold 8 large paintings and 4 small paintings last month.
+                He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+            - action: Calculator[8*60+4*30]
+            - observation: 600
+            - thought: |-
+                So he sold 600 paintings last month. He sold twice as many this month, therefore I need to calculate 600*2.
+            - action: Calculator[600*2]
+            - observation: 1200
+            - thought: He sold $1200 this month.
+            - action: Finish[$1200]
+document:
+  - include: examples/prompt_library/tools.pdl
+  - include: examples/prompt_library/ReAct.pdl
+  - call: react
+    args:
+     question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+     model: meta-llama/llama-3-70b-instruct
+     tools: "{{ math_tools }}"
+     trajectories: []
