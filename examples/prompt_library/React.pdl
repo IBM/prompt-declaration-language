@@ -95,21 +95,20 @@ defs:
         repeat:
           - defs:
               type: "{{ trajectory.keys()|first }}"
-              content: "{{ trajectory.values()|first }}"
           - if: "{{ type == 'question'}}"
             then: |
-              Question: {{ content }}
+              Question: {{ trajectory[type] }}
           - if: "{{ type == 'thought'}}"
             then: |
-              Tho: {{ content }}
+              Tho: {{ trajectory[type] }}
           - if: "{{ type == 'action'}}"
             then: |
-              Act: {{ content }}
+              Act: {{ trajectory[type] }}
           - if: "{{ type == 'observation'}}"
             then: |
-              Obs: {{ content }}
+              Obs: {{ trajectory[type] }}
           - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
-            then: "{{ type }}: {{ content }}"
+            then: "{{ type }}: {{ trajectory[type] }}"
       - "\n"
 
   demonstrate_tools:
@@ -278,4 +277,4 @@ defs:
         until: "{{ action.name == 'Finish' }}"
       - "\n\nJSON Output: "
       - data:
-          answer: "{{ SUBJECT|trim }}"
+          answer: "{{ action.arguments }}"

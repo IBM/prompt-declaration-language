@@ -28,7 +28,7 @@ defs:
 
   Search:
     function:
-      arguments: str
+      arguments: obj
     return:
       - defs:
           result:
@@ -43,7 +43,7 @@ defs:
                 except wikipedia.WikipediaException as e:
                   return str(e)
 
-              result = main(**action["arguments"])
+              result = main(**arguments)
       - if: "{{ wrap_document }}"
         then: "[Document]\n{{ result }}\n[End]\n"
         else: "{{ result }}"
@@ -138,7 +138,7 @@ defs:
           - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
             - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
             - action: |
-                '{"name": "Search", "arguments": {"topic": "Colorado orogeny"}}'
+                {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
             - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
             - thought: "It does not mention the eastern sector. So I need to look up eastern sector."
             - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
