@@ -5,7 +5,7 @@
 # 3. `mkdocs build` to build the static site.
 #    In the future, a GitHub action should do this.
 
-site_name: Prompt Description Language
+site_name: Prompt Declaration Language
 # repo_url: https://github.com/ibm/pdl # Uncomment when open sourced
 site_url: https://pages.github.ibm.com/ml4code/pdl/
 

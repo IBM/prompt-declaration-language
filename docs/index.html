@@ -20,7 +20,7 @@
     
     
       
-        <title>Prompt Description Language</title>
+        <title>Prompt Declaration Language</title>
       
     
     
@@ -90,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Prompt Description Language" class="md-header__button md-logo" aria-label="Prompt Description Language" data-md-component="logo">
+    <a href="." title="Prompt Declaration Language" class="md-header__button md-logo" aria-label="Prompt Declaration Language" data-md-component="logo">
       
   <img src="assets/ai-governance--prompt.svg" alt="logo">
 
@@ -103,7 +103,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Prompt Description Language
+            Prompt Declaration Language
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -298,12 +298,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Prompt Description Language" class="md-nav__button md-logo" aria-label="Prompt Description Language" data-md-component="logo">
+    <a href="." title="Prompt Declaration Language" class="md-nav__button md-logo" aria-label="Prompt Declaration Language" data-md-component="logo">
       
   <img src="assets/ai-governance--prompt.svg" alt="logo">
 
     </a>
-    Prompt Description Language
+    Prompt Declaration Language
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -522,8 +522,8 @@ hide:
   - navigation
   - toc
 --- -->
-<h1 id="prompt-description-language">Prompt Description Language</h1>
-<p>LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Description Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. </p>
+<h1 id="prompt-description-language">Prompt Declaration Language</h1>
+<p>LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. </p>
 <p>PDL is based on the premise that interactions between users, LLMs and rule-based systems form a <em>document</em>. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML or JSON), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...). Moreover, PDL programs themselves are structured data (YAML) as opposed to traditional code, so they make good targets for LLM generation as well.</p>
 <p>PDL provides the following features:
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages).
