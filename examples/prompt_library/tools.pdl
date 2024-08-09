@@ -1,23 +1,52 @@
 description: Toolbox of PDL functions for agents
 defs:
-
   # Note: Although PDL functions can be properly typed,
   # the input to a function via the LLM is fundamentally a string.
   # Therefore, parsing the input is the responsibility of the
   # function, not the caller. In the future, one could
   # imagine the use of constrained decoding to force
   # LLM to produce a type-compliant JSON as input.
-  Search:
+
+  wrap_document:
+    data: true
+  Search_old:
     function:
       subject: str
     return:
-      - lan: python
-        code: |
-          import wikipedia
-          try:
-            result = wikipedia.summary(subject)
-          except wikipedia.WikipediaException as e:
-            result = str(error)
+      - defs:
+          result:
+            lan: python
+            code: |
+              import wikipedia
+              try:
+                result = wikipedia.summary(subject)
+              except wikipedia.WikipediaException as e:
+                result = str(error)
+      - if: "{{ wrap_document }}"
+        then: "[Document]\n{{ result }}\n[End]\n"
+        else: "{{ result }}"
+
+  Search:
+    function:
+      arguments: str
+    return:
+      - defs:
+          result:
+            lan: python
+            code: |
+              import warnings, wikipedia
+              warnings.simplefilter("ignore")
+
+              def main(topic: str) -> str:
+                try:
+                  return wikipedia.summary(topic)
+                except wikipedia.WikipediaException as e:
+                  return str(e)
+
+              result = main(**action["arguments"])
+      - if: "{{ wrap_document }}"
+        then: "[Document]\n{{ result }}\n[End]\n"
+        else: "{{ result }}"
 
   default_model: "ibm/granite-34-code-instruct"
   LLM:
@@ -25,7 +54,10 @@ defs:
       subject: str
     return:
       model: "{{ default_model }}"
-      params:
+      parameters:
+        stop_sequences:
+          - "<|endoftext|>"
+        include_stop_sequence: false
         decoding_method: greedy
 
   Calculator:
@@ -36,3 +68,139 @@ defs:
       code: |
         import math
         result = {{ subject }}
+
+  get_current_weather:
+    function:
+      subject: str
+    return:
+      - api: https
+        url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
+        input: "{{ subject }}"
+        show_result: false
+
+  default_tools:
+    data:
+      - name: get_current_weather
+        description: Get the current weather
+        parameters:
+          - name: location
+            type: string
+            description: The city and state, e.g. San Francisco, CA
+        examples:
+          - - question: "What is the weather in London?"
+            - action: "get_current_weather[London]"
+            - observation: |
+                {"location":{"name":"London","region":"City of London, Greater London","country":"United Kingdom","lat":51.52,"lon":-0.11,"tz_id":"Europe/London","localtime_epoch":1722262564,"localtime":"2024-07-29 15:16"},"current":{"last_updated_epoch":1722262500,"last_updated":"2024-07-29 15:15","temp_c":27.9,"temp_f":82.2,"is_day":1,"condition":{"text":"Sunny","icon":"//cdn.weatherapi.com/weather/64x64/day/113.png","code":1000},"wind_mph":8.1,"wind_kph":13.0,"wind_degree":133,"wind_dir":"SE","pressure_mb":1019.0,"pressure_in":30.09,"precip_mm":0.0,"precip_in":0.0,"humidity":33,"cloud":6,"feelslike_c":27.2,"feelslike_f":80.9,"windchill_c":27.9,"windchill_f":82.2,"heatindex_c":27.2,"heatindex_f":80.9,"dewpoint_c":10.3,"dewpoint_f":50.5,"vis_km":10.0,"vis_miles":6.0,"uv":7.0,"gust_mph":9.3,"gust_kph":14.9}}
+            - action: "Finish[The weather in London is 82.2f and sunny.]"
+      - name: LLM
+        description: Call another LLM
+        parameters:
+          - name: query
+            type: string
+            description: The prompt
+        examples:
+      - name: Calculator
+        description: Run a calculator
+        parameters:
+          - name: query
+            type: string
+            description: The equation
+        examples:
+      - name: Wikipedia
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: query
+            type: string
+            description: The topic of interest
+        examples:
+          - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+            - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+            - action: "Search[Colorado orogeny]"
+            - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+            - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+            - action: "Finish[1,800 to 7,000 ft]"
+          - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+            - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+            - action: "Search[Nicholas Ray]"
+            - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+            - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+            - action: "Search[Elia Kazan]"
+            - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+            - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+            - action: "Finish[director, screenwriter, actor]"
+      - name: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: query
+            type: string
+            description: The topic of interest
+        examples:
+          - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+            - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+            - action: |
+                '{"name": "Search", "arguments": {"topic": "Colorado orogeny"}}'
+            - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+            - thought: "It does not mention the eastern sector. So I need to look up eastern sector."
+            - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+            - action: |
+                {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
+          - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+            - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+            - action: |
+                {"name": "Search", "arguments": {"topic": "Nicholas Ray"}}
+            - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+            - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+            - action: |
+                {"name": "Search", "arguments": {"topic": "Elia Kazan"}}
+            - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+            - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+            - action: |
+                {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
+          
+          # - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+          #   - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+          #   - action: "Search[Colorado orogeny]"
+          #   - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+          #   - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+          #   - action: "Finish[1,800 to 7,000 ft]"
+          # - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+          #   - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+          #   - action: "Search[Nicholas Ray]"
+          #   - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+          #   - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+          #   - action: "Search[Elia Kazan]"
+          #   - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+          #   - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+          #   - action: "Finish[director, screenwriter, actor]"
+
+  filter_tools_by_name:
+    function:
+      tools: { list: obj }
+      tool_names: { list: str }
+    return:
+      data: "{{ tools|selectattr('name', 'in', tool_names)|list }}"
+
+  list_tools:
+    function:
+      tools: { list: obj }
+    return:
+      - defs:
+          signatures:
+            for:
+              tool: "{{ tools }}"
+            repeat: "{{ tool.name }}[<{{ tool.parameters|join('>, <', attribute='name') }}>]"
+          typed_signatures:
+            for:
+              tool: "{{ tools }}"
+            repeat:
+              - defs:
+                  params:
+                    for:
+                      param: "{{ tool.parameters }}"
+                    repeat: "{{ param.name}}: {{ param.type }}"
+              - "{{ tool.name }}({{ params|join(', ') }})"
+      - data:
+          names: "{{ tools|map(attribute='name')|list }}"
+          signatures: "{{ signatures }}"
+          typed_signatures: "{{ typed_signatures }}"
+          descriptions: "{{ tools|map(attribute='description')|list }}"

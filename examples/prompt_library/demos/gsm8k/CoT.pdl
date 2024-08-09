@@ -1,7 +1,7 @@
 description: Demo of CoT template
 document:
   - include: examples/prompt_library/CoT.pdl
-  - call: fewshot_cot
+  - call: chain_of_thought
     args:
       examples:
         - question: |-
@@ -28,8 +28,5 @@ document:
             So he sold << 150+30= 180 >> 180 vases last month.
             Therefore he sold << 180*3= 540 >> this month.
           answer: $540
-  - call: auto_chain_of_thought
-    args:
-      question: "Noah has 2 apples. A friend gives him 3 more. How many apples does Noah have?"
-      model: "ibm/granite-34b-code-instruct"
-      answer: "5"
+      question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+      model: "meta-llama/llama-3-70b-instruct"
