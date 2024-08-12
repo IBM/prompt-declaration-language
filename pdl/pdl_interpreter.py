@@ -16,6 +16,7 @@ from .pdl_ast import (
     ApiBlock,
     ArrayBlock,
     BamModelBlock,
+    Block,
     BlocksType,
     BlockType,
     CallBlock,
@@ -161,12 +162,12 @@ def step_block(
     result: Any
     output: str
     trace: BlockType
-    if isinstance(block, str):
+    if not isinstance(block, Block):
         result, errors = process_expr(scope, block, loc)
         if len(errors) != 0:
             trace = handle_error(block, loc, None, errors, block)
             result = block
-            output = block
+            output = str(block)
         else:
             output = stringify(result)
             trace = output
@@ -1080,7 +1081,7 @@ def handle_error(
 
 
 def _raise_on_error(block: BlockType):
-    if isinstance(block, str) or block.fallback is not None:
+    if not isinstance(block, Block) or block.fallback is not None:
         return
     if isinstance(block, ErrorBlock):
         raise StopIteration

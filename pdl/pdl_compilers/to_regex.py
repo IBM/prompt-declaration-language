@@ -8,6 +8,7 @@ from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as WatsonxGenParams
 from ..pdl_ast import (
     ApiBlock,
     BamModelBlock,
+    Block,
     BlocksType,
     BlockType,
     CallBlock,
@@ -258,8 +259,8 @@ def compile_block(
     scope: CompileScope, block: BlockType
 ) -> tuple[RegexType, CompileScope]:
     regex: RegexType
-    if isinstance(block, str):
-        return ReConst(block), scope
+    if not isinstance(block, Block):
+        return ReConst(str(block)), scope
     match block:
         case ModelBlock():
             stop_sequences: list[str]

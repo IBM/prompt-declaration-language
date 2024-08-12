@@ -3,6 +3,7 @@ from typing import Callable, Sequence
 from .pdl_ast import (
     ApiBlock,
     ArrayBlock,
+    Block,
     BlocksType,
     BlockType,
     CallBlock,
@@ -27,7 +28,7 @@ from .pdl_ast import (
 
 
 def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> None:
-    if isinstance(block, str):
+    if not isinstance(block, Block):
         return
     for blocks in block.defs.values():
         iter_blocks(f, blocks)

@@ -23,6 +23,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -85,6 +91,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -223,6 +235,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -285,6 +303,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -376,6 +400,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -438,6 +468,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -537,6 +573,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -599,6 +641,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -737,6 +785,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -799,6 +853,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -882,6 +942,12 @@
         "array": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -944,6 +1010,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1041,6 +1113,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -1103,6 +1181,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -1241,6 +1325,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1303,6 +1393,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1390,6 +1486,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1452,6 +1554,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1611,6 +1719,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -1673,6 +1787,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -1811,6 +1931,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1873,6 +1999,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1965,6 +2097,12 @@
         "trace": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2027,6 +2165,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2128,6 +2272,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -2190,6 +2340,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -2328,6 +2484,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2390,6 +2552,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2481,6 +2649,12 @@
         "code": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2543,6 +2717,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2641,6 +2821,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -2703,6 +2889,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -2841,6 +3033,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2903,6 +3101,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3024,6 +3228,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -3086,6 +3296,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -3224,6 +3440,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3286,6 +3508,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3369,6 +3597,12 @@
         "document": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3431,6 +3665,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3528,6 +3768,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -3590,6 +3836,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -3728,6 +3980,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3790,6 +4048,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3897,6 +4161,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -3959,6 +4229,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -4097,6 +4373,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4159,6 +4441,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4246,6 +4534,12 @@
         "program": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4308,6 +4602,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4406,6 +4706,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -4468,6 +4774,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -4606,6 +4918,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4668,6 +4986,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4755,6 +5079,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4817,6 +5147,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4898,6 +5234,12 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
                     "type": "string"
                   },
                   {
@@ -4960,6 +5302,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -5066,6 +5414,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -5128,6 +5482,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -5266,6 +5626,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5328,6 +5694,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5422,6 +5794,12 @@
         "return": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5484,6 +5862,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5594,6 +5978,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -5656,6 +6046,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -5794,6 +6190,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5856,6 +6258,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5970,6 +6378,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -6032,6 +6446,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -6170,6 +6590,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -6232,6 +6658,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -6318,6 +6750,12 @@
         "then": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -6380,6 +6818,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -6450,6 +6894,12 @@
         "else": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -6512,6 +6962,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -6626,6 +7082,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -6688,6 +7150,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -6826,6 +7294,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -6888,6 +7362,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -6974,6 +7454,12 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
             {
               "type": "string"
             },
@@ -7619,6 +8105,12 @@
     "PdlBlock": {
       "anyOf": [
         {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "string"
         },
         {
@@ -7684,6 +8176,12 @@
     "PdlBlocks": {
       "anyOf": [
         {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "string"
         },
         {
@@ -7746,6 +8244,12 @@
         {
           "items": {
             "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
               {
                 "type": "string"
               },
@@ -7843,6 +8347,12 @@
         "pdl": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -7905,6 +8415,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -7981,6 +8497,12 @@
     },
     "Program": {
       "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
         {
           "type": "string"
         },
@@ -8092,6 +8614,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -8154,6 +8682,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -8292,6 +8826,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8354,6 +8894,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8542,6 +9088,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -8604,6 +9156,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -8742,6 +9300,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8804,6 +9368,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8887,6 +9457,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8949,6 +9525,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9034,6 +9616,12 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
                     "type": "string"
                   },
                   {
@@ -9096,6 +9684,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -9202,6 +9796,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -9264,6 +9864,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -9402,6 +10008,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -9464,6 +10076,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9547,6 +10165,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -9609,6 +10233,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9693,6 +10323,12 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
                     "type": "string"
                   },
                   {
@@ -9755,6 +10391,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -9861,6 +10503,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -9923,6 +10571,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -10061,6 +10715,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -10123,6 +10783,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -10206,6 +10872,12 @@
         "sequence": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -10268,6 +10940,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -10458,6 +11136,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -10520,6 +11204,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -10658,6 +11348,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -10720,6 +11416,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -10807,6 +11509,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -10869,6 +11577,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },

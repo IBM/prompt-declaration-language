@@ -5,7 +5,7 @@ export function map_block_children(
   f: (block: PdlBlock) => PdlBlock,
   block: PdlBlock
 ): PdlBlock {
-  if (typeof block === 'string') {
+  if (typeof block === 'number' || typeof block === 'string') {
     return block;
   }
   let new_block: PdlBlock;
@@ -106,7 +106,7 @@ export function iter_block_children(
   f: (block: PdlBlock) => void,
   block: PdlBlock
 ): void {
-  if (typeof block === 'string') {
+  if (typeof block === 'number' || typeof block === 'string') {
     return;
   }
   if (block?.defs) {

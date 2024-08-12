@@ -275,7 +275,7 @@ AdvancedBlockType: TypeAlias = (
     | EmptyBlock
 )
 
-BlockType: TypeAlias = str | AdvancedBlockType
+BlockType: TypeAlias = int | float | str | AdvancedBlockType
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 
 

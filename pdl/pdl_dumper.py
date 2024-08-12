@@ -8,6 +8,7 @@ from .pdl_ast import (
     ApiBlock,
     ArrayBlock,
     BamModelBlock,
+    Block,
     BlocksType,
     CallBlock,
     CodeBlock,
@@ -57,12 +58,12 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
-def program_to_dict(prog: pdl_ast.Program) -> str | dict[str, Any]:
+def program_to_dict(prog: pdl_ast.Program) -> int | float | str | dict[str, Any]:
     return block_to_dict(prog.root)
 
 
-def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
-    if isinstance(block, str):
+def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any]:
+    if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
     d["kind"] = block.kind
@@ -177,8 +178,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
 
 def blocks_to_dict(
     blocks: BlocksType,
-) -> str | dict[str, Any] | list[str | dict[str, Any]]:
-    result: str | dict[str, Any] | list[str | dict[str, Any]]
+) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
+    result: int | float | str | dict[str, Any] | list[
+        int | float | str | dict[str, Any]
+    ]
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = [block_to_dict(block) for block in blocks]
     else:
