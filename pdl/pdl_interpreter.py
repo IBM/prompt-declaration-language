@@ -3,14 +3,14 @@ import re
 import shlex
 import subprocess
 import types
-from ast import literal_eval
 from itertools import batched
 from pathlib import Path
 from typing import Any, Generator, Iterable, Literal, Optional, Sequence
 
 import requests
 import yaml
-from jinja2 import StrictUndefined, Template, UndefinedError
+from jinja2 import Environment, StrictUndefined, Template, UndefinedError
+from jinja2.runtime import Undefined
 from pydantic import BaseModel
 
 from .pdl_ast import (
@@ -558,16 +558,31 @@ def process_expr(
             autoescape=False,
             undefined=StrictUndefined,
         )
+
         try:
-            s = template.render(scope)
             if expr.startswith("{{") and expr.endswith("}}"):
                 try:
-                    return literal_eval(s), []
-                except Exception:
-                    pass
+                    env = Environment(
+                        block_start_string="{%%%%%PDL%%%%%%%%%%",
+                        block_end_string="%%%%%PDL%%%%%%%%%%}",
+                        undefined=StrictUndefined,
+                    )
+
+                    s = env.compile_expression(expr[2:-2], undefined_to_none=False)(
+                        scope
+                    )
+
+                    if isinstance(s, Undefined):
+                        raise UndefinedError(str(s))
+                except Exception as e:
+                    msg = f"{get_loc_string(loc)}{e}"
+                    return (None, [msg])
+            else:
+                s = template.render(scope)
         except UndefinedError as e:
             msg = f"{get_loc_string(loc)}{e}"
             return (None, [msg])
+
         return (s, [])
     if isinstance(expr, list):
         errors = []
