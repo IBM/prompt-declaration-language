@@ -4,7 +4,7 @@ from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
 
-from .pdl_ast import PDLTextGenerationParameters
+from .pdl_ast import BamTextGenerationParameters
 from .pdl_llms import BamModel
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
@@ -60,7 +60,7 @@ class ModelCallMessage(YieldMessage):
     model_id: str
     model_input: str
     prompt_id: Optional[str]
-    parameters: Optional[PDLTextGenerationParameters]
+    parameters: Optional[dict | BamTextGenerationParameters]
     moderations: Optional[ModerationParameters]
     data: Optional[PromptTemplateData]
 

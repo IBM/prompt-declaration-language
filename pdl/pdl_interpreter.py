@@ -16,6 +16,7 @@ from .pdl_ast import (
     ApiBlock,
     ArrayBlock,
     BamModelBlock,
+    BamTextGenerationParameters,
     Block,
     BlocksType,
     BlockType,
@@ -701,6 +702,9 @@ def step_call_model(
     Any,
     tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | ErrorBlock],
 ]:
+    # evaluate model name
+    model, errors = process_expr(scope, block.model, append(loc, "model"))
+    # evaluate input
     if block.input is not None:  # If not implicit, then input must be a block
         _, model_input, _, input_trace = yield from step_blocks(
             IterationType.DOCUMENT,
@@ -712,17 +716,51 @@ def step_call_model(
     else:
         model_input = scope["context"]
         input_trace = None
-    model, errors = process_expr(scope, block.model, append(loc, "model"))
+    # evaluate model params
+    match block:
+        case BamModelBlock():
+            if isinstance(block.parameters, BamTextGenerationParameters):
+                params_expr = block.parameters.model_dump()
+            else:
+                params_expr = block.parameters
+            params, param_errors = process_expr(scope, params_expr, loc)
+            errors += param_errors
+            concrete_block = block.model_copy(
+                update={
+                    "model": model,
+                    "input": model_input,
+                    "parameters": params,
+                }
+            )
+        case WatsonxModelBlock():
+            params, param_errors = process_expr(scope, block.params, loc)
+            errors += param_errors
+            concrete_block = block.model_copy(
+                update={
+                    "model": model,
+                    "input": model_input,
+                    "params": params,
+                }
+            )
+        case _:
+            assert False
     if len(errors) != 0:
         trace = handle_error(
-            block, loc, None, errors, block.model_copy(update={"input": input_trace})
+            block,
+            loc,
+            None,
+            errors,
+            block.model_copy(update={"input": input_trace, "trace": concrete_block}),
         )
         return None, "", scope, trace
+    # Execute model call
     try:
         append_log(state, "Model Input", model_input)
-        gen = yield from generate_client_response(state, block, model, model_input)
+        gen = yield from generate_client_response(state, concrete_block)
         append_log(state, "Model Output", gen)
-        trace = block.model_copy(update={"result": gen, "input": input_trace})
+        trace = block.model_copy(
+            update={"result": gen, "input": input_trace, "trace": concrete_block}
+        )
         return gen, gen, scope, trace
     except Exception as e:
         trace = handle_error(
@@ -730,7 +768,7 @@ def step_call_model(
             loc,
             f"Model error: {e}",
             [],
-            block.model_copy(update={"input": input_trace}),
+            block.model_copy(update={"input": input_trace, "trace": concrete_block}),
         )
         return None, "", scope, trace
 
@@ -738,46 +776,38 @@ def step_call_model(
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock,
-    model: str,
-    model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
     match state.batch:
         case 0:
-            output = yield from generate_client_response_streaming(
-                state, block, model, model_input
-            )
+            output = yield from generate_client_response_streaming(state, block)
         case 1:
-            output = yield from generate_client_response_single(
-                state, block, model, model_input
-            )
+            output = yield from generate_client_response_single(state, block)
         case _:
-            output = yield from generate_client_response_batching(
-                state, block, model, model_input
-            )
+            output = yield from generate_client_response_batching(state, block)
     return output
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock,
-    model: str,
-    model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
     text_stream: Generator[str, Any, None]
     match block:
         case BamModelBlock():
+            assert isinstance(block.input, str)
             text_stream = BamModel.generate_text_stream(
-                model_id=model,
+                model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=model_input,
+                model_input=block.input,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,
             )
         case WatsonxModelBlock():
+            assert isinstance(block.input, str)
             text_stream = WatsonxModel.generate_text_stream(
-                model_id=model,
-                prompt=model_input,
+                model_id=block.model,
+                prompt=block.input,
                 params=block.params,
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
@@ -795,24 +825,24 @@ def generate_client_response_streaming(
 def generate_client_response_single(
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock,
-    model: str,
-    model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
     text: str
     match block:
         case BamModelBlock():
+            assert isinstance(block.input, str)
             text = BamModel.generate_text(
-                model_id=model,
+                model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=model_input,
+                model_input=block.input,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,
             )
         case WatsonxModelBlock():
+            assert isinstance(block.input, str)
             text = WatsonxModel.generate_text(
-                model_id=model,
-                prompt=model_input,
+                model_id=block.model,
+                prompt=block.input,
                 params=block.params,
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
@@ -825,15 +855,14 @@ def generate_client_response_single(
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock,
-    model: str,
-    model_input: str,
 ) -> Generator[YieldMessage, Any, str]:
     match block:
         case BamModelBlock():
+            assert isinstance(block.input, str)
             text = yield ModelCallMessage(
-                model_id=model,
+                model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=model_input,
+                model_input=block.input,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,

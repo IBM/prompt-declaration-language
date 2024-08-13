@@ -168,13 +168,15 @@ defs:
           args:
             trajectory: "{{ traj }}"
       - "Question: {{ question }}\nTho:"
-      - repeat:
+      - defs:
+          temperature: 0.7
+        repeat:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
                   decoding_method: sample
-                  temperature: 0.7
+                  temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
             until: "{{ THOUGHT.endswith('Act:') }}"
@@ -182,7 +184,7 @@ defs:
             model: "{{ model }}"
             parameters:
               decoding_method: sample
-              temperature: 0.7
+              temperature: "{{ temperature }}"
               stop_sequences: ["[", "\n"]
               include_stop_sequence: false
           - def: ACTION
@@ -193,7 +195,7 @@ defs:
             model: "{{ model }}"
             parameters:
               decoding_method: sample
-              temperature: 0.7
+              temperature: "{{ temperature }}"
               stop_sequences: ["]", "\n"]
               include_stop_sequence: false
           - "]"
@@ -209,7 +211,7 @@ defs:
                     parameters:
                       decoding_method: sample
                       repetition_penalty: 1.1
-                      temperature: 0.7
+                      temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."

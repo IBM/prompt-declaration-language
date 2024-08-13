@@ -270,6 +270,11 @@ def compile_block(
                     if block.parameters is None:
                         stop_sequences = []
                         include_stop_sequence = False
+                    elif isinstance(block.parameters, dict):
+                        stop_sequences = block.parameters.get("stop_sequences", [])
+                        include_stop_sequence = block.parameters.get(
+                            "include_stop_sequence", False
+                        )
                     else:
                         stop_sequences = block.parameters.stop_sequences or []
                         include_stop_sequence = (

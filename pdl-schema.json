@@ -1631,6 +1631,81 @@
           "default": null,
           "title": "Input"
         },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
+        },
         "platform": {
           "const": "bam",
           "default": "bam",
@@ -1655,13 +1730,17 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PDLTextGenerationParameters"
+              "$ref": "#/$defs/BamTextGenerationParameters"
+            },
+            {
+              "type": "object"
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Parameters"
         },
         "moderations": {
           "anyOf": [
@@ -1694,6 +1773,231 @@
         "model"
       ],
       "title": "BamModelBlock",
+      "type": "object"
+    },
+    "BamTextGenerationParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "beam_width": {
+          "anyOf": [
+            {
+              "maximum": 3,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Beam width"
+        },
+        "decoding_method": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecodingMethod"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "include_stop_sequence": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Include Stop Sequence"
+        },
+        "length_penalty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LengthPenalty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_new_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max new tokens"
+        },
+        "min_new_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min new tokens"
+        },
+        "random_seed": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Random seed"
+        },
+        "repetition_penalty": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 1.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repetition penalty"
+        },
+        "return_options": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextGenerationReturnOptions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stop_sequences": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 6,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "examples": [
+            "[\" and \"]"
+          ],
+          "title": "Stop sequences"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 0.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature"
+        },
+        "time_limit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time limit"
+        },
+        "top_k": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top K"
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top P (nucleus sampling)"
+        },
+        "truncate_input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Truncate input tokens"
+        },
+        "typical_p": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.01,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Typical P"
+        }
+      },
+      "title": "BamTextGenerationParameters",
       "type": "object"
     },
     "CallBlock": {
@@ -7877,231 +8181,6 @@
       "title": "ModerationSocialBiasOutput",
       "type": "object"
     },
-    "PDLTextGenerationParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "beam_width": {
-          "anyOf": [
-            {
-              "maximum": 3,
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Beam width"
-        },
-        "decoding_method": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/DecodingMethod"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "include_stop_sequence": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Include Stop Sequence"
-        },
-        "length_penalty": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LengthPenalty"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "max_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Max new tokens"
-        },
-        "min_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Min new tokens"
-        },
-        "random_seed": {
-          "anyOf": [
-            {
-              "maximum": 4294967295,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Random seed"
-        },
-        "repetition_penalty": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 1.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Repetition penalty"
-        },
-        "return_options": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/TextGenerationReturnOptions"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "stop_sequences": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "maxItems": 6,
-              "minItems": 1,
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "examples": [
-            "[\" and \"]"
-          ],
-          "title": "Stop sequences"
-        },
-        "temperature": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Temperature"
-        },
-        "time_limit": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Time limit"
-        },
-        "top_k": {
-          "anyOf": [
-            {
-              "maximum": 100,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top K"
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top P (nucleus sampling)"
-        },
-        "truncate_input_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Truncate input tokens"
-        },
-        "typical_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Typical P"
-        }
-      },
-      "title": "PDLTextGenerationParameters",
-      "type": "object"
-    },
     "PdlBlock": {
       "anyOf": [
         {
@@ -11653,6 +11732,81 @@
           ],
           "default": null,
           "title": "Input"
+        },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
         },
         "platform": {
           "const": "watsonx",

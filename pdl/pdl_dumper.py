@@ -8,6 +8,7 @@ from .pdl_ast import (
     ApiBlock,
     ArrayBlock,
     BamModelBlock,
+    BamTextGenerationParameters,
     Block,
     BlocksType,
     CallBlock,
@@ -82,7 +83,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
-                d["parameters"] = block.parameters.model_dump()
+                if isinstance(block.parameters, BamTextGenerationParameters):
+                    d["parameters"] = block.parameters.model_dump()
+                else:
+                    d["parameters"] = block.parameters
             if block.moderations is not None:
                 d["moderations"] = block.moderations
             if block.data is True:

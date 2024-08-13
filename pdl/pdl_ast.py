@@ -106,7 +106,7 @@ class CallBlock(Block):
     trace: Optional["BlocksType"] = None
 
 
-class PDLTextGenerationParameters(TextGenerationParameters):
+class BamTextGenerationParameters(TextGenerationParameters):
     model_config = ConfigDict(extra="forbid")
 
 
@@ -119,13 +119,14 @@ class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str
     input: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class BamModelBlock(ModelBlock):
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
     prompt_id: Optional[str] = None
-    parameters: Optional[PDLTextGenerationParameters] = None
+    parameters: Optional[BamTextGenerationParameters | dict] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
@@ -312,8 +313,8 @@ TOP_K_SAMPLING = 50
 DECODING_METHOD = "greedy"
 
 
-def empty_text_generation_parameters() -> PDLTextGenerationParameters:
-    return PDLTextGenerationParameters(
+def empty_text_generation_parameters() -> BamTextGenerationParameters:
+    return BamTextGenerationParameters(
         beam_width=None,
         max_new_tokens=None,
         min_new_tokens=None,
@@ -330,10 +331,14 @@ def empty_text_generation_parameters() -> PDLTextGenerationParameters:
 
 
 def set_default_model_params(
-    params: Optional[PDLTextGenerationParameters],
-) -> PDLTextGenerationParameters:
-    if params is None:
+    parameters: Optional[dict | BamTextGenerationParameters],
+) -> BamTextGenerationParameters:
+    if parameters is None:
         params = empty_text_generation_parameters()
+    elif isinstance(parameters, BamTextGenerationParameters):
+        params = parameters
+    else:
+        params = BamTextGenerationParameters(**parameters)
     if params.decoding_method is None:
         params.decoding_method = (  # pylint: disable=attribute-defined-outside-init
             DecodingMethod.GREEDY

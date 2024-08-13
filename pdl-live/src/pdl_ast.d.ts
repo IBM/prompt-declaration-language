@@ -1680,38 +1680,34 @@ export type Input1 =
       | EmptyBlock
     )[]
   | null;
+export type Trace4 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
 export type Platform = "bam";
 export type PromptId = string | null;
-export type BeamWidth = number | null;
-export type DecodingMethod = "greedy" | "sample";
-export type IncludeStopSequence = boolean | null;
-export type DecayFactor = number | null;
-export type StartIndex = number | null;
-export type MaxNewTokens = number | null;
-export type MinNewTokens = number | null;
-export type RandomSeed = number | null;
-export type RepetitionPenalty = number | null;
-export type GeneratedTokens = boolean | null;
-export type InputParameters = boolean | null;
-export type InputText = boolean | null;
-export type InputTokens = boolean | null;
-export type TokenLogprobs = boolean | null;
-export type TokenRanks = boolean | null;
-export type TopNTokens = number | null;
-export type StopSequences =
-  | [string]
-  | [string, string]
-  | [string, string, string]
-  | [string, string, string, string]
-  | [string, string, string, string, string]
-  | [string, string, string, string, string, string]
-  | null;
-export type Temperature = number | null;
-export type TimeLimit = number | null;
-export type TopK = number | null;
-export type TopPNucleusSampling = number | null;
-export type TruncateInputTokens = number | null;
-export type TypicalP = number | null;
+export type Parameters = {
+  [k: string]: unknown;
+} | null;
 export type Enabled = boolean | null;
 export type SendTokens = boolean | null;
 export type Threshold = number | null;
@@ -1832,6 +1828,29 @@ export type Input2 =
       | EmptyBlock
     )[]
   | null;
+export type Trace5 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
 export type Platform1 = "watsonx";
 export type Params = {
   [k: string]: unknown;
@@ -1893,7 +1912,7 @@ export type Fallback17 =
   | null;
 export type Kind17 = "call";
 export type Call = string;
-export type Trace4 =
+export type Trace6 =
   | number
   | string
   | FunctionBlock
@@ -2194,7 +2213,7 @@ export interface CallBlock {
   kind?: Kind17;
   call: Call;
   args?: Args;
-  trace?: Trace4;
+  trace?: Trace6;
 }
 export interface Spec1 {
   [k: string]: unknown;
@@ -2261,6 +2280,7 @@ export interface WatsonxModelBlock {
   kind?: Kind16;
   model: Model1;
   input?: Input2;
+  trace?: Trace5;
   platform?: Platform1;
   params?: Params;
   guardrails?: Guardrails;
@@ -2331,9 +2351,10 @@ export interface BamModelBlock {
   kind?: Kind15;
   model: Model;
   input?: Input1;
+  trace?: Trace4;
   platform?: Platform;
   prompt_id?: PromptId;
-  parameters?: PDLTextGenerationParameters | null;
+  parameters?: Parameters;
   moderations?: ModerationParameters | null;
   data?: PromptTemplateData | null;
   constraints?: Constraints;
@@ -3411,39 +3432,6 @@ export interface If {
   [k: string]: unknown;
 }
 export interface Data {
-  [k: string]: unknown;
-}
-export interface PDLTextGenerationParameters {
-  beam_width?: BeamWidth;
-  decoding_method?: DecodingMethod | null;
-  include_stop_sequence?: IncludeStopSequence;
-  length_penalty?: LengthPenalty | null;
-  max_new_tokens?: MaxNewTokens;
-  min_new_tokens?: MinNewTokens;
-  random_seed?: RandomSeed;
-  repetition_penalty?: RepetitionPenalty;
-  return_options?: TextGenerationReturnOptions | null;
-  stop_sequences?: StopSequences;
-  temperature?: Temperature;
-  time_limit?: TimeLimit;
-  top_k?: TopK;
-  top_p?: TopPNucleusSampling;
-  truncate_input_tokens?: TruncateInputTokens;
-  typical_p?: TypicalP;
-}
-export interface LengthPenalty {
-  decay_factor?: DecayFactor;
-  start_index?: StartIndex;
-  [k: string]: unknown;
-}
-export interface TextGenerationReturnOptions {
-  generated_tokens?: GeneratedTokens;
-  input_parameters?: InputParameters;
-  input_text?: InputText;
-  input_tokens?: InputTokens;
-  token_logprobs?: TokenLogprobs;
-  token_ranks?: TokenRanks;
-  top_n_tokens?: TopNTokens;
   [k: string]: unknown;
 }
 export interface ModerationParameters {
