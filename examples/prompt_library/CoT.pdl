@@ -1,7 +1,7 @@
 description: CoT pattern introduced by Wei et al. (2022)
 defs:
   # Chain of Thought
-  chain_of_thought:
+  cot_block:
     function:
       question: str
       reasoning: str
@@ -32,18 +32,49 @@ defs:
         stop_sequences:
         - "The answer is"
         include_stop_sequence: false
-    - "The answer is {{answer}}."
+    - "The answer is {{ answer }}."
 
   fewshot_cot:
     function:
       examples:
         { list: { obj: { question: str, reasoning: str, answer: str } } }
     return:
-      - for:
-          example: "{{ examples }}"
-        repeat:
-          - call: chain_of_thought
-            args:
-              question: "{{ example.question }}"
-              reasoning: "{{ example.reasoning }}"
-              answer: "{{ example.answer }}"
+      for:
+        example: "{{ examples }}"
+      repeat:
+        call: cot_block
+        args:
+          question: "{{ example.question }}"
+          reasoning: "{{ example.reasoning }}"
+          answer: "{{ example.answer }}"
+
+
+  chain_of_thought:
+    function:
+      question: str
+      model: str
+      examples: { list: { obj: { question: str, reasoning: str, answer: str } } }
+    return:
+    - call: fewshot_cot
+      args:
+        examples: "{{ examples }}"
+    - |-
+      Question: {{question}}
+
+      Answer: Let's think step by step.
+    - model: "{{ model }}"
+      platform: bam
+      parameters:
+        decoding_method: "greedy"
+        stop_sequences:
+        - "The answer is"
+        include_stop_sequence: false
+    - "The answer is "
+    - def: answer
+      model: "{{ model }}"
+      platform: bam
+      parameters:
+        decoding_method: "greedy"
+    - "\n\nJSON Output: "
+    - data:
+        answer: "{{ answer|trim }}"

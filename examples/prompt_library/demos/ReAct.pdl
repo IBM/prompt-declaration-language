@@ -3,6 +3,7 @@ defs:
   available_tools:
     data: ["Search"]
 document:
+  - include: examples/prompt_library/tools.pdl
   - include: examples/prompt_library/ReAct.pdl
   - def: filtered_tools
     call: filter_tools_by_name
@@ -10,7 +11,7 @@ document:
     args:
       tools: "{{ default_tools }}"
       tool_names: "{{ available_tools }}"
-  - call: react
+  - call: react_json
     args:
      question: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct

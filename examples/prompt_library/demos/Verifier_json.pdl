@@ -1,0 +1,39 @@
+document:
+- include: examples/prompt_library/tools.pdl
+- include: examples/prompt_library/ReAct.pdl
+- include: examples/granite/granite_defs.pdl
+- def: filtered_tools
+  call: filter_tools_by_name
+  show_result: false
+  args:
+    tools: "{{ default_tools }}"
+    tool_names: ["Search"]
+- def: QUESTION
+  show_result: false
+  read: 
+  message: "Please enter a question: "
+- def: PROPOSED
+  call: react_json
+  show_result: true
+  args:
+    context: "{{ granite_models.granite_7b_lab.system_prompt }}"
+    question: "{{ QUESTION }}"
+    model: ibm/granite-7b-lab
+    tools: "{{ filtered_tools }}"
+    trajectories: []
+- "\n\n----- Verifying answer... -----\n\n"
+- def: VERIFIED
+  call: react_json
+  show_result: true
+  args:
+    context: ""
+    question: |-
+      Is this the right answer to this question?
+      "{{ QUESTION }}"
+      Proposed answer: {{ PROPOSED.answer.topic }}
+
+      Please answer as True or False.
+    model: "{{ granite_models.granite_20b_code_instruct_v2.id }}"
+    tools: "{{ filtered_tools }}"
+    trajectories: []
+- "\n\nThe answer '{{ PROPOSED.answer.topic }}' has been verified as '{{VERIFIED.answer.topic}}'.\n"
