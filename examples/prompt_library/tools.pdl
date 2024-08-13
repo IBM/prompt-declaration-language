@@ -9,7 +9,6 @@ defs:
 
   wrap_document:
     data: true
-
   Search_old:
     function:
       subject: str
@@ -18,13 +17,14 @@ defs:
           result:
             lan: python
             code: |
-              import wikipedia
+              import warnings, wikipedia
+              warnings.simplefilter("ignore")
               try:
                 result = wikipedia.summary(subject)
               except wikipedia.WikipediaException as e:
                 result = str(error)
       - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]\n"
+        then: "[Document]\n{{ result }}\n[End]"
         else: "{{ result }}"
 
   Search:
@@ -38,7 +38,7 @@ defs:
               import warnings, wikipedia
               warnings.simplefilter("ignore")
 
-              def main(topic: str) -> str:
+              def main(topic: str, *args, **kwargs) -> str:
                 try:
                   return wikipedia.summary(topic)
                 except wikipedia.WikipediaException as e:
@@ -46,7 +46,7 @@ defs:
 
               result = main(**arguments)
       - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]\n"
+        then: "[Document]\n{{ result }}\n[End]"
         else: "{{ result }}"
 
   default_model: "ibm/granite-34-code-instruct"
@@ -132,7 +132,7 @@ defs:
       - name: Search
         description: Search Wikipedia for a summary
         parameters:
-          - name: query
+          - name: topic
             type: string
             description: The topic of interest
         examples:
@@ -157,21 +157,28 @@ defs:
             - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
             - action: |
                 {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
-          # - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
-          #   - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
-          #   - action: "Search[Colorado orogeny]"
-          #   - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
-          #   - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
-          #   - action: "Finish[1,800 to 7,000 ft]"
-          # - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
-          #   - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
-          #   - action: "Search[Nicholas Ray]"
-          #   - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
-          #   - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
-          #   - action: "Search[Elia Kazan]"
-          #   - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
-          #   - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
-          #   - action: "Finish[director, screenwriter, actor]"
+      - name: Search_old
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: query
+            type: string
+            description: The topic of interest
+        examples:
+          - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
+            - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+            - action: "Search[Colorado orogeny]"
+            - observation: "The Colorado orogeny was an episode of mountain building (an orogeny) ..."
+            - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+            - action: "Finish[1,800 to 7,000 ft]"
+          - - question: "What profession does Nicholas Ray and Elia Kazan have in common?"
+            - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+            - action: "Search[Nicholas Ray]"
+            - observation: "Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause."
+            - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+            - action: "Search[Elia Kazan]"
+            - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
+            - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+            - action: "Finish[director, screenwriter, actor]"
 
   filter_tools_by_name:
     function:

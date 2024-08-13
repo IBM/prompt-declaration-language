@@ -4,7 +4,8 @@ document:
   multiline: True
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-20b-code-instruct
+  platform: bam
   input:
     document:
     - |-
@@ -41,6 +42,7 @@ document:
 
 
 - model: ibm/granite-20b-code-instruct
+  platform: bam
   input:
     document:
     - |-

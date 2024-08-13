@@ -32,6 +32,8 @@ class BlockKind(StrEnum):
     GET = "get"
     DATA = "data"
     DOCUMENT = "document"
+    SEQUENCE = "sequence"
+    ARRAY = "array"
     IF = "if"
     REPEAT = "repeat"
     REPEAT_UNTIL = "repeat_until"
@@ -104,7 +106,7 @@ class CallBlock(Block):
     trace: Optional["BlocksType"] = None
 
 
-class PDLTextGenerationParameters(TextGenerationParameters):
+class BamTextGenerationParameters(TextGenerationParameters):
     model_config = ConfigDict(extra="forbid")
 
 
@@ -118,13 +120,14 @@ class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str
     input: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class BamModelBlock(ModelBlock):
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
     prompt_id: Optional[str] = None
-    parameters: Optional[PDLTextGenerationParameters] = None
+    parameters: Optional[BamTextGenerationParameters | dict] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
@@ -147,7 +150,7 @@ class OpenAIModelBlock(ModelBlock):
 class CodeBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: Literal["python", "command"]
+    lan: Literal["python"]
     code: "BlocksType"
 
 
@@ -177,6 +180,18 @@ class DocumentBlock(Block):
     document: "BlocksType"
 
 
+class SequenceBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
+    sequence: "BlocksType"
+
+
+class ArrayBlock(Block):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
+    array: "BlocksType"
+
+
 class IfBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
@@ -186,11 +201,18 @@ class IfBlock(Block):
     if_result: Optional[bool] = None
 
 
+class IterationType(StrEnum):
+    SEQUENCE = "sequence"
+    ARRAY = "array"
+    DOCUMENT = "document"
+
+
 class ForBlock(Block):
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
     repeat: "BlocksType"
+    iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
     trace: Optional[list["BlocksType"]] = None
 
 
@@ -199,6 +221,7 @@ class RepeatBlock(Block):
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "BlocksType"
     num_iterations: int
+    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
     trace: Optional[list["BlocksType"]] = None
 
 
@@ -207,6 +230,7 @@ class RepeatUntilBlock(Block):
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
     until: ExpressionType
+    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
     trace: Optional[list["BlocksType"]] = None
 
 
@@ -252,13 +276,15 @@ AdvancedBlockType: TypeAlias = (
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
 )
 
-BlockType: TypeAlias = str | AdvancedBlockType
+BlockType: TypeAlias = int | float | str | AdvancedBlockType
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 
 
@@ -295,8 +321,8 @@ TOP_K_SAMPLING = 50
 DECODING_METHOD = "greedy"
 
 
-def empty_text_generation_parameters() -> PDLTextGenerationParameters:
-    return PDLTextGenerationParameters(
+def empty_text_generation_parameters() -> BamTextGenerationParameters:
+    return BamTextGenerationParameters(
         beam_width=None,
         max_new_tokens=None,
         min_new_tokens=None,
@@ -313,10 +339,14 @@ def empty_text_generation_parameters() -> PDLTextGenerationParameters:
 
 
 def set_default_model_params(
-    params: Optional[PDLTextGenerationParameters],
-) -> PDLTextGenerationParameters:
-    if params is None:
+    parameters: Optional[dict | BamTextGenerationParameters],
+) -> BamTextGenerationParameters:
+    if parameters is None:
         params = empty_text_generation_parameters()
+    elif isinstance(parameters, BamTextGenerationParameters):
+        params = parameters
+    else:
+        params = BamTextGenerationParameters(**parameters)
     if params.decoding_method is None:
         params.decoding_method = (  # pylint: disable=attribute-defined-outside-init
             DecodingMethod.GREEDY

@@ -6,6 +6,7 @@ defs:
       def: CODE
    EXPLANATION:
       model: ibm/granite-20b-code-instruct
+      platform: bam
       input:
            |
             Here is some info about the location of the function in the repo.

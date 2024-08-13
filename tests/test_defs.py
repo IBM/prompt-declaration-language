@@ -40,7 +40,7 @@ defs_chain_data = {
     "defs": {
         "X": {"data": "a"},
         "Y": {"data": "b"},
-        "Z": [{"get": "X"}, {"get": "Y"}, "c"],
+        "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
     },
     "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
 }
@@ -50,7 +50,7 @@ def test_defs_chain():
     state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
     _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "abc"
+    assert document == "ababc"
 
 
 defs_only = {"description": "defs only", "defs": {"var": "hello"}}

@@ -23,6 +23,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -68,6 +74,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -82,6 +94,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -126,6 +144,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -217,6 +241,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -262,6 +292,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -276,6 +312,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -320,6 +362,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -364,6 +412,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -409,6 +463,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -423,6 +483,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -469,6 +535,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -496,7 +568,7 @@
       "title": "ApiBlock",
       "type": "object"
     },
-    "BamModelBlock": {
+    "ArrayBlock": {
       "additionalProperties": false,
       "properties": {
         "description": {
@@ -519,6 +591,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -532,9 +610,6 @@
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/OpenAIModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -564,6 +639,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -579,6 +660,12 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
                       "type": "string"
                     },
                     {
@@ -592,9 +679,6 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/OpenAIModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -622,6 +706,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -713,6 +803,558 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "array",
+          "default": "array",
+          "enum": [
+            "array"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "array": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Array"
+        }
+      },
+      "required": [
+        "array"
+      ],
+      "title": "ArrayBlock",
+      "type": "object"
+    },
+    "BamModelBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/OpenAIModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/OpenAIModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -758,6 +1400,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -772,6 +1420,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -816,6 +1470,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -856,6 +1516,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -901,6 +1567,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -915,6 +1587,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -961,6 +1639,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -982,6 +1666,81 @@
           ],
           "default": null,
           "title": "Input"
+        },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
         },
         "platform": {
           "const": "bam",
@@ -1007,13 +1766,17 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PDLTextGenerationParameters"
+              "$ref": "#/$defs/BamTextGenerationParameters"
+            },
+            {
+              "type": "object"
             },
             {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Parameters"
         },
         "moderations": {
           "anyOf": [
@@ -1048,6 +1811,231 @@
       "title": "BamModelBlock",
       "type": "object"
     },
+    "BamTextGenerationParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "beam_width": {
+          "anyOf": [
+            {
+              "maximum": 3,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Beam width"
+        },
+        "decoding_method": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DecodingMethod"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "include_stop_sequence": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Include Stop Sequence"
+        },
+        "length_penalty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LengthPenalty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_new_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max new tokens"
+        },
+        "min_new_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min new tokens"
+        },
+        "random_seed": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Random seed"
+        },
+        "repetition_penalty": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 1.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repetition penalty"
+        },
+        "return_options": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextGenerationReturnOptions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stop_sequences": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 6,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "examples": [
+            "[\" and \"]"
+          ],
+          "title": "Stop sequences"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 0.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature"
+        },
+        "time_limit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time limit"
+        },
+        "top_k": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top K"
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top P (nucleus sampling)"
+        },
+        "truncate_input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Truncate input tokens"
+        },
+        "typical_p": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.01,
+              "multipleOf": 0.01,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Typical P"
+        }
+      },
+      "title": "BamTextGenerationParameters",
+      "type": "object"
+    },
     "CallBlock": {
       "additionalProperties": false,
       "properties": {
@@ -1070,6 +2058,12 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
               {
                 "type": "string"
               },
@@ -1116,6 +2110,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -1130,6 +2130,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -1174,6 +2180,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -1265,6 +2277,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1310,6 +2328,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1324,6 +2348,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1368,6 +2398,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1413,6 +2449,12 @@
         "trace": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1458,6 +2500,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1472,6 +2520,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1516,6 +2570,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1570,6 +2630,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -1615,6 +2681,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -1629,6 +2701,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -1673,6 +2751,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -1764,6 +2848,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -1809,6 +2899,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1823,6 +2919,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -1867,6 +2969,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -1901,15 +3009,21 @@
           "type": "string"
         },
         "lan": {
+          "const": "python",
           "enum": [
-            "python",
-            "command"
+            "python"
           ],
           "title": "Lan",
           "type": "string"
         },
         "code": {
           "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
             {
               "type": "string"
             },
@@ -1956,6 +3070,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -1970,6 +3090,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2014,6 +3140,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2065,6 +3197,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -2110,6 +3248,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2124,6 +3268,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -2168,6 +3318,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -2259,6 +3415,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2304,6 +3466,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2318,6 +3486,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2362,6 +3536,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2436,6 +3616,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -2481,6 +3667,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2495,6 +3687,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -2539,6 +3737,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -2630,6 +3834,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2675,6 +3885,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2689,6 +3905,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2733,6 +3955,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2769,6 +3997,12 @@
         "document": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -2814,6 +4048,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -2828,6 +4068,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -2872,6 +4118,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -2922,6 +4174,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -2967,6 +4225,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -2981,6 +4245,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -3025,6 +4295,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3116,6 +4392,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3161,6 +4443,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3175,6 +4463,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3219,6 +4513,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3279,6 +4579,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -3324,6 +4630,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -3338,6 +4650,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -3382,6 +4700,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3473,6 +4797,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3518,6 +4848,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3532,6 +4868,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3576,6 +4918,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3616,6 +4964,12 @@
         "program": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -3661,6 +5015,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -3675,6 +5035,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -3719,6 +5085,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -3770,6 +5142,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -3815,6 +5193,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -3829,6 +5213,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -3873,6 +5263,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -3964,6 +5360,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4009,6 +5411,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4023,6 +5431,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4067,6 +5481,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4107,6 +5527,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4152,6 +5578,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4166,6 +5598,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4210,6 +5648,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4230,11 +5674,25 @@
           ],
           "title": "Repeat"
         },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "array"
+        },
         "trace": {
           "anyOf": [
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4281,6 +5739,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -4295,6 +5759,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -4339,6 +5809,12 @@
                         },
                         {
                           "$ref": "#/$defs/DocumentBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
                         },
                         {
                           "$ref": "#/$defs/ReadBlock"
@@ -4398,6 +5874,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -4443,6 +5925,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -4457,6 +5945,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -4501,6 +5995,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -4592,6 +6092,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4637,6 +6143,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4651,6 +6163,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4695,6 +6213,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4742,6 +6266,12 @@
         "return": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -4787,6 +6317,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -4801,6 +6337,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -4845,6 +6387,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -4908,6 +6456,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -4953,6 +6507,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -4967,6 +6527,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -5011,6 +6577,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -5102,6 +6674,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5147,6 +6725,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5161,6 +6745,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5205,6 +6795,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5272,6 +6868,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -5317,6 +6919,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -5331,6 +6939,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -5375,6 +6989,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -5466,6 +7086,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5511,6 +7137,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5525,6 +7157,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5569,6 +7207,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5608,6 +7252,12 @@
         "then": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5653,6 +7303,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5667,6 +7323,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5711,6 +7373,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5734,6 +7402,12 @@
         "else": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -5779,6 +7453,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -5793,6 +7473,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -5837,6 +7523,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -5904,6 +7596,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -5949,6 +7647,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -5963,6 +7667,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -6007,6 +7717,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -6098,6 +7814,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -6143,6 +7865,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -6157,6 +7885,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -6203,6 +7937,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -6240,6 +7980,12 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
             {
               "type": "string"
             },
@@ -6286,6 +8032,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -6310,6 +8062,15 @@
       ],
       "title": "IncludeBlock",
       "type": "object"
+    },
+    "IterationType": {
+      "enum": [
+        "sequence",
+        "array",
+        "document"
+      ],
+      "title": "IterationType",
+      "type": "string"
     },
     "LengthPenalty": {
       "additionalProperties": true,
@@ -6645,748 +8406,14 @@
       "title": "ModerationSocialBiasOutput",
       "type": "object"
     },
-    "OpenAIModelBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/WatsonxModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/OpenAIModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/ForBlock"
-              },
-              {
-                "$ref": "#/$defs/DocumentBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/WatsonxModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/OpenAIModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ForBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DocumentBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ReadBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/EmptyBlock"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
-        },
-        "show_result": {
-          "default": true,
-          "title": "Show Result",
-          "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/WatsonxModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/OpenAIModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/WatsonxModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/OpenAIModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Fallback"
-        },
-        "kind": {
-          "const": "model",
-          "default": "model",
-          "enum": [
-            "model"
-          ],
-          "title": "Kind",
-          "type": "string"
-        },
-        "model": {
-          "title": "Model",
-          "type": "string"
-        },
-        "input": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/WatsonxModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/OpenAIModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/WatsonxModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/OpenAIModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Input"
-        },
-        "platform": {
-          "const": "openai",
-          "default": "openai",
-          "enum": [
-            "openai"
-          ],
-          "title": "Platform",
-          "type": "string"
-        },
-        "params": {
-          "anyOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Params"
-        }
-      },
-      "required": [
-        "model"
-      ],
-      "title": "OpenAIModelBlock",
-      "type": "object"
-    },
-    "PDLTextGenerationParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "beam_width": {
-          "anyOf": [
-            {
-              "maximum": 3,
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Beam width"
-        },
-        "decoding_method": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/DecodingMethod"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "include_stop_sequence": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Include Stop Sequence"
-        },
-        "length_penalty": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LengthPenalty"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "max_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Max new tokens"
-        },
-        "min_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Min new tokens"
-        },
-        "random_seed": {
-          "anyOf": [
-            {
-              "maximum": 4294967295,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Random seed"
-        },
-        "repetition_penalty": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 1.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Repetition penalty"
-        },
-        "return_options": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/TextGenerationReturnOptions"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "stop_sequences": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "maxItems": 6,
-              "minItems": 1,
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "examples": [
-            "[\" and \"]"
-          ],
-          "title": "Stop sequences"
-        },
-        "temperature": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Temperature"
-        },
-        "time_limit": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Time limit"
-        },
-        "top_k": {
-          "anyOf": [
-            {
-              "maximum": 100,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top K"
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top P (nucleus sampling)"
-        },
-        "truncate_input_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Truncate input tokens"
-        },
-        "typical_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Typical P"
-        }
-      },
-      "title": "PDLTextGenerationParameters",
-      "type": "object"
-    },
     "PdlBlock": {
       "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
         {
           "type": "string"
         },
@@ -7431,6 +8458,12 @@
         },
         {
           "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
         },
         {
           "$ref": "#/$defs/ReadBlock"
@@ -7450,6 +8483,12 @@
     "PdlBlocks": {
       "anyOf": [
         {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "string"
         },
         {
@@ -7495,6 +8534,12 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
+        },
+        {
           "$ref": "#/$defs/ReadBlock"
         },
         {
@@ -7509,6 +8554,12 @@
         {
           "items": {
             "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
               {
                 "type": "string"
               },
@@ -7553,6 +8604,12 @@
               },
               {
                 "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
               },
               {
                 "$ref": "#/$defs/ReadBlock"
@@ -7603,6 +8660,12 @@
         "pdl": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -7648,6 +8711,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -7662,6 +8731,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -7708,6 +8783,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -7735,6 +8816,12 @@
     },
     "Program": {
       "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
         {
           "type": "string"
         },
@@ -7779,6 +8866,12 @@
         },
         {
           "$ref": "#/$defs/DocumentBlock"
+        },
+        {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
+          "$ref": "#/$defs/ArrayBlock"
         },
         {
           "$ref": "#/$defs/ReadBlock"
@@ -7843,6 +8936,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -7888,6 +8987,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -7902,6 +9007,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -7946,6 +9057,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -8037,6 +9154,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8082,6 +9205,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -8096,6 +9225,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8140,6 +9275,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8281,6 +9422,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -8326,6 +9473,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -8340,6 +9493,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -8384,6 +9543,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -8475,6 +9640,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8520,6 +9691,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -8534,6 +9711,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8578,6 +9761,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8614,6 +9803,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -8659,6 +9854,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -8673,6 +9874,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8717,6 +9924,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -8741,11 +9954,25 @@
           "title": "Num Iterations",
           "type": "integer"
         },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "sequence"
+        },
         "trace": {
           "anyOf": [
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -8792,6 +10019,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -8806,6 +10039,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -8850,6 +10089,12 @@
                         },
                         {
                           "$ref": "#/$defs/DocumentBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
                         },
                         {
                           "$ref": "#/$defs/ReadBlock"
@@ -8909,6 +10154,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -8954,6 +10205,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -8968,6 +10225,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -9012,6 +10275,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -9103,6 +10372,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -9148,6 +10423,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -9162,6 +10443,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9206,6 +10493,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -9242,6 +10535,12 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -9287,6 +10586,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -9301,6 +10606,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9345,6 +10656,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -9368,11 +10685,25 @@
         "until": {
           "title": "Until"
         },
+        "as": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
+          "default": "sequence"
+        },
         "trace": {
           "anyOf": [
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9419,6 +10750,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -9433,6 +10770,12 @@
                   {
                     "items": {
                       "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
                         {
                           "type": "string"
                         },
@@ -9479,6 +10822,12 @@
                           "$ref": "#/$defs/DocumentBlock"
                         },
                         {
+                          "$ref": "#/$defs/SequenceBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
+                        },
+                        {
                           "$ref": "#/$defs/ReadBlock"
                         },
                         {
@@ -9511,6 +10860,546 @@
         "until"
       ],
       "title": "RepeatUntilBlock",
+      "type": "object"
+    },
+    "SequenceBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "kind": {
+          "const": "sequence",
+          "default": "sequence",
+          "enum": [
+            "sequence"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "sequence": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Sequence"
+        }
+      },
+      "required": [
+        "sequence"
+      ],
+      "title": "SequenceBlock",
       "type": "object"
     },
     "TextGenerationReturnOptions": {
@@ -9629,6 +11518,12 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
                 "type": "string"
               },
               {
@@ -9674,6 +11569,12 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
                 "$ref": "#/$defs/ReadBlock"
               },
               {
@@ -9688,6 +11589,12 @@
               {
                 "items": {
                   "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
                     {
                       "type": "string"
                     },
@@ -9732,6 +11639,12 @@
                     },
                     {
                       "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
                     },
                     {
                       "$ref": "#/$defs/ReadBlock"
@@ -9823,6 +11736,12 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -9868,6 +11787,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -9882,6 +11807,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -9926,6 +11857,12 @@
                   },
                   {
                     "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
                   },
                   {
                     "$ref": "#/$defs/ReadBlock"
@@ -9966,6 +11903,12 @@
         "input": {
           "anyOf": [
             {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
               "type": "string"
             },
             {
@@ -10011,6 +11954,12 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
               "$ref": "#/$defs/ReadBlock"
             },
             {
@@ -10025,6 +11974,12 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
                   {
                     "type": "string"
                   },
@@ -10071,6 +12026,12 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ReadBlock"
                   },
                   {
@@ -10092,6 +12053,81 @@
           ],
           "default": null,
           "title": "Input"
+        },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
         },
         "platform": {
           "const": "watsonx",

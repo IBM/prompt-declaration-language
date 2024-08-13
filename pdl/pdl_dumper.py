@@ -6,7 +6,10 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     ApiBlock,
+    ArrayBlock,
     BamModelBlock,
+    BamTextGenerationParameters,
+    Block,
     BlocksType,
     CallBlock,
     CodeBlock,
@@ -26,6 +29,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    SequenceBlock,
     WatsonxModelBlock,
 )
 
@@ -67,12 +71,12 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
-def program_to_dict(prog: pdl_ast.Program) -> str | dict[str, Any]:
+def program_to_dict(prog: pdl_ast.Program) -> int | float | str | dict[str, Any]:
     return block_to_dict(prog.root)
 
 
-def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
-    if isinstance(block, str):
+def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any]:
+    if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
     d["kind"] = block.kind
@@ -91,7 +95,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
-                d["parameters"] = block.parameters.model_dump()
+                if isinstance(block.parameters, BamTextGenerationParameters):
+                    d["parameters"] = block.parameters.model_dump()
+                else:
+                    d["parameters"] = block.parameters
             if block.moderations is not None:
                 d["moderations"] = block.moderations
             if block.data is True:
@@ -130,6 +137,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
                 d["input"] = blocks_to_dict(block.input)
         case DocumentBlock():
             d["document"] = blocks_to_dict(block.document)
+        case SequenceBlock():
+            d["sequence"] = blocks_to_dict(block.sequence)
+        case ArrayBlock():
+            d["array"] = blocks_to_dict(block.array)
         case ReadBlock():
             d["read"] = block.read
             d["message"] = block.message
@@ -144,16 +155,19 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
+            d["as"] = block.iteration_type
             if block.trace is not None:
                 d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["until"] = block.until
+            d["as"] = block.iteration_type
             if block.trace is not None:
                 d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat)
+            d["as"] = block.iteration_type
             if block.trace is not None:
                 d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
         case FunctionBlock():
@@ -187,8 +201,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> str | dict[str, Any]:
 
 def blocks_to_dict(
     blocks: BlocksType,
-) -> str | dict[str, Any] | list[str | dict[str, Any]]:
-    result: str | dict[str, Any] | list[str | dict[str, Any]]
+) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
+    result: int | float | str | dict[str, Any] | list[
+        int | float | str | dict[str, Any]
+    ]
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = [block_to_dict(block) for block in blocks]
     else:

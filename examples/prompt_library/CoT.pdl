@@ -7,10 +7,10 @@ defs:
       reasoning: str
       answer: str
     return: |+
-      Question: {{question}}
+      Question: {{ question }}
 
-      Answer: Let's think step by step. {{reasoning}}
-      The answer is {{answer}}.
+      Answer: Let's think step by step. {{ reasoning }}
+      The answer is {{ answer }}.
 
   # Auto Chain of Thought Zhang et al. (2022)
   # The idea is to use a _model_ to generate a reasoning path, even if not very accurate.
@@ -22,7 +22,7 @@ defs:
       answer: str
     return:
     - |-
-      Question: {{question}}
+      Question: {{ question }}
 
       Answer: Let's think step by step. 
     - model: "{{ model }}"
@@ -60,7 +60,7 @@ defs:
         examples: "{{ examples }}"
     - |-
       Now answer this question.
-      Question: {{question}}
+      Question: {{ question }}
 
       Answer: Let's think step by step. 
     - model: "{{ model }}"
@@ -70,17 +70,3 @@ defs:
         stop_sequences:
         - "<|endoftext|>"
         include_stop_sequence: false
-    # - "The answer is "
-    # - def: answer
-    #   model: "{{ model }}"
-    #   platform: bam
-    #   parameters:
-    #     decoding_method: "greedy"
-    #     stop_sequences:
-    #     - "<|endoftext|>"
-    #     include_stop_sequence: false
-    # - "\n\nJSON Output: "
-    # - defs:
-    #     foobar: "{{ answer|trim }}"
-# - data:
-#     answer: "{{ answer|trim }}"

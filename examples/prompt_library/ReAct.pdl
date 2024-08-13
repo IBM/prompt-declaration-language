@@ -71,13 +71,15 @@ defs:
           args:
             trajectory: "{{ traj }}"
       - "Question: {{ question }}\nTho:"
-      - repeat:
+      - defs:
+          temperature: 0.7
+        repeat:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
                   decoding_method: sample
-                  temperature: 0.7
+                  temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
             until: "{{ THOUGHT.endswith('Act:') }}"
@@ -85,7 +87,7 @@ defs:
             model: "{{ model }}"
             parameters:
               decoding_method: sample
-              temperature: 0.7
+              temperature: "{{ temperature }}"
               stop_sequences: ["[", "\n"]
               include_stop_sequence: false
           - defs:
@@ -95,7 +97,7 @@ defs:
             model: "{{ model }}"
             parameters:
               decoding_method: sample
-              temperature: 0.7
+              temperature: "{{ temperature }}"
               stop_sequences: ["]", "\n"]
               include_stop_sequence: false
           - "]"
@@ -110,8 +112,7 @@ defs:
                   - model: "{{ model }}"
                     parameters:
                       decoding_method: sample
-                      repetition_penalty: 1.1
-                      temperature: 0.7
+                      temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
@@ -151,13 +152,16 @@ defs:
           args:
             trajectory: "{{ traj }}"
       - "Question: {{ question }}\nTho:"
-      - repeat:
+      - defs:
+          temperature: 0.05
+          decoding_method: "greedy"
+        repeat:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
-                  decoding_method: sample
-                  temperature: 0.7
+                  decoding_method: "{{ decoding_method }}"
+                  temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
             until: "{{ THOUGHT.endswith('Act:') }}"
@@ -166,8 +170,8 @@ defs:
             parser: json
             spec: {name: str, arguments: obj}
             parameters:
-              decoding_method: sample
-              temperature: 0.7
+              decoding_method: "{{ decoding_method }}"
+              temperature: "{{ temperature }}"
               stop_sequences: ["\n", "<|endoftext|>"]
               include_stop_sequence: false
           - if: "{{ action.name != 'Finish' }}"
@@ -180,9 +184,8 @@ defs:
                       arguments: "{{ action.arguments }}"
                   - model: "{{ model }}"
                     parameters:
-                      decoding_method: sample
-                      repetition_penalty: 1.1
-                      temperature: 0.7
+                      decoding_method: "{{ decoding_method }}"
+                      temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."

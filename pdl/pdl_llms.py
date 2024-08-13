@@ -11,7 +11,7 @@ from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInfer
 from openai import OpenAI
 
 from .pdl_ast import (
-    PDLTextGenerationParameters,
+    BamTextGenerationParameters,
     set_default_model_parameters,
     set_default_model_params,
 )
@@ -48,19 +48,18 @@ class BamModel:
         model_id: str,
         prompt_id: Optional[str],
         model_input: Optional[str],
-        parameters: Optional[PDLTextGenerationParameters],
+        parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
     ) -> str:
         client = BamModel.get_model()
-        params = parameters
-        params = set_default_model_params(params)
+        params = set_default_model_params(parameters)
         text = ""
         for response in client.text.generation.create(
             model_id=model_id,
             prompt_id=prompt_id,
             input=model_input,
-            parameters=params.__dict__,
+            parameters=params,
             moderations=moderations,
             data=data,
         ):
@@ -75,18 +74,17 @@ class BamModel:
         model_id: str,
         prompt_id: Optional[str],
         model_input: Optional[str],
-        parameters: Optional[PDLTextGenerationParameters],
+        parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
     ) -> Generator[str, Any, None]:
         client = BamModel.get_model()
-        params = parameters
-        params = set_default_model_params(params)
+        params = set_default_model_params(parameters)
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,
             input=model_input,
-            parameters=params.__dict__,
+            parameters=params,
             moderations=moderations,
             data=data,
         ):

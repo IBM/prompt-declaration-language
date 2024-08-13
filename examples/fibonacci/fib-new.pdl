@@ -2,6 +2,7 @@ description: Fibonacci
 document:
 - def: CODE
   model: ibm/granite-20b-code-instruct
+  platform: bam
   input:
     document:
       - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
@@ -24,3 +25,4 @@ document:
 - "The result is: {{ RESULT }}"
 - "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-20b-code-instruct
+  platform: bam

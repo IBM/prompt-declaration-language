@@ -98,9 +98,45 @@ def test_for_data4():
     state = InterpreterState()
     data = Program.model_validate(for_data4)
     result, output, scope, _ = process_prog(state, empty_scope, data)
-    assert result == "2345"
+    assert result == "[2, 3, 4, 5]"
     assert output == "2345"
     assert scope["x"] == [2, 3, 4, 5]
+
+
+for_as_document_data4 = {
+    "description": "For block def",
+    "document": [
+        {
+            "def": "x",
+            "for": {"i": [1, 2, 3, 4]},
+            "repeat": "{{ i + 1 }}",
+            "as": "document",
+        }
+    ],
+}
+
+
+def test_for_as_document_data4():
+    state = InterpreterState()
+    data = Program.model_validate(for_as_document_data4)
+    result, output, scope, _ = process_prog(state, empty_scope, data)
+    assert result == "2345"
+    assert output == "2345"
+    assert scope["x"] == "2345"
+
+
+for_data5 = {
+    "description": "For block def",
+    "document": [
+        {
+            "def": "x",
+            "document": {
+                "for": {"i": [1, 2, 3, 4]},
+                "repeat": "{{ i }}",
+            },
+        }
+    ],
+}
 
 
 for_data5 = {
@@ -121,6 +157,6 @@ def test_for_data5():
     state = InterpreterState()
     data = Program.model_validate(for_data5)
     result, output, scope, _ = process_prog(state, empty_scope, data)
-    assert result == "1234"
+    assert result == "[1, 2, 3, 4]"
     assert output == "1234"
-    assert scope["x"] == "1234"
+    assert scope["x"] == "[1, 2, 3, 4]"
