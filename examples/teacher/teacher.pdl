@@ -72,8 +72,7 @@ defs:
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
             include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 4096
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
@@ -159,8 +158,7 @@ defs:
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
             include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 256
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
@@ -252,12 +250,9 @@ defs:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
           parameters:
-            stop_sequences:  # TODO -- Need "{{ prompt_data.additional_stop_tokens.append(teacher_stop_token) }}"
-            - "{{teacher_stop_token}}"
-            - "{{prompt_data.additional_stop_tokens}}"
+            stop_sequences:  "{{ [teacher_stop_token] + prompt_data.additional_stop_tokens }}"
             include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 4096
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
         parsed_answer:
           lan: python
           code: | # parse model output
@@ -344,8 +339,7 @@ defs:
           parameters:
             stop_sequences: ["{{teacher_stop_token}}"]
             include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 256
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
