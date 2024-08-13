@@ -9,6 +9,7 @@ defs:
 
   wrap_document:
     data: true
+
   Search_old:
     function:
       subject: str
@@ -156,7 +157,6 @@ defs:
             - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
             - action: |
                 {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
-          
           # - - question: "What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?"
           #   - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
           #   - action: "Search[Colorado orogeny]"

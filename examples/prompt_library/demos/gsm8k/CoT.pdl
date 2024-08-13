@@ -1,32 +1,72 @@
 description: Demo of CoT template
+defs:
+  # demonstrations:
+  #   data:
+  #     - question: |-
+  #         Noah charges $60 for a large painting and $30 for a small painting.
+  #         Last month he sold eight large paintings and four small paintings.
+  #         If he sold twice as much this month, how much is his sales for this month?
+  #       reasoning: |-
+  #         He sold 8 large paintings and 4 small paintings last month.
+  #         He sold twice as many this month.
+  #         8 large paintings x $60 = << 8*60= 480 >> 480
+  #         4 small paintings x $30 = << 4*30= 120 >> 120
+  #         So he sold << 480+120= 600 >> 600 paintings last month.
+  #         Therefore he sold << 600*2= 1200 >> this month.
+  #       answer: $1200
+  #     - question: |-
+  #         Noah charges $30 for a large vases and $10 for a small vases.
+  #         Last month he sold five large vases and three small vases.
+  #         If he sold three times as much this month, how much is his sales for this month?
+  #       reasoning: |-
+  #         He sold 5 large vases and 3 small vases last month.
+  #         He sold three times as many this month.
+  #         5 large vases x $30 = << 5*30= 150 >> 150
+  #         3 small vases x $10 = << 3*10= 30 >> 30
+  #         So he sold << 150+30= 180 >> 180 vases last month.
+  #         Therefore he sold << 180*3= 540 >> this month.
+  #       answer: $540
+  demos:
+    for:
+      demonstration: "{{ demonstrations }}"
+    repeat:
+      data:
+        question: "{{ demonstration.question }}"
+        reasoning: "{{ demonstration.reasoning|trim }}"
+        answer: "{{ demonstration.answer }}"
+
+  # question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+
+  # model: "ibm/granite-34b-code-instruct"
 document:
   - include: examples/prompt_library/CoT.pdl
   - call: chain_of_thought
     args:
-      examples:
-        - question: |-
-            Noah charges $60 for a large painting and $30 for a small painting.
-            Last month he sold eight large paintings and four small paintings.
-            If he sold twice as much this month, how much is his sales for this month?
-          reasoning: |-
-            He sold 8 large paintings and 4 small paintings last month.
-            He sold twice as many this month.
-            8 large paintings x $60 = << 8*60= 480 >> 480
-            4 small paintings x $30 = << 4*30= 120 >> 120
-            So he sold << 480+120= 600 >> 600 paintings last month.
-            Therefore he sold << 600*2= 1200 >> this month.
-          answer: $1200
-        - question: |-
-            Noah charges $30 for a large vases and $10 for a small vases.
-            Last month he sold five large vases and three small vases.
-            If he sold three times as much this month, how much is his sales for this month?
-          reasoning: |-
-            He sold 5 large vases and 3 small vases last month.
-            He sold three times as many this month.
-            5 large vases x $30 = << 5*30= 150 >> 150
-            3 small vases x $10 = << 3*10= 30 >> 30
-            So he sold << 150+30= 180 >> 180 vases last month.
-            Therefore he sold << 180*3= 540 >> this month.
-          answer: $540
-      question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-      model: "meta-llama/llama-3-70b-instruct"
+      examples: "{{ demos }}"
+      
+        # - question: |-
+        #     Noah charges $60 for a large painting and $30 for a small painting.
+        #     Last month he sold eight large paintings and four small paintings.
+        #     If he sold twice as much this month, how much is his sales for this month?
+        #   reasoning: |-
+        #     He sold 8 large paintings and 4 small paintings last month.
+        #     He sold twice as many this month.
+        #     8 large paintings x $60 = << 8*60= 480 >> 480
+        #     4 small paintings x $30 = << 4*30= 120 >> 120
+        #     So he sold << 480+120= 600 >> 600 paintings last month.
+        #     Therefore he sold << 600*2= 1200 >> this month.
+        #   answer: $1200
+        # - question: |-
+        #     Noah charges $30 for a large vases and $10 for a small vases.
+        #     Last month he sold five large vases and three small vases.
+        #     If he sold three times as much this month, how much is his sales for this month?
+        #   reasoning: |-
+        #     He sold 5 large vases and 3 small vases last month.
+        #     He sold three times as many this month.
+        #     5 large vases x $30 = << 5*30= 150 >> 150
+        #     3 small vases x $10 = << 3*10= 30 >> 30
+        #     So he sold << 150+30= 180 >> 180 vases last month.
+        #     Therefore he sold << 180*3= 540 >> this month.
+        #   answer: $540
+      question: "{{ question }}"
+      model: "{{ model }}" # meta-llama/llama-3-70b-instruct

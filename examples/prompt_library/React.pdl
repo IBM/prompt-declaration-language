@@ -1,91 +1,6 @@
 description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
 # See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
 defs:
-  langchain: |
-    Answer the following questions as best you can. You have access to the following tools:
-
-    {tools}
-
-    Use the following format:
-
-    Question: the input question you must answer
-    Thought: you should always think about what to do
-    Action: the action to take, should be one of [{tool_names}]
-    Action Input: the input to the action
-    Observation: the result of the action
-    ... (this Thought/Action/Action Input/Observation can repeat N times)
-    Thought: I now know the final answer
-    Final Answer: the final answer to the original input question
-
-    Begin!
-
-    Question: {input}
-    Thought:{agent_scratchpad}
-
-  langsmith: |
-    Assistant is a large language model trained by OpenAI.
-
-    Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
-
-    Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
-
-    Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
-
-    TOOLS:
-
-    ------
-
-    Assistant has access to the following tools:
-
-    {tools}
-
-    To use a tool, please use the following format:
-
-    ```
-
-    Thought: Do I need to use a tool? Yes
-
-    Action: the action to take, should be one of [{tool_names}]
-
-    Action Input: the input to the action
-
-    Observation: the result of the action
-
-    ```
-
-    When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:
-
-    ```
-
-    Thought: Do I need to use a tool? No
-
-    Final Answer: [your response here]
-
-    ```
-
-    Begin!
-
-    Previous conversation history:
-
-    {chat_history}
-
-    New input: {input}
-
-    {agent_scratchpad}
-
-  # By abstracting the pattern, the naming and formatting of the individual steps can
-  # be more easily changed.
-  # Example usage:
-  # - call: react_block
-  #   args:
-  #     trajectory:
-  #     - question: "When did the Battle of White Plains take place?"
-  #     - thought: "I need to search Battle of White Plains, find the date it took place."
-  #     - action: "Search[Battle of White Plains]"
-  #     - observation: "The Battle of White Plains took place during the New York and New Jersey campaign of the American Revolutionary War on October 28, 1776, near White Plains, New York."
-  #     - thought: "It's mentioned that it took place in 1776."
-  #     - act: "Finish[1776]"
-
   react_block:
     function:
       trajectory: { list: obj }
@@ -97,18 +12,18 @@ defs:
               type: "{{ trajectory.keys()|first }}"
           - if: "{{ type == 'question'}}"
             then: |
-              Question: {{ trajectory[type] }}
+              Question: {{ trajectory[type]|trim }}
           - if: "{{ type == 'thought'}}"
             then: |
-              Tho: {{ trajectory[type] }}
+              Tho: {{ trajectory[type]|trim }}
           - if: "{{ type == 'action'}}"
             then: |
-              Act: {{ trajectory[type] }}
+              Act: {{ trajectory[type]|trim }}
           - if: "{{ type == 'observation'}}"
             then: |
-              Obs: {{ trajectory[type] }}
+              Obs: {{ trajectory[type]|trim }}
           - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
-            then: "{{ type }}: {{ trajectory[type] }}"
+            then: "{{ type }}: {{ trajectory[type]|trim }}"
       - "\n"
 
   demonstrate_tools:
@@ -155,7 +70,7 @@ defs:
           call: react_block
           args:
             trajectory: "{{ traj }}"
-      - "Question: {{ question }}\nTho: "
+      - "Question: {{ question }}\nTho:"
       - repeat:
           - repeat:
               - def: THOUGHT
@@ -165,9 +80,6 @@ defs:
                   temperature: 0.7
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-                constraints:
-                  - words_len: ">2"
-                    not_contains: Tho
             until: "{{ THOUGHT.endswith('Act:') }}"
           - def: action_raw
             model: "{{ model }}"

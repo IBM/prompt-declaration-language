@@ -560,7 +560,9 @@ def process_expr(
         )
 
         try:
-            if expr.startswith("{{") and expr.endswith("}}"):
+            if (expr.startswith("{{") and expr.endswith("}}")) and (
+                "}}" not in expr[2:-2]
+            ):
                 try:
                     env = Environment(
                         block_start_string="{%%%%%PDL%%%%%%%%%%",

@@ -16,3 +16,4 @@ document:
      question: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct
      tools: "{{ filtered_tools }}"
+     trajectories: []

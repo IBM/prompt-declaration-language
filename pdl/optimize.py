@@ -273,7 +273,7 @@ class Gsm8kThread(PDLThread):
             {
                 "question": q["question"],
                 "reasoning": q["reasoning"],
-                "answer": q["answer"],
+                "answer": str(q["answer"]),
             }
             for q in self.demonstrations
         ]
@@ -297,12 +297,17 @@ class Gsm8kThread(PDLThread):
             scope = self.get_scope()
 
             result, document, scope, trace = process_prog(state, scope, self.pdl_obj)
-            if self.index == 0:
-                model_input = get_seq_logprobs(
-                    self.model,
-                    scope[self.input_variable_name],
-                )
-                input_logprobs = model_input.input_probs
+            # print(result, "----END RESULT")
+            print(document, "---DOC")
+            # print(scope, "---SCOPE")
+            # print(trace, "---TRACE")
+            # exit()
+            # if self.index == 0:
+            #     model_input = get_seq_logprobs(
+            #         self.model,
+            #         scope[self.input_variable_name],
+            #     )
+            #     input_logprobs = model_input.input_probs
             answer = extract_math_answer(document)
         except Exception as e:
             print(e)
@@ -455,7 +460,7 @@ class Optimizer:
                 f"{self.k:,} demonstrations, {len(train_ds):,} training examples"
             )
             for trial in range(self.trials):  # TODO: work with a time budget?
-                demonstrations = self.sample(train_ds, SamplingMethods.UNCERTAINTY)
+                demonstrations = self.sample(train_ds, SamplingMethods.RANDOM_INDICES)
                 threads = []
                 for index, qna in enumerate(self.test_set):
                     threads.append(
@@ -490,10 +495,10 @@ class Optimizer:
                 if p_passing > max_percent_passing:
                     self.best_demos = scope[input_variable_name]
 
-        pdl_program.root.defs[input_variable_name] = self.best_demos
-        self.save_pdl_program(pdl_program)
+        # pdl_program.root.defs[input_variable_name] = self.best_demos
+        # self.save_pdl_program(pdl_program)
         tqdm.write("Best few shots")
-        tqdm.write(self.best_demos)
+        tqdm.write(str(self.best_demos))
         tqdm.write(
             f"Starting optimization: {self.trials:,} trials, "
             f"{self.test_set_size:,} test set, "
@@ -635,8 +640,8 @@ class EvalPlusPDLOptimizer(PDLOptimizer):
 
 
 if __name__ == "__main__":
-    Gsm8kPDLOptimizer()
-    exit()
+    # Gsm8kPDLOptimizer()
+    # exit()
     parser = argparse.ArgumentParser("")
     parser.add_argument(
         "--bench",
@@ -675,12 +680,12 @@ if __name__ == "__main__":
 
     if args.bench == "gsm-fewshot":
         Gsm8kOptimizer(
-            dataset=load_from_disk("gsm8k_logprobs_agg"),
+            dataset=load_from_disk("var/gsm8k"),
             pdl_file=args.pdl_file,
             trials=args.trials,
             k=args.num_demos,
             test_set_size=args.test_set_size,
-        ).process()
+        ).process(parallelism=5)
     if args.bench == "gsm-pal":
         gsm8k = load_from_disk("gsm8k")
         gsm8k["train"] = Dataset.from_json("examples/gsm8k/demos.json")

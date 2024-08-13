@@ -29,8 +29,8 @@ document:
   - include: examples/prompt_library/ReWoo.pdl
   - call: rewoo
     args:
-     task: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-     model: meta-llama/llama-3-70b-instruct
-     tools: "{{ math_tools }}"
-     trajectories: []
-     show_plans: true
+      task: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+      model: meta-llama/llama-3-70b-instruct
+      tools: "{{ math_tools }}"
+      trajectories: []
+      show_plans: true
