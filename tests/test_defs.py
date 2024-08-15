@@ -31,7 +31,7 @@ defs_data = {
 def test_defs():
     state = InterpreterState()
     data = Program.model_validate(defs_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -49,7 +49,7 @@ defs_chain_data = {
 def test_defs_chain():
     state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "ababc"
 
 
@@ -59,5 +59,5 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 def test_defs_only():
     state = InterpreterState()
     data = Program.model_validate(defs_only)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

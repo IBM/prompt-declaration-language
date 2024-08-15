@@ -380,6 +380,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "api",
           "default": "api",
@@ -930,6 +942,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "array",
           "default": "array",
@@ -1469,6 +1493,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "model",
@@ -2380,6 +2416,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "call",
           "default": "call",
@@ -2933,6 +2981,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "code",
           "default": "code",
@@ -3482,6 +3542,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -3888,6 +3960,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "document",
@@ -4429,6 +4513,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -4821,6 +4917,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "error",
@@ -5366,6 +5474,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "for",
@@ -6075,6 +6195,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "function",
           "default": "function",
@@ -6639,6 +6771,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -7038,6 +7182,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "if",
@@ -7742,6 +7898,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "include",
@@ -9050,6 +9218,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -9523,6 +9703,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "repeat",
@@ -10232,6 +10424,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "repeat_until",
           "default": "repeat_until",
@@ -10939,6 +11143,18 @@
           "default": null,
           "title": "Fallback"
         },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
         "kind": {
           "const": "sequence",
           "default": "sequence",
@@ -11571,6 +11787,18 @@
           ],
           "default": null,
           "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "kind": {
           "const": "model",

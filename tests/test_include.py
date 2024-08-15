@@ -15,7 +15,7 @@ include_data = {
 def test_include():
     state = InterpreterState()
     data = Program.model_validate(include_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == """Start
@@ -45,7 +45,7 @@ biz = {
 def test_biz():
     state = InterpreterState()
     data = Program.model_validate(biz)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"

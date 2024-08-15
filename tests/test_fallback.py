@@ -8,7 +8,7 @@ direct_fallback_data = {"model": "raise an error", "fallback": "The error was ca
 def test_direct_fallback():
     state = InterpreterState()
     data = Program.model_validate(direct_fallback_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "The error was caught"
 
 
@@ -21,7 +21,7 @@ indirect_fallback_data = {
 def test_indirect_fallback():
     state = InterpreterState()
     data = Program.model_validate(indirect_fallback_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "The error was caught"
 
 
@@ -34,5 +34,5 @@ error_in_sequence_data = {
 def test_error_in_sequence():
     state = InterpreterState()
     data = Program.model_validate(error_in_sequence_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello Bye!The error was caught"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "The error was caught"

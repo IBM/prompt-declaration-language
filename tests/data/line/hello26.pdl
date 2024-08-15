@@ -12,8 +12,10 @@ document:
         question: "{{ questions2 }}"
         answer: "{{ data.answers }}"
       repeat:
+        document:
         - "{{ question }}"
         - "{{ answer }}"
+      as: document
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
   parameters:
     decoding_method: greedy

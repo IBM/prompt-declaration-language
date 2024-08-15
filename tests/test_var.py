@@ -34,7 +34,7 @@ var_data = {
 def test_var():
     state = InterpreterState()
     data = Program.model_validate(var_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\nTell me about world?\n"
 
 
@@ -70,7 +70,7 @@ var_shared_scope_data = {
 def test_code_shared_scope():
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, worlddlrow !\n"
 
 
@@ -103,7 +103,7 @@ def test_code_shared_scope_no_mutate():
 
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_mutate_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, foooof"
 
 
@@ -123,8 +123,8 @@ code_var_data = {
 def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
-    _, document, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"context": document, "I": 0}
+    document, _, scope, _ = process_prog(state, empty_scope, data)
+    assert scope == {"context": [{"role": None, "content": document}], "I": 0}
     assert document == "0"
 
 

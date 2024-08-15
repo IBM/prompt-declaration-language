@@ -4,7 +4,7 @@ from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
 
-from .pdl_ast import BamTextGenerationParameters
+from .pdl_ast import BamTextGenerationParameters, Message
 from .pdl_llms import BamModel
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
@@ -51,7 +51,7 @@ class YieldMessage:
 @dataclass
 class OutputMessage(YieldMessage):
     kind = MessageKind.OUTPUT
-    output: str
+    output: list[Message]
 
 
 @dataclass
@@ -81,7 +81,8 @@ def schedule(
                 msg = gen.send(v)
                 match msg:
                     case OutputMessage(output=output):
-                        print(output, end="")
+                        s = "".join([msg["content"] for msg in output])  # TODO
+                        print(s, end="")
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
                         text = BamModel.generate_text(

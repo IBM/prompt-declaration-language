@@ -18,7 +18,7 @@ python_data = {
 def test_python():
     state = InterpreterState()
     data = Program.model_validate(python_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, Tracy!\n"
 
 
@@ -40,12 +40,12 @@ def show_result_data(show):
 def test_show_result():
     state = InterpreterState()
     data = Program.model_validate(show_result_data(True))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "How can I help you?: "
 
 
 def test_show_result_false():
     state = InterpreterState()
     data = Program.model_validate(show_result_data(False))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

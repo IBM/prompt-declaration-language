@@ -52,46 +52,36 @@ cond_data = {
                     "document": [
                         {
                             "def": "REASON_OR_CALC",
-                            "document": [
-                                {
-                                    "model": "ibm/granite-20b-code-instruct-v2",
-                                    "parameters": {
-                                        "decoding_method": "greedy",
-                                        "max_new_tokens": 2048,
-                                        "stop_sequences": ["<<"],
-                                        "include_stop_sequence": True,
-                                    },
-                                }
-                            ],
+                            "model": "ibm/granite-20b-code-instruct-v2",
+                            "parameters": {
+                                "decoding_method": "greedy",
+                                "max_new_tokens": 2048,
+                                "stop_sequences": ["<<"],
+                                "include_stop_sequence": True,
+                            },
                         },
                         {
-                            "then": [
-                                {
-                                    "def": "EXPR",
-                                    "document": [
-                                        {
-                                            "model": "ibm/granite-20b-code-instruct-v2",
-                                            "parameters": {
-                                                "decoding_method": "greedy",
-                                                "max_new_tokens": 2048,
-                                                "stop_sequences": ["=", "\n"],
-                                                "include_stop_sequence": False,
-                                            },
-                                        }
-                                    ],
-                                },
-                                "= ",
-                                {
-                                    "def": "RESULT",
-                                    "document": [
-                                        {
-                                            "lan": "python",
-                                            "code": ["result = ", {"get": "EXPR"}],
-                                        }
-                                    ],
-                                },
-                                " >>",
-                            ],
+                            "then": {
+                                "document": [
+                                    {
+                                        "def": "EXPR",
+                                        "model": "ibm/granite-20b-code-instruct-v2",
+                                        "parameters": {
+                                            "decoding_method": "greedy",
+                                            "max_new_tokens": 2048,
+                                            "stop_sequences": ["=", "\n"],
+                                            "include_stop_sequence": False,
+                                        },
+                                    },
+                                    "= ",
+                                    {
+                                        "def": "RESULT",
+                                        "lan": "python",
+                                        "code": ["result = ", {"get": "EXPR"}],
+                                    },
+                                    " >>",
+                                ],
+                            },
                             "if": '{{ REASON_OR_CALC.endswith("<<") }}',
                         },
                     ]
@@ -150,7 +140,7 @@ assert_data = [
 def test_cond():
     state = InterpreterState()
     data = Program.model_validate(cond_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "".join(assert_data)
 
 
@@ -175,6 +165,7 @@ def cond_data1(show, name):
             {
                 "then": [", hello there!\n"],
                 "if": '{{ NAME.endswith("' + name + '") }}',
+                "else": "",
             },
         ],
     }
@@ -183,14 +174,14 @@ def cond_data1(show, name):
 def test_cond1():
     state = InterpreterState()
     data = Program.model_validate(cond_data1(False, "blah"))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""
 
 
 def test_cond2():
     state = InterpreterState()
     data = Program.model_validate(cond_data1(True, "acy"))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Tracy, hello there!\n"
 
 
@@ -206,12 +197,16 @@ repeat_until_data = {
         {
             "repeat": [
                 {
-                    "def": "I",
-                    "lan": "python",
-                    "code": ["result = ", {"get": "I"}, " + 1"],
-                    "show_result": True,
-                },
-                "\n",
+                    "document": [
+                        {
+                            "def": "I",
+                            "lan": "python",
+                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "show_result": True,
+                        },
+                        "\n",
+                    ]
+                }
             ],
             "until": "{{ I == 5 }}",
         },
@@ -222,7 +217,88 @@ repeat_until_data = {
 def test_repeat_until():
     state = InterpreterState()
     data = Program.model_validate(repeat_until_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "".join(
+        [
+            "0",
+            "\n",
+            "5",
+            "\n",
+        ]
+    )
+
+
+repeat_until_array_data = {
+    "description": "Hello world showing call out to python code with condition",
+    "document": [
+        {
+            "def": "I",
+            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "show_result": True,
+        },
+        "\n",
+        {
+            "repeat": [
+                {
+                    "document": [
+                        {
+                            "def": "I",
+                            "lan": "python",
+                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "show_result": True,
+                        },
+                        "\n",
+                    ]
+                }
+            ],
+            "until": "{{ I == 5 }}",
+            "as": "array",
+        },
+    ],
+}
+
+
+def test_repeat_until_array():
+    state = InterpreterState()
+    data = Program.model_validate(repeat_until_array_data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "".join(["0", "\n", '["1\\n", "2\\n", "3\\n", "4\\n", "5\\n"]'])
+
+
+repeat_until_document_data = {
+    "description": "Hello world showing call out to python code with condition",
+    "document": [
+        {
+            "def": "I",
+            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "show_result": True,
+        },
+        "\n",
+        {
+            "repeat": [
+                {
+                    "document": [
+                        {
+                            "def": "I",
+                            "lan": "python",
+                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "show_result": True,
+                        },
+                        "\n",
+                    ]
+                }
+            ],
+            "until": "{{ I == 5 }}",
+            "as": "document",
+        },
+    ],
+}
+
+
+def test_repeat_until_document():
+    state = InterpreterState()
+    data = Program.model_validate(repeat_until_document_data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "".join(
         [
             "0",
@@ -251,20 +327,23 @@ repeat_until_str_data = {
         },
         "\n",
         {
-            "repeat": [
-                {
-                    "def": "I",
-                    "document": [
-                        {
-                            "lan": "python",
-                            "code": ["result = ", {"get": "I"}, " + 1"],
-                        }
-                    ],
-                    "show_result": True,
-                },
-                "\n",
-            ],
+            "repeat": {
+                "document": [
+                    {
+                        "def": "I",
+                        "document": [
+                            {
+                                "lan": "python",
+                                "code": ["result = ", {"get": "I"}, " + 1"],
+                            }
+                        ],
+                        "show_result": True,
+                    },
+                    "\n",
+                ],
+            },
             "until": '{{ I in "5" }}',
+            "as": "document",
         },
     ],
 }
@@ -273,7 +352,7 @@ repeat_until_str_data = {
 def test_repeat_until_str():
     state = InterpreterState()
     data = Program.model_validate(repeat_until_str_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "".join(
         [
             "0",

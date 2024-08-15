@@ -26,10 +26,9 @@ model_parser = {
 def test_model_parser():
     state = InterpreterState()
     data = Program.model_validate(model_parser)
-    result, document, _, trace = process_prog(state, empty_scope, data)
+    result, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert result == {"bob": 20, "carol": 30}
-    assert document == '{"bob": 20, "carol": 30}'
 
 
 model_parser1 = {
@@ -63,9 +62,11 @@ def test_get_parser():
     state = InterpreterState()
     data = Program.model_validate(get_parser)
     scope = {"x": '{"a": "foo", "b": "bar"}'}
-    result, _, _, trace = process_prog(state, scope, data)
+    result, _, scope, trace = process_prog(state, scope, data)
     assert not contains_error(trace)
-    assert result == {"a": "foo", "b": "bar"}
+    assert result == ""
+    assert scope["x"] == '{"a": "foo", "b": "bar"}'
+    assert scope["y"] == {"a": "foo", "b": "bar"}
 
 
 code_parser = {

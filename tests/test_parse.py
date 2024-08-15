@@ -15,6 +15,5 @@ regex_data = {
 def test_model():
     state = InterpreterState()
     data = Program.model_validate(regex_data)
-    result, document, _, _ = process_prog(state, empty_scope, data)
+    result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == {"first_name": "Malcolm", "last_name": "Reynolds"}
-    assert document == "Malcolm Reynolds"

@@ -156,7 +156,9 @@ function_call = {
             "description": "Define hello",
             "def": "hello",
             "function": {},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {
+                "document": ["Hello ", {"get": "name"}, "!"],
+            },
         },
         {"call": "hello"},
     ],
@@ -166,7 +168,7 @@ function_call = {
 def test_function_call():
     state = InterpreterState()
     data = Program.model_validate(function_call)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello Bob!"
 
@@ -178,7 +180,7 @@ function_call1 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "str"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": "Bob"}},
     ],
@@ -188,7 +190,7 @@ function_call1 = {
 def test_function_call1():
     state = InterpreterState()
     data = Program.model_validate(function_call1)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello Bob!"
 
@@ -200,7 +202,7 @@ function_call2 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "int"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 42}},
     ],
@@ -210,7 +212,7 @@ function_call2 = {
 def test_function_call2():
     state = InterpreterState()
     data = Program.model_validate(function_call2)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 42!"
 
@@ -222,7 +224,7 @@ function_call3 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "list"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": ["Bob", "Carrol"]}},
     ],
@@ -232,7 +234,7 @@ function_call3 = {
 def test_function_call3():
     state = InterpreterState()
     data = Program.model_validate(function_call3)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == 'Hello ["Bob", "Carrol"]!'
 
@@ -244,7 +246,7 @@ function_call4 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "obj"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": {"bob": "caroll"}}},
     ],
@@ -254,7 +256,7 @@ function_call4 = {
 def test_function_call4():
     state = InterpreterState()
     data = Program.model_validate(function_call4)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == 'Hello {"bob": "caroll"}!'
 
@@ -266,7 +268,7 @@ function_call5 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "bool"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": True}},
     ],
@@ -276,7 +278,7 @@ function_call5 = {
 def test_function_call5():
     state = InterpreterState()
     data = Program.model_validate(function_call5)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello true!"
 
@@ -288,7 +290,7 @@ function_call6 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -298,7 +300,7 @@ function_call6 = {
 def test_function_call6():
     state = InterpreterState()
     data = Program.model_validate(function_call6)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6!"
 
@@ -310,7 +312,7 @@ function_call7 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -320,7 +322,7 @@ function_call7 = {
 def test_function_call7():
     state = InterpreterState()
     data = Program.model_validate(function_call7)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6!"
 
@@ -332,7 +334,7 @@ function_call8 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "floats"},
-            "return": ["Hello ", {"get": "name"}, "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -353,7 +355,7 @@ function_call9 = {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, " {{ address}}", "!"]},
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street"}},
     ],
@@ -363,7 +365,7 @@ function_call9 = {
 def test_function_call9():
     state = InterpreterState()
     data = Program.model_validate(function_call9)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6 street!"
 
@@ -481,7 +483,7 @@ function_call15 = {
             "def": "hello",
             "function": {"name": "float", "address": "str"},
             "spec": "str",
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": {"document": ["Hello ", {"get": "name"}, " {{ address}}", "!"]},
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street"}},
     ],
@@ -491,7 +493,7 @@ function_call15 = {
 def test_function_call15():
     state = InterpreterState()
     data = Program.model_validate(function_call15)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello 6.6 street!"
 
@@ -536,7 +538,7 @@ function_call17 = {
 def test_function_call17():
     state = InterpreterState()
     data = Program.model_validate(function_call17)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "[1, 2, 3]"
 
@@ -573,7 +575,7 @@ hello = {
 def test_hello():
     state = InterpreterState()
     data = Program.model_validate(hello)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    document, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
     assert document == "Hello, world!"
 
@@ -588,9 +590,9 @@ hello1 = {
 def test_hello1():
     state = InterpreterState()
     data = Program.model_validate(hello1)
-    _, document, _, trace = process_prog(state, empty_scope, data)
+    result, _, _, trace = process_prog(state, empty_scope, data)
     assert not contains_error(trace)
-    assert document == '{"a": "Hello", "b": "World"}'
+    assert result == {"a": "Hello", "b": "World"}
 
 
 hello2 = {

@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional, TypeAlias, TypedDict
 
 from genai.schema import (
     DecodingMethod,
@@ -21,6 +21,11 @@ ExpressionType: TypeAlias = Any
 #     | list["ExpressionType"]
 #     | dict[str, "ExpressionType"]
 # )
+
+
+class Message(TypedDict):
+    role: Optional[str]
+    content: str
 
 
 class BlockKind(StrEnum):
@@ -72,6 +77,7 @@ class RegexParser(Parser):
 
 
 ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
+RoleType: TypeAlias = Optional[str]
 
 
 class Block(BaseModel):
@@ -88,6 +94,7 @@ class Block(BaseModel):
     location: Optional[LocationType] = None
     has_error: bool = False
     fallback: Optional["BlocksType"] = None
+    role: RoleType = None
 
 
 class FunctionBlock(Block):

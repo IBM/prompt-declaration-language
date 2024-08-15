@@ -396,11 +396,11 @@ line26 = {
         "tests/data/line/hello26.pdl:12 - 'questions2' is undefined",
         "tests/data/line/hello26.pdl:12 - Values inside the For block must be lists",
         "tests/data/line/hello26.pdl:11 - Lists inside the For block must be of the same length",
-        "Answer: Here's an example of how you can create a JSON object in Python using the json library:",
-        "```python",
-        "import json",
-        '# Create a dictionary with two fields, "bob" and "carol", each set to a value of 20 and 30 respectively',
-        'data = {"bob": 20, "carol": 30}',
+        'Answer: Here\'s an example of a valid JSON object with two fields, "bob" and "carol", each set to a value of "20" and "30" respectively:',
+        "{",
+        '  "bob": "20",',
+        '  "carol": "30"',
+        "}",
     ],
 }
 

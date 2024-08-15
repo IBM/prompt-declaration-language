@@ -22,7 +22,7 @@ model_data = {
 def test_model():
     state = InterpreterState()
     data = Program.model_validate(model_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -68,7 +68,7 @@ model_chain_data = {
 def test_model_chain():
     state = InterpreterState()
     data = Program.model_validate(model_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "".join(
         [
             "Hello,",
@@ -118,7 +118,7 @@ multi_shot_data = {
 def test_multi_shot():
     state = InterpreterState()
     data = Program.model_validate(multi_shot_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Armonk, NY\n"
 
 
@@ -139,7 +139,7 @@ model_data_missing_parameters = {
 def test_data_missing_parameters():
     state = InterpreterState()
     data = Program.model_validate(model_data_missing_parameters)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == "Hello,\n\nI am writing to inquire about the possibility of a partnership with you."
@@ -164,7 +164,7 @@ model_parameter = {
 def test_model_parameter():
     state = InterpreterState()
     data = Program.model_validate(model_parameter)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"
 
 
@@ -186,5 +186,5 @@ model_parameter1 = {
 def test_model_parameter1():
     state = InterpreterState()
     data = Program.model_validate(model_parameter1)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"

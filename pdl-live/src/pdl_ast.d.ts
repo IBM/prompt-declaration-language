@@ -159,6 +159,7 @@ export type Fallback =
       | EmptyBlock
     )[]
   | null;
+export type Role = string | null;
 export type Kind = "empty";
 export type Def1 = string | null;
 export type ShowResult1 = boolean;
@@ -211,6 +212,7 @@ export type Fallback1 =
       | EmptyBlock
     )[]
   | null;
+export type Role1 = string | null;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -310,6 +312,7 @@ export type Fallback2 =
       | EmptyBlock
     )[]
   | null;
+export type Role2 = string | null;
 export type Kind2 = "include";
 export type Include = string;
 export type Trace =
@@ -386,6 +389,7 @@ export type Fallback3 =
       | EmptyBlock
     )[]
   | null;
+export type Role3 = string | null;
 export type Kind3 = "read";
 export type Read = string | null;
 export type Message = string | null;
@@ -441,6 +445,7 @@ export type Fallback4 =
       | EmptyBlock
     )[]
   | null;
+export type Role4 = string | null;
 export type Kind4 = "array";
 export type Array =
   | number
@@ -539,6 +544,7 @@ export type Fallback5 =
       | EmptyBlock
     )[]
   | null;
+export type Role5 = string | null;
 export type Kind5 = "sequence";
 export type Sequence =
   | number
@@ -637,6 +643,7 @@ export type Fallback6 =
       | EmptyBlock
     )[]
   | null;
+export type Role6 = string | null;
 export type Kind6 = "document";
 export type Document =
   | number
@@ -735,6 +742,7 @@ export type Fallback7 =
       | EmptyBlock
     )[]
   | null;
+export type Role7 = string | null;
 export type Kind7 = "for";
 export type Repeat =
   | number
@@ -884,6 +892,7 @@ export type Fallback8 =
       | EmptyBlock
     )[]
   | null;
+export type Role8 = string | null;
 export type Kind8 = "repeat_until";
 export type Repeat1 =
   | number
@@ -1032,6 +1041,7 @@ export type Fallback9 =
       | EmptyBlock
     )[]
   | null;
+export type Role9 = string | null;
 export type Kind9 = "repeat";
 export type Repeat2 =
   | number
@@ -1181,6 +1191,7 @@ export type Fallback10 =
       | EmptyBlock
     )[]
   | null;
+export type Role10 = string | null;
 export type Kind10 = "if";
 export type Then =
   | number
@@ -1327,6 +1338,7 @@ export type Fallback11 =
       | EmptyBlock
     )[]
   | null;
+export type Role11 = string | null;
 export type Kind11 = "data";
 export type Def12 = string | null;
 export type ShowResult12 = boolean;
@@ -1379,6 +1391,7 @@ export type Fallback12 =
       | EmptyBlock
     )[]
   | null;
+export type Role12 = string | null;
 export type Kind12 = "get";
 export type Get = string;
 export type Def13 = string | null;
@@ -1432,6 +1445,7 @@ export type Fallback13 =
       | EmptyBlock
     )[]
   | null;
+export type Role13 = string | null;
 export type Kind13 = "api";
 export type Api = string;
 export type Url = string;
@@ -1532,6 +1546,7 @@ export type Fallback14 =
       | EmptyBlock
     )[]
   | null;
+export type Role14 = string | null;
 export type Kind14 = "code";
 export type Lan = "python";
 export type Code =
@@ -1631,6 +1646,7 @@ export type Fallback15 =
       | EmptyBlock
     )[]
   | null;
+export type Role15 = string | null;
 export type Kind15 = "model";
 export type Model = string;
 export type Input1 =
@@ -1705,9 +1721,42 @@ export type Trace4 =
   | null;
 export type Platform = "bam";
 export type PromptId = string | null;
-export type Parameters = {
-  [k: string]: unknown;
-} | null;
+export type Parameters =
+  | BamTextGenerationParameters
+  | {
+      [k: string]: unknown;
+    }
+  | null;
+export type BeamWidth = number | null;
+export type DecodingMethod = "greedy" | "sample";
+export type IncludeStopSequence = boolean | null;
+export type DecayFactor = number | null;
+export type StartIndex = number | null;
+export type MaxNewTokens = number | null;
+export type MinNewTokens = number | null;
+export type RandomSeed = number | null;
+export type RepetitionPenalty = number | null;
+export type GeneratedTokens = boolean | null;
+export type InputParameters = boolean | null;
+export type InputText = boolean | null;
+export type InputTokens = boolean | null;
+export type TokenLogprobs = boolean | null;
+export type TokenRanks = boolean | null;
+export type TopNTokens = number | null;
+export type StopSequences =
+  | [string]
+  | [string, string]
+  | [string, string, string]
+  | [string, string, string, string]
+  | [string, string, string, string, string]
+  | [string, string, string, string, string, string]
+  | null;
+export type Temperature = number | null;
+export type TimeLimit = number | null;
+export type TopK = number | null;
+export type TopPNucleusSampling = number | null;
+export type TruncateInputTokens = number | null;
+export type TypicalP = number | null;
 export type Enabled = boolean | null;
 export type SendTokens = boolean | null;
 export type Threshold = number | null;
@@ -1779,6 +1828,7 @@ export type Fallback16 =
       | EmptyBlock
     )[]
   | null;
+export type Role16 = string | null;
 export type Kind16 = "model";
 export type Model1 = string;
 export type Input2 =
@@ -1910,6 +1960,7 @@ export type Fallback17 =
       | EmptyBlock
     )[]
   | null;
+export type Role17 = string | null;
 export type Kind17 = "call";
 export type Call = string;
 export type Trace6 =
@@ -2010,6 +2061,7 @@ export type Fallback18 =
       | EmptyBlock
     )[]
   | null;
+export type Role18 = string | null;
 export type Kind18 = "function";
 export type Function = {
   [k: string]: unknown;
@@ -2143,6 +2195,7 @@ export interface FunctionBlock {
   location?: LocationType | null;
   has_error?: HasError18;
   fallback?: Fallback18;
+  role?: Role18;
   kind?: Kind18;
   function: Function;
   return: Return;
@@ -2210,6 +2263,7 @@ export interface CallBlock {
   location?: LocationType | null;
   has_error?: HasError17;
   fallback?: Fallback17;
+  role?: Role17;
   kind?: Kind17;
   call: Call;
   args?: Args;
@@ -2277,6 +2331,7 @@ export interface WatsonxModelBlock {
   location?: LocationType | null;
   has_error?: HasError16;
   fallback?: Fallback16;
+  role?: Role16;
   kind?: Kind16;
   model: Model1;
   input?: Input2;
@@ -2348,6 +2403,7 @@ export interface BamModelBlock {
   location?: LocationType | null;
   has_error?: HasError15;
   fallback?: Fallback15;
+  role?: Role15;
   kind?: Kind15;
   model: Model;
   input?: Input1;
@@ -2421,6 +2477,7 @@ export interface CodeBlock {
   location?: LocationType | null;
   has_error?: HasError14;
   fallback?: Fallback14;
+  role?: Role14;
   kind?: Kind14;
   lan: Lan;
   code: Code;
@@ -2487,6 +2544,7 @@ export interface ApiBlock {
   location?: LocationType | null;
   has_error?: HasError13;
   fallback?: Fallback13;
+  role?: Role13;
   kind?: Kind13;
   api: Api;
   url: Url;
@@ -2554,6 +2612,7 @@ export interface GetBlock {
   location?: LocationType | null;
   has_error?: HasError12;
   fallback?: Fallback12;
+  role?: Role12;
   kind?: Kind12;
   get: Get;
 }
@@ -2619,6 +2678,7 @@ export interface DataBlock {
   location?: LocationType | null;
   has_error?: HasError11;
   fallback?: Fallback11;
+  role?: Role11;
   kind?: Kind11;
   data: Data;
 }
@@ -2684,6 +2744,7 @@ export interface IfBlock {
   location?: LocationType | null;
   has_error?: HasError10;
   fallback?: Fallback10;
+  role?: Role10;
   kind?: Kind10;
   if: If;
   then: Then;
@@ -2752,6 +2813,7 @@ export interface RepeatBlock {
   location?: LocationType | null;
   has_error?: HasError9;
   fallback?: Fallback9;
+  role?: Role9;
   kind?: Kind9;
   repeat: Repeat2;
   num_iterations: NumIterations;
@@ -2820,6 +2882,7 @@ export interface RepeatUntilBlock {
   location?: LocationType | null;
   has_error?: HasError8;
   fallback?: Fallback8;
+  role?: Role8;
   kind?: Kind8;
   repeat: Repeat1;
   until: Until;
@@ -2888,6 +2951,7 @@ export interface ForBlock {
   location?: LocationType | null;
   has_error?: HasError7;
   fallback?: Fallback7;
+  role?: Role7;
   kind?: Kind7;
   for: For;
   repeat: Repeat;
@@ -2956,6 +3020,7 @@ export interface DocumentBlock {
   location?: LocationType | null;
   has_error?: HasError6;
   fallback?: Fallback6;
+  role?: Role6;
   kind?: Kind6;
   document: Document;
 }
@@ -3021,6 +3086,7 @@ export interface SequenceBlock {
   location?: LocationType | null;
   has_error?: HasError5;
   fallback?: Fallback5;
+  role?: Role5;
   kind?: Kind5;
   sequence: Sequence;
 }
@@ -3086,6 +3152,7 @@ export interface ArrayBlock {
   location?: LocationType | null;
   has_error?: HasError4;
   fallback?: Fallback4;
+  role?: Role4;
   kind?: Kind4;
   array: Array;
 }
@@ -3151,6 +3218,7 @@ export interface ReadBlock {
   location?: LocationType | null;
   has_error?: HasError3;
   fallback?: Fallback3;
+  role?: Role3;
   kind?: Kind3;
   read: Read;
   message?: Message;
@@ -3218,6 +3286,7 @@ export interface IncludeBlock {
   location?: LocationType | null;
   has_error?: HasError2;
   fallback?: Fallback2;
+  role?: Role2;
   kind?: Kind2;
   include: Include;
   trace?: Trace;
@@ -3284,6 +3353,7 @@ export interface ErrorBlock {
   location?: LocationType | null;
   has_error?: HasError1;
   fallback?: Fallback1;
+  role?: Role1;
   kind?: Kind1;
   msg: Msg;
   program: Program1;
@@ -3350,6 +3420,7 @@ export interface EmptyBlock {
   location?: LocationType | null;
   has_error?: HasError;
   fallback?: Fallback;
+  role?: Role;
   kind?: Kind;
 }
 export interface Spec18 {
@@ -3432,6 +3503,39 @@ export interface If {
   [k: string]: unknown;
 }
 export interface Data {
+  [k: string]: unknown;
+}
+export interface BamTextGenerationParameters {
+  beam_width?: BeamWidth;
+  decoding_method?: DecodingMethod | null;
+  include_stop_sequence?: IncludeStopSequence;
+  length_penalty?: LengthPenalty | null;
+  max_new_tokens?: MaxNewTokens;
+  min_new_tokens?: MinNewTokens;
+  random_seed?: RandomSeed;
+  repetition_penalty?: RepetitionPenalty;
+  return_options?: TextGenerationReturnOptions | null;
+  stop_sequences?: StopSequences;
+  temperature?: Temperature;
+  time_limit?: TimeLimit;
+  top_k?: TopK;
+  top_p?: TopPNucleusSampling;
+  truncate_input_tokens?: TruncateInputTokens;
+  typical_p?: TypicalP;
+}
+export interface LengthPenalty {
+  decay_factor?: DecayFactor;
+  start_index?: StartIndex;
+  [k: string]: unknown;
+}
+export interface TextGenerationReturnOptions {
+  generated_tokens?: GeneratedTokens;
+  input_parameters?: InputParameters;
+  input_text?: InputText;
+  input_tokens?: InputTokens;
+  token_logprobs?: TokenLogprobs;
+  token_ranks?: TokenRanks;
+  top_n_tokens?: TopNTokens;
   [k: string]: unknown;
 }
 export interface ModerationParameters {
