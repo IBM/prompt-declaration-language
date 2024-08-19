@@ -22,7 +22,6 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     LocationType,
-    OpenAIModelBlock,
     ParserType,
     PdlParser,
     ReadBlock,
@@ -116,13 +115,6 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["guardrails"] = block.guardrails
             if block.guardrails_hap_params is not None:
                 d["guardrails_hap_params"] = block.guardrails_hap_params
-        case OpenAIModelBlock():
-            d["platform"] = block.platform
-            d["model"] = block.model
-            if block.input is not None:
-                d["input"] = blocks_to_dict(block.input)
-            if block.params is not None:
-                d["params"] = block.params
         case CodeBlock():
             d["lan"] = block.lan
             d["code"] = blocks_to_dict(block.code)

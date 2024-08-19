@@ -1,0 +1,67 @@
+description: Demo of template
+defs:
+  # demonstrations:
+  #   data: []
+
+  math_tools:
+    data:
+      - name: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expression
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+  # optimized: ""
+  # demos:
+  #   for:
+  #     demonstration: "{{ static }}"
+  #   repeat:
+  #     data:
+  #       question: "{{ demonstration.question }}"
+  #       reasoning: "{{ demonstration.reasoning|trim }}"
+  #       answer: "{{ demonstration.answer|string }}"
+
+  # prompt_pattern: "cot" | "react" | "rewoo"
+  # question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+  # model: "ibm/granite-34b-code-instruct"
+document:
+  # CoT
+  - if: "{{ prompt_pattern == 'cot' }}"
+    then:
+      - include: examples/prompt_library/CoT.pdl
+      - "Answer the questions to the best of your abilities.\n"
+      - call: chain_of_thought
+        args:
+          examples: "{{ demonstrations }}"
+          question: "{{ question }}"
+          model: "{{ model }}"
+
+  # ReAct
+  - if: "{{ prompt_pattern == 'react' }}"
+    then:
+      - include: examples/prompt_library/tools.pdl
+      - include: examples/prompt_library/ReAct.pdl
+      - call: react
+        def: ANSWER
+        args:
+         question: "{{ question }}"
+         model: "{{ model }}"
+         tools: "{{ math_tools }}"
+         trajectories: "{{ demonstrations }}"
+      - "\nThe answer is {{ ANSWER.answer|trim }}"
+
+  # ReWOO
+  - if: "{{ prompt_pattern == 'rewoo' }}"
+    then:
+        - include: examples/prompt_library/tools.pdl
+        - include: examples/prompt_library/ReWoo.pdl
+        - call: rewoo
+          def: ANSWER
+          args:
+           task: "{{ question }}"
+           model: "{{ model }}"
+           tools: "{{ math_tools }}"
+           trajectories: "{{ demonstrations }}"
+           show_plans: true
+        - "\nThe answer is {{ ANSWER.answer|trim }}"

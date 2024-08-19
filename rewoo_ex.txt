@@ -1,0 +1,31 @@
+Task: Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?
+Plan: The cost of the house was $80,000 and the cost of the repairs was $50,000. Calculate the total cost. #E1 = Calculator[80000+50000]
+Plan: The value of the house increased by 150% after the repairs. Calculate the new value of the house. #E2 = Calculator[80000*1.5]
+Plan: The profit is the value of the house minus the cost. Calculate the profit. #E3 = Calculator[#E2-#E1]
+
+--- Extracted Blueprint ---
+Plan: The cost of the house was $80,000 and the cost of the repairs was $50,000. Calculate the total cost.
+#E1 = Calculator[80000+50000]
+Plan: The value of the house increased by 150% after the repairs. Calculate the new value of the house.
+#E2 = Calculator[80000*1.5]
+Plan: The profit is the value of the house minus the cost. Calculate the profit.
+#E3 = Calculator[#E2-#E1]
+
+
+Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+
+Plan: The cost of the house was $80,000 and the cost of the repairs was $50,000. Calculate the total cost.
+Evidence: 130000
+Plan: The value of the house increased by 150% after the repairs. Calculate the new value of the house.
+Evidence: 120000
+Plan: The profit is the value of the house minus the cost. Calculate the profit.
+Evidence: -10000
+
+Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+
+Task: Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?
+Response: $10,000
+The answer is $10,000
+
+
+true answer 70000

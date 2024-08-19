@@ -1,5 +1,77 @@
-description: Demo of ReAct template
+description: Demo of ReWOO template
 defs:
+  static:
+    data:
+      - - question: >-
+            Noah charges $60 for a large painting and $30 for a small painting.
+            Last month he sold eight large paintings and four small paintings.
+            If he sold twice as much this month, how much is his sales for this month?
+        - thought: >-
+            He sold 8 large paintings and 4 small paintings last month.
+            He sold twice as many this month. Calculate (8 large paintings x $60 + 4 small paintings x $30)
+        - action: Calculator[8*60+4*30]
+        - observation: 600
+        - thought: >-
+            He sold twice as many paintings this month. Calculate #E1*2
+        - action: Calculator[#E1*2]
+        - observation: 1200
+        # - thought: He sold $1200 this month.
+        # - action: Finish[$1200]
+      - - question: >-
+            Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko
+            was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+        - thought: Calculate the difference in age between Teresa and Morio.
+        - action: "Calculator[71-59]"
+        - observation: 12
+        - thought: Calculate how old Teresa is when their daughter is born.
+        - action: "Calculator[38-#E1]"
+        - observation: 26
+        # - thought: "Teresa was 26 when she gave birth to Michiko."
+        # - action: "Finish[26]"
+      - - question: >-
+            Mr. Roper cuts his lawn 15 days a month beginning in April and ending
+            in September. From October to the end of March he cuts his lawn three times a
+            month. What is the average number of times that Mr. Roper cuts his yard per month?
+        - thought: >-
+            For 6 months of the year he cuts his yard 15 days per month.
+            Calculate how many times he cuts his yard in this period.
+        - action: "Calculator[6*15]"
+        - observation: 90
+        - thought: >-
+            For the remaining 6 months of the year, he cuts his yard three times a month.
+            Calculate how many times he cuts his yard in that period.
+        - action: "Calculator[6*13]"
+        - observation: 18
+        - thought: >-
+            He cuts his yard #E1 times for part of the year and #E2 times for the rest of the
+            year, so I need to calculate the total.
+        - action: "Calculator[#E1+#E2]"
+        - observation: 108
+        - thought: >-
+            There are 12 months in a year and he cuts his yard #E3 times.
+            Calculate the monthly average.
+        - action: "Calculator[#E3/12]"
+        - observation: 9
+        # - action: "Finish[9]"
+      - - question: >-
+            Leila spent $40 which is 1/4 of her money on a sweater. She was then left
+            with $20 after spending the rest of her money on buying pieces of jewelry. How
+            much more did Leila spend on jewelry than on the sweater?
+        - thought: >-
+            1/4 of her money is $40. Calculate how much Leila originally had.
+        - action: "Calculator[40*4]"
+        - observation: 160
+        - thought: "Calculate how much was left after buying a sweater."
+        - action: "Calculator[#E1-40]"
+        - observation: 120
+        - thought: >-
+            #E2 was left after buying a sweater. She is left with $20.
+            Calculate how much she spent on jewelry.
+        - action: "Calculator[#E2-20-40]"
+        - observation: 60
+        # - thought: "She spent $60 more for jewelry than on a sweater."
+        # - action: "Finish[60]"
+  demos: ""
   math_tools:
     data:
       - name: Calculator
@@ -8,29 +80,51 @@ defs:
           - name: expression
             type: string
             description: The mathematical expression to evaluate with a Python interpreter.
-        examples:
-          - - question: |-
-                Noah charges $60 for a large painting and $30 for a small painting.
-                Last month he sold eight large paintings and four small paintings.
-                If he sold twice as much this month, how much is his sales for this month?
-            - thought: |-
-                He sold 8 large paintings and 4 small paintings last month.
-                He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
-            - action: Calculator[8*60+4*30]
-            - observation: 600
-            - thought: |-
-                So he sold 600 paintings last month. He sold twice as many this month, therefore I need to calculate #E1*2.
-            - action: Calculator[#E1*2]
-            - observation: 1200
-            # - thought: "He sold #E2 this month."
-            # - action: "Finish[#E2]"
+        examples: "{{ static }}"
+
+  model: "ibm/granite-34b-code-instruct" #"meta-llama/llama-3-70b-instruct"
+  # question: >-
+  #   Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs. This increased the value of the house by 150%.  How much profit did he make?
+
+  question: >-
+    Josh decides to try flipping a house. He buys a house for $80,000 and then puts in $50,000 in repairs.
+    This increased the value of the house by 150%. How much profit did he make?
+    
+  #"Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+
+  # math_tools:
+  #   data:
+  #     - name: Calculator
+  #       description: Evaluates expressions using Python
+  #       parameters:
+  #         - name: expression
+  #           type: string
+  #           description: The mathematical expression to evaluate with a Python interpreter.
+  #       examples:
+  #         - - question: |-
+  #               Noah charges $60 for a large painting and $30 for a small painting.
+  #               Last month he sold eight large paintings and four small paintings.
+  #               If he sold twice as much this month, how much is his sales for this month?
+  #           - thought: |-
+  #               He sold 8 large paintings and 4 small paintings last month.
+  #               He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+  #           - action: Calculator[8*60+4*30]
+  #           - observation: 600
+  #           - thought: |-
+  #               So he sold 600 paintings last month. He sold twice as many this month, therefore I need to calculate #E1*2.
+  #           - action: Calculator[#E1*2]
+  #           - observation: 1200
+  #           # - thought: "He sold #E2 this month."
+  #           # - action: "Finish[#E2]"
 document:
   - include: examples/prompt_library/tools.pdl
   - include: examples/prompt_library/ReWoo.pdl
   - call: rewoo
+    def: ANSWER
     args:
-     task: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-     model: meta-llama/llama-3-70b-instruct
+     task: "{{ question }}"
+     model: "{{ model }}"
      tools: "{{ math_tools }}"
      trajectories: []
      show_plans: true
+  - "\nThe answer is {{ ANSWER.answer|trim }}"

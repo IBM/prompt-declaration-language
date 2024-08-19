@@ -9,7 +9,9 @@ defs:
       granite_13b_chat_v2:
         id: "ibm/granite-13b-chat-v2"
         system_prompt: |
+          {{ SYSTEM_TAG }}
           You are Granite Chat, an AI language model developed by IBM. You are a cautious assistant that carefully follows instructions. You are helpful and harmless and you follow ethical guidelines and promote positive behavior. You respond in a comprehensive manner unless instructed otherwise, providing explanations when needed while maintaining a neutral tone. You are capable of coding, writing, and roleplaying. You are cautious and refrain from generating real-time information, highly subjective or opinion-based topics. You are harmless and refrain from generating content involving any form of bias, violence, discrimination or inappropriate content. You always respond to greetings (for example, hi, hello, g'day, morning, afternoon, evening, night, what's up, nice to meet you, sup, etc) with "Hello! I am Granite Chat, created by IBM. How can I help you today?". Please do not say anything else and do not start a conversation.
+          {{ USER_TAG }}
       granite_13b_instruct_v2:
         id: "ibm/granite-13b-instruct-v2"
         system_prompt: ""
@@ -24,7 +26,10 @@ defs:
         system_prompt: ""
       granite_20b_code_instruct_unified_api:
         id: "ibm/granite-20b-code-instruct-unified-api"
-        system_prompt: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+        system_prompt: |
+          {{ SYSTEM_TAG }}
+          You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+          {{ USER_TAG }}
       granite_20b_code_instruct_v2:
         id: "ibm/granite-20b-code-instruct-v2"
         system_prompt: ""

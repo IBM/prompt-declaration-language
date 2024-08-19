@@ -67,8 +67,26 @@ defs:
     return:
       lan: python
       code: |
-        import math
-        result = {{ subject }}
+        from sympy.parsing.sympy_parser import parse_expr
+        # from math import *
+        result = None
+
+        try:
+          exp = "{{ subject|replace(",", "")|replace("$","")|replace("^","**")|replace("%","*0.01") }}"
+          # print("-----EXP", exp)
+          result = float(parse_expr(exp).evalf())
+          # print("-----RESULT", result)
+          # if result is not None and isinstance(result, (int, float, complex)) and not isinstance(result, bool):
+          result = round(result, 2)
+          if result.is_integer():
+            result = int(result)
+          # else:
+          # result = None
+        except Exception as e:
+            # print(subject, e)
+            result = "There was an error calculating:" + str(e)
+
+        
 
   get_current_weather:
     function:

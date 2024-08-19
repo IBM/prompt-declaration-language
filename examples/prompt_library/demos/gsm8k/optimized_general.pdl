@@ -1,0 +1,53 @@
+description: Demo of template
+defs:
+  demonstrations:
+    data: []
+  math_tools:
+    data:
+    - name: Calculator
+      description: Evaluates expressions using Python
+      parameters:
+      - name: expression
+        type: string
+        description: The mathematical expression to evaluate with a Python interpreter.
+      examples: []
+document:
+- if: '{{ prompt_pattern == ''cot'' }}'
+  then:
+  - include: examples/prompt_library/CoT.pdl
+  - |
+    Answer the questions to the best of your abilities.
+  - call: chain_of_thought
+    args:
+      examples: '{{ demonstrations }}'
+      question: '{{ question }}'
+      model: '{{ model }}'
+- if: '{{ prompt_pattern == ''react'' }}'
+  then:
+  - include: examples/prompt_library/tools.pdl
+  - include: examples/prompt_library/ReAct.pdl
+  - def: ANSWER
+    call: react
+    args:
+      question: '{{ question }}'
+      model: '{{ model }}'
+      tools: '{{ math_tools }}'
+      trajectories: '{{ demonstrations }}'
+  - |2-
+
+    The answer is {{ ANSWER.answer|trim }}
+- if: '{{ prompt_pattern == ''rewoo'' }}'
+  then:
+  - include: examples/prompt_library/tools.pdl
+  - include: examples/prompt_library/ReWoo.pdl
+  - def: ANSWER
+    call: rewoo
+    args:
+      task: '{{ question }}'
+      model: '{{ model }}'
+      tools: '{{ math_tools }}'
+      trajectories: '{{ demonstrations }}'
+      show_plans: true
+  - |2-
+
+    The answer is {{ ANSWER.answer|trim }}

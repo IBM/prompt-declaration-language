@@ -35,7 +35,6 @@ from .pdl_ast import (
     IterationType,
     LocationType,
     ModelBlock,
-    OpenAIModelBlock,
     ParserType,
     PDLException,
     PdlParser,
@@ -51,7 +50,7 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_llms import BamModel, OpenAIModel, WatsonxModel
+from .pdl_llms import BamModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_program
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
@@ -637,40 +636,6 @@ def process_expr(
     scope: ScopeType, expr: Any, loc: LocationType
 ) -> tuple[Any, list[str]]:
     if isinstance(expr, str):
-<<<<<<< HEAD
-        template = Template(
-            expr,
-            keep_trailing_newline=True,
-            block_start_string="{%%%%%PDL%%%%%%%%%%",
-            block_end_string="%%%%%PDL%%%%%%%%%%}",
-            # comment_start_string="",
-            # comment_end_string="",
-            autoescape=False,
-            undefined=StrictUndefined,
-        )
-
-        try:
-            if (expr.startswith("{{") and expr.endswith("}}")) and (
-                "}}" not in expr[2:-2]
-            ):
-                try:
-                    env = Environment(
-                        block_start_string="{%%%%%PDL%%%%%%%%%%",
-                        block_end_string="%%%%%PDL%%%%%%%%%%}",
-                        undefined=StrictUndefined,
-                    )
-
-                    s = env.compile_expression(expr[2:-2], undefined_to_none=False)(
-                        scope
-                    )
-
-                    if isinstance(s, Undefined):
-                        raise UndefinedError(str(s))
-                except Exception as e:
-                    msg = f"{get_loc_string(loc)}{e}"
-                    return (None, [msg])
-            else:
-=======
         try:
             if expr.startswith("{{") and expr.endswith("}}") and "}}" not in expr[:-2]:
                 env = Environment(
@@ -693,7 +658,6 @@ def process_expr(
                     autoescape=False,
                     undefined=StrictUndefined,
                 )
->>>>>>> main
                 s = template.render(scope)
         except UndefinedError as e:
             msg = f"{get_loc_string(loc)}{e}"
@@ -731,17 +695,12 @@ def process_condition(
 def step_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
+    block: BamModelBlock | WatsonxModelBlock,
     loc: LocationType,
 ) -> Generator[
     YieldMessage,
     Any,
-    tuple[
-        Any,
-        str,
-        ScopeType,
-        BamModelBlock | WatsonxModelBlock | OpenAIModelBlock | ErrorBlock,
-    ],
+    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | ErrorBlock],
 ]:
     # evaluate model name
     model, errors = process_expr(scope, block.model, append(loc, "model"))
@@ -816,13 +775,7 @@ def step_call_model(
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-<<<<<<< HEAD
-    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
-    model: str,
-    model_input: str,
-=======
     block: BamModelBlock | WatsonxModelBlock,
->>>>>>> main
 ) -> Generator[YieldMessage, Any, str]:
     match state.batch:
         case 0:
@@ -836,13 +789,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 def generate_client_response_streaming(
     state: InterpreterState,
-<<<<<<< HEAD
-    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
-    model: str,
-    model_input: str,
-=======
     block: BamModelBlock | WatsonxModelBlock,
->>>>>>> main
 ) -> Generator[YieldMessage, Any, str]:
     text_stream: Generator[str, Any, None]
     match block:
@@ -865,12 +812,6 @@ def generate_client_response_streaming(
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
-        case OpenAIModelBlock():
-            text_stream = OpenAIModel.generate_text_stream(
-                model_id=model,
-                model_input=model_input,
-                parameters=block.params,
-            )
         case _:
             assert False
     text = ""
@@ -883,13 +824,7 @@ def generate_client_response_streaming(
 
 def generate_client_response_single(
     state: InterpreterState,
-<<<<<<< HEAD
-    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
-    model: str,
-    model_input: str,
-=======
     block: BamModelBlock | WatsonxModelBlock,
->>>>>>> main
 ) -> Generator[YieldMessage, Any, str]:
     text: str
     match block:
@@ -912,12 +847,6 @@ def generate_client_response_single(
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
-        case OpenAIModelBlock():
-            text = OpenAIModel.generate_text(
-                model_id=model,
-                model_input=model_input,
-                parameters=block.params,
-            )
     if state.yield_output:
         yield OutputMessage(text)
     return text
@@ -925,13 +854,7 @@ def generate_client_response_single(
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-<<<<<<< HEAD
-    block: BamModelBlock | WatsonxModelBlock | OpenAIModelBlock,
-    model: str,
-    model_input: str,
-=======
     block: BamModelBlock | WatsonxModelBlock,
->>>>>>> main
 ) -> Generator[YieldMessage, Any, str]:
     match block:
         case BamModelBlock():
@@ -947,8 +870,6 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
             if state.yield_output:
                 yield OutputMessage(text)
         case WatsonxModelBlock():
-            assert False  # XXX TODO
-        case OpenAIModelBlock():
             assert False  # XXX TODO
         case _:
             assert False

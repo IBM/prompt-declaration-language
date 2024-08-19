@@ -117,8 +117,8 @@ defs:
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
         until: "{{ ACTION == 'Finish' }}"
-      - "\n\nJSON Output: "
-      - data:
+      - show_result: false
+        data:
           answer: "{{ SUBJECT|trim }}"
 
   react_json:
@@ -190,6 +190,6 @@ defs:
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
         until: "{{ action.name == 'Finish' }}"
-      - "\n\nJSON Output: "
-      - data:
+      - show_result: false
+        data:
           answer: "{{ action.arguments }}"

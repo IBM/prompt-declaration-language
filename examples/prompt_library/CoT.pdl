@@ -8,9 +8,8 @@ defs:
       answer: str
     return: |+
       Question: {{ question }}
-
       Answer: Let's think step by step. {{ reasoning }}
-      The answer is {{ answer }}.
+      The answer is {{ answer }}
 
   # Auto Chain of Thought Zhang et al. (2022)
   # The idea is to use a _model_ to generate a reasoning path, even if not very accurate.
@@ -23,7 +22,6 @@ defs:
     return:
     - |-
       Question: {{ question }}
-
       Answer: Let's think step by step. 
     - model: "{{ model }}"
       platform: bam
@@ -58,10 +56,8 @@ defs:
     - call: fewshot_cot
       args:
         examples: "{{ examples }}"
-    - |-
-      Now answer this question.
+    - |
       Question: {{ question }}
-
       Answer: Let's think step by step. 
     - model: "{{ model }}"
       platform: bam

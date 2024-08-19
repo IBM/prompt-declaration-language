@@ -78,7 +78,7 @@ defs:
           call: rewoo_block
           args:
             trajectory: "{{ traj }}"
-      - "\n"
+      # - "\n"
       - |
         Begin! 
         Describe your plans with rich details. Each Plan should be followed by only one #E.
@@ -94,6 +94,8 @@ defs:
           decoding_method: greedy
           stop_sequences:
             - "<|endoftext|>"
+            - "\n\n"
+            - "Task:"
           include_stop_sequence: false
       - if: "{{ show_plans }}"
         then:
@@ -173,6 +175,6 @@ defs:
           include_stop_sequence: false
         input:
           document: "{{ solution_input }}"
-      - "\n\nJSON Output: "
-      - data:
+      - show_result: false
+        data:
           answer: "{{ SOLUTION }}"

@@ -1,5 +1,123 @@
 description: Demo of ReAct template
 defs:
+  static:
+    data:
+      - - question: >-
+            Noah charges $60 for a large painting and $30 for a small painting. 
+            Last month he sold eight large paintings and four small paintings. 
+            If he sold twice as much this month, how much is his sales for this month?
+        - thought: >-
+            He sold 8 large paintings and 4 small paintings last month. 
+            He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+        - action: Calculator[8*60+4*30]
+        - observation: 600
+        - thought: >-
+            He sold twice as many paintings this month, therefore I need to calculate 600*2.
+        - action: Calculator[600*2]
+        - observation: 1200
+        - thought: He sold $1200 this month.
+        - action: Finish[$1200]
+      - - question: >-
+            Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko
+            was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+        - thought: I need to calculate the difference in age between Teresa and Morio.
+        - action: "Calculator[71-59]"
+        - observation: 12
+        - thought: I need to calculate how old Teresa is when their daughter is born.
+        - action: "Calculator[38-12]"
+        - observation: 26
+        - thought: "Teresa was 26 when she gave birth to Michiko."
+        - action: "Finish[26]"
+      - - question: >-
+            Mr. Roper cuts his lawn 15 days a month beginning in April and ending
+            in September. From October to the end of March he cuts his lawn three times a
+            month.  What is the average number of times that Mr. Roper cuts his yard per month?
+        - thought: >-
+            For 6 months of the year he cuts his yard 15 days per month. I need to calculate how 
+            many times he cuts his yard in this period.
+        - action: "Calculator[6*15]"
+        - observation: 90
+        - thought: >-
+            For the remaining 6 months of the year, he cuts his yard three times a month so
+            I need to calculate how many times he cuts his yard in that period.
+        - action: "Calculator[6*13]"
+        - observation: 18
+        - thought: >-
+            He cuts his yard 90 times for part of the year and 18 times for the rest of the
+            year, so I need to calculate the total.
+        - action: "Calculator[90+18]"
+        - observation: 108
+        - thought: >-
+            There are 12 months in a year and he cuts his yard 108 times so I need 
+            to calculate the monthly average.
+        - action: "Calculator[108/12]"
+        - observation: 9
+        - action: "Finish[9]"
+      - - question: >-
+            Leila spent $40 which is 1/4 of her money on a sweater. She was then left
+            with $20 after spending the rest of her money on buying pieces of jewelry. How
+            much more did Leila spend on jewelry than on the sweater?
+        - thought: >-
+            Since 1/4 of her money is $40, I need to calculate how much Leila originally had.
+        - action: "Calculator[40*4]"
+        - observation: 160
+        - thought: "I need to calculate how much was left after buying a sweater."
+        - action: "Calculator[160-40]"
+        - observation: 120
+        - thought: >-
+            $120 was left after buying a sweater. Since she is left with $20, I need to calculate 
+            how much she spent on jewelry.
+        - action: "Calculator[100-40]"
+        - observation: 60
+        - thought: "She spent $60 more for jewelry than on a sweater."
+        - action: "Finish[60]"
+
+
+
+      # - answer: '2.0'
+      #   question: One US cup equals 250ml. Brian is making lasagna for himself, his wife,
+      #     his two kids, his parents, and his wife's parents. The recipe requires 1/2 a cup
+      #     of milk per serving. How many 1L cartons of milk does Brian need to buy if each
+      #     person is expected to eat 2 servings?
+      #   reasoning: 'There will be a total of (1) Brian + (1) Brian''s wife + (2) two kids
+      #     + (2) Brian''s parents + (2) Brian''s in-laws = 1+1+2+2+2= <<1+1+2+2+2=8>>8 people
+      #     eating
+
+      #     If 1 person eats 2 serving of lasagna then 8 people will eat 8 * 2 = <<8*2=16>>16
+      #     servings
+
+      #     If each serving requires 1/2 cup of milk then 16 servings require 16 * 1/2 cups
+      #     = <<16*1/2=8>>8 cups of milk
+
+      #     If one cup of milk equals 250 ml, then 8 cups of milk equal 8 * 250 = <<8*250=2000>>2000
+      #     ml of milk
+
+      #     1L carton of milk equals 1000ml of milk, therefore Brian needs 2000/1000 = <<2000/1000=2>>2
+      #     cartons of 1L milk'
+      # - answer: '5.0'
+      #   question: Janet lives in a city built on a grid system.  She walks 3 blocks north,
+      #     then seven times as many blocks west. Then she turns around and walks 8 blocks
+      #     south and twice as many blocks east in the direction of her home. If Janet can
+      #     walk 2 blocks/minute, how long will it take her to get home?
+      #   reasoning: 'First, find the total number of blocks south Janet is from her starting
+      #     point by subtracting the blocks she walked north from the blocks she walked south:
+      #     8 blocks - 3 blocks = <<8-3=5>>5 blocks
+
+      #     Then find the number blocks she walked west: 3 blocks * 7 = <<3*7=21>>21 blocks
+
+      #     Then find the number of blocks she walked east: 8 blocks * 2 = <<8*2=16>>16 blocks
+
+      #     Subtract the number of blocks she walked east from the number of blocks she walked
+      #     west to find how many blocks west of her starting point she is: 21 blocks - 16
+      #     blocks = <<21-16=5>>5 blocks
+
+      #     Add the number of blocks she needs to walk north to the number of blocks she needs
+      #     to walk east: 5 blocks + 5 blocks = <<5+5=10>>10 blocks
+
+      #     Finally, divide the distance she needs to walk by her speed to find how long she''ll
+      #     spend walking: 10 blocks / 2 blocks/minute = <<10/2=5>>5 minutes'
+      
+  demos: ""
   math_tools:
     data:
       - name: Calculator
@@ -8,28 +126,16 @@ defs:
           - name: expression
             type: string
             description: The mathematical expression to evaluate with a Python interpreter.
-        examples:
-          - - question: |-
-                Noah charges $60 for a large painting and $30 for a small painting.
-                Last month he sold eight large paintings and four small paintings.
-                If he sold twice as much this month, how much is his sales for this month?
-            - thought: |-
-                He sold 8 large paintings and 4 small paintings last month.
-                He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
-            - action: Calculator[8*60+4*30]
-            - observation: 600
-            - thought: |-
-                So he sold 600 paintings last month. He sold twice as many this month, therefore I need to calculate 600*2.
-            - action: Calculator[600*2]
-            - observation: 1200
-            - thought: He sold $1200 this month.
-            - action: Finish[$1200]
+        examples: [] # "{{ static }}"
+
+  # model: "meta-llama/llama-3-70b-instruct"
+  # question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
 document:
   - include: examples/prompt_library/tools.pdl
   - include: examples/prompt_library/ReAct.pdl
   - call: react
     args:
-     question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-     model: "meta-llama/llama-3-70b-instruct"
+     question: "{{ question }}"
+     model: "{{ model }}"
      tools: "{{ math_tools }}"
-     trajectories: []
+     trajectories: "{{ trajectories }}"
