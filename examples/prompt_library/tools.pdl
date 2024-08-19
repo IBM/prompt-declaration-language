@@ -67,7 +67,7 @@ defs:
     return:
       lan: python
       code: |
-        from sympy.parsing.sympy_parser import parse_expr
+        # from sympy.parsing.sympy_parser import parse_expr
         # from math import *
         result = None
 

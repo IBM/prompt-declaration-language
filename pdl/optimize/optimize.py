@@ -21,7 +21,7 @@ from pdl.pdl_ast import (
     ScopeType,
 )
 from pdl.pdl_dumper import dump_program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_interpreter import InterpreterState, contains_error, empty_scope, process_prog
 
 rng = default_rng()
 
@@ -174,7 +174,7 @@ def execute_threads(max_threads: int, pdl_threads: list):
         ]
         for future in futures:
             try:
-                yield future.result(timeout=180)  # 259200)
+                yield future.result(timeout=30)  # 259200)
             except TimeoutError as t:
                 print(t)
 
@@ -477,6 +477,10 @@ class Gsm8kTrialThread(PDLThread):
                 scope,
                 self.pdl_program,
             )
+
+            errored = contains_error(trace)
+            if errored:
+                print("PDL error occured.")
 
             if DEBUG:
                 print(document)
