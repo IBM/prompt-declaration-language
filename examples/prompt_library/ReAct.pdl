@@ -78,6 +78,9 @@ defs:
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
+                  time_limit: 60000
+                  random_seed: 42
+                  truncate_input_tokens: 8192
                   decoding_method: sample
                   repetition_penalty: 1.1
                   temperature: "{{ temperature }}"
@@ -87,6 +90,9 @@ defs:
           - def: action_raw
             model: "{{ model }}"
             parameters:
+              time_limit: 60000
+              random_seed: 42
+              truncate_input_tokens: 8192
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -98,6 +104,9 @@ defs:
           - def: SUBJECT
             model: "{{ model }}"
             parameters:
+              time_limit: 60000
+              random_seed: 42
+              truncate_input_tokens: 8192
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -115,6 +124,9 @@ defs:
                   - model: "{{ model }}"
                     fallback: "Error calling model"
                     parameters:
+                      time_limit: 60000
+                      random_seed: 42
+                      truncate_input_tokens: 8192
                       repetition_penalty: 1.1
                       decoding_method: sample
                       temperature: "{{ temperature }}"

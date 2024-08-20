@@ -1,13 +1,13 @@
 import argparse
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from dataclasses import dataclass
 from enum import Enum, StrEnum
 from math import ceil, log2
 from pathlib import Path
 from threading import Thread
 from typing import Any
-
+import traceback
 import yaml
 from datasets import Dataset, load_dataset, load_from_disk
 from numpy.random import default_rng
@@ -21,7 +21,14 @@ from pdl.pdl_ast import (
     ScopeType,
 )
 from pdl.pdl_dumper import dump_program
-from pdl.pdl_interpreter import InterpreterState, contains_error, empty_scope, process_prog
+from pdl.pdl_interpreter import (
+    InterpreterState,
+    contains_error,
+    empty_scope,
+    process_prog,
+)
+import datetime
+
 
 rng = default_rng()
 
@@ -165,20 +172,68 @@ class Gsm8kOutput:
 
 
 def execute_threads(max_threads: int, pdl_threads: list):
-    with ThreadPoolExecutor(max_workers=max_threads) as service:
-        futures = [
-            service.submit(
-                thread.run,
-            )
-            for thread in pdl_threads
-        ]
-        for future in futures:
-            try:
-                yield future.result(timeout=30)  # 259200)
-            except TimeoutError as t:
-                print(t)
+    # with ThreadPoolExecutor(max_workers=max_threads) as service:
+    service = ThreadPoolExecutor(max_workers=max_threads)
+    futures = [
+        service.submit(
+            thread.run,
+        )
+        for thread in pdl_threads
+    ]
+    # print("max threads", max_threads)
+    for future in tqdm(futures, disable=True):
+        # print("future")
+        try:
+            yield future.result(timeout=120)  # 259200)
+        except TimeoutError as t:
+            print("TIMED OUT!!")
+            # print(t)
+            yield t
+        except KeyboardInterrupt as k:
+            print("Ctrl+Ced. Exiting...")
+            service.shutdown(wait=False)#, cancel_futures=True)
+            exit()
+            raise
+        except Exception as te:
+            print("Exception!", traceback.format_exc())
+            yield te
+        # now = datetime.datetime.now()
+        # print("finish future", now)
 
-        service.shutdown()
+    # print("Shutting down threadpool")
+    service.shutdown(wait=False)
+    # print("Service shutdown")
+    # print("Exited context")
+
+
+def execute_processes(max_processes: int, pdl_threads: list):
+    # with ThreadPoolExecutor(max_workers=max_threads) as service:
+    service = ProcessPoolExecutor(max_workers=max_processes)
+    futures = [
+        service.submit(
+            thread.run,
+        )
+        for thread in pdl_threads
+    ]
+    # print("max threads", max_threads)
+    for future in tqdm(futures, disable=True):
+        # print("future")
+        try:
+            yield future.result(timeout=120)  # 259200)
+        except TimeoutError as t:
+            print("TIMED OUT!!")
+            # print(t)
+            yield future.exception()
+        except Exception as te:
+            print("Exception!", traceback.format_exc())
+            yield te
+        # now = datetime.datetime.now()
+        # print("finish future", now)
+
+    # print("Shutting down threadpool")
+    service.shutdown(wait=False)
+    # print("Service shutdown")
+    # print("Exited context")
 
 
 class SamplingMethods(Enum):
@@ -193,175 +248,177 @@ class Models(StrEnum):
     granite_20b_code_instruct_v2 = "ibm/granite-20b-code-instruct-v2"
 
 
-class Optimizer:
-    def __init__(
-        self,
-        dataset: Dataset,
-        pdl_file: Path,
-        trials: int,
-        k: int,
-        test_set_size: int,
-        input_variable: str,
-    ) -> None:
-        self.dataset = dataset
-        self.pdl_file = pdl_file
-        self.num_trials = trials
-        self.num_demonstrations = k
-        self.model = str(Models.granite_34b_code_instruct)
-        self.best_demos = []
-        # self.budget = "1"
-        self.test_set_size = test_set_size
-        self.test_set = self.dataset["test"].select(range(self.test_set_size))
-        self.trial_metrics = []
-        self.trial_logprobs = []
-        self.input_variable = input_variable
+# class Optimizer:
+#     def __init__(
+#         self,
+#         dataset: Dataset,
+#         pdl_file: Path,
+#         trials: int,
+#         k: int,
+#         test_set_size: int,
+#         input_variable: str,
+#         timeout: int,
+#     ) -> None:
+#         self.dataset = dataset
+#         self.pdl_file = pdl_file
+#         self.num_trials = trials
+#         self.num_demonstrations = k
+#         self.model = str(Models.granite_34b_code_instruct)
+#         self.best_demos = []
+#         # self.budget = "1"
+#         self.test_set_size = test_set_size
+#         self.test_set = self.dataset["test"].select(range(self.test_set_size))
+#         self.trial_metrics = []
+#         self.trial_logprobs = []
+#         self.input_variable = input_variable
+#         self.timeout = timeout
 
-    def extract_answer(self, document):
-        return extract_math_answer(document)
+#     def extract_answer(self, document):
+#         return extract_math_answer(document)
 
-    def load_pdl(self) -> Program:
-        with (
-            self.pdl_file.open(encoding="utf-8") as pdl,
-        ):
-            return Program.model_validate(yaml.safe_load(pdl))
+#     def load_pdl(self) -> Program:
+#         with (
+#             self.pdl_file.open(encoding="utf-8") as pdl,
+#         ):
+#             return Program.model_validate(yaml.safe_load(pdl))
 
-    def sample(self, dataset, method: SamplingMethods):
-        match method:
-            case SamplingMethods.IDENTITY:
-                return dataset
-            case SamplingMethods.REVERSED:
-                return list(reversed(dataset))
-            case SamplingMethods.RANDOM_INDICES:
-                return self.sample_random_indices(dataset)
-            case SamplingMethods.UNCERTAINTY:
-                # filtered = dataset.sort("entropy", reverse=True)[:self.k*3]#.filter(lambda x: x["entropy"] < 4.5, num_proc=32)
-                filtered = dataset.sort("entropy", reverse=True).select(
-                    range(self.num_demonstrations * 3),
-                )  # [:self.k*3]#.filter(lambda x: x["entropy"] < 4.5, num_proc=32)
-                return self.sample_random_indices(filtered)
+#     def sample(self, dataset, method: SamplingMethods):
+#         match method:
+#             case SamplingMethods.IDENTITY:
+#                 return dataset
+#             case SamplingMethods.REVERSED:
+#                 return list(reversed(dataset))
+#             case SamplingMethods.RANDOM_INDICES:
+#                 return self.sample_random_indices(dataset)
+#             case SamplingMethods.UNCERTAINTY:
+#                 # filtered = dataset.sort("entropy", reverse=True)[:self.k*3]#.filter(lambda x: x["entropy"] < 4.5, num_proc=32)
+#                 filtered = dataset.sort("entropy", reverse=True).select(
+#                     range(self.num_demonstrations * 3),
+#                 )  # [:self.k*3]#.filter(lambda x: x["entropy"] < 4.5, num_proc=32)
+#                 return self.sample_random_indices(filtered)
 
-        msg = "Invalid sampling method!"
-        raise ValueError(msg)
+#         msg = "Invalid sampling method!"
+#         raise ValueError(msg)
 
-    def sample_random_indices(self, dataset) -> Dataset:
-        demo_indices = rng.choice(
-            len(dataset),
-            size=self.num_demonstrations,
-            replace=False,
-        )
-        return dataset.select(demo_indices)
+#     def sample_random_indices(self, dataset) -> Dataset:
+#         demo_indices = rng.choice(
+#             len(dataset),
+#             size=self.num_demonstrations,
+#             replace=False,
+#         )
+#         return dataset.select(demo_indices)
 
-    def sample_random_index(self, items: list):
-        demo_indices = rng.choice(
-            len(items),
-            size=1,
-            replace=False,
-        )[0]
-        return items[demo_indices]
+#     def sample_random_index(self, items: list):
+#         demo_indices = rng.choice(
+#             len(items),
+#             size=1,
+#             replace=False,
+#         )[0]
+#         return items[demo_indices]
 
-    def save_pdl_program(self, pdl_program: Program) -> int:
-        output_file = Path(self.pdl_file.parent, "optimized_" + self.pdl_file.name)
-        return output_file.write_text(dump_program(pdl_program))
+#     def save_pdl_program(self, pdl_program: Program) -> int:
+#         output_file = Path(self.pdl_file.parent, "optimized_" + self.pdl_file.name)
+#         return output_file.write_text(dump_program(pdl_program))
 
-    def process(self, parallelism: int = 5):
-        """
-        1. Should figure out all mutable parts: the input variables, the text instructions, any "optimize" blocks.
-        2. Set values for each part, in each trial.
-        """
-        input_variable_name = self.input_variable  # "trajectories"  # "demos"
+#     def process(self, parallelism: int = 5):
+#         """
+#         1. Should figure out all mutable parts: the input variables, the text instructions, any "optimize" blocks.
+#         2. Set values for each part, in each trial.
+#         """
+#         input_variable_name = self.input_variable  # "trajectories"  # "demos"
 
-        train_ds = self.dataset["train"]
-        pdl_program = self.load_pdl()
-        max_percent_passing = -1
-        total = self.num_trials * self.test_set_size
-        with tqdm(
-            total=total,
-            colour="green",
-            smoothing=0.3,
-        ) as t:
-            t.write(
-                f"Starting optimization: {self.num_trials:,} trials, "
-                f"{self.test_set_size:,} test set, "
-                f"{self.num_demonstrations:,} demonstrations, {len(train_ds):,} training examples",
-            )
-            for trial in range(self.num_trials):  # TODO: work with a time budget?
-                demonstrations = self.sample(train_ds, SamplingMethods.RANDOM_INDICES)
-                p_pattern = self.sample_random_index(["cot", "react", "rewoo"])
-                threads = []
+#         train_ds = self.dataset["train"]
+#         pdl_program = self.load_pdl()
+#         max_percent_passing = -1
+#         total = self.num_trials * self.test_set_size
+#         with tqdm(
+#             total=total,
+#             colour="green",
+#             smoothing=0.3,
+#         ) as t:
+#             t.write(
+#                 f"Starting optimization: {self.num_trials:,} trials, "
+#                 f"{self.test_set_size:,} test set, "
+#                 f"{self.num_demonstrations:,} demonstrations, {len(train_ds):,} training examples",
+#             )
+#             for trial in range(self.num_trials):  # TODO: work with a time budget?
+#                 demonstrations = self.sample(train_ds, SamplingMethods.RANDOM_INDICES)
+#                 p_pattern = self.sample_random_index(["cot", "react", "rewoo"])
+#                 threads = []
 
-                for index, qna in enumerate(self.test_set):
-                    t.write(f"Pattern: {p_pattern}")
-                    threads.append(
-                        Gsm8kThread(
-                            pdl_program.model_copy(),
-                            qna,
-                            demonstrations,
-                            index,
-                            trial,
-                            self.model,
-                            input_variable_name,
-                            return_logprobs=False,
-                            prompt_pattern=p_pattern,
-                        ),
-                    )
-                matches = 0
-                exceptions = []
-                results = []
-                for index, result in enumerate(execute_threads(parallelism, threads)):
-                    gsm8k_output: Gsm8kOutput = result
-                    # TODO: it would be nice if different trials can run in parallel
-                    results.append(gsm8k_output)
+#                 for index, qna in enumerate(self.test_set):
+#                     t.write(f"Pattern: {p_pattern}")
+#                     threads.append(
+#                         Gsm8kThread(
+#                             pdl_program.model_copy(),
+#                             qna,
+#                             demonstrations,
+#                             index,
+#                             trial,
+#                             self.model,
+#                             input_variable_name,
+#                             return_logprobs=False,
+#                             prompt_pattern=p_pattern,
+#                         ),
+#                     )
+#                 matches = 0
+#                 exceptions = []
+#                 results = []
+#                 for index, result in enumerate(execute_threads(parallelism, threads)):
+#                     gsm8k_output: Gsm8kOutput = result
+#                     # TODO: it would be nice if different trials can run in parallel
+#                     results.append(gsm8k_output)
 
-                    if gsm8k_output.exception:
-                        exceptions.append(gsm8k_output.exception)
+#                     if gsm8k_output.exception:
+#                         exceptions.append(gsm8k_output.exception)
 
-                    matches += int(gsm8k_output.matches)
+#                     matches += int(gsm8k_output.matches)
 
-                    if gsm8k_output.input_logprobs is not None:
-                        self.trial_logprobs.append(
-                            gsm8k_output.input_logprobs.input_logprobs,
-                        )
-                    p_passing = matches / (index + 1)
-                    t.update(1)
-                t.write(f"----\nTrial ({trial} / {self.num_trials})")
-                t.write(
-                    f"Percentage passing: {p_passing:.0%} ({len(exceptions)} exceptions)",
-                )
-                self.trial_metrics.append(p_passing)
-                # self.trial_demo_logprobs.append()
+#                     if gsm8k_output.input_logprobs is not None:
+#                         self.trial_logprobs.append(
+#                             gsm8k_output.input_logprobs.input_logprobs,
+#                         )
+#                     p_passing = matches / (index + 1)
+#                     t.update(1)
+#                 t.write(f"----\nTrial ({trial} / {self.num_trials})")
+#                 t.write(
+#                     f"Percentage passing: {p_passing:.0%} ({len(exceptions)} exceptions)",
+#                 )
+#                 self.trial_metrics.append(p_passing)
+#                 # self.trial_demo_logprobs.append()
 
-                if p_passing > max_percent_passing:
-                    self.best_demos = gsm8k_output.scope[input_variable_name]
+#                 if p_passing > max_percent_passing:
+#                     self.best_demos = gsm8k_output.scope[input_variable_name]
 
-        pdl_program.root.defs[input_variable_name] = DataBlock(
-            data=self.best_demos,
-        )  # yaml.dump(self.best_demos)
-        self.save_pdl_program(pdl_program)
-        tqdm.write("Best few shots")
-        tqdm.write(yaml.dump(self.best_demos))
-        tqdm.write(
-            f"Starting optimization: {self.num_trials:,} trials, "
-            f"{self.test_set_size:,} test set, "
-            f"{self.num_demonstrations:,} demonstrations, {len(train_ds):,} training examples",
-        )
-        tqdm.write(f"accuracies = {self.trial_metrics}")
-        input_probs = self.trial_logprobs
-        print("Shape =", [s.shape[0] for s in input_probs])
-        # print("Min =", [np.min(s) for s in input_probs])
-        # print("Max =", [ np.max(s) for s in input_probs])
-        # print("Mean =", [np.mean(s) for s in input_probs])
-        # print("Gmean =", [gmean(s) for s in input_probs])
-        # print("Entropy =", [entropy(s) for s in input_probs])
+#         pdl_program.root.defs[input_variable_name] = DataBlock(
+#             data=self.best_demos,
+#         )  # yaml.dump(self.best_demos)
+#         self.save_pdl_program(pdl_program)
+#         tqdm.write("Best few shots")
+#         tqdm.write(yaml.dump(self.best_demos))
+#         tqdm.write(
+#             f"Starting optimization: {self.num_trials:,} trials, "
+#             f"{self.test_set_size:,} test set, "
+#             f"{self.num_demonstrations:,} demonstrations, {len(train_ds):,} training examples",
+#         )
+#         tqdm.write(f"accuracies = {self.trial_metrics}")
+#         input_probs = self.trial_logprobs
+#         print("Shape =", [s.shape[0] for s in input_probs])
+#         # print("Min =", [np.min(s) for s in input_probs])
+#         # print("Max =", [ np.max(s) for s in input_probs])
+#         # print("Mean =", [np.mean(s) for s in input_probs])
+#         # print("Gmean =", [gmean(s) for s in input_probs])
+#         # print("Entropy =", [entropy(s) for s in input_probs])
 
-        # input_probs = [s / s.sum(0) for s in input_probs]
-        # print("norm_Min =", [np.min(s) for s in input_probs])
-        # print("norm_Max =", [np.max(s) for s in input_probs])
-        # print("norm_Mean =", [np.mean(s) for s in input_probs])
-        # print("norm_Gmean =", [gmean(s) for s in input_probs])
-        # print("norm_Entropy =", [entropy(s) for s in input_probs])
+#         # input_probs = [s / s.sum(0) for s in input_probs]
+#         # print("norm_Min =", [np.min(s) for s in input_probs])
+#         # print("norm_Max =", [np.max(s) for s in input_probs])
+#         # print("norm_Mean =", [np.mean(s) for s in input_probs])
+#         # print("norm_Gmean =", [gmean(s) for s in input_probs])
+#         # print("norm_Entropy =", [entropy(s) for s in input_probs])
 
-    def process_single(self):
-        return self.process_parallel(1)
+#     def process_single(self):
+#         return self.process_parallel(1)
 
 
 class TrialResults(list):
@@ -378,19 +435,19 @@ class CandidateResult:
     metric: float | int | None
 
 
-class Gsm8kOptimizer(Optimizer):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+# class Gsm8kOptimizer(Optimizer):
+#     def __init__(self, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
 
 
-class FEVEROptimizer(Optimizer):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+# class FEVEROptimizer(Optimizer):
+#     def __init__(self, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
 
 
-class EvalPlusOptimizer(Optimizer):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+# class EvalPlusOptimizer(Optimizer):
+#     def __init__(self, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
 
 
 DEBUG = False
@@ -468,35 +525,54 @@ class Gsm8kTrialThread(PDLThread):
         match = False
         truth = self.example["answer"]  # HARDCODED
 
-        try:
-            state = InterpreterState(yield_output=False)
-            scope = self.get_scope()
+        retry = True
+        tries = 0
+        while retry:
+            if tries > 1:
+                print("RETRYING! ", tries)
+            try:
+                state = InterpreterState(yield_output=False)
+                scope = self.get_scope()
 
-            result, document, scope, trace = process_prog(
-                state,
-                scope,
-                self.pdl_program,
-            )
-
-            errored = contains_error(trace)
-            if errored:
-                print("PDL error occured.")
-
-            if DEBUG:
-                print(document)
-
-            if self.index == 0 and self.return_logprobs:
-                model_input = get_seq_logprobs(
-                    self.model,
-                    scope["demonstrations"],  # HARDCODED
+                result, document, scope, trace = process_prog(
+                    state,
+                    scope,
+                    self.pdl_program,
                 )
-            answer = extract_math_answer(document)
+                tries += 1
 
-            if answer is None:
-                print(document)
-        except Exception as e:
-            print(e)
-            exception = e
+                if DEBUG:
+                    print(document)
+
+                errored = contains_error(trace)
+                if errored:
+                    print("PDL error occured.")
+                    print(document)
+                else:
+                    if self.index == 0 and self.return_logprobs:
+                        model_input = get_seq_logprobs(
+                            self.model,
+                            scope["demonstrations"],  # HARDCODED
+                        )
+                    answer = extract_math_answer(document)
+
+                    if answer is None:
+                        print(document)
+                        print("Couldn't extract answer")
+
+                if answer is None or errored:
+                    retry = True
+
+                if answer is not None and not errored:
+                    retry = False
+
+                if tries > 2:
+                    retry = False
+            except Exception as e:
+                print(e)
+                exception = e
+        if errored and not exception:
+            exception = errored
 
         match = answer == truth or document.endswith(str(truth))
 
@@ -529,6 +605,7 @@ class PDLOptimizer:
         starting_test_set_size: int,
         ending_test_set_size: int,
         max_candidates: int,
+        timeout: int,
     ):
         self.pdl_path = pdl_path
         # self.dataset_name = dataset_name
@@ -542,6 +619,7 @@ class PDLOptimizer:
         self.starting_test_set_size = starting_test_set_size
         self.ending_test_set_size = ending_test_set_size
         self.max_candidates = max_candidates
+        self.timeout = timeout
 
         # Load
         self.dataset = dataset  # load_dataset(self.dataset_name, split=self.split)
@@ -618,13 +696,22 @@ class PDLOptimizer:
         results = []
         input_logprobs = None
         for index, result in enumerate(execute_threads(self.parallelism, threads)):
+            if isinstance(result, BaseException):
+                self.pbar.update(1)
+                self.pbar.write("Progressed on exception")
+                continue
             # for index, trial in enumerate(threads):
             # gsm8k_output: Gsm8kOutput = trial.run()
             gsm8k_output: Gsm8kOutput = result
             # TODO: it would be nice if different trials can run in parallel
-            self.pbar.write(
-                f"Answer: {gsm8k_output.answer} Ground truth: {gsm8k_output.groundtruth} Match: {gsm8k_output.matches}"
-            )
+            if isinstance(gsm8k_output.answer, float):
+                self.pbar.write(
+                    f"Answer: {gsm8k_output.answer:.2f} Ground truth: {gsm8k_output.groundtruth} Match: {gsm8k_output.matches}"
+                )
+            else:
+                self.pbar.write(
+                    f"Answer: {gsm8k_output.answer} Ground truth: {gsm8k_output.groundtruth} Match: {gsm8k_output.matches}"
+                )
 
             results.append(gsm8k_output)
 
@@ -637,7 +724,7 @@ class PDLOptimizer:
                 input_logprobs = gsm8k_output.input_logprobs
             p_passing = matches / (index + 1)
             self.pbar.update(1)
-
+        print("Finished loop")
         self.pbar.write(
             f"Matches: {matches} Accuracy: {p_passing} Exceptions: {len(exceptions)}"
         )
@@ -679,12 +766,15 @@ class PDLOptimizer:
             total=total,
             colour="green",
             smoothing=0.3,
+            # disable=True
         )
 
-        test_set_multiplier = 2#ceil((ending_test_set_size / starting_test_set_size) ** (
+        test_set_multiplier = (
+            2  # ceil((ending_test_set_size / starting_test_set_size) ** (
+        )
         #    1 / (num_iterations - 1)
-        #))  # or 2
-        
+        # ))  # or 2
+
         for _i in range(max_iterations):
             if _i > num_iterations:
                 self.pbar.write("Exceeded predicted iterations!!!")
@@ -833,6 +923,13 @@ if __name__ == "__main__":
         default=5,
     )
     parser.add_argument(
+        "--timeout",
+        "-to",
+        type=int,
+        help="Number of seconds to run PDL until aborting. Usually 30 to 120 seconds.",
+        default=120,
+    )
+    parser.add_argument(
         "pdl_file",
         type=Path,
         help="Path to a PDL file to optimize",
@@ -858,32 +955,33 @@ if __name__ == "__main__":
             metric=lambda: 0.0,
             prompt_patterns=[
                 "react",
-                # "cot", 
+                # "cot",
                 # "rewoo"
-                ],
+            ],
             tools=[],
             parallelism=args.parallelism,
             num_demonstrations=args.num_demos,
             starting_test_set_size=args.starting_test_set_size,
             ending_test_set_size=args.end_test_set_size,
             max_candidates=args.trials,
+            timeout=args.timeout,
         ).run()
-    if args.bench == "gsm-pal":
-        gsm8k = load_from_disk("gsm8k")
-        gsm8k["train"] = Dataset.from_json("examples/gsm8k/demos.json")
+    # if args.bench == "gsm-pal":
+    #     gsm8k = load_from_disk("gsm8k")
+    #     gsm8k["train"] = Dataset.from_json("examples/gsm8k/demos.json")
 
-        Gsm8kOptimizer(
-            dataset=gsm8k,
-            pdl_file=args.pdl_file,
-            trials=args.trials,
-            k=args.num_demos,
-            test_set_size=args.test_set_size,
-        ).process()
-    if args.bench == "gsm-evolve":
-        Gsm8kOptimizer(
-            dataset=load_from_disk("gsm8k"),
-            pdl_file=args.pdl_file,
-            trials=args.trials,
-            k=args.num_demos,
-            test_set_size=args.test_set_size,
-        ).evolve()
+    #     Gsm8kOptimizer(
+    #         dataset=gsm8k,
+    #         pdl_file=args.pdl_file,
+    #         trials=args.trials,
+    #         k=args.num_demos,
+    #         test_set_size=args.test_set_size,
+    #     ).process()
+    # if args.bench == "gsm-evolve":
+    #     Gsm8kOptimizer(
+    #         dataset=load_from_disk("gsm8k"),
+    #         pdl_file=args.pdl_file,
+    #         trials=args.trials,
+    #         k=args.num_demos,
+    #         test_set_size=args.test_set_size,
+    #     ).evolve()

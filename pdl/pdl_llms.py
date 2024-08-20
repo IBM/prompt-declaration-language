@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Any, Generator, Optional
 
 from dotenv import load_dotenv
@@ -80,6 +81,7 @@ class BamModel:
     ) -> Generator[str, Any, None]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
+        start = time.time()
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -97,6 +99,10 @@ class BamModel:
                 continue
             for result in response.results:
                 if result.generated_text:
+                    end = time.time()
+                    total_time = end - start
+                    if total_time > 50:
+                        print(f"Model call time: {total_time:.2f} seconds")
                     yield result.generated_text
 
     # @staticmethod
