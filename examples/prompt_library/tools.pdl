@@ -9,7 +9,7 @@ defs:
 
   wrap_document:
     data: true
-  Search_old:
+  Search:
     function:
       subject: str
     return:
@@ -20,14 +20,16 @@ defs:
               import warnings, wikipedia
               warnings.simplefilter("ignore")
               try:
-                result = wikipedia.summary(subject)
+                result = wikipedia.summary(subject).strip()
+              except wikipedia.DisambiguationError as d:
+                result = f"\"{subject}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
               except wikipedia.WikipediaException as e:
-                result = str(error)
+                result = str(e)
       - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]"
+        then: "[Document]\n{{ result|trim }}\n[End]"
         else: "{{ result }}"
 
-  Search:
+  Search_json:
     function:
       arguments: obj
     return:
@@ -46,7 +48,7 @@ defs:
 
               result = main(**arguments)
       - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]"
+        then: "[Document]\n{{ result|trim }}\n[End]"
         else: "{{ result }}"
 
   default_model: "ibm/granite-34-code-instruct"
@@ -68,23 +70,17 @@ defs:
       lan: python
       code: |
         from sympy.parsing.sympy_parser import parse_expr
-        # from math import *
         result = None
 
         try:
           exp = "{{ subject|replace(",", "")|replace("$","")|replace("^","**")|replace("%","*0.01") }}"
-          # print("-----EXP", exp)
+
           result = float(parse_expr(exp).evalf())
-          # print("-----RESULT", result)
-          # if result is not None and isinstance(result, (int, float, complex)) and not isinstance(result, bool):
           result = round(result, 2)
           if result.is_integer():
             result = int(result)
-          # else:
-          # result = None
         except Exception as e:
-            # print(subject, e)
-            result = "There was an error calculating:" + str(e)
+            result = f"There was an error calculating: {e}. Please try again."
 
         
 
@@ -99,7 +95,8 @@ defs:
 
   default_tools:
     data:
-      - name: get_current_weather
+      - display_name: get_current_weather
+        pdl_function: get_current_weather
         description: Get the current weather
         parameters:
           - name: location
@@ -111,21 +108,24 @@ defs:
             - observation: |
                 {"location":{"name":"London","region":"City of London, Greater London","country":"United Kingdom","lat":51.52,"lon":-0.11,"tz_id":"Europe/London","localtime_epoch":1722262564,"localtime":"2024-07-29 15:16"},"current":{"last_updated_epoch":1722262500,"last_updated":"2024-07-29 15:15","temp_c":27.9,"temp_f":82.2,"is_day":1,"condition":{"text":"Sunny","icon":"//cdn.weatherapi.com/weather/64x64/day/113.png","code":1000},"wind_mph":8.1,"wind_kph":13.0,"wind_degree":133,"wind_dir":"SE","pressure_mb":1019.0,"pressure_in":30.09,"precip_mm":0.0,"precip_in":0.0,"humidity":33,"cloud":6,"feelslike_c":27.2,"feelslike_f":80.9,"windchill_c":27.9,"windchill_f":82.2,"heatindex_c":27.2,"heatindex_f":80.9,"dewpoint_c":10.3,"dewpoint_f":50.5,"vis_km":10.0,"vis_miles":6.0,"uv":7.0,"gust_mph":9.3,"gust_kph":14.9}}
             - action: "Finish[The weather in London is 82.2f and sunny.]"
-      - name: LLM
+      - display_name: LLM
+        pdl_function: LLM
         description: Call another LLM
         parameters:
           - name: query
             type: string
             description: The prompt
         examples:
-      - name: Calculator
+      - display_name: Calculator
+        pdl_function: Calculator
         description: Run a calculator
         parameters:
           - name: query
             type: string
             description: The equation
         examples:
-      - name: Wikipedia
+      - display_name: Wikipedia
+        pdl_function: Wikipedia
         description: Search Wikipedia for a summary
         parameters:
           - name: query
@@ -147,7 +147,8 @@ defs:
             - observation: "Elia Kazan was an American film and theatre director, producer, screenwriter and actor."
             - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
             - action: "Finish[director, screenwriter, actor]"
-      - name: Search
+      - display_name: Search
+        pdl_function: Search
         description: Search Wikipedia for a summary
         parameters:
           - name: topic
@@ -175,7 +176,8 @@ defs:
             - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
             - action: |
                 {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
-      - name: Search_old
+      - display_name: Search_old
+        pdl_function: Search
         description: Search Wikipedia for a summary
         parameters:
           - name: query
@@ -213,7 +215,7 @@ defs:
           signatures:
             for:
               tool: "{{ tools }}"
-            repeat: "{{ tool.name }}[<{{ tool.parameters|join('>, <', attribute='name') }}>]"
+            repeat: "{{ tool.display_name }}[<{{ tool.parameters|join('>, <', attribute='name') }}>]"
           typed_signatures:
             for:
               tool: "{{ tools }}"
@@ -223,9 +225,18 @@ defs:
                     for:
                       param: "{{ tool.parameters }}"
                     repeat: "{{ param.name}}: {{ param.type }}"
-              - "{{ tool.name }}({{ params|join(', ') }})"
+              - "{{ tool.display_name }}({{ params|join(', ') }})"
+          display_names: "{{ tools|map(attribute='display_name')|list }}"
+          pdl_functions: "{{ tools|map(attribute='pdl_function')|list }}"
+          name_map:
+            lan: python
+            code: |
+              result = dict(zip(display_names, pdl_functions, strict=True))
       - data:
-          names: "{{ tools|map(attribute='name')|list }}"
+          names: "{{ tools|map(attribute='display_name')|list }}"
+          display_names: "{{ tools|map(attribute='display_name')|list }}"
+          pdl_functions: "{{ tools|map(attribute='pdl_function')|list }}"
+          name_map: "{{ name_map }}"
           signatures: "{{ signatures }}"
           typed_signatures: "{{ typed_signatures }}"
           descriptions: "{{ tools|map(attribute='description')|list }}"

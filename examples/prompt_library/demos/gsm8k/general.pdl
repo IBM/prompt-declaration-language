@@ -6,6 +6,8 @@ defs:
   math_tools:
     data:
       - name: Calculator
+        display_name: Calculator
+        pdl_function: Calculator
         description: Evaluates expressions using Python
         parameters:
           - name: expression
@@ -45,7 +47,7 @@ document:
       - call: react
         def: ANSWER
         args:
-         question: "{{ question }}"
+         task: "Question: {{ question }}"
          model: "{{ model }}"
          tools: "{{ math_tools }}"
          trajectories: "{{ demonstrations }}"

@@ -88,6 +88,7 @@ class Block(BaseModel):
     location: Optional[LocationType] = Field(default=None, exclude=True)
     has_error: bool = False
     fallback: Optional["BlocksType"] = None
+    optimizer: Optional[dict] = None
 
 
 class FunctionBlock(Block):

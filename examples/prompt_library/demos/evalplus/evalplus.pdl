@@ -1,0 +1,42 @@
+defs:
+  problems:
+    lan: python
+    code: |
+      from evalplus.data import get_human_eval_plus
+      PDL_SESSION.problems = get_human_eval_plus()
+      result = PDL_SESSION.problems
+  problems_list: "{{ (problems.keys()|list)[:5] }}"
+  # problem_raw:
+  #   lan: python
+  #   code: |
+  #     result = {
+  #     "prompt": PDL_SESSION.problems['HumanEval/0']['prompt'],
+  #     "task_id": PDL_SESSION.problems['HumanEval/0']['task_id'],
+  #     }
+  # task_id: "{{ problem_raw['task_id'] }}"
+document:
+- for:
+    problem: "{{ problems_list }}"
+  repeat:
+    - defs:
+        problem_raw:
+          lan: python
+          code: |
+            result = PDL_SESSION.problems[problem]
+        prompt: |
+          Do not provide explanations, only provide code. Complete the following code:
+          {{ problem_raw['prompt']|trim }}
+    - model: "ibm/granite-34b-code-instruct"
+      platform: bam
+      def: completion
+      show_result: false
+      input: "{{ prompt }}"
+      parameters:
+        stop_sequences:
+          - "<|endoftext|>"
+        include_stop_sequence: false
+        decoding_method: greedy
+    - "\n"
+    - data:
+        task_id: "{{ problem }}"
+        completion: "{{ completion }}"

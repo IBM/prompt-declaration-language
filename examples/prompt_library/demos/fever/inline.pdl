@@ -1,0 +1,76 @@
+description: FEVER dataset
+defs: 
+  CLAIM: "On June 2017, the following claim was made: Ukrainian Soviet Socialist Republic was a founding participant of the UN."
+document:
+- |-
+    {{ CLAIM }}
+    Answer Choices: true, false
+
+    According to <<wikipedia("
+- model: meta-llama/llama-3-8b-instruct
+  show_result: true
+  def: wikipedia_article
+  parameters:
+    max_new_tokens: 64
+    stop_sequences:
+    - '"'
+    - '")>>'
+    - '">>'
+    include_stop_sequence: false
+- "\") | "
+# - def: wikipedia_excerpt
+#   lan: python
+#   show_result: false
+#   code:
+#   - |
+#     import requests
+#     url = "https://en.wikipedia.org/w/api.php"
+#     query = {
+#             "format": "json",
+#             "action": "query",
+#             "prop": "extracts",
+#             "exintro": "",
+#             "explaintext": "",
+#             "redirects": "1",
+#             "titles": "{{wikipedia_article}}",
+#             "origin": "*"}
+#     response = requests.request("GET", url=url, params=query)
+#     # print("QUERY WIKI:", query["titles"])
+#     try:
+#       result = list(response.json()["query"]["pages"].values())[0]["extract"][:280]
+#     except:
+#       result = "No results (try differently)"
+- api: https
+  url: https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=
+  input: '{{ wikipedia_article | urlencode }}'
+  def: wikipedia_response
+  show_result: false
+  fallback: "No results (try differently)"
+- if: "{{ (wikipedia_response.query.pages.values()|first).extract }}"
+  then: "{{ (wikipedia_response.query.pages.values()|first).extract[:280]|trim }}"
+  else: "No results (try differently)"
+  def: wikipedia_excerpt
+  show_result: true
+- ">> "
+- model: meta-llama/llama-3-8b-instruct
+  show_result: true
+  def: inline_cot
+  parameters:
+    max_new_tokens: 100
+    include_stop_sequence: false
+    stop_sequences:
+    - Therefore
+    - " I hope it is correct"
+- "Therefore the answer is "
+- model: meta-llama/llama-3-8b-instruct
+  show_result: false
+  def: final_answer
+  parameters:
+    max_new_tokens: 4
+    stop_sequences:
+    - "true"
+    - "false"
+    - "TRUE"
+    - "FALSE"
+    include_stop_sequence: true
+- "{{ final_answer|trim|trim('*') }}"

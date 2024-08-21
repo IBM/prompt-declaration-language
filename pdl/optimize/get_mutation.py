@@ -1,8 +1,7 @@
+from genai.schema import DecodingMethod
+
 from pdl.pdl_ast import BamTextGenerationParameters, set_default_model_params
 from pdl.pdl_llms import BamModel
-
-
-from genai.schema import DecodingMethod
 
 
 def get_mutation(model: str, sequence: str):

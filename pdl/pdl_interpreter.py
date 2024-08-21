@@ -1,5 +1,6 @@
 import json
 import re
+import time
 import types
 from itertools import batched
 from pathlib import Path
@@ -68,6 +69,7 @@ class InterpreterState(BaseModel):
     yield_output: bool = True
     log: list[str] = []
     batch: int = 0
+    runtime: float | None = None
     # batch=0: streaming
     # batch=1: call to generate with `input`
 
@@ -119,10 +121,11 @@ def process_prog(
     initial_scope: ScopeType,
     prog: Program,
     loc=empty_block_location,
+    timeout: int | None = None
 ) -> tuple[Any, str, ScopeType, BlockType]:
     scope: ScopeType = empty_scope | initial_scope
     doc_generator = step_block(state, scope, block=prog.root, loc=loc)
-    for result, document, scope, trace in schedule([doc_generator]):
+    for result, document, scope, trace in schedule([doc_generator], timeout=timeout):
         return result, document, scope, trace
     assert False
     # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))

@@ -101,7 +101,7 @@ class BamModel:
                 if result.generated_text:
                     end = time.time()
                     total_time = end - start
-                    if total_time > 50:
+                    if total_time > 65:
                         print(f"Model call time: {total_time:.2f} seconds")
                     yield result.generated_text
 

@@ -1,0 +1,174 @@
+description: Demo of template
+defs:
+  demonstrations:
+    data:
+      - - question:
+            The largest frog can grow to weigh 10 times as much as the smallest
+            frog. The largest frog weighs 120 pounds. How much more does the largest frog
+            weigh than the smallest frog?
+        - thought:
+            To find the weight of the smallest frog, 120 pounds / 10 pounds for the
+            smallest frog. I need to calculate 120/10
+        - action: Calculator[120/10]
+        - observation: "12"
+        - thought: The difference is 120 - 12 pounds. I need to calculate 120-12
+        - action: Calculator[120-12]
+        - observation: "108"
+        - thought: The answer is 108
+        - action: Finish[108]
+      - - question:
+            John books 3 nights at a hotel room for $250 a night. He has a $100
+            discount. How much does he pay?
+        - thought: The cost is 250*3. I need to calculate 250*3
+        - action: Calculator[250*3]
+        - observation: "750"
+        - thought: So he spends 750-100. I need to calculate 750-100
+        - action: Calculator[750-100]
+        - observation: "650"
+        - thought: The answer is 650
+        - action: Finish[650]
+      - - question:
+            Eighty-five cans were collected. LaDonna picked up 25 cans. Prikya picked
+            up twice as many times as many cans as LaDonna. Yoki picked up the rest of the
+            cans. How many cans did Yoki pick up?
+        - thought: LaDonna cans. I need to calculate 25
+        - action: Calculator[25]
+        - observation: "25"
+        - thought: Prikya is twice as many as LaDonna = 2*25. I need to calculate 2*25
+        - action: Calculator[2*25]
+        - observation: "50"
+        - thought: Yoki picked up the rest 85 - 25 - 50. I need to calculate 85-25-50
+        - action: Calculator[85-25-50]
+        - observation: "10"
+        - thought: Yoki picked up 10 cans.
+        - action: Finish[10]
+      - - question:
+            James buys 3 shirts for $60. There is a 40% off sale. How much did he
+            pay per shirt after the discount?
+        - thought: He got a 60*.4 discount. I need to calculate 60*.4
+        - action: Calculator[60*.4]
+        - observation: "24"
+        - thought: So he paid 60-24 for the shirts. I need to calculate 60-24
+        - action: Calculator[60-24]
+        - observation: "36"
+        - thought: That means he paid 36/3 per shirt. I need to calculate 36/3
+        - action: Calculator[36/3]
+        - observation: "12"
+        - thought: The answer is 12
+        - action: Finish[12]
+      - - question:
+            John puts $25 in his piggy bank every month for 2 years to save up for
+            a vacation. He had to spend $400 from his piggy bank savings last week to repair
+            his car. How many dollars are left in his piggy bank?
+        - thought:
+            He saved money for 2 years, which is equal to 12 x 2 months. I need to
+            calculate 12*2
+        - action: Calculator[12*2]
+        - observation: "24"
+        - thought: The amount of money he saved is $25*24. I need to calculate 25*24
+        - action: Calculator[25*24]
+        - observation: "600"
+        - thought:
+            But he spent some money so there is $600 - $400 left. I need to calculate
+            600-400
+        - action: Calculator[600-400]
+        - observation: "200"
+        - thought: The answer is 200
+        - action: Finish[200]
+      - - question:
+            Fiona and Casey share the hoodies they own. Between the two of them,
+            they own eight hoodies. Casey owns two more than Fiona. How many hoodies does
+            Fiona own?
+        - thought: Let H be the number of hoodies Fiona owns.
+        - thought: Casey owns H + 2 hoodies.
+        - thought: Together, they own H + H + 2 = 2H + 2 = 8 hoodies.
+        - thought: Thus, 2H = 8 - 2 = 6 hoodies.
+        - thought: Therefore, Fiona owns H = 6 / 2 hoodies. I need to calculate 6/2
+        - action: Calculator[6/2]
+        - observation: "3"
+        - thought: The answer is 3
+        - action: Finish[3]
+  model: ibm/granite-34b-code-instruct
+  prompt_pattern: react
+  question:
+    A 76-star flag has three rows of 8 stars, two rows of 6 stars and the rest
+    are 5-star rows. How many rows of 5 stars are there altogether on the flag?
+  reasoning:
+    "The rows of 8 stars have a total of: 3 rows * 8 stars/row = <<3*8=24>>24
+    stars.
+
+    The rows of 6 stars have a total of: 2 rows * 6 stars/row = <<2*6=12>>12 stars.
+
+    Including the rows of 8 and 6 stars, we have 24 stars + 12 stars = <<24+12=36>>36
+    stars.
+
+    Now we need to know how many stars are missing, 76 stars - 36 stars = <<76-36=40>>40
+    stars.
+
+    Now we need to distribute the missing stars in rows of 5 stars, 40 stars/5 rows
+    = <<40/5=8>>8 rows of 5 stars."
+
+  math_tools:
+    data:
+      - name: Calculator
+        display_name: Calculator
+        pdl_function: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expression
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+  # optimized: ""
+  # demos:
+  #   for:
+  #     demonstration: "{{ static }}"
+  #   repeat:
+  #     data:
+  #       question: "{{ demonstration.question }}"
+  #       reasoning: "{{ demonstration.reasoning|trim }}"
+  #       answer: "{{ demonstration.answer|string }}"
+
+  # prompt_pattern: "cot" | "react" | "rewoo"
+  # question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+  # model: "ibm/granite-34b-code-instruct"
+document:
+  # CoT
+  - if: "{{ prompt_pattern == 'cot' }}"
+    then:
+      - include: examples/prompt_library/CoT.pdl
+      - "Answer the questions to the best of your abilities.\n"
+      - call: chain_of_thought
+        args:
+          examples: "{{ demonstrations }}"
+          question: "{{ question }}"
+          model: "{{ model }}"
+
+  # ReAct
+  - if: "{{ prompt_pattern == 'react' }}"
+    then:
+      - include: examples/prompt_library/tools.pdl
+      - include: examples/prompt_library/ReAct.pdl
+      - call: react
+        def: ANSWER
+        args:
+          task: "Question: {{ question }}"
+          model: "{{ model }}"
+          tools: "{{ math_tools }}"
+          trajectories: "{{ demonstrations }}"
+      - "\nThe answer is {{ ANSWER.answer|trim }}"
+
+  # ReWOO
+  - if: "{{ prompt_pattern == 'rewoo' }}"
+    then:
+      - include: examples/prompt_library/tools.pdl
+      - include: examples/prompt_library/ReWoo.pdl
+      - call: rewoo
+        def: ANSWER
+        args:
+          task: "{{ question }}"
+          model: "{{ model }}"
+          tools: "{{ math_tools }}"
+          trajectories: "{{ demonstrations }}"
+          show_plans: true
+      - "\nThe answer is {{ ANSWER.answer|trim }}"

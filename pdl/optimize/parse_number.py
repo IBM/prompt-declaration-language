@@ -1,7 +1,6 @@
 # thanks https://stackoverflow.com/a/20159350
 import re
 
-
 _pattern = r"""(?x)       # enable verbose mode (which ignores whitespace and comments)
     ^                     # start of the input
     [^\d+-\.]*            # prefixed junk

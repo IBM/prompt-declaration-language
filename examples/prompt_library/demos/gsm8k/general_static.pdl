@@ -1,0 +1,180 @@
+description: Demo of template
+defs:
+  demonstrations:
+    data:
+    - - question: Carol gets a fixed $20 allowance each week. She can also earn $1.5 more
+          dollars each week if she does extra chores. At the end of 10 weeks, she has
+          425 dollars. How many extra chores did she average each week?
+      - thought: She earned $42.5 on average per week because 425 / 10. I need to calculate
+          425/10
+      - action: Calculator[425/10]
+      - observation: '42.5'
+      - thought: She earned $22.5 each week from extra chores because 42.5 - 20. I need
+          to calculate 42.5-20
+      - action: Calculator[42.5-20]
+      - observation: '22.5'
+      - thought: She did 15 extra chores a week because 22.5 / 1.5. I need to calculate
+          22.5/1.5
+      - action: Calculator[22.5/1.5]
+      - observation: '15'
+      - thought: The answer is 15
+      - action: Finish[15]
+    - - question: Nadia is learning to play the piano. She normally makes 3 mistakes per
+          40 notes and can play about 60 notes a minute.  If she plays for 8 minutes how
+          many mistakes will she make on average?
+      - thought: She plays 480 notes because 8 x 60. I need to calculate 8*60
+      - action: Calculator[8*60]
+      - observation: '480'
+      - thought: This is 12 blocks of 40 notes because 480/40. I need to calculate 480/40
+      - action: Calculator[480/40]
+      - observation: '12'
+      - thought: She makes 36 mistakes because 12 x 3. I need to calculate 12*3
+      - action: Calculator[12*3]
+      - observation: '36'
+      - thought: The answer is 36
+      - action: Finish[36]
+    - - question: Jenny is trying to convince her cat to walk on a leash. The cat spends
+          twenty minutes resisting. Then Jenny coaxes the cat to walk 64 feet at a rate
+          of 8 feet/minute. How many minutes does this whole process take?
+      - thought: 'First find how many minutes the cat spends walking: 64 feet / 8 feet/minute
+          minutes. I need to calculate 64/8'
+      - action: Calculator[64/8]
+      - observation: '8'
+      - thought: 'Then add this to the time the cat spent resisting to find the total
+          amount of time: 8 minutes + 20 minutes minutes. I need to calculate 8+20'
+      - action: Calculator[8+20]
+      - observation: '28'
+      - thought: The answer is 28
+      - action: Finish[28]
+    - - question: A store puts out a product sample every Saturday. The last Saturday,
+          the sample product came in boxes of 20. If they had to open 12 boxes, and they
+          had five samples left over at the end of the day, how many customers tried a
+          sample if the samples were limited to one per person?
+      - thought: The store opened 12 boxes of 20 products, so they put out 20 * 12 product
+          samples. I need to calculate 20*12
+      - action: Calculator[20*12]
+      - observation: '240'
+      - thought: They had 5 samples left over, so 240 - 5 samples were used. I need to
+          calculate 240-5
+      - action: Calculator[240-5]
+      - observation: '235'
+      - thought: Each customer could only have one sample, so 235 * 1 customers tried
+          a sample. I need to calculate 235*1
+      - action: Calculator[235*1]
+      - observation: '235'
+      - thought: The answer is 235
+      - action: Finish[235]
+    - - question: A four-layer pyramid is being built with each layer having three times
+          as many sandstone blocks as the layer above it. The top layer is a single block.
+          How many sandstone blocks are in the pyramid?
+      - thought: There are 1 * 3 blocks in the second layer. I need to calculate 1*3
+      - action: Calculator[1*3]
+      - observation: '3'
+      - thought: There are 3 * 3 blocks in the third layer. I need to calculate 3*3
+      - action: Calculator[3*3]
+      - observation: '9'
+      - thought: There are 9 * 3 blocks in the fourth layer. I need to calculate 9*3
+      - action: Calculator[9*3]
+      - observation: '27'
+      - thought: Thus, there are 1 + 3 + 9 + 27 sandstone blocks in the pyramid. I need
+          to calculate 1+3+9+27
+      - action: Calculator[1+3+9+27]
+      - observation: '40'
+      - thought: The answer is 40
+      - action: Finish[40]
+    - - question: Perry, Dana, Charlie, and Phil played golf together every week. At the
+          end of the season, Perry had won five more games than Dana, but Charlie had
+          won 2 games fewer than Dana. Phil had won 3 games more than Charlie did. If
+          Phil won a total of 12 games, how many more games did Perry win than did Phil?
+      - thought: If Phil had won 3 games more than did Charlie, and Phil won 12 games,
+          then Charlie won 12-3 games. I need to calculate 12-3
+      - action: Calculator[12-3]
+      - observation: '9'
+      - thought: If Charlie had won 2 games fewer than Dana, and Charlie won 9 games,
+          then Dana won 9+2 games. I need to calculate 9+2
+      - action: Calculator[9+2]
+      - observation: '11'
+      - thought: If Perry had won five more games than did Dana, and Dana won 11 games,
+          then Perry won 11+5 games. I need to calculate 11+5
+      - action: Calculator[11+5]
+      - observation: '16'
+      - thought: Thus, Perry won 16-12 more games than did Phil. I need to calculate 16-12
+      - action: Calculator[16-12]
+      - observation: '4'
+      - thought: The answer is 4
+      - action: Finish[4]
+  model: ibm/granite-34b-code-instruct
+  prompt_pattern: react
+  question: James is in charge of running messages from the office to each teacher's
+    classroom. If he delivers 66 messages to Ms. Thompson and 1/3 as many messages to
+    Mr. Yu, how many messages does he deliver total?
+  reasoning: 'First find the number of messages Mr. Yu gets: 66 messages / 3 = <<66/3=22>>22
+    messages
+  
+    Then add that to the number of messages Ms. Thompson gets to find the total: 66
+    messages + 22 messages = <<66+22=88>>88 messages'
+
+  math_tools:
+    data:
+      - name: Calculator
+        display_name: Calculator
+        pdl_function: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expression
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+  # optimized: ""
+  # demos:
+  #   for:
+  #     demonstration: "{{ static }}"
+  #   repeat:
+  #     data:
+  #       question: "{{ demonstration.question }}"
+  #       reasoning: "{{ demonstration.reasoning|trim }}"
+  #       answer: "{{ demonstration.answer|string }}"
+
+  # prompt_pattern: "cot" | "react" | "rewoo"
+  # question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+  # model: "ibm/granite-34b-code-instruct"
+document:
+  # CoT
+  - if: "{{ prompt_pattern == 'cot' }}"
+    then:
+      - include: examples/prompt_library/CoT.pdl
+      - "Answer the questions to the best of your abilities.\n"
+      - call: chain_of_thought
+        args:
+          examples: "{{ demonstrations }}"
+          question: "{{ question }}"
+          model: "{{ model }}"
+
+  # ReAct
+  - if: "{{ prompt_pattern == 'react' }}"
+    then:
+      - include: examples/prompt_library/tools.pdl
+      - include: examples/prompt_library/ReAct.pdl
+      - call: react
+        def: ANSWER
+        args:
+         task: "Question: {{ question }}"
+         model: "{{ model }}"
+         tools: "{{ math_tools }}"
+         trajectories: "{{ demonstrations }}"
+      - "\nThe answer is {{ ANSWER.answer|trim }}"
+
+  # ReWOO
+  - if: "{{ prompt_pattern == 'rewoo' }}"
+    then:
+        - include: examples/prompt_library/tools.pdl
+        - include: examples/prompt_library/ReWoo.pdl
+        - call: rewoo
+          def: ANSWER
+          args:
+           task: "{{ question }}"
+           model: "{{ model }}"
+           tools: "{{ math_tools }}"
+           trajectories: "{{ demonstrations }}"
+           show_plans: true
+        - "\nThe answer is {{ ANSWER.answer|trim }}"

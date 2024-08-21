@@ -13,6 +13,9 @@ defs:
           - if: "{{ type == 'question'}}"
             then: |
               Question: {{ trajectory[type]|trim }}
+          - if: "{{ type == 'task'}}"
+            then: |
+              Task: {{ trajectory[type]|trim }}
           - if: "{{ type == 'thought'}}"
             then: |
               Tho: {{ trajectory[type]|trim }}
@@ -22,7 +25,7 @@ defs:
           - if: "{{ type == 'observation'}}"
             then: |
               Obs: {{ trajectory[type]|trim }}
-          - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
+          - if: "{{ type not in ['question', 'task', 'thought', 'action', 'observation'] }}"
             then: "{{ type }}: {{ trajectory[type]|trim }}"
       - "\n"
 
@@ -42,7 +45,7 @@ defs:
 
   react:
     function:
-      question: str
+      task: str
       model: str
       tools: { list: obj }
       trajectories: { list: list }
@@ -54,7 +57,7 @@ defs:
               tools: "{{ tools }}"
       - "Available tools:\n"
       - for:
-          name: "{{ TOOL_INFO.names }}"
+          name: "{{ TOOL_INFO.display_names }}"
           sig: "{{ TOOL_INFO.signatures }}"
           desc: "{{ TOOL_INFO.descriptions }}"
         repeat: |
@@ -70,29 +73,32 @@ defs:
           call: react_block
           args:
             trajectory: "{{ traj }}"
-      - "Question: {{ question }}\nTho:"
+      - "{{ task }}\nTho:"
       - defs:
           temperature: 0.7
+          iterations: 0
         repeat:
           - repeat:
+              - defs:
+                  iterations: "{{ iterations+1 }}"
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
                   time_limit: 60000
                   random_seed: 42
-                  truncate_input_tokens: 8192
+                  truncate_input_tokens: 8191
                   decoding_method: sample
                   repetition_penalty: 1.1
                   temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-            until: "{{ THOUGHT.endswith('Act:') }}"
+            until: "{{ THOUGHT.endswith('Act:') or iterations>20 }}"
           - def: action_raw
             model: "{{ model }}"
             parameters:
               time_limit: 60000
               random_seed: 42
-              truncate_input_tokens: 8192
+              truncate_input_tokens: 8191
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -106,7 +112,7 @@ defs:
             parameters:
               time_limit: 60000
               random_seed: 42
-              truncate_input_tokens: 8192
+              truncate_input_tokens: 8191
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -116,9 +122,9 @@ defs:
           - if: "{{ ACTION != 'Finish' }}"
             then:
               - "\nObs: "
-              - if: "{{ ACTION in TOOL_INFO.names }}"
+              - if: "{{ ACTION in TOOL_INFO.display_names }}"
                 then:
-                  - call: "{{ ACTION }}"
+                  - call: "{{ TOOL_INFO.name_map[ACTION] }}"
                     args:
                       subject: "{{ SUBJECT }}"
                   - model: "{{ model }}"
@@ -126,21 +132,21 @@ defs:
                     parameters:
                       time_limit: 60000
                       random_seed: 42
-                      truncate_input_tokens: 8192
+                      truncate_input_tokens: 8191
                       repetition_penalty: 1.1
                       decoding_method: sample
                       temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-        until: "{{ ACTION == 'Finish' }}"
+        until: "{{ ACTION == 'Finish' or iterations>20 }}"
       - show_result: false
         data:
           answer: "{{ SUBJECT|trim }}"
 
   react_json:
     function:
-      question: str
+      task: str
       model: str
       tools: { list: obj }
       trajectories: { list: list }
@@ -152,7 +158,7 @@ defs:
               tools: "{{ tools }}"
       - "Available tools:\n"
       - for:
-          name: "{{ TOOL_INFO.names }}"
+          name: "{{ TOOL_INFO.display_names }}"
           sig: "{{ TOOL_INFO.signatures }}"
           desc: "{{ TOOL_INFO.descriptions }}"
         repeat: |
@@ -168,7 +174,7 @@ defs:
           call: react_block
           args:
             trajectory: "{{ traj }}"
-      - "Question: {{ question }}\nTho:"
+      - "{{ task }}\nTho:"
       - defs:
           temperature: 0.05
           decoding_method: "greedy"
@@ -194,9 +200,9 @@ defs:
           - if: "{{ action.name != 'Finish' }}"
             then:
               - "\nObs: "
-              - if: "{{ action.name in TOOL_INFO.names }}"
+              - if: "{{ action.name in TOOL_INFO.display_names }}"
                 then:
-                  - call: "{{ action.name }}"
+                  - call: "{{ TOOL_INFO.name_map[action.name] }}"
                     args:
                       arguments: "{{ action.arguments }}"
                   - model: "{{ model }}"

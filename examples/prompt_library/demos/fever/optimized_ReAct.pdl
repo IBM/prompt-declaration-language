@@ -1,0 +1,96 @@
+description: Demo of ReAct template fever
+defs:
+  search_tools:
+    data:
+    - name: Search
+      display_name: Search
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+      - name: query
+        type: string
+        description: The topic of interest
+      examples:
+      - - question: What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+        - thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+        - action: Search[Colorado orogeny]
+        - observation: |-
+            [Document]
+            The Colorado orogeny was an episode of mountain building (an orogeny) ...
+            [End]
+        - thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+        - action: Finish[1,800 to 7,000 ft]
+      - - question: What profession does Nicholas Ray and Elia Kazan have in common?
+        - thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+        - action: Search[Nicholas Ray]
+        - observation: |-
+            [Document]
+            Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+            [End]
+        - thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+        - action: Search[Elia Kazan]
+        - observation: |-
+            [Document]
+            Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+            [End]
+        - thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+        - action: Finish[director, screenwriter, actor]
+  demos: ''
+  model: meta-llama/llama-3-70b-instruct
+  prompt_pattern: react
+  claim: Fox 2000 Pictures released the film Soul Food.
+  task: 'Question: On June 2017, the following claim was made: {{ claim }} Was this claim true or false?'
+  demonstrations:
+    data:
+    - - task: |-
+          On June 2017, the following claim was made: Warren Beatty co-wrote Reds.
+          Q: Was this claim true or false?
+      - thought: I need to search Reds (film).
+      - action: Search[Reds (film)]
+      - observation: |-
+          [Document]
+          Reds is a 1981 American epic historical drama film co-written, produced, and directed by Warren Beatty, about the life and career of John Reed, the journalist and writer who chronicled the October Revolution in Russia in his 1919 book Ten Days That Shook the World. Beatty stars in the lead role alongside Diane Keaton as Louise Bryant and Jack Nicholson as Eugene O'Neill.
+          The supporting cast includes Edward Herrmann, Jerzy Kosiński, Paul Sorvino, Maureen Stapleton, Gene Hackman, Ramon Bieri, Nicolas Coster, and M. Emmet Walsh. The film also features, as "witnesses", interviews with the 98-year-old radical educator and peace activist Scott Nearing, author Dorothy Frooks, reporter and author George Seldes, civil liberties advocate Roger Baldwin, and the American writer Henry Miller, among others.
+          Reds was released on December 4, 1981, to widespread critical acclaim. Beatty was awarded the Academy Award for Best Director and the film was nominated for Best Picture, but lost to Chariots of Fire. Beatty, Keaton, Nicholson, and Stapleton were nominated for Best Actor, Best Actress, Best Supporting Actor and Best Supporting Actress, respectively, with Stapleton winning her category. Beatty became the third person to be nominated for Academy Awards in the categories Best Director, Actor, and, with co-writer Trevor Griffiths, Original Screenplay—losing again to Chariots of Fire—for a film nominated for Best Picture.
+          In June 2008, the American Film Institute revealed "AFI's 10 Top 10"—the best ten films in ten "classic" American film genres—after polling over 1,500 people from the film community. Reds came in ninth in the epic genre.
+          [End]
+      - thought: The claim is True.
+      - action: Finish[True]
+    - - task: |-
+          On June 2017, the following claim was made: Warren Beatty co-wrote Reds.
+          Q: Was this claim true or false?
+      - thought: I need to search Reds (film).
+      - action: Search[Reds (film)]
+      - observation: |-
+          [Document]
+          Reds is a 1981 American epic historical drama film co-written, produced, and directed by Warren Beatty, about the life and career of John Reed, the journalist and writer who chronicled the October Revolution in Russia in his 1919 book Ten Days That Shook the World. Beatty stars in the lead role alongside Diane Keaton as Louise Bryant and Jack Nicholson as Eugene O'Neill.
+          The supporting cast includes Edward Herrmann, Jerzy Kosiński, Paul Sorvino, Maureen Stapleton, Gene Hackman, Ramon Bieri, Nicolas Coster, and M. Emmet Walsh. The film also features, as "witnesses", interviews with the 98-year-old radical educator and peace activist Scott Nearing, author Dorothy Frooks, reporter and author George Seldes, civil liberties advocate Roger Baldwin, and the American writer Henry Miller, among others.
+          Reds was released on December 4, 1981, to widespread critical acclaim. Beatty was awarded the Academy Award for Best Director and the film was nominated for Best Picture, but lost to Chariots of Fire. Beatty, Keaton, Nicholson, and Stapleton were nominated for Best Actor, Best Actress, Best Supporting Actor and Best Supporting Actress, respectively, with Stapleton winning her category. Beatty became the third person to be nominated for Academy Awards in the categories Best Director, Actor, and, with co-writer Trevor Griffiths, Original Screenplay—losing again to Chariots of Fire—for a film nominated for Best Picture.
+          In June 2008, the American Film Institute revealed "AFI's 10 Top 10"—the best ten films in ten "classic" American film genres—after polling over 1,500 people from the film community. Reds came in ninth in the epic genre.
+          [End]
+      - thought: The claim is True.
+      - action: Finish[True]
+    - - task: |-
+          On June 2017, the following claim was made: Spain is a city.
+          Q: Was this claim true or false?
+      - thought: I need to search Sovereign state.
+      - action: Search[Sovereign state]
+      - observation: |-
+          [Document]
+          A sovereign state is a state that has the highest authority over a territory.
+          International law defines sovereign states as having a permanent population, defined territory, a government not under another, and the capacity to interact with other states.
+          It is commonly understood that a sovereign state is independent. A sovereign state can exist without being recognized by other sovereign states such as Somaliland.  Unrecognized states often have difficulty engaging in diplomatic relations with other sovereign states due to their lack of international recognition. When referring to a specific polity, the term "country" may also refer to a constituent country, or a dependent territory.
+
+
+          [End]
+      - thought: The claim is False.
+      - action: Finish[False]
+document:
+- include: examples/prompt_library/tools.pdl
+- include: examples/prompt_library/ReAct.pdl
+- call: react
+  args:
+    task: '{{ task }}'
+    model: '{{ model }}'
+    tools: '{{ search_tools }}'
+    trajectories: []

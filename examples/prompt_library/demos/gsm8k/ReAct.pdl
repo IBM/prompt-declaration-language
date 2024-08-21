@@ -1,4 +1,6 @@
 description: Demo of ReAct template
+optimizer:
+  test: test
 defs:
   static:
     data:
@@ -121,6 +123,8 @@ defs:
   math_tools:
     data:
       - name: Calculator
+        display_name: Calculator
+        pdl_function: Calculator
         description: Evaluates expressions using Python
         parameters:
           - name: expression
@@ -128,14 +132,15 @@ defs:
             description: The mathematical expression to evaluate with a Python interpreter.
         examples: [] # "{{ static }}"
 
-  # model: "meta-llama/llama-3-70b-instruct"
-  # question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+  model: "meta-llama/llama-3-70b-instruct"
+  question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+  trajectories: []
 document:
   - include: examples/prompt_library/tools.pdl
   - include: examples/prompt_library/ReAct.pdl
   - call: react
     args:
-     question: "{{ question }}"
+     task: "{{ question }}"
      model: "{{ model }}"
      tools: "{{ math_tools }}"
-     trajectories: "{{ trajectories }}"
+     trajectories: [] #"{{ trajectories }}"

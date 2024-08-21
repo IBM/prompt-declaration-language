@@ -1,16 +1,82 @@
 description: Demo of template
 defs:
-  demonstrations:
-    data: []
   math_tools:
     data:
     - name: Calculator
+      display_name: Calculator
+      pdl_function: Calculator
       description: Evaluates expressions using Python
       parameters:
       - name: expression
         type: string
         description: The mathematical expression to evaluate with a Python interpreter.
       examples: []
+  demonstrations:
+    data:
+    - - question: Four kids can wash three whiteboards in 20 minutes. How long would it take, in minutes, for one kid to wash six whiteboards?
+      - thought: One kid can wash three whiteboards in 20*4 minutes. I need to calculate 20*4
+      - action: Calculator[20*4]
+      - observation: '80'
+      - thought: One kid can wash six whiteboards in 80*(6/3)=160 minutes.
+      - action: Finish[160]
+    - - question: Andy and Dawn spent the weekend cleaning the house. When putting away the laundry Andy took six minutes more than two times the number of minutes it took Dawn to wash the dishes. If it took Dawn 20 minutes to wash the dishes how many minutes did it take Andy to put away the laundry?
+      - thought: Two times the minutes it took Dawn to wash the dishes is 20*2. I need to calculate 20*2
+      - action: Calculator[20*2]
+      - observation: '40'
+      - thought: Andy took 40+6 minutes to put away the laundry. I need to calculate 40+6
+      - action: Calculator[40+6]
+      - observation: '46'
+      - thought: The answer is 46
+      - action: Finish[46]
+    - - question: If 3 crows eat 30 worms in one hour, how many worms will 5 crows eat in 2 hours?
+      - thought: If 3 crows eat 30 worms in one hour, then each crow eats 30/3 worms per hour. I need to calculate 30/3
+      - action: Calculator[30/3]
+      - observation: '10'
+      - thought: 5 crows will eat 5*10 worms per hour. I need to calculate 5*10
+      - action: Calculator[5*10]
+      - observation: '50'
+      - thought: Over two hours, 5 crows will eat 2*50=100 worms.
+      - action: Finish[100]
+    - - question: There are 2000 pinecones on the ground. 20% are eaten by reindeer. Twice as many are eaten by squirrels as reindeer. 25% of the remainder are collected to make fires. How many pinecones are left?
+      - thought: 'First find the number of pinecones eaten by reindeer: 20% * 2000 pinecones pine cones. I need to calculate 20*.01*2000'
+      - action: Calculator[20*.01*2000]
+      - observation: '400'
+      - thought: 'Then find the total number of pinecones eaten by squirrels: 400 pine cones * 2 pine cones. I need to calculate 400*2'
+      - action: Calculator[400*2]
+      - observation: '800'
+      - thought: 'Then subtract those two amounts to find the number of pinecones left: 2000 pinecones - 400 pine cones - 800 pine cones pinecones. I need to calculate 2000-400-800'
+      - action: Calculator[2000-400-800]
+      - observation: '800'
+      - thought: 'Divide that number by 4 to find the number that are collected for fires: 800 pinecones / 4 pine cones. I need to calculate 800/4'
+      - action: Calculator[800/4]
+      - observation: '200'
+      - thought: 'Then subtract that number from the 800 pinecones to find the total left on the ground: 800 pine cones - 200 pinecones pine cones. I need to calculate 800-200'
+      - action: Calculator[800-200]
+      - observation: '600'
+      - thought: The answer is 600
+      - action: Finish[600]
+    - - question: Jane is looking at a tree. At the same time, the tree and Jane are casting shadows - the tree of 10 meters and Jane of 0.5 meters. Jane is 1.5 meters tall. How tall is the tree?
+      - thought: The shadow of Jane is 1.5 / 0.5 times smaller than her height. I need to calculate 1.5/0.5
+      - action: Calculator[1.5/0.5]
+      - observation: '3'
+      - thought: The height of the tree is therefore 3 times bigger than the shadow, so it's 3 * 10 meters tall. I need to calculate 3*10
+      - action: Calculator[3*10]
+      - observation: '30'
+      - thought: The answer is 30
+      - action: Finish[30]
+    - - question: A mum ordered 80 cupcakes for her daughter's birthday. Half of them are gluten-free. There are 24 vegan cupcakes and half of them are also gluten-free. How many are non-vegan cupcakes that also contain gluten?
+      - thought: The gluten-free cupcakes are 80 / 2. I need to calculate 80/2
+      - action: Calculator[80/2]
+      - observation: '40'
+      - thought: The vegan cupcakes with gluten are 24 / 2. I need to calculate 24/2
+      - action: Calculator[24/2]
+      - observation: '12'
+      - thought: The non-vegan cupcakes with gluten are 40 - 12. I need to calculate 40-12
+      - action: Calculator[40-12]
+      - observation: '28'
+      - thought: The answer is 28
+      - action: Finish[28]
+  prompt_pattern: react
 document:
 - if: '{{ prompt_pattern == ''cot'' }}'
   then:
@@ -29,7 +95,7 @@ document:
   - def: ANSWER
     call: react
     args:
-      question: '{{ question }}'
+      task: 'Question: {{ question }}'
       model: '{{ model }}'
       tools: '{{ math_tools }}'
       trajectories: '{{ demonstrations }}'
