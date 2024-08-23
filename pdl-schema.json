@@ -44,6 +44,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -111,6 +114,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -256,6 +262,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -323,6 +332,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -433,6 +445,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -500,6 +515,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -606,6 +624,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -673,6 +694,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -818,6 +842,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -885,6 +912,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -987,6 +1017,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -1054,6 +1087,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1158,6 +1194,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -1225,6 +1264,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -1370,6 +1412,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -1437,6 +1482,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1543,6 +1591,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -1610,6 +1661,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1689,6 +1743,9 @@
             },
             {
               "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2080,6 +2137,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -2147,6 +2207,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -2292,6 +2355,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -2359,6 +2425,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2470,6 +2539,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -2537,6 +2609,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2645,6 +2720,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -2712,6 +2790,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -2857,6 +2938,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -2924,6 +3008,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3034,6 +3121,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -3101,6 +3191,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3206,6 +3299,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -3273,6 +3369,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3418,6 +3517,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -3485,6 +3587,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3625,6 +3730,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -3692,6 +3800,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3837,6 +3948,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -3904,6 +4018,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4006,6 +4123,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -4073,6 +4193,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4177,6 +4300,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -4244,6 +4370,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4389,6 +4518,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -4456,6 +4588,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4582,6 +4717,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -4649,6 +4787,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4794,6 +4935,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -4861,6 +5005,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4967,6 +5114,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -5034,6 +5184,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5139,6 +5292,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -5206,6 +5362,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -5351,6 +5510,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -5418,6 +5580,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5524,6 +5689,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -5591,6 +5759,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5679,6 +5850,9 @@
                     "$ref": "#/$defs/BamModelBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
@@ -5746,6 +5920,9 @@
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -5859,6 +6036,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -5926,6 +6106,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -6071,6 +6254,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -6138,6 +6324,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6251,6 +6440,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -6318,6 +6510,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6435,6 +6630,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -6502,6 +6700,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -6647,6 +6848,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -6714,6 +6918,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6847,6 +7054,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -6914,6 +7124,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7059,6 +7272,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -7126,6 +7342,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7231,6 +7450,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -7298,6 +7520,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7375,6 +7600,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -7442,6 +7670,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7563,6 +7794,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -7630,6 +7864,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7775,6 +8012,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -7842,6 +8082,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7948,6 +8191,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -8046,6 +8292,1028 @@
         }
       },
       "title": "LengthPenalty",
+      "type": "object"
+    },
+    "LitellmModelBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/WatsonxModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/SequenceBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/WatsonxModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/SequenceBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "show_result": {
+          "default": true,
+          "title": "Show Result",
+          "type": "boolean"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parser"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
+        "kind": {
+          "const": "model",
+          "default": "model",
+          "enum": [
+            "model"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/WatsonxModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/SequenceBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input"
+        },
+        "trace": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/WatsonxModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/SequenceBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace"
+        },
+        "platform": {
+          "const": "litellm",
+          "default": "litellm",
+          "enum": [
+            "litellm"
+          ],
+          "title": "Platform",
+          "type": "string"
+        },
+        "parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LitellmParameters"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "model",
+        "parameters"
+      ],
+      "title": "LitellmModelBlock",
+      "type": "object"
+    },
+    "LitellmParameters": {
+      "additionalProperties": true,
+      "properties": {
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timeout"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature"
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top P"
+        },
+        "n": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N"
+        },
+        "stop": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stop"
+        },
+        "max_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Tokens"
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Presence Penalty"
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frequency Penalty"
+        },
+        "logit_bias": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logit Bias"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User"
+        },
+        "response_format": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Response Format"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        },
+        "tools": {
+          "anyOf": [
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tools"
+        },
+        "tool_choice": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Choice"
+        },
+        "logprobs": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logprobs"
+        },
+        "top_logprobs": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Logprobs"
+        },
+        "parallel_tool_calls": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parallel Tool Calls"
+        },
+        "extra_headers": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extra Headers"
+        },
+        "functions": {
+          "anyOf": [
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Functions"
+        },
+        "function_call": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Function Call"
+        },
+        "base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Url"
+        },
+        "api_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Version"
+        },
+        "api_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key"
+        },
+        "model_list": {
+          "anyOf": [
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model List"
+        },
+        "mock_response": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mock Response"
+        },
+        "custom_llm_provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Custom Llm Provider"
+        },
+        "max_retries": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Retries"
+        }
+      },
+      "title": "LitellmParameters",
       "type": "object"
     },
     "LocationType": {
@@ -8373,6 +9641,9 @@
           "$ref": "#/$defs/BamModelBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/CodeBlock"
         },
         {
@@ -8444,6 +9715,9 @@
           "$ref": "#/$defs/BamModelBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/CodeBlock"
         },
         {
@@ -8511,6 +9785,9 @@
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -8615,6 +9892,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -8682,6 +9962,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8766,6 +10049,9 @@
           "$ref": "#/$defs/BamModelBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/CodeBlock"
         },
         {
@@ -8811,7 +10097,7 @@
           "$ref": "#/$defs/EmptyBlock"
         }
       ],
-      "description": "Prompt Description Program (PDL)",
+      "description": "Prompt Declaration Language program (PDL)",
       "title": "Program"
     },
     "PromptTemplateData": {
@@ -8882,6 +10168,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -8949,6 +10238,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -9094,6 +10386,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9161,6 +10456,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9368,6 +10666,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -9435,6 +10736,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -9580,6 +10884,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9647,6 +10954,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9749,6 +11059,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9816,6 +11129,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9908,6 +11224,9 @@
                     "$ref": "#/$defs/BamModelBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
@@ -9975,6 +11294,9 @@
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -10088,6 +11410,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -10155,6 +11480,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -10300,6 +11628,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -10367,6 +11698,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -10469,6 +11803,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -10536,6 +11873,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -10627,6 +11967,9 @@
                     "$ref": "#/$defs/BamModelBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
@@ -10694,6 +12037,9 @@
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -10807,6 +12153,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -10874,6 +12223,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -11019,6 +12371,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -11086,6 +12441,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11188,6 +12546,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -11255,6 +12616,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11452,6 +12816,9 @@
                 "$ref": "#/$defs/BamModelBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -11519,6 +12886,9 @@
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -11664,6 +13034,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -11731,6 +13104,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11837,6 +13213,9 @@
               "$ref": "#/$defs/BamModelBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -11904,6 +13283,9 @@
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11983,6 +13365,9 @@
             },
             {
               "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"

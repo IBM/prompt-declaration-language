@@ -7,7 +7,7 @@
 
 export type PDLSchemas = Program | PdlBlock | PdlBlocks;
 /**
- * Prompt Description Program (PDL)
+ * Prompt Declaration Language program (PDL)
  */
 export type Program =
   | number
@@ -16,6 +16,7 @@ export type Program =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -50,11 +51,12 @@ export type Description15 = string | null;
 export type Description16 = string | null;
 export type Description17 = string | null;
 export type Description18 = string | null;
+export type Description19 = string | null;
 export type Def = string | null;
 export type ShowResult = boolean;
 export type Parser = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type Description19 = string | null;
-export type Spec19 = {
+export type Description20 = string | null;
+export type Spec20 = {
   [k: string]: unknown;
 } | null;
 export type Pdl =
@@ -64,6 +66,7 @@ export type Pdl =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -87,6 +90,7 @@ export type Pdl =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -103,8 +107,8 @@ export type Pdl =
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Description20 = string | null;
-export type Spec20 = {
+export type Description21 = string | null;
+export type Spec21 = {
   [k: string]: unknown;
 } | null;
 export type Regex = string;
@@ -119,6 +123,7 @@ export type Fallback =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -142,6 +147,7 @@ export type Fallback =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -172,6 +178,7 @@ export type Fallback1 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -195,6 +202,7 @@ export type Fallback1 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -222,6 +230,7 @@ export type Program1 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -245,6 +254,7 @@ export type Program1 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -272,6 +282,7 @@ export type Fallback2 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -295,6 +306,7 @@ export type Fallback2 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -322,6 +334,7 @@ export type Trace =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -349,6 +362,7 @@ export type Fallback3 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -372,6 +386,7 @@ export type Fallback3 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -405,6 +420,7 @@ export type Fallback4 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -428,6 +444,7 @@ export type Fallback4 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -454,6 +471,7 @@ export type Array =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -477,6 +495,7 @@ export type Array =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -504,6 +523,7 @@ export type Fallback5 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -527,6 +547,7 @@ export type Fallback5 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -553,6 +574,7 @@ export type Sequence =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -576,6 +598,7 @@ export type Sequence =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -603,6 +626,7 @@ export type Fallback6 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -626,6 +650,7 @@ export type Fallback6 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -652,6 +677,7 @@ export type Document =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -675,6 +701,7 @@ export type Document =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -702,6 +729,7 @@ export type Fallback7 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -725,6 +753,7 @@ export type Fallback7 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -751,6 +780,7 @@ export type Repeat =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -774,6 +804,7 @@ export type Repeat =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -800,6 +831,7 @@ export type Trace1 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -823,6 +855,7 @@ export type Trace1 =
           | CallBlock
           | WatsonxModelBlock
           | BamModelBlock
+          | LitellmModelBlock
           | CodeBlock
           | ApiBlock
           | GetBlock
@@ -852,6 +885,7 @@ export type Fallback8 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -875,6 +909,7 @@ export type Fallback8 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -901,6 +936,7 @@ export type Repeat1 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -924,6 +960,7 @@ export type Repeat1 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -949,6 +986,7 @@ export type Trace2 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -972,6 +1010,7 @@ export type Trace2 =
           | CallBlock
           | WatsonxModelBlock
           | BamModelBlock
+          | LitellmModelBlock
           | CodeBlock
           | ApiBlock
           | GetBlock
@@ -1001,6 +1040,7 @@ export type Fallback9 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1024,6 +1064,7 @@ export type Fallback9 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1050,6 +1091,7 @@ export type Repeat2 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1073,6 +1115,7 @@ export type Repeat2 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1099,6 +1142,7 @@ export type Trace3 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1122,6 +1166,7 @@ export type Trace3 =
           | CallBlock
           | WatsonxModelBlock
           | BamModelBlock
+          | LitellmModelBlock
           | CodeBlock
           | ApiBlock
           | GetBlock
@@ -1151,6 +1196,7 @@ export type Fallback10 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1174,6 +1220,7 @@ export type Fallback10 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1200,6 +1247,7 @@ export type Then =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1223,6 +1271,7 @@ export type Then =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1246,6 +1295,7 @@ export type Else =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1269,6 +1319,7 @@ export type Else =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1298,6 +1349,7 @@ export type Fallback11 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1321,6 +1373,7 @@ export type Fallback11 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1351,6 +1404,7 @@ export type Fallback12 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1374,6 +1428,7 @@ export type Fallback12 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1405,6 +1460,7 @@ export type Fallback13 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1428,6 +1484,7 @@ export type Fallback13 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1456,6 +1513,7 @@ export type Input =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1479,6 +1537,7 @@ export type Input =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1506,6 +1565,7 @@ export type Fallback14 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1529,6 +1589,7 @@ export type Fallback14 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1556,6 +1617,7 @@ export type Code =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1579,6 +1641,7 @@ export type Code =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1606,6 +1669,7 @@ export type Fallback15 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1629,6 +1693,7 @@ export type Fallback15 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1656,6 +1721,7 @@ export type Input1 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1679,6 +1745,7 @@ export type Input1 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1703,6 +1770,7 @@ export type Trace4 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1719,7 +1787,175 @@ export type Trace4 =
   | ErrorBlock
   | EmptyBlock
   | null;
-export type Platform = "bam";
+export type Platform = "litellm";
+export type Timeout = number | string | null;
+export type Temperature = number | null;
+export type TopP = number | null;
+export type N = number | null;
+export type Stop = string | string[] | null;
+export type MaxTokens = number | null;
+export type PresencePenalty = number | null;
+export type FrequencyPenalty = number | null;
+export type LogitBias = {
+  [k: string]: unknown;
+} | null;
+export type User = string | null;
+export type ResponseFormat = {
+  [k: string]: unknown;
+} | null;
+export type Seed = number | null;
+export type Tools = unknown[] | null;
+export type ToolChoice =
+  | string
+  | {
+      [k: string]: unknown;
+    }
+  | null;
+export type Logprobs = boolean | null;
+export type TopLogprobs = number | null;
+export type ParallelToolCalls = boolean | null;
+export type ExtraHeaders = {
+  [k: string]: unknown;
+} | null;
+export type Functions = unknown[] | null;
+export type FunctionCall = string | null;
+export type BaseUrl = string | null;
+export type ApiVersion = string | null;
+export type ApiKey = string | null;
+export type ModelList = unknown[] | null;
+export type MockResponse = string | null;
+export type CustomLlmProvider = string | null;
+export type MaxRetries = number | null;
+export type Def16 = string | null;
+export type ShowResult16 = boolean;
+export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError16 = boolean;
+export type Fallback16 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | LitellmModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Role16 = string | null;
+export type Kind16 = "model";
+export type Model1 = string;
+export type Input2 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | LitellmModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Trace5 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+export type Platform1 = "bam";
 export type PromptId = string | null;
 export type Parameters =
   | BamTextGenerationParameters
@@ -1751,7 +1987,7 @@ export type StopSequences =
   | [string, string, string, string, string]
   | [string, string, string, string, string, string]
   | null;
-export type Temperature = number | null;
+export type Temperature1 = number | null;
 export type TimeLimit = number | null;
 export type TopK = number | null;
 export type TopPNucleusSampling = number | null;
@@ -1777,138 +2013,6 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
-export type Def16 = string | null;
-export type ShowResult16 = boolean;
-export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError16 = boolean;
-export type Fallback16 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Role16 = string | null;
-export type Kind16 = "model";
-export type Model1 = string;
-export type Input2 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Trace5 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-export type Platform1 = "watsonx";
-export type Params = {
-  [k: string]: unknown;
-} | null;
-export type Guardrails = boolean | null;
-export type GuardrailsHapParams = {
-  [k: string]: unknown;
-} | null;
 export type Def17 = string | null;
 export type ShowResult17 = boolean;
 export type Parser17 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -1920,6 +2024,7 @@ export type Fallback17 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1943,6 +2048,7 @@ export type Fallback17 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1961,15 +2067,16 @@ export type Fallback17 =
     )[]
   | null;
 export type Role17 = string | null;
-export type Kind17 = "call";
-export type Call = string;
-export type Trace6 =
+export type Kind17 = "model";
+export type Model2 = string;
+export type Input3 =
   | number
   | string
   | FunctionBlock
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1993,6 +2100,7 @@ export type Trace6 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2010,6 +2118,38 @@ export type Trace6 =
       | EmptyBlock
     )[]
   | null;
+export type Trace6 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+export type Platform2 = "watsonx";
+export type Params = {
+  [k: string]: unknown;
+} | null;
+export type Guardrails = boolean | null;
+export type GuardrailsHapParams = {
+  [k: string]: unknown;
+} | null;
 export type Def18 = string | null;
 export type ShowResult18 = boolean;
 export type Parser18 = ("json" | "yaml") | PdlParser | RegexParser | null;
@@ -2021,6 +2161,7 @@ export type Fallback18 =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2044,6 +2185,7 @@ export type Fallback18 =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2062,17 +2204,16 @@ export type Fallback18 =
     )[]
   | null;
 export type Role18 = string | null;
-export type Kind18 = "function";
-export type Function = {
-  [k: string]: unknown;
-} | null;
-export type Return =
+export type Kind18 = "call";
+export type Call = string;
+export type Trace7 =
   | number
   | string
   | FunctionBlock
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2096,6 +2237,114 @@ export type Return =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Def19 = string | null;
+export type ShowResult19 = boolean;
+export type Parser19 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type HasError19 = boolean;
+export type Fallback19 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | LitellmModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+export type Role19 = string | null;
+export type Kind19 = "function";
+export type Function = {
+  [k: string]: unknown;
+} | null;
+export type Return =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | WatsonxModelBlock
+  | BamModelBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | WatsonxModelBlock
+      | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2122,6 +2371,7 @@ export type PdlBlock =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2144,6 +2394,7 @@ export type PdlBlocks =
   | CallBlock
   | WatsonxModelBlock
   | BamModelBlock
+  | LitellmModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2167,6 +2418,7 @@ export type PdlBlocks =
       | CallBlock
       | WatsonxModelBlock
       | BamModelBlock
+      | LitellmModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2188,15 +2440,15 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def18;
-  show_result?: ShowResult18;
+  def?: Def19;
+  show_result?: ShowResult19;
   result?: unknown;
-  parser?: Parser18;
+  parser?: Parser19;
   location?: LocationType | null;
-  has_error?: HasError18;
-  fallback?: Fallback18;
-  role?: Role18;
-  kind?: Kind18;
+  has_error?: HasError19;
+  fallback?: Fallback19;
+  role?: Role19;
+  kind?: Kind19;
   function: Function;
   return: Return;
   scope?: Scope;
@@ -2212,6 +2464,7 @@ export interface Defs {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2235,6 +2488,7 @@ export interface Defs {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2256,18 +2510,18 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def17;
-  show_result?: ShowResult17;
+  def?: Def18;
+  show_result?: ShowResult18;
   result?: unknown;
-  parser?: Parser17;
+  parser?: Parser18;
   location?: LocationType | null;
-  has_error?: HasError17;
-  fallback?: Fallback17;
-  role?: Role17;
-  kind?: Kind17;
+  has_error?: HasError18;
+  fallback?: Fallback18;
+  role?: Role18;
+  kind?: Kind18;
   call: Call;
   args?: Args;
-  trace?: Trace6;
+  trace?: Trace7;
 }
 export interface Spec1 {
   [k: string]: unknown;
@@ -2280,6 +2534,7 @@ export interface Defs1 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2303,6 +2558,7 @@ export interface Defs1 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2324,19 +2580,19 @@ export interface WatsonxModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def16;
-  show_result?: ShowResult16;
+  def?: Def17;
+  show_result?: ShowResult17;
   result?: unknown;
-  parser?: Parser16;
+  parser?: Parser17;
   location?: LocationType | null;
-  has_error?: HasError16;
-  fallback?: Fallback16;
-  role?: Role16;
-  kind?: Kind16;
-  model: Model1;
-  input?: Input2;
-  trace?: Trace5;
-  platform?: Platform1;
+  has_error?: HasError17;
+  fallback?: Fallback17;
+  role?: Role17;
+  kind?: Kind17;
+  model: Model2;
+  input?: Input3;
+  trace?: Trace6;
+  platform?: Platform2;
   params?: Params;
   guardrails?: Guardrails;
   guardrails_hap_params?: GuardrailsHapParams;
@@ -2352,6 +2608,7 @@ export interface Defs2 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2375,6 +2632,7 @@ export interface Defs2 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2396,19 +2654,19 @@ export interface BamModelBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def15;
-  show_result?: ShowResult15;
+  def?: Def16;
+  show_result?: ShowResult16;
   result?: unknown;
-  parser?: Parser15;
+  parser?: Parser16;
   location?: LocationType | null;
-  has_error?: HasError15;
-  fallback?: Fallback15;
-  role?: Role15;
-  kind?: Kind15;
-  model: Model;
-  input?: Input1;
-  trace?: Trace4;
-  platform?: Platform;
+  has_error?: HasError16;
+  fallback?: Fallback16;
+  role?: Role16;
+  kind?: Kind16;
+  model: Model1;
+  input?: Input2;
+  trace?: Trace5;
+  platform?: Platform1;
   prompt_id?: PromptId;
   parameters?: Parameters;
   moderations?: ModerationParameters | null;
@@ -2426,6 +2684,7 @@ export interface Defs3 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2449,6 +2708,79 @@ export interface Defs3 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock
+      )[];
+}
+export interface LitellmModelBlock {
+  description?: Description4;
+  spec?: Spec4;
+  defs?: Defs4;
+  def?: Def15;
+  show_result?: ShowResult15;
+  result?: unknown;
+  parser?: Parser15;
+  location?: LocationType | null;
+  has_error?: HasError15;
+  fallback?: Fallback15;
+  role?: Role15;
+  kind?: Kind15;
+  model: Model;
+  input?: Input1;
+  trace?: Trace4;
+  platform?: Platform;
+  parameters: LitellmParameters | null;
+}
+export interface Spec4 {
+  [k: string]: unknown;
+}
+export interface Defs4 {
+  [k: string]:
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | WatsonxModelBlock
+    | BamModelBlock
+    | LitellmModelBlock
+    | CodeBlock
+    | ApiBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | DocumentBlock
+    | SequenceBlock
+    | ArrayBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | (
+        | number
+        | number
+        | string
+        | FunctionBlock
+        | CallBlock
+        | WatsonxModelBlock
+        | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2467,9 +2799,9 @@ export interface Defs3 {
       )[];
 }
 export interface CodeBlock {
-  description?: Description4;
-  spec?: Spec4;
-  defs?: Defs4;
+  description?: Description5;
+  spec?: Spec5;
+  defs?: Defs5;
   def?: Def14;
   show_result?: ShowResult14;
   result?: unknown;
@@ -2482,10 +2814,10 @@ export interface CodeBlock {
   lan: Lan;
   code: Code;
 }
-export interface Spec4 {
+export interface Spec5 {
   [k: string]: unknown;
 }
-export interface Defs4 {
+export interface Defs5 {
   [k: string]:
     | number
     | string
@@ -2493,6 +2825,7 @@ export interface Defs4 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2516,6 +2849,7 @@ export interface Defs4 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2534,9 +2868,9 @@ export interface Defs4 {
       )[];
 }
 export interface ApiBlock {
-  description?: Description5;
-  spec?: Spec5;
-  defs?: Defs5;
+  description?: Description6;
+  spec?: Spec6;
+  defs?: Defs6;
   def?: Def13;
   show_result?: ShowResult13;
   result?: unknown;
@@ -2550,10 +2884,10 @@ export interface ApiBlock {
   url: Url;
   input: Input;
 }
-export interface Spec5 {
+export interface Spec6 {
   [k: string]: unknown;
 }
-export interface Defs5 {
+export interface Defs6 {
   [k: string]:
     | number
     | string
@@ -2561,6 +2895,7 @@ export interface Defs5 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2584,6 +2919,7 @@ export interface Defs5 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2602,9 +2938,9 @@ export interface Defs5 {
       )[];
 }
 export interface GetBlock {
-  description?: Description6;
-  spec?: Spec6;
-  defs?: Defs6;
+  description?: Description7;
+  spec?: Spec7;
+  defs?: Defs7;
   def?: Def12;
   show_result?: ShowResult12;
   result?: unknown;
@@ -2616,10 +2952,10 @@ export interface GetBlock {
   kind?: Kind12;
   get: Get;
 }
-export interface Spec6 {
+export interface Spec7 {
   [k: string]: unknown;
 }
-export interface Defs6 {
+export interface Defs7 {
   [k: string]:
     | number
     | string
@@ -2627,6 +2963,7 @@ export interface Defs6 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2650,6 +2987,7 @@ export interface Defs6 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2668,9 +3006,9 @@ export interface Defs6 {
       )[];
 }
 export interface DataBlock {
-  description?: Description7;
-  spec?: Spec7;
-  defs?: Defs7;
+  description?: Description8;
+  spec?: Spec8;
+  defs?: Defs8;
   def?: Def11;
   show_result?: ShowResult11;
   result?: unknown;
@@ -2682,10 +3020,10 @@ export interface DataBlock {
   kind?: Kind11;
   data: Data;
 }
-export interface Spec7 {
+export interface Spec8 {
   [k: string]: unknown;
 }
-export interface Defs7 {
+export interface Defs8 {
   [k: string]:
     | number
     | string
@@ -2693,6 +3031,7 @@ export interface Defs7 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2716,6 +3055,7 @@ export interface Defs7 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2734,9 +3074,9 @@ export interface Defs7 {
       )[];
 }
 export interface IfBlock {
-  description?: Description8;
-  spec?: Spec8;
-  defs?: Defs8;
+  description?: Description9;
+  spec?: Spec9;
+  defs?: Defs9;
   def?: Def10;
   show_result?: ShowResult10;
   result?: unknown;
@@ -2751,10 +3091,10 @@ export interface IfBlock {
   else?: Else;
   if_result?: IfResult;
 }
-export interface Spec8 {
+export interface Spec9 {
   [k: string]: unknown;
 }
-export interface Defs8 {
+export interface Defs9 {
   [k: string]:
     | number
     | string
@@ -2762,6 +3102,7 @@ export interface Defs8 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2785,6 +3126,7 @@ export interface Defs8 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2803,9 +3145,9 @@ export interface Defs8 {
       )[];
 }
 export interface RepeatBlock {
-  description?: Description9;
-  spec?: Spec9;
-  defs?: Defs9;
+  description?: Description10;
+  spec?: Spec10;
+  defs?: Defs10;
   def?: Def9;
   show_result?: ShowResult9;
   result?: unknown;
@@ -2820,10 +3162,10 @@ export interface RepeatBlock {
   as?: IterationType & string;
   trace?: Trace3;
 }
-export interface Spec9 {
+export interface Spec10 {
   [k: string]: unknown;
 }
-export interface Defs9 {
+export interface Defs10 {
   [k: string]:
     | number
     | string
@@ -2831,6 +3173,7 @@ export interface Defs9 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2854,6 +3197,7 @@ export interface Defs9 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2872,9 +3216,9 @@ export interface Defs9 {
       )[];
 }
 export interface RepeatUntilBlock {
-  description?: Description10;
-  spec?: Spec10;
-  defs?: Defs10;
+  description?: Description11;
+  spec?: Spec11;
+  defs?: Defs11;
   def?: Def8;
   show_result?: ShowResult8;
   result?: unknown;
@@ -2889,10 +3233,10 @@ export interface RepeatUntilBlock {
   as?: IterationType & string;
   trace?: Trace2;
 }
-export interface Spec10 {
+export interface Spec11 {
   [k: string]: unknown;
 }
-export interface Defs10 {
+export interface Defs11 {
   [k: string]:
     | number
     | string
@@ -2900,6 +3244,7 @@ export interface Defs10 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2923,6 +3268,7 @@ export interface Defs10 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -2941,9 +3287,9 @@ export interface Defs10 {
       )[];
 }
 export interface ForBlock {
-  description?: Description11;
-  spec?: Spec11;
-  defs?: Defs11;
+  description?: Description12;
+  spec?: Spec12;
+  defs?: Defs12;
   def?: Def7;
   show_result?: ShowResult7;
   result?: unknown;
@@ -2958,10 +3304,10 @@ export interface ForBlock {
   as?: IterationType & string;
   trace?: Trace1;
 }
-export interface Spec11 {
+export interface Spec12 {
   [k: string]: unknown;
 }
-export interface Defs11 {
+export interface Defs12 {
   [k: string]:
     | number
     | string
@@ -2969,6 +3315,7 @@ export interface Defs11 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -2992,6 +3339,7 @@ export interface Defs11 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3010,9 +3358,9 @@ export interface Defs11 {
       )[];
 }
 export interface DocumentBlock {
-  description?: Description12;
-  spec?: Spec12;
-  defs?: Defs12;
+  description?: Description13;
+  spec?: Spec13;
+  defs?: Defs13;
   def?: Def6;
   show_result?: ShowResult6;
   result?: unknown;
@@ -3024,10 +3372,10 @@ export interface DocumentBlock {
   kind?: Kind6;
   document: Document;
 }
-export interface Spec12 {
+export interface Spec13 {
   [k: string]: unknown;
 }
-export interface Defs12 {
+export interface Defs13 {
   [k: string]:
     | number
     | string
@@ -3035,6 +3383,7 @@ export interface Defs12 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3058,6 +3407,7 @@ export interface Defs12 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3076,9 +3426,9 @@ export interface Defs12 {
       )[];
 }
 export interface SequenceBlock {
-  description?: Description13;
-  spec?: Spec13;
-  defs?: Defs13;
+  description?: Description14;
+  spec?: Spec14;
+  defs?: Defs14;
   def?: Def5;
   show_result?: ShowResult5;
   result?: unknown;
@@ -3090,10 +3440,10 @@ export interface SequenceBlock {
   kind?: Kind5;
   sequence: Sequence;
 }
-export interface Spec13 {
+export interface Spec14 {
   [k: string]: unknown;
 }
-export interface Defs13 {
+export interface Defs14 {
   [k: string]:
     | number
     | string
@@ -3101,6 +3451,7 @@ export interface Defs13 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3124,6 +3475,7 @@ export interface Defs13 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3142,9 +3494,9 @@ export interface Defs13 {
       )[];
 }
 export interface ArrayBlock {
-  description?: Description14;
-  spec?: Spec14;
-  defs?: Defs14;
+  description?: Description15;
+  spec?: Spec15;
+  defs?: Defs15;
   def?: Def4;
   show_result?: ShowResult4;
   result?: unknown;
@@ -3156,10 +3508,10 @@ export interface ArrayBlock {
   kind?: Kind4;
   array: Array;
 }
-export interface Spec14 {
+export interface Spec15 {
   [k: string]: unknown;
 }
-export interface Defs14 {
+export interface Defs15 {
   [k: string]:
     | number
     | string
@@ -3167,6 +3519,7 @@ export interface Defs14 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3190,6 +3543,7 @@ export interface Defs14 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3208,9 +3562,9 @@ export interface Defs14 {
       )[];
 }
 export interface ReadBlock {
-  description?: Description15;
-  spec?: Spec15;
-  defs?: Defs15;
+  description?: Description16;
+  spec?: Spec16;
+  defs?: Defs16;
   def?: Def3;
   show_result?: ShowResult3;
   result?: unknown;
@@ -3224,10 +3578,10 @@ export interface ReadBlock {
   message?: Message;
   multiline?: Multiline;
 }
-export interface Spec15 {
+export interface Spec16 {
   [k: string]: unknown;
 }
-export interface Defs15 {
+export interface Defs16 {
   [k: string]:
     | number
     | string
@@ -3235,6 +3589,7 @@ export interface Defs15 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3258,6 +3613,7 @@ export interface Defs15 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3276,9 +3632,9 @@ export interface Defs15 {
       )[];
 }
 export interface IncludeBlock {
-  description?: Description16;
-  spec?: Spec16;
-  defs?: Defs16;
+  description?: Description17;
+  spec?: Spec17;
+  defs?: Defs17;
   def?: Def2;
   show_result?: ShowResult2;
   result?: unknown;
@@ -3291,10 +3647,10 @@ export interface IncludeBlock {
   include: Include;
   trace?: Trace;
 }
-export interface Spec16 {
+export interface Spec17 {
   [k: string]: unknown;
 }
-export interface Defs16 {
+export interface Defs17 {
   [k: string]:
     | number
     | string
@@ -3302,6 +3658,7 @@ export interface Defs16 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3325,6 +3682,7 @@ export interface Defs16 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3343,9 +3701,9 @@ export interface Defs16 {
       )[];
 }
 export interface ErrorBlock {
-  description?: Description17;
-  spec?: Spec17;
-  defs?: Defs17;
+  description?: Description18;
+  spec?: Spec18;
+  defs?: Defs18;
   def?: Def1;
   show_result?: ShowResult1;
   result?: unknown;
@@ -3358,10 +3716,10 @@ export interface ErrorBlock {
   msg: Msg;
   program: Program1;
 }
-export interface Spec17 {
+export interface Spec18 {
   [k: string]: unknown;
 }
-export interface Defs17 {
+export interface Defs18 {
   [k: string]:
     | number
     | string
@@ -3369,6 +3727,7 @@ export interface Defs17 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3392,6 +3751,7 @@ export interface Defs17 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3410,9 +3770,9 @@ export interface Defs17 {
       )[];
 }
 export interface EmptyBlock {
-  description?: Description18;
-  spec?: Spec18;
-  defs?: Defs18;
+  description?: Description19;
+  spec?: Spec19;
+  defs?: Defs19;
   def?: Def;
   show_result?: ShowResult;
   result?: unknown;
@@ -3423,10 +3783,10 @@ export interface EmptyBlock {
   role?: Role;
   kind?: Kind;
 }
-export interface Spec18 {
+export interface Spec19 {
   [k: string]: unknown;
 }
-export interface Defs18 {
+export interface Defs19 {
   [k: string]:
     | number
     | string
@@ -3434,6 +3794,7 @@ export interface Defs18 {
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3457,6 +3818,7 @@ export interface Defs18 {
         | CallBlock
         | WatsonxModelBlock
         | BamModelBlock
+        | LitellmModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3475,13 +3837,13 @@ export interface Defs18 {
       )[];
 }
 export interface PdlParser {
-  description?: Description19;
-  spec?: Spec19;
+  description?: Description20;
+  spec?: Spec20;
   pdl: Pdl;
 }
 export interface RegexParser {
-  description?: Description20;
-  spec?: Spec20;
+  description?: Description21;
+  spec?: Spec21;
   regex: Regex;
   mode?: Mode;
 }
@@ -3505,6 +3867,36 @@ export interface If {
 export interface Data {
   [k: string]: unknown;
 }
+export interface LitellmParameters {
+  timeout?: Timeout;
+  temperature?: Temperature;
+  top_p?: TopP;
+  n?: N;
+  stop?: Stop;
+  max_tokens?: MaxTokens;
+  presence_penalty?: PresencePenalty;
+  frequency_penalty?: FrequencyPenalty;
+  logit_bias?: LogitBias;
+  user?: User;
+  response_format?: ResponseFormat;
+  seed?: Seed;
+  tools?: Tools;
+  tool_choice?: ToolChoice;
+  logprobs?: Logprobs;
+  top_logprobs?: TopLogprobs;
+  parallel_tool_calls?: ParallelToolCalls;
+  extra_headers?: ExtraHeaders;
+  functions?: Functions;
+  function_call?: FunctionCall;
+  base_url?: BaseUrl;
+  api_version?: ApiVersion;
+  api_key?: ApiKey;
+  model_list?: ModelList;
+  mock_response?: MockResponse;
+  custom_llm_provider?: CustomLlmProvider;
+  max_retries?: MaxRetries;
+  [k: string]: unknown;
+}
 export interface BamTextGenerationParameters {
   beam_width?: BeamWidth;
   decoding_method?: DecodingMethod | null;
@@ -3516,7 +3908,7 @@ export interface BamTextGenerationParameters {
   repetition_penalty?: RepetitionPenalty;
   return_options?: TextGenerationReturnOptions | null;
   stop_sequences?: StopSequences;
-  temperature?: Temperature;
+  temperature?: Temperature1;
   time_limit?: TimeLimit;
   top_k?: TopK;
   top_p?: TopPNucleusSampling;

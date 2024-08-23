@@ -188,3 +188,23 @@ def test_model_parameter1():
     data = Program.model_validate(model_parameter1)
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"
+
+
+litellm_mock = {
+    "description": "call LiteLLM with a mock response",
+    "document": [
+        "Hello,",
+        {
+            "model": "watsonx/ibm/granite-20b-code-instruct-v2",
+            "platform": "litellm",
+            "parameters": {"stop": ["!"], "mock_response": " World!"},
+        },
+    ],
+}
+
+
+def test_litellm_mock():
+    state = InterpreterState()
+    data = Program.model_validate(litellm_mock)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!"

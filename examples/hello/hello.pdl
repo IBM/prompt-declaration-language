@@ -1,7 +1,8 @@
-description: Hello world with watsonx
+description: Hello world through LiteLLM on watsonx
 document:
-- Hello
-- model: ibm/granite-3b-code-instruct
-  params:
-    STOP_SEQUENCES:
+- Hello,
+- model: watsonx/ibm/granite-3b-code-instruct
+  parameters:
+    stop:
     - '!'
+    decoding_method: greedy

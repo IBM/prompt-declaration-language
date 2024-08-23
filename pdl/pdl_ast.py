@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, TypedDict
+from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -117,9 +117,94 @@ class BamTextGenerationParameters(TextGenerationParameters):
     model_config = ConfigDict(extra="forbid")
 
 
+class LitellmParameters(BaseModel):
+    model_config = ConfigDict(extra="allow", protected_namespaces=())
+    timeout: Optional[Union[float, str]] = None
+    temperature: Optional[float] = None
+    """The temperature parameter for controlling the randomness of the output (default is 1.0).
+    """
+    top_p: Optional[float] = None
+    """The top-p parameter for nucleus sampling (default is 1.0).
+    """
+    n: Optional[int] = None
+    """The number of completions to generate (default is 1).
+    """
+    # stream: Optional[bool] = None
+    # """If True, return a streaming response (default is False).
+    # """
+    # stream_options: Optional[dict] = None
+    # """A dictionary containing options for the streaming response. Only set this when you set stream: true.
+    # """
+    stop: Optional[str | list[str]] = None
+    """Up to 4 sequences where the LLM API will stop generating further tokens.
+    """
+    max_tokens: Optional[int] = None
+    """The maximum number of tokens in the generated completion (default is infinity).
+    """
+    presence_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their existence in the text so far.
+    """
+    frequency_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their frequency in the text so far.
+    """
+    logit_bias: Optional[dict] = None
+    """Used to modify the probability of specific tokens appearing in the completion.
+    """
+    user: Optional[str] = None
+    """A unique identifier representing your end-user. This can help the LLM provider to monitor and detect abuse.
+    """
+    # openai v1.0+ new params
+    response_format: Optional[dict] = None
+    seed: Optional[int] = None
+    tools: Optional[list] = None
+    tool_choice: Optional[Union[str, dict]] = None
+    logprobs: Optional[bool] = None
+    """Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message
+    """
+    top_logprobs: Optional[int] = None
+    """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
+    """
+    parallel_tool_calls: Optional[bool] = None
+    # deployment_id = None
+    extra_headers: Optional[dict] = None
+    """Additional headers to include in the request.
+    """
+    # soon to be deprecated params by OpenAI
+    functions: Optional[list] = None
+    """A list of functions to apply to the conversation messages (default is an empty list)
+    """
+    function_call: Optional[str] = None
+    """The name of the function to call within the conversation (default is an empty string)
+    """
+    # set api_base, api_version, api_key
+    base_url: Optional[str] = None
+    """Base URL for the API (default is None).
+    """
+    api_version: Optional[str] = None
+    """API version (default is None).
+    """
+    api_key: Optional[str] = None
+    """API key (default is None).
+    """
+    model_list: Optional[list] = None  # pass in a list of api_base,keys, etc.
+    """List of api base, version, keys.
+    """
+    # Optional liteLLM function params
+    mock_response: Optional[str] = None
+    """If provided, return a mock completion response for testing or debugging purposes (default is None).
+    """
+    custom_llm_provider: Optional[str] = None
+    """Used for Non-OpenAI LLMs, Example usage for bedrock, set model="amazon.titan-tg1-large" and custom_llm_provider="bedrock"
+    """
+    max_retries: Optional[int] = None
+    """The number of retries to attempt (default is 0).
+    """
+
+
 class ModelPlatform(StrEnum):
     BAM = "bam"
     WATSONX = "watsonx"
+    LITELLM = "litellm"
 
 
 class ModelBlock(Block):
@@ -145,6 +230,12 @@ class WatsonxModelBlock(ModelBlock):
     params: Optional[dict] = None
     guardrails: Optional[bool] = None
     guardrails_hap_params: Optional[dict] = None
+
+
+class LitellmModelBlock(ModelBlock):
+    model_config = ConfigDict(extra="forbid")
+    platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
+    parameters: Optional[LitellmParameters]
 
 
 class CodeBlock(Block):
@@ -266,6 +357,7 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -289,11 +381,12 @@ BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 
 class Program(RootModel):
     """
-    Prompt Description Program (PDL)
+    Prompt Declaration Language program (PDL)
     """
 
-    # root: dict[str, BlockType]
     root: BlockType
+    """Entry point to parse a PDL program using Pydantic.
+    """
 
 
 class PdlBlock(RootModel):

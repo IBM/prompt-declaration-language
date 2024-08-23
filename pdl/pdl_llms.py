@@ -8,9 +8,11 @@ from genai.schema import ModerationParameters as BamModerationParameters
 from genai.schema import PromptTemplateData as BamPromptTemplateData
 from ibm_watsonx_ai import Credentials as WatsonxCredentials
 from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
+from litellm import completion
 
 from .pdl_ast import (
     BamTextGenerationParameters,
+    Message,
     set_default_model_parameters,
     set_default_model_params,
 )
@@ -188,3 +190,40 @@ class WatsonxModel:
             guardrails_hap_params=guardrails_hap_params,
         )
         return text_stream
+
+
+class LitellmModel:
+    litellm_client: Optional[None] = None
+
+    @staticmethod
+    def get_model() -> None:
+        return None
+
+    @staticmethod
+    def generate_text(
+        model_id: str,
+        messages: list[Message],
+        parameters: dict[str, Any],
+    ) -> str:
+        response = completion(
+            model=model_id, messages=messages, stream=False, **parameters
+        )
+        text = response.choices[0].message.content  # pyright: ignore
+        if text is None:
+            assert False, "TODO"  # XXX TODO XXX
+        return text
+
+    @staticmethod
+    def generate_text_stream(
+        model_id: str,
+        messages: list[Message],
+        parameters: dict[str, Any],
+    ) -> Generator[str, Any, None]:
+        response = completion(
+            model=model_id, messages=messages, stream=True, **parameters
+        )
+        for chunk in response:
+            text = chunk.choices[0].delta.content  # pyright: ignore
+            if text is None:
+                break
+            yield text
