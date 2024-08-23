@@ -85,7 +85,7 @@ def schedule(
                         print(s, end="")
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
-                        text = BamModel.generate_text(
+                        text_msg = BamModel.generate_text(
                             model_id=msg.model_id,
                             prompt_id=msg.prompt_id,
                             model_input=msg.model_input,
@@ -93,7 +93,7 @@ def schedule(
                             moderations=msg.moderations,
                             data=msg.data,
                         )
-                        todo_next.append((i, gen, text))
+                        todo_next.append((i, gen, text_msg))
                     case _:
                         assert False
             except StopIteration as e:

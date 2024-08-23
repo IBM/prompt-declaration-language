@@ -820,8 +820,9 @@ def step_call_model(
     # Execute model call
     try:
         append_log(state, "Model Input", messages_to_str(model_input))
-        result = yield from generate_client_response(state, concrete_block, model_input)
-        background: Messages = [{"role": state.role, "content": result}]
+        msg = yield from generate_client_response(state, concrete_block, model_input)
+        background: Messages = [msg]
+        result = msg["content"]
         append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
         return result, background, scope, trace
@@ -840,7 +841,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, str]:
+) -> Generator[YieldMessage, Any, Message]:
     match state.batch:
         case 0:
             model_output = yield from generate_client_response_streaming(
@@ -861,12 +862,12 @@ def generate_client_response_streaming(
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, str]:
-    text_stream: Generator[str, Any, None]
+) -> Generator[YieldMessage, Any, Message]:
+    msg_stream: Generator[Message, Any, None]
     model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            text_stream = BamModel.generate_text_stream(
+            msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
                 model_input=model_input_str,
@@ -875,7 +876,7 @@ def generate_client_response_streaming(
                 data=block.data,
             )
         case WatsonxModelBlock():
-            text_stream = WatsonxModel.generate_text_stream(
+            msg_stream = WatsonxModel.generate_text_stream(
                 model_id=block.model,
                 prompt=model_input_str,
                 params=block.params,
@@ -884,17 +885,26 @@ def generate_client_response_streaming(
             )
         case LitellmModelBlock():
             parameters = litellm_block_to_dict(block)
-            text_stream = LitellmModel.generate_text_stream(
+            msg_stream = LitellmModel.generate_text_stream(
                 model_id=block.model, messages=model_input, parameters=parameters
             )
         case _:
             assert False
-    text = ""
-    for chunk in text_stream:
+    complete_msg: Optional[Message] = None
+    role = None
+    for chunk in msg_stream:
         if state.yield_output:
-            yield OutputMessage([{"role": state.role, "content": chunk}])
-        text += chunk
-    return text
+            yield OutputMessage([chunk])
+        if complete_msg is None:
+            complete_msg = chunk
+            role = complete_msg["role"]
+        else:
+            chunk_role = chunk["role"]
+            if chunk_role is None or chunk_role == role:
+                complete_msg["content"] += chunk["content"]
+    if complete_msg is None:
+        return Message(role=state.role, content="")
+    return complete_msg
 
 
 def litellm_block_to_dict(block: LitellmModelBlock) -> dict[str, Any]:
@@ -910,12 +920,12 @@ def generate_client_response_single(
     state: InterpreterState,
     block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, str]:
-    text: str
+) -> Generator[YieldMessage, Any, Message]:
+    msg: Message
     model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            text = BamModel.generate_text(
+            msg = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
                 model_input=model_input_str,
@@ -924,7 +934,7 @@ def generate_client_response_single(
                 data=block.data,
             )
         case WatsonxModelBlock():
-            text = WatsonxModel.generate_text(
+            msg = WatsonxModel.generate_text(
                 model_id=block.model,
                 prompt=model_input_str,
                 params=block.params,
@@ -933,12 +943,12 @@ def generate_client_response_single(
             )
         case LitellmModelBlock():
             parameters = litellm_block_to_dict(block)
-            text = LitellmModel.generate_text(
+            msg = LitellmModel.generate_text(
                 model_id=block.model, messages=model_input, parameters=parameters
             )
     if state.yield_output:
-        yield OutputMessage([{"role": state.role, "content": text}])
-    return text
+        yield OutputMessage([msg])
+    return msg
 
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
@@ -946,11 +956,11 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
     # model: str,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, str]:
+) -> Generator[YieldMessage, Any, Message]:
     model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            text = yield ModelCallMessage(
+            msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
                 model_input=model_input_str,
@@ -959,14 +969,14 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
                 data=block.data,
             )
             if state.yield_output:
-                yield OutputMessage(text)
+                yield OutputMessage(msg)
         case WatsonxModelBlock():
             assert False  # XXX TODO
         case LitellmModelBlock():
             assert False  # XXX TODO
         case _:
             assert False
-    return text
+    return msg
 
 
 def step_call_api(

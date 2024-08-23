@@ -52,7 +52,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> str:
+    ) -> Message:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         text = ""
@@ -68,7 +68,7 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     text += result.generated_text
-        return text
+        return {"role": None, "content": text}
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments
@@ -78,7 +78,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[str, Any, None]:
+    ) -> Generator[Message, Any, None]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         for response in client.text.generation.create_stream(
@@ -98,7 +98,7 @@ class BamModel:
                 continue
             for result in response.results:
                 if result.generated_text:
-                    yield result.generated_text
+                    yield {"role": None, "content": result.generated_text}
 
     # @staticmethod
     # def generate_text_lazy(  # pylint: disable=too-many-arguments
@@ -159,7 +159,7 @@ class WatsonxModel:
         params: Optional[dict],
         guardrails: Optional[bool],
         guardrails_hap_params: Optional[dict],
-    ) -> str:
+    ) -> Message:
         model_inference = WatsonxModel.get_model(model_id)
         parameters = params
         parameters = set_default_model_parameters(parameters)
@@ -170,7 +170,7 @@ class WatsonxModel:
             guardrails_hap_params=guardrails_hap_params,
         )
         assert isinstance(text, str)
-        return text
+        return {"role": None, "content": text}
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments
@@ -179,7 +179,7 @@ class WatsonxModel:
         params: Optional[dict],
         guardrails: Optional[bool],
         guardrails_hap_params: Optional[dict],
-    ) -> Generator[str, Any, None]:
+    ) -> Generator[Message, None, None]:
         model_inference = WatsonxModel.get_model(model_id)
         parameters = params
         parameters = set_default_model_parameters(parameters)
@@ -189,7 +189,7 @@ class WatsonxModel:
             guardrails=guardrails or False,
             guardrails_hap_params=guardrails_hap_params,
         )
-        return text_stream
+        return (Message(role=None, content=chunk) for chunk in text_stream)
 
 
 class LitellmModel:
@@ -204,26 +204,26 @@ class LitellmModel:
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> str:
+    ) -> Message:
         response = completion(
             model=model_id, messages=messages, stream=False, **parameters
         )
-        text = response.choices[0].message.content  # pyright: ignore
-        if text is None:
+        msg = response.choices[0].message  # pyright: ignore
+        if msg.content is None:
             assert False, "TODO"  # XXX TODO XXX
-        return text
+        return {"role": msg.role, "content": msg.content}
 
     @staticmethod
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> Generator[str, Any, None]:
+    ) -> Generator[Message, Any, None]:
         response = completion(
             model=model_id, messages=messages, stream=True, **parameters
         )
         for chunk in response:
-            text = chunk.choices[0].delta.content  # pyright: ignore
-            if text is None:
+            msg = chunk.choices[0].delta  # pyright: ignore
+            if msg.content is None:
                 break
-            yield text
+            yield {"role": msg.role, "content": msg.content}
