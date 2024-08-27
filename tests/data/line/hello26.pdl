@@ -8,6 +8,7 @@ document:
 - model: ibm/granite-20b-code-instruct-v2
   def: model_output
   input: 
+    document:
     - for: 
         question: "{{ questions2 }}"
         answer: "{{ data.answers }}"

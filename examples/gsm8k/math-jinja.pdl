@@ -4,70 +4,71 @@ document:
 - model: meta-llama/llama-3-70b-instruct
   def: PDL
   input:
-  - |
-    Question: A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. 
-    Over three hundred years, it has consumed 847 people. Ships have been built larger over time, 
-    so each new ship has twice as many people as the last ship. How many people were on the ship the 
-    monster ate in the first hundred years?
-
-    Answer:
-    ```
-    description: my answer
     document:
-    - Let's call the number of people on the first ship x.
-    - lan: python
-      def: equation
-      code: 
-      - |
-        from sympy import *
-        x = symbols('x')
-        result = x + 2*x + 4*x
-    - "The equation is {{ equation }} = 847.\n"
-    - "Solving for x, we get "
-    - lan: python
-      def: RESULT
-      code:
-      - |
-        from sympy import *
-        x = symbols('x')
-        result = solve({{ equation }} - 847, x)[0]
-    - "\nThe answer is {{RESULT}}."
-    - lan: python
-      def: FINAL
-      code:
-      - |
-        result = {{ RESULT }}
-    - "\n#### "
-    - "{{ FINAL }}"
-    ```
-    Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
-    Each can has 3 tennis balls. How many tennis balls does he have now?
+    - |
+      Question: A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. 
+      Over three hundred years, it has consumed 847 people. Ships have been built larger over time, 
+      so each new ship has twice as many people as the last ship. How many people were on the ship the 
+      monster ate in the first hundred years?
 
-    Answer: 
-    ```
-    description: my answer
-    document:
-    - Roger started with 5 tennis balls
-    - def: tennis_balls
-      data: 5
-    - "\n2 cans of 3 tennis balls each is\n"
-    - def: bought_balls
-      data: "{{ 2 * 3 }}"
-    - "\ntennis balls. The answer is\n"
-    - def: RESULT
-      data: "{{ tennis_balls + bought_balls }}"
-    - lan: python
-      def: FINAL
-      code:
-      - |
-        result = {{ RESULT }}
-    - "\n#### "
-    - "{{ FINAL }}"
-    ```
+      Answer:
+      ```
+      description: my answer
+      document:
+      - Let's call the number of people on the first ship x.
+      - lan: python
+        def: equation
+        code: 
+        - |
+          from sympy import *
+          x = symbols('x')
+          result = x + 2*x + 4*x
+      - "The equation is {{ equation }} = 847.\n"
+      - "Solving for x, we get "
+      - lan: python
+        def: RESULT
+        code:
+        - |
+          from sympy import *
+          x = symbols('x')
+          result = solve({{ equation }} - 847, x)[0]
+      - "\nThe answer is {{RESULT}}."
+      - lan: python
+        def: FINAL
+        code:
+        - |
+          result = {{ RESULT }}
+      - "\n#### "
+      - "{{ FINAL }}"
+      ```
+      Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
+      Each can has 3 tennis balls. How many tennis balls does he have now?
 
-   
+      Answer: 
+      ```
+      description: my answer
+      document:
+      - Roger started with 5 tennis balls
+      - def: tennis_balls
+        data: 5
+      - "\n2 cans of 3 tennis balls each is\n"
+      - def: bought_balls
+        data: "{{ 2 * 3 }}"
+      - "\ntennis balls. The answer is\n"
+      - def: RESULT
+        data: "{{ tennis_balls + bought_balls }}"
+      - lan: python
+        def: FINAL
+        code:
+        - |
+          result = {{ RESULT }}
+      - "\n#### "
+      - "{{ FINAL }}"
+      ```
 
-  - "Question: {{ question }}"
+    
+
+    - "Question: {{ question }}"
   params:
     stop_sequences: ["Question"]
     include_stop_sequence: false

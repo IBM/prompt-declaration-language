@@ -9,6 +9,7 @@ document:
   def: model_output
   spec: {"bob": int, "carol": str}
   input: 
+    document:
     - for: 
         question: "{{ data.questions }}"
         answer: "{{ data.answers }}"

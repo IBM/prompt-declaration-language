@@ -238,9 +238,7 @@ document:
   parameters:
     decoding_method: greedy
     max_new_tokens: 1024
-  input:
-    document:
-    - |
+  input: |
       Here is some info about the location of the function in the repo.
       repo: 
       {{ CODE.repo_info.repo }}
@@ -258,8 +256,7 @@ document:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
   lan: python
-  code:
-  - |
+  code: |
     import textdistance
     expl = """
     {{ EXPLANATION }}

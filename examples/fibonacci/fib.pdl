@@ -3,9 +3,7 @@ document:
 - def: CODE
   model: ibm/granite-20b-code-instruct
   platform: bam
-  input:
-    document:
-    - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+  input: "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
 - "\nFind a random number between 1 and 20\n"
 - def: N
   lan: python

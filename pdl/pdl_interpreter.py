@@ -37,6 +37,7 @@ from .pdl_ast import (
     LitellmParameters,
     LocationType,
     Message,
+    MessageBlock,
     ModelBlock,
     ParserType,
     PDLException,
@@ -343,6 +344,16 @@ def step_block_body(
                 append(loc, "array"),
             )
             trace = block.model_copy(update={"array": array})
+        case MessageBlock():
+            content, background, scope, content_trace = yield from step_blocks(
+                IterationType.SEQUENCE,
+                state,
+                scope,
+                block.content,
+                append(loc, "content"),
+            )
+            result = {"role": state.role, "content": content_trace}
+            trace = block.model_copy(update={"content": content})
         case IfBlock():
             result = None
             background = []
@@ -761,14 +772,17 @@ def step_call_model(
     # evaluate input
     model_input: Messages
     if block.input is not None:  # If not implicit, then input must be a block
-        model_input_str, _, _, input_trace = yield from step_blocks(
-            IterationType.DOCUMENT,
+        model_input_result, _, _, input_trace = yield from step_blocks(
+            IterationType.SEQUENCE,
             state.with_yield_output(False),
             scope,
             block.input,
             append(loc, "input"),
         )
-        model_input = [{"role": None, "content": model_input_str}]
+        if isinstance(model_input_result, str):
+            model_input = [{"role": None, "content": model_input_result}]
+        else:
+            model_input = model_input_result
     else:
         model_input = scope["context"]
         input_trace = None

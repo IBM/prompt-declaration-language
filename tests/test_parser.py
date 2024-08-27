@@ -9,15 +9,17 @@ from pdl.pdl.pdl_interpreter import (  # pyright: ignore
 model_parser = {
     "model": "ibm/granite-20b-code-instruct-v2",
     "spec": {"bob": "int", "carol": "int"},
-    "input": [
-        "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
-        '{"a": 0, "b": 0}',
-        "\n",
-        "Write a JSON object with 3 fields 'x' and 'y' and 'z' set to '1', '2', '3' respectively.",
-        '{"x": 1, "y": 2, "z": 3}',
-        "\n",
-        "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively.",
-    ],
+    "input": {
+        "document": [
+            "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
+            '{"a": 0, "b": 0}',
+            "\n",
+            "Write a JSON object with 3 fields 'x' and 'y' and 'z' set to '1', '2', '3' respectively.",
+            '{"x": 1, "y": 2, "z": 3}',
+            "\n",
+            "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively.",
+        ]
+    },
     "parser": "json",
     "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
 }
@@ -34,15 +36,17 @@ def test_model_parser():
 model_parser1 = {
     "model": "ibm/granite-20b-code-instruct-v2",
     "spec": {"bob": "int", "carol": "int"},
-    "input": [
-        "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
-        '{"a": 0, "b":',
-        "\n",
-        "Write a JSON object with 3 fields 'x' and 'y' and 'z' set to '1', '2', '3' respectively.",
-        '{"x": 1, "y": 2, "z":',
-        "\n",
-        "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively.",
-    ],
+    "input": {
+        "document": [
+            "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
+            '{"a": 0, "b":',
+            "\n",
+            "Write a JSON object with 3 fields 'x' and 'y' and 'z' set to '1', '2', '3' respectively.",
+            '{"x": 1, "y": 2, "z":',
+            "\n",
+            "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively.",
+        ]
+    },
     "parser": "json",
     "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
 }

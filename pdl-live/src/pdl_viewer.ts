@@ -158,6 +158,14 @@ export function show_block(data: PdlBlock) {
       const doc_child = show_blocks(data.array);
       body.appendChild(doc_child);
     })
+    .with({kind: 'message'}, data => {
+      body.classList.add('pdl_message');
+      const role = document.createElement('pre');
+      role.innerHTML = htmlize(data.role + ': ');
+      body.appendChild(role);
+      const doc_child = show_blocks(data.content);
+      body.appendChild(doc_child);
+    })
     .with({kind: 'repeat'}, data => {
       body.classList.add('pdl_repeat');
       const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);

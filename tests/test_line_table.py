@@ -393,9 +393,9 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:12 - 'questions2' is undefined",
-        "tests/data/line/hello26.pdl:12 - Values inside the For block must be lists",
-        "tests/data/line/hello26.pdl:11 - Lists inside the For block must be of the same length",
+        "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
+        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists",
+        "tests/data/line/hello26.pdl:12 - Lists inside the For block must be of the same length",
         'Answer: Here\'s an example of a valid JSON object with two fields, "bob" and "carol", each set to a value of "20" and "30" respectively:',
         "{",
         '  "bob": "20",',

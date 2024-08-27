@@ -673,8 +673,7 @@ document:
   message: "Ask a query: "
   show_result: false
 - model: ibm/granite-20b-code-instruct-v2
-  input:
-    document: |-
+  input: |-
       Question: What is the weather in London?
       London
       Question: What's the weather in Paris?
@@ -958,7 +957,8 @@ document:
   model: ibm/granite-20b-code-instruct-v2
   def: model_output
   spec: {name: str, age: int}
-  input: 
+  input:
+    document:
     - for: 
         question: "{{ data.questions }}"
         answer: "{{ data.answers }}"
@@ -966,6 +966,7 @@ document:
         - |
           {{ question }}
           {{ answer }}
+      as: document
     - > 
       Question: Create a JSON object with fields 'name' and 'age' 
       and set them appropriately. Write the age in letters.
