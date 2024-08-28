@@ -28,7 +28,8 @@ See below for installation notes, followed by an [overview](#overview) of the la
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45
+<iframe src=https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45 width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+
 
 ## Interpreter Installation
 
