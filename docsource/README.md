@@ -24,10 +24,11 @@ PDL provides the following features:
 
 The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
 
-See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).## 
+See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+
 ## Demo Video
 
-<iframe src="https://ibm.box.com/s/rvt3zy6ar77ribhcimkbiuj8ynfrec0w" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45
 
 ## Interpreter Installation
 
