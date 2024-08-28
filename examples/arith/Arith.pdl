@@ -58,9 +58,7 @@ document:
             - '= '
             - def: RESULT
               lan: python
-              code:
-              - 'result = '
-              - get: EXPR
+              code: result = {{ EXPR }}
             - ' >>'
           else: ""
       until: '{{ "The answer is" in REASON_OR_CALC }}'

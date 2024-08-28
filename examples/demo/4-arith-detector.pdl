@@ -123,8 +123,7 @@ document:
   show_result: false
 
 - lan: python
-  code:
-  - | 
+  code: | 
     from pdl import pdl_ast, pdl_interpreter
     from pdl.pdl_ast import Program
     from pdl.pdl_interpreter import process_prog
@@ -132,10 +131,7 @@ document:
     from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
-    s = """'
-  - get: PDL
-  - |
-    '"""
+    s = """'{{ PDL }}'"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
     state = InterpreterState()

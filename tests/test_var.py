@@ -59,7 +59,7 @@ var_shared_scope_data = {
         {
             "def": "I",
             "lan": "python",
-            "code": ["result = NAME[::-1] + '!\\n'"],
+            "code": "result = NAME[::-1] + '!\\n'",
             "show_result": False,
         },
         {"get": "I"},
@@ -86,7 +86,7 @@ var_shared_scope_mutate_data = {
         {
             "def": "I",
             "lan": "python",
-            "code": ["NAME = NAME[::-1]\n", "result = NAME"],
+            "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
             "show_result": False,
         },
         {"get": "NAME"},

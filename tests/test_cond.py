@@ -77,7 +77,9 @@ cond_data = {
                                     {
                                         "def": "RESULT",
                                         "lan": "python",
-                                        "code": ["result = ", {"get": "EXPR"}],
+                                        "code": {
+                                            "document": ["result = ", {"get": "EXPR"}]
+                                        },
                                     },
                                     " >>",
                                 ],
@@ -153,11 +155,13 @@ def cond_data1(show, name):
                 "document": [
                     {
                         "lan": "python",
-                        "code": [
-                            "import random\n",
-                            "import string\n",
-                            "result = 'Tracy'",
-                        ],
+                        "code": {
+                            "document": [
+                                "import random\n",
+                                "import string\n",
+                                "result = 'Tracy'",
+                            ]
+                        },
                     }
                 ],
                 "show_result": show,
@@ -201,7 +205,7 @@ repeat_until_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "code": "result = {{ I }} + 1",
                             "show_result": True,
                         },
                         "\n",
@@ -244,7 +248,7 @@ repeat_until_array_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "code": "result = {{ I }} + 1",
                             "show_result": True,
                         },
                         "\n",
@@ -281,7 +285,7 @@ repeat_until_document_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": ["result = ", {"get": "I"}, " + 1"],
+                            "code": ["result = {{ I }} + 1"],
                             "show_result": True,
                         },
                         "\n",
@@ -334,7 +338,7 @@ repeat_until_str_data = {
                         "document": [
                             {
                                 "lan": "python",
-                                "code": ["result = ", {"get": "I"}, " + 1"],
+                                "code": ["result = {{ I }} + 1"],
                             }
                         ],
                         "show_result": True,

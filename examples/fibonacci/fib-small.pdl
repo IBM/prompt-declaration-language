@@ -4,6 +4,8 @@ document:
   model: ibm/granite-20b-code-instruct
   platform: bam
   input: "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+  parameters:
+    include_stop_sequence: false
 - def: N
   lan: python
   code:
@@ -15,12 +17,10 @@ document:
 - get: N
 - ') = '
 - lan: python
-  code:
-  - get: CODE
-  - result = fibonacci(
-  - get: N
-  - )
-
+  code: |
+    {{ CODE }}
+    result = fibonacci({{ N }})
+  
 
 
   

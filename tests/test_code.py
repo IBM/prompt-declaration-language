@@ -8,7 +8,9 @@ python_data = {
         "Hello, ",
         {
             "lan": "python",
-            "code": ["import random\n", "import string\n", "result = 'Tracy'"],
+            "code": {
+                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+            },
         },
         "!\n",
     ],

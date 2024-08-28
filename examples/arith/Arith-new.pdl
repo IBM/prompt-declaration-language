@@ -30,8 +30,7 @@ document:
       - '= '
       - def: RESULT
         lan: python
-        code:
-        - result = {{ EXPR }}
+        code: result = {{ EXPR }}
       - ' >>'
     until: '{{ "The answer is" in REASON_OR_CALC }}'
   - "\n\n"

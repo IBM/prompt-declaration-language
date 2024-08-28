@@ -76,7 +76,13 @@ def test_get_parser():
 code_parser = {
     "lan": "python",
     "parser": "json",
-    "code": ["import json\n", "r = {'a':'b', 'c':'d'}\n", "result=json.dumps(r)"],
+    "code": {
+        "document": [
+            "import json\n",
+            "r = {'a':'b', 'c':'d'}\n",
+            "result=json.dumps(r)",
+        ]
+    },
 }
 
 
@@ -90,7 +96,7 @@ def test_code_parser():
 
 code_parser1 = {
     "lan": "python",
-    "code": ["r = {'a':'b', 'c':'d'}\n", "result=str(r)"],
+    "code": "r = {'a':'b', 'c':'d'}\nresult=str(r)",
 }
 
 

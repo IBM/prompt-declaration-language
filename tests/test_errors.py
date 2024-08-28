@@ -128,7 +128,9 @@ error5 = {
         "Hello, ",
         {
             "lans": "python",
-            "code": ["import random\n", "import string\n", "result = 'Tracy'"],
+            "code": {
+                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+            },
         },
         "!\n",
     ],
@@ -151,7 +153,9 @@ error6 = {
         "Hello, ",
         {
             "lans": "python",
-            "codes": ["import random\n", "import string\n", "result = 'Tracy'"],
+            "codes": {
+                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+            },
         },
         "!\n",
     ],

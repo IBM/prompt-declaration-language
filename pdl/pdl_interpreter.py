@@ -642,11 +642,6 @@ def step_blocks(
     trace: BlocksType
     results = []
     iteration_state = state
-    # match iteration_type:
-    #     case IterationType.DOCUMENT:
-    #         iteration_state = state
-    #     case _:
-    #         iteration_state = state.with_yield_output(False)
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         background = []
         trace = []
@@ -666,12 +661,6 @@ def step_blocks(
         )
         results.append(block_result)
     result = combine_results(iteration_type, results)
-    # match iteration_type:
-    #     case IterationType.DOCUMENT:
-    #         pass
-    #     case _:
-    #         if state.yield_output:
-    #             yield OutputMessage(stringify(result))
     return result, background, scope, trace
 
 
@@ -1000,7 +989,7 @@ def step_call_api(
 ]:
     background: Messages
     input_value, _, _, input_trace = yield from step_blocks(
-        IterationType.DOCUMENT,
+        IterationType.SEQUENCE,
         state.with_yield_output(False),
         scope,
         block.input,
@@ -1034,7 +1023,7 @@ def step_call_code(
 ]:
     background: Messages
     code_s, _, _, code_trace = yield from step_blocks(
-        IterationType.DOCUMENT,
+        IterationType.SEQUENCE,
         state.with_yield_output(False),
         scope,
         block.code,
