@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://pages.github.ibm.com/ml4code/pdl/tutorial/">
+        <link rel="canonical" href="https://pages.ibm.com/IBM/prompt-declaration-language/tutorial/">
       
       
         <link rel="prev" href="..">
@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1215,8 +1215,7 @@ But not this one: ` world`!
 <span class="w">  </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Ask</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">query:</span><span class="nv"> </span><span class="s">&quot;</span>
 <span class="w">  </span><span class="nt">show_result</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibm/granite-20b-code-instruct-v2</span>
-<span class="w">  </span><span class="nt">input</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">  </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
 <span class="w">      </span><span class="no">Question: What is the weather in London?</span>
 <span class="w">      </span><span class="no">London</span>
 <span class="w">      </span><span class="no">Question: What&#39;s the weather in Paris?</span>
@@ -1457,7 +1456,8 @@ document:
   model: ibm/granite-20b-code-instruct-v2
   def: model_output
   spec: {name: str, age: int}
-  input: 
+  input:
+    document:
     - for: 
         question: &quot;{{ data.questions }}&quot;
         answer: &quot;{{ data.answers }}&quot;
@@ -1465,6 +1465,7 @@ document:
         - |
           {{ question }}
           {{ answer }}
+      as: document
     - &gt; 
       Question: Create a JSON object with fields &#39;name&#39; and &#39;age&#39; 
       and set them appropriately. Write the age in letters.
@@ -1816,7 +1817,7 @@ result, document, _, _ = process_prog(state, empty_scope, data)
     <script id="__config" type="application/json">{"base": "..", "features": ["search.highlight", "search.suggest", "navigation.sections", "navigation.path", "navigation.footer", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      <script src="../assets/javascripts/bundle.af256bd8.min.js"></script>
       
     
   </body>

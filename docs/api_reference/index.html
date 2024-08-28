@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://pages.github.ibm.com/ml4code/pdl/api_reference/">
+        <link rel="canonical" href="https://pages.ibm.com/IBM/prompt-declaration-language/api_reference/">
       
       
         <link rel="prev" href="../tutorial/">
@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -431,9 +431,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pdl.pdl_interpreter.InterpreterState.role" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;role
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pdl.pdl_interpreter.InterpreterState.yield_output" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;yield_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdl.pdl_interpreter.InterpreterState.with_role" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;with_role
     </span>
   </a>
   
@@ -557,23 +575,31 @@
 
               <details class="quote">
                 <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InterpreterState</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InterpreterState</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">yield_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">log</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1"># batch=0: streaming</span>
     <span class="c1"># batch=1: call to generate with `input`</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">RoleType</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">with_yield_output</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yield_output&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">with_role</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">RoleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role</span><span class="p">})</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -621,6 +647,21 @@
 
 
 
+<h3 id="pdl.pdl_interpreter.InterpreterState.role" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">role</span><span class="p">:</span> <span class="n">RoleType</span> <span class="o">=</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h3 id="pdl.pdl_interpreter.InterpreterState.yield_output" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">yield_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></code>
 
@@ -637,6 +678,28 @@
 <div class="doc doc-object doc-function">
 
 
+<h3 id="pdl.pdl_interpreter.InterpreterState.with_role" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">with_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+            <details class="quote">
+              <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">with_role</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="n">RoleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role</span><span class="p">})</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="pdl.pdl_interpreter.InterpreterState.with_yield_output" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">with_yield_output</span><span class="p">(</span><span class="n">b</span><span class="p">)</span></code>
 
@@ -647,8 +710,8 @@
 
             <details class="quote">
               <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">with_yield_output</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">with_yield_output</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InterpreterState&quot;</span><span class="p">:</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yield_output&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">})</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -682,24 +745,55 @@
 
     <div class="doc doc-contents first">
 
+      <p>Execute a PDL program.</p>
+<p>Args:
+    state: Initial state of the interpreter.
+    initial_scope: Environment defining the variables in scope to execute the program.
+    prog: Program to execute.
+    loc: Source code location mapping. Defaults to empty_block_location.</p>
+<p>Returns:
+    Return the final result, the background messages, the final variable mapping, and the execution trace.</p>
+
             <details class="quote">
               <summary>Source code in <code>pdl/pdl_interpreter.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_prog</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_prog</span><span class="p">(</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">InterpreterState</span><span class="p">,</span>
     <span class="n">initial_scope</span><span class="p">:</span> <span class="n">ScopeType</span><span class="p">,</span>
     <span class="n">prog</span><span class="p">:</span> <span class="n">Program</span><span class="p">,</span>
-    <span class="n">loc</span><span class="o">=</span><span class="n">empty_block_location</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ScopeType</span><span class="p">,</span> <span class="n">BlockType</span><span class="p">]:</span>
+    <span class="n">loc</span><span class="p">:</span> <span class="n">LocationType</span> <span class="o">=</span> <span class="n">empty_block_location</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">ScopeType</span><span class="p">,</span> <span class="n">BlockType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a PDL program.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state: Initial state of the interpreter.</span>
+<span class="sd">        initial_scope: Environment defining the variables in scope to execute the program.</span>
+<span class="sd">        prog: Program to execute.</span>
+<span class="sd">        loc: Source code location mapping. Defaults to empty_block_location.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Return the final result, the background messages, the final variable mapping, and the execution trace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scope</span><span class="p">:</span> <span class="n">ScopeType</span> <span class="o">=</span> <span class="n">empty_scope</span> <span class="o">|</span> <span class="n">initial_scope</span>
     <span class="n">doc_generator</span> <span class="o">=</span> <span class="n">step_block</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="n">prog</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">result</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">schedule</span><span class="p">([</span><span class="n">doc_generator</span><span class="p">]):</span>
@@ -722,23 +816,25 @@
               Bases: <code><span title="pydantic.RootModel">RootModel</span></code></p>
 
 
-      <p>Prompt Declaration Program (PDL)</p>
+      <p>Prompt Declaration Language program (PDL)</p>
 
               <details class="quote">
                 <summary>Source code in <code>pdl/pdl_ast.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Program</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Program</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Prompt Declaration Program (PDL)</span>
+<span class="sd">    Prompt Declaration Language program (PDL)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># root: dict[str, BlockType]</span>
     <span class="n">root</span><span class="p">:</span> <span class="n">BlockType</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point to parse a PDL program using Pydantic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -763,6 +859,8 @@
 
 
     <div class="doc doc-contents ">
+
+      <p>Entry point to parse a PDL program using Pydantic.</p>
     </div>
 
 </div>
@@ -875,7 +973,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["search.highlight", "search.suggest", "navigation.sections", "navigation.path", "navigation.footer", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      <script src="../assets/javascripts/bundle.af256bd8.min.js"></script>
       
     
   </body>
