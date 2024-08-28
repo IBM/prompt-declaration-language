@@ -2,13 +2,9 @@ import json
 
 from pydantic import ValidationError
 
-from pdl.pdl.pdl_ast import Program, empty_block_location  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
-    InterpreterState,
-    empty_scope,
-    process_prog,
-)
-from pdl.pdl.pdl_schema_error_analyzer import analyze_errors  # pyright: ignore
+from pdl.pdl_ast import Program, empty_block_location
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_schema_error_analyzer import analyze_errors
 
 
 def error(raw_data, assertion):

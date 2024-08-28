@@ -1,4 +1,4 @@
-from pdl.pdl.pdl_interpreter import generate  # pyright: ignore
+from pdl.pdl_interpreter import generate
 
 
 def do_test(t, capsys):
