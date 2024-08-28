@@ -2,7 +2,7 @@ import json
 
 from pydantic.json_schema import models_json_schema
 
-from pdl.pdl.pdl_ast import PdlBlock, PdlBlocks, Program  # pyright: ignore
+from pdl.pdl_ast import PdlBlock, PdlBlocks, Program
 
 
 def test_saved_schema():

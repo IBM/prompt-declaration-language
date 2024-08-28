@@ -3,7 +3,7 @@ import pathlib
 import pydantic
 import yaml
 
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl_ast import Program
 
 EXPECTED_INVALID = [
     pathlib.Path("tests") / "data" / "line" / "hello.pdl",

@@ -1,6 +1,5 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 python_data = {
     "description": "Hello world showing call out to python code",

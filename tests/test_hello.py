@@ -1,8 +1,8 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+from pdl.pdl_ast import Program, RepeatBlock
+from pdl.pdl_interpreter import (
     InterpreterState,
     contains_error,
+    empty_scope,
     process_prog,
 )
 
@@ -121,8 +121,9 @@ def test_repeat_error():
     _, _, _, trace = process_prog(state, empty_scope, data)
     errors = 0
     print(trace)
-    for document in trace.trace:
-        if contains_error(document):
-            errors += 1
+    if trace is not None and isinstance(trace, RepeatBlock):
+        for document in trace.trace:
+            if contains_error(document):
+                errors += 1
 
     assert errors == 1

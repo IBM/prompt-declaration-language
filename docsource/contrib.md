@@ -17,7 +17,7 @@ To suggest a change to this repository, [submit a pull request](https://github.i
 
 The test suite can be executed with the following command in the top-level folder:
 ```
-pytest
+pytest tests
 ```
 
 Also, please make sure that your changes pass static checks such as code styles by executing the following command:

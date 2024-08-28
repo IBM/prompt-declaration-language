@@ -1,8 +1,8 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import (
     InterpreterState,
     contains_error,
+    empty_scope,
     process_prog,
 )
 
