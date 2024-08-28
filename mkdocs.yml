@@ -6,7 +6,7 @@
 #    In the future, a GitHub action should do this.
 
 site_name: Prompt Declaration Language
-repo_url: https://ibm.github.io/prompt-declaration-language/ # Uncomment when open sourced
+repo_url: https://github.com/IBM/prompt-declaration-language/
 site_url: https://ibm.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
