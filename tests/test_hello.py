@@ -121,8 +121,9 @@ def test_repeat_error():
     _, _, _, trace = process_prog(state, empty_scope, data)
     errors = 0
     print(trace)
-    if trace is not None and isinstance(trace, RepeatBlock):
-        for document in trace.trace:
+    if isinstance(trace, RepeatBlock):
+        traces = trace.trace or []
+        for document in traces:
             if contains_error(document):
                 errors += 1
 
