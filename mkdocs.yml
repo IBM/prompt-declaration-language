@@ -6,7 +6,9 @@
 #    In the future, a GitHub action should do this.
 
 site_name: Prompt Declaration Language
-repo_url: https://github.com/IBM/prompt-declaration-language/
+repo_url: https://github.com/IBM/prompt-declaration-language
+repo_name: IBM/prompt-declaration-language
+edit_uri: edit/main/docsource/
 site_url: https://ibm.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
@@ -35,6 +37,7 @@ theme:
     - toc.follow
     - toc.integrate
     - navigation.tabs
+    - content.action.edit
   logo: assets/ai-governance--prompt.svg
   palette:
     - primary: custom
