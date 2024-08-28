@@ -7,7 +7,7 @@
 
 site_name: Prompt Declaration Language
 # repo_url: https://github.com/ibm/pdl # Uncomment when open sourced
-site_url: https://pages.github.ibm.com/ml4code/pdl/
+site_url: https://ibm.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
 # is due to GitHub not presenting /site/ as an option

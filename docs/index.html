@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://pages.github.ibm.com/ml4code/pdl/">
+        <link rel="canonical" href="https://pages.ibm.com/IBM/prompt-declaration-language/">
       
       
       
@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prompt-description-language" class="md-skip">
+        <a href="#prompt-declaration-language" class="md-skip">
           Skip to content
         </a>
       
@@ -522,7 +522,7 @@ hide:
   - navigation
   - toc
 --- -->
-<h1 id="prompt-description-language">Prompt Declaration Language</h1>
+<h1 id="prompt-declaration-language">Prompt Declaration Language</h1>
 <p>LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. </p>
 <p>PDL is based on the premise that interactions between users, LLMs and rule-based systems form a <em>document</em>. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML or JSON), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...). Moreover, PDL programs themselves are structured data (YAML) as opposed to traditional code, so they make good targets for LLM generation as well.</p>
 <p>PDL provides the following features:
@@ -689,9 +689,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 <span class="w">  </span><span class="nt">parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">decoding_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">greedy</span>
 <span class="w">    </span><span class="nt">max_new_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
-<span class="w">  </span><span class="nt">input</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">document</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">Here is some info about the location of the function in the repo.</span>
 <span class="w">      </span><span class="no">repo: </span>
 <span class="w">      </span><span class="no">{{ CODE.repo_info.repo }}</span>
@@ -709,8 +707,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 <span class="w">  </span><span class="no">The similarity (Levenshtein) between this answer and the ground truth is:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">def</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVAL</span>
 <span class="w">  </span><span class="nt">lan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="w">  </span><span class="nt">code</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">import textdistance</span>
 <span class="w">    </span><span class="no">expl = &quot;&quot;&quot;</span>
 <span class="w">    </span><span class="no">{{ EXPLANATION }}</span>
@@ -896,7 +893,7 @@ that we provide some default values when the following parameters are missing:</
     <script id="__config" type="application/json">{"base": ".", "features": ["search.highlight", "search.suggest", "navigation.sections", "navigation.path", "navigation.footer", "navigation.indexes", "navigation.top", "toc.follow", "toc.integrate", "navigation.tabs"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.ad660dcc.min.js"></script>
+      <script src="assets/javascripts/bundle.af256bd8.min.js"></script>
       
     
   </body>
