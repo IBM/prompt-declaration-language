@@ -1,0 +1,65 @@
+description: Model utils
+defs:
+  model_call:
+    function:
+      platform: str
+      model: str
+      fallback: str
+      time_limit: int
+      truncate_input_tokens: int
+      reptition_penalty: float
+      decoding_method: string
+      temperature: float
+      stop_sequences: { list: str }
+      include_stop_sequence: bool
+    return:
+      - if: "{{ platform == 'bam' }}"
+        then:
+          model: "{{ model }}"
+          fallback: "{{ fallback }}"
+          parameters:
+            time_limit: "{{ time_limit }}"
+            truncate_input_tokens: "{{ truncate_input_tokens }}"
+            repetition_penalty: "{{ reptition_penalty }}"
+            decoding_method: "{{ decoding_method }}"
+            temperature: "{{ temperature }}"
+            stop_sequences: "{{ stop_sequences }}"
+            include_stop_sequence: "{{ include_stop_sequence }}"
+            random_seed: 42
+      - if: "{{ platform == 'watsonx' }}"
+        then:
+          model: "{{ model }}"
+          fallback: "{{ fallback }}"
+          parameters:
+            time_limit: "{{ time_limit }}"
+            truncate_input_tokens: "{{ truncate_input_tokens }}"
+            repetition_penalty: "{{ reptition_penalty }}"
+            decoding_method: "{{ decoding_method }}"
+            temperature: "{{ temperature }}"
+            stop_sequences: "{{ stop_sequences }}"
+            include_stop_sequence: "{{ include_stop_sequence }}"
+            random_seed: 42
+  test_tools:
+    data:
+      - name: Calculator
+        display_name: Calculator
+        pdl_function: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expression
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+  finish_action:
+    data:
+      display_name: Finish
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+        - name: topic
+          type: string
+          description: The topic of interest
+      examples: []
+document:
+  - include: examples/prompt_library/tools.pdl
+  - "{{ test_tools.append(finish_action) or test_tools }}"

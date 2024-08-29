@@ -140,7 +140,7 @@ document:
   - include: examples/prompt_library/ReAct.pdl
   - call: react
     args:
-     task: "{{ question }}"
+     task: "Question: {{ question }}"
      model: "{{ model }}"
      tools: "{{ math_tools }}"
      trajectories: [] #"{{ trajectories }}"

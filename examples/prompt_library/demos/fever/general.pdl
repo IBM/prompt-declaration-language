@@ -1,8 +1,8 @@
 description: Demo of ReAct template fever
 defs:
-  search_tools:
+  search_tools_react:
     data:
-      - name: Search
+      - name: Search ReAct
         display_name: Search
         pdl_function: Search
         description: Search Wikipedia for a summary
@@ -10,7 +10,7 @@ defs:
           - name: query
             type: string
             description: The topic of interest
-        examples: #[]
+        examples:
           - - task: |
                 On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
                 Q: Was this claim true or false?
@@ -32,28 +32,77 @@ defs:
             - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
             - thought: "The claim is True."
             - action: "Finish[True]"
-  demos: ""
-
+  search_tools_rewoo:
+    data:
+      - name: Search ReWOO
+        display_name: Search
+        pdl_function: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: query
+            type: string
+            description: The topic of interest
+        examples:
+          - - task: |
+                On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+                Q: Was this claim true or false?
+            - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+            - action: "Search[Colorado orogeny]"
+            - observation: "[Document]\nThe Colorado orogeny was an episode of mountain building (an orogeny) ...\n[End]"
+          - - task: |
+                On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+                Q: Was this claim true or false?
+            - thought: "Search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+            - action: "Search[Nicholas Ray]"
+            - observation: "[Document]\nNicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.\n[End]"
+            - thought: "Search Elia Kazan."
+            - action: "Search[Elia Kazan]"
+            - observation: "[Document]\nElia Kazan was an American film and theatre director, producer, screenwriter and actor.\n[End]"
   # model: "meta-llama/llama-3-70b-instruct"
   # prompt_pattern: "react"
   # claim: "Fox 2000 Pictures released the film Soul Food."
   # task: >
   #   Task: Determine if there is Observation that SUPPORTS or REFUTES
   #   a Claim, or if there is NOT ENOUGH INFORMATION.
-  
+
   #   Claim: {{ claim }}
   task: |-
     Task: On June 2017, the following claim was made: {{ claim }}
     Q: Was this claim true or false?
 document:
   - include: examples/prompt_library/tools.pdl
-  - include: examples/prompt_library/ReAct.pdl
-  # - call: list_tools
-  #   args:
-  #     tools: "{{ default_tools }}"
-  - call: react
-    args:
-     task: "{{ task }}"
-     model: "{{ model }}"
-     tools: "{{ search_tools }}"
-     trajectories: "{{ demonstrations }}"
+
+  # CoT
+  - if: "{{ prompt_pattern == 'cot' }}"
+    then:
+      - include: examples/prompt_library/CoT.pdl
+      - call: chain_of_thought_claim
+        args:
+          examples: "{{ demonstrations }}"
+          question: "{{ task }}"
+          model: "{{ model }}"
+
+  # ReAct
+  - if: "{{ prompt_pattern == 'react' }}"
+    then:
+      - include: examples/prompt_library/ReAct.pdl
+      - call: react
+        def: ANSWER
+        args:
+          task: "{{ task }}"
+          model: "{{ model }}"
+          tools: "{{ search_tools_react }}"
+          trajectories: "{{ demonstrations }}"
+
+  # ReWOO
+  - if: "{{ prompt_pattern == 'rewoo' }}"
+    then:
+      - include: examples/prompt_library/ReWoo.pdl
+      - call: rewoo
+        def: ANSWER
+        args:
+          task: "{{ task }}"
+          model: "{{ model }}"
+          tools: "{{ search_tools_rewoo }}"
+          trajectories: "{{ demonstrations }}"
+          show_plans: true

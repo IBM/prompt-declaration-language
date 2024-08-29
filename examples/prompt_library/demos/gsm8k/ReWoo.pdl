@@ -122,7 +122,7 @@ document:
   - call: rewoo
     def: ANSWER
     args:
-     task: "{{ question }}"
+     task: "Question: {{ question }}"
      model: "{{ model }}"
      tools: "{{ math_tools }}"
      trajectories: []

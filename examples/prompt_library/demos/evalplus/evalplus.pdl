@@ -1,42 +1,34 @@
+description: EvalPlus simple
 defs:
-  problems:
-    lan: python
-    code: |
-      from evalplus.data import get_human_eval_plus
-      PDL_SESSION.problems = get_human_eval_plus()
-      result = PDL_SESSION.problems
-  problems_list: "{{ (problems.keys()|list)[:5] }}"
-  # problem_raw:
-  #   lan: python
-  #   code: |
-  #     result = {
-  #     "prompt": PDL_SESSION.problems['HumanEval/0']['prompt'],
-  #     "task_id": PDL_SESSION.problems['HumanEval/0']['task_id'],
-  #     }
-  # task_id: "{{ problem_raw['task_id'] }}"
+  demonstrations:
+    data:
+      - answer: "def max_run_uppercase(test_str):\n  cnt = 0\n  res = 0\n  for idx in range(0,\
+          \ len(test_str)):\n    if test_str.isupper():\n      cnt += 1\n    else:\n\
+          \      res = cnt\n      cnt = 0\n  if test_str.isupper():\n\
+          \    res = cnt\n  return (res)"
+        question: Write a function to find maximum run of uppercase characters in the given
+          string.
+      - answer: "def remove_length(test_str, K):\n  temp = test_str.split()\n  res = \n  res = ' '.join(res)\n  return (res) "
+        question: Write a function to remove all the words with k length in the given string.
+  model: ibm/granite-34b-code-instruct
+  prompt_pattern: cot
+  prompt: Write a python function to toggle bits of the number except the first and the last bit.
 document:
 - for:
-    problem: "{{ problems_list }}"
+    example: "{{ demonstrations }}"
   repeat:
-    - defs:
-        problem_raw:
-          lan: python
-          code: |
-            result = PDL_SESSION.problems[problem]
-        prompt: |
-          Do not provide explanations, only provide code. Complete the following code:
-          {{ problem_raw['prompt']|trim }}
-    - model: "ibm/granite-34b-code-instruct"
-      platform: bam
-      def: completion
-      show_result: false
-      input: "{{ prompt }}"
-      parameters:
-        stop_sequences:
-          - "<|endoftext|>"
-        include_stop_sequence: false
-        decoding_method: greedy
-    - "\n"
-    - data:
-        task_id: "{{ problem }}"
-        completion: "{{ completion }}"
+    document: |+
+      Task: {{ example.question }}
+      Solution:
+      {{ example.answer }}
+
+- |
+   Task: {{ prompt }}
+   Solution:
+- model: "{{ model }}"
+  platform: bam
+  parameters:
+    decoding_method: "greedy"
+    stop_sequences:
+      - "<|endoftext|>"
+    include_stop_sequence: false

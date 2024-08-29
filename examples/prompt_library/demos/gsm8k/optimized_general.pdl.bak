@@ -1,0 +1,112 @@
+description: Demo of template
+optimizer:
+  
+defs:
+  math_tools:
+    data:
+    - name: Calculator
+      display_name: Calculator
+      pdl_function: Calculator
+      description: Evaluates expressions using Python
+      parameters:
+      - name: expression
+        type: string
+        description: The mathematical expression to evaluate with a Python interpreter.
+      examples: []
+  demonstrations:
+    data:
+    - - question: Tony is driving his car between his town and a friend's down. The towns are 120 miles apart and he gets there in 3 hours. The next day, he is driving to see another friend who lives 200 miles away from his friend. If he drives at the same speed, how long will the drive take?
+      - thought: He is driving 40 MPH because 120 / 3. I need to calculate 120/3
+      - action: Calculator[120/3]
+      - observation: '40'
+      - thought: It will take him 5 hours because 200 / 40. I need to calculate 200/40
+      - action: Calculator[200/40]
+      - observation: '5'
+      - thought: The answer is 5
+      - action: Finish[5]
+    - - question: Mark collects money for the homeless. He visits 20 households a day for 5 days and half of those households give him a pair of 20s. How much did he collect?
+      - thought: He got money from 20/2 households per day. I need to calculate 20/2
+      - action: Calculator[20/2]
+      - observation: '10'
+      - thought: So that means he got money from 10*5 households. I need to calculate 10*5
+      - action: Calculator[10*5]
+      - observation: '50'
+      - thought: Each of those houses gave 20*2. I need to calculate 20*2
+      - action: Calculator[20*2]
+      - observation: '40'
+      - thought: So he raised 40*50. I need to calculate 40*50
+      - action: Calculator[40*50]
+      - observation: '2000'
+      - thought: The answer is 2000
+      - action: Finish[2000]
+    - - question: Tyson played basketball on the schoolyard. He scored three points fifteen times, and two points twelve times. He also scored one point some number of times. How many times did he score one point, if in total he scored 75 points?
+      - thought: Tyson scored three points fifteen times, which would be 3 * 15 points. I need to calculate 3*15
+      - action: Calculator[3*15]
+      - observation: '45'
+      - thought: He also scored two points twelve times, which would give him a score of 2 * 12. I need to calculate 2*12
+      - action: Calculator[2*12]
+      - observation: '24'
+      - thought: So Tyson scored 75 - 45 - 24 points, by one point each. I need to calculate 75-45-24
+      - action: Calculator[75-45-24]
+      - observation: '6'
+      - thought: The answer is 6
+      - action: Finish[6]
+    - - question: Tim's car goes down in value by $1000 a year. He bought it for $20,000. How much is it worth after 6 years?
+      - thought: It went down in value 1000*6. I need to calculate 1000*6
+      - action: Calculator[1000*6]
+      - observation: '6000'
+      - thought: So the car is worth 20000-6000. I need to calculate 20000-6000
+      - action: Calculator[20000-6000]
+      - observation: '14000'
+      - thought: The answer is 14000
+      - action: Finish[14000]
+    - - question: Dan owns an ice cream shop and every sixth customer gets a free ice cream cone. Cones cost $2 each. If he sold $100 worth of cones, how many free ones did he give away?
+      - thought: He sold 50 cones because 100 / 2. I need to calculate 100/2
+      - action: Calculator[100/2]
+      - observation: '50'
+      - thought: He gave away 10 cones because 50 / 5. I need to calculate 50/5
+      - action: Calculator[50/5]
+      - observation: '10'
+      - thought: The answer is 10
+      - action: Finish[10]
+  prompt_pattern: react
+document:
+- if: '{{ prompt_pattern == ''cot'' }}'
+  then:
+  - include: examples/prompt_library/CoT.pdl
+  - |
+    Answer the questions to the best of your abilities.
+  - call: chain_of_thought
+    args:
+      examples: '{{ demonstrations }}'
+      question: '{{ question }}'
+      model: '{{ model }}'
+- if: '{{ prompt_pattern == ''react'' }}'
+  then:
+  - include: examples/prompt_library/tools.pdl
+  - include: examples/prompt_library/ReAct.pdl
+  - def: ANSWER
+    call: react
+    args:
+      task: 'Question: {{ question }}'
+      model: '{{ model }}'
+      tools: '{{ math_tools }}'
+      trajectories: '{{ demonstrations }}'
+  - |2-
+
+    The answer is {{ ANSWER.answer|trim }}
+- if: '{{ prompt_pattern == ''rewoo'' }}'
+  then:
+  - include: examples/prompt_library/tools.pdl
+  - include: examples/prompt_library/ReWoo.pdl
+  - def: ANSWER
+    call: rewoo
+    args:
+      task: 'Question: {{ question }}'
+      model: '{{ model }}'
+      tools: '{{ math_tools }}'
+      trajectories: '{{ demonstrations }}'
+      show_plans: true
+  - |2-
+
+    The answer is {{ ANSWER.answer|trim }}

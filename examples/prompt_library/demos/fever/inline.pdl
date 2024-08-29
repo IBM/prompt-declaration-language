@@ -1,13 +1,20 @@
 description: FEVER dataset
 defs: 
-  CLAIM: "On June 2017, the following claim was made: Ukrainian Soviet Socialist Republic was a founding participant of the UN."
+  claim: "Ukrainian Soviet Socialist Republic was a founding participant of the UN."
+  model: "ibm/granite-34b-code-instruct"
+  wrap_document:
+    data: false
 document:
+- include: examples/prompt_library/tools.pdl
+- defs:
+    wrap_document:
+      data: false
 - |-
-    {{ CLAIM }}
-    Answer Choices: true, false
+    On June 2017, the following claim was made: {{ claim }}
+    Q: Was this claim true or false?
 
     According to <<wikipedia("
-- model: meta-llama/llama-3-8b-instruct
+- model: "{{ model }}"
   show_result: true
   def: wikipedia_article
   parameters:
@@ -40,19 +47,22 @@ document:
 #       result = list(response.json()["query"]["pages"].values())[0]["extract"][:280]
 #     except:
 #       result = "No results (try differently)"
-- api: https
-  url: https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=
-  input: '{{ wikipedia_article | urlencode }}'
-  def: wikipedia_response
-  show_result: false
-  fallback: "No results (try differently)"
-- if: "{{ (wikipedia_response.query.pages.values()|first).extract }}"
-  then: "{{ (wikipedia_response.query.pages.values()|first).extract[:280]|trim }}"
-  else: "No results (try differently)"
-  def: wikipedia_excerpt
-  show_result: true
+# - api: https
+#   url: https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=
+#   input: '{{ wikipedia_article | urlencode }}'
+#   def: wikipedia_response
+#   show_result: false
+#   fallback: "No results (try differently)"
+# - if: "{{ (wikipedia_response.query.pages.values()|first).extract }}"
+#   then: "{{ (wikipedia_response.query.pages.values()|first).extract[:280]|trim }}"
+#   else: "No results (try differently)"
+#   def: wikipedia_excerpt
+#   show_result: true
+- call: "Search"
+  args:
+    subject: "{{ wikipedia_article }}"
 - ">> "
-- model: meta-llama/llama-3-8b-instruct
+- model: "{{ model }}"
   show_result: true
   def: inline_cot
   parameters:
@@ -61,16 +71,16 @@ document:
     stop_sequences:
     - Therefore
     - " I hope it is correct"
-- "Therefore the answer is "
-- model: meta-llama/llama-3-8b-instruct
-  show_result: false
-  def: final_answer
-  parameters:
-    max_new_tokens: 4
-    stop_sequences:
-    - "true"
-    - "false"
-    - "TRUE"
-    - "FALSE"
-    include_stop_sequence: true
-- "{{ final_answer|trim|trim('*') }}"
+# - "Therefore the answer is "
+# - model: "{{ model }}"
+#   show_result: false
+#   def: final_answer
+#   parameters:
+#     max_new_tokens: 4
+#     stop_sequences:
+#     - "true"
+#     - "false"
+#     - "TRUE"
+#     - "FALSE"
+#     include_stop_sequence: true
+# - "{{ final_answer|trim|trim('*') }}"

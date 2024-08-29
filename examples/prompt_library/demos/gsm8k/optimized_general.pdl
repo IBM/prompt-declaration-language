@@ -11,72 +11,42 @@ defs:
         type: string
         description: The mathematical expression to evaluate with a Python interpreter.
       examples: []
+  model: ibm/granite-13b-chat-v2
+  prompt_pattern: cot
   demonstrations:
     data:
-    - - question: Four kids can wash three whiteboards in 20 minutes. How long would it take, in minutes, for one kid to wash six whiteboards?
-      - thought: One kid can wash three whiteboards in 20*4 minutes. I need to calculate 20*4
-      - action: Calculator[20*4]
-      - observation: '80'
-      - thought: One kid can wash six whiteboards in 80*(6/3)=160 minutes.
-      - action: Finish[160]
-    - - question: Andy and Dawn spent the weekend cleaning the house. When putting away the laundry Andy took six minutes more than two times the number of minutes it took Dawn to wash the dishes. If it took Dawn 20 minutes to wash the dishes how many minutes did it take Andy to put away the laundry?
-      - thought: Two times the minutes it took Dawn to wash the dishes is 20*2. I need to calculate 20*2
-      - action: Calculator[20*2]
-      - observation: '40'
-      - thought: Andy took 40+6 minutes to put away the laundry. I need to calculate 40+6
-      - action: Calculator[40+6]
-      - observation: '46'
-      - thought: The answer is 46
-      - action: Finish[46]
-    - - question: If 3 crows eat 30 worms in one hour, how many worms will 5 crows eat in 2 hours?
-      - thought: If 3 crows eat 30 worms in one hour, then each crow eats 30/3 worms per hour. I need to calculate 30/3
-      - action: Calculator[30/3]
-      - observation: '10'
-      - thought: 5 crows will eat 5*10 worms per hour. I need to calculate 5*10
-      - action: Calculator[5*10]
-      - observation: '50'
-      - thought: Over two hours, 5 crows will eat 2*50=100 worms.
-      - action: Finish[100]
-    - - question: There are 2000 pinecones on the ground. 20% are eaten by reindeer. Twice as many are eaten by squirrels as reindeer. 25% of the remainder are collected to make fires. How many pinecones are left?
-      - thought: 'First find the number of pinecones eaten by reindeer: 20% * 2000 pinecones pine cones. I need to calculate 20*.01*2000'
-      - action: Calculator[20*.01*2000]
-      - observation: '400'
-      - thought: 'Then find the total number of pinecones eaten by squirrels: 400 pine cones * 2 pine cones. I need to calculate 400*2'
-      - action: Calculator[400*2]
-      - observation: '800'
-      - thought: 'Then subtract those two amounts to find the number of pinecones left: 2000 pinecones - 400 pine cones - 800 pine cones pinecones. I need to calculate 2000-400-800'
-      - action: Calculator[2000-400-800]
-      - observation: '800'
-      - thought: 'Divide that number by 4 to find the number that are collected for fires: 800 pinecones / 4 pine cones. I need to calculate 800/4'
-      - action: Calculator[800/4]
-      - observation: '200'
-      - thought: 'Then subtract that number from the 800 pinecones to find the total left on the ground: 800 pine cones - 200 pinecones pine cones. I need to calculate 800-200'
-      - action: Calculator[800-200]
-      - observation: '600'
-      - thought: The answer is 600
-      - action: Finish[600]
-    - - question: Jane is looking at a tree. At the same time, the tree and Jane are casting shadows - the tree of 10 meters and Jane of 0.5 meters. Jane is 1.5 meters tall. How tall is the tree?
-      - thought: The shadow of Jane is 1.5 / 0.5 times smaller than her height. I need to calculate 1.5/0.5
-      - action: Calculator[1.5/0.5]
-      - observation: '3'
-      - thought: The height of the tree is therefore 3 times bigger than the shadow, so it's 3 * 10 meters tall. I need to calculate 3*10
-      - action: Calculator[3*10]
-      - observation: '30'
-      - thought: The answer is 30
-      - action: Finish[30]
-    - - question: A mum ordered 80 cupcakes for her daughter's birthday. Half of them are gluten-free. There are 24 vegan cupcakes and half of them are also gluten-free. How many are non-vegan cupcakes that also contain gluten?
-      - thought: The gluten-free cupcakes are 80 / 2. I need to calculate 80/2
-      - action: Calculator[80/2]
-      - observation: '40'
-      - thought: The vegan cupcakes with gluten are 24 / 2. I need to calculate 24/2
-      - action: Calculator[24/2]
-      - observation: '12'
-      - thought: The non-vegan cupcakes with gluten are 40 - 12. I need to calculate 40-12
-      - action: Calculator[40-12]
-      - observation: '28'
-      - thought: The answer is 28
-      - action: Finish[28]
-  prompt_pattern: react
+    - question: David has a store where he sells cell phones. When he takes inventory at the end of the day, he notices that he has 10 Samsung cell phones but he started the day with 14 Samsung cell phones. Then he notices that he has 5 iPhones and in the initial inventory, but started with 8. His staff then told him that in the afternoon they realized that 2 Samsung cell phones were damaged and 1 iPhone had a manufacturing defect in the screen, so they threw these out during the day. What was the total number of cell phones that were sold today?
+      reasoning: |-
+        The actual initial inventory of Samsung cell phones was 14, but there were 2 defective phones so 14 - 2 = <<14-2=12>>12 is the initial inventory of working Samsung phones.
+        The actual initial inventory of iPhone cell phones was 8, but there was one defective phone, so 8 - 1 = <<8-1=7>>7 is the actual initial inventory of working iPhones.
+        Thus only 12 - 10 = <<12-10=2>>2 Samsung cell phones were sold.
+        Thus only 7 - 5 = <<7-5=2>>2 iPhones were sold.
+        Thus the total number of phones sold is 2 Samsung + 2 iPhone = <<2+2=4>>4 cell phones.
+      answer: '4'
+    - question: Ursula earns $8.50 an hour working in a restaurant. She works 8 hours a day. If she works 20 days a month, determine her annual salary.
+      reasoning: |-
+        Ursula earns 8 x $8.50 = $<<8*8.50=68>>68 a day.
+        In a month, she earns 20 x $68 = $<<20*68=1360>>1360.
+        Therefore, Ursula's annual salary is 12 x $1360 = $<<12*1360=16320>>16,320
+      answer: '16320'
+    - question: Donna is catering for a party. She makes 20 sandwiches and then cuts them in half, before cutting them in half again. She then gives everyone 8 portions. How many people can she feed?
+      reasoning: |-
+        First, we need to determine the overall number of portions. To do this, we begin by performing 20*2= <<20*2=40>>40 portions after the first halving.
+        Next, we take this portion number and double it again, performing 40*2=<<40*2=80>>80 portions after the second halving.
+        Lastly, we divide this portion number by the number of portions each person will be served, performing 80/8=<<80/8=10>>10 people served.
+      answer: '10'
+    - question: Jack orders 3 sandwiches that cost $5 each. He pays with a $20 bill. How much does he get in change?
+      reasoning: |-
+        The cost was 3*5=$<<3*5=15>>15.
+        So he got 20-15=$<<20-15=5>>5 in change.
+      answer: '5'
+    - question: One of the clubs at Georgia's school was selling carnations for a fundraising event. A carnation costs $0.50. They also had a special where you could buy one dozen carnations for $4.00. If Georgia sent a dozen carnations to each of her 5 teachers and bought one carnation for each of her 14 friends, how much money would she spend?
+      reasoning: |-
+        She wants to send a dozen carnations that cost $4/dz to each of her 5 teachers, so 4*5 = $<<4*5=20>>20
+        She has 14 friends and she knows a dozen carnations is cheaper than buying 12 single carnations. So 14-12 = <<14-12=2>>2 single carnations are needed
+        A single carnation cost $0.50 so 2*.50 = $<<2*.50=1.00>>1.00
+        All total she will spend 20+4+1 = $<<20+4+1=25.00>>25.00 on carnations
+      answer: '25'
 document:
 - if: '{{ prompt_pattern == ''cot'' }}'
   then:
@@ -109,7 +79,7 @@ document:
   - def: ANSWER
     call: rewoo
     args:
-      task: '{{ question }}'
+      task: 'Question: {{ question }}'
       model: '{{ model }}'
       tools: '{{ math_tools }}'
       trajectories: '{{ demonstrations }}'

@@ -18,22 +18,22 @@ defs:
                 document: "{{ trajectory.keys()|first }}"
               content:
                 document: "{{ trajectory.values()|first }}"
-          - if: "{{ type == 'question'}}"
+          - if: "{{ type in ['task', 'question'] }}"
             then: |
-              Task: {{ content }}
+              Task: {{ content|trim }}
           - if: "{{ type == 'thought'}}"
             then: |-
-              Plan: {{ content }}
+              Plan: {{ content|trim }}
           - if: "{{ type == 'action'}}"
             then:
-              - " #E{{ i }} = {{ content }}\n"
+              - " #E{{ i }} = {{ content|trim }}\n"
               - defs:
                   i:
                     data: "{{ i+1 }}"
           - if: "{{ type == 'observation'}}"
             then: ""
-          - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
-            then: "{{ type }}: {{ content }}"
+          - if: "{{ type not in ['question', 'task', 'thought', 'action', 'observation'] }}"
+            then: "{{ type }}: {{ content|trim }}\n"
       - "\n"
 
   rewoo:
@@ -57,7 +57,7 @@ defs:
         Tools can be one of the following:
       - for:
           i: "{{ range(1, (tools|length)+1)|list }}"
-          name: "{{ TOOL_INFO.names }}"
+          name: "{{ TOOL_INFO.display_names }}"
           sig: "{{ TOOL_INFO.signatures }}"
           desc: "{{ TOOL_INFO.descriptions }}"
         repeat: |
@@ -83,7 +83,7 @@ defs:
         Begin! 
         Describe your plans with rich details. Each Plan should be followed by only one #E.
 
-        Task: {{ task }}
+        {{ task }}
       - def: PLANS
         model: "{{ model }}"
         platform: bam
@@ -99,13 +99,13 @@ defs:
           include_stop_sequence: false
       - if: "{{ show_plans }}"
         then:
-          - "\n\n\u001b[34m--- Extracted Blueprint ---\n"
+          - "\n\n--- Extracted Blueprint ---\n"
           - for:
               plan: "{{ PLANS }}"
             repeat:
-              - "\u001b[31mPlan: {{ plan[0] }}\n"
-              - "\u001b[32m{{ plan[1] }} = {{ plan[2] }}[{{ plan[3] }}]\n"
-          - "\n\u001b[37m"
+              - "Plan: {{ plan[0] }}\n"
+              - "{{ plan[1] }} = {{ plan[2] }}[{{ plan[3] }}]\n"
+          - "----------------------------\n\n"
       - defs:
           output:
             data: {}
@@ -126,12 +126,12 @@ defs:
                           SUBJECT = SUBJECT.replace(k, v)
                       result = SUBJECT
                   raw_tool_output:
-                    if: "{{ ACTION in TOOL_INFO.names }}"
+                    if: "{{ ACTION in TOOL_INFO.display_names }}"
                     then:
-                      call: "{{ ACTION }}"
+                      call: "{{ TOOL_INFO.name_map[ACTION] }}"
                       args:
                         subject: "{{ SUBJECT_REPLACED }}"
-                    else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
+                    else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }}"
                   tool_output: "{{ raw_tool_output }}"
               - def: output
                 show_result: false
@@ -139,24 +139,9 @@ defs:
                 code: |
                   output[ID] = str(tool_output)
                   result = output
-              # - data:
-              #     plan: "{{ PLAN }}"
-              #     key: "{{ ID }}"
-              #     value: "{{ tool_output }}"
-              #     subject: "{{ SUBJECT }}"
-              #     subject_replaced: "{{ SUBJECT_REPLACED }}"
               - |
                 Plan: {{ PLAN }}
                 Evidence: {{ tool_output }}
-      # - def: EVIDENCE
-      #   show_result: false
-      #   document:
-      #     for:
-      #       plan: "{{ plans }}"
-      #     repeat:
-      #       - |
-      #         Plan: {{ plan.plan }}
-      #         Evidence: {{ plan.value }}
       - def: solution_input
         document: |-
           Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
@@ -164,8 +149,8 @@ defs:
           {{ plans|join }}
           Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
 
-          Task: {{ task }}
-          Response:
+          {{ task }}
+          Response: 
       - def: SOLUTION
         model: "{{ model }}"
         parameters:

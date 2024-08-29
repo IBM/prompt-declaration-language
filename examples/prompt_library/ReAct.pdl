@@ -29,6 +29,17 @@ defs:
             then: "{{ type }}: {{ trajectory[type]|trim }}"
       - "\n"
 
+  finish_action:
+    data:
+      display_name: Finish
+      pdl_function: 
+      description: Respond with the Answer
+      parameters:
+        - name: answer
+          type: string
+          description: The answer
+      examples: []
+
   demonstrate_tools:
     function:
       tools: { list: obj }
@@ -54,7 +65,7 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "{{ tools }}"
+              tools: "{{ tools.append(finish_action) or tools }}"
       - "Available tools:\n"
       - for:
           name: "{{ TOOL_INFO.display_names }}"
@@ -62,7 +73,6 @@ defs:
           desc: "{{ TOOL_INFO.descriptions }}"
         repeat: |
           {{ name }}: {{ desc }}
-      - "Finish: Respond with the Answer\n"
       - "\n"
       - call: demonstrate_tools
         args:
@@ -127,6 +137,7 @@ defs:
                   - call: "{{ TOOL_INFO.name_map[ACTION] }}"
                     args:
                       subject: "{{ SUBJECT }}"
+                  - "\nTho:"
                   - model: "{{ model }}"
                     fallback: "Error calling model"
                     parameters:
@@ -155,15 +166,14 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "{{ tools }}"
-      - "Available tools:\n"
+              tools: "{{ tools.append(finish_action) or tools }}"
+      - "Available tools:\n" # The preprompt!
       - for:
           name: "{{ TOOL_INFO.display_names }}"
           sig: "{{ TOOL_INFO.signatures }}"
           desc: "{{ TOOL_INFO.descriptions }}"
         repeat: |
           {{ name }}: {{ desc }}
-      - "Finish: Respond with the Answer\n"
       - "\n"
       - call: demonstrate_tools
         args:

@@ -11,7 +11,9 @@ defs:
         type: string
         description: The topic of interest
       examples:
-      - - question: What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+      - - task: |
+            On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+            Q: Was this claim true or false?
         - thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
         - action: Search[Colorado orogeny]
         - observation: |-
@@ -19,8 +21,11 @@ defs:
             The Colorado orogeny was an episode of mountain building (an orogeny) ...
             [End]
         - thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
-        - action: Finish[1,800 to 7,000 ft]
-      - - question: What profession does Nicholas Ray and Elia Kazan have in common?
+        - thought: The claim is True.
+        - action: Finish[True]
+      - - task: |
+            On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+            Q: Was this claim true or false?
         - thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
         - action: Search[Nicholas Ray]
         - observation: |-
@@ -34,57 +39,54 @@ defs:
             Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
             [End]
         - thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-        - action: Finish[director, screenwriter, actor]
+        - thought: The claim is True.
+        - action: Finish[True]
   demos: ''
-  model: meta-llama/llama-3-70b-instruct
-  prompt_pattern: react
-  claim: Fox 2000 Pictures released the film Soul Food.
-  task: 'Question: On June 2017, the following claim was made: {{ claim }} Was this claim true or false?'
+  task: |-
+    Task: On June 2017, the following claim was made: {{ claim }}
+    Q: Was this claim true or false?
   demonstrations:
     data:
     - - task: |-
-          On June 2017, the following claim was made: Warren Beatty co-wrote Reds.
+          On June 2017, the following claim was made: Logic is the stage name of Sir Robert Bryson Hall II.
           Q: Was this claim true or false?
-      - thought: I need to search Reds (film).
-      - action: Search[Reds (film)]
+      - thought: I need to search Logic (musician).
+      - action: Search[Logic (musician)]
       - observation: |-
           [Document]
-          Reds is a 1981 American epic historical drama film co-written, produced, and directed by Warren Beatty, about the life and career of John Reed, the journalist and writer who chronicled the October Revolution in Russia in his 1919 book Ten Days That Shook the World. Beatty stars in the lead role alongside Diane Keaton as Louise Bryant and Jack Nicholson as Eugene O'Neill.
-          The supporting cast includes Edward Herrmann, Jerzy Kosiński, Paul Sorvino, Maureen Stapleton, Gene Hackman, Ramon Bieri, Nicolas Coster, and M. Emmet Walsh. The film also features, as "witnesses", interviews with the 98-year-old radical educator and peace activist Scott Nearing, author Dorothy Frooks, reporter and author George Seldes, civil liberties advocate Roger Baldwin, and the American writer Henry Miller, among others.
-          Reds was released on December 4, 1981, to widespread critical acclaim. Beatty was awarded the Academy Award for Best Director and the film was nominated for Best Picture, but lost to Chariots of Fire. Beatty, Keaton, Nicholson, and Stapleton were nominated for Best Actor, Best Actress, Best Supporting Actor and Best Supporting Actress, respectively, with Stapleton winning her category. Beatty became the third person to be nominated for Academy Awards in the categories Best Director, Actor, and, with co-writer Trevor Griffiths, Original Screenplay—losing again to Chariots of Fire—for a film nominated for Best Picture.
-          In June 2008, the American Film Institute revealed "AFI's 10 Top 10"—the best ten films in ten "classic" American film genres—after polling over 1,500 people from the film community. Reds came in ninth in the epic genre.
+          Sir Robert Bryson Hall II (born January 22, 1990), known professionally as Logic, is an American rapper, singer, songwriter, and record producer from Gaithersburg, Maryland. He released his debut mixtape, Psychological: The Mixtape in December 2009 under the name Psychological, thereafter shortening his name to Logic. He gained popularity following his Young Sinatra (2011) mixtape series; its third installment, Young Sinatra: Welcome to Forever (2013) received critical acclaim and led him to secure a recording contract with Def Jam Recordings. Logic's first two studio albums—Under Pressure (2014) and The Incredible True Story (2015)—both peaked within the top five of the U.S. Billboard 200, while the former received platinum certification by the Recording Industry Association of America (RIAA).
+          Logic achieved his furthest success and mainstream recognition with his third album Everybody (2017), which peaked at number one on the Billboard 200 and was supported by the Billboard Hot 100 top-three single "1-800-273-8255" (featuring Alessia Cara and Khalid). His fourth and fifth albums, YSIV (2018) and Confessions of a Dangerous Mind (2019) were met with similar commercial success; the latter contained the single "Homicide" (featuring Eminem), which peaked at number five on the Hot 100. After his sixth album No Pressure (2020), Logic retired from music; however, his career would continue with the release his seventh mixtape Bobby Tarantino III (2021). His seventh album, Vinyl Days (2022) was his final release with Def Jam. His eighth and ninth albums, College Park (2023) and Ultra 85 (2024) were released independently.
+          Logic has received two Grammy Award nominations. As an author, he released the novel Supermarket (2019), which was accompanied with a namesake soundtrack album. The book became a New York Times Best Seller, although both works received generally unfavorable critical reception. He published his memoir, This Bright Future, in 2021. Logic is also a streamer and is signed exclusively with Twitch, becoming the first musician to do so.
           [End]
       - thought: The claim is True.
       - action: Finish[True]
     - - task: |-
-          On June 2017, the following claim was made: Warren Beatty co-wrote Reds.
+          On June 2017, the following claim was made: Vienna is Japan's capital.
           Q: Was this claim true or false?
-      - thought: I need to search Reds (film).
-      - action: Search[Reds (film)]
+      - thought: I need to search Vienna.
+      - action: Search[Vienna]
       - observation: |-
           [Document]
-          Reds is a 1981 American epic historical drama film co-written, produced, and directed by Warren Beatty, about the life and career of John Reed, the journalist and writer who chronicled the October Revolution in Russia in his 1919 book Ten Days That Shook the World. Beatty stars in the lead role alongside Diane Keaton as Louise Bryant and Jack Nicholson as Eugene O'Neill.
-          The supporting cast includes Edward Herrmann, Jerzy Kosiński, Paul Sorvino, Maureen Stapleton, Gene Hackman, Ramon Bieri, Nicolas Coster, and M. Emmet Walsh. The film also features, as "witnesses", interviews with the 98-year-old radical educator and peace activist Scott Nearing, author Dorothy Frooks, reporter and author George Seldes, civil liberties advocate Roger Baldwin, and the American writer Henry Miller, among others.
-          Reds was released on December 4, 1981, to widespread critical acclaim. Beatty was awarded the Academy Award for Best Director and the film was nominated for Best Picture, but lost to Chariots of Fire. Beatty, Keaton, Nicholson, and Stapleton were nominated for Best Actor, Best Actress, Best Supporting Actor and Best Supporting Actress, respectively, with Stapleton winning her category. Beatty became the third person to be nominated for Academy Awards in the categories Best Director, Actor, and, with co-writer Trevor Griffiths, Original Screenplay—losing again to Chariots of Fire—for a film nominated for Best Picture.
-          In June 2008, the American Film Institute revealed "AFI's 10 Top 10"—the best ten films in ten "classic" American film genres—after polling over 1,500 people from the film community. Reds came in ninth in the epic genre.
-          [End]
-      - thought: The claim is True.
-      - action: Finish[True]
-    - - task: |-
-          On June 2017, the following claim was made: Spain is a city.
-          Q: Was this claim true or false?
-      - thought: I need to search Sovereign state.
-      - action: Search[Sovereign state]
-      - observation: |-
-          [Document]
-          A sovereign state is a state that has the highest authority over a territory.
-          International law defines sovereign states as having a permanent population, defined territory, a government not under another, and the capacity to interact with other states.
-          It is commonly understood that a sovereign state is independent. A sovereign state can exist without being recognized by other sovereign states such as Somaliland.  Unrecognized states often have difficulty engaging in diplomatic relations with other sovereign states due to their lack of international recognition. When referring to a specific polity, the term "country" may also refer to a constituent country, or a dependent territory.
-
-
+          Vietnam,  officially the Socialist Republic of Vietnam, is a country at the eastern edge of mainland Southeast Asia, with an area of about 331,000 square kilometres (128,000 sq mi) and a population of over 100 million, making it the world's fifteenth-most populous country. One of the two Marxist-Leninist states in Southeast Asia, Vietnam shares land borders with China to the north, and Laos and Cambodia to the west. It shares maritime borders with Thailand through the Gulf of Thailand, and the Philippines, Indonesia, and Malaysia through the South China Sea. Its capital is Hanoi and its largest city is Ho Chi Minh City (commonly known as Saigon).
+          Vietnam was inhabited by the Paleolithic age, with states established in the first millennium BC on the Red River Delta in modern-day northern Vietnam. The Han dynasty annexed Northern and Central Vietnam under Chinese rule from 111 BC, until the first dynasty emerged in 939. Successive monarchical dynasties absorbed Chinese influences through Confucianism and Buddhism, and expanded southward to the Mekong Delta, conquering Champa. During most of the 17th and 18th centuries, Vietnam was effectively divided into two domains of Đàng Trong and Đàng Ngoài. The Nguyễn—the last imperial dynasty—surrendered to France in 1883. In 1887, its territory was integrated into French Indochina as three separate regions. In the immediate aftermath of World War II, the nationalist coalition Viet Minh, led by the communist revolutionary Ho Chi Minh, launched the August Revolution and declared Vietnam's independence from the Empire of Japan in 1945.
+          Vietnam went through prolonged warfare in the 20th century. After World War II, France returned to reclaim colonial power in the First Indochina War, from which Vietnam emerged victorious in 1954. As a result of the treaties signed between the Viet Minh and France, Vietnam was also separated into two parts. The Vietnam War began shortly after, between the communist North Vietnam, supported by the Soviet Union and China, and the anti-communist South Vietnam, supported by the United States. Upon the North Vietnamese victory in 1975, Vietnam reunified as a unitary socialist state under the Communist Party of Vietnam (CPV) in 1976. An ineffective planned economy, a trade embargo by the West, and wars with Cambodia and China crippled the country further. In 1986, the CPV initiated economic and political reforms similar to the Chinese economic reform, transforming the country to a socialist-oriented market economy. The reforms facilitated Vietnamese reintegration into the global economy and politics.
+          Vietnam is a developing country with a lower-middle-income economy. It has high levels of corruption, censorship, environmental issues and a poor human rights record; the country ranks among the lowest in international measurements of civil liberties, freedom of the press, and freedom of religion and ethnic minorities. It is part of international and intergovernmental institutions including the ASEAN, the APEC, the CPTPP, the Non-Aligned Movement, the OIF, and the WTO. It has assumed a seat on the United Nations Security Council twice.
           [End]
       - thought: The claim is False.
       - action: Finish[False]
+    - - task: |-
+          On June 2017, the following claim was made: One artist appearing on Collision Course won a Grammy.
+          Q: Was this claim true or false?
+      - thought: I need to search Collision Course (album).
+      - action: Search[Collision Course (album)]
+      - observation: |-
+          [Document]
+          Collision Course is a collaborative EP from American rapper Jay-Z and rock band Linkin Park, released on November 30, 2004, by Roc-A-Fella, Machine Shop, Warner Bros. and Def Jam. From Linkin Park's catalog, Collision Course features three songs from Meteora and four from Hybrid Theory. From Jay-Z's catalog, it features three songs from The Black Album, one from Vol. 3: Life and Times of S. Carter, one from Vol. 2... Hard Knock Life and one from The Blueprint. Before the album, Jay-Z had released collaborations with The Roots and R. Kelly, and Linkin Park had collaborated with various artists on their remix album Reanimation.
+          The album was inspired by The Grey Album by Danger Mouse, which was a mash-up album between Jay-Z and The Beatles. MTV had originally planned on mashing up only one or two songs, but the project was eventually expanded to a six-song album. The production on the album was mostly handled by Mike Shinoda and Jay-Z, and it was recorded between July 16 and July 19. The album spawned one single, "Numb/Encore" which won Best Rap/Sung Collaboration at the 48th Grammy Awards. The album received generally mixed reviews from music critics but despite that was a commercial success. It debuted at number one on the US Billboard 200 chart, selling 368,000 copies in its first week.
+          [End]
+      - thought: The claim is True.
+      - action: Finish[True]
+  prompt_pattern: react
 document:
 - include: examples/prompt_library/tools.pdl
 - include: examples/prompt_library/ReAct.pdl
@@ -93,4 +95,4 @@ document:
     task: '{{ task }}'
     model: '{{ model }}'
     tools: '{{ search_tools }}'
-    trajectories: []
+    trajectories: '{{ demonstrations }}'

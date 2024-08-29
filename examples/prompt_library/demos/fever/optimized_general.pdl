@@ -1,0 +1,172 @@
+description: Demo of ReAct template fever
+defs:
+  search_tools_react:
+    data:
+    - name: Search ReAct
+      display_name: Search
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+      - name: query
+        type: string
+        description: The topic of interest
+      examples:
+      - - task: |
+            On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+            Q: Was this claim true or false?
+        - thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+        - action: Search[Colorado orogeny]
+        - observation: |-
+            [Document]
+            The Colorado orogeny was an episode of mountain building (an orogeny) ...
+            [End]
+        - thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+        - thought: The claim is True.
+        - action: Finish[True]
+      - - task: |
+            On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+            Q: Was this claim true or false?
+        - thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+        - action: Search[Nicholas Ray]
+        - observation: |-
+            [Document]
+            Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+            [End]
+        - thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+        - action: Search[Elia Kazan]
+        - observation: |-
+            [Document]
+            Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+            [End]
+        - thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+        - thought: The claim is True.
+        - action: Finish[True]
+  search_tools_rewoo:
+    data:
+    - name: Search ReWOO
+      display_name: Search
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+      - name: query
+        type: string
+        description: The topic of interest
+      examples:
+      - - task: |
+            On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+            Q: Was this claim true or false?
+        - thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+        - action: Search[Colorado orogeny]
+        - observation: |-
+            [Document]
+            The Colorado orogeny was an episode of mountain building (an orogeny) ...
+            [End]
+      - - task: |
+            On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+            Q: Was this claim true or false?
+        - thought: Search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+        - action: Search[Nicholas Ray]
+        - observation: |-
+            [Document]
+            Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+            [End]
+        - thought: Search Elia Kazan.
+        - action: Search[Elia Kazan]
+        - observation: |-
+            [Document]
+            Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+            [End]
+  task: |-
+    Task: On June 2017, the following claim was made: {{ claim }}
+    Q: Was this claim true or false?
+  demonstrations:
+    data:
+    - - task: |-
+          On June 2017, the following claim was made: Miranda Otto is the son of Barry Otto.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Miranda Otto.
+      - action: Search[Miranda Otto]
+      - observation: |-
+          [Document]
+          Miranda Otto (born 16 December 1967) is an Australian actress. She is the daughter of actors Barry and Lindsay Otto and the paternal half-sister of actress Gracie Otto. Otto began her acting career in 1986 at age 18 and appeared in a variety of independent and major studio films in Australia. She made her major film debut in Emma's War in 1987 in which she played a teenager who moves to Australia's bush country during World War II.
+          After a decade of critically acclaimed roles in Australian films, Otto gained Hollywood's attention during the 1990s after appearing in supporting roles in the films The Thin Red Line and What Lies Beneath. She rose to fame in the early 2000s for playing Éowyn in Peter Jackson's The Lord of the Rings film series, based on the classic fantasy novel of the same name by English author J. R. R. Tolkien.
+          [End]
+      - observation: The daughter of actors Barry and Lindsay Otto , and the sister of actress Gracie Otto , Brisbane-born Miranda began her acting career at age 18 in 1986 , and has appeared in a variety of independent and major studio films .
+    - - task: |-
+          On June 2017, the following claim was made: Alexandra Daddario was born in the 20th century.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Alexandra Daddario.
+      - action: Search[Alexandra Daddario]
+      - observation: |-
+          [Document]
+          Alexandra Anna Daddario (born March 16, 1986) is an American actress. She had her breakthrough portraying Annabeth Chase in the Percy Jackson film series (2010–2013). She has since starred as Paige in Hall Pass (2011), Heather Miller in Texas Chainsaw 3D (2013), Blake Gaines in San Andreas (2015), Summer Quinn in Baywatch (2017), and Alexis Butler in We Summon the Darkness (2019).
+          In 2021, she starred in the first season of the HBO series The White Lotus, for which she received critical acclaim and a Primetime Emmy Award nomination for Outstanding Supporting Actress in a Limited or Anthology Series or Movie in 2022. In 2023, she began playing the lead role of Dr. Rowan Fielding in the AMC series Mayfair Witches based on  a series of novels written by author Anne Rice.
+          [End]
+      - observation: |
+          Alexandra Anna Daddario (born March 16 , 1986) is an American actress .
+    - - task: |-
+          On June 2017, the following claim was made: Despicable Me 2 was produced for Universal Pictures in 2014.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Despicable Me 2.
+      - action: Search[Despicable Me 2]
+      - observation: |-
+          [Document]
+          Despicable Me 2 is a 2013 American animated comedy film produced by Universal Pictures and Illumination Entertainment, and distributed by Universal. It is the sequel to Despicable Me (2010) and the second installment in the Despicable Me franchise. The film was directed by Chris Renaud and Pierre Coffin, produced by Chris Meledandri and Janet Healy, and written by the writing team of Cinco Paul and Ken Daurio. It stars the voices of Steve Carell, Kristen Wiig, Benjamin Bratt, Miranda Cosgrove, Russell Brand, and Ken Jeong. The film follows retired supervillain Gru as he is recruited by secret agent Lucy Wilde to investigate the theft of a powerful mutagen by El Macho, a supervillain who seeks to achieve world domination.
+          Development of Despicable Me 2 began in 2010 following the success of the original film, with the directors, producers, and writers returning. Production was underway by February 2012, with the majority of the cast returning to voice the characters, along with new cast members, while animation services were provided by Illumination Mac Guff in France. Al Pacino was cast as the voice of El Macho, recording all of his dialogue, but left in May 2013 over creative differences; Bratt was brought in to replace Pacino, and used him as an inspiration after finding imitating his voice impossible. Heitor Pereira and Pharrell Williams returned for the sequel's music.
+          Despicable Me 2 premiered in Australia on June 5, 2013, and was theatrically released in the United States on July 3. It received generally positive reviews from critics, who praised its humor and animation. It earned $971 million worldwide, becoming the third-highest-grossing film of 2013 and the most profitable film for Universal Pictures at the time. It was nominated for two awards at the 86th Academy Awards, and received numerous other accolades. A sequel, Despicable Me 3, was released in 2017.
+          [End]
+      - observation: Despicable Me 2 is a 2013 American 3D computer-animated comedy film and the sequel to the 2010 animated film Despicable Me .
+    - - task: |-
+          On June 2017, the following claim was made: Blade Runner 2049 is not a sequel.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Blade Runner 2049.
+      - action: Search[Blade Runner 2049]
+      - observation: |-
+          [Document]
+          Blade Runner 2049 is a 2017 American epic neo-noir science fiction film directed by Denis Villeneuve from a screenplay by Hampton Fancher and Michael Green, based on a story by Fancher. A sequel to Blade Runner (1982), the film stars Ryan Gosling and Harrison Ford, with Ana de Armas, Sylvia Hoeks, Robin Wright, Mackenzie Davis, Dave Bautista, and Jared Leto in supporting roles. Ford and Edward James Olmos reprise their roles from the previous film as Rick Deckard and Gaff, respectively. Gosling plays K, a "blade runner" who uncovers a secret that threatens to destabilize society and the course of civilization.
+          Ideas for a Blade Runner sequel were first proposed in the 1990s, but licensing issues stalled their development. Andrew Kosove and Broderick Johnson obtained the film rights from Bud Yorkin. Ridley Scott stepped down as the film's initial director and worked as an executive producer, while Villeneuve was later appointed to direct. Blade Runner 2049 was financed through a partnership between Alcon Entertainment and Sony Pictures, as well as a Hungarian government-funded tax rebate. Warner Bros., who had distributed its predecessor, released the film on behalf of Alcon in North America, while Sony handled distribution in international markets. Principal photography took place mostly at two soundstages in Budapest over four months from July to November 2016.
+          Blade Runner 2049 premiered at the Dolby Theatre in Los Angeles, California on October 3, 2017, and was released in the United States on October 6. The film received acclaim from critics, who praised multiple aspects including cast performances, directing, cinematography, and faithfulness to the previous film. Despite this, it was one of the biggest box-office bombs of the year, grossing just $267.5 million worldwide against a production budget of $150–185 million and failing to reach its estimated break-even point of $400 million. Blade Runner 2049 received many accolades, including Academy Awards for Best Cinematography and Best Visual Effects out of five nominations, and eight British Academy Film Awards nominations, winning for Best Cinematography and Best Special Visual Effects. A sequel television series, Blade Runner 2099, is in development at Amazon Studios, with Scott set to return as executive producer.
+          [End]
+      - observation: It is the sequel to 1982 's Blade Runner and stars Ryan Gosling and Harrison Ford , who is reprising his role as Rick Deckard , with Ana de Armas , Mackenzie Davis , Sylvia Hoeks , Lennie James , Carla Juri , Robin Wright , Dave Bautista and Jared Leto in supporting roles .
+    - - task: |-
+          On June 2017, the following claim was made: Byron Howard turned down the opportunity to direct the film Zootopia in favor of becoming a wizard.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Byron Howard.
+      - action: Search[Byron Howard]
+      - observation: |-
+          [Document]
+          Byron P. Howard (born December 26, 1968) is an American animator, character designer, story artist, film director, producer, and screenwriter. He is best known as a director on the Walt Disney Animation Studios films Bolt (2008), Tangled (2010), Zootopia (2016), and Encanto (2021). He is the first LGBT director to win the Oscar for Best Animated Feature twice for his work on Zootopia and Encanto.
+          [End]
+      - observation: He is best known as the co-director of Bolt (2008) , Tangled (2010) , and Zootopia (2016) , and a supervising animator on Lilo & Stitch (2002) and Brother Bear (2003) .
+  prompt_pattern: rewoo
+document:
+- include: examples/prompt_library/tools.pdl
+- if: '{{ prompt_pattern == ''cot'' }}'
+  then:
+  - include: examples/prompt_library/CoT.pdl
+  - call: chain_of_thought_claim
+    args:
+      examples: '{{ demonstrations }}'
+      question: '{{ task }}'
+      model: '{{ model }}'
+- if: '{{ prompt_pattern == ''react'' }}'
+  then:
+  - include: examples/prompt_library/ReAct.pdl
+  - def: ANSWER
+    call: react
+    args:
+      task: '{{ task }}'
+      model: '{{ model }}'
+      tools: '{{ search_tools_react }}'
+      trajectories: '{{ demonstrations }}'
+- if: '{{ prompt_pattern == ''rewoo'' }}'
+  then:
+  - include: examples/prompt_library/ReWoo.pdl
+  - def: ANSWER
+    call: rewoo
+    args:
+      task: '{{ task }}'
+      model: '{{ model }}'
+      tools: '{{ search_tools_rewoo }}'
+      trajectories: '{{ demonstrations }}'
+      show_plans: true

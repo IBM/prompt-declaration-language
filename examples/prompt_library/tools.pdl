@@ -25,9 +25,9 @@ defs:
                 result = f"\"{subject}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
               except wikipedia.WikipediaException as e:
                 result = str(e)
-      - if: "{{ wrap_document }}"
+      - if: "{{ wrap_document == True }}"
         then: "[Document]\n{{ result|trim }}\n[End]"
-        else: "{{ result }}"
+        else: "{{ result|trim }}"
 
   Search_json:
     function:
@@ -224,7 +224,7 @@ defs:
                   params:
                     for:
                       param: "{{ tool.parameters }}"
-                    repeat: "{{ param.name}}: {{ param.type }}"
+                    repeat: "{{ param.name}}{{ (': ' ~ param.type) if param.type else '' }}"
               - "{{ tool.display_name }}({{ params|join(', ') }})"
           display_names: "{{ tools|map(attribute='display_name')|list }}"
           pdl_functions: "{{ tools|map(attribute='pdl_function')|list }}"

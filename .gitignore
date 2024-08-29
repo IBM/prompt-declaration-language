@@ -149,3 +149,7 @@ pdl-live/package-lock.json
 # PDL trace
 *_result.json
 *_result.yaml
+
+# macos
+.DS_Store
+_site
