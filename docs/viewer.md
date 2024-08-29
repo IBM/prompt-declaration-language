@@ -76,6 +76,19 @@ hide:
 <!-- Main window -->
 <div id="mainview">
   <!-- Main window layout -->
+  <input type="file" name="input_file" id="input_file">
+  <script type="text/javascript">
+      document.getElementById('input_file')
+        .addEventListener('change', function () {
+          let fr = new FileReader();
+          fr.onload = function () {
+            data = JSON.parse(fr.result)
+            pdl_viewer.replace_div('doc', pdl_viewer.show_output(data))
+          }
+          fr.readAsText(this.files[0]);
+        })
+  </script>
+  <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_output(pdl_viewer.data))" value="Display">
   <div id="layout" style="height: 900px;"></div>
   <script type="module">
     import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'

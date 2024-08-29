@@ -8,14 +8,14 @@
 site_name: Prompt Declaration Language
 repo_url: https://github.com/IBM/prompt-declaration-language
 repo_name: IBM/prompt-declaration-language
-edit_uri: edit/main/docsource/
+edit_uri: edit/main/docs/
 site_url: https://ibm.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
 # is due to GitHub not presenting /site/ as an option
 # when selecting the dir for Pages.
-docs_dir: docsource
-site_dir: docs
+docs_dir: docs
+site_dir: _site
 
 copyright: Copyright &copy; 2024 IBM
 
