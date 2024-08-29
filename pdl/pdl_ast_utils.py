@@ -2,6 +2,8 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     ApiBlock,
+    ArrayBlock,
+    Block,
     BlocksType,
     BlockType,
     CallBlock,
@@ -15,17 +17,19 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    MessageBlock,
     ModelBlock,
     PdlParser,
     ReadBlock,
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    SequenceBlock,
 )
 
 
 def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> None:
-    if isinstance(block, str):
+    if not isinstance(block, Block):
         return
     for blocks in block.defs.values():
         iter_blocks(f, blocks)
@@ -49,6 +53,12 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DocumentBlock():
             iter_blocks(f, block.document)
+        case SequenceBlock():
+            iter_blocks(f, block.sequence)
+        case ArrayBlock():
+            iter_blocks(f, block.array)
+        case MessageBlock():
+            iter_blocks(f, block.content)
         case IfBlock():
             iter_blocks(f, block.then)
             if block.elses is not None:

@@ -5,7 +5,7 @@ document:
 - repeat:
   - "\nQuestion: "
   - def: QUESTION
-    model: ibm/granite-20b-code-instruct-v2
+    model: ibm/granite-20b-code-instruct
     parameters:
       stop_sequences:
       - Answer
@@ -13,7 +13,7 @@ document:
   - "Answer: Let's think step by step.\n"
   - repeat:
     - def: REASON_OR_CALC
-      model: ibm/granite-20b-code-instruct-v2
+      model: ibm/granite-20b-code-instruct
       parameters:
         stop_sequences:
         - '<<'
@@ -30,8 +30,7 @@ document:
       - '= '
       - def: RESULT
         lan: python
-        code:
-        - result = {{ EXPR }}
+        code: result = {{ EXPR }}
       - ' >>'
     until: '{{ "The answer is" in REASON_OR_CALC }}'
   - "\n\n"

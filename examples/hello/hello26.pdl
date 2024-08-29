@@ -1,0 +1,11 @@
+description: Hello function
+defs:
+  hello:
+    function:
+      name: str
+    return: Hello {{ name }}!
+  alias: hello
+document:
+  - call: "{{ alias }}"
+    args:
+      name: World

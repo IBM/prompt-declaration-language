@@ -3,19 +3,17 @@ import pathlib
 import pydantic
 import yaml
 
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
+from pdl.pdl_ast import Program
 
 EXPECTED_INVALID = [
     pathlib.Path("tests") / "data" / "line" / "hello.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello1.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello2.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello4.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello5.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello6.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello7.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello8.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello10.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello11.pdl",
+    pathlib.Path("examples") / "hello" / "hello24.pdl",
 ]
 
 

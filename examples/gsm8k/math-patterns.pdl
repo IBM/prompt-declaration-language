@@ -1,0 +1,34 @@
+description: math problem
+defs:
+  available_tools:
+    data: ["Search"]
+  prompt_pattern: "CoT"
+
+# try all examples and collect which ones _fail_
+# cluster by similarity, or classify e.g. 5 classes that don't work
+
+document:
+  - include: examples/prompt_library/ReWOO.pdl
+  - include: examples/prompt_library/ReAct.pdl
+  - include: examples/prompt_library/CoT.pdl
+  - def: filtered_tools
+    call: filter_tools_by_name
+    show_result: false
+    args:
+      tools: "{{ default_tools }}"
+      tool_names: "{{ available_tools }}"
+  - call: react
+    args:
+      question: "When did the Battle of White Plains take place?"
+      model: meta-llama/llama-3-70b-instruct
+      tools: "{{ filtered_tools }}"
+  - |
+    {{ demos }}Question: {{ question }}
+    Answer: Let's think step by step. 
+  - model: "{{ model }}"
+    def: PDL
+    platform: bam
+    parameters:
+      stop_sequences: ["<|endoftext|>"]
+      include_stop_sequence: false
+    show_result: true

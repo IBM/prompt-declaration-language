@@ -1,8 +1,8 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import (
     InterpreterState,
     contains_error,
+    empty_scope,
     process_prog,
 )
 
@@ -34,8 +34,77 @@ var_data = {
 def test_var():
     state = InterpreterState()
     data = Program.model_validate(var_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\nTell me about world?\n"
+
+
+var_shared_scope_data = {
+    "description": "Hello world with variable use",
+    "document": [
+        "Hello,",
+        {
+            "def": "NAME",
+            "document": [
+                {
+                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "show_result": True,
+                    "parameters": {
+                        "decoding_method": "greedy",
+                        "stop_sequences": ["!"],
+                        "include_stop_sequence": False,
+                    },
+                }
+            ],
+        },
+        {
+            "def": "I",
+            "lan": "python",
+            "code": "result = NAME[::-1] + '!\\n'",
+            "show_result": False,
+        },
+        {"get": "I"},
+    ],
+}
+
+
+def test_code_shared_scope():
+    state = InterpreterState()
+    data = Program.model_validate(var_shared_scope_data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, worlddlrow !\n"
+
+
+var_shared_scope_mutate_data = {
+    "description": "Hello world with variable use",
+    "document": [
+        "Hello, ",
+        {
+            "def": "NAME",
+            "document": "foo",
+            "show_result": False,
+        },
+        {
+            "def": "I",
+            "lan": "python",
+            "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
+            "show_result": False,
+        },
+        {"get": "NAME"},
+        {"get": "I"},
+    ],
+}
+
+
+def test_code_shared_scope_no_mutate():
+    """
+    Python should be able to access variables in the PDL document scope,
+    but any modifications should _not_ affect the document scope.
+    """
+
+    state = InterpreterState()
+    data = Program.model_validate(var_shared_scope_mutate_data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, foooof"
 
 
 code_var_data = {
@@ -54,8 +123,8 @@ code_var_data = {
 def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
-    _, document, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"context": document, "I": 0}
+    document, _, scope, _ = process_prog(state, empty_scope, data)
+    assert scope == {"context": [{"role": None, "content": document}], "I": 0}
     assert document == "0"
 
 

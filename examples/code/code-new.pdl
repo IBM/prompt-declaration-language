@@ -5,10 +5,8 @@ defs:
       parser: json
       def: CODE
    EXPLANATION:
-      model: ibm/granite-20b-code-instruct-v2
-      parameters:
-         decoding_method: greedy
-         max_new_tokens: 1024
+      model: ibm/granite-20b-code-instruct
+      platform: bam
       input:
            |
             Here is some info about the location of the function in the repo.

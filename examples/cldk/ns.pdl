@@ -7,8 +7,7 @@ document:
 - lan: python
   def: analysis
   show_result: false
-  code:
-  - |
+  code: |
     from northstar import Northstar
     from pprint import pprint 
 
@@ -67,8 +66,8 @@ document:
   - if: "{{ query != 'quit'}}"
     then: 
     - model: meta-llama/llama-3-70b-instruct
-      input: 
-      - |
+      platform: bam
+      input: |
         In the following code, {{ query }}
         {{ analysis }}
   until: "{{ query == 'quit' }}"

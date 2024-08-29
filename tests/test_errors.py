@@ -2,13 +2,9 @@ import json
 
 from pydantic import ValidationError
 
-from pdl.pdl.pdl_ast import Program, empty_block_location  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
-    InterpreterState,
-    empty_scope,
-    process_prog,
-)
-from pdl.pdl.pdl_schema_error_analyzer import analyze_errors  # pyright: ignore
+from pdl.pdl_ast import Program, empty_block_location
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_schema_error_analyzer import analyze_errors
 
 
 def error(raw_data, assertion):
@@ -128,7 +124,9 @@ error5 = {
         "Hello, ",
         {
             "lans": "python",
-            "code": ["import random\n", "import string\n", "result = 'Tracy'"],
+            "code": {
+                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+            },
         },
         "!\n",
     ],
@@ -151,7 +149,9 @@ error6 = {
         "Hello, ",
         {
             "lans": "python",
-            "codes": ["import random\n", "import string\n", "result = 'Tracy'"],
+            "codes": {
+                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+            },
         },
         "!\n",
     ],

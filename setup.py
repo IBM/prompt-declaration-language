@@ -13,12 +13,19 @@ install_requires = [
     "jinja2",
     "PyYAML",
     "jsonschema",
+    "litellm",
 ]
 
 dev = ["black", "pre-commit", "pytest"]
 examples = ["wikipedia", "textdistance", "faiss-cpu", "datasets", "sympy"]
+docs = ["mkdocs", "mkdocstrings[python]", "mkdocs-material", "pymdown-extensions"]
 
-extras_require = {"dev": dev, "examples": examples, "all": dev + examples}
+extras_require = {
+    "dev": dev,
+    "examples": examples,
+    "docs": docs,
+    "all": dev + examples + docs,
+}
 setup(
     name="pdl",
     description="Prompt Description Language.",

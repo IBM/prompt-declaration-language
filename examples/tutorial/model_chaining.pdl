@@ -8,3 +8,4 @@ document:
     include_stop_sequence: true
 - "\nTranslate the above sentence to French\n"
 - model: ibm/granite-20b-multilingual
+  platform: bam

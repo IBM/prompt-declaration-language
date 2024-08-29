@@ -1,6 +1,5 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 defs_data = {
     "description": "Hello world with variable use",
@@ -31,7 +30,7 @@ defs_data = {
 def test_defs():
     state = InterpreterState()
     data = Program.model_validate(defs_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -40,7 +39,7 @@ defs_chain_data = {
     "defs": {
         "X": {"data": "a"},
         "Y": {"data": "b"},
-        "Z": [{"get": "X"}, {"get": "Y"}, "c"],
+        "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
     },
     "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
 }
@@ -49,8 +48,8 @@ defs_chain_data = {
 def test_defs_chain():
     state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "abc"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "ababc"
 
 
 defs_only = {"description": "defs only", "defs": {"var": "hello"}}
@@ -59,5 +58,5 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 def test_defs_only():
     state = InterpreterState()
     data = Program.model_validate(defs_only)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

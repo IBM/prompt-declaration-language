@@ -1,0 +1,27 @@
+description: Retrieval-Augmented Generation (RAG) following Lewis et al.
+defs:
+  # Corpus: Store the retrieval object in the PDL session
+  corpus:
+    function:
+      corpus: {list: str}
+    return:
+    - lan: python
+      show_result: false
+      code: |
+        from rank_bm25 import BM25Okapi
+        PDL_SESSION.corpus = corpus
+        PDL_SESSION.tokenized_corpus = [doc.split(" ") for doc in corpus]
+        PDL_SESSION.bm25_corpus = BM25Okapi(PDL_SESSION.tokenized_corpus)
+        result = None
+  # Retrieve from corpus in PDL session
+  retrieve:
+    function:
+      query: str
+      num_examples: int
+    spec: {list: str}
+    return:
+    - lan: python
+      code: |
+        from rank_bm25 import BM25Okapi
+        tokenized_query = query.split(" ")
+        result = PDL_SESSION.bm25_corpus.get_top_n(tokenized_query, PDL_SESSION.corpus, n=num_examples)

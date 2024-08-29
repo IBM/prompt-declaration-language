@@ -1,6 +1,6 @@
 description: Input block example with json input
 document:
-- read: tests/data/input.json
+- read: examples/tutorial/input.json
   parser: json
   def: PERSON
   show_result: false

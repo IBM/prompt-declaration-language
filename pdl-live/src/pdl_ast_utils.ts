@@ -5,7 +5,7 @@ export function map_block_children(
   f: (block: PdlBlock) => PdlBlock,
   block: PdlBlock
 ): PdlBlock {
-  if (typeof block === 'string') {
+  if (typeof block === 'number' || typeof block === 'string') {
     return block;
   }
   let new_block: PdlBlock;
@@ -46,6 +46,18 @@ export function map_block_children(
     .with({kind: 'document'}, block => {
       const document = map_blocks(f, block.document);
       return {...block, document: document};
+    })
+    .with({kind: 'sequence'}, block => {
+      const sequence = map_blocks(f, block.sequence);
+      return {...block, sequence: sequence};
+    })
+    .with({kind: 'array'}, block => {
+      const array = map_blocks(f, block.array);
+      return {...block, array: array};
+    })
+    .with({kind: 'message'}, block => {
+      const content = map_blocks(f, block.content);
+      return {...block, content: content};
     })
     .with({kind: 'if'}, block => {
       const then_ = map_blocks(f, block.then);
@@ -89,7 +101,7 @@ export function map_blocks(
 ): PdlBlocks {
   blocks = match(blocks)
     .with(P.string, s => s)
-    .with(P.array(P._), sequence => sequence.map(doc => f(doc)))
+    .with(P.array(P._), sequence => sequence.map(f))
     .otherwise(block => f(block));
   return blocks;
 }
@@ -98,7 +110,7 @@ export function iter_block_children(
   f: (block: PdlBlock) => void,
   block: PdlBlock
 ): void {
-  if (typeof block === 'string') {
+  if (typeof block === 'number' || typeof block === 'string') {
     return;
   }
   if (block?.defs) {
@@ -126,6 +138,15 @@ export function iter_block_children(
     .with({kind: 'data'}, () => {})
     .with({kind: 'document'}, block => {
       iter_blocks(f, block.document);
+    })
+    .with({kind: 'sequence'}, block => {
+      iter_blocks(f, block.sequence);
+    })
+    .with({kind: 'array'}, block => {
+      iter_blocks(f, block.array);
+    })
+    .with({kind: 'message'}, block => {
+      iter_blocks(f, block.content);
     })
     .with({kind: 'if'}, block => {
       if (block.then) iter_blocks(f, block.then);

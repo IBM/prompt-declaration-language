@@ -1,5 +1,4 @@
 defs:
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/teacher_config.yaml
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
   teacher_model: mistralai/mixtral-8x7b-instruct-v01
   teacher_template:
@@ -10,7 +9,6 @@ defs:
   teacher_stop_token: </s>
 
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/question_template_freeform.yaml
   question_template_freeform:
     function:
       num_samples: int
@@ -40,7 +38,6 @@ defs:
           Now generate {{num_samples}} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
         max_new_tokens: 10000
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_questions_freeform.py
   gen_questions_freeform_inner:
     function:
       num_samples: int
@@ -69,11 +66,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          parameters:
-            stop_sequences: ["{{teacher_stop_token}}"]
-            include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 4096
+          params:
+            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
+            INCLUDE_STOP_SEQUENCE: false
+            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
@@ -107,7 +103,6 @@ defs:
           result = [q for qs in {{list_of_lists}} for q in qs]
 
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_questions_template.yaml
   filter_questions_template:
     function:
       task_description: str
@@ -127,7 +122,7 @@ defs:
           If the question meets the above requirements, please rate it 1. If not, please rate it 0.
         generation: |
           Begin your evaluation by providing a short explanation. Be as objective as possible. After providing your explanation, you must rate the question on a scale of 0 or 1 as mentioned above by strictly following this format: \"[[rating]]\", for example: \"Rating: [[1]]\"
-          Here's the question you need to evaluate:
+          Here is the question you need to evaluate:
           {{question}}
         max_new_tokens: 256
 
@@ -156,17 +151,16 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          parameters:
-            stop_sequences: ["{{teacher_stop_token}}"]
-            include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 256
+          params:
+            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
+            INCLUDE_STOP_SEQUENCE: false
+            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - "{{ teacher_output.rating }}"
+    - "{{ teacher_output.rating | float }}"
 
   filter_questions:
     function:
@@ -194,7 +188,6 @@ defs:
     - "{{filtered}}"
 
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/answer_template.yaml
   answer_template:
     function:
       icl_question: str
@@ -225,7 +218,7 @@ defs:
         additional_stop_tokens:
         - "[Question]"
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/gen_answers.py
+
   gen_answers_inner:
     function:
       question: {icl_question: str, icl_answer: str, question: str}
@@ -251,13 +244,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          parameters:
-            stop_sequences:  # TODO -- Need "{{ prompt_data.additional_stop_tokens.append(teacher_stop_token) }}"
-            - "{{teacher_stop_token}}"
-            - "{{prompt_data.additional_stop_tokens}}"
-            include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 4096
+          params:
+            STOP_SEQUENCES: "{{ [teacher_stop_token] + prompt_data.additional_stop_tokens }}"
+            INCLUDE_STOP_SEQUENCE: false
+            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
         parsed_answer:
           lan: python
           code: | # parse model output
@@ -290,7 +280,6 @@ defs:
           result = [r for r in {{all_results}} if len(r["answer"]) > 0]
 
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/configs/filter_qa_template.yaml
   filter_qa_template:
     function:
       question: str
@@ -309,14 +298,13 @@ defs:
         generation: |
           Begin your evaluation by providing a short explanation. Be as objective as possible. After providing your explanation, you must rate the answer on a scale of 1 to 3 as mentioned above by strictly following this format: \"[[rating]]\", for example: \"Rating: [[1]]\"
 
-          Here's the question and the answer you need to evaluate:
+          Here is the question and the answer you need to evaluate:
           [Question]
           {{question}}
           [Answer]
           {{answer}}
         max_new_tokens: 256
 
-  # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/filter_question_answer_pair.py
   filter_question_answer_pair_inner:
     function:
       question: str
@@ -341,16 +329,15 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          parameters:
-            stop_sequences: ["{{teacher_stop_token}}"]
-            include_stop_sequence: false
-            # TODO: max_new_tokens: "{{prompt_data.max_new_tokens}}"
-            max_new_tokens: 256
+          params:
+            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
+            INCLUDE_STOP_SEQUENCE: false
+            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - "{{ teacher_output.rating if teacher_output.rating is not none else 0.0 | float}}"
+    - "{{ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}}"
 
   filter_question_answer_pair:
     function:
@@ -380,44 +367,31 @@ defs:
 
 
 document:
-- |
-  Loading seed examples
-  ---------------------
-- def: seed_examples # https://github.com/instruct-lab/taxonomy/blob/main/compositional_skills/writing/freeform/jokes/puns/general/qna.yaml
+- "----- Loading seed examples -----\n\n"
+- def: seed_examples
   read: examples/teacher/qna.yaml
   parser: yaml
-- |
-
-  Generating questions
-  --------------------
+- "\n\n----- Generating questions -----\n\n"
 - def: generated_questions
   call: gen_questions_freeform
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: "{{seed_examples.task_description}}"
     seed_examples: "{{seed_examples.seed_examples}}"
-- |
-
-  Filtering questions
-  -------------------
+- "\n\n----- Filtering questions -----\n\n"
 - def: filtered_questions
   call: filter_questions
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: "{{seed_examples.task_description}}"
     questions: "{{generated_questions}}"
-- |
-
-  Generating answers
-  ------------------
+- "\n\n----- Generating answers -----\n\n"
 - def: qa_pairs
   call: gen_answers
   args:
     questions: "{{filtered_questions}}" 
-- |
-
-  Filtering QA pairs
-  ------------------
+- "\n\n----- Filtering QA pairs -----\n\n"
 - call: filter_question_answer_pair
   args:
     qa_pairs: "{{qa_pairs}}"
+- "\n"

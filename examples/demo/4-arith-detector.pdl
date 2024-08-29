@@ -4,9 +4,8 @@ document:
   multiline: True
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
+- model: ibm/granite-20b-code-instruct
+  platform: bam
   input:
     document:
     - |-
@@ -42,9 +41,8 @@ document:
   show_result: false
 
 
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
-    decoding_method: greedy
+- model: ibm/granite-20b-code-instruct
+  platform: bam
   input:
     document:
     - |-
@@ -125,8 +123,7 @@ document:
   show_result: false
 
 - lan: python
-  code:
-  - | 
+  code: | 
     from pdl import pdl_ast, pdl_interpreter
     from pdl.pdl_ast import Program
     from pdl.pdl_interpreter import process_prog
@@ -134,16 +131,11 @@ document:
     from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
-    s = """'
-  - get: PDL
-  - |
-    '"""
+    s = """'{{ PDL }}'"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
     state = InterpreterState()
     data = Program.model_validate(obj)
     _, result, _, _ = process_prog(state, empty_scope, data)
   def: RESULT
-  show_result: true
-- "\n"
-- model: ibm/granite-13b-instruct-v2
+  show_result: false

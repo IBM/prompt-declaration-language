@@ -1,6 +1,5 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
@@ -22,7 +21,7 @@ model_data = {
 def test_model():
     state = InterpreterState()
     data = Program.model_validate(model_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\n"
 
 
@@ -51,7 +50,7 @@ model_chain_data = {
             "def": "RESULT",
             "document": [
                 {
-                    "model": "google/flan-t5-xl",
+                    "model": "ibm/granite-20b-code-instruct-v2",
                     "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
@@ -68,7 +67,7 @@ model_chain_data = {
 def test_model_chain():
     state = InterpreterState()
     data = Program.model_validate(model_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "".join(
         [
             "Hello,",
@@ -77,7 +76,7 @@ def test_model_chain():
             "Who is",
             " world",
             "?\n",
-            "hello world",
+            "I am the one who knows.",
             "\n",
         ]
     )
@@ -118,7 +117,7 @@ multi_shot_data = {
 def test_multi_shot():
     state = InterpreterState()
     data = Program.model_validate(multi_shot_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Armonk, NY\n"
 
 
@@ -139,7 +138,7 @@ model_data_missing_parameters = {
 def test_data_missing_parameters():
     state = InterpreterState()
     data = Program.model_validate(model_data_missing_parameters)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
         == "Hello,\n\nI am writing to inquire about the possibility of a partnership with you."
@@ -164,7 +163,7 @@ model_parameter = {
 def test_model_parameter():
     state = InterpreterState()
     data = Program.model_validate(model_parameter)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"
 
 
@@ -186,5 +185,25 @@ model_parameter1 = {
 def test_model_parameter1():
     state = InterpreterState()
     data = Program.model_validate(model_parameter1)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"
+
+
+litellm_mock = {
+    "description": "call LiteLLM with a mock response",
+    "document": [
+        "Hello,",
+        {
+            "model": "watsonx/ibm/granite-20b-code-instruct-v2",
+            "platform": "litellm",
+            "parameters": {"stop": ["!"], "mock_response": " World!"},
+        },
+    ],
+}
+
+
+def test_litellm_mock():
+    state = InterpreterState()
+    data = Program.model_validate(litellm_mock)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!"
