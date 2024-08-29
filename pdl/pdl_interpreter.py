@@ -515,8 +515,8 @@ def step_block_body(
             result = closure
             background = []
             trace = closure.model_copy(update={})
-        case CallBlock(call=f):
-            result, output, scope, trace = yield from step_call(
+        case CallBlock():
+            result, background, scope, trace = yield from step_call(
                 state, scope, block, loc
             )
         case EmptyBlock():
@@ -1023,9 +1023,11 @@ def call_python(code: str, scope: dict) -> Any:
 
 def step_call(
     state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock | ErrorBlock]]:
+) -> Generator[
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock | ErrorBlock]
+]:
     result = None
-    background = []
+    background: Messages = []
     args, errors = process_expr(scope, block.args, append(loc, "args"))
     if len(errors) != 0:
         trace = handle_error(
@@ -1041,7 +1043,7 @@ def step_call(
         trace = handle_error(
             block,
             append(loc, "call"),
-            f"Function is undefined: {f}",
+            f"Function is undefined: {block.call}",
             [],
             block.model_copy(),
         )
@@ -1052,7 +1054,7 @@ def step_call(
             trace = handle_error(
                 block,
                 argsloc,
-                f"Type errors during function call to {f}",
+                f"Type errors during function call to {closure_expr}",
                 type_errors,
                 block.model_copy(),
             )
@@ -1074,11 +1076,12 @@ def step_call(
                     trace = handle_error(
                         block,
                         loc,
-                        f"Type errors in result of function call to {f}",
+                        f"Type errors in result of function call to {closure_expr}",
                         errors,
                         trace,
                     )
     return result, background, scope, trace
+
 
 def process_input(
     state: InterpreterState, scope: ScopeType, block: ReadBlock, loc: LocationType
