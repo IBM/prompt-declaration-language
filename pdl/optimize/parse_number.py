@@ -64,19 +64,20 @@ def extract_math_answer(result: str) -> float | int:
     # Check if a match was found and print the captured group
     if match:
         return parse_number(match[-1])
-    else:
-        print("No match!", last_line)
-        return old_extract(result)
-    return 0.0
+
+    print("No match!", last_line)
+
+    return old_extract(result)
 
 
 def old_extract(result: str) -> float:
+    # Therefore, Madeline spends $5,829 a year on her dog.
     try:
         return float(result.split("####")[-1].strip().replace("$", "").replace(",", ""))
     except Exception:
         for r in reversed(result.split()):
             try:
-                ret = r.replace("$", "")
+                ret = r.replace("$", "").replace(",", "")
                 if ret.endswith("."):
                     ret = ret[:-1]
                 return float(ret)
