@@ -238,7 +238,7 @@ def step_advanced_block(
     result, background, scope, trace = yield from step_block_body(
         state, scope, block, loc
     )
-    trace = trace.model_copy(update={"defs": defs_trace, "result": background})
+    trace = trace.model_copy(update={"defs": defs_trace, "result": result})
     if block.parser is not None:
         try:
             result = parse_result(block.parser, result)
