@@ -3,11 +3,6 @@ name: Build
 
 on: [push, pull_request]
 
-env:
-  WATSONX_KEY: deployment
-  WATSONX_PROJECT_ID: deployment
-  WATSONX_API: deployment
-
 jobs:
   tests:
     name: static checks / linters
@@ -45,3 +40,8 @@ jobs:
       run: pre-commit run -a
     - name: run tests
       run: py.test -v --capture=tee-sys tests
+      env:
+        WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
+        WATSONX_KEY: ${{ secrets.WATSONX_KEY }}
+        WATSONX_API: ${{ secrets.WATSONX_API }}
+        
