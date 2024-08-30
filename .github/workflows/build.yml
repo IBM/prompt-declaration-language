@@ -39,4 +39,12 @@ jobs:
     - name: pre-commit checks
       run: pre-commit run -a
     - name: run tests
+      env:
+        WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
+        WATSONX_KEY: ${{ secrets.WATSONX_KEY }}
+        WATSONX_API: ${{ secrets.WATSONX_API }}
+        GENAI_KEY: ${{ secrets.GENAI_KEY }}
+        GENAI_API: ${{ secrets.GENAI_API }}
       run: py.test -v --capture=tee-sys tests
+      
+        
