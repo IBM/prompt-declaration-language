@@ -1,3 +1,7 @@
+"""PDL programs are represented by the Pydantic data structure defined in this file.
+"""
+
+
 from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
@@ -82,7 +86,7 @@ RoleType: TypeAlias = Optional[str]
 
 
 class Block(BaseModel):
-    """PDL block: common fields of all PDL blocks."""
+    """Common fields for all PDL blocks."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -109,7 +113,6 @@ class Block(BaseModel):
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     """
-
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
@@ -117,20 +120,31 @@ class Block(BaseModel):
 
 
 class FunctionBlock(Block):
-    """Function declaration"""
-
+    """Function declaration."""
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
+    """Functions parameters with their types.
+    """
     returns: "BlocksType" = Field(..., alias="return")
+    """Body of the function
+    """
+    # Field for internal use
     scope: Optional[ScopeType] = None
 
 
 class CallBlock(Block):
+    """Calling a function.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
     call: str
+    """Function to call.
+    """
     args: dict[str, Any] = {}
+    """Arguments of the function with their values.
+    """
+    # Field for internal use    
     trace: Optional["BlocksType"] = None
 
 
@@ -139,8 +153,12 @@ class BamTextGenerationParameters(TextGenerationParameters):
 
 
 class LitellmParameters(BaseModel):
+    """Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+    """
     model_config = ConfigDict(extra="allow", protected_namespaces=())
     timeout: Optional[Union[float, str]] = None
+    """Timeout in seconds for completion requests (Defaults to 600 seconds).
+    """
     temperature: Optional[float] = None
     """The temperature parameter for controlling the randomness of the output (default is 1.0).
     """
@@ -246,6 +264,8 @@ class BamModelBlock(ModelBlock):
 
 
 class WatsonxModelBlock(ModelBlock):
+    """Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk.
+    """
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
     params: Optional[dict] = None
@@ -254,69 +274,104 @@ class WatsonxModelBlock(ModelBlock):
 
 
 class LitellmModelBlock(ModelBlock):
+    """Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
+    """
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     parameters: Optional[LitellmParameters]
 
 
 class CodeBlock(Block):
+    """Execute a piece of code.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lan: Literal["python"]
+    """Programming language of the code.
+    """
     code: "BlocksType"
+    """Code to execute.
+    """
 
 
 class ApiBlock(Block):
+    """Call an API.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.API] = BlockKind.API
     api: str
     url: str
+    """URL of the endpoint."""
     input: "BlocksType"
+    """Arguments to the request.
+    """
 
 
 class GetBlock(Block):
+    """Get the value of a variable."""
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.GET] = BlockKind.GET
     get: str
-
+    """Name of the variable to access."""
 
 class DataBlock(Block):
+    """Arbitrary JSON value."""
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType
+    """Value defined."""
 
 
 class DocumentBlock(Block):
+    """Create the concatenation of the stringify version of the result of each block of the list of blocks.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
     document: "BlocksType"
-
+    """Body of the document.
+    """
 
 class SequenceBlock(Block):
+    """Return the value of the last block if the list of blocks."""
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
     sequence: "BlocksType"
 
 
 class ArrayBlock(Block):
+    """Return the array of values computed by each block of the list of blocks.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
     array: "BlocksType"
 
 
 class MessageBlock(Block):
+    """Create a message.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     role: RoleType
+    """Role of associated to the message."""
     content: "BlocksType"
+    """Content of the message."""
 
 
 class IfBlock(Block):
+    """Conditional control structure.
+    """
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: ExpressionType = Field(alias="if")
+    """Condition.
+    """
     then: "BlocksType"
+    """Branch to exectute if the condition is true.
+    """
     elses: Optional["BlocksType"] = Field(default=None, alias="else")
+    """Branch to execute if the condition is false.
+    """
+    # Field for internal use    
     if_result: Optional[bool] = None
 
 
@@ -327,10 +382,15 @@ class IterationType(StrEnum):
 
 
 class ForBlock(Block):
+    """Iteration over arrays."""
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
+    """Arrays to iterate over.
+    """
     repeat: "BlocksType"
+    """Body of the loop.
+    """
     iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
     trace: Optional[list["BlocksType"]] = None
 
