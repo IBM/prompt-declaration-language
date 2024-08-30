@@ -82,23 +82,43 @@ RoleType: TypeAlias = Optional[str]
 
 
 class Block(BaseModel):
-    """PDL program block"""
+    """PDL block: common fields of all PDL blocks."""
 
     model_config = ConfigDict(extra="forbid")
+
     description: Optional[str] = None
+    """Documentation associated to the block.
+    """
     spec: Any = None
+    """Type specification of the result of the block.
+    """
     defs: dict[str, "BlocksType"] = {}
+    """Set of definitions executed before the execution of the block.
+    """
     assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the result of the execution of the block.
+    """
     show_result: bool = True
-    result: Optional[Any] = None
+    """Ignore the value computed by the block.
+    """
     parser: Optional[ParserType] = None
+    """Parser to use to construct a value out of a string result."""
+    fallback: Optional["BlocksType"] = None
+    """Block to execute in case of error.
+    """
+    role: RoleType = None
+    """Role associated to the block and sub-blocks.
+    """
+
+    # Fields for internal use
+    result: Optional[Any] = None
     location: Optional[LocationType] = None
     has_error: bool = False
-    fallback: Optional["BlocksType"] = None
-    role: RoleType = None
 
 
 class FunctionBlock(Block):
+    """Function declaration"""
+
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
