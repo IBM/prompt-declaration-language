@@ -68,8 +68,11 @@ def test_model_chain():
     state = InterpreterState()
     data = Program.model_validate(model_chain_data)
     document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!\nWho is World?\n```\n\n## License\n\nThis project is licensed under the terms of the MIT license.\n\n"
-    
+    assert (
+        document
+        == "Hello, World!\nWho is World?\n```\n\n## License\n\nThis project is licensed under the terms of the MIT license.\n\n"
+    )
+
 
 multi_shot_data = {
     "description": "Hello world showing model chaining",
@@ -130,7 +133,7 @@ def test_data_missing_parameters():
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
-        == "Hello,\n\nI have a question about the use of the word \"in\" in the sentence: \"The cake was baked in the oven."
+        == 'Hello,\n\nI have a question about the use of the word "in" in the sentence: "The cake was baked in the oven.'
     )
 
 
