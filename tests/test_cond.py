@@ -36,10 +36,8 @@ cond_data = {
                     "def": "QUESTION",
                     "document": [
                         {
-                            "model": "ibm/granite-20b-code-instruct-v2",
-                            "parameters": {
-                                "decoding_method": "greedy",
-                                "max_new_tokens": 2048,
+                            "model": "ibm/granite-20b-code-instruct",
+                            "params": {
                                 "stop_sequences": ["Answer"],
                                 "include_stop_sequence": False,
                             },
@@ -51,10 +49,8 @@ cond_data = {
                     "document": [
                         {
                             "def": "REASON_OR_CALC",
-                            "model": "ibm/granite-20b-code-instruct-v2",
-                            "parameters": {
-                                "decoding_method": "greedy",
-                                "max_new_tokens": 2048,
+                            "model": "ibm/granite-20b-code-instruct",
+                            "params": {
                                 "stop_sequences": ["<<"],
                                 "include_stop_sequence": True,
                             },
@@ -64,10 +60,8 @@ cond_data = {
                                 "document": [
                                     {
                                         "def": "EXPR",
-                                        "model": "ibm/granite-20b-code-instruct-v2",
-                                        "parameters": {
-                                            "decoding_method": "greedy",
-                                            "max_new_tokens": 2048,
+                                        "model": "ibm/granite-20b-code-instruct",
+                                        "params": {
                                             "stop_sequences": ["=", "\n"],
                                             "include_stop_sequence": False,
                                         },
@@ -123,17 +117,16 @@ assert_data = [
     "The answer is $540.\n\n",
     "Question: ",
     "\n"
-    "Noah charges $10 for a large painting and $5 for a small painting.\n"
-    "Last month he sold two large paintings and six small paintings.\n"
-    "If he sold half as much this month, how much is his sales for this month?\n"
-    "\n",
+    "Noah charges $30 for a large painting and $10 for a small painting.\n"
+    "Last month he sold five large paintings and three small paintings.\n"
+    "If he sold three times as much this month, how much is his sales for this month?"
     "Answer: Let's think step by step.\n",
-    "He sold 2 large paintings and 6 small paintings last month.\n"
-    "He sold half as many this month.\n"
-    "2 large paintings x $10 = <<",
-    " 2*10",
+    "He sold 5 large paintings and 3 small paintings last month.\n"
+    "He sold three times as many this month.\n"
+    "5 large paintings x $30 = <<",
+    " 5*30",
     "= ",
-    "20",
+    "150",
     " >>",
 ]
 

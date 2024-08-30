@@ -14,8 +14,8 @@ var_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
-                    "parameters": {
+                    "model": "ibm/granite-34b-code-instruct",
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -35,7 +35,7 @@ def test_var():
     state = InterpreterState()
     data = Program.model_validate(var_data)
     document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!\nTell me about world?\n"
+    assert document == "Hello, World!\nTell me about World?\n"
 
 
 var_shared_scope_data = {
@@ -46,9 +46,9 @@ var_shared_scope_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "model": "ibm/granite-34b-code-instruct",
                     "show_result": True,
-                    "parameters": {
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -71,7 +71,7 @@ def test_code_shared_scope():
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_data)
     document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, worlddlrow !\n"
+    assert document == "Hello, WorlddlroW !\n"
 
 
 var_shared_scope_mutate_data = {

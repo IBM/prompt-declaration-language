@@ -1,8 +1,8 @@
 description: Hello world showing model chaining
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
+- model: ibm/granite-20b-code-instruct
+  params:
     decoding_method: greedy
     stop_sequences:
     - '!'
@@ -12,7 +12,7 @@ document:
   !
   Who is{{ NAME }}?
 - model: google/flan-t5-xl
-  parameters:
+  params:
     decoding_method: greedy
     stop_sequences:
     - '!'
