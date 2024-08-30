@@ -74,7 +74,7 @@ plugins:
           show_symbol_type_heading: true
           show_signature: true
           show_signature_annotations: true
-
+          members_order: source
 
 markdown_extensions:
   - admonition
