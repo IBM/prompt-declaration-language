@@ -120,8 +120,7 @@ class Block(BaseModel):
 
 
 class FunctionBlock(Block):
-    """Function declaration.
-    """
+    """Function declaration."""
 
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
@@ -515,6 +514,7 @@ BlockType: TypeAlias = int | float | str | AdvancedBlockType
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 """List of blocks.
 """
+
 
 class Program(RootModel):
     """
