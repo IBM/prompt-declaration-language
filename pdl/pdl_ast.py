@@ -71,12 +71,10 @@ class Parser(BaseModel):
 
 
 class PdlParser(Parser):
-    model_config = ConfigDict(extra="forbid")
     pdl: "BlocksType"
 
 
 class RegexParser(Parser):
-    model_config = ConfigDict(extra="forbid")
     regex: str
     mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
 
@@ -88,7 +86,7 @@ RoleType: TypeAlias = Optional[str]
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
 
     description: Optional[str] = None
     """Documentation associated to the block.
@@ -122,7 +120,6 @@ class Block(BaseModel):
 class FunctionBlock(Block):
     """Function declaration."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
     """Functions parameters with their types.
@@ -137,7 +134,6 @@ class FunctionBlock(Block):
 class CallBlock(Block):
     """Calling a function."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
     call: str
     """Function to call.
@@ -255,7 +251,6 @@ class ModelBlock(Block):
 
 
 class BamModelBlock(ModelBlock):
-    model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
     prompt_id: Optional[str] = None
     parameters: Optional[BamTextGenerationParameters | dict] = None
@@ -267,7 +262,6 @@ class BamModelBlock(ModelBlock):
 class WatsonxModelBlock(ModelBlock):
     """Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk."""
 
-    model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
     params: Optional[dict] = None
     guardrails: Optional[bool] = None
@@ -277,7 +271,6 @@ class WatsonxModelBlock(ModelBlock):
 class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
-    model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     parameters: Optional[LitellmParameters] = None
 
@@ -285,7 +278,6 @@ class LitellmModelBlock(ModelBlock):
 class CodeBlock(Block):
     """Execute a piece of code."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lan: Literal["python"]
     """Programming language of the code.
@@ -298,7 +290,6 @@ class CodeBlock(Block):
 class ApiBlock(Block):
     """Call an API."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.API] = BlockKind.API
     api: str
     url: str
@@ -311,7 +302,6 @@ class ApiBlock(Block):
 class GetBlock(Block):
     """Get the value of a variable."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.GET] = BlockKind.GET
     get: str
     """Name of the variable to access."""
@@ -320,7 +310,6 @@ class GetBlock(Block):
 class DataBlock(Block):
     """Arbitrary JSON value."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType
     """Value defined."""
@@ -329,7 +318,6 @@ class DataBlock(Block):
 class DocumentBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
     document: "BlocksType"
     """Body of the document.
@@ -339,7 +327,6 @@ class DocumentBlock(Block):
 class SequenceBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
     sequence: "BlocksType"
 
@@ -347,7 +334,6 @@ class SequenceBlock(Block):
 class ArrayBlock(Block):
     """Return the array of values computed by each block of the list of blocks."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
     array: "BlocksType"
 
@@ -355,7 +341,6 @@ class ArrayBlock(Block):
 class MessageBlock(Block):
     """Create a message."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     role: RoleType
     """Role of associated to the message."""
@@ -366,7 +351,6 @@ class MessageBlock(Block):
 class IfBlock(Block):
     """Conditional control structure."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: ExpressionType = Field(alias="if")
     """Condition.
@@ -390,7 +374,6 @@ class IterationType(StrEnum):
 class ForBlock(Block):
     """Iteration over arrays."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
     """Arrays to iterate over.
@@ -408,7 +391,6 @@ class ForBlock(Block):
 class RepeatBlock(Block):
     """Repeat the execution of a block for a fixed number of iterations."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "BlocksType"
     """Body of the loop.
@@ -426,7 +408,6 @@ class RepeatBlock(Block):
 class RepeatUntilBlock(Block):
     """Repeat the execution of a block until a condition is satisfied."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
     """Body of the loop.
@@ -444,7 +425,6 @@ class RepeatUntilBlock(Block):
 class ReadBlock(Block):
     """Read from a file or standard input."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.READ] = BlockKind.READ
     read: str | None
     """Name of the file to read. If `None`, read the standard input.
@@ -460,7 +440,6 @@ class ReadBlock(Block):
 class IncludeBlock(Block):
     """Include a PDL file."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.INCLUDE] = BlockKind.INCLUDE
     include: str
     """Name of the file to include.
@@ -470,7 +449,6 @@ class IncludeBlock(Block):
 
 
 class ErrorBlock(Block):
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
     program: "BlocksType"
@@ -479,7 +457,6 @@ class ErrorBlock(Block):
 class EmptyBlock(Block):
     """Block without an action. It can contain definitions."""
 
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 

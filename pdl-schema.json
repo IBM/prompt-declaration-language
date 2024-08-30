@@ -14,10 +14,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -177,6 +179,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -190,10 +193,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -217,6 +222,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -377,6 +383,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -389,6 +396,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -431,6 +439,7 @@
           "type": "string"
         },
         "url": {
+          "description": "URL of the endpoint.",
           "title": "Url",
           "type": "string"
         },
@@ -588,6 +597,7 @@
               "type": "array"
             }
           ],
+          "description": "Arguments to the request.\n    ",
           "title": "Input"
         }
       },
@@ -613,10 +623,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -776,6 +788,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -789,10 +802,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -816,6 +831,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -976,6 +992,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -988,6 +1005,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -1201,10 +1219,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -1364,6 +1384,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1377,10 +1398,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -1404,6 +1427,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -1564,6 +1588,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1576,6 +1601,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -2166,10 +2192,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -2329,6 +2357,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2342,10 +2371,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -2369,6 +2400,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -2529,6 +2561,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2541,6 +2574,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -2579,11 +2613,13 @@
           "type": "string"
         },
         "call": {
+          "description": "Function to call.\n    ",
           "title": "Call",
           "type": "string"
         },
         "args": {
           "default": {},
+          "description": "Arguments of the function with their values.\n    ",
           "title": "Args",
           "type": "object"
         },
@@ -2768,10 +2804,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -2931,6 +2969,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2944,10 +2983,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -2971,6 +3012,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -3131,6 +3173,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3143,6 +3186,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -3182,6 +3226,7 @@
         },
         "lan": {
           "const": "python",
+          "description": "Programming language of the code.\n    ",
           "enum": [
             "python"
           ],
@@ -3342,6 +3387,7 @@
               "type": "array"
             }
           ],
+          "description": "Code to execute.\n    ",
           "title": "Code"
         }
       },
@@ -3366,10 +3412,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -3529,6 +3577,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3542,10 +3591,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -3569,6 +3620,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -3729,6 +3781,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3741,6 +3794,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -3779,6 +3833,7 @@
           "type": "string"
         },
         "data": {
+          "description": "Value defined.",
           "title": "Data"
         }
       },
@@ -3810,10 +3865,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -3973,6 +4030,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3986,10 +4044,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -4013,6 +4073,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -4173,6 +4234,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4185,6 +4247,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -4376,6 +4439,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the document.\n    ",
           "title": "Document"
         }
       },
@@ -4399,10 +4463,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -4562,6 +4628,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4575,10 +4642,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -4602,6 +4671,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -4762,6 +4832,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4774,6 +4845,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -4828,10 +4900,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -4991,6 +5065,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5004,10 +5079,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -5031,6 +5108,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -5191,6 +5269,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5203,6 +5282,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -5422,10 +5502,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -5585,6 +5667,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5598,10 +5681,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -5625,6 +5710,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -5785,6 +5871,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5797,6 +5884,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -5835,6 +5923,7 @@
           "type": "string"
         },
         "for": {
+          "description": "Arrays to iterate over.\n    ",
           "title": "For",
           "type": "object"
         },
@@ -5992,6 +6081,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "as": {
@@ -6000,7 +6090,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "array"
+          "default": "array",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -6191,10 +6282,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -6354,6 +6447,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6367,10 +6461,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -6394,6 +6490,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -6554,6 +6651,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6566,6 +6664,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -6612,6 +6711,7 @@
               "type": "null"
             }
           ],
+          "description": "Functions parameters with their types.\n    ",
           "title": "Function"
         },
         "return": {
@@ -6768,6 +6868,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the function\n    ",
           "title": "Return"
         },
         "scope": {
@@ -6804,10 +6905,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -6967,6 +7070,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6980,10 +7084,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -7007,6 +7113,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -7167,6 +7274,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7179,6 +7287,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -7217,6 +7326,7 @@
           "type": "string"
         },
         "get": {
+          "description": "Name of the variable to access.",
           "title": "Get",
           "type": "string"
         }
@@ -7241,10 +7351,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -7404,6 +7516,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7417,10 +7530,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -7444,6 +7559,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -7604,6 +7720,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7616,6 +7733,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -7654,6 +7772,7 @@
           "type": "string"
         },
         "if": {
+          "description": "Condition.\n    ",
           "title": "If"
         },
         "then": {
@@ -7810,6 +7929,7 @@
               "type": "array"
             }
           ],
+          "description": "Branch to exectute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -7970,6 +8090,7 @@
             }
           ],
           "default": null,
+          "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
         },
         "if_result": {
@@ -8006,10 +8127,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -8169,6 +8292,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8182,10 +8306,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -8209,6 +8335,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -8369,6 +8496,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8381,6 +8509,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -8419,6 +8548,7 @@
           "type": "string"
         },
         "include": {
+          "description": "Name of the file to include.\n    ",
           "title": "Include",
           "type": "string"
         },
@@ -8566,10 +8696,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -8729,6 +8861,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8742,10 +8875,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -8769,6 +8904,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -8929,6 +9065,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8941,6 +9078,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -9641,10 +9779,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -9804,6 +9944,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9817,10 +9958,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -9844,6 +9987,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -10004,6 +10148,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -10015,6 +10160,7 @@
               "type": "null"
             }
           ],
+          "description": "Role of associated to the message.",
           "title": "Role"
         },
         "result": {
@@ -10206,6 +10352,7 @@
               "type": "array"
             }
           ],
+          "description": "Content of the message.",
           "title": "Content"
         }
       },
@@ -11026,10 +11173,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -11189,6 +11338,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -11202,10 +11352,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -11229,6 +11381,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -11389,6 +11542,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -11401,6 +11555,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -11447,6 +11602,7 @@
               "type": "null"
             }
           ],
+          "description": "Name of the file to read. If `None`, read the standard input.\n    ",
           "title": "Read"
         },
         "message": {
@@ -11459,10 +11615,12 @@
             }
           ],
           "default": null,
+          "description": "Message to prompt the user to enter a value.\n    ",
           "title": "Message"
         },
         "multiline": {
           "default": false,
+          "description": "Indicate if one or multiple lines shoud be read.\n    ",
           "title": "Multiline",
           "type": "boolean"
         }
@@ -11537,10 +11695,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -11700,6 +11860,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -11713,10 +11874,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -11740,6 +11903,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -11900,6 +12064,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -11912,6 +12077,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -12103,9 +12269,11 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "num_iterations": {
+          "description": "Number of iterations to perform.\n    ",
           "title": "Num Iterations",
           "type": "integer"
         },
@@ -12115,7 +12283,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "sequence"
+          "default": "sequence",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -12306,10 +12475,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -12469,6 +12640,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -12482,10 +12654,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -12509,6 +12683,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -12669,6 +12844,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -12681,6 +12857,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -12872,9 +13049,11 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "until": {
+          "description": "Condition of the loop.\n    ",
           "title": "Until"
         },
         "as": {
@@ -12883,7 +13062,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "sequence"
+          "default": "sequence",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -13074,10 +13254,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -13237,6 +13419,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -13250,10 +13433,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -13277,6 +13462,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -13437,6 +13623,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -13449,6 +13636,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
@@ -13756,10 +13944,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -13919,6 +14109,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -13932,10 +14123,12 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
         },
@@ -13959,6 +14152,7 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
         },
         "fallback": {
@@ -14119,6 +14313,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -14131,6 +14326,7 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
         "result": {
