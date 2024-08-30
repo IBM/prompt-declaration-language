@@ -506,7 +506,7 @@ AdvancedBlockType: TypeAlias = (
     | ErrorBlock
     | EmptyBlock
 )
-"""Different types of structured blocks. 
+"""Different types of structured blocks.
 """
 BlockType: TypeAlias = int | float | str | AdvancedBlockType
 """All kinds of blocks.
