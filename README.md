@@ -21,8 +21,8 @@ The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it i
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
-## Demo Video
-
+## Demo Video 
+ 
 https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45
 
 
@@ -46,7 +46,7 @@ In order to run the examples that use foundation models hosted on IBM's [watsonx
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
-
+ 
 To run the interpreter:
 
 ```

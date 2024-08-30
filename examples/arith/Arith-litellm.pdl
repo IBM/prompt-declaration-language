@@ -31,8 +31,8 @@ document:
     document:
     - "\nQuestion: "
     - def: QUESTION
-      model: ibm/granite-20b-code-instruct
-      params:
+      model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
         stop_sequences:
         - Answer
         include_stop_sequence: false
@@ -40,18 +40,18 @@ document:
     - repeat:
         document:
         - def: REASON_OR_CALC
-          model: ibm/granite-20b-code-instruct
-          params:
-            stop_sequences:
+          model: watsonx/ibm/granite-20b-code-instruct
+          parameters:
+            stop:
             - '<<'
             include_stop_sequence: true
         - if: '{{ REASON_OR_CALC.endswith("<<") }}'
           then:
             document:
             - def: EXPR
-              model: ibm/granite-20b-code-instruct
-              params:
-                stop_sequences:
+              model: watsonx/ibm/granite-20b-code-instruct
+              parameters:
+                stop:
                 - '='
                 - "\n"
                 include_stop_sequence: false

@@ -2,13 +2,7 @@
 name: Build Docs & Deploy to Pages
 
 on:
-  # Runs on PR/pushes targeting the default branch
-  pull_request:
-    branches:
-      - "main"
-    paths:
-      - "mkdocs.yml"
-      - "docs/**"
+  # Runs on pushes targeting the default branch
   push:
     branches:
       - "main"

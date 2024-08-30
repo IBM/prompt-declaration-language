@@ -82,23 +82,43 @@ RoleType: TypeAlias = Optional[str]
 
 
 class Block(BaseModel):
-    """PDL program block"""
+    """PDL block: common fields of all PDL blocks."""
 
     model_config = ConfigDict(extra="forbid")
+
     description: Optional[str] = None
+    """Documentation associated to the block.
+    """
     spec: Any = None
+    """Type specification of the result of the block.
+    """
     defs: dict[str, "BlocksType"] = {}
+    """Set of definitions executed before the execution of the block.
+    """
     assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the result of the execution of the block.
+    """
     show_result: bool = True
-    result: Optional[Any] = None
+    """Ignore the value computed by the block.
+    """
     parser: Optional[ParserType] = None
+    """Parser to use to construct a value out of a string result."""
+    fallback: Optional["BlocksType"] = None
+    """Block to execute in case of error.
+    """
+    role: RoleType = None
+    """Role associated to the block and sub-blocks.
+    """
+
+    # Fields for internal use
+    result: Optional[Any] = None
     location: Optional[LocationType] = None
     has_error: bool = False
-    fallback: Optional["BlocksType"] = None
-    role: RoleType = None
 
 
 class FunctionBlock(Block):
+    """Function declaration"""
+
     model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
@@ -236,7 +256,7 @@ class WatsonxModelBlock(ModelBlock):
 class LitellmModelBlock(ModelBlock):
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters]
+    parameters: Optional[LitellmParameters] = None
 
 
 class CodeBlock(Block):
@@ -494,6 +514,43 @@ def set_default_model_parameters(
     if "max_new_tokens" not in parameters:
         parameters[
             "max_new_tokens"
+        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "min_new_tokens" not in parameters:
+        parameters[
+            "min_new_tokens"
+        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "repetition_penalty" not in parameters:
+        parameters[
+            "repetition_penalty"
+        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+    if parameters["decoding_method"] == "sample":
+        if "temperature" not in parameters:
+            parameters[
+                "temperature"
+            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_k" not in parameters:
+            parameters[
+                "top_k"
+            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_p" not in parameters:
+            parameters[
+                "top_p"
+            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    return parameters
+
+
+def set_default_granite_model_parameters(
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, str]:
+    if parameters is None:
+        parameters = {}
+    if "decoding_method" not in parameters:
+        parameters[
+            "decoding_method"
+        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+    if "max_tokens" in parameters and parameters["max_tokens"] is None:
+        parameters[
+            "max_tokens"
         ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
     if "min_new_tokens" not in parameters:
         parameters[

@@ -63,14 +63,17 @@ plugins:
           show_bases: true
           show_symbol_type_toc: true
           show_submodules: false
-          show_root_toc_entry: false
+          show_root_toc_entry: true
           docstring_section_style: table
           inherited_members: false
           summary: true
-          docstring_style: null
+          docstring_style: google
           show_if_no_docstring: false
-          show_labels: false
+          show_labels: true
           heading_level: 3
+          show_symbol_type_heading: true
+          show_signature: true
+          show_signature_annotations: true
 
 
 markdown_extensions:
