@@ -117,9 +117,6 @@ export type Spec22 = {
 } | null;
 export type Regex = string;
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
-export type Path = string[];
-export type File = string;
-export type HasError = boolean;
 export type Fallback =
   | number
   | string
@@ -172,11 +169,13 @@ export type Fallback =
     )[]
   | null;
 export type Role = string | null;
+export type Path = string[];
+export type File = string;
+export type HasError = boolean;
 export type Kind = "empty";
 export type Def1 = string | null;
 export type ShowResult1 = boolean;
 export type Parser1 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError1 = boolean;
 export type Fallback1 =
   | number
   | string
@@ -229,6 +228,7 @@ export type Fallback1 =
     )[]
   | null;
 export type Role1 = string | null;
+export type HasError1 = boolean;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -284,7 +284,6 @@ export type Program1 =
 export type Def2 = string | null;
 export type ShowResult2 = boolean;
 export type Parser2 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError2 = boolean;
 export type Fallback2 =
   | number
   | string
@@ -337,6 +336,7 @@ export type Fallback2 =
     )[]
   | null;
 export type Role2 = string | null;
+export type HasError2 = boolean;
 export type Kind2 = "include";
 export type Include = string;
 export type Trace =
@@ -367,7 +367,6 @@ export type Trace =
 export type Def3 = string | null;
 export type ShowResult3 = boolean;
 export type Parser3 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError3 = boolean;
 export type Fallback3 =
   | number
   | string
@@ -420,6 +419,7 @@ export type Fallback3 =
     )[]
   | null;
 export type Role3 = string | null;
+export type HasError3 = boolean;
 export type Kind3 = "read";
 export type Read = string | null;
 export type Message = string | null;
@@ -427,7 +427,6 @@ export type Multiline = boolean;
 export type Def4 = string | null;
 export type ShowResult4 = boolean;
 export type Parser4 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError4 = boolean;
 export type Fallback4 =
   | number
   | string
@@ -480,6 +479,7 @@ export type Fallback4 =
     )[]
   | null;
 export type Role4 = string | null;
+export type HasError4 = boolean;
 export type Kind4 = "message";
 export type Content =
   | number
@@ -534,7 +534,6 @@ export type Content =
 export type Def5 = string | null;
 export type ShowResult5 = boolean;
 export type Parser5 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError5 = boolean;
 export type Fallback5 =
   | number
   | string
@@ -587,6 +586,7 @@ export type Fallback5 =
     )[]
   | null;
 export type Role5 = string | null;
+export type HasError5 = boolean;
 export type Kind5 = "array";
 export type Array =
   | number
@@ -641,7 +641,6 @@ export type Array =
 export type Def6 = string | null;
 export type ShowResult6 = boolean;
 export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError6 = boolean;
 export type Fallback6 =
   | number
   | string
@@ -694,6 +693,7 @@ export type Fallback6 =
     )[]
   | null;
 export type Role6 = string | null;
+export type HasError6 = boolean;
 export type Kind6 = "sequence";
 export type Sequence =
   | number
@@ -748,7 +748,6 @@ export type Sequence =
 export type Def7 = string | null;
 export type ShowResult7 = boolean;
 export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError7 = boolean;
 export type Fallback7 =
   | number
   | string
@@ -801,6 +800,7 @@ export type Fallback7 =
     )[]
   | null;
 export type Role7 = string | null;
+export type HasError7 = boolean;
 export type Kind7 = "document";
 export type Document =
   | number
@@ -855,7 +855,6 @@ export type Document =
 export type Def8 = string | null;
 export type ShowResult8 = boolean;
 export type Parser8 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError8 = boolean;
 export type Fallback8 =
   | number
   | string
@@ -908,6 +907,7 @@ export type Fallback8 =
     )[]
   | null;
 export type Role8 = string | null;
+export type HasError8 = boolean;
 export type Kind8 = "for";
 export type Repeat =
   | number
@@ -1017,7 +1017,6 @@ export type Trace1 =
 export type Def9 = string | null;
 export type ShowResult9 = boolean;
 export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError9 = boolean;
 export type Fallback9 =
   | number
   | string
@@ -1070,6 +1069,7 @@ export type Fallback9 =
     )[]
   | null;
 export type Role9 = string | null;
+export type HasError9 = boolean;
 export type Kind9 = "repeat_until";
 export type Repeat1 =
   | number
@@ -1178,7 +1178,6 @@ export type Trace2 =
 export type Def10 = string | null;
 export type ShowResult10 = boolean;
 export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError10 = boolean;
 export type Fallback10 =
   | number
   | string
@@ -1231,6 +1230,7 @@ export type Fallback10 =
     )[]
   | null;
 export type Role10 = string | null;
+export type HasError10 = boolean;
 export type Kind10 = "repeat";
 export type Repeat2 =
   | number
@@ -1340,7 +1340,6 @@ export type Trace3 =
 export type Def11 = string | null;
 export type ShowResult11 = boolean;
 export type Parser11 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError11 = boolean;
 export type Fallback11 =
   | number
   | string
@@ -1393,6 +1392,7 @@ export type Fallback11 =
     )[]
   | null;
 export type Role11 = string | null;
+export type HasError11 = boolean;
 export type Kind11 = "if";
 export type Then =
   | number
@@ -1499,7 +1499,6 @@ export type IfResult = boolean | null;
 export type Def12 = string | null;
 export type ShowResult12 = boolean;
 export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError12 = boolean;
 export type Fallback12 =
   | number
   | string
@@ -1552,11 +1551,11 @@ export type Fallback12 =
     )[]
   | null;
 export type Role12 = string | null;
+export type HasError12 = boolean;
 export type Kind12 = "data";
 export type Def13 = string | null;
 export type ShowResult13 = boolean;
 export type Parser13 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError13 = boolean;
 export type Fallback13 =
   | number
   | string
@@ -1609,12 +1608,12 @@ export type Fallback13 =
     )[]
   | null;
 export type Role13 = string | null;
+export type HasError13 = boolean;
 export type Kind13 = "get";
 export type Get = string;
 export type Def14 = string | null;
 export type ShowResult14 = boolean;
 export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError14 = boolean;
 export type Fallback14 =
   | number
   | string
@@ -1667,6 +1666,7 @@ export type Fallback14 =
     )[]
   | null;
 export type Role14 = string | null;
+export type HasError14 = boolean;
 export type Kind14 = "api";
 export type Api = string;
 export type Url = string;
@@ -1723,7 +1723,6 @@ export type Input =
 export type Def15 = string | null;
 export type ShowResult15 = boolean;
 export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError15 = boolean;
 export type Fallback15 =
   | number
   | string
@@ -1776,6 +1775,7 @@ export type Fallback15 =
     )[]
   | null;
 export type Role15 = string | null;
+export type HasError15 = boolean;
 export type Kind15 = "code";
 export type Lan = "python";
 export type Code =
@@ -1831,7 +1831,6 @@ export type Code =
 export type Def16 = string | null;
 export type ShowResult16 = boolean;
 export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError16 = boolean;
 export type Fallback16 =
   | number
   | string
@@ -1884,6 +1883,7 @@ export type Fallback16 =
     )[]
   | null;
 export type Role16 = string | null;
+export type HasError16 = boolean;
 export type Kind16 = "model";
 export type Model = string;
 export type Input1 =
@@ -2004,7 +2004,6 @@ export type MaxRetries = number | null;
 export type Def17 = string | null;
 export type ShowResult17 = boolean;
 export type Parser17 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError17 = boolean;
 export type Fallback17 =
   | number
   | string
@@ -2057,6 +2056,7 @@ export type Fallback17 =
     )[]
   | null;
 export type Role17 = string | null;
+export type HasError17 = boolean;
 export type Kind17 = "model";
 export type Model1 = string;
 export type Input2 =
@@ -2196,7 +2196,6 @@ export type ExampleFileIds =
 export type Def18 = string | null;
 export type ShowResult18 = boolean;
 export type Parser18 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError18 = boolean;
 export type Fallback18 =
   | number
   | string
@@ -2249,6 +2248,7 @@ export type Fallback18 =
     )[]
   | null;
 export type Role18 = string | null;
+export type HasError18 = boolean;
 export type Kind18 = "model";
 export type Model2 = string;
 export type Input3 =
@@ -2338,7 +2338,6 @@ export type GuardrailsHapParams = {
 export type Def19 = string | null;
 export type ShowResult19 = boolean;
 export type Parser19 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError19 = boolean;
 export type Fallback19 =
   | number
   | string
@@ -2391,6 +2390,7 @@ export type Fallback19 =
     )[]
   | null;
 export type Role19 = string | null;
+export type HasError19 = boolean;
 export type Kind19 = "call";
 export type Call = string;
 export type Trace7 =
@@ -2447,7 +2447,6 @@ export type Trace7 =
 export type Def20 = string | null;
 export type ShowResult20 = boolean;
 export type Parser20 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError20 = boolean;
 export type Fallback20 =
   | number
   | string
@@ -2500,6 +2499,7 @@ export type Fallback20 =
     )[]
   | null;
 export type Role20 = string | null;
+export type HasError20 = boolean;
 export type Kind20 = "function";
 export type Function = {
   [k: string]: unknown;
@@ -2632,18 +2632,21 @@ export type PdlBlocks =
       | EmptyBlock
     )[];
 
+/**
+ * Function declaration.
+ */
 export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
   def?: Def20;
   show_result?: ShowResult20;
-  result?: unknown;
   parser?: Parser20;
-  location?: LocationType | null;
-  has_error?: HasError20;
   fallback?: Fallback20;
   role?: Role20;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError20;
   kind?: Kind20;
   function: Function;
   return: Return;
@@ -2704,18 +2707,21 @@ export interface Defs {
         | EmptyBlock
       )[];
 }
+/**
+ * Calling a function.
+ */
 export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
   def?: Def19;
   show_result?: ShowResult19;
-  result?: unknown;
   parser?: Parser19;
-  location?: LocationType | null;
-  has_error?: HasError19;
   fallback?: Fallback19;
   role?: Role19;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError19;
   kind?: Kind19;
   call: Call;
   args?: Args;
@@ -2776,18 +2782,21 @@ export interface Defs1 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk.
+ */
 export interface WatsonxModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
   def?: Def18;
   show_result?: ShowResult18;
-  result?: unknown;
   parser?: Parser18;
-  location?: LocationType | null;
-  has_error?: HasError18;
   fallback?: Fallback18;
   role?: Role18;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError18;
   kind?: Kind18;
   model: Model2;
   input?: Input3;
@@ -2858,12 +2867,12 @@ export interface BamModelBlock {
   defs?: Defs3;
   def?: Def17;
   show_result?: ShowResult17;
-  result?: unknown;
   parser?: Parser17;
-  location?: LocationType | null;
-  has_error?: HasError17;
   fallback?: Fallback17;
   role?: Role17;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError17;
   kind?: Kind17;
   model: Model1;
   input?: Input2;
@@ -2930,24 +2939,27 @@ export interface Defs3 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
+ */
 export interface LitellmModelBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
   def?: Def16;
   show_result?: ShowResult16;
-  result?: unknown;
   parser?: Parser16;
-  location?: LocationType | null;
-  has_error?: HasError16;
   fallback?: Fallback16;
   role?: Role16;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError16;
   kind?: Kind16;
   model: Model;
   input?: Input1;
   trace?: Trace4;
   platform?: Platform;
-  parameters: LitellmParameters | null;
+  parameters?: LitellmParameters | null;
 }
 export interface Spec4 {
   [k: string]: unknown;
@@ -3004,18 +3016,21 @@ export interface Defs4 {
         | EmptyBlock
       )[];
 }
+/**
+ * Execute a piece of code.
+ */
 export interface CodeBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
   def?: Def15;
   show_result?: ShowResult15;
-  result?: unknown;
   parser?: Parser15;
-  location?: LocationType | null;
-  has_error?: HasError15;
   fallback?: Fallback15;
   role?: Role15;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError15;
   kind?: Kind15;
   lan: Lan;
   code: Code;
@@ -3075,18 +3090,21 @@ export interface Defs5 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call an API.
+ */
 export interface ApiBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
   def?: Def14;
   show_result?: ShowResult14;
-  result?: unknown;
   parser?: Parser14;
-  location?: LocationType | null;
-  has_error?: HasError14;
   fallback?: Fallback14;
   role?: Role14;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError14;
   kind?: Kind14;
   api: Api;
   url: Url;
@@ -3147,18 +3165,21 @@ export interface Defs6 {
         | EmptyBlock
       )[];
 }
+/**
+ * Get the value of a variable.
+ */
 export interface GetBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
   def?: Def13;
   show_result?: ShowResult13;
-  result?: unknown;
   parser?: Parser13;
-  location?: LocationType | null;
-  has_error?: HasError13;
   fallback?: Fallback13;
   role?: Role13;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError13;
   kind?: Kind13;
   get: Get;
 }
@@ -3217,18 +3238,21 @@ export interface Defs7 {
         | EmptyBlock
       )[];
 }
+/**
+ * Arbitrary JSON value.
+ */
 export interface DataBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
   def?: Def12;
   show_result?: ShowResult12;
-  result?: unknown;
   parser?: Parser12;
-  location?: LocationType | null;
-  has_error?: HasError12;
   fallback?: Fallback12;
   role?: Role12;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError12;
   kind?: Kind12;
   data: Data;
 }
@@ -3287,18 +3311,21 @@ export interface Defs8 {
         | EmptyBlock
       )[];
 }
+/**
+ * Conditional control structure.
+ */
 export interface IfBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
   def?: Def11;
   show_result?: ShowResult11;
-  result?: unknown;
   parser?: Parser11;
-  location?: LocationType | null;
-  has_error?: HasError11;
   fallback?: Fallback11;
   role?: Role11;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError11;
   kind?: Kind11;
   if: If;
   then: Then;
@@ -3360,18 +3387,21 @@ export interface Defs9 {
         | EmptyBlock
       )[];
 }
+/**
+ * Repeat the execution of a block for a fixed number of iterations.
+ */
 export interface RepeatBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
   def?: Def10;
   show_result?: ShowResult10;
-  result?: unknown;
   parser?: Parser10;
-  location?: LocationType | null;
-  has_error?: HasError10;
   fallback?: Fallback10;
   role?: Role10;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError10;
   kind?: Kind10;
   repeat: Repeat2;
   num_iterations: NumIterations;
@@ -3433,18 +3463,21 @@ export interface Defs10 {
         | EmptyBlock
       )[];
 }
+/**
+ * Repeat the execution of a block until a condition is satisfied.
+ */
 export interface RepeatUntilBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
   def?: Def9;
   show_result?: ShowResult9;
-  result?: unknown;
   parser?: Parser9;
-  location?: LocationType | null;
-  has_error?: HasError9;
   fallback?: Fallback9;
   role?: Role9;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError9;
   kind?: Kind9;
   repeat: Repeat1;
   until: Until;
@@ -3506,18 +3539,21 @@ export interface Defs11 {
         | EmptyBlock
       )[];
 }
+/**
+ * Iteration over arrays.
+ */
 export interface ForBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
   def?: Def8;
   show_result?: ShowResult8;
-  result?: unknown;
   parser?: Parser8;
-  location?: LocationType | null;
-  has_error?: HasError8;
   fallback?: Fallback8;
   role?: Role8;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError8;
   kind?: Kind8;
   for: For;
   repeat: Repeat;
@@ -3579,18 +3615,21 @@ export interface Defs12 {
         | EmptyBlock
       )[];
 }
+/**
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ */
 export interface DocumentBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
   def?: Def7;
   show_result?: ShowResult7;
-  result?: unknown;
   parser?: Parser7;
-  location?: LocationType | null;
-  has_error?: HasError7;
   fallback?: Fallback7;
   role?: Role7;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError7;
   kind?: Kind7;
   document: Document;
 }
@@ -3649,18 +3688,21 @@ export interface Defs13 {
         | EmptyBlock
       )[];
 }
+/**
+ * Return the value of the last block if the list of blocks.
+ */
 export interface SequenceBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
   def?: Def6;
   show_result?: ShowResult6;
-  result?: unknown;
   parser?: Parser6;
-  location?: LocationType | null;
-  has_error?: HasError6;
   fallback?: Fallback6;
   role?: Role6;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError6;
   kind?: Kind6;
   sequence: Sequence;
 }
@@ -3719,18 +3761,21 @@ export interface Defs14 {
         | EmptyBlock
       )[];
 }
+/**
+ * Return the array of values computed by each block of the list of blocks.
+ */
 export interface ArrayBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
   def?: Def5;
   show_result?: ShowResult5;
-  result?: unknown;
   parser?: Parser5;
-  location?: LocationType | null;
-  has_error?: HasError5;
   fallback?: Fallback5;
   role?: Role5;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError5;
   kind?: Kind5;
   array: Array;
 }
@@ -3789,18 +3834,21 @@ export interface Defs15 {
         | EmptyBlock
       )[];
 }
+/**
+ * Create a message.
+ */
 export interface MessageBlock {
   description?: Description16;
   spec?: Spec16;
   defs?: Defs16;
   def?: Def4;
   show_result?: ShowResult4;
-  result?: unknown;
   parser?: Parser4;
-  location?: LocationType | null;
-  has_error?: HasError4;
   fallback?: Fallback4;
   role: Role4;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError4;
   kind?: Kind4;
   content: Content;
 }
@@ -3859,18 +3907,21 @@ export interface Defs16 {
         | EmptyBlock
       )[];
 }
+/**
+ * Read from a file or standard input.
+ */
 export interface ReadBlock {
   description?: Description17;
   spec?: Spec17;
   defs?: Defs17;
   def?: Def3;
   show_result?: ShowResult3;
-  result?: unknown;
   parser?: Parser3;
-  location?: LocationType | null;
-  has_error?: HasError3;
   fallback?: Fallback3;
   role?: Role3;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError3;
   kind?: Kind3;
   read: Read;
   message?: Message;
@@ -3931,18 +3982,21 @@ export interface Defs17 {
         | EmptyBlock
       )[];
 }
+/**
+ * Include a PDL file.
+ */
 export interface IncludeBlock {
   description?: Description18;
   spec?: Spec18;
   defs?: Defs18;
   def?: Def2;
   show_result?: ShowResult2;
-  result?: unknown;
   parser?: Parser2;
-  location?: LocationType | null;
-  has_error?: HasError2;
   fallback?: Fallback2;
   role?: Role2;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError2;
   kind?: Kind2;
   include: Include;
   trace?: Trace;
@@ -4008,12 +4062,12 @@ export interface ErrorBlock {
   defs?: Defs19;
   def?: Def1;
   show_result?: ShowResult1;
-  result?: unknown;
   parser?: Parser1;
-  location?: LocationType | null;
-  has_error?: HasError1;
   fallback?: Fallback1;
   role?: Role1;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError1;
   kind?: Kind1;
   msg: Msg;
   program: Program1;
@@ -4073,18 +4127,21 @@ export interface Defs19 {
         | EmptyBlock
       )[];
 }
+/**
+ * Block without an action. It can contain definitions.
+ */
 export interface EmptyBlock {
   description?: Description20;
   spec?: Spec20;
   defs?: Defs20;
   def?: Def;
   show_result?: ShowResult;
-  result?: unknown;
   parser?: Parser;
-  location?: LocationType | null;
-  has_error?: HasError;
   fallback?: Fallback;
   role?: Role;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError;
   kind?: Kind;
 }
 export interface Spec20 {
@@ -4173,6 +4230,9 @@ export interface If {
 export interface Data {
   [k: string]: unknown;
 }
+/**
+ * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+ */
 export interface LitellmParameters {
   timeout?: Timeout;
   temperature?: Temperature;
