@@ -46,7 +46,7 @@ In order to run the examples that use foundation models hosted on IBM's [watsonx
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
-
+ 
 To run the interpreter:
 
 ```
