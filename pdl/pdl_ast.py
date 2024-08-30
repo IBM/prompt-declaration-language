@@ -236,7 +236,7 @@ class WatsonxModelBlock(ModelBlock):
 class LitellmModelBlock(ModelBlock):
     model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters]
+    parameters: Optional[LitellmParameters] = None
 
 
 class CodeBlock(Block):
@@ -494,6 +494,43 @@ def set_default_model_parameters(
     if "max_new_tokens" not in parameters:
         parameters[
             "max_new_tokens"
+        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "min_new_tokens" not in parameters:
+        parameters[
+            "min_new_tokens"
+        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "repetition_penalty" not in parameters:
+        parameters[
+            "repetition_penalty"
+        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+    if parameters["decoding_method"] == "sample":
+        if "temperature" not in parameters:
+            parameters[
+                "temperature"
+            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_k" not in parameters:
+            parameters[
+                "top_k"
+            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_p" not in parameters:
+            parameters[
+                "top_p"
+            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    return parameters
+
+
+def set_default_granite_model_parameters(
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, str]:
+    if parameters is None:
+        parameters = {}
+    if "decoding_method" not in parameters:
+        parameters[
+            "decoding_method"
+        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+    if "max_tokens" in parameters and parameters["max_tokens"] is None:
+        parameters[
+            "max_tokens"
         ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
     if "min_new_tokens" not in parameters:
         parameters[

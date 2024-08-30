@@ -9227,12 +9227,12 @@
             {
               "type": "null"
             }
-          ]
+          ],
+          "default": null
         }
       },
       "required": [
-        "model",
-        "parameters"
+        "model"
       ],
       "title": "LitellmModelBlock",
       "type": "object"

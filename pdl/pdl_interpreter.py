@@ -802,11 +802,13 @@ def step_call_model(
                 }
             )
         case LitellmModelBlock():
-            # TODO: evaluate all the parameters?
+            params, param_errors = process_expr(scope, block.parameters, loc)
+            errors += param_errors
             concrete_block = block.model_copy(
                 update={
                     "model": model,
                     "input": input_trace,
+                    "params": params,
                 }
             )
         case _:

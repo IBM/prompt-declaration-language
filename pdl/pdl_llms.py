@@ -15,6 +15,7 @@ from .pdl_ast import (
     Message,
     set_default_model_parameters,
     set_default_model_params,
+    set_default_granite_model_parameters,
 )
 
 # Load environment variables
@@ -205,8 +206,11 @@ class LitellmModel:
         messages: list[Message],
         parameters: dict[str, Any],
     ) -> Message:
+        params = parameters
+        if "granite" in model_id:
+            params = set_default_granite_model_parameters(params)
         response = completion(
-            model=model_id, messages=messages, stream=False, **parameters
+            model=model_id, messages=messages, stream=False, **params
         )
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
@@ -219,8 +223,11 @@ class LitellmModel:
         messages: list[Message],
         parameters: dict[str, Any],
     ) -> Generator[Message, Any, None]:
+        params = parameters
+        if "granite" in model_id:
+            params = set_default_granite_model_parameters(params)
         response = completion(
-            model=model_id, messages=messages, stream=True, **parameters
+            model=model_id, messages=messages, stream=True, **params
         )
         for chunk in response:
             msg = chunk.choices[0].delta  # pyright: ignore
