@@ -38,20 +38,6 @@ def test_line1(capsys):
     do_test(line1, capsys)
 
 
-line2 = {
-    "file": "tests/data/line/hello2.pdl",
-    "errors": [
-        "",
-        "tests/data/line/hello2.pdl:9 - Field not allowed: decoding_methods",
-        "tests/data/line/hello2.pdl:10 - Field not allowed: stop_sequencess",
-    ],
-}
-
-# XXX The type checking of BAM parameters is now weaker
-# def test_line2(capsys):
-#     do_test(line2, capsys)
-
-
 line3 = {
     "file": "tests/data/line/hello3.pdl",
     "errors": [
@@ -79,34 +65,6 @@ line4 = {
 
 def test_line4(capsys):
     do_test(line4, capsys)
-
-
-line5 = {
-    "file": "tests/data/line/hello5.pdl",
-    "errors": [
-        "",
-        "tests/data/line/hello5.pdl:19 - Field not allowed: include_stop_sequences",
-    ],
-}
-
-# XXX The type checking of BAM parameters is now weaker
-# def test_line5(capsys):
-#     do_test(line5, capsys)
-
-
-line6 = {
-    "file": "tests/data/line/hello6.pdl",
-    "errors": [
-        "",
-        "tests/data/line/hello6.pdl:7 - Field not allowed: foo",
-        "tests/data/line/hello6.pdl:6 - Field not allowed: decoding_methoda",
-        "tests/data/line/hello6.pdl:20 - Field not allowed: include_stop_sequences",
-    ],
-}
-
-# XXX The type checking of BAM parameters is now weaker
-# def test_line6(capsys):
-#     do_test(line6, capsys)
 
 
 line7 = {
@@ -209,25 +167,21 @@ def test_line13(capsys):
     do_test(line13, capsys)
 
 
-# line14 = {
-#    "file": "tests/data/line/hello14.pdl",
-#    "errors": [
-#        "",
-#        "Hello, world!",
-#        "Translate the sentence 'Hello, World!' to French",
-#        "Bonjour le monde !",
-#        "Translate the sentence 'Hello, World!' to German",
-#        "Hallo Welt!",
-#        "tests/data/line/hello14.pdl:19 - Type errors in result of function call to translate",  # pylint: disable=line-too-long
-#        "tests/data/line/hello14.pdl:15 - Bonjour le monde !",
-#        "Translate the sentence 'Hello, world!' to German",
-#        "Hallo Welt! should be of type <class 'int'>",
-#    ],
-# }
+line14 = {
+    "file": "tests/data/line/hello14.pdl",
+    "errors": [
+        "",
+        "Hello, World!",
+        "Translate the sentence 'Hello, World!' to French",
+        "Bonjour le monde!",
+        "tests/data/line/hello14.pdl:22 - Type errors in result of function call to translate",
+        "tests/data/line/hello14.pdl:15 - Bonjour le monde! should be of type <class 'int'>",
+    ],
+}
 
 
-# def test_line14(capsys):
-#    do_test(line14, capsys)
+def test_line14(capsys):
+    do_test(line14, capsys)
 
 
 line15 = {
@@ -246,19 +200,19 @@ def test_line15(capsys):
     do_test(line15, capsys)
 
 
-# line16 = {
-#    "file": "tests/data/line/hello16.pdl",
-#    "errors": [
-#        "",
-#        "{'bob': 20, 'carol': 30}",
-#        "tests/data/line/hello16.pdl:8 - Type errors during spec checking",
-#        "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
-#    ],
-# }
+line16 = {
+    "file": "tests/data/line/hello16.pdl",
+    "errors": [
+        "",
+        '{"bob": 20, "carol": 30}',
+        "tests/data/line/hello16.pdl:8 - Type errors during spec checking",
+        "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
+    ],
+}
 
 
-# def test_line16(capsys):
-#    do_test(line16, capsys)
+def test_line16(capsys):
+    do_test(line16, capsys)
 
 
 line17 = {
@@ -353,40 +307,40 @@ def test_line23(capsys):
     do_test(line23, capsys)
 
 
-# line24 = {
-#    "file": "tests/data/line/hello24.pdl",
-#    "errors": [
-#        "",
-#        "Hello, world!",
-#        "tests/data/line/hello24.pdl:21 - 'GEN1' is undefined",
-#        "tests/data/line/hello24.pdl:22 - 'GEN2' is undefined",
-#        "tests/data/line/hello24.pdl:20 - Type errors during function call to translate",
-#        "tests/data/line/hello24.pdl:21 - None should be of type <class 'str'>",
-#        "tests/data/line/hello24.pdl:22 - None should be of type <class 'str'>",
-#        "tests/data/line/hello24.pdl:18 - Type errors during spec checking",
-#        "tests/data/line/hello24.pdl:18 - None should be of type <class 'str'>",
-#    ],
-# }
+line24 = {
+    "file": "tests/data/line/hello24.pdl",
+    "errors": [
+        "",
+        "Hello, World!",
+        "tests/data/line/hello24.pdl:21 - 'GEN1' is undefined",
+        "tests/data/line/hello24.pdl:22 - 'GEN2' is undefined",
+        "tests/data/line/hello24.pdl:20 - Type errors during function call to translate",
+        "tests/data/line/hello24.pdl:21 - None should be of type <class 'str'>",
+        "tests/data/line/hello24.pdl:22 - None should be of type <class 'str'>",
+        "tests/data/line/hello24.pdl:18 - Type errors during spec checking",
+        "tests/data/line/hello24.pdl:18 - None should be of type <class 'str'>",
+    ],
+}
 
 
-# def test_line24(capsys):
-#    do_test(line24, capsys)
+def test_line24(capsys):
+    do_test(line24, capsys)
 
 
-# line25 = {
-#    "file": "tests/data/line/hello25.pdl",
-#    "errors": [
-#        "",
-#        "Hello, World!",
-#        "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
-#        "Translate the sentence '{{ sentence1 }}' to {{ language }}",
-#        "Hello, world!",
-#    ],
-# }
+line25 = {
+    "file": "tests/data/line/hello25.pdl",
+    "errors": [
+        "",
+        "Hello, World!",
+        "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
+        "Translate the sentence '{{ sentence1 }}' to {{ language }}",
+        "{{ translate(sentence1) }}",
+    ],
+}
 
 
-# def test_line25(capsys):
-#    do_test(line25, capsys)
+def test_line25(capsys):
+    do_test(line25, capsys)
 
 
 line26 = {
@@ -408,24 +362,6 @@ line26 = {
 
 def test_line26(capsys):
     do_test(line26, capsys)
-
-
-line27 = {
-    "file": "tests/data/line/hello27.pdl",
-    "errors": [
-        "",
-        "",
-        "tests/data/line/hello27.pdl:3 - Attempting to include invalid yaml: tests/data/line/hello2.pdl",  # pylint: disable=line-too-long
-        "tests/data/line/hello2.pdl:9 - Field not allowed: decoding_methods",
-        "tests/data/line/hello2.pdl:10 - Field not allowed: stop_sequencess",
-        "",
-        "",
-    ],
-}
-
-# XXX The type checking of BAM parameters is now weaker
-# def test_line27(capsys):
-#     do_test(line27, capsys)
 
 
 line28 = {
