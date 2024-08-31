@@ -13,7 +13,12 @@ document:
     language: str
   return:
     - "\nTranslate the sentence '{{ sentence1 }}' to {{ language }}\n"
-    - model: ibm/granite-34b-code-instruct
+    - model: ibm/granite-20b-multilingual
+      params:
+        stop_sequences:
+        - "!"
+        - "\n"
+        include_stop_sequence: true
 - call: translate
   spec: str
   args:
