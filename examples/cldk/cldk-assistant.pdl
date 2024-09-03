@@ -34,7 +34,7 @@ document:
   - "\n***Generating PDL code for your query:\n"
   - if: "{{ query != 'quit'}}"
     then: 
-    - model: watsonx/ibm/granite-34b-code-instruct
+    - model: ibm/granite-20b-code-instruct
       def: PDL
       show_result: true
       input: 
@@ -116,7 +116,7 @@ document:
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
               result = method
           - "\n\nGenerate a summary of method Foo\n\n"
-          - model: watsonx/meta-llama/llama-3-70b-instruct
+          - model: meta-llama/llama-3-70b-instruct
           ```
 
           Question: Generate a different comment for method Foo(string) in class org.ibm.App?
@@ -129,7 +129,7 @@ document:
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
               result = method
           - "\n\nGenerate a different comment for method Foo(string)\n\n"
-          - model: watsonx/meta-llama/llama-3-70b-instruct
+          - model: meta-llama/llama-3-70b-instruct
           ```
 
           If the query contains something about a field be sure to call a model.
@@ -137,7 +137,7 @@ document:
           Question: {{ query }}
 
 
-      parameters:
+      params:
         stop_sequence: ["Question"]
         include_stop_sequence: false
     - "\n\n***Executing the above PDL code:\n\n"
@@ -152,6 +152,7 @@ document:
         import re
         import yaml
         s = """'{{ PDL }}'"""
+        print(s)
         pdl = s.split("```")[1]
         obj = yaml.safe_load(pdl)
         state = InterpreterState()

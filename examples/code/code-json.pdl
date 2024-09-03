@@ -9,7 +9,6 @@ document:
   show_result: False
 - model: ibm/granite-20b-code-instruct
   def: EXPLANATION
-  platform: bam
   show_result: False
   input:
      |
