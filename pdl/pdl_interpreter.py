@@ -57,7 +57,7 @@ from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_program
+from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
 
@@ -105,9 +105,8 @@ def generate(
     if log_file is None:
         log_file = "log.txt"
     try:
-        prog, line_table = parse_program(pdl_file)
+        prog, loc = parse_file(pdl_file)
         state = InterpreterState(yield_output=True)
-        loc = LocationType(path=[], file=pdl_file, table=line_table)
         _, _, _, trace = process_prog(state, initial_scope, prog, loc)
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
@@ -1132,8 +1131,7 @@ def step_include(
     YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock | ErrorBlock]
 ]:
     try:
-        prog, line_table = parse_program(block.include)
-        newloc = LocationType(file=block.include, path=[], table=line_table)
+        prog, newloc = parse_file(block.include)
         result, background, scope, trace = yield from step_block(
             state, scope, prog.root, newloc
         )
