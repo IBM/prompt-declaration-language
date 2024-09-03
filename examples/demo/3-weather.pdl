@@ -4,7 +4,7 @@ document:
   def: QUERY
   message: "Ask a query: "
   show_result: false
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-34b-code-instruct
   input: |
       Question: What is the weather in London?
       London
@@ -13,7 +13,7 @@ document:
       Question: Tell me the weather in Lagos?
       Lagos
       Question: {{ QUERY }}
-  parameters:
+  params:
     stop_sequences:
     - Question
     - What
@@ -26,9 +26,9 @@ document:
   input: '{{ LOCATION }}'
   def: WEATHER
   show_result: false
-- model: ibm/granite-20b-code-instruct-v2
-  platform: bam
+- model: ibm/granite-20b-code-instruct
   input: |
-      Explain the weather from the following JSON:
+      Explain the weather from the following JSON. Don't write quotes.
       `{{ WEATHER }}`
+- "\n"
   

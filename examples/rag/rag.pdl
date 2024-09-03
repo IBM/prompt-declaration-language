@@ -3,9 +3,9 @@ document:
 - lan: python
   code: | # initialize PDL_SESSION.vec_db and PDL_SESSION.embed() function
     import datasets, numpy, os, requests
-    genai_key, genai_api = os.environ["GENAI_KEY"], os.environ["GENAI_API"]
+    genai_key, genai_api = os.environ["WATSONX_KEY"], os.environ["WATSONX_API"]
     def embed(text):
-        endpoint = f"{genai_api}/v2/text/embeddings?version=2023-11-22"
+        endpoint = f"{genai_api}/v1/text/embeddings?version=2024-05-02"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {genai_key}",
@@ -51,5 +51,5 @@ document:
     Q: {{ TEST_PROMPT }}
     A: ```
 - model: ibm/granite-20b-code-instruct-v2
-  parameters:
+  params:
     stop_sequences: ["```"]

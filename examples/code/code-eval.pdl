@@ -6,7 +6,6 @@ document:
   show_result: False
 - "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct
-  platform: bam
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
@@ -38,3 +37,4 @@ document:
     {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- "\n"

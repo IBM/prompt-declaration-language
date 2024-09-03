@@ -3,21 +3,14 @@ document:
 - 'A list of things not to forget when '
 - "traveling:\n"
 - repeat:
-  - '- '
-  - constraints:
-    - in:
-      - passport
-      - phone
-      - keys
-    - words_len: <=2
-    model: ibm/granite-20b-code-instruct-v2
-    parameters:
+  - model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: greedy
   - "\n"
   num_iterations: 2
 - 'The most important of these is '
 - def: ITEM
-  model: ibm/granite-20b-code-instruct-v2
-  parameters:
+  model: ibm/granite-20b-code-instruct
+  params:
     decoding_method: greedy
 - .

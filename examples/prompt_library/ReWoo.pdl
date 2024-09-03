@@ -86,11 +86,10 @@ defs:
         Task: {{ task }}
       - def: PLANS
         model: "{{ model }}"
-        platform: bam
         parser: # plan, step_name, tool, tool_input
           regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<tool>\w+)\s*\[(?P<tool_input>[^\]]+)\]'
           mode: findall
-        parameters:
+        params:
           decoding_method: greedy
           stop_sequences:
             - "<|endoftext|>"
@@ -166,7 +165,7 @@ defs:
           Response:
       - def: SOLUTION
         model: "{{ model }}"
-        parameters:
+        params:
           decoding_method: greedy
           stop_sequences:
             - "<|endoftext|>"

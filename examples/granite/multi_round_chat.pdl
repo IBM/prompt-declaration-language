@@ -15,7 +15,7 @@ document:
     {{ prompt }}
     {{ ASSISTANT_TAG }}"
   - model: ibm/granite-13b-chat-v2
-    parameters:
+    params:
       decoding_method: sample
       max_new_tokens: 512
-
+- "\n"

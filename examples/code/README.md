@@ -38,4 +38,5 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-The PDL program for this example can be found [here](examples/code/code.yaml). This example also contains a comparison with some ground truth for evaluation and outputs a text similarity metric.
+The PDL program for this example can be found [here](examples/code/code.yaml). This example also contains a comparison with some ground truth for evaluation and outputs a text similarity metric ([code-eval.pdl](examples/code/code-eval.yaml)).
+The program [code-json.pdl](examples/code/code-json.yaml) outputs its results in JSON format.
