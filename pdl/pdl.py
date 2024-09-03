@@ -7,10 +7,7 @@ from pydantic.json_schema import models_json_schema
 
 from . import pdl_interpreter
 from .pdl_ast import (
-    BlocksType,
-    CallBlock,
     LocationType,
-    Message,
     PdlBlock,
     PdlBlocks,
     Program,
@@ -18,7 +15,7 @@ from .pdl_ast import (
     ScopeType,
     empty_block_location,
 )
-from .pdl_interpreter import InterpreterState, process_prog, step_call
+from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
 
 

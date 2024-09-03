@@ -1,6 +1,6 @@
 from pdl.pdl import exec_str
 
-hello = """
+HELLO = """
 document:
 - Hello,
 - model: watsonx/ibm/granite-20b-code-instruct
@@ -13,7 +13,7 @@ document:
 
 
 def main():
-    result = exec_str(hello)
+    result = exec_str(HELLO)
     print(result)
 
 
