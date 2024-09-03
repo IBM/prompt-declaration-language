@@ -125,34 +125,6 @@ def exec_file(
     return result
 
 
-class PDL:
-    state: InterpreterState
-    result: Any
-    background: list[Message]
-    scope: ScopeType
-    trace: BlocksType
-    loc: LocationType
-
-    def __init__(self, pdl_file: str) -> None:
-        prog, loc = parse_file(pdl_file)
-        state = InterpreterState(yield_output=False)
-        result, background, scope, trace = process_prog(state, {}, prog, loc)
-        self.state = state
-        self.result = result
-        self.background = background
-        self.scope = scope
-        self.trace = trace
-        self.loc = loc
-
-    def call(self, f: str, args: dict[str, Any]):
-        block = CallBlock(call=f, args=args)
-        result, document, scope, trace = yield from step_call(
-            self.state, self.scope, block, self.loc
-        )
-        self.scope = scope
-        return result, document, scope, trace
-
-
 def main():
     parser = argparse.ArgumentParser("")
     parser.add_argument(
