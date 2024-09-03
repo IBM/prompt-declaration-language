@@ -90,7 +90,7 @@ def generate(
     pdl_file: str,
     log_file: Optional[str],
     initial_scope: ScopeType,
-    output_mode: Optional[Literal["json", "yaml"]],
+    output_trace: Optional[Literal["json", "yaml"]],
     output_file: Optional[str],
 ):
     """Execute the PDL program defined in `pdl_file`.
@@ -99,7 +99,7 @@ def generate(
         pdl_file: Program to execute.
         log_file: File where the log is written. If `None`, use `log.txt`.
         initial_scope: Environment defining the variables in scope to execute the program.
-        output_mode: Format in which the execution trace must be produced.
+        output_trace: Format in which the execution trace must be produced.
         output_file: File to save the execution trace.
     """
     if log_file is None:
@@ -112,8 +112,8 @@ def generate(
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
                 log_fp.write(line)
-        if output_mode is not None and trace is not None:
-            write_trace(pdl_file, output_mode, output_file, trace)
+        if output_trace is not None and trace is not None:
+            write_trace(pdl_file, output_trace, output_file, trace)
     except PDLParseError as e:
         print("\n".join(e.msg))
 
@@ -751,11 +751,13 @@ def step_call_model(
                 }
             )
         case LitellmModelBlock():
-            # TODO: evaluate all the parameters?
+            params, param_errors = process_expr(scope, block.parameters, loc)
+            errors += param_errors
             concrete_block = block.model_copy(
                 update={
                     "model": model,
                     "input": input_trace,
+                    "params": params,
                 }
             )
         case _:

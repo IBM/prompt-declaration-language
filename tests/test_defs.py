@@ -8,10 +8,9 @@ defs_data = {
         "NAME": {
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "model": "ibm/granite-34b-code-instruct",
                     "input": {"get": "HELLO"},
-                    "parameters": {
-                        "decoding_method": "greedy",
+                    "params": {
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
                     },
@@ -31,7 +30,7 @@ def test_defs():
     state = InterpreterState()
     data = Program.model_validate(defs_data)
     document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!\n"
+    assert document == "Hello, World!\n"
 
 
 defs_chain_data = {

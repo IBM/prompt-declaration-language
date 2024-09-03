@@ -2,6 +2,7 @@
   "$defs": {
     "ApiBlock": {
       "additionalProperties": false,
+      "description": "Call an API.",
       "properties": {
         "description": {
           "anyOf": [
@@ -13,10 +14,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -176,6 +179,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -189,22 +193,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -226,23 +222,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -402,6 +383,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -414,7 +396,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "api",
@@ -430,6 +439,7 @@
           "type": "string"
         },
         "url": {
+          "description": "URL of the endpoint.",
           "title": "Url",
           "type": "string"
         },
@@ -587,6 +597,7 @@
               "type": "array"
             }
           ],
+          "description": "Arguments to the request.\n    ",
           "title": "Input"
         }
       },
@@ -600,6 +611,7 @@
     },
     "ArrayBlock": {
       "additionalProperties": false,
+      "description": "Return the array of values computed by each block of the list of blocks.",
       "properties": {
         "description": {
           "anyOf": [
@@ -611,10 +623,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -774,6 +788,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -787,22 +802,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -824,23 +831,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -1000,6 +992,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1012,7 +1005,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "array",
@@ -1199,10 +1219,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -1362,6 +1384,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1375,22 +1398,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -1412,23 +1427,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -1588,6 +1588,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1600,7 +1601,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -2152,6 +2180,7 @@
     },
     "CallBlock": {
       "additionalProperties": false,
+      "description": "Calling a function.",
       "properties": {
         "description": {
           "anyOf": [
@@ -2163,10 +2192,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -2326,6 +2357,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2339,22 +2371,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -2376,23 +2400,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -2552,6 +2561,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2564,7 +2574,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "call",
@@ -2576,11 +2613,13 @@
           "type": "string"
         },
         "call": {
+          "description": "Function to call.\n    ",
           "title": "Call",
           "type": "string"
         },
         "args": {
           "default": {},
+          "description": "Arguments of the function with their values.\n    ",
           "title": "Args",
           "type": "object"
         },
@@ -2753,6 +2792,7 @@
     },
     "CodeBlock": {
       "additionalProperties": false,
+      "description": "Execute a piece of code.",
       "properties": {
         "description": {
           "anyOf": [
@@ -2764,10 +2804,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -2927,6 +2969,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2940,22 +2983,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -2977,23 +3012,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -3153,6 +3173,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3165,7 +3186,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "code",
@@ -3178,6 +3226,7 @@
         },
         "lan": {
           "const": "python",
+          "description": "Programming language of the code.\n    ",
           "enum": [
             "python"
           ],
@@ -3338,6 +3387,7 @@
               "type": "array"
             }
           ],
+          "description": "Code to execute.\n    ",
           "title": "Code"
         }
       },
@@ -3350,6 +3400,7 @@
     },
     "DataBlock": {
       "additionalProperties": false,
+      "description": "Arbitrary JSON value.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3361,10 +3412,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -3524,6 +3577,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3537,22 +3591,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -3574,23 +3620,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -3750,6 +3781,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3762,7 +3794,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "data",
@@ -3774,6 +3833,7 @@
           "type": "string"
         },
         "data": {
+          "description": "Value defined.",
           "title": "Data"
         }
       },
@@ -3793,6 +3853,7 @@
     },
     "DocumentBlock": {
       "additionalProperties": false,
+      "description": "Create the concatenation of the stringify version of the result of each block of the list of blocks.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3804,10 +3865,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -3967,6 +4030,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3980,22 +4044,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -4017,23 +4073,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -4193,6 +4234,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4205,7 +4247,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "document",
@@ -4370,6 +4439,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the document.\n    ",
           "title": "Document"
         }
       },
@@ -4381,6 +4451,7 @@
     },
     "EmptyBlock": {
       "additionalProperties": false,
+      "description": "Block without an action. It can contain definitions.",
       "properties": {
         "description": {
           "anyOf": [
@@ -4392,10 +4463,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -4555,6 +4628,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4568,22 +4642,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -4605,23 +4671,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -4781,6 +4832,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4793,7 +4845,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "empty",
@@ -4821,10 +4900,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -4984,6 +5065,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4997,22 +5079,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -5034,23 +5108,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -5210,6 +5269,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5222,7 +5282,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "error",
@@ -5403,6 +5490,7 @@
     },
     "ForBlock": {
       "additionalProperties": false,
+      "description": "Iteration over arrays.",
       "properties": {
         "description": {
           "anyOf": [
@@ -5414,10 +5502,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -5577,6 +5667,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5590,22 +5681,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -5627,23 +5710,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -5803,6 +5871,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5815,7 +5884,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "for",
@@ -5827,6 +5923,7 @@
           "type": "string"
         },
         "for": {
+          "description": "Arrays to iterate over.\n    ",
           "title": "For",
           "type": "object"
         },
@@ -5984,6 +6081,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "as": {
@@ -5992,7 +6090,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "array"
+          "default": "array",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -6171,6 +6270,7 @@
     },
     "FunctionBlock": {
       "additionalProperties": false,
+      "description": "Function declaration.",
       "properties": {
         "description": {
           "anyOf": [
@@ -6182,10 +6282,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -6345,6 +6447,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6358,22 +6461,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -6395,23 +6490,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -6571,6 +6651,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6583,7 +6664,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "function",
@@ -6603,6 +6711,7 @@
               "type": "null"
             }
           ],
+          "description": "Functions parameters with their types.\n    ",
           "title": "Function"
         },
         "return": {
@@ -6759,6 +6868,7 @@
               "type": "array"
             }
           ],
+          "description": "Body of the function\n    ",
           "title": "Return"
         },
         "scope": {
@@ -6783,6 +6893,7 @@
     },
     "GetBlock": {
       "additionalProperties": false,
+      "description": "Get the value of a variable.",
       "properties": {
         "description": {
           "anyOf": [
@@ -6794,10 +6905,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -6957,6 +7070,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6970,22 +7084,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -7007,23 +7113,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -7183,6 +7274,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7195,7 +7287,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "get",
@@ -7207,6 +7326,7 @@
           "type": "string"
         },
         "get": {
+          "description": "Name of the variable to access.",
           "title": "Get",
           "type": "string"
         }
@@ -7219,6 +7339,7 @@
     },
     "IfBlock": {
       "additionalProperties": false,
+      "description": "Conditional control structure.",
       "properties": {
         "description": {
           "anyOf": [
@@ -7230,10 +7351,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -7393,6 +7516,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7406,22 +7530,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -7443,23 +7559,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -7619,6 +7720,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7631,7 +7733,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "if",
@@ -7643,6 +7772,7 @@
           "type": "string"
         },
         "if": {
+          "description": "Condition.\n    ",
           "title": "If"
         },
         "then": {
@@ -7799,6 +7929,7 @@
               "type": "array"
             }
           ],
+          "description": "Branch to exectute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -7959,6 +8090,7 @@
             }
           ],
           "default": null,
+          "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
         },
         "if_result": {
@@ -7983,6 +8115,7 @@
     },
     "IncludeBlock": {
       "additionalProperties": false,
+      "description": "Include a PDL file.",
       "properties": {
         "description": {
           "anyOf": [
@@ -7994,10 +8127,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -8157,6 +8292,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8170,22 +8306,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -8207,23 +8335,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -8383,6 +8496,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8395,7 +8509,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "include",
@@ -8407,6 +8548,7 @@
           "type": "string"
         },
         "include": {
+          "description": "Name of the file to include.\n    ",
           "title": "Include",
           "type": "string"
         },
@@ -8542,6 +8684,7 @@
     },
     "LitellmModelBlock": {
       "additionalProperties": false,
+      "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
       "properties": {
         "description": {
           "anyOf": [
@@ -8553,10 +8696,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -8716,6 +8861,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8729,22 +8875,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -8766,23 +8904,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -8942,6 +9065,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8954,7 +9078,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -9227,18 +9378,19 @@
             {
               "type": "null"
             }
-          ]
+          ],
+          "default": null
         }
       },
       "required": [
-        "model",
-        "parameters"
+        "model"
       ],
       "title": "LitellmModelBlock",
       "type": "object"
     },
     "LitellmParameters": {
       "additionalProperties": true,
+      "description": "Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.",
       "properties": {
         "timeout": {
           "anyOf": [
@@ -9615,6 +9767,7 @@
     },
     "MessageBlock": {
       "additionalProperties": false,
+      "description": "Create a message.",
       "properties": {
         "description": {
           "anyOf": [
@@ -9626,10 +9779,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -9789,6 +9944,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9802,22 +9958,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -9839,23 +9987,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -10015,6 +10148,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -10026,7 +10160,34 @@
               "type": "null"
             }
           ],
+          "description": "Role of associated to the message.",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "message",
@@ -10191,6 +10352,7 @@
               "type": "array"
             }
           ],
+          "description": "Content of the message.",
           "title": "Content"
         }
       },
@@ -10999,6 +11161,7 @@
     },
     "ReadBlock": {
       "additionalProperties": false,
+      "description": "Read from a file or standard input.",
       "properties": {
         "description": {
           "anyOf": [
@@ -11010,10 +11173,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -11173,6 +11338,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -11186,22 +11352,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -11223,23 +11381,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -11399,6 +11542,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -11411,7 +11555,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "read",
@@ -11431,6 +11602,7 @@
               "type": "null"
             }
           ],
+          "description": "Name of the file to read. If `None`, read the standard input.\n    ",
           "title": "Read"
         },
         "message": {
@@ -11443,10 +11615,12 @@
             }
           ],
           "default": null,
+          "description": "Message to prompt the user to enter a value.\n    ",
           "title": "Message"
         },
         "multiline": {
           "default": false,
+          "description": "Indicate if one or multiple lines shoud be read.\n    ",
           "title": "Multiline",
           "type": "boolean"
         }
@@ -11509,6 +11683,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
+      "description": "Repeat the execution of a block for a fixed number of iterations.",
       "properties": {
         "description": {
           "anyOf": [
@@ -11520,10 +11695,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -11683,6 +11860,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -11696,22 +11874,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -11733,23 +11903,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -11909,6 +12064,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -11921,7 +12077,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "repeat",
@@ -12086,9 +12269,11 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "num_iterations": {
+          "description": "Number of iterations to perform.\n    ",
           "title": "Num Iterations",
           "type": "integer"
         },
@@ -12098,7 +12283,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "sequence"
+          "default": "sequence",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -12277,6 +12463,7 @@
     },
     "RepeatUntilBlock": {
       "additionalProperties": false,
+      "description": "Repeat the execution of a block until a condition is satisfied.",
       "properties": {
         "description": {
           "anyOf": [
@@ -12288,10 +12475,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -12451,6 +12640,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -12464,22 +12654,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -12501,23 +12683,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -12677,6 +12844,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -12689,7 +12857,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "repeat_until",
@@ -12854,9 +13049,11 @@
               "type": "array"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "until": {
+          "description": "Condition of the loop.\n    ",
           "title": "Until"
         },
         "as": {
@@ -12865,7 +13062,8 @@
               "$ref": "#/$defs/IterationType"
             }
           ],
-          "default": "sequence"
+          "default": "sequence",
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
           "anyOf": [
@@ -13044,6 +13242,7 @@
     },
     "SequenceBlock": {
       "additionalProperties": false,
+      "description": "Return the value of the last block if the list of blocks.",
       "properties": {
         "description": {
           "anyOf": [
@@ -13055,10 +13254,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -13218,6 +13419,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -13231,22 +13433,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -13268,23 +13462,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -13444,6 +13623,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -13456,7 +13636,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "sequence",
@@ -13725,6 +13932,7 @@
     },
     "WatsonxModelBlock": {
       "additionalProperties": false,
+      "description": "Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk.",
       "properties": {
         "description": {
           "anyOf": [
@@ -13736,10 +13944,12 @@
             }
           ],
           "default": null,
+          "description": "Documentation associated to the block.\n    ",
           "title": "Description"
         },
         "spec": {
           "default": null,
+          "description": "Type specification of the result of the block.\n    ",
           "title": "Spec"
         },
         "defs": {
@@ -13899,6 +14109,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -13912,22 +14123,14 @@
             }
           ],
           "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
         "show_result": {
           "default": true,
+          "description": "Ignore the value computed by the block.\n    ",
           "title": "Show Result",
           "type": "boolean"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
         },
         "parser": {
           "anyOf": [
@@ -13949,23 +14152,8 @@
             }
           ],
           "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
           "title": "Parser"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "fallback": {
           "anyOf": [
@@ -14125,6 +14313,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -14137,7 +14326,34 @@
             }
           ],
           "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "has_error": {
+          "default": false,
+          "title": "Has Error",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",

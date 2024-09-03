@@ -33,29 +33,124 @@ export type Program =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description1 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description2 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description3 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description4 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description5 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description6 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description7 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description8 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description9 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description10 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description11 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description12 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description13 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description14 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description15 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description16 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description17 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description18 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description19 = string | null;
+/**
+ * Documentation associated to the block.
+ *
+ */
 export type Description20 = string | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser = ("json" | "yaml") | PdlParser | RegexParser | null;
 export type Description21 = string | null;
 export type Spec21 = {
@@ -117,9 +212,10 @@ export type Spec22 = {
 } | null;
 export type Regex = string;
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
-export type Path = string[];
-export type File = string;
-export type HasError = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback =
   | number
   | string
@@ -171,12 +267,33 @@ export type Fallback =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role = string | null;
+export type Path = string[];
+export type File = string;
+export type HasError = boolean;
 export type Kind = "empty";
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def1 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult1 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser1 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError1 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback1 =
   | number
   | string
@@ -228,7 +345,12 @@ export type Fallback1 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role1 = string | null;
+export type HasError1 = boolean;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -281,10 +403,24 @@ export type Program1 =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def2 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult2 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser2 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError2 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback2 =
   | number
   | string
@@ -336,8 +472,17 @@ export type Fallback2 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role2 = string | null;
+export type HasError2 = boolean;
 export type Kind2 = "include";
+/**
+ * Name of the file to include.
+ *
+ */
 export type Include = string;
 export type Trace =
   | number
@@ -364,10 +509,24 @@ export type Trace =
   | ErrorBlock
   | EmptyBlock
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def3 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult3 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser3 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError3 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback3 =
   | number
   | string
@@ -419,15 +578,46 @@ export type Fallback3 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role3 = string | null;
+export type HasError3 = boolean;
 export type Kind3 = "read";
+/**
+ * Name of the file to read. If `None`, read the standard input.
+ *
+ */
 export type Read = string | null;
+/**
+ * Message to prompt the user to enter a value.
+ *
+ */
 export type Message = string | null;
+/**
+ * Indicate if one or multiple lines shoud be read.
+ *
+ */
 export type Multiline = boolean;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def4 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult4 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser4 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError4 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback4 =
   | number
   | string
@@ -479,8 +669,15 @@ export type Fallback4 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role of associated to the message.
+ */
 export type Role4 = string | null;
+export type HasError4 = boolean;
 export type Kind4 = "message";
+/**
+ * Content of the message.
+ */
 export type Content =
   | number
   | string
@@ -531,10 +728,24 @@ export type Content =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def5 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult5 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser5 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError5 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback5 =
   | number
   | string
@@ -586,7 +797,12 @@ export type Fallback5 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role5 = string | null;
+export type HasError5 = boolean;
 export type Kind5 = "array";
 export type Array =
   | number
@@ -638,10 +854,24 @@ export type Array =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def6 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult6 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError6 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback6 =
   | number
   | string
@@ -693,7 +923,12 @@ export type Fallback6 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role6 = string | null;
+export type HasError6 = boolean;
 export type Kind6 = "sequence";
 export type Sequence =
   | number
@@ -745,10 +980,24 @@ export type Sequence =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def7 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult7 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError7 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback7 =
   | number
   | string
@@ -800,8 +1049,17 @@ export type Fallback7 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role7 = string | null;
+export type HasError7 = boolean;
 export type Kind7 = "document";
+/**
+ * Body of the document.
+ *
+ */
 export type Document =
   | number
   | string
@@ -852,10 +1110,24 @@ export type Document =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def8 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult8 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser8 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError8 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback8 =
   | number
   | string
@@ -907,8 +1179,17 @@ export type Fallback8 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role8 = string | null;
+export type HasError8 = boolean;
 export type Kind8 = "for";
+/**
+ * Body of the loop.
+ *
+ */
 export type Repeat =
   | number
   | string
@@ -1014,10 +1295,24 @@ export type Trace1 =
         )[]
     )[]
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def9 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult9 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError9 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback9 =
   | number
   | string
@@ -1069,8 +1364,17 @@ export type Fallback9 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role9 = string | null;
+export type HasError9 = boolean;
 export type Kind9 = "repeat_until";
+/**
+ * Body of the loop.
+ *
+ */
 export type Repeat1 =
   | number
   | string
@@ -1175,10 +1479,24 @@ export type Trace2 =
         )[]
     )[]
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def10 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult10 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError10 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback10 =
   | number
   | string
@@ -1230,8 +1548,17 @@ export type Fallback10 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role10 = string | null;
+export type HasError10 = boolean;
 export type Kind10 = "repeat";
+/**
+ * Body of the loop.
+ *
+ */
 export type Repeat2 =
   | number
   | string
@@ -1282,6 +1609,10 @@ export type Repeat2 =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Number of iterations to perform.
+ *
+ */
 export type NumIterations = number;
 export type Trace3 =
   | (
@@ -1337,10 +1668,24 @@ export type Trace3 =
         )[]
     )[]
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def11 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult11 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser11 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError11 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback11 =
   | number
   | string
@@ -1392,8 +1737,17 @@ export type Fallback11 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role11 = string | null;
+export type HasError11 = boolean;
 export type Kind11 = "if";
+/**
+ * Branch to exectute if the condition is true.
+ *
+ */
 export type Then =
   | number
   | string
@@ -1444,6 +1798,10 @@ export type Then =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
 export type Else =
   | number
   | string
@@ -1496,10 +1854,24 @@ export type Else =
     )[]
   | null;
 export type IfResult = boolean | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def12 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult12 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError12 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback12 =
   | number
   | string
@@ -1551,12 +1923,31 @@ export type Fallback12 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role12 = string | null;
+export type HasError12 = boolean;
 export type Kind12 = "data";
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def13 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult13 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser13 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError13 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback13 =
   | number
   | string
@@ -1608,13 +1999,35 @@ export type Fallback13 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role13 = string | null;
+export type HasError13 = boolean;
 export type Kind13 = "get";
+/**
+ * Name of the variable to access.
+ */
 export type Get = string;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def14 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult14 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError14 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback14 =
   | number
   | string
@@ -1666,10 +2079,22 @@ export type Fallback14 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role14 = string | null;
+export type HasError14 = boolean;
 export type Kind14 = "api";
 export type Api = string;
+/**
+ * URL of the endpoint.
+ */
 export type Url = string;
+/**
+ * Arguments to the request.
+ *
+ */
 export type Input =
   | number
   | string
@@ -1720,10 +2145,24 @@ export type Input =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def15 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult15 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError15 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback15 =
   | number
   | string
@@ -1775,9 +2214,22 @@ export type Fallback15 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role15 = string | null;
+export type HasError15 = boolean;
 export type Kind15 = "code";
+/**
+ * Programming language of the code.
+ *
+ */
 export type Lan = "python";
+/**
+ * Code to execute.
+ *
+ */
 export type Code =
   | number
   | string
@@ -1828,10 +2280,24 @@ export type Code =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def16 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult16 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError16 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback16 =
   | number
   | string
@@ -1883,7 +2349,12 @@ export type Fallback16 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role16 = string | null;
+export type HasError16 = boolean;
 export type Kind16 = "model";
 export type Model = string;
 export type Input1 =
@@ -2001,10 +2472,24 @@ export type ModelList = unknown[] | null;
 export type MockResponse = string | null;
 export type CustomLlmProvider = string | null;
 export type MaxRetries = number | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def17 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult17 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser17 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError17 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback17 =
   | number
   | string
@@ -2056,7 +2541,12 @@ export type Fallback17 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role17 = string | null;
+export type HasError17 = boolean;
 export type Kind17 = "model";
 export type Model1 = string;
 export type Input2 =
@@ -2193,10 +2683,24 @@ export type ExampleFileIds =
   | [string, string, string, string]
   | [string, string, string, string, string]
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def18 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult18 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser18 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError18 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback18 =
   | number
   | string
@@ -2248,7 +2752,12 @@ export type Fallback18 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role18 = string | null;
+export type HasError18 = boolean;
 export type Kind18 = "model";
 export type Model2 = string;
 export type Input3 =
@@ -2335,10 +2844,24 @@ export type Guardrails = boolean | null;
 export type GuardrailsHapParams = {
   [k: string]: unknown;
 } | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def19 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult19 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser19 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError19 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback19 =
   | number
   | string
@@ -2390,8 +2913,17 @@ export type Fallback19 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role19 = string | null;
+export type HasError19 = boolean;
 export type Kind19 = "call";
+/**
+ * Function to call.
+ *
+ */
 export type Call = string;
 export type Trace7 =
   | number
@@ -2444,10 +2976,24 @@ export type Trace7 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
 export type Def20 = string | null;
+/**
+ * Ignore the value computed by the block.
+ *
+ */
 export type ShowResult20 = boolean;
+/**
+ * Parser to use to construct a value out of a string result.
+ */
 export type Parser20 = ("json" | "yaml") | PdlParser | RegexParser | null;
-export type HasError20 = boolean;
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback20 =
   | number
   | string
@@ -2499,11 +3045,24 @@ export type Fallback20 =
       | EmptyBlock
     )[]
   | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
 export type Role20 = string | null;
+export type HasError20 = boolean;
 export type Kind20 = "function";
+/**
+ * Functions parameters with their types.
+ *
+ */
 export type Function = {
   [k: string]: unknown;
 } | null;
+/**
+ * Body of the function
+ *
+ */
 export type Return =
   | number
   | string
@@ -2632,26 +3191,37 @@ export type PdlBlocks =
       | EmptyBlock
     )[];
 
+/**
+ * Function declaration.
+ */
 export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
   def?: Def20;
   show_result?: ShowResult20;
-  result?: unknown;
   parser?: Parser20;
-  location?: LocationType | null;
-  has_error?: HasError20;
   fallback?: Fallback20;
   role?: Role20;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError20;
   kind?: Kind20;
   function: Function;
   return: Return;
   scope?: Scope;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs {
   [k: string]:
     | number
@@ -2704,26 +3274,37 @@ export interface Defs {
         | EmptyBlock
       )[];
 }
+/**
+ * Calling a function.
+ */
 export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
   def?: Def19;
   show_result?: ShowResult19;
-  result?: unknown;
   parser?: Parser19;
-  location?: LocationType | null;
-  has_error?: HasError19;
   fallback?: Fallback19;
   role?: Role19;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError19;
   kind?: Kind19;
   call: Call;
   args?: Args;
   trace?: Trace7;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec1 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs1 {
   [k: string]:
     | number
@@ -2776,18 +3357,21 @@ export interface Defs1 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk.
+ */
 export interface WatsonxModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
   def?: Def18;
   show_result?: ShowResult18;
-  result?: unknown;
   parser?: Parser18;
-  location?: LocationType | null;
-  has_error?: HasError18;
   fallback?: Fallback18;
   role?: Role18;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError18;
   kind?: Kind18;
   model: Model2;
   input?: Input3;
@@ -2797,9 +3381,17 @@ export interface WatsonxModelBlock {
   guardrails?: Guardrails;
   guardrails_hap_params?: GuardrailsHapParams;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec2 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs2 {
   [k: string]:
     | number
@@ -2858,12 +3450,12 @@ export interface BamModelBlock {
   defs?: Defs3;
   def?: Def17;
   show_result?: ShowResult17;
-  result?: unknown;
   parser?: Parser17;
-  location?: LocationType | null;
-  has_error?: HasError17;
   fallback?: Fallback17;
   role?: Role17;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError17;
   kind?: Kind17;
   model: Model1;
   input?: Input2;
@@ -2875,9 +3467,17 @@ export interface BamModelBlock {
   data?: PromptTemplateData | null;
   constraints?: Constraints;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec3 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs3 {
   [k: string]:
     | number
@@ -2930,28 +3530,39 @@ export interface Defs3 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
+ */
 export interface LitellmModelBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
   def?: Def16;
   show_result?: ShowResult16;
-  result?: unknown;
   parser?: Parser16;
-  location?: LocationType | null;
-  has_error?: HasError16;
   fallback?: Fallback16;
   role?: Role16;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError16;
   kind?: Kind16;
   model: Model;
   input?: Input1;
   trace?: Trace4;
   platform?: Platform;
-  parameters: LitellmParameters | null;
+  parameters?: LitellmParameters | null;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec4 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs4 {
   [k: string]:
     | number
@@ -3004,25 +3615,36 @@ export interface Defs4 {
         | EmptyBlock
       )[];
 }
+/**
+ * Execute a piece of code.
+ */
 export interface CodeBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
   def?: Def15;
   show_result?: ShowResult15;
-  result?: unknown;
   parser?: Parser15;
-  location?: LocationType | null;
-  has_error?: HasError15;
   fallback?: Fallback15;
   role?: Role15;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError15;
   kind?: Kind15;
   lan: Lan;
   code: Code;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec5 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs5 {
   [k: string]:
     | number
@@ -3075,26 +3697,37 @@ export interface Defs5 {
         | EmptyBlock
       )[];
 }
+/**
+ * Call an API.
+ */
 export interface ApiBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
   def?: Def14;
   show_result?: ShowResult14;
-  result?: unknown;
   parser?: Parser14;
-  location?: LocationType | null;
-  has_error?: HasError14;
   fallback?: Fallback14;
   role?: Role14;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError14;
   kind?: Kind14;
   api: Api;
   url: Url;
   input: Input;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec6 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs6 {
   [k: string]:
     | number
@@ -3147,24 +3780,35 @@ export interface Defs6 {
         | EmptyBlock
       )[];
 }
+/**
+ * Get the value of a variable.
+ */
 export interface GetBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
   def?: Def13;
   show_result?: ShowResult13;
-  result?: unknown;
   parser?: Parser13;
-  location?: LocationType | null;
-  has_error?: HasError13;
   fallback?: Fallback13;
   role?: Role13;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError13;
   kind?: Kind13;
   get: Get;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec7 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs7 {
   [k: string]:
     | number
@@ -3217,24 +3861,35 @@ export interface Defs7 {
         | EmptyBlock
       )[];
 }
+/**
+ * Arbitrary JSON value.
+ */
 export interface DataBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
   def?: Def12;
   show_result?: ShowResult12;
-  result?: unknown;
   parser?: Parser12;
-  location?: LocationType | null;
-  has_error?: HasError12;
   fallback?: Fallback12;
   role?: Role12;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError12;
   kind?: Kind12;
   data: Data;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec8 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs8 {
   [k: string]:
     | number
@@ -3287,27 +3942,38 @@ export interface Defs8 {
         | EmptyBlock
       )[];
 }
+/**
+ * Conditional control structure.
+ */
 export interface IfBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
   def?: Def11;
   show_result?: ShowResult11;
-  result?: unknown;
   parser?: Parser11;
-  location?: LocationType | null;
-  has_error?: HasError11;
   fallback?: Fallback11;
   role?: Role11;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError11;
   kind?: Kind11;
   if: If;
   then: Then;
   else?: Else;
   if_result?: IfResult;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec9 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs9 {
   [k: string]:
     | number
@@ -3360,27 +4026,42 @@ export interface Defs9 {
         | EmptyBlock
       )[];
 }
+/**
+ * Repeat the execution of a block for a fixed number of iterations.
+ */
 export interface RepeatBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
   def?: Def10;
   show_result?: ShowResult10;
-  result?: unknown;
   parser?: Parser10;
-  location?: LocationType | null;
-  has_error?: HasError10;
   fallback?: Fallback10;
   role?: Role10;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError10;
   kind?: Kind10;
   repeat: Repeat2;
   num_iterations: NumIterations;
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
   as?: IterationType & string;
   trace?: Trace3;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec10 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs10 {
   [k: string]:
     | number
@@ -3433,27 +4114,42 @@ export interface Defs10 {
         | EmptyBlock
       )[];
 }
+/**
+ * Repeat the execution of a block until a condition is satisfied.
+ */
 export interface RepeatUntilBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
   def?: Def9;
   show_result?: ShowResult9;
-  result?: unknown;
   parser?: Parser9;
-  location?: LocationType | null;
-  has_error?: HasError9;
   fallback?: Fallback9;
   role?: Role9;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError9;
   kind?: Kind9;
   repeat: Repeat1;
   until: Until;
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
   as?: IterationType & string;
   trace?: Trace2;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec11 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs11 {
   [k: string]:
     | number
@@ -3506,27 +4202,42 @@ export interface Defs11 {
         | EmptyBlock
       )[];
 }
+/**
+ * Iteration over arrays.
+ */
 export interface ForBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
   def?: Def8;
   show_result?: ShowResult8;
-  result?: unknown;
   parser?: Parser8;
-  location?: LocationType | null;
-  has_error?: HasError8;
   fallback?: Fallback8;
   role?: Role8;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError8;
   kind?: Kind8;
   for: For;
   repeat: Repeat;
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
   as?: IterationType & string;
   trace?: Trace1;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec12 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs12 {
   [k: string]:
     | number
@@ -3579,24 +4290,35 @@ export interface Defs12 {
         | EmptyBlock
       )[];
 }
+/**
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ */
 export interface DocumentBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
   def?: Def7;
   show_result?: ShowResult7;
-  result?: unknown;
   parser?: Parser7;
-  location?: LocationType | null;
-  has_error?: HasError7;
   fallback?: Fallback7;
   role?: Role7;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError7;
   kind?: Kind7;
   document: Document;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec13 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs13 {
   [k: string]:
     | number
@@ -3649,24 +4371,35 @@ export interface Defs13 {
         | EmptyBlock
       )[];
 }
+/**
+ * Return the value of the last block if the list of blocks.
+ */
 export interface SequenceBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
   def?: Def6;
   show_result?: ShowResult6;
-  result?: unknown;
   parser?: Parser6;
-  location?: LocationType | null;
-  has_error?: HasError6;
   fallback?: Fallback6;
   role?: Role6;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError6;
   kind?: Kind6;
   sequence: Sequence;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec14 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs14 {
   [k: string]:
     | number
@@ -3719,24 +4452,35 @@ export interface Defs14 {
         | EmptyBlock
       )[];
 }
+/**
+ * Return the array of values computed by each block of the list of blocks.
+ */
 export interface ArrayBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
   def?: Def5;
   show_result?: ShowResult5;
-  result?: unknown;
   parser?: Parser5;
-  location?: LocationType | null;
-  has_error?: HasError5;
   fallback?: Fallback5;
   role?: Role5;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError5;
   kind?: Kind5;
   array: Array;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec15 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs15 {
   [k: string]:
     | number
@@ -3789,24 +4533,35 @@ export interface Defs15 {
         | EmptyBlock
       )[];
 }
+/**
+ * Create a message.
+ */
 export interface MessageBlock {
   description?: Description16;
   spec?: Spec16;
   defs?: Defs16;
   def?: Def4;
   show_result?: ShowResult4;
-  result?: unknown;
   parser?: Parser4;
-  location?: LocationType | null;
-  has_error?: HasError4;
   fallback?: Fallback4;
   role: Role4;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError4;
   kind?: Kind4;
   content: Content;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec16 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs16 {
   [k: string]:
     | number
@@ -3859,26 +4614,37 @@ export interface Defs16 {
         | EmptyBlock
       )[];
 }
+/**
+ * Read from a file or standard input.
+ */
 export interface ReadBlock {
   description?: Description17;
   spec?: Spec17;
   defs?: Defs17;
   def?: Def3;
   show_result?: ShowResult3;
-  result?: unknown;
   parser?: Parser3;
-  location?: LocationType | null;
-  has_error?: HasError3;
   fallback?: Fallback3;
   role?: Role3;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError3;
   kind?: Kind3;
   read: Read;
   message?: Message;
   multiline?: Multiline;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec17 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs17 {
   [k: string]:
     | number
@@ -3931,25 +4697,36 @@ export interface Defs17 {
         | EmptyBlock
       )[];
 }
+/**
+ * Include a PDL file.
+ */
 export interface IncludeBlock {
   description?: Description18;
   spec?: Spec18;
   defs?: Defs18;
   def?: Def2;
   show_result?: ShowResult2;
-  result?: unknown;
   parser?: Parser2;
-  location?: LocationType | null;
-  has_error?: HasError2;
   fallback?: Fallback2;
   role?: Role2;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError2;
   kind?: Kind2;
   include: Include;
   trace?: Trace;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec18 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs18 {
   [k: string]:
     | number
@@ -4008,19 +4785,27 @@ export interface ErrorBlock {
   defs?: Defs19;
   def?: Def1;
   show_result?: ShowResult1;
-  result?: unknown;
   parser?: Parser1;
-  location?: LocationType | null;
-  has_error?: HasError1;
   fallback?: Fallback1;
   role?: Role1;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError1;
   kind?: Kind1;
   msg: Msg;
   program: Program1;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec19 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs19 {
   [k: string]:
     | number
@@ -4073,23 +4858,34 @@ export interface Defs19 {
         | EmptyBlock
       )[];
 }
+/**
+ * Block without an action. It can contain definitions.
+ */
 export interface EmptyBlock {
   description?: Description20;
   spec?: Spec20;
   defs?: Defs20;
   def?: Def;
   show_result?: ShowResult;
-  result?: unknown;
   parser?: Parser;
-  location?: LocationType | null;
-  has_error?: HasError;
   fallback?: Fallback;
   role?: Role;
+  result?: unknown;
+  location?: LocationType | null;
+  has_error?: HasError;
   kind?: Kind;
 }
+/**
+ * Type specification of the result of the block.
+ *
+ */
 export interface Spec20 {
   [k: string]: unknown;
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs20 {
   [k: string]:
     | number
@@ -4161,18 +4957,36 @@ export interface LocationType {
 export interface Table {
   [k: string]: number;
 }
+/**
+ * Arrays to iterate over.
+ *
+ */
 export interface For {
   [k: string]: unknown;
 }
+/**
+ * Condition of the loop.
+ *
+ */
 export interface Until {
   [k: string]: unknown;
 }
+/**
+ * Condition.
+ *
+ */
 export interface If {
   [k: string]: unknown;
 }
+/**
+ * Value defined.
+ */
 export interface Data {
   [k: string]: unknown;
 }
+/**
+ * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+ */
 export interface LitellmParameters {
   timeout?: Timeout;
   temperature?: Temperature;
@@ -4282,6 +5096,10 @@ export interface PromptTemplateData {
 export interface Constraints {
   [k: string]: unknown;
 }
+/**
+ * Arguments of the function with their values.
+ *
+ */
 export interface Args {
   [k: string]: unknown;
 }

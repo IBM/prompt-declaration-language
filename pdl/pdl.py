@@ -75,7 +75,9 @@ def main():
     )
 
     parser.add_argument("-o", "--output", help="output file")
-    parser.add_argument("-m", "--mode", help="output mode", choices=["json", "yaml"])
+    parser.add_argument(
+        "-m", "--trace", help="output trace for live document", choices=["json", "yaml"]
+    )
     parser.add_argument("--json", help="json file")
     parser.add_argument("--yaml", help="yaml file")
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
@@ -106,7 +108,7 @@ def main():
         args.pdl,
         args.log,
         initial_scope,
-        args.mode,
+        args.trace,
         args.output,
     )
 

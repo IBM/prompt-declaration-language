@@ -21,8 +21,8 @@ The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it i
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
-## Demo Video
-
+## Demo Video 
+ 
 https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45
 
 
@@ -46,7 +46,7 @@ In order to run the examples that use foundation models hosted on IBM's [watsonx
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
-
+ 
 To run the interpreter:
 
 ```
@@ -62,20 +62,27 @@ The interpreter prints out a log by default in the file `log.txt`. This log cont
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-python3 -m pdl.pdl --log <my-logfile> <my-example>
+python -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-python3 -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
+python -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
+python -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
 ```
+
+The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
+
+```
+python -m pdl.pdl --trace <json | yaml> <my-example>
+```
+
 
 ## Overview
 
@@ -334,6 +341,20 @@ The data block takes various variables and combines their values into a JSON obj
 
 See [PDL Language Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial)
 
+
+## Live Document Visualizer
+
+PDL has a Live Document visualizer to help in program understanding given an execution trace.
+To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
+
+```
+python -m pdl.pdl --trace <json | yaml> <my-example>
+```
+
+This produces an additional file named `my-example_result.json` or `my-example_result.yaml` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
+in the right pane. 
+
+This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 
 ## Additional Notes and Future Work

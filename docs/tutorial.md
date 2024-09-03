@@ -1277,6 +1277,21 @@ result, document, _, _ = process_prog(state, empty_scope, data)
 where `result` is a JSON object, and `document` is a string, both corresponding to the result of the program.
 
 
+## Live Document Visualizer
+
+PDL has a Live Document visualizer to help in program understanding given an execution trace.
+To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
+
+```
+python -m pdl.pdl --trace <json | yaml> <my-example>
+```
+
+This produces an additional file named `my-example_result.json` or `my-example_result.yaml` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
+in the right pane. 
+
+This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
+
+
 
 
 

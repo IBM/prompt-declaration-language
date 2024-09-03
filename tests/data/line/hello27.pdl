@@ -1,3 +1,0 @@
-description: including an invalid file
-document:
-  include: tests/data/line/hello2.pdl

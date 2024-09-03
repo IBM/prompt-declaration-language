@@ -1,9 +1,9 @@
 description: Hello world with model chaining
 document:
 - Hello,
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-34b-code-instruct
   def: GEN
-  parameters:
+  params:
     stop_sequences:
     - '!'
     include_stop_sequence: true
@@ -15,7 +15,10 @@ document:
   return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/granite-20b-multilingual
-      platform: bam
+      params:
+        stop_sequences:
+        - '!'
+        include_stop_sequence: true
 - call: translate
   spec: str
   args:
