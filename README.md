@@ -176,17 +176,16 @@ In PDL, this would be expressed as follows (see [file](https://github.com/IBM/pr
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct
+- model: meta-llama/llama-3-70b-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
-        repo: 
-        {{ CODE.repo_info.repo }}
+        repo: {{ CODE.repo_info.repo }}
         path: {{ CODE.repo_info.path }}
         Function_name: {{ CODE.repo_info.function_name }}
 
@@ -206,24 +205,24 @@ The third block calls a granite model. Here we explicitly provide an `input` fie
 When we execute this program with the PDL interpreter, we obtain the following document:
 
 ```
+
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
-    offsetMap = new HashMap<>();
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
   }
   return offsetMap;
 }
 
-Answer:
-The above code is a part of the StreamSets Data Collector that deserializes an offset map from a string. The function takes in a string representing the last source offset and returns a map containing the deserialized offsets.
 
-The @SuppressWarnings annotation is used to suppress warnings related to unchecked operations performed by the Jackson library. This is necessary because the deserializeOffsetMap function uses generics to handle different types of maps, but the Jackson library does not support generic types.
+The code is used to deserialize a string into a map. The string is expected to be a JSON representation of a map. If the string is null or empty, an empty map is returned. Otherwise, the string is deserialized using the Jackson library and the resulting map is returned.
 
-The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library's ObjectMapper class and returned as a map.
+The code uses the `@SuppressWarnings("unchecked")` annotation to suppress the warning that the `JSON_MAPPER.readValue()` method returns an `Object` and not a `Map`. This is safe because the Jackson library is used to deserialize the string into a map, and it will throw an exception if the string is not a valid JSON representation of a map.
 
+The code also handles the case where the string is not a valid JSON representation of a map by throwing an `IOException`. This can happen if the string contains invalid JSON syntax or if it does not represent a map.
 ```
 
 Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/ground_truth.txt). See [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-eval.yaml):
@@ -231,19 +230,13 @@ Notice that in PDL variables are used to templatize any entity in the document, 
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
-  def: TRUTH
-  show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-34b-code-instruct
   def: EXPLANATION
-  parameters:
-    decoding_method: greedy
-    max_new_tokens: 1024
   input: |
       Here is some info about the location of the function in the repo.
       repo: 
@@ -255,6 +248,9 @@ document:
       Explain the following code:
       ```
       {{ CODE.source_code }}```
+- read: examples/code/ground_truth.txt
+  def: TRUTH
+  show_result: False
 - |
 
 
@@ -271,6 +267,7 @@ document:
     {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- "\n"
 ```
 
 This program has an input block that reads the ground truth from filename `examples/code/ground_truth.txt` and assigns its contents to variable `TRUTH`. It also assigns the output of the model to the variable `EXPLANATION`. The last block is a call to Python code, which is included after the `code` field. Notice how code is included here simply as data. We collate fragments of Python with outputs obtained from previous blocks. This is one of the powerful features of PDL: the ability to specify the execution of code that is not known ahead of time. We can use LLMs to generate code that is later executed in the same programming model. This is made possible because PDL treats code as data, like any another part of the document.
@@ -278,27 +275,26 @@ This program has an input block that reads the ground truth from filename `examp
 When we execute this new program, we obtain the following:
 
 ```
+
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
-    offsetMap = new HashMap<>();
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
   }
   return offsetMap;
 }
 
-Answer:
-The above code is a part of the StreamSets Data Collector that deserializes an offset map from a string. The function takes in a string representing the last source offset and returns a map containing the deserialized offsets.
 
-The @SuppressWarnings annotation is used to suppress warnings related to unchecked operations performed by the Jackson library. This is necessary because the deserializeOffsetMap function uses generics to handle different types of maps, but the Jackson library does not support generic types.
+The function `deserializeOffsetMap` takes a string as input and returns a map. It first checks if the input string is null or empty. If it is, it creates a new empty map and returns it. Otherwise, it uses the Jackson library to parse the input string into a map and returns it.
 
-The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library's ObjectMapper class and returned as a map.
+The `@SuppressWarnings("unchecked")` annotation is used to suppress the warning that the type of the parsed map is not checked. This is because the Jackson library is used to parse the input string into a map, but the specific type of the map is not known at compile time. Therefore, the warning is suppressed to avoid potential issues.
 
 EVALUATION:
 The similarity (Levenshtein) between this answer and the ground truth is:
-0.9987730061349693
+0.9967637540453075
 ```
 
 PDL allows rapid prototyping of prompts by allowing the user to change prompts and see their immediate effects on metrics. Try it!
@@ -308,19 +304,16 @@ Finally, we can output JSON data as a result of this program, as follows:
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-34b-code-instruct
   def: EXPLANATION
   show_result: False
-  parameters:
-    decoding_method: greedy
-    max_new_tokens: 1024
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -346,10 +339,11 @@ document:
     {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- data:
+- data: 
     input: "{{ CODE }}"
     output: "{{ EXPLANATION }}"
     metric: "{{ EVAL }}"
+- "\n\n"
 ```
 
 The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `show_result` set to `false`. The output of this program is the corresponding serialized JSON object, with the appropriate treatment of quotation marks. Such PDL programs can be bootstrapped in a bash or Python script to create data en masse.
@@ -365,7 +359,7 @@ PDL has a Live Document visualizer to help in program understanding given an exe
 To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
 
 ```
-python -m pdl.pdl --trace <json | yaml> <my-example>
+pdl --trace <json | yaml> <my-example>
 ```
 
 This produces an additional file named `my-example_result.json` or `my-example_result.yaml` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
@@ -375,9 +369,8 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 
 
 ## Additional Notes and Future Work
-TODO
-- Currently, model blocks support the [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface of BAM, with the exception
-that we provide some default values when the following parameters are missing:
+
+When using Granite models on Watsonx, we use the following defaults for model parameters:
   - `decoding_method`: `greedy`
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
@@ -389,8 +382,6 @@ that we provide some default values when the following parameters are missing:
   - `top_k`: 50
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
-
-
 
 For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
 
