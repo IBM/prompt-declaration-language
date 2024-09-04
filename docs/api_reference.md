@@ -6,8 +6,11 @@ This page documents the PDL members that likely to be used to run PDL programs f
 ::: pdl.pdl_ast
 
 ## Interpreter
-::: pdl.pdl_interpreter
+::: pdl.pdl
+
 <!-- 
+::: pdl.pdl_interpreter
+
 ::: pdl.pdl_interpreter.InterpreterState
     options:
         show_if_no_docstring: true
