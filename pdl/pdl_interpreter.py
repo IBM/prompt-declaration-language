@@ -57,7 +57,7 @@ from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_program
+from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
 
@@ -105,9 +105,8 @@ def generate(
     if log_file is None:
         log_file = "log.txt"
     try:
-        prog, line_table = parse_program(pdl_file)
+        prog, loc = parse_file(pdl_file)
         state = InterpreterState(yield_output=True)
-        loc = LocationType(path=[], file=pdl_file, table=line_table)
         _, _, _, trace = process_prog(state, initial_scope, prog, loc)
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
@@ -515,61 +514,10 @@ def step_block_body(
             result = closure
             background = []
             trace = closure.model_copy(update={})
-        case CallBlock(call=f):
-            result = None
-            background = []
-            args, errors = process_expr(scope, block.args, append(loc, "args"))
-            if len(errors) != 0:
-                trace = handle_error(
-                    block, append(loc, "args"), None, errors, block.model_copy()
-                )
-            closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
-            if len(errors) != 0:
-                trace = handle_error(
-                    block, append(loc, "call"), None, errors, block.model_copy()
-                )
-            closure = get_var(closure_expr, scope)
-            if closure is None:
-                trace = handle_error(
-                    block,
-                    append(loc, "call"),
-                    f"Function is undefined: {f}",
-                    [],
-                    block.model_copy(),
-                )
-            else:
-                argsloc = append(loc, "args")
-                type_errors = type_check_args(args, closure.function, argsloc)
-                if len(type_errors) > 0:
-                    trace = handle_error(
-                        block,
-                        argsloc,
-                        f"Type errors during function call to {f}",
-                        type_errors,
-                        block.model_copy(),
-                    )
-                else:
-                    f_body = closure.returns
-                    f_scope = closure.scope | {"context": scope["context"]} | args
-                    funloc = LocationType(
-                        file=closure.location.file,
-                        path=closure.location.path + ["return"],
-                        table=loc.table,
-                    )
-                    result, background, _, f_trace = yield from step_blocks(
-                        IterationType.SEQUENCE, state, f_scope, f_body, funloc
-                    )
-                    trace = block.model_copy(update={"trace": f_trace})
-                    if closure.spec is not None:
-                        errors = type_check_spec(result, closure.spec, funloc)
-                        if len(errors) > 0:
-                            trace = handle_error(
-                                block,
-                                loc,
-                                f"Type errors in result of function call to {f}",
-                                errors,
-                                trace,
-                            )
+        case CallBlock():
+            result, background, scope, trace = yield from step_call(
+                state, scope, block, loc
+            )
         case EmptyBlock():
             result = ""
             background = []
@@ -1074,6 +1022,68 @@ def call_python(code: str, scope: dict) -> Any:
     return result
 
 
+def step_call(
+    state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
+) -> Generator[
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock | ErrorBlock]
+]:
+    result = None
+    background: Messages = []
+    args, errors = process_expr(scope, block.args, append(loc, "args"))
+    if len(errors) != 0:
+        trace = handle_error(
+            block, append(loc, "args"), None, errors, block.model_copy()
+        )
+    closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
+    if len(errors) != 0:
+        trace = handle_error(
+            block, append(loc, "call"), None, errors, block.model_copy()
+        )
+    closure = get_var(closure_expr, scope)
+    if closure is None:
+        trace = handle_error(
+            block,
+            append(loc, "call"),
+            f"Function is undefined: {block.call}",
+            [],
+            block.model_copy(),
+        )
+    else:
+        argsloc = append(loc, "args")
+        type_errors = type_check_args(args, closure.function, argsloc)
+        if len(type_errors) > 0:
+            trace = handle_error(
+                block,
+                argsloc,
+                f"Type errors during function call to {closure_expr}",
+                type_errors,
+                block.model_copy(),
+            )
+        else:
+            f_body = closure.returns
+            f_scope = closure.scope | {"context": scope["context"]} | args
+            funloc = LocationType(
+                file=closure.location.file,
+                path=closure.location.path + ["return"],
+                table=loc.table,
+            )
+            result, background, _, f_trace = yield from step_blocks(
+                IterationType.SEQUENCE, state, f_scope, f_body, funloc
+            )
+            trace = block.model_copy(update={"trace": f_trace})
+            if closure.spec is not None:
+                errors = type_check_spec(result, closure.spec, funloc)
+                if len(errors) > 0:
+                    trace = handle_error(
+                        block,
+                        loc,
+                        f"Type errors in result of function call to {closure_expr}",
+                        errors,
+                        trace,
+                    )
+    return result, background, scope, trace
+
+
 def process_input(
     state: InterpreterState, scope: ScopeType, block: ReadBlock, loc: LocationType
 ) -> tuple[str, Messages, ScopeType, ReadBlock | ErrorBlock]:
@@ -1121,8 +1131,7 @@ def step_include(
     YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock | ErrorBlock]
 ]:
     try:
-        prog, line_table = parse_program(block.include)
-        newloc = LocationType(file=block.include, path=[], table=line_table)
+        prog, newloc = parse_file(block.include)
         result, background, scope, trace = yield from step_block(
             state, scope, prog.root, newloc
         )
