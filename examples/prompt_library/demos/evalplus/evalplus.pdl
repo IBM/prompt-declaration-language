@@ -1,15 +1,15 @@
 description: EvalPlus simple
 defs:
-  demonstrations:
-    data:
-      - answer: "def max_run_uppercase(test_str):\n  cnt = 0\n  res = 0\n  for idx in range(0,\
-          \ len(test_str)):\n    if test_str.isupper():\n      cnt += 1\n    else:\n\
-          \      res = cnt\n      cnt = 0\n  if test_str.isupper():\n\
-          \    res = cnt\n  return (res)"
-        question: Write a function to find maximum run of uppercase characters in the given
-          string.
-      - answer: "def remove_length(test_str, K):\n  temp = test_str.split()\n  res = \n  res = ' '.join(res)\n  return (res) "
-        question: Write a function to remove all the words with k length in the given string.
+  # demonstrations:
+  #   data:
+  #     - answer: "def max_run_uppercase(test_str):\n  cnt = 0\n  res = 0\n  for idx in range(0,\
+  #         \ len(test_str)):\n    if test_str.isupper():\n      cnt += 1\n    else:\n\
+  #         \      res = cnt\n      cnt = 0\n  if test_str.isupper():\n\
+  #         \    res = cnt\n  return (res)"
+  #       question: Write a function to find maximum run of uppercase characters in the given
+  #         string.
+  #     - answer: "def remove_length(test_str, K):\n  temp = test_str.split()\n  res = \n  res = ' '.join(res)\n  return (res) "
+  #       question: Write a function to remove all the words with k length in the given string.
   model: ibm/granite-34b-code-instruct
   prompt_pattern: cot
   prompt: Write a python function to toggle bits of the number except the first and the last bit.
@@ -23,12 +23,12 @@ document:
       {{ example.answer }}
 
 - |
-   Task: {{ prompt }}
-   Solution:
-- model: "{{ model }}"
-  platform: bam
-  parameters:
-    decoding_method: "greedy"
-    stop_sequences:
-      - "<|endoftext|>"
-    include_stop_sequence: false
+  Task: {{ prompt }}
+  Solution:
+# - model: "{{ model }}"
+#   platform: bam
+#   parameters:
+#     decoding_method: "greedy"
+#     stop_sequences:
+#       - "<|endoftext|>"
+#     include_stop_sequence: false

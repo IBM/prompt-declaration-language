@@ -103,7 +103,6 @@ def schedule(
             end_time = time.time()
             runtime = end_time - start_time
             if timeout and timeout < runtime:
-                # print("RUNTIME over 15", runtime)
                 raise TimeoutError(f"Out of time. {runtime}")
         todo = todo_next
         todo_next = []

@@ -7,8 +7,8 @@ from threading import Thread
 from typing import Any
 
 import yaml
-from rich.console import Console
 from datasets import Dataset
+from rich.console import Console
 
 from pdl.optimize.bam_logprobs import ModelResponse, get_seq_logprobs
 from pdl.optimize.config_parser import OptimizationConfig
@@ -99,16 +99,16 @@ class PDLThread(Thread):
                     self.pdl_program,
                     timeout=self.timeout,
                 )
-                console.log("result", result)
+                # console.log("result", result)
                 self.scope = scope
                 end_time = time.time()
                 runtime = end_time - start_time
-                console.log(f"Runtime took seconds: {runtime:.2f}")
+                # console.log(f"Runtime took seconds: {runtime:.2f}")
 
                 tries += 1
 
-                if DEBUG:
-                    console.log("DEBUG:", document)
+                # if DEBUG:
+                #     console.log("DEBUG:", document)
 
                 errored = contains_error(trace)
                 if errored:
@@ -162,6 +162,7 @@ class PDLThread(Thread):
             answer=answer,
             groundtruth=truth,
             runtime=runtime,
+            example=self.example,
         )
 
 
@@ -177,6 +178,7 @@ class TrialOutput:
     answer: str | None = None
     groundtruth: str | None = None
     runtime: int | None = None
+    example: Any = None
 
     def to_dict(self) -> dict:
         return {
@@ -227,6 +229,7 @@ def execute_threads(max_threads: int, pdl_threads: list, timeout: int | None = N
         console.log("Running without parallelism")
         for job in pdl_threads:
             yield job.run()
+        return
 
     service = ThreadPoolExecutor(max_workers=max_threads)
     future_to_trial = {service.submit(thread.run): thread for thread in pdl_threads}

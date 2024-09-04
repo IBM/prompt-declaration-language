@@ -2,8 +2,13 @@ import argparse
 from enum import Enum
 from pathlib import Path
 
-from datasets import load_from_disk, Dataset, load_dataset
 import yaml
+from datasets import load_dataset, load_from_disk
+from evalplus.evaluate import (
+    MBPP_OUTPUT_NOT_NONE_TASKS,
+    get_groundtruth,
+    get_mbpp_plus_hash,
+)
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.mbpp_thread import MBPPTrialThread
@@ -85,14 +90,49 @@ if __name__ == "__main__":
             config=config,
         ).run()
     elif config.benchmark == "evalplus":
-        # from evalplus.data import get_mbpp_plus
-        # mbpp_plus = get_mbpp_plus()
+        from copy import deepcopy
 
-        mbpp = load_dataset("google-research-datasets/mbpp", name="sanitized")
+        from datasets import concatenate_datasets
+        from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
+
+        class SelectableList(list):
+            def select(self, iterable):
+                return [self[i] for i in iterable]
+
+        class MBPPDataset(dict):
+            def __init__(self):
+                self.mbpp_plus = get_mbpp_plus()
+                self.dataset_hash = get_mbpp_plus_hash()
+
+                expected_outputs = get_groundtruth(
+                    deepcopy(self.mbpp_plus),
+                    self.dataset_hash,
+                    MBPP_OUTPUT_NOT_NONE_TASKS,
+                )
+
+                self.mbpp = load_dataset("google-research-datasets/mbpp", name="full")
+                self["train"] = concatenate_datasets(
+                    self.mbpp.filter(
+                        lambda x: f"Mbpp/{x['task_id']}" not in self.mbpp_plus,
+                    )
+                    .rename_columns({"code": "canonical_solution", "text": "prompt"})
+                    .values(),
+                )
+                self["test"] = SelectableList([v for k, v in self.mbpp_plus.items()])
+                for i, x in enumerate(self["test"]):
+                    self["test"][i]["expected_output"] = expected_outputs[x["task_id"]]
+
+            def __getitem__(self, key):
+                return dict.__getitem__(self, key)
+
+            def __setitem__(self, key, val):
+                dict.__setitem__(self, key, val)
+
+        mbpp_dataset = MBPPDataset()
 
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=mbpp,
+            dataset=mbpp_dataset,
             trial_thread=MBPPTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),

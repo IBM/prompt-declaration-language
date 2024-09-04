@@ -1,16 +1,14 @@
-from enum import Enum
 import json
-import random
 import string
 import sys
 import time
-from collections.abc import Callable
+from enum import Enum
 from math import ceil, log2
 from pathlib import Path
-from typing import Type
 
 import yaml
-from datasets import Dataset, DatasetDict
+from datasets import DatasetDict
+from duration_parser import parse as parse_duration
 from numpy.random import default_rng
 from rich.table import Table
 from tqdm.rich import tqdm
@@ -18,7 +16,6 @@ from tqdm.rich import tqdm
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import (
     CandidateResult,
-    Models,
     PDLThread,
     TrialOutput,
     console,
@@ -26,7 +23,6 @@ from pdl.optimize.util import (
 )
 from pdl.pdl_ast import DataBlock, Program
 from pdl.pdl_dumper import dump_program
-from duration_parser import parse as parse_duration
 
 rng = default_rng()
 
@@ -54,7 +50,7 @@ class PDLOptimizer:
         # ending_test_set_size: int,
         # max_candidates: int,
         # timeout: int,
-        trial_thread: Type[PDLThread],
+        trial_thread: type[PDLThread],
         # budget_growth: str,
         # test_set: str,
         # train_set: str,
@@ -120,9 +116,7 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (
-            path.open(encoding="utf-8") as pdl,
-        ):
+        with (path.open(encoding="utf-8") as pdl,):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def parse_signature(self):
@@ -147,9 +141,7 @@ class PDLOptimizer:
 
     def random_uuid(self, k: int = 8) -> str:
         alphabet = string.ascii_lowercase + string.digits
-        return "".join(
-            rng.choice(list(alphabet), size=k)
-        )
+        return "".join(rng.choice(list(alphabet), size=k))
 
     def sample_candidates(self, num_candidates: int, demo_indices: list | None = None):
         demo_name = self.config.demonstrations_variable_name
@@ -157,7 +149,7 @@ class PDLOptimizer:
         for _ in range(num_candidates):
             if demo_indices is None:
                 demo_indices = self.sample_random_indices(
-                    self.dataset[self.train_set_name], size=self.num_demonstrations
+                    self.dataset[self.train_set_name], size=self.num_demonstrations,
                 )
             variable_instance = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
@@ -290,7 +282,7 @@ class PDLOptimizer:
             test_set_indices = list(
                 range(
                     min(len(self.dataset[self.test_set_name]), ending_test_set_size),
-                )
+                ),
             )
 
         start_time = time.time()
@@ -463,14 +455,16 @@ class PDLOptimizer:
                     console.log("Progressed on exception")
                     console.log(result)
             elif isinstance(result, TrialOutput):
-                answer = (
+                (
                     round(result.answer, 2)
                     if isinstance(result.answer, float)
                     else result.answer
                 )
-                console.log(
-                    f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
-                )
+                if result.correct is not True:
+                    console.log("FAIL", result.example["task_id"])
+                # console.log(
+                #     f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
+                # )
 
                 results.append(result)
 
