@@ -1,0 +1,10 @@
+description: Hello world with function definition and call
+document:
+- def: hello
+  function:
+    name: str
+  return: Hello {{ name }}!
+- call: hello
+  args:
+    name: World
+- "\n"

@@ -1,7 +1,7 @@
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
 - read: examples/code/ground_truth.txt

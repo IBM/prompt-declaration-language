@@ -1,11 +1,11 @@
-description: for loop
+description: Hello world with for loop
 defs:
-  numbers: {
+  numbers: 
     data: [1, 2, 3, 4]
-  }
-  names: {
+  
+  names: 
     data: ["Bob", "Carol", "David", "Ernest"]
-  }
+  
 
 document:
 - for:

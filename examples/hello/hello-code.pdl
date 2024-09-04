@@ -7,3 +7,4 @@ document:
     import string
     result = random.choice(string.ascii_lowercase)
 - '!'
+- "\n"

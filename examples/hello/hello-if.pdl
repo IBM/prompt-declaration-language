@@ -1,4 +1,4 @@
-description: Hello world showing call out to python code with condition
+description: Hello world with condition
 document:
 - 'Hello! '
 - lan: python
@@ -9,4 +9,4 @@ document:
   show_result: false
 - if: '{{ QUESTION }}'
   then: How are you?
-  
+- "\n"

@@ -28,7 +28,7 @@ document:
   show_result: false
 - model: ibm/granite-20b-code-instruct
   input: |
-      Explain the weather from the following JSON. Don't write quotes.
-      `{{ WEATHER }}`
+      Explain the weather from the following JSON.
+      `{{ WEATHER }}` 
 - "\n"
   

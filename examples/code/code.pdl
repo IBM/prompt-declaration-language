@@ -1,16 +1,15 @@
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct
+- model: meta-llama/llama-3-70b-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
-        repo: 
-        {{ CODE.repo_info.repo }}
+        repo: {{ CODE.repo_info.repo }}
         path: {{ CODE.repo_info.path }}
         Function_name: {{ CODE.repo_info.function_name }}
 

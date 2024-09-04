@@ -6,7 +6,7 @@ PDL is based on the premise that interactions between users, LLMs and rule-based
 
 
 PDL provides the following features:
-- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/)
+- Ability to use any LLM locally or remotely via [IBM's Watsonx](https://www.ibm.com/watsonx) and [LiteLLM](https://www.litellm.ai/)
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages)
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files, including JSON data
@@ -41,70 +41,78 @@ To install the dependencies for development of PDL and execute all the example, 
 pip3 install '.[all]'
 ```
 
-In order to run the examples that use foundation models hosted on IBM's [watsonx](https://www.ibm.com/watsonx), you need a WatsonX account (a free plan is available) and set up environment variables according to this [documentation](https://docs.litellm.ai/docs/providers/watsonx). At minimum, you will need to set:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`)
-- `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
+
+
+In order to run the examples that use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx), you need an account (a free plan is available) and set up the following environment variables:
+- `WATSONX_API`, the API url (set to `https://{region}.ml.cloud.ibm.com`)
+- `WATSONX_KEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
- 
+To reach these models via LiteLLM, follow instructions on this [documentation](https://docs.litellm.ai/docs/providers/watsonx).
+
 To run the interpreter:
 
 ```
-python -m pdl.pdl <path/to/example.yaml>
+pdl <path/to/example.yaml>
 ```
 
-The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. They cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of prompting patterns.
+The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. They cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of ready-to-use prompting patterns. 
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
+We highly recommend using VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-python -m pdl.pdl --log <my-logfile> <my-example>
+pdl --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-python -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
+pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-python -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
+pdl --data_file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-python -m pdl.pdl --trace <json | yaml> <my-example>
+pdl --trace <json | yaml> <my-example>
 ```
 
+For more information:
+```
+pdl --help
+```
 
 ## Overview
 
 In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```yaml
-description: Hello world through LiteLLM on watsonx
+description: Hello world
 document:
 - Hello,
-- model: watsonx/ibm/granite-3b-code-instruct
-  parameters:
-    stop:
+- model: ibm/granite-34b-code-instruct
+  params:
+    stop_sequences:
     - '!'
-    decoding_method: greedy
+    include_stop_sequence: true
+- "\n"
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-3b-code-instruct` from [watsonx](https://www.ibm.com/watsonx) via LiteLLM, with the indicated parameter: the stop sequence is `!`. The input to the model call is everything that has been produced so far in the document (here `Hello`).
+The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
 ```
-python -m pdl.pdl examples/hello/hello.yaml
+pdl examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -119,16 +127,24 @@ where the portion `, World!` was produced by granite. In general, PDL provides b
 Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.
 
-For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.json):
-```json
-{
-    "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}",
-    "repo_info": {
-        "repo": "streamsets/datacollector",
-        "path": "stagesupport/src/main/java/com/.../OffsetUtil.java",
-        "function_name": "OffsetUtil.deserializeOffsetMap"
+For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.yaml):
+```yaml
+source_code: 
+  |
+  @SuppressWarnings("unchecked")
+  public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+    Map<String, String> offsetMap;
+    if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+      offsetMap = new HashMap<>();  
+    } else {
+      offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
     }
-}
+    return offsetMap;
+  }
+repo_info: 
+  repo: streamsets/datacollector
+  path: stagesupport/src/main/java/com/.../OffsetUtil.java
+  function_name: OffsetUtil.deserializeOffsetMap
 ```
 
 we would like to express the following prompt and submit it to an LLM:
@@ -155,7 +171,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-In PDL, this would be expressed as follows (see [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code.yaml)):
+In PDL, this would be expressed as follows (see [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code.pdl)):
 
 ```yaml
 description: Code explanation example
@@ -165,24 +181,25 @@ document:
   def: CODE
   show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-20b-code-instruct-v2
+- model: ibm/granite-20b-code-instruct
   input:
-     |
-      Here is some info about the location of the function in the repo.
-      repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      - |
+        Here is some info about the location of the function in the repo.
+        repo: 
+        {{ CODE.repo_info.repo }}
+        path: {{ CODE.repo_info.path }}
+        Function_name: {{ CODE.repo_info.function_name }}
 
 
-      Explain the following code:
-      ```
-      {{ CODE.source_code }}```
+        Explain the following code:
+        ```
+        {{ CODE.source_code }}```
+- "\n"
 ```
 
-The first block of the document is an *input* block. It reads the indicated filename (`examples/code/data.json`) and loads its contents into a variable named `CODE`. In PDL, any block can have a `def` field, which means the output of that block is assigned to that variable. Since the field `parser` is set to `json`, variable `CODE` contains that data in JSON format. The final field in the input block says that `show_result` is set to `false`, which means that the output of this block (the content that was read) is not included in the document. This feature allows the user to obtain intermediate results that are not necessarily included in the final output.
+The first block of the document is an *input* block. It reads the indicated filename (`examples/code/data.yaml`) and loads its contents into a variable named `CODE`. In PDL, any block can have a `def` field, which means the output of that block is assigned to that variable. Since the field `parser` is set to `yaml`, variable `CODE` contains that data in YAML format. The final field in the input block says that `show_result` is set to `false`, which means that the output of this block (the content that was read) is not included in the document. This feature allows the user to obtain intermediate results that are not necessarily included in the final output.
 
-The second block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains JSON data, we can also access fields such as `CODE.source_code`.
+The second block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
 The third block calls a granite model. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 

@@ -1,8 +1,8 @@
 description: Code explanation example
 defs: 
    CODE:
-      read: examples/code/data.json
-      parser: json
+      read: examples/code/data.yaml
+      parser: yaml
       def: CODE
    EXPLANATION:
       model: ibm/granite-20b-code-instruct
