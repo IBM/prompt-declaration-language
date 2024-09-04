@@ -6,11 +6,8 @@ document:
   show_result: False
 - "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct
-  platform: bam
   def: EXPLANATION
-  input:
-    document:
-    - |
+  input: |
       Here is some info about the location of the function in the repo.
       repo: 
       {{ CODE.repo_info.repo }}
@@ -31,8 +28,7 @@ document:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
   lan: python
-  code:
-  - |
+  code: |
     import textdistance
     expl = """
     {{ EXPLANATION }}
@@ -41,3 +37,4 @@ document:
     {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- "\n"

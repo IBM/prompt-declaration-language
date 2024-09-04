@@ -14,8 +14,8 @@ document:
     result = ''.join(contents)
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct-v2
-  parameters:
+- model: ibm/granite-20b-code-instruct
+  params:
     decoding_method: greedy
   input:
     document:
@@ -105,8 +105,8 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v2
-        parameters:
+      - model: ibm/granite-20b-code-instruct
+        params:
           decoding_method: greedy
       ```
 
@@ -116,8 +116,8 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v2
-        parameters:
+      - model: ibm/granite-20b-code-instruct
+        params:
           decoding_method: greedy
           stop_sequences:
           - '!'
@@ -132,7 +132,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
       ```
 
@@ -142,8 +142,8 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct-v2
-        parameters:
+      - model: ibm/granite-20b-code-instruct
+        params:
           decoding_method: greedy
           stop_sequences:
           - '\n'
@@ -157,7 +157,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         def: NAME
       ```
@@ -169,7 +169,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         show_results: false
       ```
@@ -223,7 +223,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         input:
           document:
@@ -242,7 +242,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         input:
           document:
@@ -262,7 +262,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         input:
           document:
@@ -284,7 +284,7 @@ document:
       description: PDL with model call
       document:
       - model: "google/flan-t5-xl"
-        parameters:
+        params:
           decoding_method: greedy
         input:
           document:

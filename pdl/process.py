@@ -52,25 +52,25 @@ def process(file, mode):
                 qna = json.loads(json_str)
                 truth = extract_answer(qna["answer"])
                 question = qna["question"]
-                document = ""  # pylint: disable=invalid-name
+                result = ""
                 answer = 0.0  # pylint: disable=invalid-name
                 try:
                     state = InterpreterState(yield_output=True)
                     scope = empty_scope
                     scope["question"] = question
-                    _, document, _, _ = process_prog(state, scope, data)
-                    print(document)
+                    result, _, _, _ = process_prog(state, scope, data)
+                    print(result)
                     if mode == "python":
-                        answer = extract_answer(process_answer(document))
+                        answer = extract_answer(process_answer(result))
                     else:
-                        answer = extract_answer(document)
+                        answer = extract_answer(result)
 
                 except Exception as e:
                     print("EXCEPTION at: " + str(index))
                     print(e)
                     exceptions += 1
 
-                if answer == truth or document.endswith(str(truth)):
+                if answer == truth or result.endswith(str(truth)):
                     print("MATCH!")
                     matches += 1
                 else:

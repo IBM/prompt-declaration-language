@@ -93,10 +93,7 @@ defs:
                   iterations: "{{ iterations+1 }}"
               - def: THOUGHT
                 model: "{{ model }}"
-                parameters:
-                  time_limit: 60000
-                  random_seed: 42
-                  truncate_input_tokens: 8191
+                params:
                   decoding_method: sample
                   repetition_penalty: 1.1
                   temperature: "{{ temperature }}"
@@ -105,10 +102,7 @@ defs:
             until: "{{ THOUGHT.endswith('Act:') or iterations>20 }}"
           - def: action_raw
             model: "{{ model }}"
-            parameters:
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
+            params:
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -119,10 +113,7 @@ defs:
           - "["
           - def: SUBJECT
             model: "{{ model }}"
-            parameters:
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
+            params:
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: "{{ temperature }}"
@@ -139,12 +130,7 @@ defs:
                       subject: "{{ SUBJECT }}"
                   - "\nTho:"
                   - model: "{{ model }}"
-                    fallback: "Error calling model"
-                    parameters:
-                      time_limit: 60000
-                      random_seed: 42
-                      truncate_input_tokens: 8191
-                      repetition_penalty: 1.1
+                    params:
                       decoding_method: sample
                       temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
@@ -192,21 +178,21 @@ defs:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
-                parameters:
-                  decoding_method: "{{ decoding_method }}"
-                  temperature: "{{ temperature }}"
-                  stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
-                  include_stop_sequence: true
+                params:
+                  DECODING_METHOD: "{{ decoding_method }}"
+                  TEMPERATURE: "{{ temperature }}"
+                  STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]
+                  INCLUDE_STOP_SEQUENCE: true
             until: "{{ THOUGHT.endswith('Act:') }}"
           - def: action
             model: "{{ model }}"
             parser: json
             spec: {name: str, arguments: obj}
-            parameters:
-              decoding_method: "{{ decoding_method }}"
-              temperature: "{{ temperature }}"
-              stop_sequences: ["\n", "<|endoftext|>"]
-              include_stop_sequence: false
+            params:
+              DECODING_METHOD: "{{ decoding_method }}"
+              TEMPERATURE: "{{ temperature }}"
+              STOP_SEQUENCES: ["\n", "<|endoftext|>"]
+              INCLUDE_STOP_SEQUENCE: false
           - if: "{{ action.name != 'Finish' }}"
             then:
               - "\nObs: "
@@ -216,11 +202,11 @@ defs:
                     args:
                       arguments: "{{ action.arguments }}"
                   - model: "{{ model }}"
-                    parameters:
-                      decoding_method: "{{ decoding_method }}"
-                      temperature: "{{ temperature }}"
-                      stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
-                      include_stop_sequence: false
+                    params:
+                      DECODING_METHOD: "{{ decoding_method }}"
+                      TEMPERATURE: "{{ temperature }}"
+                      STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]
+                      INCLUDE_STOP_SEQUENCE: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
         until: "{{ action.name == 'Finish' }}"
       - show_result: false

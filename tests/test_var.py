@@ -1,8 +1,8 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import (
     InterpreterState,
     contains_error,
+    empty_scope,
     process_prog,
 )
 
@@ -14,8 +14,8 @@ var_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
-                    "parameters": {
+                    "model": "ibm/granite-34b-code-instruct",
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -34,8 +34,8 @@ var_data = {
 def test_var():
     state = InterpreterState()
     data = Program.model_validate(var_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!\nTell me about world?\n"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!\nTell me about World?\n"
 
 
 var_shared_scope_data = {
@@ -46,9 +46,9 @@ var_shared_scope_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "model": "ibm/granite-34b-code-instruct",
                     "show_result": True,
-                    "parameters": {
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -59,7 +59,7 @@ var_shared_scope_data = {
         {
             "def": "I",
             "lan": "python",
-            "code": ["result = NAME[::-1] + '!\\n'"],
+            "code": "result = NAME[::-1] + '!\\n'",
             "show_result": False,
         },
         {"get": "I"},
@@ -70,8 +70,8 @@ var_shared_scope_data = {
 def test_code_shared_scope():
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, worlddlrow !\n"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, WorlddlroW !\n"
 
 
 var_shared_scope_mutate_data = {
@@ -86,7 +86,7 @@ var_shared_scope_mutate_data = {
         {
             "def": "I",
             "lan": "python",
-            "code": ["NAME = NAME[::-1]\n", "result = NAME"],
+            "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
             "show_result": False,
         },
         {"get": "NAME"},
@@ -103,7 +103,7 @@ def test_code_shared_scope_no_mutate():
 
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_mutate_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, foooof"
 
 
@@ -123,8 +123,8 @@ code_var_data = {
 def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
-    _, document, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"context": document, "I": 0}
+    document, _, scope, _ = process_prog(state, empty_scope, data)
+    assert scope == {"context": [{"role": None, "content": document}], "I": 0}
     assert document == "0"
 
 

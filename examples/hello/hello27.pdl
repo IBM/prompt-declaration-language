@@ -1,0 +1,14 @@
+description: Model call with explicit messages input
+sequence:
+- def: prompt
+  array:
+  - role: system
+    content: You are a helpful software engineer. You write clear, concise, well-commented code.
+  - role: user
+    content: Write a Python function that implement merge sort.
+  show_result: false
+- model: watsonx/ibm/granite-8b-code-instruct
+  platform: litellm
+  input: "{{ prompt }}"
+  parameters:
+    decoding_method: greedy

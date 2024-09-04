@@ -1,6 +1,1 @@
-Answer:
-The above code is a part of the StreamSets Data Collector that deserializes an offset map from a string. The function takes in a string representing the last source offset and returns a map containing the deserialized offsets.
-
-The @SuppressWarnings annotation is used to suppress warnings related to unchecked operations performed by the Jackson library. This is necessary because the deserializeOffsetMap function uses generics to handle different types of maps, but the Jackson library does not support generic types.
-
-The deserializeOffsetMap function first checks if the lastSourceOffset parameter is null or empty. If it is, then a new empty map is created and returned. Otherwise, the lastSourceOffset parameter is deserialized using the Jackson library's ObjectMapper class and returned as a map.
+This code is used to deserialize a JSON string into a map. The function takes in a string `lastSourceOffset` and returns a map. If the `lastSourceOffset` is null or empty, it creates a new empty map. Otherwise, it uses the `JSON_MAPPER` to deserialize the `lastSourceOffset` into a map. The `@SuppressWarnings("unchecked")` annotation is used to suppress warnings about unchecked type conversions.

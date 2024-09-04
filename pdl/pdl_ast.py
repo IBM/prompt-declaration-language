@@ -1,5 +1,9 @@
+"""PDL programs are represented by the Pydantic data structure defined in this file.
+"""
+
+
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias
+from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -23,6 +27,11 @@ ExpressionType: TypeAlias = Any
 # )
 
 
+class Message(TypedDict):
+    role: Optional[str]
+    content: str
+
+
 class BlockKind(StrEnum):
     FUNCTION = "function"
     CALL = "call"
@@ -34,6 +43,7 @@ class BlockKind(StrEnum):
     DOCUMENT = "document"
     SEQUENCE = "sequence"
     ARRAY = "array"
+    MESSAGE = "message"
     IF = "if"
     REPEAT = "repeat"
     REPEAT_UNTIL = "repeat_until"
@@ -61,49 +71,77 @@ class Parser(BaseModel):
 
 
 class PdlParser(Parser):
-    model_config = ConfigDict(extra="forbid")
     pdl: "BlocksType"
 
 
 class RegexParser(Parser):
-    model_config = ConfigDict(extra="forbid")
     regex: str
     mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
 
 
 ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
+RoleType: TypeAlias = Optional[str]
 
 
 class Block(BaseModel):
-    """PDL program block"""
+    """Common fields for all PDL blocks."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+
     description: Optional[str] = None
+    """Documentation associated to the block.
+    """
     spec: Any = None
+    """Type specification of the result of the block.
+    """
     defs: dict[str, "BlocksType"] = {}
+    """Set of definitions executed before the execution of the block.
+    """
     assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the result of the execution of the block.
+    """
     show_result: bool = True
-    result: Optional[Any] = None
+    """Ignore the value computed by the block.
+    """
     parser: Optional[ParserType] = None
-    location: Optional[LocationType] = Field(default=None, exclude=True)
-    has_error: bool = False
+    """Parser to use to construct a value out of a string result."""
     fallback: Optional["BlocksType"] = None
-    optimizer: Optional[dict] = None
+    """Block to execute in case of error.
+    """
+    role: RoleType = None
+    """Role associated to the block and sub-blocks.
+    """
+    # Fields for internal use
+    result: Optional[Any] = None
+    location: Optional[LocationType] = None
+    has_error: bool = False
 
 
 class FunctionBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Function declaration."""
+
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
     function: Optional[dict[str, Any]]
+    """Functions parameters with their types.
+    """
     returns: "BlocksType" = Field(..., alias="return")
+    """Body of the function
+    """
+    # Field for internal use
     scope: Optional[ScopeType] = None
 
 
 class CallBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Calling a function."""
+
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
     call: str
+    """Function to call.
+    """
     args: dict[str, Any] = {}
+    """Arguments of the function with their values.
+    """
+    # Field for internal use
     trace: Optional["BlocksType"] = None
 
 
@@ -111,9 +149,98 @@ class BamTextGenerationParameters(TextGenerationParameters):
     model_config = ConfigDict(extra="forbid")
 
 
+class LitellmParameters(BaseModel):
+    """Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input."""
+
+    model_config = ConfigDict(extra="allow", protected_namespaces=())
+    timeout: Optional[Union[float, str]] = None
+    """Timeout in seconds for completion requests (Defaults to 600 seconds).
+    """
+    temperature: Optional[float] = None
+    """The temperature parameter for controlling the randomness of the output (default is 1.0).
+    """
+    top_p: Optional[float] = None
+    """The top-p parameter for nucleus sampling (default is 1.0).
+    """
+    n: Optional[int] = None
+    """The number of completions to generate (default is 1).
+    """
+    # stream: Optional[bool] = None
+    # """If True, return a streaming response (default is False).
+    # """
+    # stream_options: Optional[dict] = None
+    # """A dictionary containing options for the streaming response. Only set this when you set stream: true.
+    # """
+    stop: Optional[str | list[str]] = None
+    """Up to 4 sequences where the LLM API will stop generating further tokens.
+    """
+    max_tokens: Optional[int] = None
+    """The maximum number of tokens in the generated completion (default is infinity).
+    """
+    presence_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their existence in the text so far.
+    """
+    frequency_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their frequency in the text so far.
+    """
+    logit_bias: Optional[dict] = None
+    """Used to modify the probability of specific tokens appearing in the completion.
+    """
+    user: Optional[str] = None
+    """A unique identifier representing your end-user. This can help the LLM provider to monitor and detect abuse.
+    """
+    # openai v1.0+ new params
+    response_format: Optional[dict] = None
+    seed: Optional[int] = None
+    tools: Optional[list] = None
+    tool_choice: Optional[Union[str, dict]] = None
+    logprobs: Optional[bool] = None
+    """Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message
+    """
+    top_logprobs: Optional[int] = None
+    """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
+    """
+    parallel_tool_calls: Optional[bool] = None
+    # deployment_id = None
+    extra_headers: Optional[dict] = None
+    """Additional headers to include in the request.
+    """
+    # soon to be deprecated params by OpenAI
+    functions: Optional[list] = None
+    """A list of functions to apply to the conversation messages (default is an empty list)
+    """
+    function_call: Optional[str] = None
+    """The name of the function to call within the conversation (default is an empty string)
+    """
+    # set api_base, api_version, api_key
+    base_url: Optional[str] = None
+    """Base URL for the API (default is None).
+    """
+    api_version: Optional[str] = None
+    """API version (default is None).
+    """
+    api_key: Optional[str] = None
+    """API key (default is None).
+    """
+    model_list: Optional[list] = None  # pass in a list of api_base,keys, etc.
+    """List of api base, version, keys.
+    """
+    # Optional liteLLM function params
+    mock_response: Optional[str] = None
+    """If provided, return a mock completion response for testing or debugging purposes (default is None).
+    """
+    custom_llm_provider: Optional[str] = None
+    """Used for Non-OpenAI LLMs, Example usage for bedrock, set model="amazon.titan-tg1-large" and custom_llm_provider="bedrock"
+    """
+    max_retries: Optional[int] = None
+    """The number of retries to attempt (default is 0).
+    """
+
+
 class ModelPlatform(StrEnum):
     BAM = "bam"
     WATSONX = "watsonx"
+    LITELLM = "litellm"
 
 
 class ModelBlock(Block):
@@ -124,7 +251,6 @@ class ModelBlock(Block):
 
 
 class BamModelBlock(ModelBlock):
-    model_config = ConfigDict(extra="forbid")
     platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
     prompt_id: Optional[str] = None
     parameters: Optional[BamTextGenerationParameters | dict] = None
@@ -134,64 +260,108 @@ class BamModelBlock(ModelBlock):
 
 
 class WatsonxModelBlock(ModelBlock):
-    model_config = ConfigDict(extra="forbid")
+    """Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk."""
+
     platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
     params: Optional[dict] = None
     guardrails: Optional[bool] = None
     guardrails_hap_params: Optional[dict] = None
 
 
+class LitellmModelBlock(ModelBlock):
+    """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
+
+    platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
+    parameters: Optional[LitellmParameters] = None
+
+
 class CodeBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Execute a piece of code."""
+
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lan: Literal["python"]
+    """Programming language of the code.
+    """
     code: "BlocksType"
+    """Code to execute.
+    """
 
 
 class ApiBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Call an API."""
+
     kind: Literal[BlockKind.API] = BlockKind.API
     api: str
     url: str
+    """URL of the endpoint."""
     input: "BlocksType"
+    """Arguments to the request.
+    """
 
 
 class GetBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Get the value of a variable."""
+
     kind: Literal[BlockKind.GET] = BlockKind.GET
     get: str
+    """Name of the variable to access."""
 
 
 class DataBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Arbitrary JSON value."""
+
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType
+    """Value defined."""
 
 
 class DocumentBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
+
     kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
     document: "BlocksType"
+    """Body of the document.
+    """
 
 
 class SequenceBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Return the value of the last block if the list of blocks."""
+
     kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
     sequence: "BlocksType"
 
 
 class ArrayBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Return the array of values computed by each block of the list of blocks."""
+
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
     array: "BlocksType"
 
 
+class MessageBlock(Block):
+    """Create a message."""
+
+    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
+    role: RoleType
+    """Role of associated to the message."""
+    content: "BlocksType"
+    """Content of the message."""
+
+
 class IfBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Conditional control structure."""
+
     kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: ExpressionType = Field(alias="if")
+    """Condition.
+    """
     then: "BlocksType"
+    """Branch to exectute if the condition is true.
+    """
     elses: Optional["BlocksType"] = Field(default=None, alias="else")
+    """Branch to execute if the condition is false.
+    """
+    # Field for internal use
     if_result: Optional[bool] = None
 
 
@@ -202,56 +372,91 @@ class IterationType(StrEnum):
 
 
 class ForBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Iteration over arrays."""
+
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
     fors: dict[str, Any] = Field(alias="for")
+    """Arrays to iterate over.
+    """
     repeat: "BlocksType"
+    """Body of the loop.
+    """
     iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
     trace: Optional[list["BlocksType"]] = None
 
 
 class RepeatBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Repeat the execution of a block for a fixed number of iterations."""
+
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     repeat: "BlocksType"
+    """Body of the loop.
+    """
     num_iterations: int
+    """Number of iterations to perform.
+    """
     iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
     trace: Optional[list["BlocksType"]] = None
 
 
 class RepeatUntilBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Repeat the execution of a block until a condition is satisfied."""
+
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
     repeat: "BlocksType"
+    """Body of the loop.
+    """
     until: ExpressionType
+    """Condition of the loop.
+    """
     iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
     trace: Optional[list["BlocksType"]] = None
 
 
 class ReadBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Read from a file or standard input."""
+
     kind: Literal[BlockKind.READ] = BlockKind.READ
     read: str | None
+    """Name of the file to read. If `None`, read the standard input.
+    """
     message: Optional[str] = None
+    """Message to prompt the user to enter a value.
+    """
     multiline: bool = False
+    """Indicate if one or multiple lines shoud be read.
+    """
 
 
 class IncludeBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Include a PDL file."""
+
     kind: Literal[BlockKind.INCLUDE] = BlockKind.INCLUDE
     include: str
+    """Name of the file to include.
+    """
+    # Field for internal use
     trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
-    model_config = ConfigDict(extra="forbid")
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
     program: "BlocksType"
 
 
 class EmptyBlock(Block):
-    model_config = ConfigDict(extra="forbid")
+    """Block without an action. It can contain definitions."""
+
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 
@@ -260,6 +465,7 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | WatsonxModelBlock
     | BamModelBlock
+    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -271,23 +477,30 @@ AdvancedBlockType: TypeAlias = (
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | MessageBlock
     | ReadBlock
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
 )
-
+"""Different types of structured blocks.
+"""
 BlockType: TypeAlias = int | float | str | AdvancedBlockType
+"""All kinds of blocks.
+"""
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
+"""List of blocks.
+"""
 
 
 class Program(RootModel):
     """
-    Prompt Description Program (PDL)
+    Prompt Declaration Language program (PDL)
     """
 
-    # root: dict[str, BlockType]
     root: BlockType
+    """Entry point to parse a PDL program using Pydantic.
+    """
 
 
 class PdlBlock(RootModel):
@@ -386,6 +599,43 @@ def set_default_model_parameters(
     if "max_new_tokens" not in parameters:
         parameters[
             "max_new_tokens"
+        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "min_new_tokens" not in parameters:
+        parameters[
+            "min_new_tokens"
+        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    if "repetition_penalty" not in parameters:
+        parameters[
+            "repetition_penalty"
+        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+    if parameters["decoding_method"] == "sample":
+        if "temperature" not in parameters:
+            parameters[
+                "temperature"
+            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_k" not in parameters:
+            parameters[
+                "top_k"
+            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "top_p" not in parameters:
+            parameters[
+                "top_p"
+            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    return parameters
+
+
+def set_default_granite_model_parameters(
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, str]:
+    if parameters is None:
+        parameters = {}
+    if "decoding_method" not in parameters:
+        parameters[
+            "decoding_method"
+        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+    if "max_tokens" in parameters and parameters["max_tokens"] is None:
+        parameters[
+            "max_tokens"
         ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
     if "min_new_tokens" not in parameters:
         parameters[

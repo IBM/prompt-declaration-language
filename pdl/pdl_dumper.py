@@ -22,6 +22,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     LocationType,
+    MessageBlock,
     ParserType,
     PdlParser,
     ReadBlock,
@@ -133,6 +134,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["sequence"] = blocks_to_dict(block.sequence)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array)
+        case MessageBlock():
+            d["content"] = blocks_to_dict(block.content)
         case ReadBlock():
             d["read"] = block.read
             d["message"] = block.message

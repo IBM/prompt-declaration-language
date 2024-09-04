@@ -2,30 +2,27 @@ description: Fibonacci
 document:
 - def: CODE
   model: ibm/granite-20b-code-instruct
-  platform: bam
-  input:
-    document:
-    - "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+  input: "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
+  params:
+    include_stop_sequence: false
 - "\nFind a random number between 1 and 20\n"
 - def: N
   lan: python
-  code:
-  - "import random\n"
-  - result = random.randint(1, 20)
+  code: |
+    import random
+    result = random.randint(1, 20)
   show_result: true
 - "\nNow computing fibonacci("
 - get: N
 - ")\n"
 - def: RESULT
   lan: python
-  code:
-  - get: CODE
-  - result = fibonacci(
-  - get: N
-  - )
+  code: |
+    {{ CODE }}
+    result = fibonacci({{ N }})
   show_result: false
 - 'The result is: '
 - get: RESULT
 - "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-20b-code-instruct
-  platform: bam
+- "\n"

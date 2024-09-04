@@ -8,8 +8,7 @@ document:
 - lan: python
   def: analysis
   show_result: false
-  code:
-  - |
+  code: |
     import os
     from rich import print  # Optional, for pretty printing.
     from cldk import CLDK
@@ -35,7 +34,7 @@ document:
   - "\n***Generating PDL code for your query:\n"
   - if: "{{ query != 'quit'}}"
     then: 
-    - model: ibm/granite-34b-code-instruct
+    - model: ibm/granite-20b-code-instruct
       def: PDL
       show_result: true
       input: 
@@ -138,14 +137,13 @@ document:
           Question: {{ query }}
 
 
-      parameters:
-        stop_sequences: ["Question"]
+      params:
+        stop_sequence: ["Question"]
         include_stop_sequence: false
     - "\n\n***Executing the above PDL code:\n\n"
     - lan: python
       show_result: false
-      code:
-      - | 
+      code: | 
         from pdl import pdl_ast, pdl_interpreter
         from pdl.pdl_ast import Program
         from pdl.pdl_interpreter import process_prog
@@ -153,10 +151,8 @@ document:
         from pdl.pdl_interpreter import empty_scope
         import re
         import yaml
-        s = """'
-      - get: PDL
-      - |
-        '"""
+        s = """'{{ PDL }}'"""
+        print(s)
         pdl = s.split("```")[1]
         obj = yaml.safe_load(pdl)
         state = InterpreterState()

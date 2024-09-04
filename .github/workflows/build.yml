@@ -1,0 +1,50 @@
+---
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    name: static checks / linters
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        # This path is specific to Ubuntu
+        path: ${{ env.pythonLocation }}
+        # Look to see if there is a cache hit for the setup file
+        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-new3
+          ${{ runner.os }}-new3
+    - name: Install dependencies
+      run: pip install --upgrade --upgrade-strategy eager .[all]
+    - name: pip list packages
+      run: pip list
+    - name: show pip dependencies
+      run: |
+        pip install pipdeptree
+        pipdeptree -fl
+    - name: pre-commit checks
+      run: pre-commit run -a
+    - name: run tests
+      env:
+        WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
+        WATSONX_KEY: ${{ secrets.WATSONX_KEY }}
+        WATSONX_API: ${{ secrets.WATSONX_API }}
+        GENAI_KEY: ${{ secrets.GENAI_KEY }}
+        GENAI_API: ${{ secrets.GENAI_API }}
+      run: py.test -v --capture=tee-sys tests
+      
+        

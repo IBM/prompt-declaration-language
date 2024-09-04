@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdl"
+version = "0.0.1"
+dependencies = [
+  "pydantic",
+  "ibm-generative-ai",
+  "ibm-watsonx-ai",
+  "requests",
+  "python-dotenv",
+  "jinja2",
+  "PyYAML",
+  "jsonschema",
+  "litellm",
+]
+authors = [
+  { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
+  { name="Louis Mandel", email="lmandel@us.ibm.com"},
+  { name="Claudio Spiess" },
+  { name="Martin Hirzel", email="hirzel@us.ibm.com" }
+]
+description = "Prompt Declaration Language"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "pre-commit",
+  "pytest"
+]
+examples = [
+  "wikipedia",
+  "textdistance",
+  "faiss-cpu",
+  "datasets",
+  "sympy"
+]
+docs = [
+  "mkdocs",
+  "mkdocstrings[python]",
+  "mkdocs-material",
+  "pymdown-extensions"
+]
+all = [ "pdl[dev,examples,docs]" ]
+
+[project.urls]
+Homepage = "https://ibm.github.io/prompt-declaration-language/"
+Documentation = "https://ibm.github.io/prompt-declaration-language/tutorial/"
+Repository = "https://github.com/IBM/prompt-declaration-language"
+Issues = "https://github.com/IBM/prompt-declaration-language/issues"
+
+[project.scripts]
+pdl = "pdl.pdl:main"

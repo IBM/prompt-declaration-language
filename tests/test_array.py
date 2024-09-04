@@ -1,6 +1,5 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 array_data = {"description": "Array", "array": ["1", "2", "3", "4"]}
 
@@ -33,7 +32,7 @@ repeat_until_data = {
     "sequence": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "document": [{"lan": "python", "code": "result = 0"}],
             "show_result": False,
         },
         {

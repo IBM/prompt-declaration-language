@@ -9,10 +9,11 @@ from genai.schema import ModerationParameters as BamModerationParameters
 from genai.schema import PromptTemplateData as BamPromptTemplateData
 from ibm_watsonx_ai import Credentials as WatsonxCredentials
 from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
-from openai import OpenAI
+from litellm import completion
 
-from .pdl_ast import (
+from .pdl_ast import (  # set_default_granite_model_parameters,
     BamTextGenerationParameters,
+    Message,
     set_default_model_parameters,
     set_default_model_params,
 )
@@ -52,7 +53,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> str:
+    ) -> Message:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         text = ""
@@ -68,7 +69,7 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     text += result.generated_text
-        return text
+        return {"role": None, "content": text}
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments
@@ -78,7 +79,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[str, Any, None]:
+    ) -> Generator[Message, Any, None]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         start = time.time()
@@ -99,11 +100,7 @@ class BamModel:
                 continue
             for result in response.results:
                 if result.generated_text:
-                    end = time.time()
-                    total_time = end - start
-                    if total_time > 65:
-                        print(f"Model call time: {total_time:.2f} seconds")
-                    yield result.generated_text
+                    yield {"role": None, "content": result.generated_text}
 
     # @staticmethod
     # def generate_text_lazy(  # pylint: disable=too-many-arguments
@@ -164,7 +161,7 @@ class WatsonxModel:
         params: Optional[dict],
         guardrails: Optional[bool],
         guardrails_hap_params: Optional[dict],
-    ) -> str:
+    ) -> Message:
         model_inference = WatsonxModel.get_model(model_id)
         parameters = params
         parameters = set_default_model_parameters(parameters)
@@ -175,7 +172,7 @@ class WatsonxModel:
             guardrails_hap_params=guardrails_hap_params,
         )
         assert isinstance(text, str)
-        return text
+        return {"role": None, "content": text}
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments
@@ -184,7 +181,7 @@ class WatsonxModel:
         params: Optional[dict],
         guardrails: Optional[bool],
         guardrails_hap_params: Optional[dict],
-    ) -> Generator[str, Any, None]:
+    ) -> Generator[Message, None, None]:
         model_inference = WatsonxModel.get_model(model_id)
         parameters = params
         parameters = set_default_model_parameters(parameters)
@@ -194,68 +191,43 @@ class WatsonxModel:
             guardrails=guardrails or False,
             guardrails_hap_params=guardrails_hap_params,
         )
-        return text_stream
+        return (Message(role=None, content=chunk) for chunk in text_stream)
 
 
-class OpenAIModel:
-    oai_client: Optional[OpenAI] = None
-
-    @staticmethod
-    def get_model() -> OpenAI:
-        if OpenAIModel.oai_client is not None:
-            return OpenAIModel.oai_client
-        OpenAIModel.oai_client = OpenAI(
-            base_url=os.environ["OPENAI_BASE_URL"],
-            api_key=os.environ["OPENAI_API_KEY"],
-        )
-        return OpenAIModel.oai_client
+class LitellmModel:
+    litellm_client: Optional[None] = None
 
     @staticmethod
-    def generate_text(  # pylint: disable=too-many-arguments
+    def get_model() -> None:
+        return None
+
+    @staticmethod
+    def generate_text(
         model_id: str,
-        model_input: Optional[str],
-        parameters: Optional[dict],
-    ) -> str:
-        client = OpenAIModel.get_model()
-        parameters = parameters or {}
-        text = ""
-        response = client.chat.completions.create(
-            model=model_id,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": model_input},
-            ],
-            **parameters,
-        )
-        # print(response)
-
-        for result in response.choices:
-            if result.message:
-                text += result.message.content
-        return text
+        messages: list[Message],
+        parameters: dict[str, Any],
+    ) -> Message:
+        params = parameters
+        # if "granite" in model_id:
+        #    params = set_default_granite_model_parameters(params)
+        response = completion(model=model_id, messages=messages, stream=False, **params)
+        msg = response.choices[0].message  # pyright: ignore
+        if msg.content is None:
+            assert False, "TODO"  # XXX TODO XXX
+        return {"role": msg.role, "content": msg.content}
 
     @staticmethod
-    def generate_text_stream(  # pylint: disable=too-many-arguments
+    def generate_text_stream(
         model_id: str,
-        model_input: Optional[str],
-        parameters: Optional[dict],
-    ) -> Generator[str, Any, None]:
-        client = OpenAIModel.get_model()
-        parameters = parameters or {}
-        for chunk in client.chat.completions.create(
-            model=model_id,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a helpful assistant based off IBM Granite.",
-                },
-                {"role": "user", "content": model_input},
-            ],
-            stream=True,
-            **parameters,
-        ):
-            # print(chunk)
-
-            for result in chunk.choices:
-                if result.delta.content:
-                    yield result.delta.content
+        messages: list[Message],
+        parameters: dict[str, Any],
+    ) -> Generator[Message, Any, None]:
+        params = parameters
+        # if "granite" in model_id:
+        #    params = set_default_granite_model_parameters(params)
+        response = completion(model=model_id, messages=messages, stream=True, **params)
+        for chunk in response:
+            msg = chunk.choices[0].delta  # pyright: ignore
+            if msg.content is None:
+                break
+            yield {"role": msg.role, "content": msg.content}

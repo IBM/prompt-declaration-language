@@ -6,21 +6,29 @@ PDL is based on the premise that interactions between users, LLMs and rule-based
 
 
 PDL provides the following features:
-- Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages).
+- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/)
+- Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages)
 - Control structures: variable definitions and use, conditionals, loops, functions
-- Ability to read from files, including JSON data.
-- Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle.
-- Ability to call out to REST APIS.
+- Ability to read from files, including JSON data
+- Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle
+- Ability to call out to REST APIs
+- Type checking input and output of model calls
+- Python SDK
+- Live Document visualization: a UI that allows the user to see 
 
 
 The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
 
-See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/).
+See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+
+## Demo Video 
+ 
+https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45
 
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python version 3.12.
+The interpreter has been tested with Python version **3.12**.
 
 To install the requirements for `pdl`, execute the command:
 
@@ -33,96 +41,85 @@ To install the dependencies for development of PDL and execute all the example, 
 pip3 install '.[all]'
 ```
 
-In order to run the examples that use foundation models hosted on [watsonx](https://www.ibm.com/watsonx), you need an account (a free plan is available) and set up the following environment variables:
-- `WATSONX_API`, the API url (set to `https://{region}.ml.cloud.ibm.com`)
-- `WATSONX_KEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
+In order to run the examples that use foundation models hosted on IBM's [watsonx](https://www.ibm.com/watsonx), you need a WatsonX account (a free plan is available) and set up environment variables according to this [documentation](https://docs.litellm.ai/docs/providers/watsonx). At minimum, you will need to set:
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`)
+- `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
-Internal IBM users can use models hosted on [BAM](https://bam.res.ibm.com/). You need to set up 2 environment variables:
-- `GENAI_API` set to `https://bam-api.res.ibm.com/`
-- `GENAI_KEY` set to your BAM API key. To obtain your key, go to the [BAM](https://bam.res.ibm.com/) main page. On the right and under the "Documentation" section, you will see a button to copy your API key.
-
+ 
 To run the interpreter:
 
 ```
-python3 -m pdl.pdl <path/to/example.yaml>
+python -m pdl.pdl <path/to/example.yaml>
 ```
 
-The folder `examples` contains some examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. 
+The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. They cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of prompting patterns.
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](.vscode/settings.json) and [schema](pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-python3 -m pdl.pdl --log <my-logfile> <my-example>
+python -m pdl.pdl --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-python3 -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
+python -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
+python -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
 ```
+
+The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
+
+```
+python -m pdl.pdl --trace <json | yaml> <my-example>
+```
+
 
 ## Overview
 
 In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```yaml
-description: Hello world with watsonx
+description: Hello world through LiteLLM on watsonx
 document:
-- Hello
-- model: ibm/granite-3b-code-instruct
-  params:
-    STOP_SEQUENCES:
+- Hello,
+- model: watsonx/ibm/granite-3b-code-instruct
+  parameters:
+    stop:
     - '!'
+    decoding_method: greedy
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `ibm/granite-3b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), with the indicated parameter: the stop sequence is `!`. The input to the model call is everything that has been produced so far in the document (here `Hello`).
+The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-3b-code-instruct` from [watsonx](https://www.ibm.com/watsonx) via LiteLLM, with the indicated parameter: the stop sequence is `!`. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
 ```
-python3 -m pdl.pdl examples/hello/hello.yaml
+python -m pdl.pdl examples/hello/hello.yaml
 ```
 
 we obtain the following document:
 
 ```
-Hello, world!
+Hello, World!
 ```
 
-where the portion `, world!` was produced by granite. In general, PDL provides blocks for calling to models, Python code, as well as APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
-
-The equivalent program using a model hosted on BAM can be written as follows:
-
-```yaml
-description: Hello world with BAM
-document:
-- Hello
-- model: ibm/granite-3b-code-instruct
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
-    - '!'
-    include_stop_sequence: true
-```
-
-The only difference is that the parameters of the model now follows the [BAM calling convention](https://bam.res.ibm.com/docs/api-reference#text-generation). The `decoding_method` is `greedy` and there is a stop sequence `!` which must be included in the output.
+where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling to models, Python code, as well as APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
 
 Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.
 
-For example, given the data in this JSON [file](examples/code/data.json):
+For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.json):
 ```json
 {
     "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}",
@@ -158,7 +155,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-In PDL, this would be expressed as follows (see [file](examples/code/code.yaml)):
+In PDL, this would be expressed as follows (see [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code.yaml)):
 
 ```yaml
 description: Code explanation example
@@ -212,7 +209,7 @@ The deserializeOffsetMap function first checks if the lastSourceOffset parameter
 
 ```
 
-Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](examples/code/ground_truth.txt). See [file](examples/code/code-eval.yaml):
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/ground_truth.txt). See [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-eval.yaml):
 
 ```yaml
 description: Code explanation example
@@ -230,9 +227,7 @@ document:
   parameters:
     decoding_method: greedy
     max_new_tokens: 1024
-  input:
-    document:
-    - |
+  input: |
       Here is some info about the location of the function in the repo.
       repo: 
       {{ CODE.repo_info.repo }}
@@ -250,8 +245,7 @@ document:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
   lan: python
-  code:
-  - |
+  code: |
     import textdistance
     expl = """
     {{ EXPLANATION }}
@@ -290,7 +284,7 @@ The similarity (Levenshtein) between this answer and the ground truth is:
 0.9987730061349693
 ```
 
-PDL allows rapid prototyping of prompts by allowing the user to change prompts and see the effects on metrics. Try it!
+PDL allows rapid prototyping of prompts by allowing the user to change prompts and see their immediate effects on metrics. Try it!
 
 Finally, we can output JSON data as a result of this program, as follows:
 
@@ -345,12 +339,26 @@ The data block takes various variables and combines their values into a JSON obj
 
 ## PDL Language Tutorial
 
-See [PDL Language Tutorial](https://pages.github.ibm.com/ml4code/pdl/tutorial/)
+See [PDL Language Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial)
 
+
+## Live Document Visualizer
+
+PDL has a Live Document visualizer to help in program understanding given an execution trace.
+To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
+
+```
+python -m pdl.pdl --trace <json | yaml> <my-example>
+```
+
+This produces an additional file named `my-example_result.json` or `my-example_result.yaml` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
+in the right pane. 
+
+This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 
 ## Additional Notes and Future Work
-
+TODO
 - Currently, model blocks support the [text generation](https://bam.res.ibm.com/docs/api-reference#text-generation) interface of BAM, with the exception
 that we provide some default values when the following parameters are missing:
   - `decoding_method`: `greedy`
@@ -365,14 +373,14 @@ that we provide some default values when the following parameters are missing:
 
 - Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
-- The example `examples/react/React.json` is work-in-progress.
 
-For a complete list of issues see [here](https://github.ibm.com/ml4code/pdl/issues).
+
+For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
 
 
 ## Contributing to the Project
 
-See [Contributing to PDL](docs/contrib.md)
+See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib)
 
 
 

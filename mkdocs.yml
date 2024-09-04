@@ -6,14 +6,16 @@
 #    In the future, a GitHub action should do this.
 
 site_name: Prompt Declaration Language
-# repo_url: https://github.com/ibm/pdl # Uncomment when open sourced
-site_url: https://pages.github.ibm.com/ml4code/pdl/
+repo_url: https://github.com/IBM/prompt-declaration-language
+repo_name: IBM/prompt-declaration-language
+edit_uri: edit/main/docs/
+site_url: https://ibm.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
 # is due to GitHub not presenting /site/ as an option
 # when selecting the dir for Pages.
-docs_dir: docsource
-site_dir: docs
+docs_dir: docs
+site_dir: _site
 
 copyright: Copyright &copy; 2024 IBM
 
@@ -35,6 +37,7 @@ theme:
     - toc.follow
     - toc.integrate
     - navigation.tabs
+    - content.action.edit
   logo: assets/ai-governance--prompt.svg
   palette:
     - primary: custom
@@ -60,15 +63,18 @@ plugins:
           show_bases: true
           show_symbol_type_toc: true
           show_submodules: false
-          show_root_toc_entry: false
+          show_root_toc_entry: true
           docstring_section_style: table
           inherited_members: false
           summary: true
-          docstring_style: null
+          docstring_style: google
           show_if_no_docstring: false
-          show_labels: false
+          show_labels: true
           heading_level: 3
-
+          show_symbol_type_heading: true
+          show_signature: true
+          show_signature_annotations: true
+          members_order: source
 
 markdown_extensions:
   - admonition

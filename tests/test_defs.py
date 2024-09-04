@@ -1,6 +1,5 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 defs_data = {
     "description": "Hello world with variable use",
@@ -9,10 +8,9 @@ defs_data = {
         "NAME": {
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "model": "ibm/granite-34b-code-instruct",
                     "input": {"get": "HELLO"},
-                    "parameters": {
-                        "decoding_method": "greedy",
+                    "params": {
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
                     },
@@ -31,8 +29,8 @@ defs_data = {
 def test_defs():
     state = InterpreterState()
     data = Program.model_validate(defs_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!\n"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!\n"
 
 
 defs_chain_data = {
@@ -49,7 +47,7 @@ defs_chain_data = {
 def test_defs_chain():
     state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "ababc"
 
 
@@ -59,5 +57,5 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 def test_defs_only():
     state = InterpreterState()
     data = Program.model_validate(defs_only)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

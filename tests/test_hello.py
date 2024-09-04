@@ -1,8 +1,8 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import (  # pyright: ignore
+from pdl.pdl_ast import Program, RepeatBlock
+from pdl.pdl_interpreter import (
     InterpreterState,
     contains_error,
+    empty_scope,
     process_prog,
 )
 
@@ -15,11 +15,14 @@ hello = {
 def repeat_data(n):
     return {
         "description": "Hello world with a nested block",
-        "repeat": [
-            "Hello, world!\n",
-            "This is your first prompt descriptor!\n",
-        ],
+        "repeat": {
+            "document": [
+                "Hello, world!\n",
+                "This is your first prompt descriptor!\n",
+            ]
+        },
         "num_iterations": n,
+        "as": "document",
     }
 
 
@@ -29,7 +32,11 @@ def nested_repeat_data(n):
         "document": [
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
-            {"repeat": ["This sentence repeats!\n"], "num_iterations": n},
+            {
+                "repeat": ["This sentence repeats!\n"],
+                "num_iterations": n,
+                "as": "document",
+            },
         ],
     }
 
@@ -37,14 +44,14 @@ def nested_repeat_data(n):
 def test_hello():
     state = InterpreterState()
     data = Program.model_validate(hello)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
 def repeat(n):
     state = InterpreterState()
     data = Program.model_validate(repeat_data(n))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -75,7 +82,7 @@ def test_repeat3():
 def repeat_nested(n):
     state = InterpreterState()
     data = Program.model_validate(nested_repeat_data(n))
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")
@@ -114,8 +121,10 @@ def test_repeat_error():
     _, _, _, trace = process_prog(state, empty_scope, data)
     errors = 0
     print(trace)
-    for document in trace.trace:
-        if contains_error(document):
-            errors += 1
+    if isinstance(trace, RepeatBlock):
+        traces = trace.trace or []
+        for document in traces:
+            if contains_error(document):
+                errors += 1
 
     assert errors == 1

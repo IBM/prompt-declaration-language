@@ -9,24 +9,20 @@ document:
 - repeat:
   - 'Q: '
   - def: JOKE
-    constraints:
-    - len(words(JOKE)) < 20
-    model: ibm/granite-20b-code-instruct-v2
-    parameters:
+    model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: sample
       stop_sequences:
       - '?'
       - "\n"
       include_stop_sequence: false
   - "\nA: "
-  - model: ibm/granite-20b-code-instruct-v2
-    parameters:
+  - model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: sample
       stop_sequences:
       - END
       - "\n"
       include_stop_sequence: false
-    constraints:
-    - words_len: '>10'
   - "\n"
   num_iterations: 2

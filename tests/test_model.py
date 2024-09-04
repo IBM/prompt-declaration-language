@@ -1,14 +1,13 @@
-from pdl.pdl.pdl_ast import Program  # pyright: ignore
-from pdl.pdl.pdl_interpreter import empty_scope  # pyright: ignore
-from pdl.pdl.pdl_interpreter import InterpreterState, process_prog  # pyright: ignore
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-20b-code-instruct-v2",
-            "parameters": {
+            "model": "ibm/granite-34b-code-instruct",
+            "params": {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
                 "include_stop_sequence": False,
@@ -22,8 +21,8 @@ model_data = {
 def test_model():
     state = InterpreterState()
     data = Program.model_validate(model_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!\n"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!\n"
 
 
 model_chain_data = {
@@ -34,8 +33,8 @@ model_chain_data = {
             "def": "SOMEONE",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
-                    "parameters": {
+                    "model": "ibm/granite-34b-code-instruct",
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -51,11 +50,11 @@ model_chain_data = {
             "def": "RESULT",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
-                    "parameters": {
+                    "model": "ibm/granite-34b-code-instruct",
+                    "params": {
                         "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
-                        "include_stop_sequence": False,
+                        "stop_sequences": ["?"],
+                        "include_stop_sequence": True,
                     },
                 }
             ],
@@ -68,18 +67,10 @@ model_chain_data = {
 def test_model_chain():
     state = InterpreterState()
     data = Program.model_validate(model_chain_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "".join(
-        [
-            "Hello,",
-            " world",
-            "!\n",
-            "Who is",
-            " world",
-            "?\n",
-            "I am the one who knows.",
-            "\n",
-        ]
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert (
+        document
+        == "Hello, World!\nWho is World?\n```\n\n## License\n\nThis project is licensed under the terms of the MIT license.\n\n"
     )
 
 
@@ -90,7 +81,7 @@ multi_shot_data = {
             "def": "LOCATION",
             "document": [
                 {
-                    "model": "ibm/granite-20b-code-instruct-v2",
+                    "model": "ibm/granite-34b-code-instruct",
                     "input": {
                         "document": [
                             "Question: What is the weather in London?\n",
@@ -102,7 +93,7 @@ multi_shot_data = {
                             "Question: What is the weather in Armonk, NY?\n",
                         ]
                     },
-                    "parameters": {
+                    "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["Question"],
                         "include_stop_sequence": False,
@@ -118,8 +109,8 @@ multi_shot_data = {
 def test_multi_shot():
     state = InterpreterState()
     data = Program.model_validate(multi_shot_data)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Armonk, NY\n"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Armonk"
 
 
 model_data_missing_parameters = {
@@ -127,8 +118,8 @@ model_data_missing_parameters = {
     "document": [
         "Hello,\n",
         {
-            "model": "ibm/granite-20b-code-instruct-v2",
-            "parameters": {
+            "model": "ibm/granite-34b-code-instruct",
+            "params": {
                 "stop_sequences": ["."],
             },
         },
@@ -139,21 +130,21 @@ model_data_missing_parameters = {
 def test_data_missing_parameters():
     state = InterpreterState()
     data = Program.model_validate(model_data_missing_parameters)
-    _, document, _, _ = process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
-        == "Hello,\n\nI am writing to inquire about the possibility of a partnership with you."
+        == 'Hello,\n\nI have a question about the use of the word "in" in the sentence: "The cake was baked in the oven.'
     )
 
 
 model_parameter = {
     "description": "Hello world with a variable",
-    "defs": {"model": "ibm/granite-20b-code-instruct-v2"},
+    "defs": {"model": "ibm/granite-34b-code-instruct"},
     "document": [
         "Hello,",
         {
             "model": "{{ model }}",
-            "parameters": {
+            "params": {
                 "stop_sequences": ["!"],
             },
         },
@@ -164,18 +155,18 @@ model_parameter = {
 def test_model_parameter():
     state = InterpreterState()
     data = Program.model_validate(model_parameter)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!"
 
 
 model_parameter1 = {
     "description": "Hello world with a variable",
-    "defs": {"model": "granite-20b-code-instruct-v2"},
+    "defs": {"model": "granite-34b-code-instruct"},
     "document": [
         "Hello,",
         {
             "model": "ibm/{{ model }}",
-            "parameters": {
+            "params": {
                 "stop_sequences": ["!"],
             },
         },
@@ -186,5 +177,25 @@ model_parameter1 = {
 def test_model_parameter1():
     state = InterpreterState()
     data = Program.model_validate(model_parameter1)
-    _, document, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!"
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!"
+
+
+litellm_mock = {
+    "description": "call LiteLLM with a mock response",
+    "document": [
+        "Hello,",
+        {
+            "model": "watsonx/ibm/granite-34b-code-instruct-v2",
+            "platform": "litellm",
+            "parameters": {"stop": ["!"], "mock_response": " World!"},
+        },
+    ],
+}
+
+
+def test_litellm_mock():
+    state = InterpreterState()
+    data = Program.model_validate(litellm_mock)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, World!"

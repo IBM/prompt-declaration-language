@@ -4,7 +4,7 @@ import time
 import types
 from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Iterable, Literal, Optional, Sequence
+from typing import Any, Generator, Iterable, Literal, Optional, Sequence, TypeAlias
 
 import requests
 import yaml
@@ -34,7 +34,11 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     IterationType,
+    LitellmModelBlock,
+    LitellmParameters,
     LocationType,
+    Message,
+    MessageBlock,
     ModelBlock,
     ParserType,
     PDLException,
@@ -44,6 +48,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    RoleType,
     ScopeType,
     SequenceBlock,
     WatsonxModelBlock,
@@ -51,9 +56,9 @@ from .pdl_ast import (
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict, dump_yaml
-from .pdl_llms import BamModel, WatsonxModel
+from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_program
+from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
 from .pdl_schema_validator import type_check_args, type_check_spec
 
@@ -62,7 +67,9 @@ class PDLRuntimeParserError(PDLException):
     pass
 
 
-empty_scope: ScopeType = {"context": ""}
+empty_scope: ScopeType = {"context": []}
+
+Messages: TypeAlias = list[Message]
 
 
 class InterpreterState(BaseModel):
@@ -72,30 +79,42 @@ class InterpreterState(BaseModel):
     runtime: float | None = None
     # batch=0: streaming
     # batch=1: call to generate with `input`
+    role: RoleType = None
 
     def with_yield_output(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_output": b})
+
+    def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
+        return self.model_copy(update={"role": role})
 
 
 def generate(
     pdl_file: str,
     log_file: Optional[str],
     initial_scope: ScopeType,
-    output_mode: Optional[Literal["json", "yaml"]],
+    output_trace: Optional[Literal["json", "yaml"]],
     output_file: Optional[str],
 ):
+    """Execute the PDL program defined in `pdl_file`.
+
+    Args:
+        pdl_file: Program to execute.
+        log_file: File where the log is written. If `None`, use `log.txt`.
+        initial_scope: Environment defining the variables in scope to execute the program.
+        output_trace: Format in which the execution trace must be produced.
+        output_file: File to save the execution trace.
+    """
     if log_file is None:
         log_file = "log.txt"
     try:
-        prog, line_table = parse_program(pdl_file)
+        prog, loc = parse_file(pdl_file)
         state = InterpreterState(yield_output=True)
-        loc = LocationType(path=[], file=pdl_file, table=line_table)
         _, _, _, trace = process_prog(state, initial_scope, prog, loc)
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
                 log_fp.write(line)
-        if output_mode is not None and trace is not None:
-            write_trace(pdl_file, output_mode, output_file, trace)
+        if output_trace is not None and trace is not None:
+            write_trace(pdl_file, output_trace, output_file, trace)
     except PDLParseError as e:
         print("\n".join(e.msg))
 
@@ -106,6 +125,14 @@ def write_trace(
     output_file: Optional[str],
     trace: BlockType,
 ):
+    """Write the execution trace into a file.
+
+    Args:
+        pdl_file: Name of the PDL program executed.
+        mode: Format in which the execution trace must be produced.
+        output_file:  File to save the execution trace.
+        trace: Execution trace.
+    """
     if output_file is None:
         output_file = str(Path(pdl_file).with_suffix("")) + f"_result.{mode}"
     with open(output_file, "w", encoding="utf-8") as fp:
@@ -146,7 +173,7 @@ def process_progs(
     initial_scopes: Iterable[ScopeType],
     prog: Program,
     loc=empty_block_location,
-) -> Iterable[tuple[Any, str, ScopeType, BlockType]]:
+) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
     if state.batch > 1:
         batch_size = state.batch
     else:
@@ -162,28 +189,28 @@ def process_progs(
 
 def step_block(
     state: InterpreterState, scope: ScopeType, block: BlockType, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
     result: Any
-    output: str
+    background: Messages
     trace: BlockType
     if not isinstance(block, Block):
         result, errors = process_expr(scope, block, loc)
         if len(errors) != 0:
             trace = handle_error(block, loc, None, errors, block)
             result = block
-            output = str(block)
+            background = [{"role": state.role, "content": str(block)}]
         else:
-            output = stringify(result)
-            trace = output
+            background = [{"role": state.role, "content": stringify(result)}]
+            trace = result
         if state.yield_output:
-            yield OutputMessage(output)
-        append_log(state, "Document", output)
+            yield OutputMessage(background)
+        append_log(state, "Document", background)
     else:
-        result, output, scope, trace = yield from step_advanced_block(
+        result, background, scope, trace = yield from step_advanced_block(
             state, scope, block, loc
         )
-    scope = scope | {"context": output}
-    return result, output, scope, trace
+    scope = scope | {"context": background}
+    return result, background, scope, trace
 
 
 def step_advanced_block(
@@ -191,14 +218,18 @@ def step_advanced_block(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+    if block.role is not None:
+        state = state.with_role(block.role)
     if len(block.defs) > 0:
         scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
     else:
         defs_trace = block.defs
     state = state.with_yield_output(state.yield_output and block.show_result)
-    result, output, scope, trace = yield from step_block_body(state, scope, block, loc)
-    trace = trace.model_copy(update={"defs": defs_trace, "result": output})
+    result, background, scope, trace = yield from step_block_body(
+        state, scope, block, loc
+    )
+    trace = trace.model_copy(update={"defs": defs_trace, "result": result})
     if block.parser is not None:
         try:
             result = parse_result(block.parser, result)
@@ -207,15 +238,16 @@ def step_advanced_block(
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
-    if block.show_result is False:
-        output = ""
     if block.spec is not None and not isinstance(block, FunctionBlock):
         errors = type_check_spec(result, block.spec, block.location)
         if len(errors) > 0:
             trace = handle_error(
                 block, loc, "Type errors during spec checking", errors, trace
             )
-    return result, output, scope, trace
+    if block.show_result is False:
+        result = ""
+        background = []
+    return result, background, scope, trace
 
 
 def step_block_body(
@@ -223,27 +255,27 @@ def step_block_body(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, AdvancedBlockType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, AdvancedBlockType]]:
     scope_init = scope
     result: Any
-    output: str
+    background: Messages
     trace: AdvancedBlockType
     block.location = loc
     match block:
         case ModelBlock():
-            result, output, scope, trace = yield from step_call_model(
+            result, background, scope, trace = yield from step_call_model(
                 state, scope, block, loc
             )
         case CodeBlock():
-            result, output, scope, trace = yield from step_call_code(
+            result, background, scope, trace = yield from step_call_code(
                 state, scope, block, loc
             )
             if state.yield_output:
-                yield OutputMessage(output)
+                yield OutputMessage(background)
         case GetBlock(get=var):
             result = get_var(var, scope)
             if result is None:
-                output = ""
+                background = []
                 trace = handle_error(
                     block,
                     append(loc, "get"),
@@ -252,32 +284,32 @@ def step_block_body(
                     block.model_copy(),
                 )
             else:
-                output = stringify(result)
+                background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
             if state.yield_output:
-                yield OutputMessage(output)
+                yield OutputMessage(background)
         case DataBlock(data=v):
             block.location = append(loc, "data")
             result, errors = process_expr(scope, v, append(loc, "data"))
             if len(errors) != 0:
                 result = None
-                output = ""
+                background = []
                 trace = handle_error(
                     block, append(loc, "data"), None, errors, block.model_copy()
                 )
             else:
-                output = stringify(result)
+                background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
             if state.yield_output:
-                yield OutputMessage(output)
+                yield OutputMessage(background)
         case ApiBlock():
-            result, output, scope, trace = yield from step_call_api(
+            result, background, scope, trace = yield from step_call_api(
                 state, scope, block, loc
             )
             if state.yield_output:
-                yield OutputMessage(output)
+                yield OutputMessage(background)
         case DocumentBlock():
-            result, output, scope, document = yield from step_blocks(
+            result, background, scope, document = yield from step_blocks(
                 IterationType.DOCUMENT,
                 state,
                 scope,
@@ -286,7 +318,7 @@ def step_block_body(
             )
             trace = block.model_copy(update={"document": document})
         case SequenceBlock():
-            result, output, scope, sequence = yield from step_blocks(
+            result, background, scope, sequence = yield from step_blocks(
                 IterationType.SEQUENCE,
                 state,
                 scope,
@@ -295,7 +327,7 @@ def step_block_body(
             )
             trace = block.model_copy(update={"sequence": sequence})
         case ArrayBlock():
-            result, output, scope, array = yield from step_blocks(
+            result, background, scope, array = yield from step_blocks(
                 IterationType.ARRAY,
                 state,
                 scope,
@@ -303,9 +335,19 @@ def step_block_body(
                 append(loc, "array"),
             )
             trace = block.model_copy(update={"array": array})
+        case MessageBlock():
+            content, background, scope, content_trace = yield from step_blocks(
+                IterationType.SEQUENCE,
+                state,
+                scope,
+                block.content,
+                append(loc, "content"),
+            )
+            result = {"role": state.role, "content": content_trace}
+            trace = block.model_copy(update={"content": content})
         case IfBlock():
             result = None
-            output = ""
+            background = []
             b, errors = process_condition(scope, block.condition, append(loc, "if"))
             if len(errors) != 0:
                 trace = handle_error(
@@ -314,7 +356,7 @@ def step_block_body(
             else:
                 if b:
                     thenloc = append(loc, "then")
-                    result, output, scope, then_trace = yield from step_blocks(
+                    result, background, scope, then_trace = yield from step_blocks(
                         IterationType.SEQUENCE, state, scope, block.then, thenloc
                     )
                     trace = block.model_copy(
@@ -325,7 +367,7 @@ def step_block_body(
                     )
                 elif block.elses is not None:
                     elseloc = append(loc, "else")
-                    result, output, scope, else_trace = yield from step_blocks(
+                    result, background, scope, else_trace = yield from step_blocks(
                         IterationType.SEQUENCE, state, scope, block.elses, elseloc
                     )
                     trace = block.model_copy(
@@ -338,22 +380,22 @@ def step_block_body(
                     trace = block.model_copy(update={"if_result": b})
         case RepeatBlock(num_iterations=n):
             results = []
-            output = ""
+            background = []
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             for _ in range(n):
                 repeatloc = append(loc, "repeat")
-                scope = scope | {"context": context_init + output}
+                scope = scope | {"context": messages_concat(context_init, background)}
                 (
                     iteration_result,
-                    iteration_output,
+                    iteration_background,
                     scope,
                     body_trace,
                 ) = yield from step_blocks(
                     IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
                 )
                 results.append(iteration_result)
-                output += iteration_output
+                background = messages_concat(background, iteration_background)
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
@@ -361,7 +403,7 @@ def step_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
             results = []
-            output = ""
+            background = []
             iter_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             items: dict[str, Any] = {}
@@ -394,19 +436,21 @@ def step_block_body(
                 )
             else:
                 for i in range(lengths[0]):
-                    scope = scope | {"context": context_init + output}
+                    scope = scope | {
+                        "context": messages_concat(context_init, background)
+                    }
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
                     newloc = append(loc, "repeat")
                     (
                         iteration_result,
-                        iteration_output,
+                        iteration_background,
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
                         IterationType.SEQUENCE, state, scope, block.repeat, newloc
                     )
-                    output += iteration_output
+                    background = messages_concat(background, iteration_background)
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
                     if contains_error(body_trace):
@@ -416,22 +460,22 @@ def step_block_body(
         case RepeatUntilBlock(until=cond):
             results = []
             stop = False
-            output = ""
+            background = []
             iterations_trace = []
             context_init = scope_init["context"]
             while not stop:
-                scope = scope | {"context": context_init + output}
+                scope = scope | {"context": messages_concat(context_init, background)}
                 repeatloc = append(loc, "repeat")
                 (
                     iteration_result,
-                    iteration_output,
+                    iteration_background,
                     scope,
                     body_trace,
                 ) = yield from step_blocks(
                     IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
                 )
                 results.append(iteration_result)
-                output += iteration_output
+                background = messages_concat(background, iteration_background)
                 iterations_trace.append(body_trace)
                 if contains_error(body_trace):
                     break
@@ -445,13 +489,12 @@ def step_block_body(
             result = combine_results(block.iteration_type, results)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
-            output, scope, trace = process_input(state, scope, block, loc)
+            result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_output:
-                yield OutputMessage(output)
-            result = output
+                yield OutputMessage(background)
 
         case IncludeBlock():
-            result, output, scope, trace = yield from step_include(
+            result, background, scope, trace = yield from step_include(
                 state, scope, block, loc
             )
 
@@ -461,66 +504,15 @@ def step_block_body(
                 scope = scope | {block.assign: closure}
             closure.scope = scope
             result = closure
-            output = ""
+            background = []
             trace = closure.model_copy(update={})
-        case CallBlock(call=f):
-            result = None
-            output = ""
-            args, errors = process_expr(scope, block.args, append(loc, "args"))
-            if len(errors) != 0:
-                trace = handle_error(
-                    block, append(loc, "args"), None, errors, block.model_copy()
-                )
-            closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
-            if len(errors) != 0:
-                trace = handle_error(
-                    block, append(loc, "call"), None, errors, block.model_copy()
-                )
-            closure = get_var(closure_expr, scope)
-            if closure is None:
-                trace = handle_error(
-                    block,
-                    append(loc, "call"),
-                    f"Function is undefined: {f}",
-                    [],
-                    block.model_copy(),
-                )
-            else:
-                argsloc = append(loc, "args")
-                type_errors = type_check_args(args, closure.function, argsloc)
-                if len(type_errors) > 0:
-                    trace = handle_error(
-                        block,
-                        argsloc,
-                        f"Type errors during function call to {f}",
-                        type_errors,
-                        block.model_copy(),
-                    )
-                else:
-                    f_body = closure.returns
-                    f_scope = closure.scope | {"context": scope["context"]} | args
-                    funloc = LocationType(
-                        file=closure.location.file,
-                        path=closure.location.path + ["return"],
-                        table=loc.table,
-                    )
-                    result, output, _, f_trace = yield from step_blocks(
-                        IterationType.SEQUENCE, state, f_scope, f_body, funloc
-                    )
-                    trace = block.model_copy(update={"trace": f_trace})
-                    if closure.spec is not None:
-                        errors = type_check_spec(result, closure.spec, funloc)
-                        if len(errors) > 0:
-                            trace = handle_error(
-                                block,
-                                loc,
-                                f"Type errors in result of function call to {f}",
-                                errors,
-                                trace,
-                            )
+        case CallBlock():
+            result, background, scope, trace = yield from step_call(
+                state, scope, block, loc
+            )
         case EmptyBlock():
             result = ""
-            output = ""
+            background = []
             trace = block.model_copy()
 
         case _:
@@ -529,16 +521,21 @@ def step_block_body(
         if block.fallback is None:
             trace.has_error = True
         else:
-            result, fallback_output, scope, fallback_trace = yield from step_blocks(
+            (
+                result,
+                fallback_background,
+                scope,
+                fallback_trace,
+            ) = yield from step_blocks(
                 IterationType.SEQUENCE,
                 state,
                 scope,
                 blocks=block.fallback,
                 loc=append(loc, "fallback"),
             )
-            output = output + fallback_output
+            background = messages_concat(background, fallback_background)
             trace.fallback = fallback_trace
-    return result, output, scope, trace
+    return result, background, scope, trace
 
 
 def stringify(result):
@@ -579,43 +576,32 @@ def step_blocks(
     scope: ScopeType,
     blocks: BlocksType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, BlocksType]]:
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlocksType]]:
     result: Any
-    output: str
+    background: Messages
     trace: BlocksType
     results = []
     iteration_state = state
-    # match iteration_type:
-    #     case IterationType.DOCUMENT:
-    #         iteration_state = state
-    #     case _:
-    #         iteration_state = state.with_yield_output(False)
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        output = ""
+        background = []
         trace = []
         context_init = scope["context"]
         for i, block in enumerate(blocks):
-            scope = scope | {"context": context_init + output}
+            scope = scope | {"context": messages_concat(context_init, background)}
             newloc = append(loc, "[" + str(i) + "]")
             iteration_result, o, scope, t = yield from step_block(
                 iteration_state, scope, block, newloc
             )
             results.append(iteration_result)
-            output += o
+            background = messages_concat(background, o)
             trace.append(t)  # type: ignore
     else:
-        block_result, output, scope, trace = yield from step_block(
+        block_result, background, scope, trace = yield from step_block(
             iteration_state, scope, blocks, loc
         )
         results.append(block_result)
     result = combine_results(iteration_type, results)
-    # match iteration_type:
-    #     case IterationType.DOCUMENT:
-    #         pass
-    #     case _:
-    #         if state.yield_output:
-    #             yield OutputMessage(stringify(result))
-    return result, output, scope, trace
+    return result, background, scope, trace
 
 
 def combine_results(iteration_type: IterationType, results: list[Any]):
@@ -698,24 +684,34 @@ def process_condition(
 def step_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: BamModelBlock | WatsonxModelBlock,
+    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
     loc: LocationType,
 ) -> Generator[
     YieldMessage,
     Any,
-    tuple[Any, str, ScopeType, BamModelBlock | WatsonxModelBlock | ErrorBlock],
+    tuple[
+        Any,
+        Messages,
+        ScopeType,
+        BamModelBlock | WatsonxModelBlock | LitellmModelBlock | ErrorBlock,
+    ],
 ]:
     # evaluate model name
     model, errors = process_expr(scope, block.model, append(loc, "model"))
     # evaluate input
+    model_input: Messages
     if block.input is not None:  # If not implicit, then input must be a block
-        _, model_input, _, input_trace = yield from step_blocks(
-            IterationType.DOCUMENT,
+        model_input_result, _, _, input_trace = yield from step_blocks(
+            IterationType.SEQUENCE,
             state.with_yield_output(False),
             scope,
             block.input,
             append(loc, "input"),
         )
+        if isinstance(model_input_result, str):
+            model_input = [{"role": None, "content": model_input_result}]
+        else:
+            model_input = model_input_result
     else:
         model_input = scope["context"]
         input_trace = None
@@ -731,7 +727,7 @@ def step_call_model(
             concrete_block = block.model_copy(
                 update={
                     "model": model,
-                    "input": model_input,
+                    "input": input_trace,
                     "parameters": params,
                 }
             )
@@ -741,7 +737,17 @@ def step_call_model(
             concrete_block = block.model_copy(
                 update={
                     "model": model,
-                    "input": model_input,
+                    "input": input_trace,
+                    "params": params,
+                }
+            )
+        case LitellmModelBlock():
+            params, param_errors = process_expr(scope, block.parameters, loc)
+            errors += param_errors
+            concrete_block = block.model_copy(
+                update={
+                    "model": model,
+                    "input": input_trace,
                     "params": params,
                 }
             )
@@ -753,149 +759,191 @@ def step_call_model(
             loc,
             None,
             errors,
-            block.model_copy(update={"input": input_trace, "trace": concrete_block}),
+            block.model_copy(update={"trace": concrete_block}),
         )
-        return None, "", scope, trace
+        return None, [], scope, trace
     # Execute model call
     try:
-        append_log(state, "Model Input", model_input)
-        gen = yield from generate_client_response(state, concrete_block)
-        append_log(state, "Model Output", gen)
-        trace = block.model_copy(
-            update={"result": gen, "input": input_trace, "trace": concrete_block}
-        )
-        return gen, gen, scope, trace
+        append_log(state, "Model Input", messages_to_str(model_input))
+        msg = yield from generate_client_response(state, concrete_block, model_input)
+        background: Messages = [msg]
+        result = msg["content"]
+        append_log(state, "Model Output", result)
+        trace = block.model_copy(update={"result": result, "trace": concrete_block})
+        return result, background, scope, trace
     except Exception as e:
         trace = handle_error(
             block,
             loc,
             f"Model error: {e}",
             [],
-            block.model_copy(update={"input": input_trace, "trace": concrete_block}),
+            block.model_copy(update={"trace": concrete_block}),
         )
-        return None, "", scope, trace
+        return None, [], scope, trace
 
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
-) -> Generator[YieldMessage, Any, str]:
+    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    model_input: Messages,
+) -> Generator[YieldMessage, Any, Message]:
     match state.batch:
         case 0:
-            output = yield from generate_client_response_streaming(state, block)
+            model_output = yield from generate_client_response_streaming(
+                state, block, model_input
+            )
         case 1:
-            output = yield from generate_client_response_single(state, block)
+            model_output = yield from generate_client_response_single(
+                state, block, model_input
+            )
         case _:
-            output = yield from generate_client_response_batching(state, block)
-    return output
+            model_output = yield from generate_client_response_batching(
+                state, block, model_input
+            )
+    return model_output
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
-) -> Generator[YieldMessage, Any, str]:
-    text_stream: Generator[str, Any, None]
+    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    model_input: Messages,
+) -> Generator[YieldMessage, Any, Message]:
+    msg_stream: Generator[Message, Any, None]
+    model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            assert isinstance(block.input, str)
-            text_stream = BamModel.generate_text_stream(
+            msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=block.input,
+                model_input=model_input_str,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,
             )
         case WatsonxModelBlock():
-            assert isinstance(block.input, str)
-            text_stream = WatsonxModel.generate_text_stream(
+            msg_stream = WatsonxModel.generate_text_stream(
                 model_id=block.model,
-                prompt=block.input,
+                prompt=model_input_str,
                 params=block.params,
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
+        case LitellmModelBlock():
+            parameters = litellm_block_to_dict(block)
+            msg_stream = LitellmModel.generate_text_stream(
+                model_id=block.model, messages=model_input, parameters=parameters
+            )
         case _:
             assert False
-    text = ""
-    for chunk in text_stream:
+    complete_msg: Optional[Message] = None
+    role = None
+    for chunk in msg_stream:
         if state.yield_output:
-            yield OutputMessage(chunk)
-        text += chunk
-    return text
+            yield OutputMessage([chunk])
+        if complete_msg is None:
+            complete_msg = chunk
+            role = complete_msg["role"]
+        else:
+            chunk_role = chunk["role"]
+            if chunk_role is None or chunk_role == role:
+                complete_msg["content"] += chunk["content"]
+    if complete_msg is None:
+        return Message(role=state.role, content="")
+    return complete_msg
+
+
+def litellm_block_to_dict(block: LitellmModelBlock) -> dict[str, Any]:
+    if block.parameters is None:
+        block_parameters = LitellmParameters()
+    else:
+        block_parameters = block.parameters
+    parameters = block_parameters.model_dump(exclude={"stream"})
+    return parameters
 
 
 def generate_client_response_single(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
-) -> Generator[YieldMessage, Any, str]:
-    text: str
+    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    model_input: Messages,
+) -> Generator[YieldMessage, Any, Message]:
+    msg: Message
+    model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            assert isinstance(block.input, str)
-            text = BamModel.generate_text(
+            msg = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=block.input,
+                model_input=model_input_str,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,
             )
         case WatsonxModelBlock():
-            assert isinstance(block.input, str)
-            text = WatsonxModel.generate_text(
+            msg = WatsonxModel.generate_text(
                 model_id=block.model,
-                prompt=block.input,
+                prompt=model_input_str,
                 params=block.params,
                 guardrails=block.guardrails,
                 guardrails_hap_params=block.guardrails_hap_params,
             )
+        case LitellmModelBlock():
+            parameters = litellm_block_to_dict(block)
+            msg = LitellmModel.generate_text(
+                model_id=block.model, messages=model_input, parameters=parameters
+            )
     if state.yield_output:
-        yield OutputMessage(text)
-    return text
+        yield OutputMessage([msg])
+    return msg
 
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock,
-) -> Generator[YieldMessage, Any, str]:
+    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    # model: str,
+    model_input: Messages,
+) -> Generator[YieldMessage, Any, Message]:
+    model_input_str = messages_to_str(model_input)
     match block:
         case BamModelBlock():
-            assert isinstance(block.input, str)
-            text = yield ModelCallMessage(
+            msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
-                model_input=block.input,
+                model_input=model_input_str,
                 parameters=block.parameters,
                 moderations=block.moderations,
                 data=block.data,
             )
             if state.yield_output:
-                yield OutputMessage(text)
+                yield OutputMessage(msg)
         case WatsonxModelBlock():
+            assert False  # XXX TODO
+        case LitellmModelBlock():
             assert False  # XXX TODO
         case _:
             assert False
-    return text
+    return msg
 
 
 def step_call_api(
     state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, ApiBlock | ErrorBlock]]:
-    _, input_str, _, input_trace = yield from step_blocks(
-        IterationType.DOCUMENT,
+) -> Generator[
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, ApiBlock | ErrorBlock]
+]:
+    background: Messages
+    input_value, _, _, input_trace = yield from step_blocks(
+        IterationType.SEQUENCE,
         state.with_yield_output(False),
         scope,
         block.input,
         append(loc, "input"),
     )
-    input_str = block.url + input_str
+    input_str = block.url + stringify(input_value)
     try:
         append_log(state, "API Input", input_str)
         response = requests.get(input_str)
         result = response.json()
-        output = stringify(result)
-        append_log(state, "API Output", output)
+        background = [{"role": state.role, "content": stringify(result)}]
+        append_log(state, "API Output", background)
         trace = block.model_copy(update={"input": input_trace})
     except Exception as e:
         trace = handle_error(
@@ -906,15 +954,18 @@ def step_call_api(
             block.model_copy(update={"input": input_trace}),
         )
         result = None
-        output = ""
-    return result, output, scope, trace
+        background = []
+    return result, background, scope, trace
 
 
 def step_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, str, ScopeType, CodeBlock | ErrorBlock]]:
-    _, code_s, _, code_trace = yield from step_blocks(
-        IterationType.DOCUMENT,
+) -> Generator[
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, CodeBlock | ErrorBlock]
+]:
+    background: Messages
+    code_s, _, _, code_trace = yield from step_blocks(
+        IterationType.SEQUENCE,
         state.with_yield_output(False),
         scope,
         block.code,
@@ -925,7 +976,7 @@ def step_call_code(
         match block.lan:
             case "python":
                 result = call_python(code_s, scope)
-                output = str(result)
+                background = [{"role": state.role, "content": str(result)}]
             case _:
                 trace = handle_error(
                     block,
@@ -935,8 +986,8 @@ def step_call_code(
                     block.model_copy(),
                 )
                 result = None
-                output = ""
-                return result, output, scope, trace
+                background = []
+                return result, background, scope, trace
     except Exception as e:
         trace = handle_error(
             block,
@@ -946,11 +997,11 @@ def step_call_code(
             block.model_copy(update={"code": code_s}),
         )
         result = None
-        output = ""
+        background = []
 
     append_log(state, "Code Output", result)
     trace = block.model_copy(update={"result": result, "code": code_trace})
-    return result, output, scope, trace
+    return result, background, scope, trace
 
 
 __PDL_SESSION = types.SimpleNamespace()
@@ -963,13 +1014,75 @@ def call_python(code: str, scope: dict) -> Any:
     return result
 
 
+def step_call(
+    state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
+) -> Generator[
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock | ErrorBlock]
+]:
+    result = None
+    background: Messages = []
+    args, errors = process_expr(scope, block.args, append(loc, "args"))
+    if len(errors) != 0:
+        trace = handle_error(
+            block, append(loc, "args"), None, errors, block.model_copy()
+        )
+    closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
+    if len(errors) != 0:
+        trace = handle_error(
+            block, append(loc, "call"), None, errors, block.model_copy()
+        )
+    closure = get_var(closure_expr, scope)
+    if closure is None:
+        trace = handle_error(
+            block,
+            append(loc, "call"),
+            f"Function is undefined: {block.call}",
+            [],
+            block.model_copy(),
+        )
+    else:
+        argsloc = append(loc, "args")
+        type_errors = type_check_args(args, closure.function, argsloc)
+        if len(type_errors) > 0:
+            trace = handle_error(
+                block,
+                argsloc,
+                f"Type errors during function call to {closure_expr}",
+                type_errors,
+                block.model_copy(),
+            )
+        else:
+            f_body = closure.returns
+            f_scope = closure.scope | {"context": scope["context"]} | args
+            funloc = LocationType(
+                file=closure.location.file,
+                path=closure.location.path + ["return"],
+                table=loc.table,
+            )
+            result, background, _, f_trace = yield from step_blocks(
+                IterationType.SEQUENCE, state, f_scope, f_body, funloc
+            )
+            trace = block.model_copy(update={"trace": f_trace})
+            if closure.spec is not None:
+                errors = type_check_spec(result, closure.spec, funloc)
+                if len(errors) > 0:
+                    trace = handle_error(
+                        block,
+                        loc,
+                        f"Type errors in result of function call to {closure_expr}",
+                        errors,
+                        trace,
+                    )
+    return result, background, scope, trace
+
+
 def process_input(
     state: InterpreterState, scope: ScopeType, block: ReadBlock, loc: LocationType
-) -> tuple[str, ScopeType, ReadBlock | ErrorBlock]:
+) -> tuple[str, Messages, ScopeType, ReadBlock | ErrorBlock]:
     read, errors = process_expr(scope, block.read, append(loc, "read"))
     if len(errors) != 0:
         trace = handle_error(block, loc, None, errors, block.model_copy())
-        return "", scope, trace
+        return "", [], scope, trace
     if read is not None:
         with open(read, encoding="utf-8") as f:
             s = f.read()
@@ -997,7 +1110,8 @@ def process_input(
             s = "".join(contents)
             append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
-    return s, scope, trace
+    background: Messages = [{"role": state.role, "content": s}]
+    return s, background, scope, trace
 
 
 def step_include(
@@ -1006,16 +1120,15 @@ def step_include(
     block: IncludeBlock,
     loc: LocationType,
 ) -> Generator[
-    YieldMessage, Any, tuple[Any, str, ScopeType, IncludeBlock | ErrorBlock]
+    YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock | ErrorBlock]
 ]:
     try:
-        prog, line_table = parse_program(block.include)
-        newloc = LocationType(file=block.include, path=[], table=line_table)
-        result, output, scope, trace = yield from step_block(
+        prog, newloc = parse_file(block.include)
+        result, background, scope, trace = yield from step_block(
             state, scope, prog.root, newloc
         )
         include_trace = block.model_copy(update={"trace": trace})
-        return result, output, scope, include_trace
+        return result, background, scope, include_trace
     except PDLParseError as e:
         trace = handle_error(
             block,
@@ -1024,7 +1137,7 @@ def step_include(
             e.msg,
             block.model_copy(),
         )
-        return None, "", scope, trace
+        return None, [], scope, trace
 
 
 def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
@@ -1141,3 +1254,31 @@ def contains_error(blocks: BlocksType) -> bool:
         return False
     except StopIteration:
         return True
+
+
+def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
+    if len(messages1) == 0:
+        return messages2
+    if len(messages2) == 0:
+        return messages1
+    left = messages1[-1]
+    right = messages2[0]
+    if left["role"] == right["role"]:
+        return (
+            messages1[:-1]
+            + [{"role": left["role"], "content": left["content"] + right["content"]}]
+            + messages2[1:]
+        )
+    return messages1 + messages2
+
+
+def messages_to_str(messages: Messages) -> str:
+    # TODO
+    return "".join(
+        [
+            msg["content"]
+            if msg["role"] is None
+            else f"<|{msg['role']}|>{msg['content']}"
+            for msg in messages
+        ]
+    )
