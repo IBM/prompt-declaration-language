@@ -26,8 +26,7 @@ defs:
 
       Answer: Let's think step by step. 
     - model: "{{ model }}"
-      platform: bam
-      parameters:
+      params:
         decoding_method: "greedy"
         stop_sequences:
         - "The answer is"
@@ -63,8 +62,7 @@ defs:
 
       Answer: Let's think step by step.
     - model: "{{ model }}"
-      platform: bam
-      parameters:
+      params:
         decoding_method: "greedy"
         stop_sequences:
         - "The answer is"
@@ -72,8 +70,7 @@ defs:
     - "The answer is "
     - def: answer
       model: "{{ model }}"
-      platform: bam
-      parameters:
+      params:
         decoding_method: "greedy"
     - "\n\nJSON Output: "
     - data:

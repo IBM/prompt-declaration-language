@@ -1,0 +1,13 @@
+{
+    "input": {
+        "source_code": "@SuppressWarnings(\"unchecked\")\npublic static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {\n  Map<String, String> offsetMap;\n  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {\n    offsetMap = new HashMap<>();\n  } else {\n    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);\n  }\n  return offsetMap;\n}", 
+        "repo_info": {
+            "repo": "streamsets/datacollector", 
+            "path": "stagesupport/src/main/java/com/.../OffsetUtil.java", 
+            "function_name": "OffsetUtil.deserializeOffsetMap"
+        }
+    }, 
+    "output": "\nThis code is used to deserialize a JSON string into a map. The function takes in a string `lastSourceOffset` and returns a map. If the `lastSourceOffset` is null or empty, it creates a new empty map. Otherwise, it uses the `JSON_MAPPER` to deserialize the `lastSourceOffset` into a map. The `@SuppressWarnings(\"unchecked\")` annotation is used to suppress warnings about unchecked type conversions.", 
+    "metric": 0.9975
+}
+

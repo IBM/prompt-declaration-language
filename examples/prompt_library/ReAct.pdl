@@ -77,7 +77,7 @@ defs:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
-                parameters:
+                params:
                   decoding_method: sample
                   temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
@@ -85,7 +85,7 @@ defs:
             until: "{{ THOUGHT.endswith('Act:') }}"
           - def: action_raw
             model: "{{ model }}"
-            parameters:
+            params:
               decoding_method: sample
               temperature: "{{ temperature }}"
               stop_sequences: ["[", "\n"]
@@ -95,7 +95,7 @@ defs:
           - "["
           - def: SUBJECT
             model: "{{ model }}"
-            parameters:
+            params:
               decoding_method: sample
               temperature: "{{ temperature }}"
               stop_sequences: ["]", "\n"]
@@ -110,7 +110,7 @@ defs:
                     args:
                       subject: "{{ SUBJECT }}"
                   - model: "{{ model }}"
-                    parameters:
+                    params:
                       decoding_method: sample
                       temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]

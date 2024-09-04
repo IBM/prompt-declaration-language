@@ -5,25 +5,26 @@ defs:
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 document:
-  model: ibm/granite-20b-code-instruct-v2
-  def: model_output
-  spec: {name: str, age: int}
-  input:
-    document:
-    - for: 
-        question: "{{ data.questions }}"
-        answer: "{{ data.answers }}"
-      repeat:
-        - |
-          {{ question }}
-          {{ answer }}
-      as: document
-    - > 
-      Question: Create a JSON object with fields 'name' and 'age' 
-      and set them appropriately. Write the age in letters.
-  parser: yaml
-  parameters:
-    decoding_method: greedy
-    stop_sequences:
-    - '}'
-    include_stop_sequence: true
+  - model: ibm/granite-20b-code-instruct
+    def: model_output
+    spec: {name: str, age: int}
+    input:
+      document:
+      - for: 
+          question: "{{ data.questions }}"
+          answer: "{{ data.answers }}"
+        repeat:
+          - |
+            {{ question }}
+            {{ answer }}
+        as: document
+      - > 
+        Question: Create a JSON object with fields 'name' and 'age' 
+        and set them appropriately. Write the age in letters.
+    parser: yaml
+    params:
+      decoding_method: greedy
+      stop_sequences:
+      - '}'
+      include_stop_sequence: true
+  - "\n"

@@ -2,9 +2,8 @@ description: Fibonacci
 document:
 - def: CODE
   model: ibm/granite-20b-code-instruct
-  platform: bam
   input: "Write just the definition for an efficient Python function to compute the Fibonacci sequence\n\n"
-  parameters:
+  params:
     include_stop_sequence: false
 - "\nFind a random number between 1 and 20\n"
 - def: N
@@ -26,4 +25,4 @@ document:
 - get: RESULT
 - "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-20b-code-instruct
-  platform: bam
+- "\n"

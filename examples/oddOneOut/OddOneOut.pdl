@@ -9,15 +9,15 @@ document:
 - repeat:
   - 'Pick the odd word out: '
   - def: OPTIONS
-    model: ibm/granite-20b-code-instruct-v2
-    parameters:
+    model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: greedy
       stop_sequences:
       - .
       include_stop_sequence: false
   - "\nNow the reasoning:\n"
-  - model: ibm/granite-20b-code-instruct-v2
-    parameters:
+  - model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: greedy
       stop_sequences:
       - Pick the odd word
@@ -25,18 +25,12 @@ document:
       - So the odd one
       - .
       include_stop_sequence: false
-    constraints:
-    - not_contains: "\n"
-    - not_contains: Pick
-    - words_len: <40
   - "\nNow the result:\n"
-  - model: ibm/granite-20b-code-instruct-v2
-    parameters:
+  - model: ibm/granite-20b-code-instruct
+    params:
       decoding_method: greedy
       stop_sequences:
       - Pick the odd word
       include_stop_sequence: false
-    constraints:
-    - in: OPTIONS
   - "\n\n"
   num_iterations: 2

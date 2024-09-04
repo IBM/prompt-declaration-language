@@ -27,8 +27,7 @@ document:
     Answer: Let's think step by step. 
   - model: "{{ model }}"
     def: PDL
-    platform: bam
-    parameters:
+    params:
       stop_sequences: ["<|endoftext|>"]
       include_stop_sequence: false
     show_result: true
