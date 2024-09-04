@@ -40,7 +40,7 @@ def exec_program(
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     loc: Optional[LocationType] = None,
-):
+) -> Any:
     """Execute a PDL program given as a value of type `pdl.pdl_ast.Program`.
 
     Args:
@@ -65,7 +65,7 @@ def exec_dict(
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     loc: Optional[LocationType] = None,
-):
+) -> Any:
     """Execute a PDL program given as a dictionary.
 
     Args:
@@ -86,7 +86,7 @@ def exec_str(
     prog: str,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
-):
+) -> Any:
     """Execute a PDL program given as YAML string.
 
     Args:
@@ -106,7 +106,7 @@ def exec_file(
     prog: str,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
-):
+) -> Any:
     """Execute a PDL program given as YAML file.
 
     Args:
