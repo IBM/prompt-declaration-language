@@ -12,18 +12,22 @@ class PDLParseError(PDLException):
     pass
 
 
-def parse_program(pdl_file: str) -> tuple[Program, dict[str, int]]:
-    with open(pdl_file, "r", encoding="utf-8") as table_fp:
-        line_table = get_line_map(table_fp)
-        with open(pdl_file, "r", encoding="utf-8") as pdl_fp:
-            prog_yaml = yaml.safe_load(pdl_fp)
-            loc = LocationType(path=[], file=pdl_file, table=line_table)
-            try:
-                prog = Program.model_validate(prog_yaml)
-            except ValidationError as exc:
-                with open("pdl-schema.json", "r", encoding="utf-8") as schema_file:
-                    schema = json.load(schema_file)
-                defs = schema["$defs"]
-                errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
-                raise PDLParseError(errors) from exc
-    return prog, line_table
+def parse_file(pdl_file: str) -> tuple[Program, LocationType]:
+    with open(pdl_file, "r", encoding="utf-8") as pdl_fp:
+        prog_str = pdl_fp.read()
+    return parse_str(prog_str, file_name=pdl_file)
+
+
+def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]:
+    prog_yaml = yaml.safe_load(pdl_str)
+    line_table = get_line_map(pdl_str)
+    loc = LocationType(path=[], file=file_name, table=line_table)
+    try:
+        prog = Program.model_validate(prog_yaml)
+    except ValidationError as exc:
+        with open("pdl-schema.json", "r", encoding="utf-8") as schema_file:
+            schema = json.load(schema_file)
+        defs = schema["$defs"]
+        errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
+        raise PDLParseError(errors) from exc
+    return prog, loc

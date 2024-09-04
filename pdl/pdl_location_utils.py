@@ -70,11 +70,11 @@ def get_paths(
     return ret
 
 
-def get_line_map(file) -> dict[str, int]:
+def get_line_map(prog: str) -> dict[str, int]:
     indentation = []
     fields = []
     is_array_item = []
-    for line in file.readlines():  # line numbers are off by one
+    for line in prog.split("\n"):  # line numbers are off by one
         fields.append(
             line.strip().split(":")[0].replace("-", "").strip()
             if line.find(":") != -1
