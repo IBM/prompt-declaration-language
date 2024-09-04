@@ -13,7 +13,6 @@ EXPECTED_INVALID = [
     pathlib.Path("tests") / "data" / "line" / "hello8.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello10.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello11.pdl",
-    pathlib.Path("examples") / "hello" / "hello24.pdl",
 ]
 
 

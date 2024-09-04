@@ -1,0 +1,8 @@
+description: Hello world through LiteLLM on watsonx
+document:
+- Hello,
+- model: ibm/granite-3b-code-instruct
+  params:
+    stop:
+    - '!'
+    decoding_method: greedy

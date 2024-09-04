@@ -1,9 +1,0 @@
-description: Hello function
-document:
-  - def: hello
-    function:
-      name: str
-    return: Hello {{ name }}!
-  - call: hello
-    args:
-      name: World

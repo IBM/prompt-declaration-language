@@ -1,4 +1,5 @@
-description: Hello world
+# Call with pdl --data '"something": "ABC"'
+description: Hello world with data
 document:
 - def: stutter
   function: 
@@ -6,5 +7,6 @@ document:
     - "{{ something }}"
 - "Hello World!\n"
 - call: stutter
+- "\n"
 
 

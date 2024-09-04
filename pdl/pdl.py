@@ -149,7 +149,7 @@ def main():
 
     parser.add_argument("-o", "--output", help="output file")
     parser.add_argument(
-        "-m", "--trace", help="output trace for live document", choices=["json", "yaml"]
+        "-t", "--trace", help="output trace for live document", choices=["json", "yaml"]
     )
     parser.add_argument("--json", help="json file")
     parser.add_argument("--yaml", help="yaml file")

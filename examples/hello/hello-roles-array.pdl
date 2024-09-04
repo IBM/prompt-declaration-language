@@ -1,5 +1,5 @@
 description: Model call with explicit messages input
-sequence:
+document:
 - def: prompt
   array:
   - role: system
@@ -7,8 +7,7 @@ sequence:
   - role: user
     content: Write a Python function that implement merge sort.
   show_result: false
-- model: watsonx/ibm/granite-8b-code-instruct
-  platform: litellm
+- model: ibm/granite-8b-code-instruct
   input: "{{ prompt }}"
-  parameters:
+  params:
     decoding_method: greedy

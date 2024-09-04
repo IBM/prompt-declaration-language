@@ -1,4 +1,0 @@
-description: Hello world using shell
-document:
-- lan: command # Shell commands are not currently supported
-  code: echo Hello World!

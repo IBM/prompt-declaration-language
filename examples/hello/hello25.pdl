@@ -1,8 +1,0 @@
-description: Hello world with Watsonx
-document:
-- Hello,
-- model: ibm/granite-13b-chat-v2
-  platform: watsonx
-  params:
-    STOP_SEQUENCES:
-    - '!'

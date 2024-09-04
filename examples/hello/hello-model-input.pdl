@@ -1,7 +1,7 @@
-description: Hello world
+description: Hello world with model input
 document:
-- Hello,
 - model: ibm/granite-34b-code-instruct
+  input: "Hello,"
   params:
     stop_sequences:
     - '!'
