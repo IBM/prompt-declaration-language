@@ -51,7 +51,7 @@ class BaseProcessor:
         answer = 0.0  # pylint: disable=invalid-name
         exception = None
         try:
-            state = InterpreterState(yield_output=False)
+            state = InterpreterState(yield_background=False)
             scope = empty_scope
             scope["question"] = question
             document, _, _, _ = process_prog(state, scope, data)

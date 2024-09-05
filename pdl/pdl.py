@@ -22,8 +22,11 @@ from .pdl_parser import parse_file, parse_str
 class InterpreterConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
 
-    yield_output: bool
-    """Print the program messages during the execution.
+    yield_result: bool
+    """Print incrementally result of the execution.
+    """
+    yield_background: bool
+    """Print the program background messages during the execution.
     """
     batch: int
     """Execution type:
