@@ -6,9 +6,11 @@ document:
   show_result: true
 - "\n"
 - repeat:
-  - def: I
-    lan: python
-    code: result = {{ I }} + 1
-    show_result: true
-  - "\n"
+    document:
+    - def: I
+      lan: python
+      code: result = {{ I }} + 1
+      show_result: true
+    - "\n"
   until: '{{ J == 5 }}'
+  as: document
