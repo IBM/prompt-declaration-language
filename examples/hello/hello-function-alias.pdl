@@ -6,6 +6,7 @@ defs:
     return: Hello {{ name }}!
   alias: hello
 document:
-  - call: "{{ alias }}"
-    args:
-      name: World
+- call: "{{ alias }}"
+  args:
+    name: World
+- "\n"

@@ -21,7 +21,7 @@ This program has a `description` field, which contains a title. It also has a `d
 To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-python3 -m pdl.pdl ./examples/hello/hello.pdl
+python3 -m pdl.pdl ./examples/tutorial/simple_program.pdl
 ```
 
 This results in the following output:

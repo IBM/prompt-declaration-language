@@ -1,11 +1,11 @@
 description: Code explanation example
 defs: 
    CODE:
-      read: examples/code/data.json
-      parser: json
+      read: examples/code/data.yaml
+      parser: yaml
       def: CODE
    EXPLANATION:
-      model: ibm/granite-20b-code-instruct
+      model: ibm/granite-34b-code-instruct
       input:
            |
             Here is some info about the location of the function in the repo.

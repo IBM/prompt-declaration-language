@@ -1,10 +1,9 @@
-description: Hello world through LiteLLM on watsonx
+description: Hello world
 document:
-- role: user
-  document: Hello, 
-- model: ollama_chat/granite-code:34b-instruct-q5_K_M
-  parameters:
-    stop:
+- Hello,
+- model: ibm/granite-34b-code-instruct
+  params:
+    stop_sequences:
     - '!'
     decoding_method: greedy
     include_stop_sequence: true

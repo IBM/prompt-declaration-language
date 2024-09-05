@@ -1,13 +1,13 @@
 description: Code explanation example
 document:
-- read: examples/code/data.json
-  parser: json
+- read: examples/code/data.yaml
+  parser: yaml
   def: CODE
   show_result: False
 - read: examples/code/ground_truth.txt
   def: TRUTH
   show_result: False
-- model: ibm/granite-20b-code-instruct
+- model: ibm/granite-34b-code-instruct
   def: EXPLANATION
   show_result: False
   input:
@@ -39,5 +39,4 @@ document:
     input: "{{ CODE }}"
     output: "{{ EXPLANATION }}"
     metric: "{{ EVAL }}"
-  def: MINE
 - "\n\n"
