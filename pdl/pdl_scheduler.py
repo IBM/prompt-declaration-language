@@ -73,9 +73,13 @@ class ModelCallMessage(YieldMessage):
     data: Optional[PromptTemplateData]
 
 
+_LAST_ROLE = None
+
+
 def schedule(
     generators: list[Generator[YieldMessage, Any, GeneratorReturnT]]
 ) -> list[GeneratorReturnT]:
+    global _LAST_ROLE
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
     todo_next: list[
         tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]
@@ -92,10 +96,19 @@ def schedule(
                         print(stringify(result), end="")
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
-                        s = "\n".join(
+                        if (
+                            len(background) > 0
+                            and background[0]["role"] == _LAST_ROLE
+                        ):
+                            s = background[0]["content"]
+                            _LAST_ROLE = background[-1]["role"]
+                            background = background[1:]
+                        else:
+                            s = "\n"
+                        s += "\n".join(
                             [f"{msg['role']}: {msg['content']}" for msg in background]
                         )
-                        print(s)
+                        print(s, end="")
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
                         text_msg = BamModel.generate_text(

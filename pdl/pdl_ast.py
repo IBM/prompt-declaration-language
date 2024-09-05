@@ -32,6 +32,9 @@ class Message(TypedDict):
     content: str
 
 
+Messages: TypeAlias = list[Message]
+
+
 class BlockKind(StrEnum):
     FUNCTION = "function"
     CALL = "call"

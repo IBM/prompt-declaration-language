@@ -29,7 +29,7 @@ class InterpreterConfig(TypedDict, total=False):
     """Print the program background messages during the execution.
     """
     batch: int
-    """Execution type:
+    """Model inference mode:
          - 0: streaming
          - 1: non-streaming
     """

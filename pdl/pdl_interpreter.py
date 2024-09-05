@@ -3,15 +3,13 @@ import re
 import types
 from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Iterable, Literal, Optional, Sequence, TypeAlias
+from typing import Any, Generator, Iterable, Literal, Optional, Sequence
 
 import requests
 import yaml
 from jinja2 import Environment, StrictUndefined, Template, UndefinedError
 from jinja2.runtime import Undefined
 from pydantic import BaseModel
-
-from pdl.pdl_utils import stringify
 
 from .pdl_ast import (
     AdvancedBlockType,
@@ -40,6 +38,7 @@ from .pdl_ast import (
     LocationType,
     Message,
     MessageBlock,
+    Messages,
     ModelBlock,
     ParserType,
     PDLException,
@@ -68,6 +67,7 @@ from .pdl_scheduler import (
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
+from .pdl_utils import messages_concat, messages_to_str, stringify
 
 
 class PDLRuntimeParserError(PDLException):
@@ -76,12 +76,10 @@ class PDLRuntimeParserError(PDLException):
 
 empty_scope: ScopeType = {"context": []}
 
-Messages: TypeAlias = list[Message]
-
 
 class InterpreterState(BaseModel):
-    yield_result: bool = True
-    yield_background: bool = False
+    yield_result: bool = False
+    yield_background: bool = True
     log: list[str] = []
     batch: int = 0
     # batch=0: streaming
@@ -1289,31 +1287,3 @@ def contains_error(blocks: BlocksType) -> bool:
         return False
     except StopIteration:
         return True
-
-
-def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
-    if len(messages1) == 0:
-        return messages2
-    if len(messages2) == 0:
-        return messages1
-    left = messages1[-1]
-    right = messages2[0]
-    if left["role"] == right["role"]:
-        return (
-            messages1[:-1]
-            + [{"role": left["role"], "content": left["content"] + right["content"]}]
-            + messages2[1:]
-        )
-    return messages1 + messages2
-
-
-def messages_to_str(messages: Messages) -> str:
-    # TODO
-    return "".join(
-        [
-            msg["content"]
-            if msg["role"] is None
-            else f"<|{msg['role']}|>{msg['content']}"
-            for msg in messages
-        ]
-    )
