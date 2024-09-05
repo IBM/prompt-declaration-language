@@ -78,8 +78,8 @@ empty_scope: ScopeType = {"context": []}
 
 
 class InterpreterState(BaseModel):
-    yield_result: bool = False
-    yield_background: bool = True
+    yield_result: bool = True
+    yield_background: bool = False
     log: list[str] = []
     batch: int = 0
     # batch=0: streaming
