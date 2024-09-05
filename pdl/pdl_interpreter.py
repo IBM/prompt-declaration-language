@@ -122,7 +122,7 @@ def generate(
         result, _, _, trace = process_prog(state, initial_scope, prog, loc)
         if not state.yield_result:
             if state.yield_background:
-                print("----------------")
+                print("\n----------------")
             print(stringify(result))
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
@@ -606,7 +606,9 @@ def step_blocks(
     background: Messages
     trace: BlocksType
     results = []
-    iteration_state = state
+    iteration_state = state.with_yield_result(
+        state.yield_result and iteration_type == IterationType.DOCUMENT
+    )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         background = []
         trace = []
@@ -626,6 +628,8 @@ def step_blocks(
         )
         results.append(block_result)
     result = combine_results(iteration_type, results)
+    if state.yield_result and iteration_type != IterationType.DOCUMENT:
+        yield YieldResultMessage(result)
     return result, background, scope, trace
 
 
