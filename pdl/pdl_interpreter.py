@@ -64,6 +64,7 @@ from .pdl_scheduler import (
     ModelCallMessage,
     YieldBackgroundMessage,
     YieldMessage,
+    YieldResultMessage,
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
@@ -79,8 +80,8 @@ Messages: TypeAlias = list[Message]
 
 
 class InterpreterState(BaseModel):
-    yield_result: bool = False
-    yield_background: bool = True
+    yield_result: bool = True
+    yield_background: bool = False
     log: list[str] = []
     batch: int = 0
     # batch=0: streaming
@@ -227,6 +228,8 @@ def step_block(
             trace = result
         if state.yield_background:
             yield YieldBackgroundMessage(background)
+        if state.yield_result:
+            yield YieldResultMessage(result)
         append_log(state, "Document", background)
     else:
         result, background, scope, trace = yield from step_advanced_block(
@@ -248,6 +251,7 @@ def step_advanced_block(
         scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
     else:
         defs_trace = block.defs
+    state = state.with_yield_result(state.yield_result and block.show_result)
     state = state.with_yield_background(state.yield_background and block.show_result)
     result, background, scope, trace = yield from step_block_body(
         state, scope, block, loc
@@ -293,6 +297,8 @@ def step_block_body(
             result, background, scope, trace = yield from step_call_code(
                 state, scope, block, loc
             )
+            if state.yield_result:
+                yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case GetBlock(get=var):
@@ -309,6 +315,8 @@ def step_block_body(
             else:
                 background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
+            if state.yield_result:
+                yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case DataBlock(data=v):
@@ -323,12 +331,16 @@ def step_block_body(
             else:
                 background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
+            if state.yield_result:
+                yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case ApiBlock():
             result, background, scope, trace = yield from step_call_api(
                 state, scope, block, loc
             )
+            if state.yield_result:
+                yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case DocumentBlock():
@@ -513,6 +525,8 @@ def step_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
+            if state.yield_result:
+                yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
 
@@ -571,6 +585,7 @@ def step_defs(
     defloc = append(loc, "defs")
     for x, blocks in defs.items():
         newloc = append(defloc, x)
+        state = state.with_yield_result(False)
         state = state.with_yield_background(False)
         result, _, _, blocks_trace = yield from step_blocks(
             IterationType.SEQUENCE, state, scope, blocks, newloc
@@ -713,7 +728,7 @@ def step_call_model(
     if block.input is not None:  # If not implicit, then input must be a block
         model_input_result, _, _, input_trace = yield from step_blocks(
             IterationType.SEQUENCE,
-            state.with_yield_background(False),
+            state.with_yield_result(False).with_yield_background(False),
             scope,
             block.input,
             append(loc, "input"),
@@ -848,6 +863,8 @@ def generate_client_response_streaming(
     complete_msg: Optional[Message] = None
     role = None
     for chunk in msg_stream:
+        if state.yield_result:
+            yield YieldResultMessage(chunk["content"])
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
@@ -901,6 +918,8 @@ def generate_client_response_single(
             msg = LitellmModel.generate_text(
                 model_id=block.model, messages=model_input, parameters=parameters
             )
+    if state.yield_result:
+        yield YieldResultMessage(msg["content"])
     if state.yield_background:
         yield YieldBackgroundMessage([msg])
     return msg
@@ -923,6 +942,8 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
                 moderations=block.moderations,
                 data=block.data,
             )
+            if state.yield_result:
+                yield YieldResultMessage(msg)
             if state.yield_background:
                 yield YieldBackgroundMessage(msg)
         case WatsonxModelBlock():
@@ -942,7 +963,7 @@ def step_call_api(
     background: Messages
     input_value, _, _, input_trace = yield from step_blocks(
         IterationType.SEQUENCE,
-        state.with_yield_background(False),
+        state.with_yield_result(False).with_yield_background(False),
         scope,
         block.input,
         append(loc, "input"),
@@ -976,7 +997,7 @@ def step_call_code(
     background: Messages
     code_s, _, _, code_trace = yield from step_blocks(
         IterationType.SEQUENCE,
-        state.with_yield_background(False),
+        state.with_yield_result(False).with_yield_background(False),
         scope,
         block.code,
         append(loc, "code"),

@@ -89,7 +89,7 @@ def schedule(
                 msg = gen.send(v)
                 match msg:
                     case YieldResultMessage(result=result):
-                        print(stringify(result))
+                        print(stringify(result), end="")
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
                         s = "\n".join(
