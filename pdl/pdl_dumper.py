@@ -163,7 +163,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["call"] = block.call
             d["args"] = block.args
             if block.trace is not None:
-                d["trace"] = blocks_to_dict(block.trace)
+                d["trace"] = blocks_to_dict(block.trace)  # pyright: ignore
         case ErrorBlock():
             d["program"] = blocks_to_dict(block.program)
     if block.assign is not None:
