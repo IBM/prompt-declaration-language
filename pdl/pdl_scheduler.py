@@ -6,6 +6,7 @@ from genai.schema import ModerationParameters, PromptTemplateData
 
 from .pdl_ast import BamTextGenerationParameters, Message
 from .pdl_llms import BamModel
+from .pdl_utils import stringify
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -40,8 +41,9 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
 
 
 class MessageKind(Enum):
-    OUTPUT = 0
-    MODEL = 1
+    RESULT = 0
+    BACKGROUND = 1
+    MODEL = 2
 
 
 class YieldMessage:
@@ -49,9 +51,15 @@ class YieldMessage:
 
 
 @dataclass
-class OutputMessage(YieldMessage):
-    kind = MessageKind.OUTPUT
-    output: list[Message]
+class YieldResultMessage(YieldMessage):
+    kind = MessageKind.RESULT
+    result: Any
+
+
+@dataclass
+class YieldBackgroundMessage(YieldMessage):
+    kind = MessageKind.BACKGROUND
+    background: list[Message]
 
 
 @dataclass
@@ -80,9 +88,14 @@ def schedule(
             try:
                 msg = gen.send(v)
                 match msg:
-                    case OutputMessage(output=output):
-                        s = "".join([msg["content"] for msg in output])  # TODO
-                        print(s, end="")
+                    case YieldResultMessage(result=result):
+                        print(stringify(result))
+                        todo_next.append((i, gen, None))
+                    case YieldBackgroundMessage(background=background):
+                        s = "\n".join(
+                            [f"{msg['role']}: {msg['content']}" for msg in background]
+                        )
+                        print(s)
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
                         text_msg = BamModel.generate_text(

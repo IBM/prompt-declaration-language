@@ -11,6 +11,8 @@ from jinja2 import Environment, StrictUndefined, Template, UndefinedError
 from jinja2.runtime import Undefined
 from pydantic import BaseModel
 
+from pdl.pdl_utils import stringify
+
 from .pdl_ast import (
     AdvancedBlockType,
     ApiBlock,
@@ -58,7 +60,12 @@ from .pdl_dumper import block_to_dict, dump_yaml
 from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
-from .pdl_scheduler import ModelCallMessage, OutputMessage, YieldMessage, schedule
+from .pdl_scheduler import (
+    ModelCallMessage,
+    YieldBackgroundMessage,
+    YieldMessage,
+    schedule,
+)
 from .pdl_schema_validator import type_check_args, type_check_spec
 
 
@@ -73,7 +80,7 @@ Messages: TypeAlias = list[Message]
 
 class InterpreterState(BaseModel):
     yield_result: bool = False
-    yield_background: bool = False
+    yield_background: bool = True
     log: list[str] = []
     batch: int = 0
     # batch=0: streaming
@@ -219,7 +226,7 @@ def step_block(
             background = [{"role": state.role, "content": stringify(result)}]
             trace = result
         if state.yield_background:
-            yield OutputMessage(background)
+            yield YieldBackgroundMessage(background)
         append_log(state, "Document", background)
     else:
         result, background, scope, trace = yield from step_advanced_block(
@@ -287,7 +294,7 @@ def step_block_body(
                 state, scope, block, loc
             )
             if state.yield_background:
-                yield OutputMessage(background)
+                yield YieldBackgroundMessage(background)
         case GetBlock(get=var):
             result = get_var(var, scope)
             if result is None:
@@ -303,7 +310,7 @@ def step_block_body(
                 background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
             if state.yield_background:
-                yield OutputMessage(background)
+                yield YieldBackgroundMessage(background)
         case DataBlock(data=v):
             block.location = append(loc, "data")
             result, errors = process_expr(scope, v, append(loc, "data"))
@@ -317,13 +324,13 @@ def step_block_body(
                 background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
             if state.yield_background:
-                yield OutputMessage(background)
+                yield YieldBackgroundMessage(background)
         case ApiBlock():
             result, background, scope, trace = yield from step_call_api(
                 state, scope, block, loc
             )
             if state.yield_background:
-                yield OutputMessage(background)
+                yield YieldBackgroundMessage(background)
         case DocumentBlock():
             result, background, scope, document = yield from step_blocks(
                 IterationType.DOCUMENT,
@@ -507,7 +514,7 @@ def step_block_body(
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_background:
-                yield OutputMessage(background)
+                yield YieldBackgroundMessage(background)
 
         case IncludeBlock():
             result, background, scope, trace = yield from step_include(
@@ -552,19 +559,6 @@ def step_block_body(
             background = messages_concat(background, fallback_background)
             trace.fallback = fallback_trace
     return result, background, scope, trace
-
-
-def stringify(result):
-    if isinstance(result, str):
-        s = result
-    elif isinstance(result, FunctionBlock):
-        s = ""
-    else:
-        try:
-            s = json.dumps(result)
-        except TypeError:
-            s = str(result)
-    return s
 
 
 def step_defs(
@@ -855,7 +849,7 @@ def generate_client_response_streaming(
     role = None
     for chunk in msg_stream:
         if state.yield_background:
-            yield OutputMessage([chunk])
+            yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
             complete_msg = chunk
             role = complete_msg["role"]
@@ -908,7 +902,7 @@ def generate_client_response_single(
                 model_id=block.model, messages=model_input, parameters=parameters
             )
     if state.yield_background:
-        yield OutputMessage([msg])
+        yield YieldBackgroundMessage([msg])
     return msg
 
 
@@ -930,7 +924,7 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
                 data=block.data,
             )
             if state.yield_background:
-                yield OutputMessage(msg)
+                yield YieldBackgroundMessage(msg)
         case WatsonxModelBlock():
             assert False  # XXX TODO
         case LitellmModelBlock():
