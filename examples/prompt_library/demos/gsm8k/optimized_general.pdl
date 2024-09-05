@@ -1,5 +1,7 @@
 description: Demo of template
 defs:
+  demonstrations:
+    data: []
   math_tools:
     data:
     - name: Calculator
@@ -11,42 +13,8 @@ defs:
         type: string
         description: The mathematical expression to evaluate with a Python interpreter.
       examples: []
-  model: ibm/granite-13b-chat-v2
-  prompt_pattern: cot
-  demonstrations:
-    data:
-    - question: David has a store where he sells cell phones. When he takes inventory at the end of the day, he notices that he has 10 Samsung cell phones but he started the day with 14 Samsung cell phones. Then he notices that he has 5 iPhones and in the initial inventory, but started with 8. His staff then told him that in the afternoon they realized that 2 Samsung cell phones were damaged and 1 iPhone had a manufacturing defect in the screen, so they threw these out during the day. What was the total number of cell phones that were sold today?
-      reasoning: |-
-        The actual initial inventory of Samsung cell phones was 14, but there were 2 defective phones so 14 - 2 = <<14-2=12>>12 is the initial inventory of working Samsung phones.
-        The actual initial inventory of iPhone cell phones was 8, but there was one defective phone, so 8 - 1 = <<8-1=7>>7 is the actual initial inventory of working iPhones.
-        Thus only 12 - 10 = <<12-10=2>>2 Samsung cell phones were sold.
-        Thus only 7 - 5 = <<7-5=2>>2 iPhones were sold.
-        Thus the total number of phones sold is 2 Samsung + 2 iPhone = <<2+2=4>>4 cell phones.
-      answer: '4'
-    - question: Ursula earns $8.50 an hour working in a restaurant. She works 8 hours a day. If she works 20 days a month, determine her annual salary.
-      reasoning: |-
-        Ursula earns 8 x $8.50 = $<<8*8.50=68>>68 a day.
-        In a month, she earns 20 x $68 = $<<20*68=1360>>1360.
-        Therefore, Ursula's annual salary is 12 x $1360 = $<<12*1360=16320>>16,320
-      answer: '16320'
-    - question: Donna is catering for a party. She makes 20 sandwiches and then cuts them in half, before cutting them in half again. She then gives everyone 8 portions. How many people can she feed?
-      reasoning: |-
-        First, we need to determine the overall number of portions. To do this, we begin by performing 20*2= <<20*2=40>>40 portions after the first halving.
-        Next, we take this portion number and double it again, performing 40*2=<<40*2=80>>80 portions after the second halving.
-        Lastly, we divide this portion number by the number of portions each person will be served, performing 80/8=<<80/8=10>>10 people served.
-      answer: '10'
-    - question: Jack orders 3 sandwiches that cost $5 each. He pays with a $20 bill. How much does he get in change?
-      reasoning: |-
-        The cost was 3*5=$<<3*5=15>>15.
-        So he got 20-15=$<<20-15=5>>5 in change.
-      answer: '5'
-    - question: One of the clubs at Georgia's school was selling carnations for a fundraising event. A carnation costs $0.50. They also had a special where you could buy one dozen carnations for $4.00. If Georgia sent a dozen carnations to each of her 5 teachers and bought one carnation for each of her 14 friends, how much money would she spend?
-      reasoning: |-
-        She wants to send a dozen carnations that cost $4/dz to each of her 5 teachers, so 4*5 = $<<4*5=20>>20
-        She has 14 friends and she knows a dozen carnations is cheaper than buying 12 single carnations. So 14-12 = <<14-12=2>>2 single carnations are needed
-        A single carnation cost $0.50 so 2*.50 = $<<2*.50=1.00>>1.00
-        All total she will spend 20+4+1 = $<<20+4+1=25.00>>25.00 on carnations
-      answer: '25'
+  model: ibm/granite-34b-code-instruct
+  prompt_pattern: rewoo
 document:
 - if: '{{ prompt_pattern == ''cot'' }}'
   then:

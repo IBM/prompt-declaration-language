@@ -1,9 +1,15 @@
 description: Hello world through LiteLLM on watsonx
 document:
-- Hello,
-- model: watsonx/ibm/granite-20b-code-instruct
+- role: user
+  document: Hello, 
+- model: ollama_chat/granite-code:34b-instruct-q5_K_M
   parameters:
     stop:
     - '!'
+    decoding_method: greedy
     include_stop_sequence: true
+    # temperature: 0.7
+    repetition_penalty: 1.05
+    top_p: 0.85
+    top_k: 50
 - "\n"

@@ -151,7 +151,7 @@ defs:
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
         until: "{{ ACTION == 'Finish' or iterations>20 }}"
-      - show_result: false
+      - show_result: true
         data:
           answer: "{{ SUBJECT|trim }}"
 

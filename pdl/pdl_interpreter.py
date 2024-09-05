@@ -4,7 +4,7 @@ import time
 import types
 from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Iterable, Literal, Optional, Sequence, TypeAlias
+from typing import Any, Generator, Iterable, Literal, Mapping, Optional, Sequence, TypeAlias
 
 import requests
 import yaml
@@ -86,6 +86,80 @@ class InterpreterState(BaseModel):
 
     def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
         return self.model_copy(update={"role": role})
+
+
+from IPython.core.interactiveshell import InteractiveShell
+from IPython.utils import io
+
+
+class PythonREPL:
+    """A tool for running python code in a REPL."""
+
+    name = "PythonREPL"
+    # This PythonREPL is not used by the environment; It is THE ENVIRONMENT.
+    signature = "NOT_USED"
+    description = "NOT_USED"
+
+    def __init__(
+        self,
+        name_to_func_mapping: Mapping[str, callable],
+        timeout: int = 30,
+    ) -> None:
+        super().__init__()
+        self.user_ns = name_to_func_mapping
+        self.timeout = timeout
+        filterwarnings("ignore", "Attempting to work in a virtualenv")
+        self.reset()
+
+    def reset(self) -> None:
+        InteractiveShell.clear_instance()
+        self.shell = InteractiveShell.instance(
+            # NOTE: shallow copy is needed to avoid
+            # shell modifying the original user_ns dict
+            user_ns=dict(self.user_ns),
+            colors="NoColor",
+        )
+
+        # disable certain function (for some rare weird cases where the tested model would try to set recursion limit and cause segfault)
+        _ = self.__call__(
+            "import sys; sys.setrecursionlimit = lambda *args, **kwargs: print('Setting recursion limit is disabled')"
+        )
+
+    def __call__(self, query: str) -> str:
+        """Use the tool and return observation"""
+        # NOTE: The timeout error will be caught by the InteractiveShell
+
+        # Capture all output
+        with io.capture_output() as captured:
+            _ = self.shell.run_cell(query, store_history=True)
+        output = captured.stdout
+
+        if output == "":
+            output = "[Executed Successfully with No Output]"
+
+        # replace potentially sensitive filepath
+        # e.g., File /mint/mint/tools/python_tool.py:30, in PythonREPL.time_limit.<locals>.signal_handler(signum, frame)
+        # with File <filepath>:30, in PythonREPL.time_limit.<locals>.signal_handler(signum, frame)
+        # use re
+        output = re.sub(
+            # r"File (/mint/)mint/tools/python_tool.py:(\d+)",
+            r"File .*Projects/pdl/repl.py:(\d+)",
+            r"File <hidden_filepath>:\1",
+            output,
+        )
+        if len(output) > 2000:
+            output = output[:2000] + "...\n[Output Truncated]"
+
+        return output
+
+
+def call_ipython(code: str, scope: dict) -> Any:
+    my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
+    shell = PythonREPL(
+        name_to_func_mapping=my_namespace.__dict__,
+        timeout=5,
+    )
+    return shell(code)
 
 
 def generate(
@@ -976,6 +1050,9 @@ def step_call_code(
         match block.lan:
             case "python":
                 result = call_python(code_s, scope)
+                background = [{"role": state.role, "content": str(result)}]
+            case "ipython":
+                result = call_ipython(code_s, scope)
                 background = [{"role": state.role, "content": str(result)}]
             case _:
                 trace = handle_error(

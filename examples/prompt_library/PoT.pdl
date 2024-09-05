@@ -229,4 +229,4 @@ defs:
       show_result: false
       code: "{{ PROGRAM|join('\n') }}"
     - get: ANSWER
-      show_result: false
+      show_result: true

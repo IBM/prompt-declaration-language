@@ -116,7 +116,9 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (path.open(encoding="utf-8") as pdl,):
+        with (
+            path.open(encoding="utf-8") as pdl,
+        ):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def parse_signature(self):
@@ -149,7 +151,8 @@ class PDLOptimizer:
         for _ in range(num_candidates):
             if demo_indices is None:
                 demo_indices = self.sample_random_indices(
-                    self.dataset[self.train_set_name], size=self.num_demonstrations,
+                    self.dataset[self.train_set_name],
+                    size=self.num_demonstrations,
                 )
             variable_instance = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
@@ -170,8 +173,10 @@ class PDLOptimizer:
         return output_file.write_text(dump_program(pdl_program))
 
     def save_experiment(self):
+        if not self.experiment_path.exists():
+            self.experiment_path.mkdir(parents=True, exist_ok=True)
         exp_file = self.experiment_path / f"{self.experiment_uuid}.json"
-        # print(self.experiment_log)
+
         with exp_file.open("w") as f:
             json.dump(self.experiment_log, f)
 
@@ -455,16 +460,14 @@ class PDLOptimizer:
                     console.log("Progressed on exception")
                     console.log(result)
             elif isinstance(result, TrialOutput):
-                (
+                answer = (
                     round(result.answer, 2)
                     if isinstance(result.answer, float)
                     else result.answer
                 )
-                if result.correct is not True:
-                    console.log("FAIL", result.example["task_id"])
-                # console.log(
-                #     f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
-                # )
+                console.log(
+                    f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
+                )
 
                 results.append(result)
 

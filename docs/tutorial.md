@@ -1291,12 +1291,63 @@ in the right pane.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
+## Using Ollama models
+
+1. Install Ollama e.g., `brew install --cask ollama`
+2. Run a model e.g., `ollama run granite-code:34b-instruct-q5_K_M`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
+3. An OpenAI style server is running locally at [http://localhost:11434/](http://localhost:11434/), see [the Ollama blog](https://ollama.com/blog/openai-compatibility) for more details.
 
 
+Example:
+
+```
+document:
+- role: user
+  document: Hello, 
+- model: ollama_chat/granite-code:34b-instruct-q5_K_M
+  parameters:
+    stop:
+    - '!'
+    decoding_method: greedy
+```
 
 
+Alternatively, one could also use Ollama's OpenAI-style endpoint using the `openai/` prefix instead of `ollama_chat/`.
 
+## Optimizer
 
+The PDL optimizer allows users to optimize over demonstrations and an arbitrary set of discrete variables. It is configured using an optimizer config YAML, for example:
+
+```yaml
+benchmark: gsm8k # Name of benchmark, currently must be implemented as a `PDLThread`
+budget: null # A time or iteration budget. If time based, use string e.g. "1h"
+budget_growth: double # Double the test set each iteration, or `to_max` to use the max test set size by the final iteration
+demonstrations_variable_name: demonstrations # The name of the variable in PDL scope to put demonstrations in
+initial_test_set_size: 2 # The test set size of the first iteration
+max_test_set_size: 1000 # The maximum test set size
+num_candidates: 6 # The number of candidates to start with
+num_demonstrations: 5 # The number of demonstrations to use 
+parallelism: 1 # How many threads to run in parallel
+shuffle_test: false # Shuffle the test set before use, otherwise always the first n
+test_set_name: test # The name of the test set
+timeout: 120 # How long to wait on a PDL program before giving up
+train_set_name: train # The name of the train set for demonstrations  
+variables: # The variables in PDL scope to set and their options to sample from
+  model:
+  - ibm/granite-34b-code-instruct
+  prompt_pattern:
+  - cot
+  - react
+  - rewoo
+```
+
+The optimizer can be started like so:
+
+```
+python -m pdl.optimize.optimize -c opticonfig.yml --yield_output examples/prompt_library/demos/gsm8k/general.pdl
+```
+
+Where `opticonfig.yml` is the config file and the last argument is the PDL program to run. The `--yield_output` flag is for debugging: including it results in PDL program output being printed to the terminal. Note that if `parallelism` is > 1, this will mix PDL output out of order.
 
 
 

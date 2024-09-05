@@ -13,23 +13,9 @@ from rich.console import Console
 from pdl.optimize.bam_logprobs import ModelResponse, get_seq_logprobs
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.pdl_ast import Program, ScopeType
-from pdl.pdl_interpreter import InterpreterState, contains_error, process_prog
+from pdl.pdl_interpreter import InterpreterState, contains_error, messages_to_str, process_prog
 
 console = Console()
-
-
-class PDLThread1(Thread):
-    def __init__(
-        self,
-        *args,
-        **kwargs,
-    ):
-        super().__init__()
-
-    def run(self):
-        msg = "Base class does not implement"
-        raise NotImplementedError(msg)
-
 
 RETRY_COUNT = 3
 
@@ -99,6 +85,7 @@ class PDLThread(Thread):
                     self.pdl_program,
                     timeout=self.timeout,
                 )
+                document = messages_to_str(document)
                 # console.log("result", result)
                 self.scope = scope
                 end_time = time.time()
@@ -123,7 +110,6 @@ class PDLThread(Thread):
                     answer = self.extract_answer(document)
 
                     if answer is None:
-                        # console.log(document)
                         last_line = document.splitlines()[-1]
                         console.log("Couldn't extract answer: ", last_line)
 
@@ -136,6 +122,7 @@ class PDLThread(Thread):
                 if tries >= RETRY_COUNT:
                     retry = False
             except Exception as e:
+                console.print_exception(show_locals=False)
                 # console.log("In thread: ", e)
                 # exception = e
                 return e

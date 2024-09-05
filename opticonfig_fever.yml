@@ -1,19 +1,19 @@
-benchmark: gsm8k
+benchmark: fever
 budget: null
 budget_growth: double
 demonstrations_variable_name: demonstrations
-initial_test_set_size: 2
+initial_test_set_size: 1
 max_test_set_size: 1000
-num_candidates: 1
+num_candidates: 6
 num_demonstrations: 5
-parallelism: 4
+parallelism: 1
 shuffle_test: false
 test_set_name: test
 timeout: 120
 train_set_name: train
 variables:
   model:
-  - ibm/granite-13b-chat-v2
+  - ibm/granite-20b-multilingual
   prompt_pattern:
   - cot
   - react
