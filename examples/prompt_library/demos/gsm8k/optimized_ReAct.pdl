@@ -1,0 +1,120 @@
+description: Demo of ReAct template
+defs:
+  static:
+    data:
+    - - question: Noah charges $60 for a large painting and $30 for a small painting.  Last month he sold eight large paintings and four small paintings.  If he sold twice as much this month, how much is his sales for this month?
+      - thought: He sold 8 large paintings and 4 small paintings last month.  He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+      - action: Calculator[8*60+4*30]
+      - observation: 600
+      - thought: He sold twice as many paintings this month, therefore I need to calculate 600*2.
+      - action: Calculator[600*2]
+      - observation: 1200
+      - thought: He sold $1200 this month.
+      - action: Finish[$1200]
+    - - question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+      - thought: I need to calculate the difference in age between Teresa and Morio.
+      - action: Calculator[71-59]
+      - observation: 12
+      - thought: I need to calculate how old Teresa is when their daughter is born.
+      - action: Calculator[38-12]
+      - observation: 26
+      - thought: Teresa was 26 when she gave birth to Michiko.
+      - action: Finish[26]
+    - - question: Mr. Roper cuts his lawn 15 days a month beginning in April and ending in September. From October to the end of March he cuts his lawn three times a month.  What is the average number of times that Mr. Roper cuts his yard per month?
+      - thought: For 6 months of the year he cuts his yard 15 days per month. I need to calculate how  many times he cuts his yard in this period.
+      - action: Calculator[6*15]
+      - observation: 90
+      - thought: For the remaining 6 months of the year, he cuts his yard three times a month so I need to calculate how many times he cuts his yard in that period.
+      - action: Calculator[6*13]
+      - observation: 18
+      - thought: He cuts his yard 90 times for part of the year and 18 times for the rest of the year, so I need to calculate the total.
+      - action: Calculator[90+18]
+      - observation: 108
+      - thought: There are 12 months in a year and he cuts his yard 108 times so I need  to calculate the monthly average.
+      - action: Calculator[108/12]
+      - observation: 9
+      - action: Finish[9]
+    - - question: Leila spent $40 which is 1/4 of her money on a sweater. She was then left with $20 after spending the rest of her money on buying pieces of jewelry. How much more did Leila spend on jewelry than on the sweater?
+      - thought: Since 1/4 of her money is $40, I need to calculate how much Leila originally had.
+      - action: Calculator[40*4]
+      - observation: 160
+      - thought: I need to calculate how much was left after buying a sweater.
+      - action: Calculator[160-40]
+      - observation: 120
+      - thought: $120 was left after buying a sweater. Since she is left with $20, I need to calculate  how much she spent on jewelry.
+      - action: Calculator[100-40]
+      - observation: 60
+      - thought: She spent $60 more for jewelry than on a sweater.
+      - action: Finish[60]
+  demos: ''
+  math_tools:
+    data:
+    - name: Calculator
+      description: Evaluates expressions using Python
+      parameters:
+      - name: expression
+        type: string
+        description: The mathematical expression to evaluate with a Python interpreter.
+      examples: []
+  trajectories:
+    data:
+    - - question: Darla needs to pay $4/watt of electricity for 300 watts of electricity, plus a $150 late fee. How much does she pay in total?
+      - thought: 'First find the total cost of the electricity: $4/watt * 300 watts. I need to calculate 4*300'
+      - action: Calculator[4*300]
+      - observation: '1200'
+      - thought: 'Then add the late fee: $1200 + $150. I need to calculate 1200+150'
+      - action: Calculator[1200+150]
+      - observation: '1350'
+      - thought: The answer is 1350
+      - action: Finish[1350]
+    - - question: How many right triangles with a height of 2 inches and a width of two inches could fit inside a square with 2-inch sides?
+      - thought: A triangle with a height of 2 inches and width of 2 inches has an area of 2 square inches because (1/2) x 2 x 2. I need to calculate (1/2)*2*2
+      - action: Calculator[(1/2)*2*2]
+      - observation: '2'
+      - thought: The square has an area of 4 square inches because 2 x 2. I need to calculate 2*2
+      - action: Calculator[2*2]
+      - observation: '4'
+      - thought: 2 triangles would fit because 4 / 2. I need to calculate 4/2
+      - action: Calculator[4/2]
+      - observation: '2'
+      - thought: The answer is 2
+      - action: Finish[2]
+    - - question: Farmer Brown raises emus, large birds. His flock has a total of 60 heads and legs. How many emus are in his flock?
+      - thought: Each emu has 1+2 heads and legs. I need to calculate 1+2
+      - action: Calculator[1+2]
+      - observation: '3'
+      - thought: Then the flock has 60/3 animals. I need to calculate 60/3
+      - action: Calculator[60/3]
+      - observation: '20'
+      - thought: The answer is 20
+      - action: Finish[20]
+    - - question: Jeremy's uncle gave him $50 to spend on basketball equipment. He bought 5 jerseys that cost $2 each, a basketball that cost $18, and a pair of shorts that cost $8. How much money does Jeremy have left?
+      - thought: The cost of the jerseys is 5 jerseys × $2/jersey. I need to calculate 5*2
+      - action: Calculator[5*2]
+      - observation: '10'
+      - thought: The total cost of the jerseys, the basketball, and the shorts is $10 + $18 + $8. I need to calculate 10+18+8
+      - action: Calculator[10+18+8]
+      - observation: '36'
+      - thought: Jeremy has $50 - $36 left. I need to calculate 50-36
+      - action: Calculator[50-36]
+      - observation: '14'
+      - thought: The answer is 14
+      - action: Finish[14]
+    - - question: Nate starts his camping trip with 70 matches. He drops 10 in a creek and his dog eats twice as many. How many matches does he have left?
+      - thought: 'First find the number of matches the dog eats: 10 matches * 2 matches. I need to calculate 10*2'
+      - action: Calculator[10*2]
+      - observation: '20'
+      - thought: 'Then subtract all the lost matches from the starting number to find the final number: 70 matches - 10 matches - 20 matches matches. I need to calculate 70-10-20'
+      - action: Calculator[70-10-20]
+      - observation: '40'
+      - thought: The answer is 40
+      - action: Finish[40]
+document:
+- include: examples/prompt_library/tools.pdl
+- include: examples/prompt_library/ReAct.pdl
+- call: react
+  args:
+    question: '{{ question }}'
+    model: '{{ model }}'
+    tools: '{{ math_tools }}'
+    trajectories: '{{ trajectories }}'

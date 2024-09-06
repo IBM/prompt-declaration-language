@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Generator, Generic, Optional, TypeVar
@@ -66,8 +67,10 @@ class ModelCallMessage(YieldMessage):
 
 
 def schedule(
-    generators: list[Generator[YieldMessage, Any, GeneratorReturnT]]
+    generators: list[Generator[YieldMessage, Any, GeneratorReturnT]],
+    timeout: int | None = None,
 ) -> list[GeneratorReturnT]:
+    start_time = time.time()
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
     todo_next: list[
         tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]
@@ -98,8 +101,13 @@ def schedule(
                         assert False
             except StopIteration as e:
                 done[i] = e.value
+            end_time = time.time()
+            runtime = end_time - start_time
+            if timeout and timeout < runtime:
+                raise TimeoutError(f"Out of time. {runtime}")
         todo = todo_next
         todo_next = []
+
     return done  # type: ignore
 
 

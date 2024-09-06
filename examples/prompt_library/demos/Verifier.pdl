@@ -13,7 +13,7 @@ document:
       tool_names: "{{ available_tools }}"
   - def: QUESTION
     show_result: false
-    read: 
+    read:
     message: "Please enter a question: "
   - def: GRANITE_RESULT
     call: react

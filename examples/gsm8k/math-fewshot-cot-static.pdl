@@ -1,0 +1,25 @@
+description: math problem
+defs:
+  demos:
+    document: |-
+      Q: Olivia has $23. She bought five bagels for $3 each. How much money does she have left?
+      A: She bought 5 bagels for $3 each. This means she spent $15. She has $8 left. The answer is $8.
+
+      Q: Michael had 58 golf balls. On tuesday, he lost 23 golf balls. On wednesday, he lost 2 more. How many golf balls did he have at the end of wednesday?
+      A: Michael initially had 58 balls. He lost 23 on Tuesday, so after that he has 58 - 23 = 35 balls. On Wednesday he lost 2 more so now he has 35 - 2 = 33 balls. The answer is 33.
+
+document:
+- |
+  {{ demos }}Question: {{ question }}
+  Answer: Let's think step by step. 
+- Answer the questions to the best of your abilities.
+- model: "{{ model }}"
+  def: PDL
+  platform: bam
+  # input: |-
+  #   {{ demos }}Question: {{ question }}
+  #   Answer: Let's think step by step. 
+  parameters:
+    stop_sequences: ["<|endoftext|>"]
+    include_stop_sequence: false
+  show_result: true

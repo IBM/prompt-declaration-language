@@ -1,0 +1,88 @@
+description: Demo of CoT template
+defs:
+  static:
+    data:
+    - answer: '26.0'
+      question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38.  How old was Teresa when she gave birth to Michiko?
+      reasoning: |-
+        The difference in age between Teresa and Morio is 71 - 59 = <<71-59=12>>12 years.
+        When their daughter is born, Teresa is 38 - 12 = <<38-12=26>>26 years old.
+    - answer: '9.0'
+      question: Mr. Roper cuts his lawn 15 days a month beginning in April and ending in September.  From October to the end of March he cuts his lawn three times a month.  What is the average number of times that Mr. Roper cuts his yard per month?
+      reasoning: |-
+        For 6 months of the year he cuts his yard 15 days per month so he cuts his yard 6*15 = <<6*15=90>>90 times
+        For the remaining 6 months of the year, he cuts his yard three times a month so he cuts his yard 6*3 = <<6*3=18>>18 times
+        He cuts his yard 90 times for part of the year and 18 times for the rest of the year for a total of 90+18 = <<90+18=108>>108 times
+        There are 12 months in a year and he cuts his yard 108 times so he averages 108/12 = <<108/12=9>>9 times per month
+    - answer: '2.0'
+      question: One US cup equals 250ml. Brian is making lasagna for himself, his wife, his two kids, his parents, and his wife's parents. The recipe requires 1/2 a cup of milk per serving. How many 1L cartons of milk does Brian need to buy if each person is expected to eat 2 servings?
+      reasoning: |-
+        There will be a total of (1) Brian + (1) Brian's wife + (2) two kids + (2) Brian's parents + (2) Brian's in-laws = 1+1+2+2+2= <<1+1+2+2+2=8>>8 people eating
+        If 1 person eats 2 serving of lasagna then 8 people will eat 8 * 2 = <<8*2=16>>16 servings
+        If each serving requires 1/2 cup of milk then 16 servings require 16 * 1/2 cups = <<16*1/2=8>>8 cups of milk
+        If one cup of milk equals 250 ml, then 8 cups of milk equal 8 * 250 = <<8*250=2000>>2000 ml of milk
+        1L carton of milk equals 1000ml of milk, therefore Brian needs 2000/1000 = <<2000/1000=2>>2 cartons of 1L milk
+    - answer: '5.0'
+      question: Janet lives in a city built on a grid system.  She walks 3 blocks north, then seven times as many blocks west. Then she turns around and walks 8 blocks south and twice as many blocks east in the direction of her home. If Janet can walk 2 blocks/minute, how long will it take her to get home?
+      reasoning: |-
+        First, find the total number of blocks south Janet is from her starting point by subtracting the blocks she walked north from the blocks she walked south: 8 blocks - 3 blocks = <<8-3=5>>5 blocks
+        Then find the number blocks she walked west: 3 blocks * 7 = <<3*7=21>>21 blocks
+        Then find the number of blocks she walked east: 8 blocks * 2 = <<8*2=16>>16 blocks
+        Subtract the number of blocks she walked east from the number of blocks she walked west to find how many blocks west of her starting point she is: 21 blocks - 16 blocks = <<21-16=5>>5 blocks
+        Add the number of blocks she needs to walk north to the number of blocks she needs to walk east: 5 blocks + 5 blocks = <<5+5=10>>10 blocks
+        Finally, divide the distance she needs to walk by her speed to find how long she'll spend walking: 10 blocks / 2 blocks/minute = <<10/2=5>>5 minutes
+    - answer: '60.0'
+      question: Leila spent $40 which is 1/4 of her money on a sweater. She was then left with $20 after spending the rest of her money on buying pieces of jewelry. How much more did Leila spend on jewelry than on the sweater?
+      reasoning: |-
+        Since 1/4 of her money is $40, then Leila originally had $40 x 4 = $<<40*4=160>>160.
+        $160 - $40 = $<<160-40=120>>120 was left after buying a sweater.
+        Since she is left with $20, Leila spent $120 - $20 = $<<120-20=100>>100 on jewelry.
+        Therefore, she spent $100 - $40 = $<<100-40=60>>60 more for jewelry than on a sweater.
+  optimized: ''
+  demos:
+    data:
+    - question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38.  How old was Teresa when she gave birth to Michiko?
+      reasoning: |-
+        The difference in age between Teresa and Morio is 71 - 59 = <<71-59=12>>12 years.
+        When their daughter is born, Teresa is 38 - 12 = <<38-12=26>>26 years old.
+      answer: '26.0'
+    - question: Mr. Roper cuts his lawn 15 days a month beginning in April and ending in September.  From October to the end of March he cuts his lawn three times a month.  What is the average number of times that Mr. Roper cuts his yard per month?
+      reasoning: |-
+        For 6 months of the year he cuts his yard 15 days per month so he cuts his yard 6*15 = <<6*15=90>>90 times
+        For the remaining 6 months of the year, he cuts his yard three times a month so he cuts his yard 6*3 = <<6*3=18>>18 times
+        He cuts his yard 90 times for part of the year and 18 times for the rest of the year for a total of 90+18 = <<90+18=108>>108 times
+        There are 12 months in a year and he cuts his yard 108 times so he averages 108/12 = <<108/12=9>>9 times per month
+      answer: '9.0'
+    - question: One US cup equals 250ml. Brian is making lasagna for himself, his wife, his two kids, his parents, and his wife's parents. The recipe requires 1/2 a cup of milk per serving. How many 1L cartons of milk does Brian need to buy if each person is expected to eat 2 servings?
+      reasoning: |-
+        There will be a total of (1) Brian + (1) Brian's wife + (2) two kids + (2) Brian's parents + (2) Brian's in-laws = 1+1+2+2+2= <<1+1+2+2+2=8>>8 people eating
+        If 1 person eats 2 serving of lasagna then 8 people will eat 8 * 2 = <<8*2=16>>16 servings
+        If each serving requires 1/2 cup of milk then 16 servings require 16 * 1/2 cups = <<16*1/2=8>>8 cups of milk
+        If one cup of milk equals 250 ml, then 8 cups of milk equal 8 * 250 = <<8*250=2000>>2000 ml of milk
+        1L carton of milk equals 1000ml of milk, therefore Brian needs 2000/1000 = <<2000/1000=2>>2 cartons of 1L milk
+      answer: '2.0'
+    - question: Janet lives in a city built on a grid system.  She walks 3 blocks north, then seven times as many blocks west. Then she turns around and walks 8 blocks south and twice as many blocks east in the direction of her home. If Janet can walk 2 blocks/minute, how long will it take her to get home?
+      reasoning: |-
+        First, find the total number of blocks south Janet is from her starting point by subtracting the blocks she walked north from the blocks she walked south: 8 blocks - 3 blocks = <<8-3=5>>5 blocks
+        Then find the number blocks she walked west: 3 blocks * 7 = <<3*7=21>>21 blocks
+        Then find the number of blocks she walked east: 8 blocks * 2 = <<8*2=16>>16 blocks
+        Subtract the number of blocks she walked east from the number of blocks she walked west to find how many blocks west of her starting point she is: 21 blocks - 16 blocks = <<21-16=5>>5 blocks
+        Add the number of blocks she needs to walk north to the number of blocks she needs to walk east: 5 blocks + 5 blocks = <<5+5=10>>10 blocks
+        Finally, divide the distance she needs to walk by her speed to find how long she'll spend walking: 10 blocks / 2 blocks/minute = <<10/2=5>>5 minutes
+      answer: '5.0'
+    - question: Leila spent $40 which is 1/4 of her money on a sweater. She was then left with $20 after spending the rest of her money on buying pieces of jewelry. How much more did Leila spend on jewelry than on the sweater?
+      reasoning: |-
+        Since 1/4 of her money is $40, then Leila originally had $40 x 4 = $<<40*4=160>>160.
+        $160 - $40 = $<<160-40=120>>120 was left after buying a sweater.
+        Since she is left with $20, Leila spent $120 - $20 = $<<120-20=100>>100 on jewelry.
+        Therefore, she spent $100 - $40 = $<<100-40=60>>60 more for jewelry than on a sweater.
+      answer: '60.0'
+document:
+- include: examples/prompt_library/CoT.pdl
+- |
+  Answer the questions to the best of your abilities.
+- call: chain_of_thought
+  args:
+    examples: '{{ demos }}'
+    question: '{{ question }}'
+    model: '{{ model }}'

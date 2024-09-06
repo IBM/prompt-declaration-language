@@ -1,0 +1,53 @@
+document:
+- |
+  What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+  Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+  Act: {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
+  Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
+  Tho: It does not mention the eastern sector. So I need to look up eastern sector.
+  Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+  Act: {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
+
+  What profession does Nicholas Ray and Elia Kazan have in common?
+  Tho: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+  Act: {"name": "Search", "arguments": {"topic": "Nicholas Ray"}}
+  Obs: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+  Tho: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+  Act: {"name": "Search", "arguments": {"topic": "Elia Kazan"}}
+  Obs: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+  Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+  Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
+
+  When was the discoverer of the Hudson River born?
+- repeat:
+  - def: thought
+    model: ibm/granite-34b-code-instruct
+    parameters:
+      stop_sequences: ["Act:"]
+      include_stop_sequence: true
+  - def: action
+    model: ibm/granite-34b-code-instruct
+    parameters:
+      stop_sequences: ["\n", "<|endoftext|>"]
+      include_stop_sequence: false
+    parser: json
+    spec: {name: str, arguments: {topic: str}}
+  - def: observation
+    if: '{{ action.name == "Search" }}'
+    then:
+    - "\nObs: [Document]\n"
+    - lan: python
+      code: |
+        import warnings, wikipedia
+        warnings.simplefilter("ignore")
+
+        def main(topic: str) -> str:
+          try:
+            return wikipedia.summary(topic)
+          except wikipedia.WikipediaException as e:
+            return str(e)
+        
+        result = main(**action["arguments"])
+    - "\n[End]\n"
+  until: '{{ action.name != "Search" }}'
+- "\n"

@@ -150,5 +150,7 @@ pdl-live/package-lock.json
 *_result.json
 *_result.yaml
 
+# macos
+.DS_Store
 # Built docs
 _site

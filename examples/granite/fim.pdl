@@ -1,0 +1,26 @@
+description: Example of fill-in-the middle using Granite
+defs:
+  fim:
+    function:
+      prefix: str
+      suffix: str
+    return: "<fim_prefix>{{ prefix }}<fim_suffix>{{ suffix }}<fim_middle>"
+document:
+- |
+  def remove_non_ascii(s: str) -> str:
+      """
+- model: ibm/granite-34b-code-instruct
+  platform: bam
+  parameters:
+    stop_sequences:
+      - "<|endoftext|>"
+    include_stop_sequence: false
+  input:
+    - call: fim
+      args:
+        prefix: |
+          def remove_non_ascii(s: str) -> str:
+              """ 
+        suffix: |
+              return result
+- "return result"

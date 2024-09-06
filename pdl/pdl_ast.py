@@ -113,7 +113,7 @@ class Block(BaseModel):
     """
     # Fields for internal use
     result: Optional[Any] = None
-    location: Optional[LocationType] = None
+    location: Optional[LocationType] = Field(default=None, exclude=True)
     has_error: bool = False
 
 
@@ -279,7 +279,7 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: Literal["python"]
+    lan: Literal["python", "ipython"]
     """Programming language of the code.
     """
     code: "BlocksType"

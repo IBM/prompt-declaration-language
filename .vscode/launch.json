@@ -5,11 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Module",
+            "name": "ReAct",
             "type": "debugpy",
             "request": "launch",
             "module": "pdl.pdl",
-            "args": "examples/prompt_library/tools.pdl"
-        }
+            "args": "examples/prompt_library/demos/ReAct.pdl"
+        },
+        {
+            "name": "Optimizer",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pdl.optimize.optimize",
+            "args": [
+                "-b",
+                "gsm-fewshot",
+                "-k",
+                "5",
+                "-t",
+                "1",
+                "-s",
+                "1",
+                "examples/prompt_library/demos/gsm8k/general.pdl"
+            ]
+        },
     ]
 }

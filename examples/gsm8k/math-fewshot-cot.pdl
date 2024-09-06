@@ -1,0 +1,25 @@
+description: math problem
+defs:
+  demos:
+    document:
+      - for:
+          demonstration: "{{ demonstrations }}"
+        repeat: |+
+          Question: {{ demonstration.question }}
+          Answer: Let's think step by step. {{ demonstration.reasoning|trim }}
+          The answer is {{ demonstration.answer }}
+
+# try all examples and collect which ones _fail_
+# cluster by similarity, or classify e.g. 5 classes that don't work
+
+document:
+- |
+  {{ demos }}Question: {{ question }}
+  Answer: Let's think step by step. 
+- model: "{{ model }}"
+  def: PDL
+  platform: bam
+  parameters:
+    stop_sequences: ["<|endoftext|>"]
+    include_stop_sequence: false
+  show_result: true
