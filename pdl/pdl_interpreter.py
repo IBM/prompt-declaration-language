@@ -96,7 +96,7 @@ class InterpreterState(BaseModel):
         return self.model_copy(update={"role": role})
 
 
-def generate(
+def generate(  # pylint: disable= too-many-arguments
     pdl_file: str,
     log_file: Optional[str],
     state: Optional[InterpreterState],
