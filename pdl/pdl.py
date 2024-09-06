@@ -150,6 +150,22 @@ def main():
         help="scope data",
     )
 
+    parser.add_argument(
+        "--stream-result",
+        dest="stream_result",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Stream the result on the standard output instead of printing it at the end of the execution.",
+    )
+
+    parser.add_argument(
+        "--stream-background",
+        dest="stream_background",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Stream the background messages on the standard output.",
+    )
+
     parser.add_argument("-o", "--output", help="output file")
     parser.add_argument(
         "-t", "--trace", help="output trace for live document", choices=["json", "yaml"]
@@ -180,9 +196,14 @@ def main():
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
 
+    config = InterpreterConfig(
+        yield_result=args.stream_result, yield_background=args.stream_background
+    )
+
     pdl_interpreter.generate(
         args.pdl,
         args.log,
+        InterpreterState(**config),
         initial_scope,
         args.trace,
         args.output,

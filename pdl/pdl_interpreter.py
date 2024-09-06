@@ -99,6 +99,7 @@ class InterpreterState(BaseModel):
 def generate(
     pdl_file: str,
     log_file: Optional[str],
+    state: Optional[InterpreterState],
     initial_scope: ScopeType,
     output_trace: Optional[Literal["json", "yaml"]],
     output_file: Optional[str],
@@ -109,6 +110,7 @@ def generate(
         pdl_file: Program to execute.
         log_file: File where the log is written. If `None`, use `log.txt`.
         initial_scope: Environment defining the variables in scope to execute the program.
+        state: Initial state of the interpreter.
         output_trace: Format in which the execution trace must be produced.
         output_file: File to save the execution trace.
     """
@@ -116,7 +118,8 @@ def generate(
         log_file = "log.txt"
     try:
         prog, loc = parse_file(pdl_file)
-        state = InterpreterState()
+        if state is None:
+            state = InterpreterState()
         result, _, _, trace = process_prog(state, initial_scope, prog, loc)
         if not state.yield_result:
             if state.yield_background:
