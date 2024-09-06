@@ -2,7 +2,7 @@ from pdl.pdl_interpreter import generate
 
 
 def do_test(t, capsys):
-    generate(t["file"], None, {}, None, None)
+    generate(t["file"], None, None, {}, None)
     captured = capsys.readouterr()
     output = captured.out.split("\n")
     print(output)

@@ -2,8 +2,7 @@ import json
 import re
 import types
 from itertools import batched
-from pathlib import Path
-from typing import Any, Generator, Iterable, Literal, Optional, Sequence
+from typing import Any, Generator, Iterable, Optional, Sequence
 
 import requests
 import yaml
@@ -55,7 +54,7 @@ from .pdl_ast import (
     empty_block_location,
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
-from .pdl_dumper import block_to_dict, dump_yaml
+from .pdl_dumper import block_to_dict
 from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
@@ -99,9 +98,9 @@ class InterpreterState(BaseModel):
 def generate(
     pdl_file: str,
     log_file: Optional[str],
+    state: Optional[InterpreterState],
     initial_scope: ScopeType,
-    output_trace: Optional[Literal["json", "yaml"]],
-    output_file: Optional[str],
+    trace_file: Optional[str],
 ):
     """Execute the PDL program defined in `pdl_file`.
 
@@ -109,14 +108,15 @@ def generate(
         pdl_file: Program to execute.
         log_file: File where the log is written. If `None`, use `log.txt`.
         initial_scope: Environment defining the variables in scope to execute the program.
-        output_trace: Format in which the execution trace must be produced.
-        output_file: File to save the execution trace.
+        state: Initial state of the interpreter.
+        trace_file: Indicate if the execution trace must be produced and the file to save it.
     """
     if log_file is None:
         log_file = "log.txt"
     try:
         prog, loc = parse_file(pdl_file)
-        state = InterpreterState()
+        if state is None:
+            state = InterpreterState()
         result, _, _, trace = process_prog(state, initial_scope, prog, loc)
         if not state.yield_result:
             if state.yield_background:
@@ -125,34 +125,24 @@ def generate(
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
                 log_fp.write(line)
-        if output_trace is not None and trace is not None:
-            write_trace(pdl_file, output_trace, output_file, trace)
+        if trace_file:
+            write_trace(trace_file, trace)
     except PDLParseError as e:
         print("\n".join(e.msg))
 
 
 def write_trace(
-    pdl_file: str,
-    mode: Literal["json", "yaml"],
-    output_file: Optional[str],
+    trace_file: str,
     trace: BlockType,
 ):
     """Write the execution trace into a file.
 
     Args:
-        pdl_file: Name of the PDL program executed.
-        mode: Format in which the execution trace must be produced.
-        output_file:  File to save the execution trace.
+        trace_file:  File to save the execution trace.
         trace: Execution trace.
     """
-    if output_file is None:
-        output_file = str(Path(pdl_file).with_suffix("")) + f"_result.{mode}"
-    with open(output_file, "w", encoding="utf-8") as fp:
-        match mode:
-            case "json":
-                json.dump(block_to_dict(trace), fp)
-            case "yaml":
-                dump_yaml(block_to_dict(trace), stream=fp)
+    with open(trace_file, "w", encoding="utf-8") as fp:
+        json.dump(block_to_dict(trace), fp)
 
 
 def process_prog(
