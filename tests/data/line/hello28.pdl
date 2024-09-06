@@ -6,4 +6,4 @@ document:
     result = True
   def: QUESTION
   show_result: false
-- get: QUESTION1
+- "{{ QUESTION1 }}"

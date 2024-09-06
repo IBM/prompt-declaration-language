@@ -55,7 +55,7 @@ def process(file, mode):
                 result = ""
                 answer = 0.0  # pylint: disable=invalid-name
                 try:
-                    state = InterpreterState(yield_output=True)
+                    state = InterpreterState(yield_background=True)
                     scope = empty_scope
                     scope["question"] = question
                     result, _, _, _ = process_prog(state, scope, data)
