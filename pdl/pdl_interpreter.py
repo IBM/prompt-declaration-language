@@ -440,7 +440,7 @@ def step_block_body(
                 if contains_error(body_trace):
                     break
             result = combine_results(block.iteration_type, results)
-            if state.yield_result and block.iteration_type != IterationType.DOCUMENT:
+            if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
@@ -506,10 +506,7 @@ def step_block_body(
                     if contains_error(body_trace):
                         break
                 result = combine_results(block.iteration_type, results)
-                if (
-                    state.yield_result
-                    and block.iteration_type != IterationType.DOCUMENT
-                ):
+                if state.yield_result and not iteration_state.yield_result:
                     yield YieldResultMessage(result)
                 trace = block.model_copy(update={"trace": iter_trace})
         case RepeatUntilBlock(until=cond):
@@ -549,7 +546,7 @@ def step_block_body(
                     iterations_trace.append(trace)
                     break
             result = combine_results(block.iteration_type, results)
-            if state.yield_result and block.iteration_type != IterationType.DOCUMENT:
+            if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
@@ -635,16 +632,18 @@ def step_blocks(
     background: Messages
     trace: BlocksType
     results = []
-    iteration_state = state.with_yield_result(
-        state.yield_result and iteration_type == IterationType.DOCUMENT
-    )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        iteration_state = state.with_yield_result(
+            state.yield_result and iteration_type != IterationType.ARRAY
+        )
         background = []
         trace = []
         context_init = scope["context"]
         for i, block in enumerate(blocks):
             scope = scope | {"context": messages_concat(context_init, background)}
             newloc = append(loc, "[" + str(i) + "]")
+            if iteration_type == IterationType.SEQUENCE and state.yield_result:
+                iteration_state = state.with_yield_result(i + 1 == len(blocks))
             iteration_result, o, scope, t = yield from step_block(
                 iteration_state, scope, block, newloc
             )
@@ -652,12 +651,15 @@ def step_blocks(
             background = messages_concat(background, o)
             trace.append(t)  # type: ignore
     else:
+        iteration_state = state.with_yield_result(
+            state.yield_result and iteration_type != IterationType.ARRAY
+        )
         block_result, background, scope, trace = yield from step_block(
             iteration_state, scope, blocks, loc
         )
         results.append(block_result)
     result = combine_results(iteration_type, results)
-    if state.yield_result and iteration_type != IterationType.DOCUMENT:
+    if state.yield_result and not iteration_state.yield_result:
         yield YieldResultMessage(result)
     return result, background, scope, trace
 
