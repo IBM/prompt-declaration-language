@@ -7,10 +7,10 @@ defs:
     data: ["Bob", "Carol", "David", "Ernest"]
   
 
-document:
-- for:
-    number: "{{ numbers }}"
-    name: "{{ names }}"
-  repeat:
-    "{{ name }}'s number is {{ number }}\n"
+for:
+  number: "{{ numbers }}"
+  name: "{{ names }}"
+repeat:
+  "{{ name }}'s number is {{ number }}\n"
+as: document
 

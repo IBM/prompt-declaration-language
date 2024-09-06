@@ -6,10 +6,12 @@ document:
   show_result: true
 - "\n"
 - repeat:
-  - def: I
-    lan: python
-    code: result = {{ I }} + 1
-    show_result: true
-    spec: str
-  - "\n"
+    document:
+    - def: I
+      lan: python
+      code: result = {{ I }} + 1
+      show_result: true
+      spec: str
+    - "\n"
   until: '{{ I == 5 }}'
+  as: document
