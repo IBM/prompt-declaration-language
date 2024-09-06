@@ -397,6 +397,7 @@ line30 = {
     "errors": [
         "",
         "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists",
+        "[]"
     ],
 }
 
