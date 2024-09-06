@@ -23,7 +23,7 @@ document:
           from sympy import *
           x = symbols('x')
           result = x + 2*x + 4*x
-      - "The equation is {{ equation }} = 847.\n"
+      - "The equation is {{'{{'}} equation {{'}}'}} = 847.\n"
       - "Solving for x, we get "
       - lan: python
         def: RESULT
