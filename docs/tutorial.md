@@ -1327,7 +1327,7 @@ initial_test_set_size: 2 # The test set size of the first iteration
 max_test_set_size: 1000 # The maximum test set size
 num_candidates: 6 # The number of candidates to start with
 num_demonstrations: 5 # The number of demonstrations to use 
-parallelism: 1 # How many threads to run in parallel
+parallelism: 1 # How many threads to run in parallel. One thread tests one test example from the test set
 shuffle_test: false # Shuffle the test set before use, otherwise always the first n
 test_set_name: test # The name of the test set
 timeout: 120 # How long to wait on a PDL program before giving up
@@ -1347,7 +1347,7 @@ The optimizer can be started like so:
 python -m pdl.optimize.optimize -c opticonfig.yml --yield_output examples/prompt_library/demos/gsm8k/general.pdl
 ```
 
-Where `opticonfig.yml` is the config file and the last argument is the PDL program to run. The `--yield_output` flag is for debugging: including it results in PDL program output being printed to the terminal. Note that if `parallelism` is > 1, this will mix PDL output out of order.
+Where `opticonfig.yml` is the config file and the last argument is the PDL program to run. The `--yield_output` flag is for debugging: including it results in PDL program output being printed to the terminal. Note that if `parallelism` is > 1, this will appear out of order in terminal. Upon completion, the optimizer will save the PDL program with the best performance in the same directory as the input program, but with the prefix `optimized_`. For example, upon optimizing `gsm8k.pdl`, `optimized_gsm8k.pdl` is saved in the same folder, but with the best configuration in the `defs` block.
 
 
 
