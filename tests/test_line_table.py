@@ -3,7 +3,7 @@ from pdl.pdl_scheduler import CODE_COLOR, END_COLOR, MODEL_COLOR
 
 
 def do_test(t, capsys):
-    generate(t["file"], None, {}, None, None)
+    generate(t["file"], None, None, {}, None)
     captured = capsys.readouterr()
     output_string = remove_coloring(captured.out)
     output = output_string.split("\n")

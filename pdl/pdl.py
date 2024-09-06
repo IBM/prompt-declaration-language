@@ -1,5 +1,6 @@
 import argparse
 import json
+from pathlib import Path
 from typing import Any, Optional, TypedDict
 
 import yaml
@@ -140,7 +141,8 @@ def main():
 
     parser.add_argument(
         "-f",
-        "--data_file",
+        "--data-file",
+        dest="data_file",
         help="initial scope data file",
     )
 
@@ -150,12 +152,29 @@ def main():
         help="scope data",
     )
 
-    parser.add_argument("-o", "--output", help="output file")
     parser.add_argument(
-        "-t", "--trace", help="output trace for live document", choices=["json", "yaml"]
+        "--stream-result",
+        dest="stream_result",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="stream the result on the standard output instead of printing it at the end of the execution",
     )
-    parser.add_argument("--json", help="json file")
-    parser.add_argument("--yaml", help="yaml file")
+
+    parser.add_argument(
+        "--stream-background",
+        dest="stream_background",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="stream the background messages on the standard output",
+    )
+
+    parser.add_argument(
+        "-t",
+        "--trace",
+        nargs="?",
+        const="*_trace.json",
+        help="output trace for live document",
+    )
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
@@ -180,12 +199,19 @@ def main():
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
 
+    config = InterpreterConfig(
+        yield_result=args.stream_result, yield_background=args.stream_background
+    )
+    if args.trace == "*_trace.json":
+        trace_file = str(Path(args.pdl).with_suffix("")) + "_trace.json"
+    else:
+        trace_file = args.trace
     pdl_interpreter.generate(
         args.pdl,
         args.log,
+        InterpreterState(**config),
         initial_scope,
-        args.trace,
-        args.output,
+        trace_file,
     )
 
 
