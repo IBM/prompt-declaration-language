@@ -416,6 +416,9 @@ def step_block_body(
             background = []
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
+            iteration_state = state.with_yield_result(
+                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+            )
             for _ in range(n):
                 repeatloc = append(loc, "repeat")
                 scope = scope | {"context": messages_concat(context_init, background)}
@@ -425,7 +428,11 @@ def step_block_body(
                     scope,
                     body_trace,
                 ) = yield from step_blocks(
-                    IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
+                    IterationType.SEQUENCE,
+                    iteration_state,
+                    scope,
+                    block.repeat,
+                    repeatloc,
                 )
                 results.append(iteration_result)
                 background = messages_concat(background, iteration_background)
@@ -433,6 +440,8 @@ def step_block_body(
                 if contains_error(body_trace):
                     break
             result = combine_results(block.iteration_type, results)
+            if state.yield_result and block.iteration_type != IterationType.DOCUMENT:
+                yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
             results = []
@@ -468,6 +477,10 @@ def step_block_body(
                     block.model_copy(),
                 )
             else:
+                iteration_state = state.with_yield_result(
+                    state.yield_result
+                    and block.iteration_type == IterationType.DOCUMENT
+                )
                 for i in range(lengths[0]):
                     scope = scope | {
                         "context": messages_concat(context_init, background)
@@ -481,7 +494,11 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE, state, scope, block.repeat, newloc
+                        IterationType.SEQUENCE,
+                        iteration_state,
+                        scope,
+                        block.repeat,
+                        newloc,
                     )
                     background = messages_concat(background, iteration_background)
                     results.append(iteration_result)
@@ -489,6 +506,11 @@ def step_block_body(
                     if contains_error(body_trace):
                         break
                 result = combine_results(block.iteration_type, results)
+                if (
+                    state.yield_result
+                    and block.iteration_type != IterationType.DOCUMENT
+                ):
+                    yield YieldResultMessage(result)
                 trace = block.model_copy(update={"trace": iter_trace})
         case RepeatUntilBlock(until=cond):
             results = []
@@ -496,6 +518,9 @@ def step_block_body(
             background = []
             iterations_trace = []
             context_init = scope_init["context"]
+            iteration_state = state.with_yield_result(
+                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+            )
             while not stop:
                 scope = scope | {"context": messages_concat(context_init, background)}
                 repeatloc = append(loc, "repeat")
@@ -505,7 +530,11 @@ def step_block_body(
                     scope,
                     body_trace,
                 ) = yield from step_blocks(
-                    IterationType.SEQUENCE, state, scope, block.repeat, repeatloc
+                    IterationType.SEQUENCE,
+                    iteration_state,
+                    scope,
+                    block.repeat,
+                    repeatloc,
                 )
                 results.append(iteration_result)
                 background = messages_concat(background, iteration_background)
@@ -520,6 +549,8 @@ def step_block_body(
                     iterations_trace.append(trace)
                     break
             result = combine_results(block.iteration_type, results)
+            if state.yield_result and block.iteration_type != IterationType.DOCUMENT:
+                yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)

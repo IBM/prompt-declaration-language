@@ -79,7 +79,7 @@ _LAST_ROLE = None
 def schedule(
     generators: list[Generator[YieldMessage, Any, GeneratorReturnT]]
 ) -> list[GeneratorReturnT]:
-    global _LAST_ROLE
+    global _LAST_ROLE  # pylint: disable= global-statement
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
     todo_next: list[
         tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]
@@ -96,10 +96,7 @@ def schedule(
                         print(stringify(result), end="")
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
-                        if (
-                            len(background) > 0
-                            and background[0]["role"] == _LAST_ROLE
-                        ):
+                        if len(background) > 0 and background[0]["role"] == _LAST_ROLE:
                             s = background[0]["content"]
                             _LAST_ROLE = background[-1]["role"]
                             background = background[1:]
