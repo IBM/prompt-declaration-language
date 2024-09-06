@@ -3225,10 +3225,10 @@
           "type": "string"
         },
         "lan": {
-          "const": "python",
           "description": "Programming language of the code.\n    ",
           "enum": [
-            "python"
+            "python",
+            "ipython"
           ],
           "title": "Lan",
           "type": "string"

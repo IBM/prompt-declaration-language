@@ -1,6 +1,4 @@
 description: Demo of ReAct template
-optimizer:
-  test: test
 defs:
   static:
     data:
@@ -130,7 +128,7 @@ defs:
           - name: expression
             type: string
             description: The mathematical expression to evaluate with a Python interpreter.
-        examples: [] # "{{ static }}"
+        examples: []
 
   model: "meta-llama/llama-3-70b-instruct"
   question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
