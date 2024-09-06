@@ -141,7 +141,8 @@ def main():
 
     parser.add_argument(
         "-f",
-        "--data_file",
+        "--data-file",
+        dest="data_file",
         help="initial scope data file",
     )
 

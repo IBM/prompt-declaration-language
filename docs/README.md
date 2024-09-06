@@ -79,7 +79,7 @@ python3 -m pdl.pdl --data <JSON-or-YAML-data> <my-example>
 This can also be done by passing a JSON or YAML file:
 
 ```
-python3 -m pdl.pdl --data_file <JSON-or-YAML-file> <my-example>
+python3 -m pdl.pdl --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 ## Overview
