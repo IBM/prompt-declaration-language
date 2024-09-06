@@ -173,6 +173,7 @@ def get_seq_logprobs(
 
     return None
 
+
 def process_logprobs():
     gsm8k = load_from_disk("var/gsm8k_logprobs_agg")
 
@@ -183,7 +184,7 @@ def process_logprobs():
             seq,
             max_new_tokens=None,
         )
-        answer = (lp.generated_text)
+        answer = lp.generated_text
         return {
             "generated_probs": lp.generated_probs,
             "generated_text": lp.generated_text,

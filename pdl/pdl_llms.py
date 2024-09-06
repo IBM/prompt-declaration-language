@@ -1,5 +1,4 @@
 import os
-import time
 from typing import Any, Generator, Optional
 
 from dotenv import load_dotenv
@@ -82,7 +81,6 @@ class BamModel:
     ) -> Generator[Message, Any, None]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
-        start = time.time()
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,

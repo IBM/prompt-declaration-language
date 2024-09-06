@@ -13,7 +13,12 @@ from rich.console import Console
 from pdl.optimize.bam_logprobs import ModelResponse, get_seq_logprobs
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.pdl_ast import Program, ScopeType
-from pdl.pdl_interpreter import InterpreterState, contains_error, messages_to_str, process_prog
+from pdl.pdl_interpreter import (
+    InterpreterState,
+    contains_error,
+    messages_to_str,
+    process_prog,
+)
 
 console = Console()
 
@@ -104,7 +109,7 @@ class PDLThread(Thread):
                 else:
                     if self.index == 0 and self.return_logprobs:
                         model_input = get_seq_logprobs(
-                            self.model,
+                            self.scope["model"],
                             scope[self.config.demonstrations_variable_name],
                         )
                     answer = self.extract_answer(document)

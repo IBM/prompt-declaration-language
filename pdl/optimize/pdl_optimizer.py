@@ -116,9 +116,7 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (
-            path.open(encoding="utf-8") as pdl,
-        ):
+        with (path.open(encoding="utf-8") as pdl,):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def parse_signature(self):

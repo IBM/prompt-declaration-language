@@ -2,9 +2,7 @@ from typing import Any
 
 from pdl.optimize.util import PDLThread
 from pdl.pdl_ast import ScopeType
-from pdl.pdl_interpreter import (
-    empty_scope,
-)
+from pdl.pdl_interpreter import empty_scope
 
 
 class FEVERTrialThread(PDLThread):

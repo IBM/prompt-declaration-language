@@ -8,7 +8,11 @@ from pydantic import BaseModel, Field
 
 class OptimizationConfig(BaseModel):
     benchmark: Literal[
-        "gsm8k", "gsm8k-baseline", "gsm8k-bench", "fever", "evalplus",
+        "gsm8k",
+        "gsm8k-baseline",
+        "gsm8k-bench",
+        "fever",
+        "evalplus",
     ] = Field()
     num_candidates: int = Field(default=30)
     num_demonstrations: int = Field(default=5)
@@ -51,7 +55,11 @@ if __name__ == "__main__":
     print(config)
     print(config.get_variable_names())
     Path("opticonfig1.yml").write_text(
-        yaml.dump(config.model_dump(
-            exclude_defaults=False, exclude_none=False, exclude_unset=False,
-        )),
+        yaml.dump(
+            config.model_dump(
+                exclude_defaults=False,
+                exclude_none=False,
+                exclude_unset=False,
+            ),
+        ),
     )

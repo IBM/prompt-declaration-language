@@ -1,14 +1,12 @@
 import argparse
+from copy import deepcopy
 from enum import Enum
 from pathlib import Path
 
 import yaml
-from datasets import load_dataset, load_from_disk
-from evalplus.evaluate import (
-    MBPP_OUTPUT_NOT_NONE_TASKS,
-    get_groundtruth,
-    get_mbpp_plus_hash,
-)
+from datasets import concatenate_datasets, load_dataset, load_from_disk
+from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
+from evalplus.evaluate import MBPP_OUTPUT_NOT_NONE_TASKS, get_groundtruth
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.mbpp_thread import MBPPTrialThread
@@ -90,10 +88,6 @@ if __name__ == "__main__":
             config=config,
         ).run()
     elif config.benchmark == "evalplus":
-        from copy import deepcopy
-
-        from datasets import concatenate_datasets
-        from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
 
         class SelectableList(list):
             def select(self, iterable):

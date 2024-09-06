@@ -1,6 +1,6 @@
+import time
 from dataclasses import dataclass
 from enum import Enum
-import time
 from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
@@ -67,7 +67,8 @@ class ModelCallMessage(YieldMessage):
 
 
 def schedule(
-    generators: list[Generator[YieldMessage, Any, GeneratorReturnT]], timeout: int | None = None
+    generators: list[Generator[YieldMessage, Any, GeneratorReturnT]],
+    timeout: int | None = None,
 ) -> list[GeneratorReturnT]:
     start_time = time.time()
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
@@ -106,7 +107,6 @@ def schedule(
                 raise TimeoutError(f"Out of time. {runtime}")
         todo = todo_next
         todo_next = []
-        
 
     return done  # type: ignore
 

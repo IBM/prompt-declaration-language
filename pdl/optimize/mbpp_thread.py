@@ -1,9 +1,7 @@
 import ast
 from typing import Any
 
-from evalplus.evaluate import (
-    check_correctness,
-)
+from evalplus.evaluate import check_correctness
 
 from pdl.optimize.util import PDLThread
 from pdl.pdl_ast import ScopeType
@@ -77,9 +75,7 @@ class MBPPTrialThread(PDLThread):
 
         task_id = self.example["task_id"]
 
-        solution = (
-            self.example["prompt"] + answer
-        )
+        solution = self.example["prompt"] + answer
 
         result = check_correctness(
             dataset="mbpp",
