@@ -1,6 +1,6 @@
 description: Hello world to call into a model
 document:
-- read: tests/data/line/hello16_data.json
+- read: ./hello16_data.json
   parser: json
   def: data
   show_result: false

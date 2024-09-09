@@ -1,0 +1,13 @@
+Question: Noah charges $60 for a large painting and $30 for a small painting.
+Last month he sold eight large paintings and four small paintings.
+If he sold twice as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 8 large paintings and 4 small paintings last month.
+He sold twice as many this month.
+8 large paintings x $60 = << 8*60= 480 >> 480
+4 small paintings x $30 = << 4*30= 120 >> 120
+So he sold << 480+120= 600 >> 600 paintings last month.
+Therefore he sold << 600*2= 1200 >> this month.
+The answer is $1200.
+

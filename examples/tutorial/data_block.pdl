@@ -1,10 +1,10 @@
 description: Code explanation example
 document:
-- read: examples/code/data.json
+- read: ./data.json
   parser: json
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - model: ibm/granite-20b-code-instruct-v2

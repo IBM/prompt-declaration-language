@@ -369,7 +369,7 @@ defs:
 document:
 - "----- Loading seed examples -----\n\n"
 - def: seed_examples
-  read: examples/teacher/qna.yaml
+  read: ./qna.yaml
   parser: yaml
 - "\n\n----- Generating questions -----\n\n"
 - def: generated_questions

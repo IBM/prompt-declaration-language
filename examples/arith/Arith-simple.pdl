@@ -1,7 +1,7 @@
 description: Math Problems
 document:
-- read: examples/arith/example1.txt
-- read: examples/arith/example2.txt
+- read: ./example1.txt
+- read: ./example2.txt
 - "\n"
 - |
   Question: Noah charges $10 for a large box and $5 for a small box.

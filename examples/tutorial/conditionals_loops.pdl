@@ -1,7 +1,7 @@
 description: Arithmetic Expressions
 document:
-- read: examples/arith/example1.txt
-- read: examples/arith/example2.txt
+- read: ./example1.txt
+- read: ./example2.txt
 - repeat:
   - "\nQuestion: "
   - def: QUESTION
