@@ -202,14 +202,15 @@ def main():
     config = InterpreterConfig(
         yield_result=args.stream_result, yield_background=args.stream_background
     )
+    pdl_file = Path(args.pdl)
     if args.trace == "*_trace.json":
-        trace_file = str(Path(args.pdl).with_suffix("")) + "_trace.json"
+        trace_file = str(pdl_file.with_suffix("")) + "_trace.json"
     else:
         trace_file = args.trace
     pdl_interpreter.generate(
-        args.pdl,
+        pdl_file,
         args.log,
-        InterpreterState(**config),
+        InterpreterState(**config, cwd=pdl_file),
         initial_scope,
         trace_file,
     )

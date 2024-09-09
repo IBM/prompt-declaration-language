@@ -2,6 +2,7 @@ import json
 import re
 import types
 from itertools import batched
+from pathlib import Path
 from typing import Any, Generator, Iterable, Optional, Sequence
 
 import requests
@@ -86,6 +87,7 @@ class InterpreterState(BaseModel):
     # batch=0: streaming
     # batch=1: call to generate with `input`
     role: RoleType = None
+    cwd: Path = Path.cwd()
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -98,11 +100,11 @@ class InterpreterState(BaseModel):
 
 
 def generate(
-    pdl_file: str,
-    log_file: Optional[str],
+    pdl_file: str | Path,
+    log_file: Optional[str | Path],
     state: Optional[InterpreterState],
     initial_scope: ScopeType,
-    trace_file: Optional[str],
+    trace_file: Optional[str | Path],
 ):
     """Execute the PDL program defined in `pdl_file`.
 
@@ -118,7 +120,7 @@ def generate(
     try:
         prog, loc = parse_file(pdl_file)
         if state is None:
-            state = InterpreterState()
+            state = InterpreterState(cwd=Path(pdl_file).parent)
         result, _, _, trace = process_prog(state, initial_scope, prog, loc)
         if not state.yield_result:
             if state.yield_background:
@@ -134,7 +136,7 @@ def generate(
 
 
 def write_trace(
-    trace_file: str,
+    trace_file: str | Path,
     trace: BlockType,
 ):
     """Write the execution trace into a file.
@@ -1142,9 +1144,10 @@ def process_input(
         trace = handle_error(block, loc, None, errors, block.model_copy())
         return "", [], scope, trace
     if read is not None:
-        with open(read, encoding="utf-8") as f:
+        file = state.cwd / read
+        with open(file, encoding="utf-8") as f:
             s = f.read()
-            append_log(state, "Input from File: " + read, s)
+            append_log(state, "Input from File: " + str(file), s)
     else:
         message = ""
         if block.message is not None:
@@ -1180,8 +1183,9 @@ def step_include(
 ) -> Generator[
     YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock | ErrorBlock]
 ]:
+    file = state.cwd / block.include
     try:
-        prog, newloc = parse_file(block.include)
+        prog, newloc = parse_file(file)
         result, background, scope, trace = yield from step_block(
             state, scope, prog.root, newloc
         )
@@ -1191,7 +1195,7 @@ def step_include(
         trace = handle_error(
             block,
             append(loc, "include"),
-            f"Attempting to include invalid yaml: {block.include}",
+            f"Attempting to include invalid yaml: {str(file)}",
             e.msg,
             block.model_copy(),
         )

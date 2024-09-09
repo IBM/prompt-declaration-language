@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import yaml
 from pydantic import ValidationError
@@ -12,10 +13,10 @@ class PDLParseError(PDLException):
     pass
 
 
-def parse_file(pdl_file: str) -> tuple[Program, LocationType]:
+def parse_file(pdl_file: str | Path) -> tuple[Program, LocationType]:
     with open(pdl_file, "r", encoding="utf-8") as pdl_fp:
         prog_str = pdl_fp.read()
-    return parse_str(prog_str, file_name=pdl_file)
+    return parse_str(prog_str, file_name=str(pdl_file))
 
 
 def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]:
