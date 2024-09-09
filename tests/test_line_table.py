@@ -1,6 +1,7 @@
 from pdl.pdl_interpreter import generate
 from pdl.pdl_scheduler import CODE_COLOR, END_COLOR, MODEL_COLOR
 
+
 def do_test(t, capsys):
     generate(t["file"], None, None, {}, None)
     captured = capsys.readouterr()
@@ -8,6 +9,7 @@ def do_test(t, capsys):
     output = output_string.split("\n")
     print(output)
     assert set(output) == set(t["errors"])
+
 
 def remove_coloring(text):
     return text.replace(MODEL_COLOR, "").replace(CODE_COLOR, "").replace(END_COLOR, "")
