@@ -1,0 +1,8 @@
+description: My first PDL program
+document: 
+- Hello,
+- model: ibm/granite-34b-code-instruct
+  params:
+    stop_sequences: ["!"]
+    include_stop_sequence: true
+- "\n"
