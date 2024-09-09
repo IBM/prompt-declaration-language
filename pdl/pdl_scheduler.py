@@ -58,6 +58,7 @@ class YieldMessage:
 @dataclass
 class YieldResultMessage(YieldMessage):
     kind = MessageKind.RESULT
+<<<<<<< HEAD
     color = None
     result: Any
 
@@ -73,6 +74,8 @@ class ModelYieldResultMessage(YieldMessage):
 class CodeYieldResultMessage(YieldMessage):
     kind = MessageKind.RESULT
     color = CODE_COLOR
+=======
+>>>>>>> main
     result: Any
 
 
@@ -112,11 +115,14 @@ def schedule(
             try:
                 msg = gen.send(v)
                 match msg:
+<<<<<<< HEAD
                     case ModelYieldResultMessage(
                         result=result
                     ) | CodeYieldResultMessage(result=result):
                         print(msg.color + stringify(result) + END_COLOR, end="")
                         todo_next.append((i, gen, None))
+=======
+>>>>>>> main
                     case YieldResultMessage(result=result):
                         print(stringify(result), end="")
                         todo_next.append((i, gen, None))

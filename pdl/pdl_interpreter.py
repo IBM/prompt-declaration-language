@@ -62,6 +62,7 @@ from .pdl_scheduler import (
     CodeYieldResultMessage,
     ModelCallMessage,
     ModelYieldResultMessage,
+    ModelCallMessage,
     YieldBackgroundMessage,
     YieldMessage,
     YieldResultMessage,
