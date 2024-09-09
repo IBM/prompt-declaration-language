@@ -63,6 +63,8 @@ from .pdl_scheduler import (
     YieldBackgroundMessage,
     YieldMessage,
     YieldResultMessage,
+    CodeYieldResultMessage,
+    ModelYieldResultMessage,
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
@@ -286,7 +288,7 @@ def step_block_body(
                 state, scope, block, loc
             )
             if state.yield_result:
-                yield YieldResultMessage(result)
+                yield CodeYieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case GetBlock(get=var):
@@ -889,7 +891,7 @@ def generate_client_response_streaming(
     role = None
     for chunk in msg_stream:
         if state.yield_result:
-            yield YieldResultMessage(chunk["content"])
+            yield ModelYieldResultMessage(chunk["content"])
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
