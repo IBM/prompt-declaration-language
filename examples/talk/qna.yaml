@@ -1,0 +1,15 @@
+task_description: to teach a large language model to come up with puns
+created_by: mizmo
+seed_examples:
+- question: Tell me a pun about birds.
+  answer: |-
+    Why do birds eat wood?
+    Because they're peckish!
+- question: Tell me a pun about gas.
+  answer: |-
+    Why did the car have a belly ache?
+    Because it had too much gas!
+- question: Tell me a pun about waves.
+  answer: |-
+    What did the ocean say to the ocean?
+    Nothing. It just waved!
