@@ -60,7 +60,9 @@ from .pdl_llms import BamModel, LitellmModel, WatsonxModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import (
+    CodeYieldResultMessage,
     ModelCallMessage,
+    ModelYieldResultMessage,
     YieldBackgroundMessage,
     YieldMessage,
     YieldResultMessage,
@@ -296,7 +298,7 @@ def step_block_body(
                 state, scope, block, loc
             )
             if state.yield_result:
-                yield YieldResultMessage(result)
+                yield CodeYieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
         case GetBlock(get=var):
@@ -899,7 +901,7 @@ def generate_client_response_streaming(
     role = None
     for chunk in msg_stream:
         if state.yield_result:
-            yield YieldResultMessage(chunk["content"])
+            yield ModelYieldResultMessage(chunk["content"])
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:

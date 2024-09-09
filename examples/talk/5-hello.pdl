@@ -1,0 +1,20 @@
+document:
+- def: translate
+  function:
+    sentence: str
+    language: str
+  return:
+  - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+  - model: ibm/granite-20b-multilingual
+    params:
+      stop_sequences: ["\n"]
+- call: translate
+  args:
+    sentence: I love Paris!
+    language: French
+- "\n"
+- call: translate
+  args:
+    sentence: I love Madrid!
+    language: Spanish
+- "\n"

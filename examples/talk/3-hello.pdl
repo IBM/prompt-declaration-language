@@ -5,4 +5,9 @@ document:
   params:
     stop_sequences: ["!"]
     include_stop_sequence: true
+- "\nTranslate this to French\n"
+- model: ibm/granite-20b-multilingual
+  params:
+    stop_sequences: ["!"]
+    include_stop_sequence: true
 - "\n"

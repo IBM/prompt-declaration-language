@@ -17,18 +17,20 @@ document:
 - read:
   message: "What is your query?\n"
 - repeat:
-  - model: ibm/granite-13b-chat-v2
-    role: assistant
-    spec: str
-    params:
-      stop_sequences: ["."]
-  - read:
-    def: eval
-    message: "\nIs this a good answer[yes/no]?\n"
-    show_result: false
-  - if: "{{ eval == 'no' }}"
-    then:
-      - read:
-        message: "Why not?\n"
+    document:
+    - model: ibm/granite-13b-chat-v2
+      role: assistant
+      spec: str
+      params:
+        max_new_tokens: 200
+    - read:
+      def: eval
+      message: "\nIs this a good answer[yes/no]?\n"
+      show_result: false
+    - if: "{{ eval == 'no' }}"
+      then:
+        - read:
+          message: "Why not?\n"
+  as: document
   until: "{{ eval == 'yes'}}"
 role: user

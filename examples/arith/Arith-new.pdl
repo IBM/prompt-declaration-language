@@ -10,8 +10,9 @@ document:
       params:
         stop_sequences:
         - Answer
-        include_stop_sequence: false
-    - "Answer: Let's think step by step.\n"
+        - "?"
+        include_stop_sequence: true
+    - "\nAnswer: Let's think step by step.\n"
     - repeat:
         document:
         - def: REASON_OR_CALC
@@ -22,20 +23,22 @@ document:
             include_stop_sequence: true
         - if: '{{ REASON_OR_CALC.endswith("<<") }}'
           then:
-          - def: EXPR
-            model: ibm/granite-34b-code-instruct
-            params:
-              stop_sequences:
-              - '='
-              - "\n"
-              - "Question"
-              include_stop_sequence: false
-          - '= '
-          - def: RESULT
-            lan: python
-            code: result = {{ EXPR }}
-          - ' >>'
+            document:
+            - def: EXPR
+              model: ibm/granite-34b-code-instruct
+              params:
+                stop_sequences:
+                - '='
+                - "\n"
+                - "Question"
+                include_stop_sequence: false
+            - '= '
+            - def: RESULT
+              lan: python
+              code: result = {{ EXPR }}
+            - ' >>'
       until: '{{ "The answer is" in REASON_OR_CALC }}'
+      as: document
     - "\n\n"
   as: document
   num_iterations: 3

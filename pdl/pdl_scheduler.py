@@ -40,6 +40,11 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     return w.value
 
 
+MODEL_COLOR = "\033[92m"  # Green
+CODE_COLOR = "\033[95m"  # Purple
+END_COLOR = "\033[0m"  # End color
+
+
 class MessageKind(Enum):
     RESULT = 0
     BACKGROUND = 1
@@ -53,6 +58,21 @@ class YieldMessage:
 @dataclass
 class YieldResultMessage(YieldMessage):
     kind = MessageKind.RESULT
+    color = None
+    result: Any
+
+
+@dataclass
+class ModelYieldResultMessage(YieldMessage):
+    kind = MessageKind.RESULT
+    color = MODEL_COLOR
+    result: Any
+
+
+@dataclass
+class CodeYieldResultMessage(YieldMessage):
+    kind = MessageKind.RESULT
+    color = CODE_COLOR
     result: Any
 
 
@@ -92,6 +112,11 @@ def schedule(
             try:
                 msg = gen.send(v)
                 match msg:
+                    case ModelYieldResultMessage(
+                        result=result
+                    ) | CodeYieldResultMessage(result=result):
+                        print(msg.color + stringify(result) + END_COLOR, end="")
+                        todo_next.append((i, gen, None))
                     case YieldResultMessage(result=result):
                         print(stringify(result), end="")
                         todo_next.append((i, gen, None))

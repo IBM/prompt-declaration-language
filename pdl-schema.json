@@ -6085,7 +6085,11 @@
           "title": "Repeat"
         },
         "as": {
-          "$ref": "#/$defs/IterationType",
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
           "default": "array",
           "description": "Define how to combine the result of each iteration.\n    "
         },
@@ -12274,7 +12278,11 @@
           "type": "integer"
         },
         "as": {
-          "$ref": "#/$defs/IterationType",
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
           "default": "sequence",
           "description": "Define how to combine the result of each iteration.\n    "
         },
@@ -13049,7 +13057,11 @@
           "title": "Until"
         },
         "as": {
-          "$ref": "#/$defs/IterationType",
+          "allOf": [
+            {
+              "$ref": "#/$defs/IterationType"
+            }
+          ],
           "default": "sequence",
           "description": "Define how to combine the result of each iteration.\n    "
         },
