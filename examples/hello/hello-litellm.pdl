@@ -3,6 +3,7 @@ document:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
+    decoding_method: greedy
     stop:
-    - ","
+    - "!"
 - "\n"
