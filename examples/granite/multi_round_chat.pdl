@@ -1,7 +1,7 @@
 description: Granite Multi-Round Chat
 document:
-- include: examples/granite/granite_defs.pdl
-- read: examples/granite/multi-prompts.json
+- include: ./granite_defs.pdl
+- read: ./multi-prompts.json
   parser: json
   def: prompts
   spec: {prompts: [str]}

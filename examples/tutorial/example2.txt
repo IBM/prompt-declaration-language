@@ -1,0 +1,12 @@
+Question: Noah charges $10 for a small vase and $30 for a large vases
+Last month he sold five large vases and three small vases.
+If he sold three times as much this month, how much is his sales for this month?
+
+Answer: Let's think step by step.
+He sold 5 large vases and 3 small vases last month.
+He sold three times as many this month.
+5 large vases x $30 = << 5*30= 150 >> 150
+3 small vases x $10 = << 3*10= 30 >> 30
+So he sold << 150+30= 180 >> 180 vases last month.
+Therefore he sold << 180*3= 540 >> this month.
+The answer is $540.

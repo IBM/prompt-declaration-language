@@ -230,7 +230,7 @@ Notice that in PDL variables are used to templatize any entity in the document, 
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.yaml
+- read: ./data.yaml
   parser: yaml
   def: CODE
   show_result: False
@@ -248,7 +248,7 @@ document:
       Explain the following code:
       ```
       {{ CODE.source_code }}```
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - |
@@ -304,11 +304,11 @@ Finally, we can output JSON data as a result of this program, as follows:
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.yaml
+- read: ./data.yaml
   parser: yaml
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - model: ibm/granite-34b-code-instruct

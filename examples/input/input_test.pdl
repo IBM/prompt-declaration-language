@@ -1,6 +1,6 @@
 description: Hello world!
 defs:
-  file: examples/input/data.tx
+  file: ./data.tx
 document:
 - read: "{{ file }}"
   def: HELLO

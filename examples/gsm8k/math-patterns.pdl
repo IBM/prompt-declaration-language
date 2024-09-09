@@ -8,9 +8,9 @@ defs:
 # cluster by similarity, or classify e.g. 5 classes that don't work
 
 document:
-  - include: examples/prompt_library/ReWOO.pdl
-  - include: examples/prompt_library/ReAct.pdl
-  - include: examples/prompt_library/CoT.pdl
+  - include: ../prompt_library/ReWOO.pdl
+  - include: ../prompt_library/ReAct.pdl
+  - include: ../prompt_library/CoT.pdl
   - def: filtered_tools
     call: filter_tools_by_name
     show_result: false

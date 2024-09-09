@@ -1,6 +1,6 @@
 description: Code explanation example
 document:
-- read: examples/code/data.yaml
+- read: ./data.yaml
   parser: yaml
   def: CODE
   show_result: False

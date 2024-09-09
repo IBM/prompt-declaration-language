@@ -158,7 +158,7 @@ In PDL, this would be expressed as follows (see [file](https://github.com/IBM/pr
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
+- read: ./data.json
   parser: json
   def: CODE
   show_result: False
@@ -212,11 +212,11 @@ Notice that in PDL variables are used to templatize any entity in the document, 
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
+- read: ./data.json
   parser: json
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - "\n{{ CODE.source_code }}\n"
@@ -289,11 +289,11 @@ Finally, we can output JSON data as a result of this program, as follows:
 ```yaml
 description: Code explanation example
 document:
-- read: examples/code/data.json
+- read: ./data.json
   parser: json
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - model: ibm/granite-20b-code-instruct-v2

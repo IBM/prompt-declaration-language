@@ -1,7 +1,7 @@
 description: Creating JSON Data
 defs:
   data:
-    read: examples/demo/data.yaml
+    read: ../demo/data.yaml
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 document:

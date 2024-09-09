@@ -210,7 +210,7 @@ def main():
     pdl_interpreter.generate(
         pdl_file,
         args.log,
-        InterpreterState(**config, cwd=pdl_file),
+        InterpreterState(**config, cwd=pdl_file.parent),
         initial_scope,
         trace_file,
     )

@@ -1,6 +1,6 @@
 description: Demo of RAG template
 document:
-  - include: examples/prompt_library/RAG.pdl
+  - include: ../RAG.pdl
   - call: corpus
     args:
       corpus:

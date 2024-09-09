@@ -1,10 +1,10 @@
 description: Code explanation example
 document:
-- read: examples/code/data.yaml
+- read: ./data.yaml
   parser: yaml
   def: CODE
   show_result: False
-- read: examples/code/ground_truth.txt
+- read: ./ground_truth.txt
   def: TRUTH
   show_result: False
 - model: ibm/granite-34b-code-instruct

@@ -1,7 +1,7 @@
 description: Code explanation example
 defs: 
    CODE:
-      read: examples/code/data.yaml
+      read: ./data.yaml
       parser: yaml
       def: CODE
    EXPLANATION:
