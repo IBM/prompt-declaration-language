@@ -373,6 +373,7 @@ line28 = {
         "Hello! ",
         "tests/data/line/hello28.pdl:9 - 'QUESTION1' is undefined",
         "{{ QUESTION1 }}",
+        "",
     ],
 }
 
@@ -390,6 +391,7 @@ line29 = {
         "tests/data/line/hello29.pdl:13 - 'QUESTION3' is undefined",
         "tests/data/line/hello29.pdl:15 - 'QUESTION4' is undefined",
         "null",
+        "",
     ],
 }
 
