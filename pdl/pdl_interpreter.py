@@ -124,6 +124,8 @@ def generate(
             if state.yield_background:
                 print("\n----------------")
             print(stringify(result))
+        else:
+            print()
         with open(log_file, "w", encoding="utf-8") as log_fp:
             for line in state.log:
                 log_fp.write(line)
