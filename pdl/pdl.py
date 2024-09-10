@@ -60,7 +60,7 @@ def exec_program(
     state = InterpreterState(**config)
     scope = scope or {}
     loc = loc or empty_block_location
-    result = process_prog(state, scope, prog, loc)
+    result, _, _, _ = process_prog(state, scope, prog, loc)
     return result
 
 

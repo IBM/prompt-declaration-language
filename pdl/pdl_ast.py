@@ -316,6 +316,8 @@ class DataBlock(Block):
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType
     """Value defined."""
+    raw: bool = False
+    """Do not evaluate expressions inside strings."""
 
 
 class DocumentBlock(Block):

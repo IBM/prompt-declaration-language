@@ -3835,6 +3835,12 @@
         "data": {
           "description": "Value defined.",
           "title": "Data"
+        },
+        "raw": {
+          "default": false,
+          "description": "Do not evaluate expressions inside strings.",
+          "title": "Raw",
+          "type": "boolean"
         }
       },
       "required": [
