@@ -5,6 +5,7 @@ from itertools import batched
 from pathlib import Path
 from typing import Any, Generator, Iterable, Optional, Sequence
 
+import litellm
 import requests
 import yaml
 from jinja2 import Environment, StrictUndefined, Template, UndefinedError
@@ -825,8 +826,17 @@ def step_call_model(
         return None, [], scope, trace
     # Execute model call
     try:
-        append_log(state, "Model Input", messages_to_str(model_input))
+        litellm_input = ""
+
+        def get_transformed_inputs(kwargs):
+            params_to_model = kwargs["additional_args"]["complete_input_dict"]
+            nonlocal litellm_input
+            litellm_input = params_to_model["input"]
+
+        litellm.input_callback = [get_transformed_inputs]
+        # append_log(state, "Model Input", messages_to_str(model_input))
         msg = yield from generate_client_response(state, concrete_block, model_input)
+        append_log(state, "Model Input", litellm_input)
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
