@@ -1240,6 +1240,10 @@ export type Repeat =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
 export type IterationType = "sequence" | "array" | "document";
 export type Trace1 =
   | (
@@ -1425,6 +1429,11 @@ export type Repeat1 =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type IterationType1 = "sequence" | "array" | "document";
 export type Trace2 =
   | (
       | number
@@ -1614,6 +1623,11 @@ export type Repeat2 =
  *
  */
 export type NumIterations = number;
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type IterationType2 = "sequence" | "array" | "document";
 export type Trace3 =
   | (
       | number
@@ -1930,6 +1944,10 @@ export type Fallback12 =
 export type Role12 = string | null;
 export type HasError12 = boolean;
 export type Kind12 = "data";
+/**
+ * Do not evaluate expressions inside strings.
+ */
+export type Raw = boolean;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -3878,6 +3896,7 @@ export interface DataBlock {
   has_error?: HasError12;
   kind?: Kind12;
   data: Data;
+  raw?: Raw;
 }
 /**
  * Type specification of the result of the block.
@@ -4044,11 +4063,7 @@ export interface RepeatBlock {
   kind?: Kind10;
   repeat: Repeat2;
   num_iterations: NumIterations;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
+  as?: IterationType2;
   trace?: Trace3;
 }
 /**
@@ -4132,11 +4147,7 @@ export interface RepeatUntilBlock {
   kind?: Kind9;
   repeat: Repeat1;
   until: Until;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
+  as?: IterationType1;
   trace?: Trace2;
 }
 /**
@@ -4220,11 +4231,7 @@ export interface ForBlock {
   kind?: Kind8;
   for: For;
   repeat: Repeat;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
+  as?: IterationType;
   trace?: Trace1;
 }
 /**

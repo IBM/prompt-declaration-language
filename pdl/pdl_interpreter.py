@@ -315,16 +315,21 @@ def step_block_body(
                 yield YieldBackgroundMessage(background)
         case DataBlock(data=v):
             block.location = append(loc, "data")
-            result, errors = process_expr(scope, v, append(loc, "data"))
-            if len(errors) != 0:
-                result = None
-                background = []
-                trace = handle_error(
-                    block, append(loc, "data"), None, errors, block.model_copy()
-                )
-            else:
+            if block.raw:
+                result = v
                 background = [{"role": state.role, "content": stringify(result)}]
                 trace = block.model_copy()
+            else:
+                result, errors = process_expr(scope, v, append(loc, "data"))
+                if len(errors) != 0:
+                    result = None
+                    background = []
+                    trace = handle_error(
+                        block, append(loc, "data"), None, errors, block.model_copy()
+                    )
+                else:
+                    background = [{"role": state.role, "content": stringify(result)}]
+                    trace = block.model_copy()
             if state.yield_result:
                 yield YieldResultMessage(result)
             if state.yield_background:

@@ -112,6 +112,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["get"] = block.get
         case DataBlock():
             d["data"] = block.data
+            if block.raw:
+                d["raw"] = block.raw
         case ApiBlock():
             d["api"] = block.api
             d["url"] = block.url
