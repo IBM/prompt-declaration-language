@@ -1,10 +1,10 @@
 description: Hello world showing model chaining
 document:
 - Hello,
-- model: ibm/granite-34b-code-instruct
-  params:
+- model: watsonx/ibm/granite-34b-code-instruct
+  parameters:
     decoding_method: greedy
-    stop_sequences:
+    stop:
     - '!'
     include_stop_sequence: false
   def: NAME
@@ -12,10 +12,14 @@ document:
   !
   Who is{{ NAME }}?
 - "\n"
-- model: google/flan-t5-xl
-  params:
+- model: watsonx/google/flan-t5-xl
+  #model: watsonx/ibm/granite-34b-code-instruct
+  parameters:
     decoding_method: greedy
-    stop_sequences:
-    - '!'
-    include_stop_sequence: false
-- "\n"
+    stop:
+    - '.'
+    include_stop_sequence: true
+    roles:
+      user:
+        pre_message: ""
+        post_message: ""

@@ -6,4 +6,3 @@ document:
     decoding_method: greedy
     stop:
     - "!"
-- "\n"
