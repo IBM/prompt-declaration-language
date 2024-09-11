@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from enum import Enum, StrEnum
+from enum import Enum
 from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
 from termcolor import colored
+from termcolor._types import Color
 
 from .pdl_ast import BamTextGenerationParameters, Message
 from .pdl_llms import BamModel
@@ -41,12 +42,6 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     return w.value
 
 
-class Color(StrEnum):
-    MODEL_COLOR = "green"
-    CODE_COLOR = "magenta"
-    NO_COLOR = ""
-
-
 class MessageKind(Enum):
     RESULT = 0
     BACKGROUND = 1
@@ -55,24 +50,24 @@ class MessageKind(Enum):
 
 class YieldMessage:
     kind: MessageKind
-    color: Color
+    color: Optional[Color]
 
 
 @dataclass
 class YieldResultMessage(YieldMessage):
-    kind = MessageKind.RESULT
-    color = Color.NO_COLOR
     result: Any
+    kind: MessageKind = MessageKind.RESULT
+    color: Optional[Color] = None
 
 
 @dataclass
 class ModelYieldResultMessage(YieldResultMessage):
-    color = Color.MODEL_COLOR
+    color: Optional[Color] = "green"
 
 
 @dataclass
 class CodeYieldResultMessage(YieldResultMessage):
-    color = Color.CODE_COLOR
+    color: Optional[Color] = "magenta"
 
 
 @dataclass
@@ -116,10 +111,10 @@ def schedule(
                     ) | CodeYieldResultMessage(result=result) | YieldResultMessage(
                         result=result
                     ):
-                        if msg.color != Color.NO_COLOR:
-                            text = colored(stringify(result), msg.color)
-                        else:
+                        if msg.color is None:
                             text = stringify(result)
+                        else:
+                            text = colored(stringify(result), msg.color)
                         print(text, end="")
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
