@@ -25,10 +25,10 @@ export function show_output(data: PdlBlocks) {
   const div = document.createElement('div');
   div.classList.add('pdl_block');
   match(data)
-    .with(P.string, output => {
+    .with(P.union(P.string, P.number), output => {
       div.innerHTML = htmlize(output);
     })
-    .with({show_result: false}, () => {
+    .with({contribute: P.union([], ['context'])}, () => {
       div.classList.add('pdl_show_result_false');
       div.innerHTML = '☐';
     })
@@ -75,7 +75,7 @@ export function show_block(data: PdlBlock) {
   div.appendChild(body);
   add_def(body, data.def);
   body.classList.add('pdl_block');
-  if (data?.show_result === false) {
+  if (!data?.contribute?.includes('context')) {
     body.classList.add('pdl_show_result_false');
   }
   match(data)
@@ -280,9 +280,12 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   match(new_data).with({trace: P._}, data => {
     data.trace = undefined;
   });
-  // remove show_result: true
-  if (new_data?.show_result) {
-    new_data.show_result = undefined;
+  // remove contribute: ["result", context]
+  if (
+    new_data?.contribute?.includes('result') &&
+    new_data?.contribute?.includes('context')
+  ) {
+    new_data.contribute = undefined;
   }
   // remove empty defs list
   if (Object.keys(data?.defs ?? {}).length === 0) {

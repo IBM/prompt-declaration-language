@@ -163,8 +163,8 @@ line13 = {
         "",
         "0",
         "1",
-        "tests/data/line/hello13.pdl:10 - Type errors during spec checking",
-        "tests/data/line/hello13.pdl:10 - 1 should be of type <class 'str'>",
+        "tests/data/line/hello13.pdl:9 - Type errors during spec checking",
+        "tests/data/line/hello13.pdl:9 - 1 should be of type <class 'str'>",
     ],
 }
 
@@ -235,7 +235,7 @@ def test_line17(capsys):
 
 line18 = {
     "file": "tests/data/line/hello18.pdl",
-    "errors": ["", "0", "1", "tests/data/line/hello18.pdl:15 - 'J' is undefined"],
+    "errors": ["", "0", "1", "tests/data/line/hello18.pdl:13 - 'J' is undefined"],
 }
 
 

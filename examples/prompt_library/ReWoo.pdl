@@ -8,7 +8,7 @@ defs:
       trajectory: { list: obj }
     return:
       - def: i
-        show_result: false
+        contribute: []
         data: 1
       - for:
           trajectory: "{{ trajectory }}"
@@ -131,7 +131,7 @@ defs:
                     else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
                   tool_output: "{{ raw_tool_output }}"
               - def: output
-                show_result: false
+                contribute: []
                 lan: python
                 code: |
                   output[ID] = str(tool_output)
@@ -146,7 +146,7 @@ defs:
                 Plan: {{ PLAN }}
                 Evidence: {{ tool_output }}
       # - def: EVIDENCE
-      #   show_result: false
+      #   contribute: []
       #   document:
       #     for:
       #       plan: "{{ plans }}"

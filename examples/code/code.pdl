@@ -1,9 +1,9 @@
 description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
 document:
-- read: ./data.yaml
-  parser: yaml
-  def: CODE
-  show_result: False
 - "\n{{ CODE.source_code }}\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:
@@ -17,4 +17,3 @@ document:
         Explain the following code:
         ```
         {{ CODE.source_code }}```
-- "\n"

@@ -196,11 +196,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -805,11 +811,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -1401,11 +1413,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -2374,11 +2392,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -2986,11 +3010,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -3398,6 +3428,14 @@
       "title": "CodeBlock",
       "type": "object"
     },
+    "ContributeTarget": {
+      "enum": [
+        "result",
+        "context"
+      ],
+      "title": "ContributeTarget",
+      "type": "string"
+    },
     "DataBlock": {
       "additionalProperties": false,
       "description": "Arbitrary JSON value.",
@@ -3594,11 +3632,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -4053,11 +4097,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -4651,11 +4701,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -5088,11 +5144,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -5690,11 +5752,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -6466,11 +6534,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -7089,11 +7163,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -7535,11 +7615,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -8311,11 +8397,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -8880,11 +8972,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -9963,11 +10061,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -11357,11 +11461,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -11879,11 +11989,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -12655,11 +12771,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -13430,11 +13552,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [
@@ -14120,11 +14248,17 @@
           "description": "Name of the variable used to store the result of the execution of the block.\n    ",
           "title": "Def"
         },
-        "show_result": {
-          "default": true,
-          "description": "Ignore the value computed by the block.\n    ",
-          "title": "Show Result",
-          "type": "boolean"
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
         },
         "parser": {
           "anyOf": [

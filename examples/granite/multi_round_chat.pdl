@@ -5,7 +5,7 @@ document:
   parser: json
   def: prompts
   spec: {prompts: [str]}
-  show_result:  false
+  contribute: []
 - "{{ SYSTEM_CONTENT_CHAT }}"
 - for:
     prompt: "{{ prompts.prompts }}"

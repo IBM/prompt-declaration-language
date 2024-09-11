@@ -161,7 +161,7 @@ document:
 - read: ./data.json
   parser: json
   def: CODE
-  show_result: False
+  contribute: []
 - "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct-v2
   input:
@@ -215,10 +215,10 @@ document:
 - read: ./data.json
   parser: json
   def: CODE
-  show_result: False
+  contribute: []
 - read: ./ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-20b-code-instruct-v2
   def: EXPLANATION
@@ -292,13 +292,13 @@ document:
 - read: ./data.json
   parser: json
   def: CODE
-  show_result: False
+  contribute: []
 - read: ./ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - model: ibm/granite-20b-code-instruct-v2
   def: EXPLANATION
-  show_result: False
+  contribute: []
   parameters:
     decoding_method: greedy
     max_new_tokens: 1024
@@ -315,7 +315,7 @@ document:
       ```
       {{ CODE.source_code }}```
 - def: EVAL
-  show_result: False
+  contribute: []
   lan: python
   code:
     |

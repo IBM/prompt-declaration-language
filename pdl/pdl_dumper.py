@@ -13,6 +13,7 @@ from .pdl_ast import (
     BlocksType,
     CallBlock,
     CodeBlock,
+    ContributeTarget,
     DataBlock,
     DocumentBlock,
     ErrorBlock,
@@ -170,8 +171,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["program"] = blocks_to_dict(block.program)
     if block.assign is not None:
         d["def"] = block.assign
-    if block.show_result is False:
-        d["show_result"] = block.show_result
+    if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
+        d["contribute"] = block.contribute
     if block.result is not None:
         d["result"] = block.result
     if block.parser is not None:

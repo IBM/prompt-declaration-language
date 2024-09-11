@@ -179,7 +179,7 @@ document:
 - read: examples/code/data.yaml
   parser: yaml
   def: CODE
-  show_result: False
+  contribute: []
 - "\n{{ CODE.source_code }}\n"
 - model: meta-llama/llama-3-70b-instruct
   input:
@@ -233,7 +233,7 @@ document:
 - read: ./data.yaml
   parser: yaml
   def: CODE
-  show_result: False
+  contribute: []
 - "\n{{ CODE.source_code }}\n"
 - model: ibm/granite-34b-code-instruct
   def: EXPLANATION
@@ -250,7 +250,7 @@ document:
       {{ CODE.source_code }}```
 - read: ./ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - |
 
 
@@ -307,13 +307,13 @@ document:
 - read: ./data.yaml
   parser: yaml
   def: CODE
-  show_result: False
+  contribute: []
 - read: ./ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - model: ibm/granite-34b-code-instruct
   def: EXPLANATION
-  show_result: False
+  contribute: []
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -327,7 +327,7 @@ document:
       ```
       {{ CODE.source_code }}```
 - def: EVAL
-  show_result: False
+  contribute: []
   lan: python
   code:
     |

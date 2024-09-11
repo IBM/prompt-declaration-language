@@ -3,7 +3,7 @@ document:
 - read:
   def: QUERY
   message: "Ask a query: "
-  show_result: false
+  contribute: []
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
       Question: What is the weather in London?
@@ -20,12 +20,12 @@ document:
     - '!'
     include_stop_sequence: false
   def: LOCATION
-  show_result: false
+  contribute: []
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
   input: '{{ LOCATION }}'
   def: WEATHER
-  show_result: false
+  contribute: []
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
       Explain the weather from the following JSON.

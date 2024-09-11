@@ -5,7 +5,7 @@
             "read": null, 
             "parser": "json", 
             "def": "PERSON",
-            "show_result": false
+            "contribute": []
         }, 
         {
             "get": "PERSON.name"

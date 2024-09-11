@@ -5,5 +5,5 @@ document:
   code: |
     result = True
   def: QUESTION
-  show_result: false
+  contribute: []
 - "{{ QUESTION1 }}"

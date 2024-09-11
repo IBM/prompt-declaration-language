@@ -1,6 +1,12 @@
 document:
 - include: ./react-fun.pdl
 - include: ../granite/granite_defs.pdl
+- def: filtered_tools
+  call: filter_tools_by_name
+  contribute: []
+  args:
+    tools: "{{ default_tools }}"
+    tool_names: ["Search"]
 - def: QUESTION
   read: 
   message: "Please enter a question: "

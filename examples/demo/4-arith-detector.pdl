@@ -3,7 +3,7 @@ document:
 - read:
   multiline: True
   def: QUERY
-  show_result: false
+  contribute: []
 - model: watsonx/ibm/granite-20b-code-instruct
   input:
     document:
@@ -35,7 +35,7 @@ document:
       Question: {{ QUERY }}
     - "\n\n"
   def: QUERY1
-  show_result: false
+  contribute: []
 
 
 - model: watsonx/ibm/granite-20b-code-instruct
@@ -116,7 +116,7 @@ document:
     - get: QUERY1
     - "\n\n"
   def: PDL
-  show_result: false
+  contribute: []
 
 - lan: python
   code: | 
@@ -134,4 +134,5 @@ document:
     data = Program.model_validate(obj)
     _, result, _, _ = process_prog(state, empty_scope, data)
   def: RESULT
-  show_result: false
+  contribute: []
+- "\n"
