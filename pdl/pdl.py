@@ -200,6 +200,8 @@ def main():
         case "none":
             stream_result = False
             stream_background = False
+        case _:
+            assert False
 
     config = InterpreterConfig(
         yield_result=stream_result, yield_background=stream_background
