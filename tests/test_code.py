@@ -32,21 +32,28 @@ def show_result_data(show):
                 "document": [
                     {"lan": "python", "code": ["result = 'How can I help you?: '"]}
                 ],
-                "show_result": show,
+                "contribute": show,
             }
         ],
     }
 
 
-def test_show_result():
+def test_contribute_result():
     state = InterpreterState()
-    data = Program.model_validate(show_result_data(True))
+    data = Program.model_validate(show_result_data(["result"]))
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "How can I help you?: "
 
 
-def test_show_result_false():
+def test_contribute_context():
     state = InterpreterState()
-    data = Program.model_validate(show_result_data(False))
+    data = Program.model_validate(show_result_data(["context"]))
+    _, background, _, _ = process_prog(state, empty_scope, data)
+    assert background[0] == [None, "How can I help you?: "]
+
+
+def test_contribute_false():
+    state = InterpreterState()
+    data = Program.model_validate(show_result_data([]))
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""

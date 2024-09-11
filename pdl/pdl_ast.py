@@ -86,6 +86,11 @@ ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
 RoleType: TypeAlias = Optional[str]
 
 
+class ContributeTarget(StrEnum):
+    RESULT = "result"
+    CONTEXT = "context"
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -103,8 +108,11 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    show_result: bool = True
-    """Ignore the value computed by the block.
+    contribute: list[ContributeTarget] = [
+        ContributeTarget.RESULT,
+        ContributeTarget.CONTEXT,
+    ]
+    """Indicate if the block contributes to the result and background context.
     """
     parser: Optional[ParserType] = None
     """Parser to use to construct a value out of a string result."""

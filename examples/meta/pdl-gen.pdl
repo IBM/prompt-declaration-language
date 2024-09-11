@@ -13,7 +13,7 @@ document:
       contents.append(line + "\n")
     result = ''.join(contents)
   def: QUERY
-  show_result: false
+  contribute: []
 - model: ibm/granite-20b-code-instruct
   params:
     decoding_method: greedy
@@ -171,7 +171,7 @@ document:
       - model: "google/flan-t5-xl"
         params:
           decoding_method: greedy
-        show_results: false
+        contribute: []
       ```
 
       Question: Write a PDL program with a block that does not show its results
@@ -191,7 +191,7 @@ document:
             break
           contents.append(line + "\n")
           result = ''.join(contents)
-        show_results: false
+        contribute: []
       ```
 
       Question: Write a PDL script with a block that has an assignment to variable QUERY
@@ -307,7 +307,6 @@ document:
         - |
           result = input("How can I help you?: ")
         def: QUERY
-        show_result: true
       ```
 
       Question:

@@ -16,7 +16,7 @@ input_json_data = {
             "read": "./data/input.json",
             "parser": "json",
             "def": "PERSON",
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "PERSON.name"},
         " lives at the following address:\n",
@@ -60,7 +60,6 @@ input_json_data_defs1 = {
     "defs": {
         "data": {
             "read": "tests/data/input_data.txt",
-            "show_result": True,
         }
     },
     "document": ["{{ data }}"],

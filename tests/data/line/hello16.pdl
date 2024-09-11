@@ -3,7 +3,7 @@ document:
 - read: ./hello16_data.json
   parser: json
   def: data
-  show_result: false
+  contribute: []
   spec: { "questions": ["str"], "answers": ["obj"] }
 - model: ibm/granite-20b-code-instruct
   def: model_output

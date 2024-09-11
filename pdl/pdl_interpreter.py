@@ -22,6 +22,7 @@ from .pdl_ast import (
     BlockType,
     CallBlock,
     CodeBlock,
+    ContributeTarget,
     DataBlock,
     DocumentBlock,
     EmptyBlock,
@@ -245,8 +246,12 @@ def step_advanced_block(
         scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
     else:
         defs_trace = block.defs
-    state = state.with_yield_result(state.yield_result and block.show_result)
-    state = state.with_yield_background(state.yield_background and block.show_result)
+    state = state.with_yield_result(
+        state.yield_result and ContributeTarget.RESULT in block.contribute
+    )
+    state = state.with_yield_background(
+        state.yield_background and ContributeTarget.CONTEXT in block.contribute
+    )
     result, background, scope, trace = yield from step_block_body(
         state, scope, block, loc
     )
@@ -265,8 +270,9 @@ def step_advanced_block(
             trace = handle_error(
                 block, loc, "Type errors during spec checking", errors, trace
             )
-    if block.show_result is False:
+    if ContributeTarget.RESULT not in block.contribute:
         result = ""
+    if ContributeTarget.CONTEXT not in block.contribute:
         background = []
     return result, background, scope, trace
 

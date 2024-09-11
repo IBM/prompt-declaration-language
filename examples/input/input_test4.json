@@ -5,7 +5,7 @@
             "read": "tests/data/input.json",
             "parser": "json",
             "def": "PERSON",
-            "show_result": false
+            "contribute": []
         },
         {"get": "PERSON.name"},
         " lives at the following address:\n",

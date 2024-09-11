@@ -11,7 +11,6 @@ document:
   code: |
     import random
     result = random.randint(1, 20)
-  show_result: true
 - "\nNow computing fib("
 - get: N
 - ")\n"
@@ -20,7 +19,7 @@ document:
   code: |
     {{ CODE }}
     result = fib({{ N }})
-  show_result: false
+  contribute: []
 - 'The result is: '
 - get: RESULT
 - "\n\nExplain what the above code does and what the result means\n\n"
