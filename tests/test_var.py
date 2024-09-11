@@ -47,7 +47,6 @@ var_shared_scope_data = {
             "document": [
                 {
                     "model": "ibm/granite-34b-code-instruct",
-                    "show_result": True,
                     "params": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
@@ -60,7 +59,7 @@ var_shared_scope_data = {
             "def": "I",
             "lan": "python",
             "code": "result = NAME[::-1] + '!\\n'",
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "I"},
     ],
@@ -81,13 +80,13 @@ var_shared_scope_mutate_data = {
         {
             "def": "NAME",
             "document": "foo",
-            "show_result": False,
+            "contribute": [],
         },
         {
             "def": "I",
             "lan": "python",
             "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "NAME"},
         {"get": "I"},
@@ -114,7 +113,6 @@ code_var_data = {
             "def": "I",
             "lan": "python",
             "code": ["result = 0"],
-            "show_result": True,
         },
     ],
 }

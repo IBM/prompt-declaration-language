@@ -5,7 +5,7 @@ document:
   code: |
     result = True
   defss: QUESTION
-  show_result: false
+  contribute: []
 - if: '{{ QUESTION }}'
   then: How are you?
   spec: bool

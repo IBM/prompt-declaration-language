@@ -53,7 +53,7 @@ def test_model_parser1():
     assert contains_error(trace)
 
 
-get_parser = {"get": "x", "parser": "json", "def": "y", "show_result": False}
+get_parser = {"get": "x", "parser": "json", "def": "y", "contribute": []}
 
 
 def test_get_parser():

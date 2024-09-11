@@ -72,7 +72,6 @@ document:
   params:
     stop_sequences: ["Question"]
     include_stop_sequence: false
-  show_result: true
 - lan: python
   code: | 
     from pdl import pdl_ast, pdl_interpreter

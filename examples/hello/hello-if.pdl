@@ -6,7 +6,7 @@ document:
     import random
     result = random.choice([False, True])
   def: QUESTION
-  show_result: false
+  contribute: []
 - if: '{{ QUESTION }}'
   then: How are you?
 - "\n"

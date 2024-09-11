@@ -504,7 +504,7 @@ document:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
     - model: ibm/granite-20b-multilingual
 - call: translate
-  show_result: false
+  contribute: []
   def: FRENCH
   args:
     sentence: Hello,{{ GEN }}
@@ -532,7 +532,7 @@ document:
   - def: NAME
     document:
       - model: "ibm/granite-20b-code-instruct-v2"
-        show_result: false # <-- MISTAKE:
+        contribute: [] # <-- MISTAKE:
         # `show_result` is specified on the document,
         # resulting in an _empty_ document and thus
         # an empty `NAME`
@@ -547,7 +547,7 @@ document:
   - get: NAME
   - "`!\n"
   - def: TWO
-    show_result: false # <-- CORRECT:
+    contribute: [] # <-- CORRECT:
     # `show_result` is set at the root of the block,
     # which behaves as expected.
     document:
@@ -624,11 +624,11 @@ The following PDL program reads this content and assigns it to variable `PERSON`
 
 ```yaml
 description: Input block example with json input
+defs:
+  PERSON:
+    read: ./input.json
+    parser: json
 document:
-- read: examples/tutorial/input.json
-  parser: json
-  def: PERSON
-  show_result: false
 - "{{ PERSON.name }} lives at the following address:\n"
 - "{{ PERSON.address.number }} {{ PERSON.address.street }} in the town of {{ PERSON.address.town }}, {{ PERSON.address.state }}"
 ```
@@ -671,7 +671,7 @@ document:
 - read:
   def: QUERY
   message: "Ask a query: "
-  show_result: false
+  contribute: []
 - model: ibm/granite-20b-code-instruct-v2
   input: |-
       Question: What is the weather in London?
@@ -689,12 +689,12 @@ document:
     - '!'
     include_stop_sequence: false
   def: LOCATION
-  show_result: false
+  contribute: []
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
   input: '{{ LOCATION }}'
   def: WEATHER
-  show_result: false
+  contribute: []
 - model: ibm/granite-20b-code-instruct-v2
   input: >
     Explain what the weather is from the following JSON:
@@ -727,13 +727,13 @@ document:
 - read: examples/code/data.json
   parser: json
   def: CODE
-  show_result: False
+  contribute: []
 - read: examples/code/ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - model: ibm/granite-20b-code-instruct-v2
   def: EXPLANATION
-  show_result: False
+  contribute: []
   parameters:
     decoding_method: greedy
     max_new_tokens: 1024
@@ -750,7 +750,7 @@ document:
       ```
       {{ CODE.source_code }}```
 - def: EVAL
-  show_result: False
+  contribute: []
   lan: python
   code:
     |

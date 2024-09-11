@@ -33,7 +33,7 @@ repeat_until_data = {
         {
             "def": "I",
             "document": [{"lan": "python", "code": "result = 0"}],
-            "show_result": False,
+            "contribute": [],
         },
         {
             "repeat": [

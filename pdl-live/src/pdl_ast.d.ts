@@ -143,11 +143,12 @@ export type Description20 = string | null;
  *
  */
 export type Def = string | null;
+export type ContributeTarget = "result" | "context";
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult = boolean;
+export type Contribute = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -282,10 +283,10 @@ export type Kind = "empty";
  */
 export type Def1 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult1 = boolean;
+export type Contribute1 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -409,10 +410,10 @@ export type Program1 =
  */
 export type Def2 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult2 = boolean;
+export type Contribute2 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -515,10 +516,10 @@ export type Trace =
  */
 export type Def3 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult3 = boolean;
+export type Contribute3 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -606,10 +607,10 @@ export type Multiline = boolean;
  */
 export type Def4 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult4 = boolean;
+export type Contribute4 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -734,10 +735,10 @@ export type Content =
  */
 export type Def5 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult5 = boolean;
+export type Contribute5 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -860,10 +861,10 @@ export type Array =
  */
 export type Def6 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult6 = boolean;
+export type Contribute6 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -986,10 +987,10 @@ export type Sequence =
  */
 export type Def7 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult7 = boolean;
+export type Contribute7 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1116,10 +1117,10 @@ export type Document =
  */
 export type Def8 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult8 = boolean;
+export type Contribute8 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1305,10 +1306,10 @@ export type Trace1 =
  */
 export type Def9 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult9 = boolean;
+export type Contribute9 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1494,10 +1495,10 @@ export type Trace2 =
  */
 export type Def10 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult10 = boolean;
+export type Contribute10 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1688,10 +1689,10 @@ export type Trace3 =
  */
 export type Def11 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult11 = boolean;
+export type Contribute11 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1874,10 +1875,10 @@ export type IfResult = boolean | null;
  */
 export type Def12 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult12 = boolean;
+export type Contribute12 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1954,10 +1955,10 @@ export type Raw = boolean;
  */
 export type Def13 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult13 = boolean;
+export type Contribute13 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2034,10 +2035,10 @@ export type Get = string;
  */
 export type Def14 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult14 = boolean;
+export type Contribute14 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2169,10 +2170,10 @@ export type Input =
  */
 export type Def15 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult15 = boolean;
+export type Contribute15 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2304,10 +2305,10 @@ export type Code =
  */
 export type Def16 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult16 = boolean;
+export type Contribute16 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2496,10 +2497,10 @@ export type MaxRetries = number | null;
  */
 export type Def17 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult17 = boolean;
+export type Contribute17 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2707,10 +2708,10 @@ export type ExampleFileIds =
  */
 export type Def18 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult18 = boolean;
+export type Contribute18 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2868,10 +2869,10 @@ export type GuardrailsHapParams = {
  */
 export type Def19 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult19 = boolean;
+export type Contribute19 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -3000,10 +3001,10 @@ export type Trace7 =
  */
 export type Def20 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult20 = boolean;
+export type Contribute20 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -3217,7 +3218,7 @@ export interface FunctionBlock {
   spec?: Spec;
   defs?: Defs;
   def?: Def20;
-  show_result?: ShowResult20;
+  contribute?: Contribute20;
   parser?: Parser20;
   fallback?: Fallback20;
   role?: Role20;
@@ -3300,7 +3301,7 @@ export interface CallBlock {
   spec?: Spec1;
   defs?: Defs1;
   def?: Def19;
-  show_result?: ShowResult19;
+  contribute?: Contribute19;
   parser?: Parser19;
   fallback?: Fallback19;
   role?: Role19;
@@ -3383,7 +3384,7 @@ export interface WatsonxModelBlock {
   spec?: Spec2;
   defs?: Defs2;
   def?: Def18;
-  show_result?: ShowResult18;
+  contribute?: Contribute18;
   parser?: Parser18;
   fallback?: Fallback18;
   role?: Role18;
@@ -3467,7 +3468,7 @@ export interface BamModelBlock {
   spec?: Spec3;
   defs?: Defs3;
   def?: Def17;
-  show_result?: ShowResult17;
+  contribute?: Contribute17;
   parser?: Parser17;
   fallback?: Fallback17;
   role?: Role17;
@@ -3556,7 +3557,7 @@ export interface LitellmModelBlock {
   spec?: Spec4;
   defs?: Defs4;
   def?: Def16;
-  show_result?: ShowResult16;
+  contribute?: Contribute16;
   parser?: Parser16;
   fallback?: Fallback16;
   role?: Role16;
@@ -3641,7 +3642,7 @@ export interface CodeBlock {
   spec?: Spec5;
   defs?: Defs5;
   def?: Def15;
-  show_result?: ShowResult15;
+  contribute?: Contribute15;
   parser?: Parser15;
   fallback?: Fallback15;
   role?: Role15;
@@ -3723,7 +3724,7 @@ export interface ApiBlock {
   spec?: Spec6;
   defs?: Defs6;
   def?: Def14;
-  show_result?: ShowResult14;
+  contribute?: Contribute14;
   parser?: Parser14;
   fallback?: Fallback14;
   role?: Role14;
@@ -3806,7 +3807,7 @@ export interface GetBlock {
   spec?: Spec7;
   defs?: Defs7;
   def?: Def13;
-  show_result?: ShowResult13;
+  contribute?: Contribute13;
   parser?: Parser13;
   fallback?: Fallback13;
   role?: Role13;
@@ -3887,7 +3888,7 @@ export interface DataBlock {
   spec?: Spec8;
   defs?: Defs8;
   def?: Def12;
-  show_result?: ShowResult12;
+  contribute?: Contribute12;
   parser?: Parser12;
   fallback?: Fallback12;
   role?: Role12;
@@ -3969,7 +3970,7 @@ export interface IfBlock {
   spec?: Spec9;
   defs?: Defs9;
   def?: Def11;
-  show_result?: ShowResult11;
+  contribute?: Contribute11;
   parser?: Parser11;
   fallback?: Fallback11;
   role?: Role11;
@@ -4053,7 +4054,7 @@ export interface RepeatBlock {
   spec?: Spec10;
   defs?: Defs10;
   def?: Def10;
-  show_result?: ShowResult10;
+  contribute?: Contribute10;
   parser?: Parser10;
   fallback?: Fallback10;
   role?: Role10;
@@ -4137,7 +4138,7 @@ export interface RepeatUntilBlock {
   spec?: Spec11;
   defs?: Defs11;
   def?: Def9;
-  show_result?: ShowResult9;
+  contribute?: Contribute9;
   parser?: Parser9;
   fallback?: Fallback9;
   role?: Role9;
@@ -4221,7 +4222,7 @@ export interface ForBlock {
   spec?: Spec12;
   defs?: Defs12;
   def?: Def8;
-  show_result?: ShowResult8;
+  contribute?: Contribute8;
   parser?: Parser8;
   fallback?: Fallback8;
   role?: Role8;
@@ -4305,7 +4306,7 @@ export interface DocumentBlock {
   spec?: Spec13;
   defs?: Defs13;
   def?: Def7;
-  show_result?: ShowResult7;
+  contribute?: Contribute7;
   parser?: Parser7;
   fallback?: Fallback7;
   role?: Role7;
@@ -4386,7 +4387,7 @@ export interface SequenceBlock {
   spec?: Spec14;
   defs?: Defs14;
   def?: Def6;
-  show_result?: ShowResult6;
+  contribute?: Contribute6;
   parser?: Parser6;
   fallback?: Fallback6;
   role?: Role6;
@@ -4467,7 +4468,7 @@ export interface ArrayBlock {
   spec?: Spec15;
   defs?: Defs15;
   def?: Def5;
-  show_result?: ShowResult5;
+  contribute?: Contribute5;
   parser?: Parser5;
   fallback?: Fallback5;
   role?: Role5;
@@ -4548,7 +4549,7 @@ export interface MessageBlock {
   spec?: Spec16;
   defs?: Defs16;
   def?: Def4;
-  show_result?: ShowResult4;
+  contribute?: Contribute4;
   parser?: Parser4;
   fallback?: Fallback4;
   role: Role4;
@@ -4629,7 +4630,7 @@ export interface ReadBlock {
   spec?: Spec17;
   defs?: Defs17;
   def?: Def3;
-  show_result?: ShowResult3;
+  contribute?: Contribute3;
   parser?: Parser3;
   fallback?: Fallback3;
   role?: Role3;
@@ -4712,7 +4713,7 @@ export interface IncludeBlock {
   spec?: Spec18;
   defs?: Defs18;
   def?: Def2;
-  show_result?: ShowResult2;
+  contribute?: Contribute2;
   parser?: Parser2;
   fallback?: Fallback2;
   role?: Role2;
@@ -4791,7 +4792,7 @@ export interface ErrorBlock {
   spec?: Spec19;
   defs?: Defs19;
   def?: Def1;
-  show_result?: ShowResult1;
+  contribute?: Contribute1;
   parser?: Parser1;
   fallback?: Fallback1;
   role?: Role1;
@@ -4873,7 +4874,7 @@ export interface EmptyBlock {
   spec?: Spec20;
   defs?: Defs20;
   def?: Def;
-  show_result?: ShowResult;
+  contribute?: Contribute;
   parser?: Parser;
   fallback?: Fallback;
   role?: Role;

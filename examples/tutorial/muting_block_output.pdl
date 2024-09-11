@@ -16,7 +16,7 @@ document:
     - model: ibm/granite-20b-multilingual
       platform: bam
 - call: translate
-  show_result: false
+  contribute: []
   def: FRENCH
   args:
     sentence: Hello,{{ GEN }}

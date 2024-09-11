@@ -4,5 +4,5 @@ defs:
 document:
 - read: "{{ file }}"
   def: HELLO
-  show_result: False
+  contribute: []
 - get: HELLO

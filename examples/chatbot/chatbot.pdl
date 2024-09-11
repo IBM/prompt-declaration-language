@@ -8,7 +8,7 @@ document:
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
-      show_result: false
+      contribute: []
     - if: "{{ eval == 'no' }}"
       then:
         document:

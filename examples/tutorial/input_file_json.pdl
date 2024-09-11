@@ -1,8 +1,8 @@
 description: Input block example with json input
+defs:
+  PERSON:
+    read: ./input.json
+    parser: json
 document:
-- read: ./input.json
-  parser: json
-  def: PERSON
-  show_result: false
 - "{{ PERSON.name }} lives at the following address:\n"
 - "{{ PERSON.address.number }} {{ PERSON.address.street }} in the town of {{ PERSON.address.town }}, {{ PERSON.address.state }}"

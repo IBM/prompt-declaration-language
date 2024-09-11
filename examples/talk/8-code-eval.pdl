@@ -3,7 +3,7 @@ document:
 - read: ./data.yaml
   parser: yaml
   def: CODE
-  show_result: False
+  contribute: []
 - |
   Here is some info about the location of the function in the repo.
       repo: {{ CODE.repo_info.repo }}
@@ -18,7 +18,7 @@ document:
   def: EXPLANATION
 - read: ./ground_truth.txt
   def: TRUTH
-  show_result: False
+  contribute: []
 - |
   
   EVALUATION:

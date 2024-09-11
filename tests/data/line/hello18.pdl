@@ -3,14 +3,12 @@ document:
 - def: I
   lan: python
   code: result = 0
-  show_result: true
 - "\n"
 - repeat:
     document:
     - def: I
       lan: python
       code: result = {{ I }} + 1
-      show_result: true
     - "\n"
   until: '{{ J == 5 }}'
   as: document

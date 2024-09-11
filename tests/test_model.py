@@ -100,7 +100,6 @@ multi_shot_data = {
                     },
                 }
             ],
-            "show_result": True,
         }
     ],
 }
