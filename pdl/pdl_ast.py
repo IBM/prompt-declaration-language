@@ -476,9 +476,9 @@ class EmptyBlock(Block):
 AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
+    | LitellmModelBlock
     | WatsonxModelBlock
     | BamModelBlock
-    | LitellmModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock

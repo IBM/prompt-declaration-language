@@ -41,13 +41,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -116,13 +116,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -249,13 +249,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -324,13 +324,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -467,13 +467,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -542,13 +542,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -656,13 +656,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -731,13 +731,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -864,13 +864,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -939,13 +939,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1073,13 +1073,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1148,13 +1148,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1258,13 +1258,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -1333,13 +1333,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -1466,13 +1466,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1541,13 +1541,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1679,13 +1679,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1754,13 +1754,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -1839,13 +1839,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2237,13 +2237,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -2312,13 +2312,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -2445,13 +2445,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2520,13 +2520,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2665,13 +2665,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2740,13 +2740,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -2855,13 +2855,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -2930,13 +2930,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3063,13 +3063,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3138,13 +3138,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3281,13 +3281,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3356,13 +3356,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3477,13 +3477,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -3552,13 +3552,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -3685,13 +3685,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3760,13 +3760,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3942,13 +3942,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4017,13 +4017,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4150,13 +4150,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4225,13 +4225,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4359,13 +4359,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4434,13 +4434,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4546,13 +4546,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4621,13 +4621,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -4754,13 +4754,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4829,13 +4829,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -4989,13 +4989,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -5064,13 +5064,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -5197,13 +5197,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5272,13 +5272,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5410,13 +5410,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5485,13 +5485,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -5597,13 +5597,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -5672,13 +5672,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -5805,13 +5805,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5880,13 +5880,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6019,13 +6019,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6094,13 +6094,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6184,13 +6184,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6259,13 +6259,13 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
+                          "$ref": "#/$defs/LitellmModelBlock"
+                        },
+                        {
                           "$ref": "#/$defs/WatsonxModelBlock"
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -6379,13 +6379,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -6454,13 +6454,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -6587,13 +6587,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6662,13 +6662,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -6808,13 +6808,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6883,13 +6883,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7008,13 +7008,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -7083,13 +7083,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7216,13 +7216,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7291,13 +7291,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7460,13 +7460,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -7535,13 +7535,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -7668,13 +7668,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7743,13 +7743,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7881,13 +7881,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7956,13 +7956,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8038,13 +8038,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8113,13 +8113,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8242,13 +8242,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -8317,13 +8317,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -8450,13 +8450,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8525,13 +8525,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8664,13 +8664,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8817,13 +8817,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -8892,13 +8892,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -9025,13 +9025,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -9100,13 +9100,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9238,13 +9238,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -9313,13 +9313,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9398,13 +9398,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -9906,13 +9906,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -9981,13 +9981,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -10114,13 +10114,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -10189,13 +10189,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -10322,13 +10322,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -10397,13 +10397,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -10758,13 +10758,13 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/WatsonxModelBlock"
         },
         {
           "$ref": "#/$defs/BamModelBlock"
-        },
-        {
-          "$ref": "#/$defs/LitellmModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -10835,13 +10835,13 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/WatsonxModelBlock"
         },
         {
           "$ref": "#/$defs/BamModelBlock"
-        },
-        {
-          "$ref": "#/$defs/LitellmModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -10910,13 +10910,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -11018,13 +11018,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -11093,13 +11093,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11181,13 +11181,13 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
           "$ref": "#/$defs/WatsonxModelBlock"
         },
         {
           "$ref": "#/$defs/BamModelBlock"
-        },
-        {
-          "$ref": "#/$defs/LitellmModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -11306,13 +11306,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -11381,13 +11381,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -11514,13 +11514,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -11589,13 +11589,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -11834,13 +11834,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -11909,13 +11909,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -12042,13 +12042,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -12117,13 +12117,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -12251,13 +12251,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -12326,13 +12326,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -12421,13 +12421,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -12496,13 +12496,13 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
+                          "$ref": "#/$defs/LitellmModelBlock"
+                        },
+                        {
                           "$ref": "#/$defs/WatsonxModelBlock"
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -12616,13 +12616,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -12691,13 +12691,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -12824,13 +12824,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -12899,13 +12899,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -13033,13 +13033,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -13108,13 +13108,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -13202,13 +13202,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -13277,13 +13277,13 @@
                           "$ref": "#/$defs/CallBlock"
                         },
                         {
+                          "$ref": "#/$defs/LitellmModelBlock"
+                        },
+                        {
                           "$ref": "#/$defs/WatsonxModelBlock"
                         },
                         {
                           "$ref": "#/$defs/BamModelBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/LitellmModelBlock"
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
@@ -13397,13 +13397,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -13472,13 +13472,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -13605,13 +13605,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -13680,13 +13680,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -13814,13 +13814,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -13889,13 +13889,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -14093,13 +14093,13 @@
                 "$ref": "#/$defs/CallBlock"
               },
               {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
                 "$ref": "#/$defs/WatsonxModelBlock"
               },
               {
                 "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -14168,13 +14168,13 @@
                       "$ref": "#/$defs/CallBlock"
                     },
                     {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
                       "$ref": "#/$defs/WatsonxModelBlock"
                     },
                     {
                       "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
@@ -14301,13 +14301,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -14376,13 +14376,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -14514,13 +14514,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -14589,13 +14589,13 @@
                     "$ref": "#/$defs/CallBlock"
                   },
                   {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
                     "$ref": "#/$defs/WatsonxModelBlock"
                   },
                   {
                     "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -14674,13 +14674,13 @@
               "$ref": "#/$defs/CallBlock"
             },
             {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
               "$ref": "#/$defs/WatsonxModelBlock"
             },
             {
               "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
