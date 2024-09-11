@@ -13,7 +13,6 @@ document:
   Who is{{ NAME }}?
 - "\n"
 - model: watsonx/google/flan-t5-xl
-  #model: watsonx/ibm/granite-34b-code-instruct
   parameters:
     decoding_method: greedy
     stop:

@@ -1,10 +1,10 @@
 description: Hello world with parser using regex
 document:
-- model: ibm/granite-34b-code-instruct
+- model: watsonx/ibm/granite-34b-code-instruct
   input: "Hello,"
-  params:
+  parameters:
     decoding_method: greedy
-    stop_sequences:
+    stop:
     - '!'
     include_stop_sequence: false
   spec: {"name": str}
@@ -12,5 +12,5 @@ document:
     spec:
       name: str
     regex: '\s*(?P<name>.*)\s*'
-- "\n"
+
 

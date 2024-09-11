@@ -9,4 +9,3 @@ document:
   show_result: false
 - if: '{{ QUESTION }}'
   then: How are you?
-- "\n"

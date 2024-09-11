@@ -4,7 +4,7 @@ document:
   multiline: True
   def: QUERY
   show_result: false
-- model: ibm/granite-20b-code-instruct
+- model: watsonx/ibm/granite-20b-code-instruct
   input:
     document:
     - |-
@@ -32,15 +32,13 @@ document:
       Answer:
       What is << 5 + 2 >>?
 
-      Question:
-
-    - get: QUERY
+      Question: {{ QUERY }}
     - "\n\n"
   def: QUERY1
   show_result: false
 
 
-- model: ibm/granite-20b-code-instruct
+- model: watsonx/ibm/granite-20b-code-instruct
   input:
     document:
     - |-
@@ -137,4 +135,3 @@ document:
     _, result, _, _ = process_prog(state, empty_scope, data)
   def: RESULT
   show_result: false
-- "\n"

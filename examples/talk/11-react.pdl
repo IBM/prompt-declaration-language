@@ -22,14 +22,16 @@ document:
 - repeat:
     document:
     - def: thought
-      model: ibm/granite-34b-code-instruct
-      params:
-        STOP_SEQUENCES: ["Act:"]
-        INCLUDE_STOP_SEQUENCE: true
+      model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        stop:
+        - "Act:"
+        include_stop_sequence: true
     - def: action
-      model: ibm/granite-34b-code-instruct
-      params:
-        STOP_SEQUENCES: ["\n"]
+      model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        stop:
+        - "\n"
       parser: json
       spec: {name: str, arguments: {topic: str}}
     - def: observation
@@ -47,4 +49,4 @@ document:
               result = str(e)
   until: '{{ action.name != "Search" }}'
   as: document
-- "\n"
+

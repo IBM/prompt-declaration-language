@@ -14,8 +14,9 @@ document:
     {{ USER_TAG }}
     {{ prompt }}
     {{ ASSISTANT_TAG }}"
-  - model: ibm/granite-13b-chat-v2
-    params:
+  - model: watsonx/ibm/granite-13b-chat-v2
+    parameters:
       decoding_method: sample
       max_new_tokens: 512
 - "\n"
+role: user

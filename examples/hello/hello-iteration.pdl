@@ -7,4 +7,3 @@ document:
       "This is your first PDL program\n"
   as: document
   num_iterations: 3
-- "\n"

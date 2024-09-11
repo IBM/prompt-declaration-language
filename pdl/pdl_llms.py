@@ -10,7 +10,8 @@ from ibm_watsonx_ai import Credentials as WatsonxCredentials
 from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
 from litellm import completion
 
-from .pdl_ast import (  # set_default_granite_model_parameters,
+from .pdl_ast import (  
+    set_default_granite_model_parameters,
     BamTextGenerationParameters,
     Message,
     set_default_model_parameters,
@@ -206,8 +207,8 @@ class LitellmModel:
         parameters: dict[str, Any],
     ) -> Message:
         params = parameters
-        # if "granite" in model_id:
-        #    params = set_default_granite_model_parameters(params)
+        if "granite" in model_id:
+            params = set_default_granite_model_parameters(params)
         response = completion(model=model_id, messages=messages, stream=False, **params)
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
@@ -221,8 +222,8 @@ class LitellmModel:
         parameters: dict[str, Any],
     ) -> Generator[Message, Any, None]:
         params = parameters
-        # if "granite" in model_id:
-        #    params = set_default_granite_model_parameters(params)
+        if "granite" in model_id:
+            params = set_default_granite_model_parameters(params)
         response = completion(model=model_id, messages=messages, stream=True, **params)
         for chunk in response:
             msg = chunk.choices[0].delta  # pyright: ignore

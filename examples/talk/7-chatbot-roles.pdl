@@ -18,19 +18,17 @@ document:
   message: "What is your query?\n"
 - repeat:
     document:
-    - model: ibm/granite-13b-chat-v2
-      role: assistant
-      spec: str
-      params:
-        max_new_tokens: 200
+    - model: watsonx/ibm/granite-13b-chat-v2
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
       show_result: false
     - if: "{{ eval == 'no' }}"
       then:
+        document:
         - read:
           message: "Why not?\n"
-  as: document
   until: "{{ eval == 'yes'}}"
+  as: document
 role: user
+

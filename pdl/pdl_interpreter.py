@@ -804,7 +804,8 @@ def step_call_model(
                 }
             )
         case LitellmModelBlock():
-            params, param_errors = process_expr(scope, block.parameters, loc)
+            parameters = litellm_block_to_dict(block)
+            params, param_errors = process_expr(scope, parameters, loc)
             errors += param_errors
             concrete_block = block.model_copy(
                 update={
@@ -826,17 +827,16 @@ def step_call_model(
         return None, [], scope, trace
     # Execute model call
     try:
-        litellm_input = ""
-
+        litellm_params = ""
         def get_transformed_inputs(kwargs):
             params_to_model = kwargs["additional_args"]["complete_input_dict"]
-            nonlocal litellm_input
-            litellm_input = params_to_model["input"]
-
+            nonlocal litellm_params
+            litellm_params = params_to_model
+        
         litellm.input_callback = [get_transformed_inputs]
-        # append_log(state, "Model Input", messages_to_str(model_input))
+        #append_log(state, "Model Input", messages_to_str(model_input))
         msg = yield from generate_client_response(state, concrete_block, model_input)
-        append_log(state, "Model Input", litellm_input)
+        append_log(state, "Model Input", litellm_params["input"])
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -900,9 +900,8 @@ def generate_client_response_streaming(
                 guardrails_hap_params=block.guardrails_hap_params,
             )
         case LitellmModelBlock():
-            parameters = litellm_block_to_dict(block)
             msg_stream = LitellmModel.generate_text_stream(
-                model_id=block.model, messages=model_input, parameters=parameters
+                model_id=block.model, messages=model_input, parameters=block.params
             )
         case _:
             assert False
