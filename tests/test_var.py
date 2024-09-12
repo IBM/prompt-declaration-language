@@ -14,8 +14,8 @@ var_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "params": {
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
@@ -46,8 +46,8 @@ var_shared_scope_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "params": {
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,

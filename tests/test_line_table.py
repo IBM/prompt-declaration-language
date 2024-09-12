@@ -337,7 +337,7 @@ line25 = {
         "",
         "Hello, World!",
         "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
-        "{{ translate(sentence1) }}",
+        "{{ translateText(sentence2) }}",
     ],
 }
 

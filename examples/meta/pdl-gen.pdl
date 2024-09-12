@@ -15,7 +15,7 @@ document:
   def: QUERY
   contribute: []
 - model: watsonx/ibm/granite-20b-code-instruct
-  params:
+  parameters:
     decoding_method: greedy
   input:
     document:
@@ -105,7 +105,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct
+      - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
       ```
@@ -116,7 +116,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct
+      - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
           stop_sequences:
@@ -131,7 +131,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
       ```
@@ -142,7 +142,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: ibm/granite-20b-code-instruct
+      - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
           stop_sequences:
@@ -156,7 +156,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         def: NAME
@@ -168,7 +168,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         contribute: []
@@ -222,7 +222,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
@@ -261,7 +261,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
@@ -283,7 +283,7 @@ document:
       ```
       description: PDL with model call
       document:
-      - model: "google/flan-t5-xl"
+      - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:

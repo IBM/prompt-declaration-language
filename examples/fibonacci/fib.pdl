@@ -1,7 +1,7 @@
 description: Fibonacci
 document:
 - def: CODE
-  model: watsonx/ibm/granite-34b-code-instruct
+  model: watsonx/ibm/granite-20b-code-instruct
   input: "Write a Python function to compute the Fibonacci sequence\n\n"
   
 - "\nFind a random number between 1 and 20\n"
@@ -10,7 +10,7 @@ document:
   code: |
     import random
     result = random.randint(1, 20)
-- "\nNow computing fibonacci("
+- "\nNow computing fib("
 - get: N
 - ")\n"
 - def: EXTRACTED
@@ -22,10 +22,9 @@ document:
   lan: python
   code: |
     {{ EXTRACTED }}
-    result = fibonacci({{ N }})
+    result = fib({{ N }})
   contribute: []
 - 'The result is: '
 - get: RESULT
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: watsonx/ibm/granite-34b-code-instruct
-- "\n"
+- model: watsonx/ibm/granite-20b-code-instruct

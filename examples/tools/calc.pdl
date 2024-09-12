@@ -12,8 +12,8 @@ document:
   Out of 1400 participants, 400 passed the test. What percentage is that?
   Act: 
 - def: action
-  model: ibm/granite-8b-code-instruct
-  params:
+  model: watsonx/ibm/granite-8b-code-instruct
+  parameters:
     STOP_SEQUENCES: ["\n"]
   parser: json
   spec: {name: str, arguments: {expr: str}}
