@@ -9,7 +9,6 @@ document:
 - "\n"
 - model: watsonx/ibm/granite-20b-multilingual
   input:
-    document:
       - "Translate the word '{{ name | trim }}' to French\n"
   parameters:
     stop: ["!"]
