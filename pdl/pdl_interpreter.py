@@ -220,7 +220,7 @@ def step_block(
             background = [{"role": state.role, "content": str(block)}]
         else:
             background = [{"role": state.role, "content": stringify(result)}]
-            trace = result
+            trace = stringify(result)
         if state.yield_background:
             yield YieldBackgroundMessage(background)
         if state.yield_result:
