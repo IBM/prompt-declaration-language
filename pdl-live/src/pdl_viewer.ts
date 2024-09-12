@@ -75,7 +75,7 @@ export function show_block(data: PdlBlock) {
   div.appendChild(body);
   add_def(body, data.def);
   body.classList.add('pdl_block');
-  if (!data?.contribute?.includes('context')) {
+  if (data?.contribute !== undefined && !data.contribute.includes('result')) {
     body.classList.add('pdl_show_result_false');
   }
   match(data)
