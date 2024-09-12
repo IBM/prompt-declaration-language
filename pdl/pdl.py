@@ -153,19 +153,10 @@ def main():
     )
 
     parser.add_argument(
-        "--stream-result",
-        dest="stream_result",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="stream the result on the standard output instead of printing it at the end of the execution",
-    )
-
-    parser.add_argument(
-        "--stream-background",
-        dest="stream_background",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="stream the background messages on the standard output",
+        "--stream",
+        choices=["result", "background", "none"],
+        default="result",
+        help="stream the result or the background messages on the standard output",
     )
 
     parser.add_argument(
@@ -199,8 +190,21 @@ def main():
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
 
+    match args.stream:
+        case "result":
+            stream_result = True
+            stream_background = False
+        case "background":
+            stream_result = False
+            stream_background = True
+        case "none":
+            stream_result = False
+            stream_background = False
+        case _:
+            assert False
+
     config = InterpreterConfig(
-        yield_result=args.stream_result, yield_background=args.stream_background
+        yield_result=stream_result, yield_background=stream_background
     )
     pdl_file = Path(args.pdl)
     if args.trace == "*_trace.json":

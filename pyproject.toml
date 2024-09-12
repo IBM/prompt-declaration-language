@@ -15,6 +15,7 @@ dependencies = [
   "PyYAML",
   "jsonschema",
   "litellm",
+  "termcolor",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },

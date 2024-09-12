@@ -3,6 +3,8 @@ from enum import Enum
 from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
+from termcolor import colored
+from termcolor._types import Color
 
 from .pdl_ast import BamTextGenerationParameters, Message
 from .pdl_llms import BamModel
@@ -40,12 +42,6 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     return w.value
 
 
-MODEL_COLOR = "\033[92m"  # Green
-CODE_COLOR = "\033[95m"  # Purple
-END_COLOR = "\033[0m"  # End color
-NO_COLOR = ""
-
-
 class MessageKind(Enum):
     RESULT = 0
     BACKGROUND = 1
@@ -54,23 +50,24 @@ class MessageKind(Enum):
 
 class YieldMessage:
     kind: MessageKind
+    color: Optional[Color]
 
 
 @dataclass
 class YieldResultMessage(YieldMessage):
-    kind = MessageKind.RESULT
-    color = NO_COLOR
     result: Any
+    kind: MessageKind = MessageKind.RESULT
+    color: Optional[Color] = None
 
 
 @dataclass
 class ModelYieldResultMessage(YieldResultMessage):
-    color = MODEL_COLOR
+    color: Optional[Color] = "green"
 
 
 @dataclass
 class CodeYieldResultMessage(YieldResultMessage):
-    color = CODE_COLOR
+    color: Optional[Color] = "magenta"
 
 
 @dataclass
@@ -111,11 +108,14 @@ def schedule(
                 match msg:
                     case ModelYieldResultMessage(
                         result=result
-                    ) | CodeYieldResultMessage(result=result):
-                        print(msg.color + stringify(result) + END_COLOR, end="")
-                        todo_next.append((i, gen, None))
-                    case YieldResultMessage(result=result):
-                        print(stringify(result), end="")
+                    ) | CodeYieldResultMessage(result=result) | YieldResultMessage(
+                        result=result
+                    ):
+                        if msg.color is None:
+                            text = stringify(result)
+                        else:
+                            text = colored(stringify(result), msg.color)
+                        print(text, end="")
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
                         if len(background) > 0 and background[0]["role"] == _LAST_ROLE:
