@@ -137,10 +137,12 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
         case IncludeBlock():
             d["include"] = block.include
         case IfBlock():
-            d["condition"] = block.condition
+            d["if"] = block.condition
             d["then"] = blocks_to_dict(block.then)
             if block.elses is not None:
                 d["else"] = blocks_to_dict(block.elses)
+            if block.if_result is not None:
+                d["if_result"] = block.if_result
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
