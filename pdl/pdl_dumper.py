@@ -103,7 +103,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["input"] = blocks_to_dict(block.input)
             if block.parameters is not None:
                 if isinstance(block.parameters, LitellmParameters):
-                    d["parameters"] = block.parameters.model_dump(exclude_unset=True, exclude_defaults=True)
+                    d["parameters"] = block.parameters.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
                 else:
                     d["parameters"] = block.parameters
         case CodeBlock():
