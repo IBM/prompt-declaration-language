@@ -50,10 +50,10 @@ model_chain_data = {
             "def": "RESULT",
             "document": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx/google/flan-t5-xl",
                     "parameters": {
                         "decoding_method": "greedy",
-                        "stop_sequences": ["?"],
+                        "stop_sequences": ["."],
                         "include_stop_sequence": True,
                         "roles": {"user": {"pre_message": "", "post_message": ""}},
                     },
@@ -71,7 +71,7 @@ def test_model_chain():
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
-        == "Hello, World!\nWho is World?\n```\n\n## License\n\nThis project is licensed under the terms of the MIT license.\n\n"
+        == 'Hello, World!\nWho is World?\nWorld is a fictional character in the popular science fiction television series "The X-Files\n'
     )
 
 
