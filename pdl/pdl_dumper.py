@@ -176,7 +176,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
     if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
         d["contribute"] = block.contribute
     if block.result is not None:
-        d["result"] = block.result
+        if isinstance(block.result, FunctionBlock):
+            d["result"] = ""
+        else:
+            d["result"] = block.result
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     if block.location is not None:
