@@ -10,12 +10,12 @@ document:
 - for:
     prompt: "{{ prompts.prompts }}"
   repeat:
-  - |
-    {{ USER_TAG }}
-    {{ prompt }}
-    {{ ASSISTANT_TAG }}"
-  - model: ibm/granite-13b-chat-v2
-    params:
-      decoding_method: sample
-      max_new_tokens: 512
-- "\n"
+    document:
+    - |
+      {{ prompt }}
+    - model: watsonx/ibm/granite-13b-chat-v2
+      parameters:
+        decoding_method: sample
+        max_new_tokens: 512
+  as: document
+role: user

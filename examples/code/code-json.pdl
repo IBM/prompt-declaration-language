@@ -7,7 +7,7 @@ document:
 - read: ./ground_truth.txt
   def: TRUTH
   contribute: []
-- model: ibm/granite-34b-code-instruct
+- model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   contribute: []
   input:

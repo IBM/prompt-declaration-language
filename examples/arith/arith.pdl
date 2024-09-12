@@ -1,14 +1,14 @@
 description: Math Problems
 document:
-- read: examples/arith/example1.txt
-- read: examples/arith/example2.txt
+- read: example1.txt
+- read: example2.txt
 - repeat:
     document:
     - "\nQuestion: "
     - def: QUESTION
-      model: ibm/granite-34b-code-instruct
-      params:
-        stop_sequences:
+      model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        stop:
         - Answer
         - "?"
         include_stop_sequence: true
@@ -16,9 +16,9 @@ document:
     - repeat:
         document:
         - def: REASON_OR_CALC
-          model: ibm/granite-34b-code-instruct
-          params:
-            stop_sequences:
+          model: watsonx/ibm/granite-34b-code-instruct
+          parameters:
+            stop:
             - '<<'
             - "Question"
             include_stop_sequence: true
@@ -26,9 +26,9 @@ document:
           then:
             document:
             - def: EXPR
-              model: ibm/granite-34b-code-instruct
-              params:
-                stop_sequences:
+              model: watsonx/ibm/granite-34b-code-instruct
+              parameters:
+                stop:
                 - '='
                 - "\n"
                 - "Question"

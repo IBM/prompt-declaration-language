@@ -11,9 +11,9 @@ document:
   Out of 1400 participants, 400 passed the test. What percentage is that?
   Act: 
 - def: action
-  model: ibm/granite-8b-code-instruct
-  params:
-    stop_sequences: ["\n"]
+  model: watsonx/ibm/granite-8b-code-instruct
+  parameters:
+    stop: ["\n"]
   parser: json
   spec: {name: str, arguments: {expr: str}}
 - if: '{{ action.name == "Calc" }}'
@@ -21,4 +21,3 @@ document:
   - "Obs: "
   - lan: python
     code: result = {{ action.arguments.expr }}
-- "\n"

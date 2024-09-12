@@ -8,10 +8,10 @@ defs_data = {
         "NAME": {
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
                     "input": {"get": "HELLO"},
-                    "params": {
-                        "stop_sequences": ["!"],
+                    "parameters": {
+                        "stop": ["!"],
                         "include_stop_sequence": False,
                     },
                 }
