@@ -46,6 +46,7 @@ class BlockKind(StrEnum):
     DOCUMENT = "document"
     SEQUENCE = "sequence"
     ARRAY = "array"
+    OBJECT = "object"
     MESSAGE = "message"
     IF = "if"
     REPEAT = "repeat"
@@ -351,6 +352,13 @@ class ArrayBlock(Block):
     array: "BlocksType"
 
 
+class ObjectBlock(Block):
+    """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
+
+    kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
+    object: dict[str, "BlockType"] | list["BlockType"]
+
+
 class MessageBlock(Block):
     """Create a message."""
 
@@ -490,6 +498,7 @@ AdvancedBlockType: TypeAlias = (
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
