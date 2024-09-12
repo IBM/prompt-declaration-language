@@ -1,4 +1,4 @@
-description: My first PDL program
+description: Variable def and use, model input
 document: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct

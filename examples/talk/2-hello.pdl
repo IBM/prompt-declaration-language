@@ -1,4 +1,4 @@
-description: My first PDL program
+description: Model call
 document: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct

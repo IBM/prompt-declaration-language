@@ -1,4 +1,4 @@
-description: chatbot
+description: chatbot, control structures, roles, contribute
 document:
 - role: system
   contribute: [context]
