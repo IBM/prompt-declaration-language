@@ -1,4 +1,4 @@
-description: My first PDL program
+description: Variable def and use, model input
 document: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
@@ -9,7 +9,6 @@ document:
 - "\n"
 - model: watsonx/ibm/granite-20b-multilingual
   input:
-    document:
       - "Translate the word '{{ name | trim }}' to French\n"
   parameters:
     stop: ["!"]

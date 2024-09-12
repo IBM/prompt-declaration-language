@@ -1,4 +1,4 @@
-description: My first PDL program
+description: Model chaining
 document: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
