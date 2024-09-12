@@ -43,8 +43,8 @@ jobs:
         WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
         WATSONX_KEY: ${{ secrets.WATSONX_KEY }}
         WATSONX_API: ${{ secrets.WATSONX_API }}
-        GENAI_KEY: ${{ secrets.GENAI_KEY }}
-        GENAI_API: ${{ secrets.GENAI_API }}
+        WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
+        WATSONX_URL: ${{ secrets.WATSONX_URL }}
       run: py.test -v --capture=tee-sys tests
       
         
