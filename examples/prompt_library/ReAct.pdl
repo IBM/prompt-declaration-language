@@ -77,7 +77,7 @@ defs:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
-                params:
+                parameters:
                   decoding_method: sample
                   temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
@@ -85,7 +85,7 @@ defs:
             until: "{{ THOUGHT.endswith('Act:') }}"
           - def: action_raw
             model: "{{ model }}"
-            params:
+            parameters:
               decoding_method: sample
               temperature: "{{ temperature }}"
               stop_sequences: ["[", "\n"]
@@ -95,7 +95,7 @@ defs:
           - "["
           - def: SUBJECT
             model: "{{ model }}"
-            params:
+            parameters:
               decoding_method: sample
               temperature: "{{ temperature }}"
               stop_sequences: ["]", "\n"]
@@ -110,7 +110,7 @@ defs:
                     args:
                       subject: "{{ SUBJECT }}"
                   - model: "{{ model }}"
-                    params:
+                    parameters:
                       decoding_method: sample
                       temperature: "{{ temperature }}"
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
@@ -159,7 +159,7 @@ defs:
           - repeat:
               - def: THOUGHT
                 model: "{{ model }}"
-                params:
+                parameters:
                   DECODING_METHOD: "{{ decoding_method }}"
                   TEMPERATURE: "{{ temperature }}"
                   STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]
@@ -169,7 +169,7 @@ defs:
             model: "{{ model }}"
             parser: json
             spec: {name: str, arguments: obj}
-            params:
+            parameters:
               DECODING_METHOD: "{{ decoding_method }}"
               TEMPERATURE: "{{ temperature }}"
               STOP_SEQUENCES: ["\n", "<|endoftext|>"]
@@ -183,7 +183,7 @@ defs:
                     args:
                       arguments: "{{ action.arguments }}"
                   - model: "{{ model }}"
-                    params:
+                    parameters:
                       DECODING_METHOD: "{{ decoding_method }}"
                       TEMPERATURE: "{{ temperature }}"
                       STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]

@@ -50,6 +50,6 @@ document:
 
     Q: {{ TEST_PROMPT }}
     A: ```
-- model: ibm/granite-20b-code-instruct-v2
-  params:
-    stop_sequences: ["```"]
+- model: watsonx/ibm/granite-20b-code-instruct-v2
+  parameters:
+    stop: ["```"]

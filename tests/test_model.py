@@ -6,8 +6,8 @@ model_data = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/granite-34b-code-instruct",
-            "params": {
+            "model": "watsonx/ibm/granite-34b-code-instruct",
+            "parameters": {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
                 "include_stop_sequence": False,
@@ -33,10 +33,10 @@ model_chain_data = {
             "def": "SOMEONE",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "params": {
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "parameters": {
                         "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
+                        "stop": ["!"],
                         "include_stop_sequence": False,
                     },
                 }
@@ -50,13 +50,14 @@ model_chain_data = {
             "def": "RESULT",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "params": {
+                    "model": "watsonx/google/flan-t5-xl",
+                    "parameters": {
                         "decoding_method": "greedy",
-                        "stop_sequences": ["?"],
+                        "stop_sequences": ["."],
                         "include_stop_sequence": True,
+                        "roles": {"user": {"pre_message": "", "post_message": ""}},
                     },
-                }
+                },
             ],
         },
         "\n",
@@ -70,7 +71,7 @@ def test_model_chain():
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
         document
-        == "Hello, World!\nWho is World?\n```\n\n## License\n\nThis project is licensed under the terms of the MIT license.\n\n"
+        == 'Hello, World!\nWho is World?\nWorld is a fictional character in the popular science fiction television series "The X-Files\n'
     )
 
 
@@ -81,7 +82,7 @@ multi_shot_data = {
             "def": "LOCATION",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
                     "input": {
                         "document": [
                             "Question: What is the weather in London?\n",
@@ -93,7 +94,7 @@ multi_shot_data = {
                             "Question: What is the weather in Armonk, NY?\n",
                         ]
                     },
-                    "params": {
+                    "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["Question"],
                         "include_stop_sequence": False,
@@ -117,8 +118,8 @@ model_data_missing_parameters = {
     "document": [
         "Hello,\n",
         {
-            "model": "ibm/granite-34b-code-instruct",
-            "params": {
+            "model": "watsonx/ibm/granite-34b-code-instruct",
+            "parameters": {
                 "stop_sequences": ["."],
             },
         },
@@ -138,12 +139,12 @@ def test_data_missing_parameters():
 
 model_parameter = {
     "description": "Hello world with a variable",
-    "defs": {"model": "ibm/granite-34b-code-instruct"},
+    "defs": {"model": "watsonx/ibm/granite-34b-code-instruct"},
     "document": [
         "Hello,",
         {
             "model": "{{ model }}",
-            "params": {
+            "parameters": {
                 "stop_sequences": ["!"],
             },
         },
@@ -164,8 +165,8 @@ model_parameter1 = {
     "document": [
         "Hello,",
         {
-            "model": "ibm/{{ model }}",
-            "params": {
+            "model": "watsonx/ibm/{{ model }}",
+            "parameters": {
                 "stop_sequences": ["!"],
             },
         },

@@ -43,8 +43,26 @@ jobs:
         WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
         WATSONX_KEY: ${{ secrets.WATSONX_KEY }}
         WATSONX_API: ${{ secrets.WATSONX_API }}
-        GENAI_KEY: ${{ secrets.GENAI_KEY }}
-        GENAI_API: ${{ secrets.GENAI_API }}
+        WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
+        WATSONX_URL: ${{ secrets.WATSONX_URL }}
       run: py.test -v --capture=tee-sys tests
-      
-        
+
+  viewer:
+    name: Build PDL live viewer
+    runs-on: ubuntu-latest
+    needs: tests
+    defaults:
+      run:
+        working-directory: ./pdl-live
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Generate pdl_ast.d.ts
+        run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
+      - name: Build viewer
+        run: npm run build

@@ -8,7 +8,6 @@ version = "0.0.1"
 dependencies = [
   "pydantic",
   "ibm-generative-ai",
-  "ibm-watsonx-ai",
   "requests",
   "python-dotenv",
   "jinja2",

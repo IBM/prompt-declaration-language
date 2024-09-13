@@ -9,4 +9,3 @@ document:
   contribute: []
 - if: '{{ QUESTION }}'
   then: How are you?
-- "\n"

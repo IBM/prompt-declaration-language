@@ -1,6 +1,3 @@
-description: |
-  ReAct agent using Granite models via watsonx.ai.
-  see [Yao et al. 2023](https://openreview.net/forum?id=WE_vluYUL-X)
 document:
 - |
   What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
@@ -23,28 +20,33 @@ document:
 
   When was the discoverer of the Hudson River born?
 - repeat:
-  - def: thought
-    model: ibm/granite-34b-code-instruct
-    params:
-      STOP_SEQUENCES: ["Act:"]
-      INCLUDE_STOP_SEQUENCE: true
-  - def: action
-    model: ibm/granite-34b-code-instruct
-    params:
-      STOP_SEQUENCES: ["\n"]
-    parser: json
-    spec: {name: str, arguments: {topic: str}}
-  - def: observation
-    if: '{{ action.name == "Search" }}'
-    then:
-    - "Obs: "
-    - lan: python
-      code: |
-        import warnings, wikipedia
-        warnings.simplefilter("ignore")
-        try:
-          result = wikipedia.summary("{{ action.arguments.topic }}")
-        except wikipedia.WikipediaException as e:
-          result = str(e)
+    document:
+    - def: thought
+      model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        stop: 
+        - "Act:"
+        include_stop_sequence: true
+    - def: action
+      model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        stop: 
+        - "\n"
+      parser: json
+      spec: {name: str, arguments: {topic: str}}
+    - def: observation
+      if: '{{ action.name == "Search" }}'
+      then:
+        document:
+        - "Obs: "
+        - lan: python
+          code: |
+            import warnings, wikipedia
+            warnings.simplefilter("ignore")
+            try:
+              result = wikipedia.summary("{{ action.arguments.topic }}")
+            except wikipedia.WikipediaException as e:
+              result = str(e)
   until: '{{ action.name != "Search" }}'
+  as: document
 - "\n"

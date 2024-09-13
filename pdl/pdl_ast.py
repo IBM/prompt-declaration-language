@@ -165,16 +165,16 @@ class LitellmParameters(BaseModel):
     """Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input."""
 
     model_config = ConfigDict(extra="allow", protected_namespaces=())
-    timeout: Optional[Union[float, str]] = None
+    timeout: Optional[Union[float, str]] | str = None
     """Timeout in seconds for completion requests (Defaults to 600 seconds).
     """
-    temperature: Optional[float] = None
+    temperature: Optional[float] | str = None
     """The temperature parameter for controlling the randomness of the output (default is 1.0).
     """
-    top_p: Optional[float] = None
+    top_p: Optional[float] | str = None
     """The top-p parameter for nucleus sampling (default is 1.0).
     """
-    n: Optional[int] = None
+    n: Optional[int] | str = None
     """The number of completions to generate (default is 1).
     """
     # stream: Optional[bool] = None
@@ -183,75 +183,74 @@ class LitellmParameters(BaseModel):
     # stream_options: Optional[dict] = None
     # """A dictionary containing options for the streaming response. Only set this when you set stream: true.
     # """
-    stop: Optional[str | list[str]] = None
+    stop: Optional[str | list[str]] | str = None
     """Up to 4 sequences where the LLM API will stop generating further tokens.
     """
-    max_tokens: Optional[int] = None
+    max_tokens: Optional[int] | str = None
     """The maximum number of tokens in the generated completion (default is infinity).
     """
-    presence_penalty: Optional[float] = None
+    presence_penalty: Optional[float] | str = None
     """It is used to penalize new tokens based on their existence in the text so far.
     """
-    frequency_penalty: Optional[float] = None
+    frequency_penalty: Optional[float] | str = None
     """It is used to penalize new tokens based on their frequency in the text so far.
     """
-    logit_bias: Optional[dict] = None
+    logit_bias: Optional[dict] | str = None
     """Used to modify the probability of specific tokens appearing in the completion.
     """
-    user: Optional[str] = None
+    user: Optional[str] | str = None
     """A unique identifier representing your end-user. This can help the LLM provider to monitor and detect abuse.
     """
     # openai v1.0+ new params
-    response_format: Optional[dict] = None
-    seed: Optional[int] = None
-    tools: Optional[list] = None
-    tool_choice: Optional[Union[str, dict]] = None
-    logprobs: Optional[bool] = None
+    response_format: Optional[dict] | str = None
+    seed: Optional[int] | str = None
+    tools: Optional[list] | str = None
+    tool_choice: Optional[Union[str, dict]] | str = None
+    logprobs: Optional[bool] | str = None
     """Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message
     """
-    top_logprobs: Optional[int] = None
+    top_logprobs: Optional[int] | str = None
     """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
     """
-    parallel_tool_calls: Optional[bool] = None
+    parallel_tool_calls: Optional[bool] | str = None
     # deployment_id = None
-    extra_headers: Optional[dict] = None
+    extra_headers: Optional[dict] | str = None
     """Additional headers to include in the request.
     """
     # soon to be deprecated params by OpenAI
-    functions: Optional[list] = None
+    functions: Optional[list] | str = None
     """A list of functions to apply to the conversation messages (default is an empty list)
     """
-    function_call: Optional[str] = None
+    function_call: Optional[str] | str = None
     """The name of the function to call within the conversation (default is an empty string)
     """
     # set api_base, api_version, api_key
-    base_url: Optional[str] = None
+    base_url: Optional[str] | str = None
     """Base URL for the API (default is None).
     """
-    api_version: Optional[str] = None
+    api_version: Optional[str] | str = None
     """API version (default is None).
     """
-    api_key: Optional[str] = None
+    api_key: Optional[str] | str = None
     """API key (default is None).
     """
-    model_list: Optional[list] = None  # pass in a list of api_base,keys, etc.
+    model_list: Optional[list] | str = None  # pass in a list of api_base,keys, etc.
     """List of api base, version, keys.
     """
     # Optional liteLLM function params
-    mock_response: Optional[str] = None
+    mock_response: Optional[str] | str = None
     """If provided, return a mock completion response for testing or debugging purposes (default is None).
     """
-    custom_llm_provider: Optional[str] = None
+    custom_llm_provider: Optional[str] | str = None
     """Used for Non-OpenAI LLMs, Example usage for bedrock, set model="amazon.titan-tg1-large" and custom_llm_provider="bedrock"
     """
-    max_retries: Optional[int] = None
+    max_retries: Optional[int] | str = None
     """The number of retries to attempt (default is 0).
     """
 
 
 class ModelPlatform(StrEnum):
     BAM = "bam"
-    WATSONX = "watsonx"
     LITELLM = "litellm"
 
 
@@ -263,7 +262,7 @@ class ModelBlock(Block):
 
 
 class BamModelBlock(ModelBlock):
-    platform: Literal[ModelPlatform.BAM] = ModelPlatform.BAM
+    platform: Literal[ModelPlatform.BAM]
     prompt_id: Optional[str] = None
     parameters: Optional[BamTextGenerationParameters | dict] = None
     moderations: Optional[ModerationParameters] = None
@@ -271,20 +270,11 @@ class BamModelBlock(ModelBlock):
     constraints: Any = None  # TODO
 
 
-class WatsonxModelBlock(ModelBlock):
-    """Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk."""
-
-    platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
-    params: Optional[dict] = None
-    guardrails: Optional[bool] = None
-    guardrails_hap_params: Optional[dict] = None
-
-
 class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters] = None
+    parameters: Optional[LitellmParameters | dict] = None
 
 
 class CodeBlock(Block):
@@ -485,7 +475,6 @@ AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | LitellmModelBlock
-    | WatsonxModelBlock
     | BamModelBlock
     | CodeBlock
     | ApiBlock
@@ -605,45 +594,6 @@ def set_default_model_params(
                 TOP_P_SAMPLING
             )
     return params
-
-
-# See: https://cloud.ibm.com/apidocs/watsonx-ai#deployments-text-generation
-def set_default_model_parameters(
-    parameters: Optional[dict[str, Any]],
-) -> dict[str, str]:
-    if parameters is None:
-        parameters = {}
-
-    if "decoding_method" not in parameters:
-        parameters[
-            "decoding_method"
-        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-    if "max_new_tokens" not in parameters:
-        parameters[
-            "max_new_tokens"
-        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-    if "min_new_tokens" not in parameters:
-        parameters[
-            "min_new_tokens"
-        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-    if "repetition_penalty" not in parameters:
-        parameters[
-            "repetition_penalty"
-        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
-    if parameters["decoding_method"] == "sample":
-        if "temperature" not in parameters:
-            parameters[
-                "temperature"
-            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
-        if "top_k" not in parameters:
-            parameters[
-                "top_k"
-            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
-        if "top_p" not in parameters:
-            parameters[
-                "top_p"
-            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
-    return parameters
 
 
 def set_default_granite_model_parameters(

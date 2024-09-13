@@ -36,8 +36,8 @@ cond_data = {
                     "def": "QUESTION",
                     "document": [
                         {
-                            "model": "ibm/granite-20b-code-instruct",
-                            "params": {
+                            "model": "watsonx/ibm/granite-20b-code-instruct",
+                            "parameters": {
                                 "stop_sequences": ["Answer"],
                                 "include_stop_sequence": False,
                             },
@@ -49,8 +49,8 @@ cond_data = {
                     "document": [
                         {
                             "def": "REASON_OR_CALC",
-                            "model": "ibm/granite-20b-code-instruct",
-                            "params": {
+                            "model": "watsonx/ibm/granite-20b-code-instruct",
+                            "parameters": {
                                 "stop_sequences": ["<<"],
                                 "include_stop_sequence": True,
                             },
@@ -60,8 +60,8 @@ cond_data = {
                                 "document": [
                                     {
                                         "def": "EXPR",
-                                        "model": "ibm/granite-20b-code-instruct",
-                                        "params": {
+                                        "model": "watsonx/ibm/granite-20b-code-instruct",
+                                        "parameters": {
                                             "stop_sequences": ["=", "\n"],
                                             "include_stop_sequence": False,
                                         },

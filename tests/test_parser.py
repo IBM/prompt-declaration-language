@@ -7,7 +7,7 @@ from pdl.pdl_interpreter import (
 )
 
 model_parser = {
-    "model": "ibm/granite-20b-code-instruct",
+    "model": "watsonx/ibm/granite-20b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "document": [
@@ -21,7 +21,7 @@ model_parser = {
         ]
     },
     "parser": "json",
-    "params": {"stop_sequences": ["}"], "include_stop_sequence": True},
+    "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
 }
 
 
@@ -34,7 +34,7 @@ def test_model_parser():
 
 
 model_parser1 = {
-    "model": "ibm/granite-34b-code-instruct",
+    "model": "watsonx/ibm/granite-34b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "document": [
@@ -42,7 +42,7 @@ model_parser1 = {
         ]
     },
     "parser": "json",
-    "params": {"stop_sequences": ["}"], "include_stop_sequence": True},
+    "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
 }
 
 

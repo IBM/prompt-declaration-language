@@ -3,24 +3,6 @@ import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
-export const hello = {
-  kind: 'document',
-  description: 'Hello world to call into a model',
-  document: [
-    'Hello,',
-    {
-      kind: 'model',
-      model: 'ibm/granite-20b-code-instruct-v2',
-      parameters:
-        '{"beam_width":null,"decoding_method":"greedy","include_stop_sequence":true,"length_penalty":null,"max_new_tokens":1024,"min_new_tokens":1,"random_seed":null,"repetition_penalty":1.07,"return_options":null,"stop_sequences":["!"],"temperature":null,"time_limit":null,"top_k":null,"top_p":null,"truncate_input_tokens":null,"typical_p":null}',
-      result: ' world!',
-    },
-  ],
-  result: 'Hello, world!',
-};
-
-export const data = hello;
-
 export function show_output(data: PdlBlocks) {
   const div = document.createElement('div');
   div.classList.add('pdl_block');
@@ -75,7 +57,7 @@ export function show_block(data: PdlBlock) {
   div.appendChild(body);
   add_def(body, data.def);
   body.classList.add('pdl_block');
-  if (!data?.contribute?.includes('context')) {
+  if (data?.contribute !== undefined && !data.contribute.includes('result')) {
     body.classList.add('pdl_show_result_false');
   }
   match(data)
@@ -251,13 +233,13 @@ export function update_code(blocks: PdlBlocks) {
 
 export function show_result_or_code(block: PdlBlock): Element {
   const div: Element = match(block)
-    .with(P.string, data => show_string(data))
-    .with({result: P.string}, data => show_string(data.result))
+    .with(P.union(P.string, P.number), data => show_value(data))
+    .with({result: P._}, data => show_value(data.result))
     .otherwise(data => show_code(data));
   return div;
 }
 
-export function show_string(s: string) {
+export function show_value(s: unknown) {
   const div = document.createElement('div');
   div.innerHTML = htmlize(s);
   return div;

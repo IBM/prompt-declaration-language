@@ -124,8 +124,6 @@
           fr.readAsText(this.files[0]);
         })
     </script>
-    <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_output(pdl_viewer.data))"
-      value="Display">
 
     <!-- Main window layout -->
     <div id="layout" style="width: 95%; height: 900px;"></div>
@@ -137,7 +135,7 @@
         box: '#layout',
         name: 'layout',
         panels: [
-          { type: 'left', size: 400, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
+          { type: 'left', size: 600, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
           { type: 'main', style: pstyle, html: '<div id="code"></div>' }
         ]
       })

@@ -109,7 +109,7 @@ repeat_data_error = {
     "description": "Hello world with variable use",
     "repeat": [
         "Hello,",
-        {"model": "ibm/granite-20b-code-instruct-v", "def": "NAME"},
+        {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
     ],
     "num_iterations": 3,
 }

@@ -1,11 +1,12 @@
-description: Hello world with model chainings
-document:
+description: Model chaining
+document: 
 - Hello,
-- model: ibm/granite-20b-code-instruct-v2
+- model: watsonx/ibm/granite-34b-code-instruct
   parameters:
-    stop_sequences:
-    - '!'
+    stop: ["!"]
     include_stop_sequence: true
-- "\nTranslate the above sentence to French\n"
-- model: ibm/granite-20b-multilingual
-  platform: bam
+- "\nTranslate this to French\n"
+- model: watsonx/ibm/granite-20b-multilingual
+  parameters:
+    stop: ["!"]
+    include_stop_sequence: true

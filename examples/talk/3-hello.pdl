@@ -1,13 +1,12 @@
-description: My first PDL program
+description: Model chaining
 document: 
 - Hello,
-- model: ibm/granite-34b-code-instruct
-  params:
-    stop_sequences: ["!"]
+- model: watsonx/ibm/granite-34b-code-instruct
+  parameters:
+    stop: ["!"]
     include_stop_sequence: true
 - "\nTranslate this to French\n"
-- model: ibm/granite-20b-multilingual
-  params:
-    stop_sequences: ["!"]
+- model: watsonx/ibm/granite-20b-multilingual
+  parameters:
+    stop: ["!"]
     include_stop_sequence: true
-- "\n"

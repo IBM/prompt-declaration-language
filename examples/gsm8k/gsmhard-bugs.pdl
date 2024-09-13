@@ -4,7 +4,7 @@ document:
 - "\n"
 - "Does the following code accurately solve this problem?\n\n"
 - "{{ code }}"
-- model: meta-llama/llama-3-70b-instruct
-  params:
+- model: watsonx/meta-llama/llama-3-70b-instruct
+  parameters:
     stop_sequences: ["def"]
     include_stop_sequence: false

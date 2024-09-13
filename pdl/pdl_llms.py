@@ -1,4 +1,3 @@
-import os
 from typing import Any, Generator, Optional
 
 from dotenv import load_dotenv
@@ -6,14 +5,13 @@ from genai.client import Client as BamClient
 from genai.credentials import Credentials as BamCredentials
 from genai.schema import ModerationParameters as BamModerationParameters
 from genai.schema import PromptTemplateData as BamPromptTemplateData
-from ibm_watsonx_ai import Credentials as WatsonxCredentials
-from ibm_watsonx_ai.foundation_models import ModelInference as WatsonxModelInference
 from litellm import completion
 
-from .pdl_ast import (  # set_default_granite_model_parameters,
+from .pdl_ast import (
     BamTextGenerationParameters,
+    LitellmParameters,
     Message,
-    set_default_model_parameters,
+    set_default_granite_model_parameters,
     set_default_model_params,
 )
 
@@ -133,65 +131,6 @@ class BamModel:
     #     return gen_text
 
 
-class WatsonxModel:
-    watsonx_models: dict[str, WatsonxModelInference] = {}
-
-    @staticmethod
-    def get_model(model_id: str) -> WatsonxModelInference:
-        model_inference = WatsonxModel.watsonx_models.get(model_id)
-        if model_inference is not None:
-            return model_inference
-        credentials = WatsonxCredentials(
-            api_key=os.getenv("WATSONX_KEY"), url=os.getenv("WATSONX_API")
-        )
-        model_inference = WatsonxModelInference(
-            model_id=model_id,
-            credentials=credentials,
-            project_id=os.getenv("WATSONX_PROJECT_ID"),
-        )
-        WatsonxModel.watsonx_models[model_id] = model_inference
-        return model_inference
-
-    @staticmethod
-    def generate_text(
-        model_id: str,
-        prompt: str,
-        params: Optional[dict],
-        guardrails: Optional[bool],
-        guardrails_hap_params: Optional[dict],
-    ) -> Message:
-        model_inference = WatsonxModel.get_model(model_id)
-        parameters = params
-        parameters = set_default_model_parameters(parameters)
-        text = model_inference.generate_text(
-            prompt=prompt,
-            params=parameters,
-            guardrails=guardrails or False,
-            guardrails_hap_params=guardrails_hap_params,
-        )
-        assert isinstance(text, str)
-        return {"role": None, "content": text}
-
-    @staticmethod
-    def generate_text_stream(  # pylint: disable=too-many-arguments
-        model_id: str,
-        prompt: str,
-        params: Optional[dict],
-        guardrails: Optional[bool],
-        guardrails_hap_params: Optional[dict],
-    ) -> Generator[Message, None, None]:
-        model_inference = WatsonxModel.get_model(model_id)
-        parameters = params
-        parameters = set_default_model_parameters(parameters)
-        text_stream = model_inference.generate_text_stream(
-            prompt=prompt,
-            params=parameters,
-            guardrails=guardrails or False,
-            guardrails_hap_params=guardrails_hap_params,
-        )
-        return (Message(role=None, content=chunk) for chunk in text_stream)
-
-
 class LitellmModel:
     litellm_client: Optional[None] = None
 
@@ -203,12 +142,17 @@ class LitellmModel:
     def generate_text(
         model_id: str,
         messages: list[Message],
-        parameters: dict[str, Any],
+        parameters: Optional[dict | LitellmParameters],
     ) -> Message:
         params = parameters
-        # if "granite" in model_id:
-        #    params = set_default_granite_model_parameters(params)
-        response = completion(model=model_id, messages=messages, stream=False, **params)
+        if "granite" in model_id:
+            if isinstance(params, dict):
+                params = set_default_granite_model_parameters(params)
+            else:
+                assert False
+        response = completion(
+            model=model_id, messages=messages, stream=False, **params  # pyright: ignore
+        )
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
             assert False, "TODO"  # XXX TODO XXX
@@ -218,12 +162,17 @@ class LitellmModel:
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
-        parameters: dict[str, Any],
+        parameters: Optional[dict | LitellmParameters],
     ) -> Generator[Message, Any, None]:
         params = parameters
-        # if "granite" in model_id:
-        #    params = set_default_granite_model_parameters(params)
-        response = completion(model=model_id, messages=messages, stream=True, **params)
+        if "granite" in model_id:
+            if isinstance(params, dict):
+                params = set_default_granite_model_parameters(params)
+            else:
+                assert False
+        response = completion(
+            model=model_id, messages=messages, stream=True, **params  # pyright: ignore
+        )
         for chunk in response:
             msg = chunk.choices[0].delta  # pyright: ignore
             if msg.content is None:

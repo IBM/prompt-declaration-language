@@ -54,12 +54,11 @@ from .pdl_ast import (
     RoleType,
     ScopeType,
     SequenceBlock,
-    WatsonxModelBlock,
     empty_block_location,
 )
 from .pdl_ast_utils import iter_block_children, iter_blocks
 from .pdl_dumper import block_to_dict
-from .pdl_llms import BamModel, LitellmModel, WatsonxModel
+from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import (
@@ -222,7 +221,7 @@ def step_block(
             background = [{"role": state.role, "content": str(block)}]
         else:
             background = [{"role": state.role, "content": stringify(result)}]
-            trace = result
+            trace = stringify(result)
         if state.yield_background:
             yield YieldBackgroundMessage(background)
         if state.yield_result:
@@ -786,7 +785,7 @@ def process_condition(
 def step_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    block: BamModelBlock | LitellmModelBlock,
     loc: LocationType,
 ) -> Generator[
     YieldMessage,
@@ -795,7 +794,7 @@ def step_call_model(
         Any,
         Messages,
         ScopeType,
-        BamModelBlock | WatsonxModelBlock | LitellmModelBlock | ErrorBlock,
+        BamModelBlock | LitellmModelBlock | ErrorBlock,
     ],
 ]:
     # evaluate model name
@@ -833,24 +832,15 @@ def step_call_model(
                     "parameters": params,
                 }
             )
-        case WatsonxModelBlock():
-            params, param_errors = process_expr(scope, block.params, loc)
-            errors += param_errors
-            concrete_block = block.model_copy(
-                update={
-                    "model": model,
-                    "input": input_trace,
-                    "params": params,
-                }
-            )
         case LitellmModelBlock():
-            params, param_errors = process_expr(scope, block.parameters, loc)
+            parameters = litellm_block_to_dict(block)
+            params, param_errors = process_expr(scope, parameters, loc)
             errors += param_errors
             concrete_block = block.model_copy(
                 update={
                     "model": model,
                     "input": input_trace,
-                    "params": params,
+                    "parameters": params,
                 }
             )
         case _:
@@ -866,17 +856,20 @@ def step_call_model(
         return None, [], scope, trace
     # Execute model call
     try:
-        litellm_input = ""
+        litellm_params = {}
 
         def get_transformed_inputs(kwargs):
             params_to_model = kwargs["additional_args"]["complete_input_dict"]
-            nonlocal litellm_input
-            litellm_input = params_to_model["input"]
+            nonlocal litellm_params
+            litellm_params = params_to_model
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
         msg = yield from generate_client_response(state, concrete_block, model_input)
-        append_log(state, "Model Input", litellm_input)
+        if "input" in litellm_params:
+            append_log(state, "Model Input", litellm_params["input"])
+        else:
+            append_log(state, "Model Input", model_input)
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -895,7 +888,7 @@ def step_call_model(
 
 def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     match state.batch:
@@ -916,7 +909,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg_stream: Generator[Message, Any, None]
@@ -931,18 +924,9 @@ def generate_client_response_streaming(
                 moderations=block.moderations,
                 data=block.data,
             )
-        case WatsonxModelBlock():
-            msg_stream = WatsonxModel.generate_text_stream(
-                model_id=block.model,
-                prompt=model_input_str,
-                params=block.params,
-                guardrails=block.guardrails,
-                guardrails_hap_params=block.guardrails_hap_params,
-            )
         case LitellmModelBlock():
-            parameters = litellm_block_to_dict(block)
             msg_stream = LitellmModel.generate_text_stream(
-                model_id=block.model, messages=model_input, parameters=parameters
+                model_id=block.model, messages=model_input, parameters=block.parameters
             )
         case _:
             assert False
@@ -966,6 +950,8 @@ def generate_client_response_streaming(
 
 
 def litellm_block_to_dict(block: LitellmModelBlock) -> dict[str, Any]:
+    if isinstance(block.parameters, dict):
+        return block.parameters
     if block.parameters is None:
         block_parameters = LitellmParameters()
     else:
@@ -976,7 +962,7 @@ def litellm_block_to_dict(block: LitellmModelBlock) -> dict[str, Any]:
 
 def generate_client_response_single(
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg: Message
@@ -991,18 +977,9 @@ def generate_client_response_single(
                 moderations=block.moderations,
                 data=block.data,
             )
-        case WatsonxModelBlock():
-            msg = WatsonxModel.generate_text(
-                model_id=block.model,
-                prompt=model_input_str,
-                params=block.params,
-                guardrails=block.guardrails,
-                guardrails_hap_params=block.guardrails_hap_params,
-            )
         case LitellmModelBlock():
-            parameters = litellm_block_to_dict(block)
             msg = LitellmModel.generate_text(
-                model_id=block.model, messages=model_input, parameters=parameters
+                model_id=block.model, messages=model_input, parameters=block.parameters
             )
     if state.yield_result:
         yield YieldResultMessage(msg["content"])
@@ -1013,7 +990,7 @@ def generate_client_response_single(
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | WatsonxModelBlock | LitellmModelBlock,
+    block: BamModelBlock | LitellmModelBlock,
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
@@ -1032,8 +1009,6 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
                 yield YieldResultMessage(msg)
             if state.yield_background:
                 yield YieldBackgroundMessage(msg)
-        case WatsonxModelBlock():
-            assert False  # XXX TODO
         case LitellmModelBlock():
             assert False  # XXX TODO
         case _:

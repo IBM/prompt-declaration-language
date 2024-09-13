@@ -1,6 +1,7 @@
-description: chatbot
+description: chatbot, control structures, roles, contribute
 document:
 - role: system
+  contribute: [context]
   document:
   - |
     You are Granite Chat, an AI language model developed by the IBM DMF Alignment Team. 
@@ -16,13 +17,10 @@ document:
     and do not start a conversation.
 - read:
   message: "What is your query?\n"
+  contribute: [context]
 - repeat:
     document:
-    - model: ibm/granite-13b-chat-v2
-      role: assistant
-      spec: str
-      params:
-        max_new_tokens: 200
+    - model: watsonx/ibm/granite-13b-chat-v2
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
@@ -31,6 +29,8 @@ document:
       then:
         - read:
           message: "Why not?\n"
-  as: document
+          contribute: [context]
   until: "{{ eval == 'yes'}}"
+  as: document
 role: user
+

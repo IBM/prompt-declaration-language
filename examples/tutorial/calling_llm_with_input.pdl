@@ -1,0 +1,7 @@
+description: Hello world calling a model
+document:
+- "Hello, "
+- model: watsonx/ibm/granite-20b-multilingual
+  input: 
+    Translate the word 'world' to French
+  

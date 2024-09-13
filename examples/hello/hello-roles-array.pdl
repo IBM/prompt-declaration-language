@@ -7,7 +7,6 @@ document:
   - role: user
     content: Write a Python function that implement merge sort.
   contribute: []
-- model: ibm/granite-8b-code-instruct
+- model: watsonx/ibm/granite-8b-code-instruct
   input: "{{ prompt }}"
-  params:
-    decoding_method: greedy
+

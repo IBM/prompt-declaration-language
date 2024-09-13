@@ -1,10 +1,9 @@
 description: Fibonacci
 document:
 - def: CODE
-  model: ibm/granite-20b-code-instruct
-  input: "Write an optimized Python function to compute the Fibonacci sequence\n\n"
-  params:
-    include_stop_sequence: false
+  model: watsonx/ibm/granite-20b-code-instruct
+  input: "Write a Python function to compute the Fibonacci sequence\n\n"
+  
 - "\nFind a random number between 1 and 20\n"
 - def: N
   lan: python
@@ -14,14 +13,18 @@ document:
 - "\nNow computing fib("
 - get: N
 - ")\n"
+- def: EXTRACTED
+  lan: python
+  code: |
+    s = """'{{ CODE }} '"""
+    result = s.split("```")[1].replace("python", "")
 - def: RESULT
   lan: python
   code: |
-    {{ CODE }}
+    {{ EXTRACTED }}
     result = fib({{ N }})
   contribute: []
 - 'The result is: '
 - get: RESULT
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: ibm/granite-20b-code-instruct
-- "\n"
+- model: watsonx/ibm/granite-20b-code-instruct

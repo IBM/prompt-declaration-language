@@ -1,13 +1,12 @@
 description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
+  TRUTH:
+    read: ./ground_truth.txt
 document:
-- read: ./data.yaml
-  parser: yaml
-  def: CODE
-  contribute: []
-- read: ./ground_truth.txt
-  def: TRUTH
-  contribute: []
-- model: ibm/granite-34b-code-instruct
+- model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   contribute: []
   input:
@@ -39,4 +38,4 @@ document:
     input: "{{ CODE }}"
     output: "{{ EXPLANATION }}"
     metric: "{{ EVAL }}"
-- "\n\n"
+

@@ -7,22 +7,24 @@ document:
   Q: Which knight invented King Arthur''s Round Table?
   A: Sir Cumference. END
 - repeat:
-  - 'Q: '
-  - def: JOKE
-    model: ibm/granite-20b-code-instruct
-    params:
-      decoding_method: sample
-      stop_sequences:
-      - '?'
-      - "\n"
-      include_stop_sequence: false
-  - "\nA: "
-  - model: ibm/granite-20b-code-instruct
-    params:
-      decoding_method: sample
-      stop_sequences:
-      - END
-      - "\n"
-      include_stop_sequence: false
-  - "\n"
+    document:
+    - 'Q: '
+    - def: JOKE
+      model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
+        decoding_method: sample
+        stop:
+        - '?'
+        - "\n"
+        include_stop_sequence: false
+    - "\nA: "
+    - model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
+        decoding_method: sample
+        stop:
+        - END
+        - "\n"
+        include_stop_sequence: true
+    - "\n"
   num_iterations: 2
+  as: document
