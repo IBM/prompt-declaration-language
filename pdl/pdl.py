@@ -181,6 +181,7 @@ def main():
         top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
     if args.pdl is None:
+        parser.print_help()
         return
 
     initial_scope = {}
