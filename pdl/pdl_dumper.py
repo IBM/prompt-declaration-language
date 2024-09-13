@@ -173,6 +173,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["trace"] = blocks_to_dict(block.trace)  # pyright: ignore
         case ErrorBlock():
             d["program"] = blocks_to_dict(block.program)
+            d["msg"] = block.msg
     if block.assign is not None:
         d["def"] = block.assign
     if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
