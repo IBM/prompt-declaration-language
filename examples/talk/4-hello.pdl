@@ -10,6 +10,3 @@ document:
 - model: watsonx/ibm/granite-20b-multilingual
   input:
       - "Translate the word '{{ name | trim }}' to French\n"
-  parameters:
-    stop: ["!"]
-    include_stop_sequence: true

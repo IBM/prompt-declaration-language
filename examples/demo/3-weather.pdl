@@ -30,5 +30,5 @@ document:
   input: |
       Explain the weather from the following JSON.
       `{{ WEATHER }}` 
-- "\n"
+
   

@@ -3,4 +3,4 @@ document:
 - for:
     i: [1, 2, 3, 4]
   repeat: 
-    "{{ i }}\n"
+    - "{{ i }}"

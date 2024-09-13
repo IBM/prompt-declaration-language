@@ -1,26 +1,21 @@
-description: Hello world with functions
+description: function def and call
 defs:
   translate:
     function:
       sentence: str
       language: str
     return:
-      - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
-      - model: ibm/granite-20b-multilingual
-        platform: bam
+    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+    - model: watsonx/ibm/granite-20b-multilingual
+      parameters:
+        stop: ["\n"]
 document:
-- Hello,
-- model: ibm/granite-20b-code-instruct-v2
-  def: GEN
-  parameters:
-    stop_sequences:
-    - '!'
-    include_stop_sequence: true 
 - call: translate
   args:
-    sentence: Hello,{{ GEN }}
+    sentence: I love Paris!
     language: French
+- "\n"
 - call: translate
   args:
-    sentence: Bye,{{ GEN }}
+    sentence: I love Madrid!
     language: Spanish
