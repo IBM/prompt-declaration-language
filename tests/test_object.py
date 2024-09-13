@@ -12,7 +12,8 @@ object:
       - "!"
 """
     result = exec_str(prog_str)
-    assert result == {"a": 1, "b": "hello", "c": "bye!" }
+    assert result == {"a": 1, "b": "hello", "c": "bye!"}
+
 
 def test_composed_object():
     prog_str = """
@@ -24,4 +25,4 @@ object:
       c: "bye!"
 """
     result = exec_str(prog_str)
-    assert result == {"a": 1, "b": "hello", "c": "bye!" }
+    assert result == {"a": 1, "b": "hello", "c": "bye!"}
