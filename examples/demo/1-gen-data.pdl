@@ -26,4 +26,4 @@ document:
       stop:
       - '}'
       include_stop_sequence: true
-  - "\n"
+ 
