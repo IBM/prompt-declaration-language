@@ -250,7 +250,6 @@ class LitellmParameters(BaseModel):
 
 class ModelPlatform(StrEnum):
     BAM = "bam"
-    WATSONX = "watsonx"
     LITELLM = "litellm"
 
 
@@ -268,15 +267,6 @@ class BamModelBlock(ModelBlock):
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
-
-
-class WatsonxModelBlock(ModelBlock):
-    """Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk."""
-
-    platform: Literal[ModelPlatform.WATSONX] = ModelPlatform.WATSONX
-    params: Optional[dict] = None
-    guardrails: Optional[bool] = None
-    guardrails_hap_params: Optional[dict] = None
 
 
 class LitellmModelBlock(ModelBlock):

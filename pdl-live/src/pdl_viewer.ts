@@ -75,7 +75,7 @@ export function show_block(data: PdlBlock) {
   div.appendChild(body);
   add_def(body, data.def);
   body.classList.add('pdl_block');
-  if (!data?.contribute?.includes('context')) {
+  if (data?.contribute !== undefined && !data.contribute.includes('result')) {
     body.classList.add('pdl_show_result_false');
   }
   match(data)
@@ -251,13 +251,13 @@ export function update_code(blocks: PdlBlocks) {
 
 export function show_result_or_code(block: PdlBlock): Element {
   const div: Element = match(block)
-    .with(P.string, data => show_string(data))
-    .with({result: P.string}, data => show_string(data.result))
+    .with(P.union(P.string, P.number), data => show_value(data))
+    .with({result: P._}, data => show_value(data.result))
     .otherwise(data => show_code(data));
   return div;
 }
 
-export function show_string(s: string) {
+export function show_value(s: unknown) {
   const div = document.createElement('div');
   div.innerHTML = htmlize(s);
   return div;

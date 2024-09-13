@@ -22,6 +22,8 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LitellmModelBlock,
+    LitellmParameters,
     LocationType,
     MessageBlock,
     ParserType,
@@ -31,7 +33,6 @@ from .pdl_ast import (
     RepeatBlock,
     RepeatUntilBlock,
     SequenceBlock,
-    WatsonxModelBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -95,17 +96,18 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["data"] = block.data
             if block.constraints is not None:
                 d["constraints"] = block.constraints
-        case WatsonxModelBlock():
+        case LitellmModelBlock():
             d["platform"] = block.platform
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input)
-            if block.params is not None:
-                d["params"] = block.params
-            if block.guardrails is not None:
-                d["guardrails"] = block.guardrails
-            if block.guardrails_hap_params is not None:
-                d["guardrails_hap_params"] = block.guardrails_hap_params
+            if block.parameters is not None:
+                if isinstance(block.parameters, LitellmParameters):
+                    d["parameters"] = block.parameters.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
+                else:
+                    d["parameters"] = block.parameters
         case CodeBlock():
             d["lan"] = block.lan
             d["code"] = blocks_to_dict(block.code)
@@ -135,10 +137,12 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
         case IncludeBlock():
             d["include"] = block.include
         case IfBlock():
-            d["condition"] = block.condition
+            d["if"] = block.condition
             d["then"] = blocks_to_dict(block.then)
             if block.elses is not None:
                 d["else"] = blocks_to_dict(block.elses)
+            if block.if_result is not None:
+                d["if_result"] = block.if_result
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
@@ -174,7 +178,10 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
     if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
         d["contribute"] = block.contribute
     if block.result is not None:
-        d["result"] = block.result
+        if isinstance(block.result, FunctionBlock):
+            d["result"] = ""
+        else:
+            d["result"] = block.result
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     if block.location is not None:
