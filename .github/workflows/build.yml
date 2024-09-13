@@ -51,6 +51,9 @@ jobs:
     name: Build PDL live viewer
     runs-on: ubuntu-latest
     needs: tests
+    defaults:
+      run:
+        working-directory: ./pdl-live
     steps:
       - uses: actions/checkout@v4
       - name: Set up node
