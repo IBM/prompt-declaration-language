@@ -55,6 +55,17 @@ export function map_block_children(
       const array = map_blocks(f, block.array);
       return {...block, array: array};
     })
+    .with({kind: 'object'}, block => {
+      let object;
+      if (block.object instanceof Array) {
+        object = block.object.map(f);
+      } else {
+        object = Object.fromEntries(
+          Object.entries(block.object).map(([k, v]) => [k, f(v)])
+        );
+      }
+      return {...block, object: object};
+    })
     .with({kind: 'message'}, block => {
       const content = map_blocks(f, block.content);
       return {...block, content: content};
@@ -145,6 +156,16 @@ export function iter_block_children(
     .with({kind: 'array'}, block => {
       iter_blocks(f, block.array);
     })
+    .with({kind: 'object'}, block => {
+      let object;
+      if (block.object instanceof Array) {
+        iter_blocks(f, block.object);
+      } else {
+        Object.entries(block.object).forEach(([_, v]) => f(v));
+      }
+      return {...block, object: object};
+    })
+
     .with({kind: 'message'}, block => {
       iter_blocks(f, block.content);
     })

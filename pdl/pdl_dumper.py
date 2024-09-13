@@ -26,6 +26,7 @@ from .pdl_ast import (
     LitellmParameters,
     LocationType,
     MessageBlock,
+    ObjectBlock,
     ParserType,
     PdlParser,
     ReadBlock,
@@ -128,6 +129,11 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["sequence"] = blocks_to_dict(block.sequence)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array)
+        case ObjectBlock():
+            if isinstance(block.object, dict):
+                d["object"] = {k: blocks_to_dict(b) for k, b in block.object.items()}
+            else:
+                d["object"] = [blocks_to_dict(b) for b in block.object]
         case MessageBlock():
             d["content"] = blocks_to_dict(block.content)
         case ReadBlock():

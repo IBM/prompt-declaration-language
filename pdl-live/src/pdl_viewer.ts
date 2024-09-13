@@ -40,6 +40,45 @@ export function show_blocks(blocks: PdlBlocks) {
   return doc_fragment;
 }
 
+export function show_array(array: PdlBlocks[]) {
+  const doc_fragment = document.createDocumentFragment();
+  const open_bracket = document.createElement('pre');
+  open_bracket.innerHTML = '[';
+  const comma = document.createElement('pre');
+  comma.innerHTML = ',';
+  const close_bracket = document.createElement('pre');
+  close_bracket.innerHTML = ']';
+  doc_fragment.appendChild(open_bracket);
+  for (const blocks of array) {
+    const child = show_blocks(blocks);
+    doc_fragment.appendChild(child);
+    doc_fragment.appendChild(comma);
+  }
+  doc_fragment.appendChild(close_bracket);
+  return doc_fragment;
+}
+
+export function show_object(object: {[key: string]: PdlBlocks}) {
+  const doc_fragment = document.createDocumentFragment();
+  const open_curly = document.createElement('pre');
+  open_curly.innerHTML = '{';
+  const comma = document.createElement('pre');
+  comma.innerHTML = ',';
+  const close_curly = document.createElement('pre');
+  close_curly.innerHTML = '}';
+  doc_fragment.appendChild(open_curly);
+  Object.keys(object).forEach(key => {
+    const key_column = document.createElement('pre');
+    key_column.innerHTML = key + ':';
+    doc_fragment.appendChild(key_column);
+    const child = show_blocks(object[key]);
+    doc_fragment.appendChild(child);
+    doc_fragment.appendChild(comma);
+  });
+  doc_fragment.appendChild(close_curly);
+  return doc_fragment;
+}
+
 export function show_block(data: PdlBlock) {
   if (typeof data === 'number' || typeof data === 'string') {
     return show_output(data);
@@ -137,7 +176,30 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'array'}, data => {
       body.classList.add('pdl_array');
-      const doc_child = show_blocks(data.array);
+      let doc_child;
+      if (data.array instanceof Array) {
+        doc_child = show_array(data.array);
+      } else {
+        doc_child = document.createDocumentFragment();
+        const open_bracket = document.createElement('pre');
+        open_bracket.innerHTML = '[';
+        const close_bracket = document.createElement('pre');
+        close_bracket.innerHTML = ']';
+        doc_child.appendChild(open_bracket);
+        const doc_elem = show_blocks(data.array);
+        doc_child.appendChild(doc_elem);
+        doc_child.appendChild(close_bracket);
+      }
+      body.appendChild(doc_child);
+    })
+    .with({kind: 'object'}, data => {
+      body.classList.add('pdl_object');
+      let doc_child;
+      if (data.object instanceof Array) {
+        doc_child = show_array(data.object);
+      } else {
+        doc_child = show_object(data.object);
+      }
       body.appendChild(doc_child);
     })
     .with({kind: 'message'}, data => {
