@@ -90,7 +90,6 @@ hide:
           fr.readAsText(this.files[0]);
         })
   </script>
-  <input type="button" onclick="pdl_viewer.replace_div('doc', pdl_viewer.show_output(pdl_viewer.data))" value="Display">
   <div id="layout" style="height: 900px;"></div>
   <script type="module">
     import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
@@ -99,7 +98,7 @@ hide:
       box: '#layout',
       name: 'layout',
       panels: [
-        { type: 'left', size: 400, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
+        { type: 'left', size: 600, resizable: true, style: pstyle, html: '<div id="doc"></div>' },
         { type: 'main', style: pstyle, html: '<div id="code">Please click on a word on the left to get started.</div>' }
       ]
     })
