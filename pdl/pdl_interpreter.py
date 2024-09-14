@@ -1,9 +1,10 @@
 import json
 import re
 import types
+
 # from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Iterable, Optional, Sequence
+from typing import Any, Generator, Optional, Sequence
 
 import litellm
 import requests
