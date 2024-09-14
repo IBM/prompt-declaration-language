@@ -1,0 +1,7 @@
+description: Hello world with model chaining
+document:
+- model: "foo"
+  parameters:
+    foo:
+      data: "{{ translateText(sentence2) }}"
+      raw: true

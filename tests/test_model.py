@@ -11,6 +11,7 @@ model_data = {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
                 "include_stop_sequence": False,
+                "mock_response": " World"
             },
         },
         "!\n",
@@ -38,6 +39,7 @@ model_chain_data = {
                         "decoding_method": "greedy",
                         "stop": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World"
                     },
                 }
             ],
@@ -56,6 +58,7 @@ model_chain_data = {
                         "stop_sequences": ["."],
                         "include_stop_sequence": True,
                         "roles": {"user": {"pre_message": "", "post_message": ""}},
+                        "mock_response": "World is a fictional character in the popular science fiction television series \"The X-Files"
                     },
                 },
             ],
@@ -98,6 +101,7 @@ multi_shot_data = {
                         "decoding_method": "greedy",
                         "stop_sequences": ["Question"],
                         "include_stop_sequence": False,
+                        "mock_response": "Armonk"
                     },
                 }
             ],
@@ -121,6 +125,7 @@ model_data_missing_parameters = {
             "model": "watsonx/ibm/granite-34b-code-instruct",
             "parameters": {
                 "stop_sequences": ["."],
+                "mock_response": "\nI have a question about the use of the word \"in\" in the sentence: \"The cake was baked in the oven."
             },
         },
     ],
@@ -146,6 +151,7 @@ model_parameter = {
             "model": "{{ model }}",
             "parameters": {
                 "stop_sequences": ["!"],
+                "mock_response": " World!"
             },
         },
     ],
@@ -168,6 +174,7 @@ model_parameter1 = {
             "model": "watsonx/ibm/{{ model }}",
             "parameters": {
                 "stop_sequences": ["!"],
+                "mock_response": " World!"
             },
         },
     ],

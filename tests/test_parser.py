@@ -21,7 +21,7 @@ model_parser = {
         ]
     },
     "parser": "json",
-    "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
+    "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True, "mock_response": '{"bob": 20, "carol": 30}'},
 }
 
 

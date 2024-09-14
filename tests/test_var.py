@@ -19,6 +19,7 @@ var_data = {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World",
                     },
                 }
             ],
@@ -51,6 +52,7 @@ var_shared_scope_data = {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World",
                     },
                 }
             ],
