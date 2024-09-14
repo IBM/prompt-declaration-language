@@ -19,6 +19,7 @@ from .pdl_ast import (
     IncludeBlock,
     MessageBlock,
     ModelBlock,
+    ObjectBlock,
     PdlParser,
     ReadBlock,
     RegexParser,
@@ -57,6 +58,12 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             iter_blocks(f, block.sequence)
         case ArrayBlock():
             iter_blocks(f, block.array)
+        case ObjectBlock():
+            if isinstance(block.object, dict):
+                body = list(block.object.values())
+            else:
+                body = block.object
+            iter_blocks(f, body)
         case MessageBlock():
             iter_blocks(f, block.content)
         case IfBlock():

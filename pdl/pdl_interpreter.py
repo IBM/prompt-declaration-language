@@ -1,9 +1,10 @@
 import json
 import re
 import types
-from itertools import batched
+
+# from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Iterable, Optional, Sequence
+from typing import Any, Generator, Optional, Sequence
 
 import litellm
 import requests
@@ -42,6 +43,7 @@ from .pdl_ast import (
     MessageBlock,
     Messages,
     ModelBlock,
+    ObjectBlock,
     ParserType,
     PDLException,
     PdlParser,
@@ -187,23 +189,23 @@ def process_prog(
     # return result, document, scope, trace
 
 
-def process_progs(
-    state: InterpreterState,
-    initial_scopes: Iterable[ScopeType],
-    prog: Program,
-    loc=empty_block_location,
-) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
-    if state.batch > 1:
-        batch_size = state.batch
-    else:
-        batch_size = 1
-    for batch in batched(initial_scopes, batch_size):
-        doc_generators = [
-            step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
-            for initial_scope in batch
-        ]
-        for result, document, scope, trace in schedule(doc_generators):
-            yield result, document, scope, trace
+# def process_progs(
+#     state: InterpreterState,
+#     initial_scopes: Iterable[ScopeType],
+#     prog: Program,
+#     loc=empty_block_location,
+# ) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
+#     if state.batch > 1:
+#         batch_size = state.batch
+#     else:
+#         batch_size = 1
+#     for batch in batched(initial_scopes, batch_size):
+#         doc_generators = [
+#             step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
+#             for initial_scope in batch
+#         ]
+#         for result, document, scope, trace in schedule(doc_generators):
+#             yield result, document, scope, trace
 
 
 def step_block(
@@ -375,6 +377,39 @@ def step_block_body(
                 append(loc, "array"),
             )
             trace = block.model_copy(update={"array": array})
+        case ObjectBlock():
+            if isinstance(block.object, dict):
+                values, background, scope, values_trace = yield from step_blocks(
+                    IterationType.ARRAY,
+                    state,
+                    scope,
+                    list(block.object.values()),
+                    append(loc, "object"),
+                )
+                assert isinstance(values, list)
+                assert isinstance(values_trace, list)
+                result = dict(zip(block.object.keys(), values))
+                object_trace = dict(zip(block.object.keys(), values_trace))
+                trace = block.model_copy(update={"object": object_trace})
+            elif isinstance(block.object, list):
+                (
+                    results,
+                    background,
+                    scope,
+                    object_trace,
+                ) = yield from step_blocks(  # type: ignore
+                    IterationType.ARRAY,
+                    state,
+                    scope,
+                    block.object,
+                    append(loc, "object"),
+                )
+                result = {}
+                for d in results:
+                    result = result | d
+                trace = block.model_copy(update={"object": object_trace})
+            else:
+                assert False
         case MessageBlock():
             content, background, scope, content_trace = yield from step_blocks(
                 IterationType.SEQUENCE,
@@ -651,11 +686,11 @@ def step_blocks(
             newloc = append(loc, "[" + str(i) + "]")
             if iteration_type == IterationType.SEQUENCE and state.yield_result:
                 iteration_state = state.with_yield_result(i + 1 == len(blocks))
-            iteration_result, o, scope, t = yield from step_block(
+            iteration_result, iteration_background, scope, t = yield from step_block(
                 iteration_state, scope, block, newloc
             )
             results.append(iteration_result)
-            background = messages_concat(background, o)
+            background = messages_concat(background, iteration_background)
             trace.append(t)  # type: ignore
     else:
         iteration_state = state.with_yield_result(
