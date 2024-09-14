@@ -25,3 +25,4 @@ document:
     stop:
     - '}'
     include_stop_sequence: true
+    mock_response: '{"bob": 20, "carol": 30}'

@@ -10,3 +10,4 @@ document:
     stop:
     - '!'
     include_stop_sequence: true
+    mock_response: " World!"

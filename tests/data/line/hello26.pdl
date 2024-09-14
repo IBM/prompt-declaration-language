@@ -23,3 +23,11 @@ document:
     stop:
     - '}'
     include_stop_sequence: true
+    mock_response:
+      |
+        Here is the code:
+        ```json
+        {
+          "bob": "20",
+          "carol": "30"
+        }
