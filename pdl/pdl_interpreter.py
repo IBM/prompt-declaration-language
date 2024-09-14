@@ -1,7 +1,7 @@
 import json
 import re
 import types
-from itertools import batched
+# from itertools import batched
 from pathlib import Path
 from typing import Any, Generator, Iterable, Optional, Sequence
 
@@ -188,23 +188,23 @@ def process_prog(
     # return result, document, scope, trace
 
 
-def process_progs(
-    state: InterpreterState,
-    initial_scopes: Iterable[ScopeType],
-    prog: Program,
-    loc=empty_block_location,
-) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
-    if state.batch > 1:
-        batch_size = state.batch
-    else:
-        batch_size = 1
-    for batch in batched(initial_scopes, batch_size):
-        doc_generators = [
-            step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
-            for initial_scope in batch
-        ]
-        for result, document, scope, trace in schedule(doc_generators):
-            yield result, document, scope, trace
+# def process_progs(
+#     state: InterpreterState,
+#     initial_scopes: Iterable[ScopeType],
+#     prog: Program,
+#     loc=empty_block_location,
+# ) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
+#     if state.batch > 1:
+#         batch_size = state.batch
+#     else:
+#         batch_size = 1
+#     for batch in batched(initial_scopes, batch_size):
+#         doc_generators = [
+#             step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
+#             for initial_scope in batch
+#         ]
+#         for result, document, scope, trace in schedule(doc_generators):
+#             yield result, document, scope, trace
 
 
 def step_block(
