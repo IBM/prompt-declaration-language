@@ -337,7 +337,7 @@ line25 = {
 }
 
 # Leaving this out for now, since we can't mock the model result
-#def test_line25(capsys):
+# def test_line25(capsys):
 #    do_test(line25, capsys)
 
 
