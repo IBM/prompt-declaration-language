@@ -5,4 +5,3 @@ document:
   parameters:
     stop: ["!"]
     include_stop_sequence: true
-
