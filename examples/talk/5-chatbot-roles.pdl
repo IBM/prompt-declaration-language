@@ -1,0 +1,19 @@
+description: chatbot, control structures, roles, contribute
+document:
+- include: ../granite/granite_defs.pdl
+- role: system
+  contribute: [context]
+  document: "{{ SYSTEM_CONTENT_CHAT }}"
+- "Type `quit` to exit this chatbot.\n"
+- repeat:
+    document:
+    - read:
+      message: ">>> "
+      def: query
+      contribute: [context]
+    - model: watsonx/ibm/granite-13b-chat-v2
+    - "\n\n"
+  until: "{{ query == 'quit'}}"
+  as: document
+role: user
+
