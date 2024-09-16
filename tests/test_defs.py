@@ -13,6 +13,7 @@ defs_data = {
                     "parameters": {
                         "stop": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World",
                     },
                 }
             ]
