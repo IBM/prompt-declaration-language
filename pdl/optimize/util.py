@@ -88,7 +88,7 @@ class PDLThread(Thread):
                     state,
                     scope,
                     self.pdl_program,
-                    timeout=self.timeout,
+                    # TODO: timeout=self.timeout,
                 )
                 document = messages_to_str(document)
                 # console.log("result", result)
