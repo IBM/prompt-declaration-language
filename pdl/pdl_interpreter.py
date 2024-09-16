@@ -378,10 +378,11 @@ def step_block_body(
             )
             trace = block.model_copy(update={"array": array})
         case ObjectBlock():
+            iteration_state = state.with_yield_result(False)
             if isinstance(block.object, dict):
                 values, background, scope, values_trace = yield from step_blocks(
                     IterationType.ARRAY,
-                    state,
+                    iteration_state,
                     scope,
                     list(block.object.values()),
                     append(loc, "object"),
@@ -390,7 +391,6 @@ def step_block_body(
                 assert isinstance(values_trace, list)
                 result = dict(zip(block.object.keys(), values))
                 object_trace = dict(zip(block.object.keys(), values_trace))
-                trace = block.model_copy(update={"object": object_trace})
             elif isinstance(block.object, list):
                 (
                     results,
@@ -399,7 +399,7 @@ def step_block_body(
                     object_trace,
                 ) = yield from step_blocks(  # type: ignore
                     IterationType.ARRAY,
-                    state,
+                    iteration_state,
                     scope,
                     block.object,
                     append(loc, "object"),
@@ -407,9 +407,11 @@ def step_block_body(
                 result = {}
                 for d in results:
                     result = result | d
-                trace = block.model_copy(update={"object": object_trace})
             else:
                 assert False
+            trace = block.model_copy(update={"object": object_trace})
+            if state.yield_result and not iteration_state.yield_result:
+                yield YieldResultMessage(result)
         case MessageBlock():
             content, background, scope, content_trace = yield from step_blocks(
                 IterationType.SEQUENCE,
