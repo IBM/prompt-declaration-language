@@ -21,7 +21,7 @@ This program has a `description` field, which contains a title. The `description
 To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-python3 -m pdl.pdl ./examples/tutorial/simple_program.pdl
+ pdl examples/tutorial/simple_program.pdl
 ```
 
 This results in the following output:
@@ -225,9 +225,9 @@ This program has the same output has the one from the previous section.
 
 ##  Muting Block Output with contribute
 
-By default, when a PDL block is executed it produces a result that gets printed in the output document. It is possible to mute this feature by setting `show_result` to `false` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document. The value of the variable specified in `def` is still set to the result of the block.
+By default, when a PDL block is executed it produces a result that is contributed to the overall result, and it also contributes to the background context. It is possible to mute both contributions by setting `contribute` to `[]` for any block. This feature allows the computation of intermediate values that are not necessarily output in the document. The value of the variable specified in `def` is still set to the result of the block.
 
-Consider the same example as above, but with `show_result` set to `false` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/muting_block_output.pdl)):
+Consider the same example as above, but with `contribute` set to `[]` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/muting_block_output.pdl)):
 
 ```yaml
 description: function def and call
@@ -261,7 +261,7 @@ In general, `contribute` can be used to set how the result of the block contribu
 Here are its possible values:
 - `[]`: no contribution to either the final result or the background context
 
-- `[result]: contribute to the final result but not the background context
+- `[result]`: contribute to the final result but not the background context
 
 - `[context]`: contribute to the background context but not the final result
   
@@ -738,7 +738,7 @@ To change the log filename, you can pass it to the interpreter as follows:
 
 Some of the most common prompt patterns/techniques have been implemented as PDL functions. A demo of the ReAct template:
 
-<iframe src="https://ibm.ent.box.com/embed/s/9ko71cfbybhtn08z29bbkw74unl5faki?sortColumn=date" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
+<iframe src=https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45 width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
 
 ### Chain of Thought (Wei et al., 2022)
 
