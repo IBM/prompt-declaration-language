@@ -836,8 +836,11 @@ def step_call_model(
                 }
             )
         case LitellmModelBlock():
-            parameters = litellm_block_to_dict(block)
-            params, param_errors = process_expr(scope, parameters, loc)
+            if isinstance(block.parameters, LitellmParameters):
+                params_expr = litellm_parameters_to_dict(block.parameters)
+            else:
+                params_expr = block.parameters
+            params, param_errors = process_expr(scope, params_expr, loc)
             errors += param_errors
             concrete_block = block.model_copy(
                 update={
@@ -929,7 +932,9 @@ def generate_client_response_streaming(
             )
         case LitellmModelBlock():
             msg_stream = LitellmModel.generate_text_stream(
-                model_id=block.model, messages=model_input, parameters=block.parameters
+                model_id=block.model,
+                messages=model_input,
+                parameters=litellm_parameters_to_dict(block.parameters),
             )
         case _:
             assert False
@@ -952,15 +957,15 @@ def generate_client_response_streaming(
     return complete_msg
 
 
-def litellm_block_to_dict(block: LitellmModelBlock) -> dict[str, Any]:
-    if isinstance(block.parameters, dict):
-        return block.parameters
-    if block.parameters is None:
-        block_parameters = LitellmParameters()
-    else:
-        block_parameters = block.parameters
-    parameters = block_parameters.model_dump(exclude={"stream"})
-    return parameters
+def litellm_parameters_to_dict(
+    parameters: Optional[LitellmParameters | dict[str, Any]]
+) -> dict[str, Any]:
+    if isinstance(parameters, dict):
+        return parameters
+    if parameters is None:
+        parameters = LitellmParameters()
+    parameters_dict = parameters.model_dump(exclude={"stream"})
+    return parameters_dict
 
 
 def generate_client_response_single(
@@ -982,7 +987,9 @@ def generate_client_response_single(
             )
         case LitellmModelBlock():
             msg = LitellmModel.generate_text(
-                model_id=block.model, messages=model_input, parameters=block.parameters
+                model_id=block.model,
+                messages=model_input,
+                parameters=litellm_parameters_to_dict(block.parameters),
             )
     if state.yield_result:
         yield YieldResultMessage(msg["content"])
