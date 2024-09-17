@@ -83,10 +83,10 @@ empty_scope: ScopeType = {"context": []}
 
 
 class InterpreterState(BaseModel):
-    yield_result: bool = True
+    yield_result: bool = False
     yield_background: bool = False
     log: list[str] = []
-    batch: int = 0
+    batch: int = 1
     # batch=0: streaming
     # batch=1: call to generate with `input`
     role: RoleType = None

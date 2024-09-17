@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Optional, TypedDict
+from typing import Any, Literal, Optional, TypedDict
 
 import yaml
 from pydantic.json_schema import models_json_schema
@@ -44,6 +44,7 @@ def exec_program(
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     loc: Optional[LocationType] = None,
+    output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a value of type `pdl.pdl_ast.Program`.
 
@@ -52,16 +53,23 @@ def exec_program(
         config: Interpreter configuration. Defaults to None.
         scope: Environment defining the initial variables in scope to execute the program. Defaults to None.
         loc: Source code location mapping. Defaults to None.
+        output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
-        Return the final result.
+        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
     """
     config = config or {}
     state = InterpreterState(**config)
     scope = scope or {}
     loc = loc or empty_block_location
-    result, _, _, _ = process_prog(state, scope, prog, loc)
-    return result
+    result, _, scope, trace = process_prog(state, scope, prog, loc)
+    match output:
+        case "result":
+            return result
+        case "all":
+            return {"result": result, "scope": scope, "trace": trace}
+        case _:
+            assert False, 'The `output` variable should be "result" or "all"'
 
 
 def exec_dict(
@@ -69,6 +77,7 @@ def exec_dict(
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     loc: Optional[LocationType] = None,
+    output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a dictionary.
 
@@ -77,12 +86,13 @@ def exec_dict(
         config: Interpreter configuration. Defaults to None.
         scope: Environment defining the initial variables in scope to execute the program. Defaults to None.
         loc: Source code location mapping. Defaults to None.
+        output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
         Return the final result.
     """
     program = Program.model_validate(prog)
-    result = exec_program(program, config, scope, loc)
+    result = exec_program(program, config, scope, loc, output)
     return result
 
 
@@ -90,6 +100,7 @@ def exec_str(
     prog: str,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
+    output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML string.
 
@@ -97,12 +108,13 @@ def exec_str(
         prog: Program to execute.
         config: Interpreter configuration. Defaults to None.
         scope: Environment defining the initial variables in scope to execute the program. Defaults to None.
+        output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
         Return the final result.
     """
     program, loc = parse_str(prog)
-    result = exec_program(program, config, scope, loc)
+    result = exec_program(program, config, scope, loc, output)
     return result
 
 
@@ -110,6 +122,7 @@ def exec_file(
     prog: str,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
+    output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML file.
 
@@ -117,12 +130,13 @@ def exec_file(
         prog: Program to execute.
         config: Interpreter configuration. Defaults to None.
         scope: Environment defining the initial variables in scope to execute the program. Defaults to None.
+        output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
         Return the final result.
     """
     program, loc = parse_file(prog)
-    result = exec_program(program, config, scope, loc)
+    result = exec_program(program, config, scope, loc, output)
     return result
 
 
@@ -204,8 +218,13 @@ def main():
         case _:
             assert False
 
+    if stream_result:
+        batch = 0
+    else:
+        batch = 1
+
     config = InterpreterConfig(
-        yield_result=stream_result, yield_background=stream_background
+        yield_result=stream_result, yield_background=stream_background, batch=batch
     )
     pdl_file = Path(args.pdl)
     if args.trace == "*_trace.json":
