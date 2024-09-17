@@ -3,20 +3,21 @@ defs:
   available_tools:
     data: ["Search"]
 document:
-  - include: ../ReAct.pdl
-  - include: ../../granite/granite_defs.pdl
+  - include: examples/prompt_library/ReAct.pdl
+  - include: examples/granite/granite_defs.pdl
   - def: filtered_tools
     call: filter_tools_by_name
-    contribute: []
+    show_result: false
     args:
       tools: "{{ default_tools }}"
       tool_names: "{{ available_tools }}"
   - def: QUESTION
-    contribute: []
-    read: 
+    show_result: false
+    read:
     message: "Please enter a question: "
   - def: GRANITE_RESULT
     call: react
+    show_result: true
     args:
       context: "{{ granite_models.granite_7b_lab.system_prompt }}"
       question: "{{ QUESTION }}"
@@ -26,6 +27,7 @@ document:
   - "\n\n-------- Verifying answer --------\n\n"
   - def: LLAMA_RESULT
     call: react
+    show_result: true
     args:
       context: ""
       question: |-

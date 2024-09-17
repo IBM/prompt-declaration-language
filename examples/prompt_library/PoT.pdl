@@ -95,15 +95,15 @@ defs:
 
     - def: PROGRAM
       model: "{{ model }}"
-      parameters:
+      params:
         stop_sequences: ["\nAnswer: "]
         include_stop_sequence: false
     - def: ANSWER
       lan: python
-      contribute: []
+      show_result: false
       code: "{{ PROGRAM }}"
     - get: ANSWER
-      contribute: []
+      show_result: false
 
   program_of_thought_backtick:
     function:
@@ -217,15 +217,16 @@ defs:
       # Python code, return ans
     - def: PROGRAM
       model: "{{ model }}"
+      show_result: true
       parser:
         regex: '```.*\n((?:.|\n|$)*?)$\n\s*```' # extracts code from backtick blocks
         mode: findall
-      parameters:
+      params:
         stop_sequences: ["\nAnswer: "]
         include_stop_sequence: false
     - def: ANSWER
       lan: python
-      contribute: []
+      show_result: false
       code: "{{ PROGRAM|join('\n') }}"
     - get: ANSWER
-      contribute: []
+      show_result: true
