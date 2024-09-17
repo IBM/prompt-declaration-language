@@ -32,7 +32,7 @@ defs:
   finish_action:
     data:
       display_name: Finish
-      pdl_function: 
+      pdl_function:
       description: Respond with the Answer
       parameters:
         - name: answer
@@ -223,6 +223,6 @@ defs:
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
         until: "{{ action.name == 'Finish' }}"
-      - show_result: false
+      - show_result: true
         data:
           answer: "{{ action.arguments }}"
