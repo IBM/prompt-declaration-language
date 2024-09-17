@@ -128,7 +128,10 @@ def generate(
         if not state.yield_result:
             if state.yield_background:
                 print("\n----------------")
-            print(stringify(result))
+            if result is None:
+                print()
+            else:
+                print(stringify(result))
         else:
             print()
         with open(log_file, "w", encoding="utf-8") as log_fp:
@@ -859,7 +862,7 @@ def step_call_model(
             errors,
             block.model_copy(update={"trace": concrete_block}),
         )
-        return None, [], scope, trace
+        return "", [], scope, trace
     # Execute model call
     try:
         litellm_params = {}
