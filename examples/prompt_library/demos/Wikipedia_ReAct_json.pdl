@@ -13,7 +13,7 @@ document:
       tool_names: "{{ available_tools }}"
   - call: react_json
     args:
-     question: "When did the Battle of White Plains take place?"
+     task: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct
      tools: "{{ filtered_tools }}"
      trajectories: []
