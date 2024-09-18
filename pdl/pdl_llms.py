@@ -1,5 +1,6 @@
 from typing import Any, Generator, Optional
 
+import litellm
 from dotenv import load_dotenv
 from genai.client import Client as BamClient
 from genai.credentials import Credentials as BamCredentials
@@ -9,7 +10,6 @@ from litellm import completion
 
 from .pdl_ast import (
     BamTextGenerationParameters,
-    LitellmParameters,
     Message,
     set_default_granite_model_parameters,
     set_default_model_params,
@@ -142,16 +142,14 @@ class LitellmModel:
     def generate_text(
         model_id: str,
         messages: list[Message],
-        parameters: Optional[dict | LitellmParameters],
+        parameters: dict[str, Any],
     ) -> Message:
-        params = parameters
         if "granite" in model_id:
-            if isinstance(params, dict):
-                params = set_default_granite_model_parameters(params)
-            else:
-                assert False
+            parameters = set_default_granite_model_parameters(parameters)
+        if parameters.get("mock_response") is not None:
+            litellm.suppress_debug_info = True
         response = completion(
-            model=model_id, messages=messages, stream=False, **params  # pyright: ignore
+            model=model_id, messages=messages, stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
@@ -162,16 +160,15 @@ class LitellmModel:
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
-        parameters: Optional[dict | LitellmParameters],
+        parameters: dict[str, Any],
     ) -> Generator[Message, Any, None]:
-        params = parameters
         if "granite" in model_id:
-            if isinstance(params, dict):
-                params = set_default_granite_model_parameters(params)
-            else:
-                assert False
+            parameters = set_default_granite_model_parameters(parameters)
         response = completion(
-            model=model_id, messages=messages, stream=True, **params  # pyright: ignore
+            model=model_id,
+            messages=messages,
+            stream=True,
+            **parameters,
         )
         for chunk in response:
             msg = chunk.choices[0].delta  # pyright: ignore
