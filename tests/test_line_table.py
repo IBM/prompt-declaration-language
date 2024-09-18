@@ -4,7 +4,7 @@ from pdl.pdl_interpreter import generate
 def do_test(t, capsys):
     generate(t["file"], None, None, {}, None)
     captured = capsys.readouterr()
-    output_string = captured.out
+    output_string = captured.out + "\n" + captured.err
     output = output_string.split("\n")
     print(output)
     assert set(output) == set(t["errors"])

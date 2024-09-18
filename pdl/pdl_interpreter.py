@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import types
 
 # from itertools import batched
@@ -220,7 +221,7 @@ def step_block(
     if not isinstance(block, Block):
         result, errors = process_expr(scope, block, loc)
         if len(errors) != 0:
-            trace = handle_error(block, loc, None, errors, block)
+            trace = handle_error(loc, None, errors, block)
             result = block
             background = [{"role": state.role, "content": str(block)}]
         else:
@@ -265,16 +266,14 @@ def step_advanced_block(
         try:
             result = parse_result(block.parser, result)
         except PDLRuntimeParserError as e:
-            trace = handle_error(block, loc, e.msg, [], trace)
+            trace = handle_error(loc, e.msg, [], trace)
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
     if block.spec is not None and not isinstance(block, FunctionBlock):
         errors = type_check_spec(result, block.spec, block.location)
         if len(errors) > 0:
-            trace = handle_error(
-                block, loc, "Type errors during spec checking", errors, trace
-            )
+            trace = handle_error(loc, "Type errors during spec checking", errors, trace)
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
@@ -311,7 +310,6 @@ def step_block_body(
             if result is None:
                 background = []
                 trace = handle_error(
-                    block,
                     append(loc, "get"),
                     f"Variable is undefined: {var}",
                     [],
@@ -336,7 +334,7 @@ def step_block_body(
                     result = None
                     background = []
                     trace = handle_error(
-                        block, append(loc, "data"), None, errors, block.model_copy()
+                        append(loc, "data"), None, errors, block.model_copy()
                     )
                 else:
                     background = [{"role": state.role, "content": stringify(result)}]
@@ -426,12 +424,12 @@ def step_block_body(
             result = {"role": state.role, "content": content_trace}
             trace = block.model_copy(update={"content": content})
         case IfBlock():
-            result = None
-            background = []
             b, errors = process_condition(scope, block.condition, append(loc, "if"))
             if len(errors) != 0:
+                result = None
+                background = []
                 trace = handle_error(
-                    block, append(loc, "if"), None, errors, block.model_copy()
+                    append(loc, "if"), None, errors, block.model_copy()
                 )
             else:
                 if b:
@@ -457,6 +455,8 @@ def step_block_body(
                         }
                     )
                 else:
+                    result = ""
+                    background = []
                     trace = block.model_copy(update={"if_result": b})
         case RepeatBlock(num_iterations=n):
             results = []
@@ -502,10 +502,9 @@ def step_block_body(
                 kloc = append(append(block.location, "for"), k)
                 klist, errors = process_expr(scope, v, kloc)
                 if len(errors) != 0:
-                    trace = handle_error(block, kloc, None, errors, block.model_copy())
+                    trace = handle_error(kloc, None, errors, block.model_copy())
                 if not isinstance(klist, list):
                     trace = handle_error(
-                        block,
                         kloc,
                         "Values inside the For block must be lists",
                         [],
@@ -517,7 +516,6 @@ def step_block_body(
             if len(set(lengths)) != 1:  # Not all the lists are of the same length
                 result = []
                 trace = handle_error(
-                    block,
                     append(block.location, "for"),
                     "Lists inside the For block must be of the same length",
                     [],
@@ -588,7 +586,7 @@ def step_block_body(
                 stop, errors = process_condition(scope, cond, append(loc, "until"))
                 if len(errors) != 0:
                     trace = handle_error(
-                        block, append(loc, "until"), None, errors, block.model_copy()
+                        append(loc, "until"), None, errors, block.model_copy()
                     )
                     iterations_trace.append(trace)
                     break
@@ -856,7 +854,6 @@ def step_call_model(
             assert False
     if len(errors) != 0:
         trace = handle_error(
-            block,
             loc,
             None,
             errors,
@@ -886,7 +883,6 @@ def step_call_model(
         return result, background, scope, trace
     except Exception as e:
         trace = handle_error(
-            block,
             loc,
             f"Model error: {e}",
             [],
@@ -1052,7 +1048,6 @@ def step_call_api(
         trace = block.model_copy(update={"input": input_trace})
     except Exception as e:
         trace = handle_error(
-            block,
             loc,
             f"API error: {e}",
             [],
@@ -1084,7 +1079,6 @@ def step_call_code(
                 background = [{"role": state.role, "content": str(result)}]
             case _:
                 trace = handle_error(
-                    block,
                     append(loc, "lan"),
                     f"Unsupported language: {block.lan}",
                     [],
@@ -1095,7 +1089,6 @@ def step_call_code(
                 return result, background, scope, trace
     except Exception as e:
         trace = handle_error(
-            block,
             loc,
             f"Code error: {e}",
             [],
@@ -1128,18 +1121,13 @@ def step_call(
     background: Messages = []
     args, errors = process_expr(scope, block.args, append(loc, "args"))
     if len(errors) != 0:
-        trace = handle_error(
-            block, append(loc, "args"), None, errors, block.model_copy()
-        )
+        trace = handle_error(append(loc, "args"), None, errors, block.model_copy())
     closure_expr, errors = process_expr(scope, block.call, append(loc, "call"))
     if len(errors) != 0:
-        trace = handle_error(
-            block, append(loc, "call"), None, errors, block.model_copy()
-        )
+        trace = handle_error(append(loc, "call"), None, errors, block.model_copy())
     closure = get_var(closure_expr, scope)
     if closure is None:
         trace = handle_error(
-            block,
             append(loc, "call"),
             f"Function is undefined: {block.call}",
             [],
@@ -1150,7 +1138,6 @@ def step_call(
         type_errors = type_check_args(args, closure.function, argsloc)
         if len(type_errors) > 0:
             trace = handle_error(
-                block,
                 argsloc,
                 f"Type errors during function call to {closure_expr}",
                 type_errors,
@@ -1172,7 +1159,6 @@ def step_call(
                 errors = type_check_spec(result, closure.spec, funloc)
                 if len(errors) > 0:
                     trace = handle_error(
-                        block,
                         loc,
                         f"Type errors in result of function call to {closure_expr}",
                         errors,
@@ -1186,7 +1172,7 @@ def process_input(
 ) -> tuple[str, Messages, ScopeType, ReadBlock | ErrorBlock]:
     read, errors = process_expr(scope, block.read, append(loc, "read"))
     if len(errors) != 0:
-        trace = handle_error(block, loc, None, errors, block.model_copy())
+        trace = handle_error(loc, None, errors, block.model_copy())
         return "", [], scope, trace
     if read is not None:
         file = state.cwd / read
@@ -1238,7 +1224,6 @@ def step_include(
         return result, background, scope, include_trace
     except PDLParseError as e:
         trace = handle_error(
-            block,
             append(loc, "include"),
             f"Attempting to include invalid yaml: {str(file)}",
             e.msg,
@@ -1325,7 +1310,6 @@ def append_log(state: InterpreterState, title, somestring):
 
 
 def handle_error(
-    block: BlockType,
     loc: LocationType,
     top_message: Optional[str],
     errors: list[str],
@@ -1335,7 +1319,7 @@ def handle_error(
     if top_message is not None:
         msg += f"{get_loc_string(loc)}{top_message}\n"
     msg += "\n".join(errors)
-    print("\n" + msg)
+    print("\n" + msg, file=sys.stderr)
     return ErrorBlock(msg=msg, program=subtrace)
 
 
