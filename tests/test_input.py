@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
@@ -11,10 +13,10 @@ input_json_data = {
     "description": "Input block example with json input",
     "document": [
         {
-            "read": "tests/data/input.json",
+            "read": "./data/input.json",
             "parser": "json",
             "def": "PERSON",
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "PERSON.name"},
         " lives at the following address:\n",
@@ -30,7 +32,7 @@ input_json_data = {
 
 
 def test_input_json():
-    state = InterpreterState()
+    state = InterpreterState(cwd=Path(__file__).parent)
     data = Program.model_validate(input_json_data)
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert (
@@ -58,7 +60,6 @@ input_json_data_defs1 = {
     "defs": {
         "data": {
             "read": "tests/data/input_data.txt",
-            "show_result": True,
         }
     },
     "document": ["{{ data }}"],

@@ -3,11 +3,11 @@ defs:
   available_tools:
     data: ["Search"]
 document:
-  - include: examples/prompt_library/tools.pdl
-  - include: examples/prompt_library/ReAct.pdl
+  - include: ../tools.pdl
+  - include: ../ReAct.pdl
   - def: filtered_tools
     call: filter_tools_by_name
-    show_result: false
+    contribute: []
     args:
       tools: "{{ default_tools }}"
       tool_names: "{{ available_tools }}"

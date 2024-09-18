@@ -1,18 +1,14 @@
 description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
+  TRUTH:
+    read: ./ground_truth.txt
 document:
-- read: examples/code/data.json
-  parser: json
-  def: CODE
-  show_result: False
-- read: examples/code/ground_truth.txt
-  def: TRUTH
-  show_result: False
-- model: ibm/granite-20b-code-instruct-v2
+- model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
-  show_result: False
-  parameters:
-    decoding_method: greedy
-    max_new_tokens: 1024
+  contribute: []
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -26,7 +22,7 @@ document:
       ```
       {{ CODE.source_code }}```
 - def: EVAL
-  show_result: False
+  contribute: []
   lan: python
   code:
     |
@@ -38,7 +34,8 @@ document:
     {{ TRUTH }}
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- data:
+- data: 
     input: "{{ CODE }}"
     output: "{{ EXPLANATION }}"
     metric: "{{ EVAL }}"
+

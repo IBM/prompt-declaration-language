@@ -1,13 +1,11 @@
 description: Granite Single-Round Chat
 document:
-- include: examples/granite/granite_defs.pdl
-- |
-  {{ SYSTEM_CONTENT_CHAT }}
-  {{ USER_TAG }}
-  {{ PROMPT }}
-  {{ ASSISTANT_TAG }}
-- model: ibm/granite-13b-chat-v2
-  params:
+- include: ./granite_defs.pdl
+- role: system
+  content: "{{ SYSTEM_CONTENT_CHAT }}"
+- "{{ PROMPT }}"
+- model: watsonx/ibm/granite-13b-chat-v2
+  parameters:
     decoding_method: sample
     max_new_tokens: 512
-- "\n"
+role: user

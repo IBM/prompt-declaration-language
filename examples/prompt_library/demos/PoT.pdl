@@ -1,6 +1,6 @@
 description: Demo of PoT template
 document:
-  - include: examples/prompt_library/PoT.pdl
+  - include: ../PoT.pdl
   - def: ANSWER
     call: program_of_thought
     args:

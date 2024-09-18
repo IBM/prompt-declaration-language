@@ -36,7 +36,7 @@ def process():
                     correct = True
                     wrongs = 0
                     try:
-                        state = InterpreterState(yield_output=True)
+                        state = InterpreterState(yield_background=True)
                         scope = empty_scope
                         scope["question"] = question
                         scope["code"] = code

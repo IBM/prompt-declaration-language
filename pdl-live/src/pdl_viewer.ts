@@ -3,32 +3,14 @@ import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
-export const hello = {
-  kind: 'document',
-  description: 'Hello world to call into a model',
-  document: [
-    'Hello,',
-    {
-      kind: 'model',
-      model: 'ibm/granite-20b-code-instruct-v2',
-      parameters:
-        '{"beam_width":null,"decoding_method":"greedy","include_stop_sequence":true,"length_penalty":null,"max_new_tokens":1024,"min_new_tokens":1,"random_seed":null,"repetition_penalty":1.07,"return_options":null,"stop_sequences":["!"],"temperature":null,"time_limit":null,"top_k":null,"top_p":null,"truncate_input_tokens":null,"typical_p":null}',
-      result: ' world!',
-    },
-  ],
-  result: 'Hello, world!',
-};
-
-export const data = hello;
-
 export function show_output(data: PdlBlocks) {
   const div = document.createElement('div');
   div.classList.add('pdl_block');
   match(data)
-    .with(P.string, output => {
+    .with(P.union(P.string, P.number), output => {
       div.innerHTML = htmlize(output);
     })
-    .with({show_result: false}, () => {
+    .with({contribute: P.union([], ['context'])}, () => {
       div.classList.add('pdl_show_result_false');
       div.innerHTML = '☐';
     })
@@ -58,6 +40,45 @@ export function show_blocks(blocks: PdlBlocks) {
   return doc_fragment;
 }
 
+export function show_array(array: PdlBlocks[]) {
+  const doc_fragment = document.createDocumentFragment();
+  const open_bracket = document.createElement('pre');
+  open_bracket.innerHTML = '[';
+  const comma = document.createElement('pre');
+  comma.innerHTML = ',';
+  const close_bracket = document.createElement('pre');
+  close_bracket.innerHTML = ']';
+  doc_fragment.appendChild(open_bracket);
+  for (const blocks of array) {
+    const child = show_blocks(blocks);
+    doc_fragment.appendChild(child);
+    doc_fragment.appendChild(comma);
+  }
+  doc_fragment.appendChild(close_bracket);
+  return doc_fragment;
+}
+
+export function show_object(object: {[key: string]: PdlBlocks}) {
+  const doc_fragment = document.createDocumentFragment();
+  const open_curly = document.createElement('pre');
+  open_curly.innerHTML = '{';
+  const comma = document.createElement('pre');
+  comma.innerHTML = ',';
+  const close_curly = document.createElement('pre');
+  close_curly.innerHTML = '}';
+  doc_fragment.appendChild(open_curly);
+  Object.keys(object).forEach(key => {
+    const key_column = document.createElement('pre');
+    key_column.innerHTML = key + ':';
+    doc_fragment.appendChild(key_column);
+    const child = show_blocks(object[key]);
+    doc_fragment.appendChild(child);
+    doc_fragment.appendChild(comma);
+  });
+  doc_fragment.appendChild(close_curly);
+  return doc_fragment;
+}
+
 export function show_block(data: PdlBlock) {
   if (typeof data === 'number' || typeof data === 'string') {
     return show_output(data);
@@ -75,7 +96,7 @@ export function show_block(data: PdlBlock) {
   div.appendChild(body);
   add_def(body, data.def);
   body.classList.add('pdl_block');
-  if (data?.show_result === false) {
+  if (data?.contribute !== undefined && !data.contribute.includes('result')) {
     body.classList.add('pdl_show_result_false');
   }
   match(data)
@@ -155,7 +176,30 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'array'}, data => {
       body.classList.add('pdl_array');
-      const doc_child = show_blocks(data.array);
+      let doc_child;
+      if (data.array instanceof Array) {
+        doc_child = show_array(data.array);
+      } else {
+        doc_child = document.createDocumentFragment();
+        const open_bracket = document.createElement('pre');
+        open_bracket.innerHTML = '[';
+        const close_bracket = document.createElement('pre');
+        close_bracket.innerHTML = ']';
+        doc_child.appendChild(open_bracket);
+        const doc_elem = show_blocks(data.array);
+        doc_child.appendChild(doc_elem);
+        doc_child.appendChild(close_bracket);
+      }
+      body.appendChild(doc_child);
+    })
+    .with({kind: 'object'}, data => {
+      body.classList.add('pdl_object');
+      let doc_child;
+      if (data.object instanceof Array) {
+        doc_child = show_array(data.object);
+      } else {
+        doc_child = show_object(data.object);
+      }
       body.appendChild(doc_child);
     })
     .with({kind: 'message'}, data => {
@@ -251,13 +295,13 @@ export function update_code(blocks: PdlBlocks) {
 
 export function show_result_or_code(block: PdlBlock): Element {
   const div: Element = match(block)
-    .with(P.string, data => show_string(data))
-    .with({result: P.string}, data => show_string(data.result))
+    .with(P.union(P.string, P.number), data => show_value(data))
+    .with({result: P._}, data => show_value(data.result))
     .otherwise(data => show_code(data));
   return div;
 }
 
-export function show_string(s: string) {
+export function show_value(s: unknown) {
   const div = document.createElement('div');
   div.innerHTML = htmlize(s);
   return div;
@@ -280,9 +324,12 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   match(new_data).with({trace: P._}, data => {
     data.trace = undefined;
   });
-  // remove show_result: true
-  if (new_data?.show_result) {
-    new_data.show_result = undefined;
+  // remove contribute: ["result", context]
+  if (
+    new_data?.contribute?.includes('result') &&
+    new_data?.contribute?.includes('context')
+  ) {
+    new_data.contribute = undefined;
   }
   // remove empty defs list
   if (Object.keys(data?.defs ?? {}).length === 0) {

@@ -1,4 +1,4 @@
-from pdl.pdl_ast import Program
+from pdl.pdl_ast import ContributeTarget, Program
 from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 cond_data = {
@@ -36,8 +36,8 @@ cond_data = {
                     "def": "QUESTION",
                     "document": [
                         {
-                            "model": "ibm/granite-20b-code-instruct",
-                            "params": {
+                            "model": "watsonx/ibm/granite-20b-code-instruct",
+                            "parameters": {
                                 "stop_sequences": ["Answer"],
                                 "include_stop_sequence": False,
                             },
@@ -49,8 +49,8 @@ cond_data = {
                     "document": [
                         {
                             "def": "REASON_OR_CALC",
-                            "model": "ibm/granite-20b-code-instruct",
-                            "params": {
+                            "model": "watsonx/ibm/granite-20b-code-instruct",
+                            "parameters": {
                                 "stop_sequences": ["<<"],
                                 "include_stop_sequence": True,
                             },
@@ -60,8 +60,8 @@ cond_data = {
                                 "document": [
                                     {
                                         "def": "EXPR",
-                                        "model": "ibm/granite-20b-code-instruct",
-                                        "params": {
+                                        "model": "watsonx/ibm/granite-20b-code-instruct",
+                                        "parameters": {
                                             "stop_sequences": ["=", "\n"],
                                             "include_stop_sequence": False,
                                         },
@@ -152,7 +152,7 @@ def cond_data1(show, name):
                         },
                     }
                 ],
-                "show_result": show,
+                "contribute": show,
             },
             {
                 "then": [", hello there!\n"],
@@ -165,14 +165,16 @@ def cond_data1(show, name):
 
 def test_cond1():
     state = InterpreterState()
-    data = Program.model_validate(cond_data1(False, "blah"))
+    data = Program.model_validate(cond_data1([], "blah"))
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == ""
 
 
 def test_cond2():
     state = InterpreterState()
-    data = Program.model_validate(cond_data1(True, "acy"))
+    data = Program.model_validate(
+        cond_data1([ContributeTarget.RESULT, ContributeTarget.CONTEXT], "acy")
+    )
     document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Tracy, hello there!\n"
 
@@ -183,7 +185,6 @@ repeat_until_data = {
         {
             "def": "I",
             "document": [{"lan": "python", "code": ["result = 0"]}],
-            "show_result": True,
         },
         "\n",
         {
@@ -194,7 +195,6 @@ repeat_until_data = {
                             "def": "I",
                             "lan": "python",
                             "code": "result = {{ I }} + 1",
-                            "show_result": True,
                         },
                         "\n",
                     ]
@@ -226,7 +226,6 @@ repeat_until_array_data = {
         {
             "def": "I",
             "document": [{"lan": "python", "code": ["result = 0"]}],
-            "show_result": True,
         },
         "\n",
         {
@@ -237,7 +236,6 @@ repeat_until_array_data = {
                             "def": "I",
                             "lan": "python",
                             "code": "result = {{ I }} + 1",
-                            "show_result": True,
                         },
                         "\n",
                     ]
@@ -263,7 +261,6 @@ repeat_until_document_data = {
         {
             "def": "I",
             "document": [{"lan": "python", "code": ["result = 0"]}],
-            "show_result": True,
         },
         "\n",
         {
@@ -274,7 +271,6 @@ repeat_until_document_data = {
                             "def": "I",
                             "lan": "python",
                             "code": ["result = {{ I }} + 1"],
-                            "show_result": True,
                         },
                         "\n",
                     ]
@@ -315,7 +311,6 @@ repeat_until_str_data = {
         {
             "def": "I",
             "document": [{"lan": "python", "code": ["result = 0"]}],
-            "show_result": True,
         },
         "\n",
         {
@@ -329,7 +324,6 @@ repeat_until_str_data = {
                                 "code": ["result = {{ I }} + 1"],
                             }
                         ],
-                        "show_result": True,
                     },
                     "\n",
                 ],

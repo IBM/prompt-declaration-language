@@ -7,7 +7,7 @@ from pdl.pdl_interpreter import (
 )
 
 model_parser = {
-    "model": "ibm/granite-20b-code-instruct",
+    "model": "watsonx/ibm/granite-20b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "document": [
@@ -21,7 +21,11 @@ model_parser = {
         ]
     },
     "parser": "json",
-    "params": {"stop_sequences": ["}"], "include_stop_sequence": True},
+    "parameters": {
+        "stop_sequences": ["}"],
+        "include_stop_sequence": True,
+        "mock_response": '{"bob": 20, "carol": 30}',
+    },
 }
 
 
@@ -34,7 +38,7 @@ def test_model_parser():
 
 
 model_parser1 = {
-    "model": "ibm/granite-34b-code-instruct",
+    "model": "watsonx/ibm/granite-34b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "document": [
@@ -42,7 +46,7 @@ model_parser1 = {
         ]
     },
     "parser": "json",
-    "params": {"stop_sequences": ["}"], "include_stop_sequence": True},
+    "parameters": {"stop_sequences": ["}"], "include_stop_sequence": True},
 }
 
 
@@ -53,7 +57,7 @@ def test_model_parser1():
     assert contains_error(trace)
 
 
-get_parser = {"get": "x", "parser": "json", "def": "y", "show_result": False}
+get_parser = {"get": "x", "parser": "json", "def": "y", "contribute": []}
 
 
 def test_get_parser():

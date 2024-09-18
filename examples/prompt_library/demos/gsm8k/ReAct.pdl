@@ -25,8 +25,8 @@ defs:
             - thought: He sold $1200 this month.
             - action: Finish[$1200]
 document:
-  - include: examples/prompt_library/tools.pdl
-  - include: examples/prompt_library/ReAct.pdl
+  - include: ../tools.pdl
+  - include: ../ReAct.pdl
   - call: react
     args:
      question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"

@@ -1,0 +1,34 @@
+document:
+- include: ./react-fun.pdl
+- include: ../granite/granite_defs.pdl
+- def: QUESTION
+  read: 
+  message: "Please enter a question: "
+- def: PROPOSED
+  call: react
+  args:
+    context:
+    - role: system
+      content: "{{ granite_models.granite_7b_lab.system_prompt }}"
+    question: "{{ QUESTION }}"
+    model: watsonx/ibm/granite-7b-lab
+- def: ANSWER
+  model: watsonx/ibm/granite-34b-code-instruct
+  input:
+    document: |
+      Get the topic from the following:
+      {{ PROPOSED }}
+- "\n\n----- Verifying answer... -----\n\n"
+- "{{ ANSWER }}"
+- "\n"
+- def: VERIFIED
+  call: react
+  args:
+    question: |-
+      Is this the right answer to this question?
+      "{{ QUESTION }}"
+      Proposed answer: {{ PROPOSED.arguments.topic }}
+
+      Please answer as True or False.
+    model: ibm/granite-34b-code-instruct
+- "\n\nThe answer '{{ PROPOSED.answer.topic }}' has been verified as '{{VERIFIED.answer.topic}}'.\n"

@@ -1,39 +1,45 @@
-description: Arithmetic Expressions
+description: Math Problems
 document:
-- read: examples/arith/example1.txt
-- read: examples/arith/example2.txt
+- read: ../arith/example1.txt
+- read: ../arith/example2.txt
 - repeat:
-  - "\nQuestion: "
-  - def: QUESTION
-    model: ibm/granite-20b-code-instruct-v2
-    parameters:
-      stop_sequences:
-      - Answer
-      include_stop_sequence: false
-  - "Answer: Let's think step by step.\n"
-  - repeat:
-    - def: REASON_OR_CALC
-      model: ibm/granite-20b-code-instruct-v2
+    document:
+    - "\nQuestion: "
+    - def: QUESTION
+      model: watsonx/ibm/granite-34b-code-instruct
       parameters:
-        stop_sequences:
-        - '<<'
+        stop:
+        - Answer
+        - "?"
         include_stop_sequence: true
-    - if: '{{ REASON_OR_CALC.endswith("<<") }}'
-      then:
-      - def: EXPR
-        model: ibm/granite-20b-code-instruct-v2
-        parameters:
-          stop_sequences:
-          - '='
-          - "\n"
-          include_stop_sequence: false
-      - '= '
-      - def: RESULT
-        lan: python
-        code:
-        - result = {{ EXPR }}
-      - ' >>'
-    until: '{{ "The answer is" in REASON_OR_CALC }}'
-    
-  - "\n\n"
+    - "\nAnswer: Let's think step by step.\n"
+    - repeat:
+        document:
+        - def: REASON_OR_CALC
+          model: watsonx/ibm/granite-34b-code-instruct
+          parameters:
+            stop:
+            - '<<'
+            - "Question"
+            include_stop_sequence: true
+        - if: '{{ REASON_OR_CALC.endswith("<<") }}'
+          then:
+            document:
+            - def: EXPR
+              model: watsonx/ibm/granite-34b-code-instruct
+              parameters:
+                stop:
+                - '='
+                - "\n"
+                - "Question"
+                include_stop_sequence: false
+            - '= '
+            - def: RESULT
+              lan: python
+              code: result = {{ EXPR }}
+            - ' >>'
+      until: '{{ "The answer is" in REASON_OR_CALC }}'
+      as: document
+    - "\n\n"
+  as: document
   num_iterations: 3

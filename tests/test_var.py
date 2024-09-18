@@ -14,11 +14,12 @@ var_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "params": {
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World",
                     },
                 }
             ],
@@ -46,12 +47,12 @@ var_shared_scope_data = {
             "def": "NAME",
             "document": [
                 {
-                    "model": "ibm/granite-34b-code-instruct",
-                    "show_result": True,
-                    "params": {
+                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "parameters": {
                         "decoding_method": "greedy",
                         "stop_sequences": ["!"],
                         "include_stop_sequence": False,
+                        "mock_response": " World",
                     },
                 }
             ],
@@ -60,7 +61,7 @@ var_shared_scope_data = {
             "def": "I",
             "lan": "python",
             "code": "result = NAME[::-1] + '!\\n'",
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "I"},
     ],
@@ -81,13 +82,13 @@ var_shared_scope_mutate_data = {
         {
             "def": "NAME",
             "document": "foo",
-            "show_result": False,
+            "contribute": [],
         },
         {
             "def": "I",
             "lan": "python",
             "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
-            "show_result": False,
+            "contribute": [],
         },
         {"get": "NAME"},
         {"get": "I"},
@@ -114,7 +115,6 @@ code_var_data = {
             "def": "I",
             "lan": "python",
             "code": ["result = 0"],
-            "show_result": True,
         },
     ],
 }

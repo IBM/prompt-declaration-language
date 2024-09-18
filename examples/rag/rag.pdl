@@ -25,7 +25,7 @@ document:
   document: >-
     Write a python function to remove first and last occurrence of a
     given character from the string.
-  show_result: false
+  contribute: []
 - def: RETRIEVED
   lan: python
   spec: {prompt: [str], code: [str]}
@@ -33,7 +33,7 @@ document:
     key = PDL_SESSION.embed("{{ TEST_PROMPT }}")
     nearest = PDL_SESSION.vec_db.get_nearest_examples("embeddings", key, 5)
     result = {col: nearest.examples[col] for col in ["prompt", "code"]}
-  show_result: false
+  contribute: []
 - |
     Given the text after "Q:", generate a Python function after "A:".
 
@@ -50,6 +50,6 @@ document:
 
     Q: {{ TEST_PROMPT }}
     A: ```
-- model: ibm/granite-20b-code-instruct-v2
-  params:
-    stop_sequences: ["```"]
+- model: watsonx/ibm/granite-20b-code-instruct-v2
+  parameters:
+    stop: ["```"]

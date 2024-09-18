@@ -1,15 +1,16 @@
 description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
 document:
-- read: examples/code/data.yaml
-  parser: yaml
-  def: CODE
-  show_result: False
 - "\n{{ CODE.source_code }}\n"
-- model: ibm/granite-34b-code-instruct
+- model: watsonx/ibm/granite-34b-code-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
-        repo: {{ CODE.repo_info.repo }}
+        repo: 
+        {{ CODE.repo_info.repo }}
         path: {{ CODE.repo_info.path }}
         Function_name: {{ CODE.repo_info.function_name }}
 
@@ -17,4 +18,3 @@ document:
         Explain the following code:
         ```
         {{ CODE.source_code }}```
-- "\n"

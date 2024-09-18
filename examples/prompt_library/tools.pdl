@@ -55,7 +55,7 @@ defs:
       subject: str
     return:
       model: "{{ default_model }}"
-      params:
+      parameters:
         stop_sequences:
           - "<|endoftext|>"
         include_stop_sequence: false
@@ -77,7 +77,7 @@ defs:
       - api: https
         url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
         input: "{{ subject }}"
-        show_result: false
+        contribute: []
 
   default_tools:
     data:
@@ -201,11 +201,11 @@ defs:
               tool: "{{ tools }}"
             repeat:
               - defs:
-                  params:
+                  parameters:
                     for:
                       param: "{{ tool.parameters }}"
                     repeat: "{{ param.name}}: {{ param.type }}"
-              - "{{ tool.name }}({{ params|join(', ') }})"
+              - "{{ tool.name }}({{ parameters|join(', ') }})"
       - data:
           names: "{{ tools|map(attribute='name')|list }}"
           signatures: "{{ signatures }}"

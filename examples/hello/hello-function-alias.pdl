@@ -9,4 +9,3 @@ document:
 - call: "{{ alias }}"
   args:
     name: World
-- "\n"

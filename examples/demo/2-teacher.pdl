@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: mistralai/mixtral-8x7b-instruct-v01
+  teacher_model: watsonx/mistralai/mixtral-8x7b-instruct-v01
   teacher_template:
     function:
       sys_prompt: str
@@ -66,10 +66,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          params:
-            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
-            INCLUDE_STOP_SEQUENCE: false
-            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
+          parameters:
+            stop: ["{{teacher_stop_token}}"]
+            include_stop_sequence: false
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
@@ -151,10 +151,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          params:
-            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
-            INCLUDE_STOP_SEQUENCE: false
-            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
+          parameters:
+            stop: ["{{teacher_stop_token}}"]
+            include_stop_sequence: false
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
@@ -244,10 +244,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          params:
-            STOP_SEQUENCES: "{{ [teacher_stop_token] + prompt_data.additional_stop_tokens }}"
-            INCLUDE_STOP_SEQUENCE: false
-            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
+          parameters:
+            stop: "{{ [teacher_stop_token] + prompt_data.additional_stop_tokens }}"
+            include_stop_sequence: false
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
         parsed_answer:
           lan: python
           code: | # parse model output
@@ -329,10 +329,10 @@ defs:
         teacher_output:
           model: "{{teacher_model}}"
           input: "{{teacher_input}}"
-          params:
-            STOP_SEQUENCES: ["{{teacher_stop_token}}"]
-            INCLUDE_STOP_SEQUENCE: false
-            MAX_NEW_TOKENS: "{{prompt_data.max_new_tokens}}"
+          parameters:
+            stop: ["{{teacher_stop_token}}"]
+            include_stop_sequence: false
+            max_new_tokens: "{{prompt_data.max_new_tokens}}"
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
@@ -369,7 +369,7 @@ defs:
 document:
 - "----- Loading seed examples -----\n\n"
 - def: seed_examples
-  read: examples/teacher/qna.yaml
+  read: ./qna.yaml
   parser: yaml
 - "\n\n----- Generating questions -----\n\n"
 - def: generated_questions
@@ -394,4 +394,4 @@ document:
 - call: filter_question_answer_pair
   args:
     qa_pairs: "{{qa_pairs}}"
-- "\n"
+

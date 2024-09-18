@@ -3,8 +3,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TypeAlias
 
-from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as WatsonxGenParams
-
 from ..pdl_ast import (
     ApiBlock,
     BamModelBlock,
@@ -21,11 +19,12 @@ from ..pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LitellmModelBlock,
+    LitellmParameters,
     ModelBlock,
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
-    WatsonxModelBlock,
 )
 
 
@@ -281,14 +280,17 @@ def compile_block(
                             block.parameters.include_stop_sequence is None
                             or block.parameters.include_stop_sequence
                         )
-                case WatsonxModelBlock():
-                    if block.params is None:
+                case LitellmModelBlock():
+                    if block.parameters is None:
                         stop_sequences = []
+                        include_stop_sequence = False
                     else:
-                        stop_sequences = block.params.get(
-                            WatsonxGenParams.STOP_SEQUENCES, []
-                        )
-                    include_stop_sequence = False
+                        if isinstance(block.parameters, LitellmParameters):
+                            parameters = block.parameters.model_dump()
+                        else:
+                            parameters = block.parameters
+                        stop_sequences = parameters.get("stop", [])
+                        include_stop_sequence = parameters.get("stop", False)
                 case _:
                     assert False
 

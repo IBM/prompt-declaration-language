@@ -1,6 +1,6 @@
 description: Demo of CoT template
 document:
-  - include: examples/prompt_library/CoT.pdl
+  - include: ../CoT.pdl
   - call: fewshot_cot
     args:
       examples:

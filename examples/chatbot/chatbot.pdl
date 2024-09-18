@@ -3,19 +3,20 @@ document:
 - read:
   message: "What is your query?\n"
 - repeat:
-  - model: ibm/granite-13b-chat-v2
-    spec: str
-    params:
-      stop_sequences: ["."]
-  - read:
-    def: eval
-    message: "\nIs this a good answer[yes/no]?\n"
-    show_result: false
-  - if: "{{ eval == 'no' }}"
-    then:
-      - read:
-        message: "Why not?\n"
+    document:
+    - model: watsonx/ibm/granite-13b-chat-v2
+    - read:
+      def: eval
+      message: "\nIs this a good answer[yes/no]?\n"
+      contribute: []
+    - if: "{{ eval == 'no' }}"
+      then:
+        document:
+        - read:
+          message: "Why not?\n"
   until: "{{ eval == 'yes'}}"
+  as: document
+role: user
 
 
 

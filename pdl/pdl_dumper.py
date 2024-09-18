@@ -13,6 +13,7 @@ from .pdl_ast import (
     BlocksType,
     CallBlock,
     CodeBlock,
+    ContributeTarget,
     DataBlock,
     DocumentBlock,
     ErrorBlock,
@@ -21,8 +22,11 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LitellmModelBlock,
+    LitellmParameters,
     LocationType,
     MessageBlock,
+    ObjectBlock,
     ParserType,
     PdlParser,
     ReadBlock,
@@ -30,7 +34,6 @@ from .pdl_ast import (
     RepeatBlock,
     RepeatUntilBlock,
     SequenceBlock,
-    WatsonxModelBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -94,17 +97,18 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["data"] = block.data
             if block.constraints is not None:
                 d["constraints"] = block.constraints
-        case WatsonxModelBlock():
+        case LitellmModelBlock():
             d["platform"] = block.platform
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input)
-            if block.params is not None:
-                d["params"] = block.params
-            if block.guardrails is not None:
-                d["guardrails"] = block.guardrails
-            if block.guardrails_hap_params is not None:
-                d["guardrails_hap_params"] = block.guardrails_hap_params
+            if block.parameters is not None:
+                if isinstance(block.parameters, LitellmParameters):
+                    d["parameters"] = block.parameters.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
+                else:
+                    d["parameters"] = block.parameters
         case CodeBlock():
             d["lan"] = block.lan
             d["code"] = blocks_to_dict(block.code)
@@ -112,6 +116,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["get"] = block.get
         case DataBlock():
             d["data"] = block.data
+            if block.raw:
+                d["raw"] = block.raw
         case ApiBlock():
             d["api"] = block.api
             d["url"] = block.url
@@ -123,6 +129,11 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["sequence"] = blocks_to_dict(block.sequence)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array)
+        case ObjectBlock():
+            if isinstance(block.object, dict):
+                d["object"] = {k: blocks_to_dict(b) for k, b in block.object.items()}
+            else:
+                d["object"] = [blocks_to_dict(b) for b in block.object]
         case MessageBlock():
             d["content"] = blocks_to_dict(block.content)
         case ReadBlock():
@@ -132,10 +143,12 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
         case IncludeBlock():
             d["include"] = block.include
         case IfBlock():
-            d["condition"] = block.condition
+            d["if"] = block.condition
             d["then"] = blocks_to_dict(block.then)
             if block.elses is not None:
                 d["else"] = blocks_to_dict(block.elses)
+            if block.if_result is not None:
+                d["if_result"] = block.if_result
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat)
             d["num_iterations"] = block.num_iterations
@@ -163,15 +176,19 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["call"] = block.call
             d["args"] = block.args
             if block.trace is not None:
-                d["trace"] = blocks_to_dict(block.trace)
+                d["trace"] = blocks_to_dict(block.trace)  # pyright: ignore
         case ErrorBlock():
             d["program"] = blocks_to_dict(block.program)
+            d["msg"] = block.msg
     if block.assign is not None:
         d["def"] = block.assign
-    if block.show_result is False:
-        d["show_result"] = block.show_result
+    if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
+        d["contribute"] = block.contribute
     if block.result is not None:
-        d["result"] = block.result
+        if isinstance(block.result, FunctionBlock):
+            d["result"] = ""
+        else:
+            d["result"] = block.result
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     if block.location is not None:

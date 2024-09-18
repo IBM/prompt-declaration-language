@@ -3,9 +3,12 @@ from enum import Enum
 from typing import Any, Generator, Generic, Optional, TypeVar
 
 from genai.schema import ModerationParameters, PromptTemplateData
+from termcolor import colored
+from termcolor._types import Color
 
 from .pdl_ast import BamTextGenerationParameters, Message
 from .pdl_llms import BamModel
+from .pdl_utils import stringify
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -40,18 +43,37 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
 
 
 class MessageKind(Enum):
-    OUTPUT = 0
-    MODEL = 1
+    RESULT = 0
+    BACKGROUND = 1
+    MODEL = 2
 
 
 class YieldMessage:
     kind: MessageKind
+    color: Optional[Color]
 
 
 @dataclass
-class OutputMessage(YieldMessage):
-    kind = MessageKind.OUTPUT
-    output: list[Message]
+class YieldResultMessage(YieldMessage):
+    result: Any
+    kind: MessageKind = MessageKind.RESULT
+    color: Optional[Color] = None
+
+
+@dataclass
+class ModelYieldResultMessage(YieldResultMessage):
+    color: Optional[Color] = "green"
+
+
+@dataclass
+class CodeYieldResultMessage(YieldResultMessage):
+    color: Optional[Color] = "magenta"
+
+
+@dataclass
+class YieldBackgroundMessage(YieldMessage):
+    kind = MessageKind.BACKGROUND
+    background: list[Message]
 
 
 @dataclass
@@ -65,9 +87,13 @@ class ModelCallMessage(YieldMessage):
     data: Optional[PromptTemplateData]
 
 
+_LAST_ROLE = None
+
+
 def schedule(
     generators: list[Generator[YieldMessage, Any, GeneratorReturnT]]
 ) -> list[GeneratorReturnT]:
+    global _LAST_ROLE  # pylint: disable= global-statement
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
     todo_next: list[
         tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]
@@ -80,8 +106,27 @@ def schedule(
             try:
                 msg = gen.send(v)
                 match msg:
-                    case OutputMessage(output=output):
-                        s = "".join([msg["content"] for msg in output])  # TODO
+                    case ModelYieldResultMessage(
+                        result=result
+                    ) | CodeYieldResultMessage(result=result) | YieldResultMessage(
+                        result=result
+                    ):
+                        if msg.color is None:
+                            text = stringify(result)
+                        else:
+                            text = colored(stringify(result), msg.color)
+                        print(text, end="")
+                        todo_next.append((i, gen, None))
+                    case YieldBackgroundMessage(background=background):
+                        if len(background) > 0 and background[0]["role"] == _LAST_ROLE:
+                            s = background[0]["content"]
+                            _LAST_ROLE = background[-1]["role"]
+                            background = background[1:]
+                        else:
+                            s = "\n"
+                        s += "\n".join(
+                            [f"{msg['role']}: {msg['content']}" for msg in background]
+                        )
                         print(s, end="")
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():

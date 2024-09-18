@@ -1,12 +1,13 @@
 description: Hello world with model chaining
 document:
 - Hello,
-- model: ibm/granite-34b-code-instruct
+- model: watsonx/ibm/granite-34b-code-instruct
   def: GEN
-  params:
-    stop_sequences:
+  parameters:
+    stop:
     - '!'
     include_stop_sequence: true
+    mock_response: " World!"
 - def: translate
   function:
     sentence: str
@@ -14,7 +15,9 @@ document:
   spec: int
   return:
     - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
-    - model: ibm/granite-34b-code-instruct
+    - model: watsonx/ibm/granite-34b-code-instruct
+      parameters:
+        mock_response: " World!"
 - call: translate
   spec: str
   args:

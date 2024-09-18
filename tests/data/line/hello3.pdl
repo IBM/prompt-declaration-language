@@ -1,12 +1,13 @@
 description: Hello world to call into a model
 defs:
-  model: ibm/granite-34b-code-instruct
+  model: watsonx/ibm/granite-34b-code-instruct
 document:
 - Hello,
 - model: "{{ model }}"
   spec: int
-  params:
+  parameters:
     decoding_method: greedy
-    stop_sequences:
+    stop:
     - '!'
     include_stop_sequence: true
+    mock_response: " World!"

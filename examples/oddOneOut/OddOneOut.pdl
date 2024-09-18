@@ -7,30 +7,32 @@ document:
 - "Spain is a country, France is a country, German is a language, ...\n"
 - "So the odd one is German.\n\n"
 - repeat:
-  - 'Pick the odd word out: '
-  - def: OPTIONS
-    model: ibm/granite-20b-code-instruct
-    params:
-      decoding_method: greedy
-      stop_sequences:
-      - .
-      include_stop_sequence: false
-  - "\nNow the reasoning:\n"
-  - model: ibm/granite-20b-code-instruct
-    params:
-      decoding_method: greedy
-      stop_sequences:
-      - Pick the odd word
-      - "\n"
-      - So the odd one
-      - .
-      include_stop_sequence: false
-  - "\nNow the result:\n"
-  - model: ibm/granite-20b-code-instruct
-    params:
-      decoding_method: greedy
-      stop_sequences:
-      - Pick the odd word
-      include_stop_sequence: false
-  - "\n\n"
+    document:
+    - 'Pick the odd word out: '
+    - def: OPTIONS
+      model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
+        decoding_method: greedy
+        stop:
+        - .
+        include_stop_sequence: false
+    - "\nNow the reasoning:\n"
+    - model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
+        decoding_method: greedy
+        stop:
+        - Pick the odd word
+        - "\n"
+        - So the odd one
+        - .
+        include_stop_sequence: false
+    - "\nNow the result:\n"
+    - model: watsonx/ibm/granite-20b-code-instruct
+      parameters:
+        decoding_method: greedy
+        stop:
+        - Pick the odd word
+        include_stop_sequence: false
+    - "\n\n"
   num_iterations: 2
+  as: document

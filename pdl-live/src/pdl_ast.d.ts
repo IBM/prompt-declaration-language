@@ -14,9 +14,8 @@ export type Program =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -28,6 +27,7 @@ export type Program =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -143,11 +143,12 @@ export type Description20 = string | null;
  *
  */
 export type Def = string | null;
+export type ContributeTarget = "result" | "context";
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult = boolean;
+export type Contribute = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -161,9 +162,8 @@ export type Pdl =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -175,6 +175,7 @@ export type Pdl =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -186,9 +187,8 @@ export type Pdl =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -200,6 +200,7 @@ export type Pdl =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -221,9 +222,8 @@ export type Fallback =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -235,6 +235,7 @@ export type Fallback =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -246,9 +247,8 @@ export type Fallback =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -260,6 +260,7 @@ export type Fallback =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -282,10 +283,10 @@ export type Kind = "empty";
  */
 export type Def1 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult1 = boolean;
+export type Contribute1 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -299,9 +300,8 @@ export type Fallback1 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -313,6 +313,7 @@ export type Fallback1 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -324,9 +325,8 @@ export type Fallback1 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -338,6 +338,7 @@ export type Fallback1 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -358,9 +359,8 @@ export type Program1 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -372,6 +372,7 @@ export type Program1 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -383,9 +384,8 @@ export type Program1 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -397,6 +397,7 @@ export type Program1 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -409,10 +410,10 @@ export type Program1 =
  */
 export type Def2 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult2 = boolean;
+export type Contribute2 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -426,9 +427,8 @@ export type Fallback2 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -440,6 +440,7 @@ export type Fallback2 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -451,9 +452,8 @@ export type Fallback2 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -465,6 +465,7 @@ export type Fallback2 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -489,9 +490,8 @@ export type Trace =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -503,6 +503,7 @@ export type Trace =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -515,10 +516,10 @@ export type Trace =
  */
 export type Def3 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult3 = boolean;
+export type Contribute3 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -532,9 +533,8 @@ export type Fallback3 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -546,6 +546,7 @@ export type Fallback3 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -557,9 +558,8 @@ export type Fallback3 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -571,6 +571,7 @@ export type Fallback3 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -606,10 +607,10 @@ export type Multiline = boolean;
  */
 export type Def4 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult4 = boolean;
+export type Contribute4 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -623,9 +624,8 @@ export type Fallback4 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -637,6 +637,7 @@ export type Fallback4 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -648,9 +649,8 @@ export type Fallback4 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -662,6 +662,7 @@ export type Fallback4 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -683,9 +684,8 @@ export type Content =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -697,6 +697,7 @@ export type Content =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -708,9 +709,8 @@ export type Content =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -722,6 +722,7 @@ export type Content =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -734,10 +735,10 @@ export type Content =
  */
 export type Def5 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult5 = boolean;
+export type Contribute5 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -751,9 +752,8 @@ export type Fallback5 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -765,6 +765,7 @@ export type Fallback5 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -776,9 +777,8 @@ export type Fallback5 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -790,6 +790,7 @@ export type Fallback5 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -803,40 +804,42 @@ export type Fallback5 =
  */
 export type Role5 = string | null;
 export type HasError5 = boolean;
-export type Kind5 = "array";
-export type Array =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
+export type Kind5 = "object";
+export type Object =
+  | {
+      [k: string]:
+        | number
+        | string
+        | FunctionBlock
+        | CallBlock
+        | LitellmModelBlock
+        | BamModelBlock
+        | CodeBlock
+        | ApiBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | RepeatBlock
+        | RepeatUntilBlock
+        | ForBlock
+        | DocumentBlock
+        | SequenceBlock
+        | ArrayBlock
+        | ObjectBlock
+        | MessageBlock
+        | ReadBlock
+        | IncludeBlock
+        | ErrorBlock
+        | EmptyBlock;
+    }
   | (
       | number
       | number
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -848,6 +851,7 @@ export type Array =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -860,10 +864,10 @@ export type Array =
  */
 export type Def6 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult6 = boolean;
+export type Contribute6 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -877,9 +881,8 @@ export type Fallback6 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -891,6 +894,7 @@ export type Fallback6 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -902,9 +906,8 @@ export type Fallback6 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -916,6 +919,7 @@ export type Fallback6 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -929,15 +933,14 @@ export type Fallback6 =
  */
 export type Role6 = string | null;
 export type HasError6 = boolean;
-export type Kind6 = "sequence";
-export type Sequence =
+export type Kind6 = "array";
+export type Array =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -949,6 +952,7 @@ export type Sequence =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -960,9 +964,8 @@ export type Sequence =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -974,6 +977,7 @@ export type Sequence =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -986,10 +990,10 @@ export type Sequence =
  */
 export type Def7 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult7 = boolean;
+export type Contribute7 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1003,9 +1007,8 @@ export type Fallback7 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1017,6 +1020,7 @@ export type Fallback7 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1028,9 +1032,8 @@ export type Fallback7 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1042,6 +1045,7 @@ export type Fallback7 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1055,19 +1059,14 @@ export type Fallback7 =
  */
 export type Role7 = string | null;
 export type HasError7 = boolean;
-export type Kind7 = "document";
-/**
- * Body of the document.
- *
- */
-export type Document =
+export type Kind7 = "sequence";
+export type Sequence =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1079,6 +1078,7 @@ export type Document =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1090,9 +1090,8 @@ export type Document =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1104,6 +1103,7 @@ export type Document =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1116,10 +1116,10 @@ export type Document =
  */
 export type Def8 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult8 = boolean;
+export type Contribute8 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1133,9 +1133,8 @@ export type Fallback8 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1147,6 +1146,7 @@ export type Fallback8 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1158,9 +1158,8 @@ export type Fallback8 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1172,6 +1171,7 @@ export type Fallback8 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1185,19 +1185,18 @@ export type Fallback8 =
  */
 export type Role8 = string | null;
 export type HasError8 = boolean;
-export type Kind8 = "for";
+export type Kind8 = "document";
 /**
- * Body of the loop.
+ * Body of the document.
  *
  */
-export type Repeat =
+export type Document =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1209,6 +1208,7 @@ export type Repeat =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1220,9 +1220,8 @@ export type Repeat =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1234,77 +1233,23 @@ export type Repeat =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type IterationType = "sequence" | "array" | "document";
-export type Trace1 =
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | LitellmModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | (
-          | number
-          | number
-          | string
-          | FunctionBlock
-          | CallBlock
-          | WatsonxModelBlock
-          | BamModelBlock
-          | LitellmModelBlock
-          | CodeBlock
-          | ApiBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | DocumentBlock
-          | SequenceBlock
-          | ArrayBlock
-          | MessageBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-        )[]
-    )[]
-  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
 export type Def9 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult9 = boolean;
+export type Contribute9 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1318,9 +1263,8 @@ export type Fallback9 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1332,6 +1276,7 @@ export type Fallback9 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1343,9 +1288,8 @@ export type Fallback9 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1357,6 +1301,7 @@ export type Fallback9 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1370,19 +1315,18 @@ export type Fallback9 =
  */
 export type Role9 = string | null;
 export type HasError9 = boolean;
-export type Kind9 = "repeat_until";
+export type Kind9 = "for";
 /**
  * Body of the loop.
  *
  */
-export type Repeat1 =
+export type Repeat =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1394,6 +1338,7 @@ export type Repeat1 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1405,9 +1350,8 @@ export type Repeat1 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1419,22 +1363,27 @@ export type Repeat1 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
     )[];
-export type Trace2 =
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type IterationType = "sequence" | "array" | "document";
+export type Trace1 =
   | (
       | number
       | number
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1446,6 +1395,7 @@ export type Trace2 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1457,9 +1407,8 @@ export type Trace2 =
           | string
           | FunctionBlock
           | CallBlock
-          | WatsonxModelBlock
-          | BamModelBlock
           | LitellmModelBlock
+          | BamModelBlock
           | CodeBlock
           | ApiBlock
           | GetBlock
@@ -1471,6 +1420,7 @@ export type Trace2 =
           | DocumentBlock
           | SequenceBlock
           | ArrayBlock
+          | ObjectBlock
           | MessageBlock
           | ReadBlock
           | IncludeBlock
@@ -1485,10 +1435,10 @@ export type Trace2 =
  */
 export type Def10 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult10 = boolean;
+export type Contribute10 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1502,9 +1452,8 @@ export type Fallback10 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1516,6 +1465,7 @@ export type Fallback10 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1527,9 +1477,8 @@ export type Fallback10 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1541,6 +1490,7 @@ export type Fallback10 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1554,19 +1504,18 @@ export type Fallback10 =
  */
 export type Role10 = string | null;
 export type HasError10 = boolean;
-export type Kind10 = "repeat";
+export type Kind10 = "repeat_until";
 /**
  * Body of the loop.
  *
  */
-export type Repeat2 =
+export type Repeat1 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1578,6 +1527,7 @@ export type Repeat2 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1589,9 +1539,8 @@ export type Repeat2 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1603,6 +1552,7 @@ export type Repeat2 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1610,20 +1560,19 @@ export type Repeat2 =
       | EmptyBlock
     )[];
 /**
- * Number of iterations to perform.
+ * Define how to combine the result of each iteration.
  *
  */
-export type NumIterations = number;
-export type Trace3 =
+export type IterationType1 = "sequence" | "array" | "document";
+export type Trace2 =
   | (
       | number
       | number
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1635,6 +1584,7 @@ export type Trace3 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1646,9 +1596,8 @@ export type Trace3 =
           | string
           | FunctionBlock
           | CallBlock
-          | WatsonxModelBlock
-          | BamModelBlock
           | LitellmModelBlock
+          | BamModelBlock
           | CodeBlock
           | ApiBlock
           | GetBlock
@@ -1660,6 +1609,7 @@ export type Trace3 =
           | DocumentBlock
           | SequenceBlock
           | ArrayBlock
+          | ObjectBlock
           | MessageBlock
           | ReadBlock
           | IncludeBlock
@@ -1674,10 +1624,10 @@ export type Trace3 =
  */
 export type Def11 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult11 = boolean;
+export type Contribute11 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1691,9 +1641,8 @@ export type Fallback11 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1705,6 +1654,7 @@ export type Fallback11 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1716,9 +1666,8 @@ export type Fallback11 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1730,6 +1679,7 @@ export type Fallback11 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1743,19 +1693,18 @@ export type Fallback11 =
  */
 export type Role11 = string | null;
 export type HasError11 = boolean;
-export type Kind11 = "if";
+export type Kind11 = "repeat";
 /**
- * Branch to exectute if the condition is true.
+ * Body of the loop.
  *
  */
-export type Then =
+export type Repeat2 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1767,6 +1716,7 @@ export type Then =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1778,9 +1728,8 @@ export type Then =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1792,6 +1741,201 @@ export type Then =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
+/**
+ * Number of iterations to perform.
+ *
+ */
+export type NumIterations = number;
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type IterationType2 = "sequence" | "array" | "document";
+export type Trace3 =
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+      | (
+          | number
+          | number
+          | string
+          | FunctionBlock
+          | CallBlock
+          | LitellmModelBlock
+          | BamModelBlock
+          | CodeBlock
+          | ApiBlock
+          | GetBlock
+          | DataBlock
+          | IfBlock
+          | RepeatBlock
+          | RepeatUntilBlock
+          | ForBlock
+          | DocumentBlock
+          | SequenceBlock
+          | ArrayBlock
+          | ObjectBlock
+          | MessageBlock
+          | ReadBlock
+          | IncludeBlock
+          | ErrorBlock
+          | EmptyBlock
+        )[]
+    )[]
+  | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def12 = string | null;
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute12 = ContributeTarget[];
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback12 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
+export type Role12 = string | null;
+export type HasError12 = boolean;
+export type Kind12 = "if";
+/**
+ * Branch to exectute if the condition is true.
+ *
+ */
+export type Then =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1807,9 +1951,8 @@ export type Else =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1821,6 +1964,7 @@ export type Else =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1832,9 +1976,8 @@ export type Else =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1846,6 +1989,7 @@ export type Else =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -1858,88 +2002,12 @@ export type IfResult = boolean | null;
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def12 = string | null;
-/**
- * Ignore the value computed by the block.
- *
- */
-export type ShowResult12 = boolean;
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback12 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | LitellmModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-/**
- * Role associated to the block and sub-blocks.
- *
- */
-export type Role12 = string | null;
-export type HasError12 = boolean;
-export type Kind12 = "data";
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def13 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult13 = boolean;
+export type Contribute13 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1953,9 +2021,8 @@ export type Fallback13 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -1967,6 +2034,7 @@ export type Fallback13 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -1978,9 +2046,8 @@ export type Fallback13 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -1992,6 +2059,7 @@ export type Fallback13 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2005,21 +2073,21 @@ export type Fallback13 =
  */
 export type Role13 = string | null;
 export type HasError13 = boolean;
-export type Kind13 = "get";
+export type Kind13 = "data";
 /**
- * Name of the variable to access.
+ * Do not evaluate expressions inside strings.
  */
-export type Get = string;
+export type Raw = boolean;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
 export type Def14 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult14 = boolean;
+export type Contribute14 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2033,9 +2101,8 @@ export type Fallback14 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2047,6 +2114,7 @@ export type Fallback14 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2058,9 +2126,8 @@ export type Fallback14 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2072,6 +2139,7 @@ export type Fallback14 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2085,7 +2153,87 @@ export type Fallback14 =
  */
 export type Role14 = string | null;
 export type HasError14 = boolean;
-export type Kind14 = "api";
+export type Kind14 = "get";
+/**
+ * Name of the variable to access.
+ */
+export type Get = string;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def15 = string | null;
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute15 = ContributeTarget[];
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback15 =
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | ApiBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | DocumentBlock
+  | SequenceBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | number
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | DocumentBlock
+      | SequenceBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
+  | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
+export type Role15 = string | null;
+export type HasError15 = boolean;
+export type Kind15 = "api";
 export type Api = string;
 /**
  * URL of the endpoint.
@@ -2100,9 +2248,8 @@ export type Input =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2114,6 +2261,7 @@ export type Input =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2125,9 +2273,8 @@ export type Input =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2139,6 +2286,7 @@ export type Input =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2149,28 +2297,27 @@ export type Input =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def15 = string | null;
+export type Def16 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult15 = boolean;
+export type Contribute16 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
  */
-export type Fallback15 =
+export type Fallback16 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2182,6 +2329,7 @@ export type Fallback15 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2193,9 +2341,8 @@ export type Fallback15 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2207,6 +2354,7 @@ export type Fallback15 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2218,9 +2366,9 @@ export type Fallback15 =
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role15 = string | null;
-export type HasError15 = boolean;
-export type Kind15 = "code";
+export type Role16 = string | null;
+export type HasError16 = boolean;
+export type Kind16 = "code";
 /**
  * Programming language of the code.
  *
@@ -2235,9 +2383,8 @@ export type Code =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2249,6 +2396,7 @@ export type Code =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2260,9 +2408,8 @@ export type Code =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2274,6 +2421,7 @@ export type Code =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2284,204 +2432,12 @@ export type Code =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null;
-/**
- * Ignore the value computed by the block.
- *
- */
-export type ShowResult16 = boolean;
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback16 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | LitellmModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-/**
- * Role associated to the block and sub-blocks.
- *
- */
-export type Role16 = string | null;
-export type HasError16 = boolean;
-export type Kind16 = "model";
-export type Model = string;
-export type Input1 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | number
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
-      | LitellmModelBlock
-      | CodeBlock
-      | ApiBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | DocumentBlock
-      | SequenceBlock
-      | ArrayBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-    )[]
-  | null;
-export type Trace4 =
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | ApiBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | DocumentBlock
-  | SequenceBlock
-  | ArrayBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-export type Platform = "litellm";
-export type Timeout = number | string | null;
-export type Temperature = number | null;
-export type TopP = number | null;
-export type N = number | null;
-export type Stop = string | string[] | null;
-export type MaxTokens = number | null;
-export type PresencePenalty = number | null;
-export type FrequencyPenalty = number | null;
-export type LogitBias = {
-  [k: string]: unknown;
-} | null;
-export type User = string | null;
-export type ResponseFormat = {
-  [k: string]: unknown;
-} | null;
-export type Seed = number | null;
-export type Tools = unknown[] | null;
-export type ToolChoice =
-  | string
-  | {
-      [k: string]: unknown;
-    }
-  | null;
-export type Logprobs = boolean | null;
-export type TopLogprobs = number | null;
-export type ParallelToolCalls = boolean | null;
-export type ExtraHeaders = {
-  [k: string]: unknown;
-} | null;
-export type Functions = unknown[] | null;
-export type FunctionCall = string | null;
-export type BaseUrl = string | null;
-export type ApiVersion = string | null;
-export type ApiKey = string | null;
-export type ModelList = unknown[] | null;
-export type MockResponse = string | null;
-export type CustomLlmProvider = string | null;
-export type MaxRetries = number | null;
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def17 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult17 = boolean;
+export type Contribute17 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2495,9 +2451,8 @@ export type Fallback17 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2509,6 +2464,7 @@ export type Fallback17 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2520,9 +2476,8 @@ export type Fallback17 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2534,6 +2489,7 @@ export type Fallback17 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2548,15 +2504,14 @@ export type Fallback17 =
 export type Role17 = string | null;
 export type HasError17 = boolean;
 export type Kind17 = "model";
-export type Model1 = string;
-export type Input2 =
+export type Model = string;
+export type Input1 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2568,6 +2523,7 @@ export type Input2 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2579,9 +2535,8 @@ export type Input2 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2593,6 +2548,7 @@ export type Input2 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2600,14 +2556,13 @@ export type Input2 =
       | EmptyBlock
     )[]
   | null;
-export type Trace5 =
+export type Trace4 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2619,13 +2574,14 @@ export type Trace5 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
   | null;
-export type Platform1 = "bam";
+export type Platform = "bam";
 export type PromptId = string | null;
 export type Parameters =
   | BamTextGenerationParameters
@@ -2657,7 +2613,7 @@ export type StopSequences =
   | [string, string, string, string, string]
   | [string, string, string, string, string, string]
   | null;
-export type Temperature1 = number | null;
+export type Temperature = number | null;
 export type TimeLimit = number | null;
 export type TopK = number | null;
 export type TopPNucleusSampling = number | null;
@@ -2689,10 +2645,10 @@ export type ExampleFileIds =
  */
 export type Def18 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult18 = boolean;
+export type Contribute18 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2706,9 +2662,8 @@ export type Fallback18 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2720,6 +2675,7 @@ export type Fallback18 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2731,9 +2687,8 @@ export type Fallback18 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2745,6 +2700,7 @@ export type Fallback18 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2759,15 +2715,14 @@ export type Fallback18 =
 export type Role18 = string | null;
 export type HasError18 = boolean;
 export type Kind18 = "model";
-export type Model2 = string;
-export type Input3 =
+export type Model1 = string;
+export type Input2 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2779,6 +2734,7 @@ export type Input3 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2790,9 +2746,8 @@ export type Input3 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2804,6 +2759,7 @@ export type Input3 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2811,14 +2767,13 @@ export type Input3 =
       | EmptyBlock
     )[]
   | null;
-export type Trace6 =
+export type Trace5 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2830,30 +2785,77 @@ export type Trace6 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
   | null;
-export type Platform2 = "watsonx";
-export type Params = {
-  [k: string]: unknown;
-} | null;
-export type Guardrails = boolean | null;
-export type GuardrailsHapParams = {
-  [k: string]: unknown;
-} | null;
+export type Platform1 = "litellm";
+export type Parameters1 =
+  | LitellmParameters
+  | {
+      [k: string]: unknown;
+    }
+  | null;
+export type Timeout = number | string | null;
+export type Temperature1 = number | string | null;
+export type TopP = number | string | null;
+export type N = number | string | null;
+export type Stop = string | string[] | null;
+export type MaxTokens = number | string | null;
+export type PresencePenalty = number | string | null;
+export type FrequencyPenalty = number | string | null;
+export type LogitBias =
+  | {
+      [k: string]: unknown;
+    }
+  | string
+  | null;
+export type User = string | null;
+export type ResponseFormat =
+  | {
+      [k: string]: unknown;
+    }
+  | string
+  | null;
+export type Seed = number | string | null;
+export type Tools = unknown[] | string | null;
+export type ToolChoice =
+  | string
+  | {
+      [k: string]: unknown;
+    }
+  | null;
+export type Logprobs = boolean | string | null;
+export type TopLogprobs = number | string | null;
+export type ParallelToolCalls = boolean | string | null;
+export type ExtraHeaders =
+  | {
+      [k: string]: unknown;
+    }
+  | string
+  | null;
+export type Functions = unknown[] | string | null;
+export type FunctionCall = string | null;
+export type BaseUrl = string | null;
+export type ApiVersion = string | null;
+export type ApiKey = string | null;
+export type ModelList = unknown[] | string | null;
+export type MockResponse = string | null;
+export type CustomLlmProvider = string | null;
+export type MaxRetries = number | string | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
 export type Def19 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult19 = boolean;
+export type Contribute19 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2867,9 +2869,8 @@ export type Fallback19 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2881,6 +2882,7 @@ export type Fallback19 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2892,9 +2894,8 @@ export type Fallback19 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2906,6 +2907,7 @@ export type Fallback19 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2925,14 +2927,13 @@ export type Kind19 = "call";
  *
  */
 export type Call = string;
-export type Trace7 =
+export type Trace6 =
   | number
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -2944,6 +2945,7 @@ export type Trace7 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -2955,9 +2957,8 @@ export type Trace7 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -2969,6 +2970,7 @@ export type Trace7 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -2982,10 +2984,10 @@ export type Trace7 =
  */
 export type Def20 = string | null;
 /**
- * Ignore the value computed by the block.
+ * Indicate if the block contributes to the result and background context.
  *
  */
-export type ShowResult20 = boolean;
+export type Contribute20 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2999,9 +3001,8 @@ export type Fallback20 =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -3013,6 +3014,7 @@ export type Fallback20 =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -3024,9 +3026,8 @@ export type Fallback20 =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -3038,6 +3039,7 @@ export type Fallback20 =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -3068,9 +3070,8 @@ export type Return =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -3082,6 +3083,7 @@ export type Return =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -3093,9 +3095,8 @@ export type Return =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -3107,6 +3108,7 @@ export type Return =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -3121,9 +3123,8 @@ export type PdlBlock =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -3135,6 +3136,7 @@ export type PdlBlock =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -3145,9 +3147,8 @@ export type PdlBlocks =
   | string
   | FunctionBlock
   | CallBlock
-  | WatsonxModelBlock
-  | BamModelBlock
   | LitellmModelBlock
+  | BamModelBlock
   | CodeBlock
   | ApiBlock
   | GetBlock
@@ -3159,6 +3160,7 @@ export type PdlBlocks =
   | DocumentBlock
   | SequenceBlock
   | ArrayBlock
+  | ObjectBlock
   | MessageBlock
   | ReadBlock
   | IncludeBlock
@@ -3170,9 +3172,8 @@ export type PdlBlocks =
       | string
       | FunctionBlock
       | CallBlock
-      | WatsonxModelBlock
-      | BamModelBlock
       | LitellmModelBlock
+      | BamModelBlock
       | CodeBlock
       | ApiBlock
       | GetBlock
@@ -3184,6 +3185,7 @@ export type PdlBlocks =
       | DocumentBlock
       | SequenceBlock
       | ArrayBlock
+      | ObjectBlock
       | MessageBlock
       | ReadBlock
       | IncludeBlock
@@ -3199,7 +3201,7 @@ export interface FunctionBlock {
   spec?: Spec;
   defs?: Defs;
   def?: Def20;
-  show_result?: ShowResult20;
+  contribute?: Contribute20;
   parser?: Parser20;
   fallback?: Fallback20;
   role?: Role20;
@@ -3228,9 +3230,8 @@ export interface Defs {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3242,6 +3243,7 @@ export interface Defs {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3253,9 +3255,8 @@ export interface Defs {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3267,6 +3268,7 @@ export interface Defs {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3282,7 +3284,7 @@ export interface CallBlock {
   spec?: Spec1;
   defs?: Defs1;
   def?: Def19;
-  show_result?: ShowResult19;
+  contribute?: Contribute19;
   parser?: Parser19;
   fallback?: Fallback19;
   role?: Role19;
@@ -3292,7 +3294,7 @@ export interface CallBlock {
   kind?: Kind19;
   call: Call;
   args?: Args;
-  trace?: Trace7;
+  trace?: Trace6;
 }
 /**
  * Type specification of the result of the block.
@@ -3311,9 +3313,8 @@ export interface Defs1 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3325,6 +3326,7 @@ export interface Defs1 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3336,9 +3338,8 @@ export interface Defs1 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3350,6 +3351,7 @@ export interface Defs1 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3358,14 +3360,14 @@ export interface Defs1 {
       )[];
 }
 /**
- * Call a LLM through the watsonx.ai API: https://ibm.github.io/watsonx-ai-python-sdk.
+ * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
  */
-export interface WatsonxModelBlock {
+export interface LitellmModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
   def?: Def18;
-  show_result?: ShowResult18;
+  contribute?: Contribute18;
   parser?: Parser18;
   fallback?: Fallback18;
   role?: Role18;
@@ -3373,13 +3375,11 @@ export interface WatsonxModelBlock {
   location?: LocationType | null;
   has_error?: HasError18;
   kind?: Kind18;
-  model: Model2;
-  input?: Input3;
-  trace?: Trace6;
-  platform?: Platform2;
-  params?: Params;
-  guardrails?: Guardrails;
-  guardrails_hap_params?: GuardrailsHapParams;
+  model: Model1;
+  input?: Input2;
+  trace?: Trace5;
+  platform?: Platform1;
+  parameters?: Parameters1;
 }
 /**
  * Type specification of the result of the block.
@@ -3398,9 +3398,8 @@ export interface Defs2 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3412,6 +3411,7 @@ export interface Defs2 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3423,9 +3423,8 @@ export interface Defs2 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3437,6 +3436,7 @@ export interface Defs2 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3449,7 +3449,7 @@ export interface BamModelBlock {
   spec?: Spec3;
   defs?: Defs3;
   def?: Def17;
-  show_result?: ShowResult17;
+  contribute?: Contribute17;
   parser?: Parser17;
   fallback?: Fallback17;
   role?: Role17;
@@ -3457,10 +3457,10 @@ export interface BamModelBlock {
   location?: LocationType | null;
   has_error?: HasError17;
   kind?: Kind17;
-  model: Model1;
-  input?: Input2;
-  trace?: Trace5;
-  platform?: Platform1;
+  model: Model;
+  input?: Input1;
+  trace?: Trace4;
+  platform: Platform;
   prompt_id?: PromptId;
   parameters?: Parameters;
   moderations?: ModerationParameters | null;
@@ -3484,9 +3484,8 @@ export interface Defs3 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3498,6 +3497,7 @@ export interface Defs3 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3509,9 +3509,8 @@ export interface Defs3 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3523,6 +3522,7 @@ export interface Defs3 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3531,14 +3531,14 @@ export interface Defs3 {
       )[];
 }
 /**
- * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
+ * Execute a piece of code.
  */
-export interface LitellmModelBlock {
+export interface CodeBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
   def?: Def16;
-  show_result?: ShowResult16;
+  contribute?: Contribute16;
   parser?: Parser16;
   fallback?: Fallback16;
   role?: Role16;
@@ -3546,11 +3546,8 @@ export interface LitellmModelBlock {
   location?: LocationType | null;
   has_error?: HasError16;
   kind?: Kind16;
-  model: Model;
-  input?: Input1;
-  trace?: Trace4;
-  platform?: Platform;
-  parameters?: LitellmParameters | null;
+  lan: Lan;
+  code: Code;
 }
 /**
  * Type specification of the result of the block.
@@ -3569,9 +3566,8 @@ export interface Defs4 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3583,6 +3579,7 @@ export interface Defs4 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3594,9 +3591,8 @@ export interface Defs4 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3608,6 +3604,7 @@ export interface Defs4 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3616,14 +3613,14 @@ export interface Defs4 {
       )[];
 }
 /**
- * Execute a piece of code.
+ * Call an API.
  */
-export interface CodeBlock {
+export interface ApiBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
   def?: Def15;
-  show_result?: ShowResult15;
+  contribute?: Contribute15;
   parser?: Parser15;
   fallback?: Fallback15;
   role?: Role15;
@@ -3631,8 +3628,9 @@ export interface CodeBlock {
   location?: LocationType | null;
   has_error?: HasError15;
   kind?: Kind15;
-  lan: Lan;
-  code: Code;
+  api: Api;
+  url: Url;
+  input: Input;
 }
 /**
  * Type specification of the result of the block.
@@ -3651,9 +3649,8 @@ export interface Defs5 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3665,6 +3662,7 @@ export interface Defs5 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3676,9 +3674,8 @@ export interface Defs5 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3690,6 +3687,7 @@ export interface Defs5 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3698,14 +3696,14 @@ export interface Defs5 {
       )[];
 }
 /**
- * Call an API.
+ * Get the value of a variable.
  */
-export interface ApiBlock {
+export interface GetBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
   def?: Def14;
-  show_result?: ShowResult14;
+  contribute?: Contribute14;
   parser?: Parser14;
   fallback?: Fallback14;
   role?: Role14;
@@ -3713,9 +3711,7 @@ export interface ApiBlock {
   location?: LocationType | null;
   has_error?: HasError14;
   kind?: Kind14;
-  api: Api;
-  url: Url;
-  input: Input;
+  get: Get;
 }
 /**
  * Type specification of the result of the block.
@@ -3734,9 +3730,8 @@ export interface Defs6 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3748,6 +3743,7 @@ export interface Defs6 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3759,9 +3755,8 @@ export interface Defs6 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3773,6 +3768,7 @@ export interface Defs6 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3781,14 +3777,14 @@ export interface Defs6 {
       )[];
 }
 /**
- * Get the value of a variable.
+ * Arbitrary JSON value.
  */
-export interface GetBlock {
+export interface DataBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
   def?: Def13;
-  show_result?: ShowResult13;
+  contribute?: Contribute13;
   parser?: Parser13;
   fallback?: Fallback13;
   role?: Role13;
@@ -3796,7 +3792,8 @@ export interface GetBlock {
   location?: LocationType | null;
   has_error?: HasError13;
   kind?: Kind13;
-  get: Get;
+  data: Data;
+  raw?: Raw;
 }
 /**
  * Type specification of the result of the block.
@@ -3815,9 +3812,8 @@ export interface Defs7 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3829,6 +3825,7 @@ export interface Defs7 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3840,9 +3837,8 @@ export interface Defs7 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3854,6 +3850,7 @@ export interface Defs7 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3862,14 +3859,14 @@ export interface Defs7 {
       )[];
 }
 /**
- * Arbitrary JSON value.
+ * Conditional control structure.
  */
-export interface DataBlock {
+export interface IfBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
   def?: Def12;
-  show_result?: ShowResult12;
+  contribute?: Contribute12;
   parser?: Parser12;
   fallback?: Fallback12;
   role?: Role12;
@@ -3877,7 +3874,10 @@ export interface DataBlock {
   location?: LocationType | null;
   has_error?: HasError12;
   kind?: Kind12;
-  data: Data;
+  if: If;
+  then: Then;
+  else?: Else;
+  if_result?: IfResult;
 }
 /**
  * Type specification of the result of the block.
@@ -3896,9 +3896,8 @@ export interface Defs8 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3910,6 +3909,7 @@ export interface Defs8 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -3921,9 +3921,8 @@ export interface Defs8 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -3935,6 +3934,7 @@ export interface Defs8 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -3943,14 +3943,14 @@ export interface Defs8 {
       )[];
 }
 /**
- * Conditional control structure.
+ * Repeat the execution of a block for a fixed number of iterations.
  */
-export interface IfBlock {
+export interface RepeatBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
   def?: Def11;
-  show_result?: ShowResult11;
+  contribute?: Contribute11;
   parser?: Parser11;
   fallback?: Fallback11;
   role?: Role11;
@@ -3958,10 +3958,10 @@ export interface IfBlock {
   location?: LocationType | null;
   has_error?: HasError11;
   kind?: Kind11;
-  if: If;
-  then: Then;
-  else?: Else;
-  if_result?: IfResult;
+  repeat: Repeat2;
+  num_iterations: NumIterations;
+  as?: IterationType2;
+  trace?: Trace3;
 }
 /**
  * Type specification of the result of the block.
@@ -3980,9 +3980,8 @@ export interface Defs9 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -3994,6 +3993,7 @@ export interface Defs9 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4005,9 +4005,8 @@ export interface Defs9 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4019,6 +4018,7 @@ export interface Defs9 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4027,14 +4027,14 @@ export interface Defs9 {
       )[];
 }
 /**
- * Repeat the execution of a block for a fixed number of iterations.
+ * Repeat the execution of a block until a condition is satisfied.
  */
-export interface RepeatBlock {
+export interface RepeatUntilBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
   def?: Def10;
-  show_result?: ShowResult10;
+  contribute?: Contribute10;
   parser?: Parser10;
   fallback?: Fallback10;
   role?: Role10;
@@ -4042,14 +4042,10 @@ export interface RepeatBlock {
   location?: LocationType | null;
   has_error?: HasError10;
   kind?: Kind10;
-  repeat: Repeat2;
-  num_iterations: NumIterations;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
-  trace?: Trace3;
+  repeat: Repeat1;
+  until: Until;
+  as?: IterationType1;
+  trace?: Trace2;
 }
 /**
  * Type specification of the result of the block.
@@ -4068,9 +4064,8 @@ export interface Defs10 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4082,6 +4077,7 @@ export interface Defs10 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4093,9 +4089,8 @@ export interface Defs10 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4107,6 +4102,7 @@ export interface Defs10 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4115,14 +4111,14 @@ export interface Defs10 {
       )[];
 }
 /**
- * Repeat the execution of a block until a condition is satisfied.
+ * Iteration over arrays.
  */
-export interface RepeatUntilBlock {
+export interface ForBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
   def?: Def9;
-  show_result?: ShowResult9;
+  contribute?: Contribute9;
   parser?: Parser9;
   fallback?: Fallback9;
   role?: Role9;
@@ -4130,14 +4126,10 @@ export interface RepeatUntilBlock {
   location?: LocationType | null;
   has_error?: HasError9;
   kind?: Kind9;
-  repeat: Repeat1;
-  until: Until;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
-  trace?: Trace2;
+  for: For;
+  repeat: Repeat;
+  as?: IterationType;
+  trace?: Trace1;
 }
 /**
  * Type specification of the result of the block.
@@ -4156,9 +4148,8 @@ export interface Defs11 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4170,6 +4161,7 @@ export interface Defs11 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4181,9 +4173,8 @@ export interface Defs11 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4195,6 +4186,7 @@ export interface Defs11 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4203,14 +4195,14 @@ export interface Defs11 {
       )[];
 }
 /**
- * Iteration over arrays.
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
-export interface ForBlock {
+export interface DocumentBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
   def?: Def8;
-  show_result?: ShowResult8;
+  contribute?: Contribute8;
   parser?: Parser8;
   fallback?: Fallback8;
   role?: Role8;
@@ -4218,14 +4210,7 @@ export interface ForBlock {
   location?: LocationType | null;
   has_error?: HasError8;
   kind?: Kind8;
-  for: For;
-  repeat: Repeat;
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  as?: IterationType & string;
-  trace?: Trace1;
+  document: Document;
 }
 /**
  * Type specification of the result of the block.
@@ -4244,9 +4229,8 @@ export interface Defs12 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4258,6 +4242,7 @@ export interface Defs12 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4269,9 +4254,8 @@ export interface Defs12 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4283,6 +4267,7 @@ export interface Defs12 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4291,14 +4276,14 @@ export interface Defs12 {
       )[];
 }
 /**
- * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ * Return the value of the last block if the list of blocks.
  */
-export interface DocumentBlock {
+export interface SequenceBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
   def?: Def7;
-  show_result?: ShowResult7;
+  contribute?: Contribute7;
   parser?: Parser7;
   fallback?: Fallback7;
   role?: Role7;
@@ -4306,7 +4291,7 @@ export interface DocumentBlock {
   location?: LocationType | null;
   has_error?: HasError7;
   kind?: Kind7;
-  document: Document;
+  sequence: Sequence;
 }
 /**
  * Type specification of the result of the block.
@@ -4325,9 +4310,8 @@ export interface Defs13 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4339,6 +4323,7 @@ export interface Defs13 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4350,9 +4335,8 @@ export interface Defs13 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4364,6 +4348,7 @@ export interface Defs13 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4372,14 +4357,14 @@ export interface Defs13 {
       )[];
 }
 /**
- * Return the value of the last block if the list of blocks.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface SequenceBlock {
+export interface ArrayBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
   def?: Def6;
-  show_result?: ShowResult6;
+  contribute?: Contribute6;
   parser?: Parser6;
   fallback?: Fallback6;
   role?: Role6;
@@ -4387,7 +4372,7 @@ export interface SequenceBlock {
   location?: LocationType | null;
   has_error?: HasError6;
   kind?: Kind6;
-  sequence: Sequence;
+  array: Array;
 }
 /**
  * Type specification of the result of the block.
@@ -4406,9 +4391,8 @@ export interface Defs14 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4420,6 +4404,7 @@ export interface Defs14 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4431,9 +4416,8 @@ export interface Defs14 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4445,6 +4429,7 @@ export interface Defs14 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4453,14 +4438,14 @@ export interface Defs14 {
       )[];
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface ArrayBlock {
+export interface ObjectBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
   def?: Def5;
-  show_result?: ShowResult5;
+  contribute?: Contribute5;
   parser?: Parser5;
   fallback?: Fallback5;
   role?: Role5;
@@ -4468,7 +4453,7 @@ export interface ArrayBlock {
   location?: LocationType | null;
   has_error?: HasError5;
   kind?: Kind5;
-  array: Array;
+  object: Object;
 }
 /**
  * Type specification of the result of the block.
@@ -4487,9 +4472,8 @@ export interface Defs15 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4501,6 +4485,7 @@ export interface Defs15 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4512,9 +4497,8 @@ export interface Defs15 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4526,6 +4510,7 @@ export interface Defs15 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4541,7 +4526,7 @@ export interface MessageBlock {
   spec?: Spec16;
   defs?: Defs16;
   def?: Def4;
-  show_result?: ShowResult4;
+  contribute?: Contribute4;
   parser?: Parser4;
   fallback?: Fallback4;
   role: Role4;
@@ -4568,9 +4553,8 @@ export interface Defs16 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4582,6 +4566,7 @@ export interface Defs16 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4593,9 +4578,8 @@ export interface Defs16 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4607,6 +4591,7 @@ export interface Defs16 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4622,7 +4607,7 @@ export interface ReadBlock {
   spec?: Spec17;
   defs?: Defs17;
   def?: Def3;
-  show_result?: ShowResult3;
+  contribute?: Contribute3;
   parser?: Parser3;
   fallback?: Fallback3;
   role?: Role3;
@@ -4651,9 +4636,8 @@ export interface Defs17 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4665,6 +4649,7 @@ export interface Defs17 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4676,9 +4661,8 @@ export interface Defs17 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4690,6 +4674,7 @@ export interface Defs17 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4705,7 +4690,7 @@ export interface IncludeBlock {
   spec?: Spec18;
   defs?: Defs18;
   def?: Def2;
-  show_result?: ShowResult2;
+  contribute?: Contribute2;
   parser?: Parser2;
   fallback?: Fallback2;
   role?: Role2;
@@ -4733,9 +4718,8 @@ export interface Defs18 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4747,6 +4731,7 @@ export interface Defs18 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4758,9 +4743,8 @@ export interface Defs18 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4772,6 +4756,7 @@ export interface Defs18 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4784,7 +4769,7 @@ export interface ErrorBlock {
   spec?: Spec19;
   defs?: Defs19;
   def?: Def1;
-  show_result?: ShowResult1;
+  contribute?: Contribute1;
   parser?: Parser1;
   fallback?: Fallback1;
   role?: Role1;
@@ -4812,9 +4797,8 @@ export interface Defs19 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4826,6 +4810,7 @@ export interface Defs19 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4837,9 +4822,8 @@ export interface Defs19 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4851,6 +4835,7 @@ export interface Defs19 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4866,7 +4851,7 @@ export interface EmptyBlock {
   spec?: Spec20;
   defs?: Defs20;
   def?: Def;
-  show_result?: ShowResult;
+  contribute?: Contribute;
   parser?: Parser;
   fallback?: Fallback;
   role?: Role;
@@ -4892,9 +4877,8 @@ export interface Defs20 {
     | string
     | FunctionBlock
     | CallBlock
-    | WatsonxModelBlock
-    | BamModelBlock
     | LitellmModelBlock
+    | BamModelBlock
     | CodeBlock
     | ApiBlock
     | GetBlock
@@ -4906,6 +4890,7 @@ export interface Defs20 {
     | DocumentBlock
     | SequenceBlock
     | ArrayBlock
+    | ObjectBlock
     | MessageBlock
     | ReadBlock
     | IncludeBlock
@@ -4917,9 +4902,8 @@ export interface Defs20 {
         | string
         | FunctionBlock
         | CallBlock
-        | WatsonxModelBlock
-        | BamModelBlock
         | LitellmModelBlock
+        | BamModelBlock
         | CodeBlock
         | ApiBlock
         | GetBlock
@@ -4931,6 +4915,7 @@ export interface Defs20 {
         | DocumentBlock
         | SequenceBlock
         | ArrayBlock
+        | ObjectBlock
         | MessageBlock
         | ReadBlock
         | IncludeBlock
@@ -4984,39 +4969,6 @@ export interface If {
 export interface Data {
   [k: string]: unknown;
 }
-/**
- * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
- */
-export interface LitellmParameters {
-  timeout?: Timeout;
-  temperature?: Temperature;
-  top_p?: TopP;
-  n?: N;
-  stop?: Stop;
-  max_tokens?: MaxTokens;
-  presence_penalty?: PresencePenalty;
-  frequency_penalty?: FrequencyPenalty;
-  logit_bias?: LogitBias;
-  user?: User;
-  response_format?: ResponseFormat;
-  seed?: Seed;
-  tools?: Tools;
-  tool_choice?: ToolChoice;
-  logprobs?: Logprobs;
-  top_logprobs?: TopLogprobs;
-  parallel_tool_calls?: ParallelToolCalls;
-  extra_headers?: ExtraHeaders;
-  functions?: Functions;
-  function_call?: FunctionCall;
-  base_url?: BaseUrl;
-  api_version?: ApiVersion;
-  api_key?: ApiKey;
-  model_list?: ModelList;
-  mock_response?: MockResponse;
-  custom_llm_provider?: CustomLlmProvider;
-  max_retries?: MaxRetries;
-  [k: string]: unknown;
-}
 export interface BamTextGenerationParameters {
   beam_width?: BeamWidth;
   decoding_method?: DecodingMethod | null;
@@ -5028,7 +4980,7 @@ export interface BamTextGenerationParameters {
   repetition_penalty?: RepetitionPenalty;
   return_options?: TextGenerationReturnOptions | null;
   stop_sequences?: StopSequences;
-  temperature?: Temperature1;
+  temperature?: Temperature;
   time_limit?: TimeLimit;
   top_k?: TopK;
   top_p?: TopPNucleusSampling;
@@ -5094,6 +5046,39 @@ export interface PromptTemplateData {
   [k: string]: unknown;
 }
 export interface Constraints {
+  [k: string]: unknown;
+}
+/**
+ * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+ */
+export interface LitellmParameters {
+  timeout?: Timeout;
+  temperature?: Temperature1;
+  top_p?: TopP;
+  n?: N;
+  stop?: Stop;
+  max_tokens?: MaxTokens;
+  presence_penalty?: PresencePenalty;
+  frequency_penalty?: FrequencyPenalty;
+  logit_bias?: LogitBias;
+  user?: User;
+  response_format?: ResponseFormat;
+  seed?: Seed;
+  tools?: Tools;
+  tool_choice?: ToolChoice;
+  logprobs?: Logprobs;
+  top_logprobs?: TopLogprobs;
+  parallel_tool_calls?: ParallelToolCalls;
+  extra_headers?: ExtraHeaders;
+  functions?: Functions;
+  function_call?: FunctionCall;
+  base_url?: BaseUrl;
+  api_version?: ApiVersion;
+  api_key?: ApiKey;
+  model_list?: ModelList;
+  mock_response?: MockResponse;
+  custom_llm_provider?: CustomLlmProvider;
+  max_retries?: MaxRetries;
   [k: string]: unknown;
 }
 /**

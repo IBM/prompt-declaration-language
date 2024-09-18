@@ -1,8 +1,8 @@
 description: Hello world!
 defs:
-  file: examples/input/data.tx
+  file: ./data.txt
 document:
 - read: "{{ file }}"
   def: HELLO
-  show_result: False
+  contribute: []
 - get: HELLO
