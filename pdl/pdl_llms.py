@@ -145,7 +145,7 @@ class LitellmModel:
         parameters: Optional[dict | LitellmParameters],
     ) -> Message:
         params = parameters
-        if "granite" in model_id:
+        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             if isinstance(params, dict):
                 params = set_default_granite_model_parameters(params)
             else:
@@ -165,7 +165,7 @@ class LitellmModel:
         parameters: Optional[dict | LitellmParameters],
     ) -> Generator[Message, Any, None]:
         params = parameters
-        if "granite" in model_id:
+        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             if isinstance(params, dict):
                 params = set_default_granite_model_parameters(params)
             else:
