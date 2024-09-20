@@ -66,107 +66,6 @@ defs:
             call: list_tools
             args:
               tools: "{{ tools.append(finish_action) or tools }}"
-      - "Available tools:\n"
-      - for:
-          name: "{{ TOOL_INFO.display_names }}"
-          sig: "{{ TOOL_INFO.signatures }}"
-          desc: "{{ TOOL_INFO.descriptions }}"
-        repeat: |
-          {{ name }}: {{ desc }}
-      - "\n"
-      - call: demonstrate_tools
-        args:
-          tools: "{{ tools }}"
-      - for:
-          traj: "{{ trajectories }}"
-        repeat:
-          call: react_block
-          args:
-            trajectory: "{{ traj }}"
-      - "{{ task }}\nTho:"
-      - defs:
-          temperature: 0.7
-          iterations: 0
-        repeat:
-          - repeat:
-              - defs:
-                  iterations: "{{ iterations+1 }}"
-              - def: THOUGHT
-                model: "{{ model }}"
-                parameters:
-                  time_limit: 60000
-                  random_seed: 42
-                  truncate_input_tokens: 8191
-                  decoding_method: sample
-                  repetition_penalty: 1.1
-                  temperature: "{{ temperature }}"
-                  stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
-                  include_stop_sequence: true
-            until: "{{ THOUGHT.endswith('Act:') or iterations>20 }}"
-          - def: action_raw
-            model: "{{ model }}"
-            parameters:
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
-              decoding_method: sample
-              repetition_penalty: 1.1
-              temperature: "{{ temperature }}"
-              stop_sequences: ["[", "\n"]
-              include_stop_sequence: false
-          - defs:
-              ACTION: "{{ action_raw|trim }}"
-          - "["
-          - def: SUBJECT
-            model: "{{ model }}"
-            parameters:
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
-              decoding_method: sample
-              repetition_penalty: 1.1
-              temperature: "{{ temperature }}"
-              stop_sequences: ["]", "\n"]
-              include_stop_sequence: false
-          - "]"
-          - if: "{{ ACTION != 'Finish' }}"
-            then:
-              - "\nObs: "
-              - if: "{{ ACTION in TOOL_INFO.display_names }}"
-                then:
-                  - call: "{{ TOOL_INFO.name_map[ACTION] }}"
-                    args:
-                      subject: "{{ SUBJECT }}"
-                  - "\nTho:"
-                  - model: "{{ model }}"
-                    fallback: "Error calling model"
-                    parameters:
-                      time_limit: 60000
-                      random_seed: 42
-                      truncate_input_tokens: 8191
-                      repetition_penalty: 1.1
-                      decoding_method: sample
-                      temperature: "{{ temperature }}"
-                      stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
-                      include_stop_sequence: false
-                else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-        until: "{{ ACTION == 'Finish' or iterations>20 }}"
-      - show_result: true
-        data:
-          answer: "{{ SUBJECT|trim }}"
-
-  react_json:
-    function:
-      task: str
-      model: str
-      tools: { list: obj }
-      trajectories: { list: list }
-    return:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: "{{ tools.append(finish_action) or tools }}"
       - "Available tools:\n" # The preprompt!
       - for:
           name: "{{ TOOL_INFO.display_names }}"
@@ -187,9 +86,12 @@ defs:
       - "{{ task }}\nTho:"
       - defs:
           temperature: 0.05
-          decoding_method: "greedy"
+          decoding_method: greedy
+          iterations: 0
         repeat:
           - repeat:
+              - defs:
+                  iterations: "{{ iterations+1 }}"
               - def: THOUGHT
                 model: "{{ model }}"
                 parameters:
@@ -197,7 +99,7 @@ defs:
                   temperature: "{{ temperature }}"
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-            until: "{{ THOUGHT.endswith('Act:') }}"
+            until: "{{ THOUGHT.endswith('Act:') or iterations>20 }}"
           - def: action
             model: "{{ model }}"
             parser: json
@@ -222,7 +124,6 @@ defs:
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-        until: "{{ action.name == 'Finish' }}"
-      - show_result: true
-        data:
+        until: "{{ action.name == 'Finish' or iterations>20 }}"
+      - data:
           answer: "{{ action.arguments }}"

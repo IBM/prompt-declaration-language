@@ -31,5 +31,5 @@ document:
   - call: auto_chain_of_thought
     args:
       question: "Noah has 2 apples. A friend gives him 3 more. How many apples does Noah have?"
-      model: "ibm/granite-34b-code-instruct"
+      model: "watsonx/ibm/granite-34b-code-instruct"
       answer: "5"
