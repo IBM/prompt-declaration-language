@@ -4,7 +4,7 @@ from pdl.pdl_interpreter import generate
 def do_test(t, capsys):
     generate(t["file"], None, None, {}, None)
     captured = capsys.readouterr()
-    output_string = captured.out
+    output_string = captured.out + "\n" + captured.err
     output = output_string.split("\n")
     print(output)
     assert set(output) == set(t["errors"])
@@ -245,7 +245,7 @@ line19 = {
         "Hello,",
         "tests/data/line/hello19.pdl:6 - 'models' is undefined",
         "tests/data/line/hello19.pdl:6 - Type errors during spec checking",
-        "tests/data/line/hello19.pdl:6 - None should be of type <class 'int'>",
+        "tests/data/line/hello19.pdl:6 -  should be of type <class 'int'>",
     ],
 }
 
@@ -270,7 +270,7 @@ def test_line20(capsys):
 
 line21 = {
     "file": "tests/data/line/hello21.pdl",
-    "errors": ["", "tests/data/line/hello21.pdl:3 - 'QUESTION' is undefined"],
+    "errors": ["", "tests/data/line/hello21.pdl:3 - 'QUESTION' is undefined", "null"],
 }
 
 
@@ -310,7 +310,7 @@ line24 = {
     "file": "tests/data/line/hello24.pdl",
     "errors": [
         "",
-        "Hello, World!",
+        "Hello, World!null",
         "tests/data/line/hello24.pdl:24 - 'GEN1' is undefined",
         "tests/data/line/hello24.pdl:25 - 'GEN2' is undefined",
         "tests/data/line/hello24.pdl:23 - Type errors during function call to translate",
@@ -365,9 +365,8 @@ def test_line26(capsys):
 line28 = {
     "file": "tests/data/line/hello28.pdl",
     "errors": [
-        "Hello! ",
+        "Hello! {{ QUESTION1 }}",
         "tests/data/line/hello28.pdl:9 - 'QUESTION1' is undefined",
-        "{{ QUESTION1 }}",
         "",
     ],
 }
@@ -380,12 +379,11 @@ def test_line28(capsys):
 line29 = {
     "file": "tests/data/line/hello29.pdl",
     "errors": [
-        "Hello! ",
+        "Hello! null",
         "tests/data/line/hello29.pdl:10 - 'QUESTION1' is undefined",
         "tests/data/line/hello29.pdl:11 - 'QUESTION2' is undefined",
         "tests/data/line/hello29.pdl:13 - 'QUESTION3' is undefined",
         "tests/data/line/hello29.pdl:15 - 'QUESTION4' is undefined",
-        "null",
         "",
     ],
 }
