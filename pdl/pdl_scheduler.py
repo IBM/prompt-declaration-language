@@ -95,9 +95,9 @@ def schedule(
 ) -> list[GeneratorReturnT]:
     global _LAST_ROLE  # pylint: disable= global-statement
     todo: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]]
-    todo_next: list[
-        tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]
-    ] = []
+    todo_next: list[tuple[int, Generator[YieldMessage, Any, GeneratorReturnT], Any]] = (
+        []
+    )
     done: list[Optional[GeneratorReturnT]]
     todo = [(i, gen, None) for i, gen in enumerate(generators)]
     done = [None for _ in generators]
@@ -106,10 +106,10 @@ def schedule(
             try:
                 msg = gen.send(v)
                 match msg:
-                    case ModelYieldResultMessage(
-                        result=result
-                    ) | CodeYieldResultMessage(result=result) | YieldResultMessage(
-                        result=result
+                    case (
+                        ModelYieldResultMessage(result=result)
+                        | CodeYieldResultMessage(result=result)
+                        | YieldResultMessage(result=result)
                     ):
                         if msg.color is None:
                             text = stringify(result)

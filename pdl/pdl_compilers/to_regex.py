@@ -30,8 +30,7 @@ from ..pdl_ast import (
 
 class Re(ABC):
     @abstractmethod
-    def to_re(self) -> str:
-        ...
+    def to_re(self) -> str: ...
 
 
 class ReEmpty(Re):

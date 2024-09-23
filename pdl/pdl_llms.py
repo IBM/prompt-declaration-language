@@ -43,7 +43,7 @@ class BamModel:
         return BamModel.bam_client
 
     @staticmethod
-    def generate_text(  # pylint: disable=too-many-arguments
+    def generate_text(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         model_id: str,
         prompt_id: Optional[str],
         model_input: Optional[str],
@@ -69,7 +69,7 @@ class BamModel:
         return {"role": None, "content": text}
 
     @staticmethod
-    def generate_text_stream(  # pylint: disable=too-many-arguments
+    def generate_text_stream(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         model_id: str,
         prompt_id: Optional[str],
         model_input: Optional[str],
