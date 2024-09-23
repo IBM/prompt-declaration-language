@@ -5,7 +5,7 @@ default_language_version:
 repos:
   # check some basic stuff
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       # Check for files that would conflict in case-insensitive filesystems
       - id: check-case-conflict
@@ -22,12 +22,12 @@ repos:
         args: [--filter-files, --profile, black]
   # Format the python code with black
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 24.8.0
     hooks:
       - id: black
   # Lint the python code with flake
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
   # Type check the Python code with pylint
@@ -38,7 +38,7 @@ repos:
         entry: pylint
         language: python
         types: [python]
-        additional_dependencies: ['pylint==3.0.3']
+        additional_dependencies: ['pylint~=3']
         args:
           [
             "-rn", # Only display messages
@@ -47,7 +47,7 @@ repos:
           ]
   # Type check the Python code with MyPy
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v1.8.0'
+    rev: 'v1.11.2'
     hooks:
       - id: mypy
         verbose: true
@@ -61,4 +61,4 @@ repos:
         language: node
         pass_filenames: false
         types: [python]
-        additional_dependencies: ['pyright@1.1.345']
+        additional_dependencies: ['pyright@1.1.381']
