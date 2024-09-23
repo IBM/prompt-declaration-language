@@ -194,6 +194,8 @@ def main():
         )
         top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
+        return
+
     if args.pdl is None:
         parser.print_help()
         return
