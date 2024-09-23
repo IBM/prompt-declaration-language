@@ -22,7 +22,7 @@ defs:
     return:
       - |-
         Question: {{ question }}
-        Answer: Let's think step by step.
+      - "Answer: Let's think step by step. "
       - model: "{{ model }}"
         parameters:
           decoding_method: "greedy"
@@ -39,11 +39,13 @@ defs:
       for:
         example: "{{ examples }}"
       repeat:
-        call: cot_block
-        args:
-          question: "{{ example.question }}"
-          reasoning: "{{ example.reasoning }}"
-          answer: "{{ example.answer }}"
+        document:
+          call: cot_block
+          args:
+            question: "{{ example.question }}"
+            reasoning: "{{ example.reasoning }}"
+            answer: "{{ example.answer }}"
+      as: document
 
   chain_of_thought:
     function:

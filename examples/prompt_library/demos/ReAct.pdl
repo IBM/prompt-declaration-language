@@ -1,7 +1,7 @@
 description: Demo of ReAct template
 defs:
   available_tools:
-    data: ["Search"]
+    data: ["Search_json"]
 document:
   - include: ../tools.pdl
   - include: ../ReAct.pdl
@@ -13,7 +13,7 @@ document:
       tool_names: "{{ available_tools }}"
   - call: react_json
     args:
-     question: "When did the Battle of White Plains take place?"
-     model: meta-llama/llama-3-70b-instruct
+     task: "Question: When did the Battle of White Plains take place?"
+     model: "watsonx/ibm/granite-34b-code-instruct"
      tools: "{{ filtered_tools }}"
      trajectories: []

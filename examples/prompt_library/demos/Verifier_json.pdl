@@ -4,17 +4,14 @@ document:
 - include: examples/granite/granite_defs.pdl
 - def: filtered_tools
   call: filter_tools_by_name
-  show_result: false
   args:
     tools: "{{ default_tools }}"
     tool_names: ["Search"]
 - def: QUESTION
-  show_result: false
-  read: 
+  read:
   message: "Please enter a question: "
 - def: PROPOSED
   call: react_json
-  show_result: true
   args:
     context: "{{ granite_models.granite_7b_lab.system_prompt }}"
     question: "{{ QUESTION }}"
@@ -24,7 +21,6 @@ document:
 - "\n\n----- Verifying answer... -----\n\n"
 - def: VERIFIED
   call: react_json
-  show_result: true
   args:
     context: ""
     question: |-

@@ -6,7 +6,6 @@ defs:
       corpus: {list: str}
     return:
     - lan: python
-      show_result: false
       code: |
         from rank_bm25 import BM25Okapi
         PDL_SESSION.corpus = corpus

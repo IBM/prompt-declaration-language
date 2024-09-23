@@ -2,7 +2,8 @@ description: Demo of ReAct template
 defs:
   math_tools:
     data:
-      - name: Calculator
+      - display_name: Calculator
+        pdl_function: Calculator
         description: Evaluates expressions using Python
         parameters:
           - name: expression
@@ -25,12 +26,12 @@ defs:
             # - thought: "He sold #E2 this month."
             # - action: "Finish[#E2]"
 document:
-  - include: examples/prompt_library/tools.pdl
-  - include: examples/prompt_library/ReWoo.pdl
+  - include: ../../tools.pdl
+  - include: ../../ReWoo.pdl
   - call: rewoo
     args:
      task: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-     model: meta-llama/llama-3-70b-instruct
+     model: "watsonx/ibm/granite-34b-code-instruct"
      tools: "{{ math_tools }}"
      trajectories: []
      show_plans: true

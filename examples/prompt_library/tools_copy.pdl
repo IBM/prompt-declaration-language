@@ -83,13 +83,14 @@ defs:
         except Exception as e:
             result = f"There was an error calculating: {e}. Please try again."
 
-  get_current_weather:
-    function:
-      subject: str
-    return:
-      api: https
-      url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-      input: "{{ subject }}"
+  # get_current_weather:
+  #   function:
+  #     subject: str
+  #   return:
+  #     api: https
+  #     url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
+  #     input: "{{ subject }}"
+  #     show_result: false
 
   default_tools:
     data:
