@@ -529,8 +529,8 @@ function_call17 = {
 def test_function_call17():
     state = InterpreterState()
     data = Program.model_validate(function_call17)
-    with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "[1, 2, 3]"
 
 
 function_call18 = {
@@ -565,8 +565,8 @@ hello = {
 def test_hello():
     state = InterpreterState()
     data = Program.model_validate(hello)
-    with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+    document, _, _, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello, world!"
 
 
 hello1 = {
