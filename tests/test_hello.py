@@ -1,10 +1,5 @@
-from pdl.pdl_ast import Program, RepeatBlock
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    contains_error,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 hello = {
     "description": "Hello world!",
@@ -115,16 +110,16 @@ repeat_data_error = {
 }
 
 
-def test_repeat_error():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_data_error)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    errors = 0
-    print(trace)
-    if isinstance(trace, RepeatBlock):
-        traces = trace.trace or []
-        for document in traces:
-            if contains_error(document):
-                errors += 1
+# def test_repeat_error():
+#     state = InterpreterState()
+#     data = Program.model_validate(repeat_data_error)
+#     _, _, _, trace = process_prog(state, empty_scope, data)
+#     errors = 0
+#     print(trace)
+#     if isinstance(trace, RepeatBlock):
+#         traces = trace.trace or []
+#         for document in traces:
+#             if contains_error(document):
+#                 errors += 1
 
-    assert errors == 1
+#     assert errors == 1

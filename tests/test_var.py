@@ -1,7 +1,9 @@
+import pytest
+
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -137,8 +139,8 @@ missing_var = {
 def test_missing_var():
     state = InterpreterState()
     data = Program.model_validate(missing_var)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 missing_call = {
@@ -150,5 +152,5 @@ missing_call = {
 def test_missing_call():
     state = InterpreterState()
     data = Program.model_validate(missing_call)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)

@@ -426,11 +426,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "api",
           "default": "api",
@@ -1041,11 +1036,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "array",
           "default": "array",
@@ -1642,11 +1632,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -2622,11 +2607,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "call",
           "default": "call",
@@ -3239,11 +3219,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "code",
@@ -3862,11 +3837,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -4326,11 +4296,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "document",
@@ -4931,11 +4896,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -5373,11 +5333,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "error",
@@ -5981,11 +5936,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "for",
@@ -6764,11 +6714,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "function",
           "default": "function",
@@ -7393,11 +7338,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -7844,11 +7784,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "if",
@@ -8627,11 +8562,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "include",
           "default": "include",
@@ -9201,11 +9131,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -10345,11 +10270,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "message",
           "default": "message",
@@ -11220,11 +11140,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "object",
@@ -12356,11 +12271,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -12883,11 +12793,6 @@
             }
           ],
           "default": null
-        },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
         },
         "kind": {
           "const": "repeat",
@@ -13666,11 +13571,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "repeat_until",
           "default": "repeat_until",
@@ -14447,11 +14347,6 @@
           ],
           "default": null
         },
-        "has_error": {
-          "default": false,
-          "title": "Has Error",
-          "type": "boolean"
-        },
         "kind": {
           "const": "sequence",
           "default": "sequence",
@@ -14731,3 +14626,23 @@
     }
   ]
 }
+usage:  [-h] [--schema | --no-schema] [-l LOG] [-f DATA_FILE] [-d DATA]
+        [--stream {result,background,none}] [-t [TRACE]]
+        [pdl]
+
+positional arguments:
+  pdl                   pdl file
+
+options:
+  -h, --help            show this help message and exit
+  --schema, --no-schema
+                        generate PDL Json Schema
+  -l LOG, --log LOG     log file
+  -f DATA_FILE, --data-file DATA_FILE
+                        initial scope data file
+  -d DATA, --data DATA  scope data
+  --stream {result,background,none}
+                        stream the result or the background messages on the
+                        standard output
+  -t [TRACE], --trace [TRACE]
+                        output trace for live document

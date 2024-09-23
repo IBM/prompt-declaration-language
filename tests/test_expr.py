@@ -1,7 +1,9 @@
+import pytest
+
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -64,9 +66,8 @@ undefined_var_data = {"document": "Hello {{ X }}"}
 def test_undefined_var():
     state = InterpreterState()
     data = Program.model_validate(undefined_var_data)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
-    assert document == "Hello {{ X }}"
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 autoescape_data = {"document": "<|system|>"}
