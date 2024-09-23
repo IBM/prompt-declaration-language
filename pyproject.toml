@@ -6,16 +6,16 @@ build-backend = "setuptools.build_meta"
 name = "pdl"
 version = "0.0.1"
 dependencies = [
-  "pydantic~=2",
-  "ibm-generative-ai~=3",
-  "requests~=2",
-  "python-dotenv~=1",
-  "jinja2~=3",
-  "PyYAML~=6",
-  "jsonschema~=4",
+  "pydantic~=2.0",
+  "ibm-generative-ai~=3.0",
+  "requests~=2.0",
+  "python-dotenv~=1.0",
+  "jinja2~=3.0",
+  "PyYAML~=6.0",
+  "jsonschema~=4.0",
   "litellm~=1.47",
-  "termcolor~=2",
-  "ipython~=8"
+  "termcolor~=2.0",
+  "ipython~=8.0"
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -34,22 +34,22 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-  "pre-commit~=3",
-  "pytest~=8",
+  "pre-commit~=3.0",
+  "pytest~=8.0",
   "pydantic~=2.9"
 ]
 examples = [
-  "wikipedia~=1",
-  "textdistance~=4",
-  "faiss-cpu~=1",
+  "wikipedia~=1.0",
+  "textdistance~=4.0",
+  "faiss-cpu~=1.0",
   "datasets>2,<4",
-  "sympy~=1"
+  "sympy~=1.0"
 ]
 docs = [
-  "mkdocs~=1",
-  "mkdocstrings[python]~=1",
-  "mkdocs-material~=9",
-  "pymdown-extensions~=10"
+  "mkdocs~=1.0",
+  "mkdocstrings[python]~=1.0",
+  "mkdocs-material~=9.0",
+  "pymdown-extensions~=10.0"
 ]
 all = [ "pdl[dev,examples,docs]" ]
 
