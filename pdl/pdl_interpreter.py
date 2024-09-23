@@ -85,8 +85,9 @@ class PDLRuntimeError(PDLException):
         self.loc = loc
         self.trace = trace
         self.fallback = fallback
+        self.message = message
         if loc is not None:
-            message = get_loc_string(loc) + message
+            self.message = get_loc_string(loc) + message
         super().__init__(message)
 
 
@@ -542,26 +543,29 @@ def step_block_body(
             for idx, lst in items.items():
                 if not isinstance(lst, list):
                     msg = "Values inside the For block must be lists."
-                    lst_loc = append(append(block.location, "for"), idx)
+                    lst_loc = append(
+                        append(block.location or empty_block_location, "for"), idx
+                    )
                     raise PDLRuntimeError(
-                        msg,
+                        message=msg,
                         loc=lst_loc,
-                        trace=ErrorBlock(message=msg, location=lst_loc, program=block),
+                        trace=ErrorBlock(msg=msg, location=lst_loc, program=block),
                         fallback=[],
                     )
                 lengths.append(len(lst))
             if len(set(lengths)) != 1:  # Not all the lists are of the same length
                 msg = "Lists inside the For block must be of the same length"
-                for_loc = append(block.location, "for")
+                for_loc = append(block.location or empty_block_location, "for")
                 raise PDLRuntimeError(
                     msg,
-                    loc=lst_loc,
-                    trace=ErrorBlock(message=msg, location=for_loc, program=block),
+                    loc=for_loc,
+                    trace=ErrorBlock(msg=msg, location=for_loc, program=block),
                     fallback=[],
                 )
             iteration_state = state.with_yield_result(
                 state.yield_result and block.iteration_type == IterationType.DOCUMENT
             )
+            repeat_loc = append(loc, "repeat")
             try:
                 for i in range(lengths[0]):
                     scope = scope | {
@@ -569,7 +573,6 @@ def step_block_body(
                     }
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
-                    newloc = append(loc, "repeat")
                     (
                         iteration_result,
                         iteration_background,
@@ -580,14 +583,14 @@ def step_block_body(
                         iteration_state,
                         scope,
                         block.repeat,
-                        newloc,
+                        repeat_loc,
                     )
                     background = messages_concat(background, iteration_background)
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
             except PDLRuntimeStepBlocksError as exc:
-                iterations_trace.append(exc.blocks)
-                trace = block.model_copy(update={"trace": iterations_trace})
+                iter_trace.append(exc.blocks)
+                trace = block.model_copy(update={"trace": iter_trace})
                 raise PDLRuntimeError(
                     exc.message,
                     loc=repeat_loc,
@@ -606,12 +609,12 @@ def step_block_body(
             iteration_state = state.with_yield_result(
                 state.yield_result and block.iteration_type == IterationType.DOCUMENT
             )
+            repeat_loc = append(loc, "repeat")
             try:
                 while not stop:
                     scope = scope | {
                         "context": messages_concat(context_init, background)
                     }
-                    repeat_loc = append(loc, "repeat")
                     (
                         iteration_result,
                         iteration_background,
@@ -904,7 +907,7 @@ def step_call_model(
                 concrete_block, "parameters", scope, loc
             )
         case LitellmModelBlock():
-            if isinstance(block.parameters, LitellmParameters):
+            if isinstance(concrete_block.parameters, LitellmParameters):
                 concrete_block = concrete_block.model_copy(
                     update={"parameters": concrete_block.parameters.model_dump()}
                 )
@@ -1285,7 +1288,7 @@ def step_include(
         raise PDLRuntimeError(
             message,
             loc=loc,
-            trace=ErrorBlock(msg=message, program=block.model_copy(), fallback=result),
+            trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
 
 

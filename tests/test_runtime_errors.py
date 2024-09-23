@@ -10,7 +10,7 @@ def test_jinja_undefined():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_jinja_access():
@@ -19,7 +19,7 @@ def test_jinja_access():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_jinja_syntax():
@@ -28,7 +28,7 @@ def test_jinja_syntax():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_parser_json():
@@ -38,7 +38,7 @@ parser: json
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_parser_regex():
@@ -49,7 +49,7 @@ parser:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_type_result():
@@ -59,7 +59,7 @@ spec: int
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_get():
@@ -70,7 +70,7 @@ document:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_call_undefined():
@@ -79,7 +79,7 @@ call: "f"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_call_bad_name():
@@ -88,7 +88,7 @@ call: "{{ ( f }}"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
 
 
 def test_call_bad_args():
@@ -104,4 +104,4 @@ args:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.message) == "XXX"
+    assert str(exc.value.message) == "XXX"
