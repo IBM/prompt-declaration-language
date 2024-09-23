@@ -630,7 +630,7 @@ def step_block_body(
                     results.append(iteration_result)
                     background = messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
-                    stop, block = process_condition_of(block, "until", scope, loc)
+                    stop = process_condition_of(block, "until", scope, loc)
             except PDLRuntimeStepBlocksError as exc:
                 iterations_trace.append(exc.blocks)
                 trace = block.model_copy(update={"trace": iterations_trace})
@@ -829,8 +829,18 @@ def process_condition_of(
     scope: ScopeType,
     loc: LocationType,
     field_alias: Optional[str] = None,
-) -> tuple[bool, BlockTypeTVarProcessCondOf]:
-    return process_expr_of(block, field, scope, loc, field_alias)
+) -> bool:
+    expr = getattr(block, field)
+    loc = append(loc, field_alias or field)
+    try:
+        result = process_expr(scope, expr, loc)
+    except PDLRuntimeExpressionError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=loc,
+            trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+        ) from exc
+    return result
 
 
 def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
