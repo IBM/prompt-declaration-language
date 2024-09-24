@@ -1238,7 +1238,7 @@ def step_call(
         if len(errors) > 0:
             raise PDLRuntimeError(
                 f"Type errors in result of function call to {closure_expr}:\n"
-                + "\n".join(type_errors),
+                + "\n".join(errors),
                 loc=loc,
                 trace=trace,
             )

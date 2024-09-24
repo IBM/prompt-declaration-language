@@ -43,8 +43,7 @@ line3 = {
     "file": "tests/data/line/hello3.pdl",
     "errors": [
         "",
-        "Hello, World!",
-        "tests/data/line/hello3.pdl:6 - Type errors during spec checking",
+        "tests/data/line/hello3.pdl:6 - Type errors during spec checking:",
         "tests/data/line/hello3.pdl:6 -  World! should be of type <class 'int'>",
     ],
 }
@@ -100,8 +99,7 @@ line9 = {
     "file": "tests/data/line/hello9.pdl",
     "errors": [
         "",
-        "hello",
-        "tests/data/line/hello9.pdl:3 - Type errors during spec checking",
+        "tests/data/line/hello9.pdl:3 - Type errors during spec checking:",
         "tests/data/line/hello9.pdl:3 - hello should be of type <class 'int'>",
     ],
 }
@@ -141,8 +139,7 @@ line12 = {
     "file": "tests/data/line/hello12.pdl",
     "errors": [
         "",
-        "Hello! How are you?",
-        "tests/data/line/hello12.pdl:9 - Type errors during spec checking",
+        "tests/data/line/hello12.pdl:9 - Type errors during spec checking:",
         "tests/data/line/hello12.pdl:9 - How are you? should be of type <class 'bool'>",
     ],
 }
@@ -156,9 +153,7 @@ line13 = {
     "file": "tests/data/line/hello13.pdl",
     "errors": [
         "",
-        "0",
-        "1",
-        "tests/data/line/hello13.pdl:9 - Type errors during spec checking",
+        "tests/data/line/hello13.pdl:9 - Type errors during spec checking:",
         "tests/data/line/hello13.pdl:9 - 1 should be of type <class 'str'>",
     ],
 }
@@ -172,8 +167,7 @@ line14 = {
     "file": "tests/data/line/hello14.pdl",
     "errors": [
         "",
-        "Hello, World!Bonjour le monde!",
-        "tests/data/line/hello14.pdl:24 - Type errors in result of function call to translate",
+        "tests/data/line/hello14.pdl:24 - Type errors in result of function call to translate:",
         "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
@@ -187,10 +181,7 @@ line15 = {
     "file": "tests/data/line/hello15.pdl",
     "errors": [
         "",
-        "Hello World!",
-        "tests/data/line/hello15.pdl:6 - Variable is undefined: boolean",
-        "tests/data/line/hello15.pdl:7 - 'something' is undefined",
-        "{{ something }}",
+        "tests/data/line/hello15.pdl:6 - Error during the evaluation of {{ boolean }}: 'boolean' is undefined",
     ],
 }
 
