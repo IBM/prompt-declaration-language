@@ -351,8 +351,8 @@ class MessageBlock(Block):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    role: RoleType  # type: ignore
-    """Role of associated to the message."""
+    role: RoleType  # pyright: ignore
+    """Role of associated to the message."""  # pyright: ignore
     content: "BlocksType"
     """Content of the message."""
 
