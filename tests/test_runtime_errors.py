@@ -10,7 +10,10 @@ def test_jinja_undefined():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Error during the evaluation of {{ x }}: 'x' is undefined"
+    )
 
 
 def test_jinja_access():
@@ -19,7 +22,10 @@ def test_jinja_access():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Error during the evaluation of {{ {}['x'] }}: 'dict object' has no attribute 'x'"
+    )
 
 
 def test_jinja_syntax():
@@ -28,7 +34,10 @@ def test_jinja_syntax():
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Syntax error in {{ {}[ }}: unexpected 'end of template'"
+    )
 
 
 def test_parser_json():
@@ -38,7 +47,10 @@ parser: json
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Attempted to parse ill-formed JSON: JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 3 (char 2)')"
+    )
 
 
 def test_parser_regex():
@@ -49,7 +61,10 @@ parser:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Fail to parse with regex (: error('missing ), unterminated subpattern at position 0')"
+    )
 
 
 def test_type_result():
@@ -59,7 +74,10 @@ spec: int
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Type errors during spec checking:\n:0 - Hello should be of type <class 'int'>"
+    )
 
 
 def test_get():
@@ -70,7 +88,10 @@ document:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Error during the evaluation of {{ x }}: 'x' is undefined"
+    )
 
 
 def test_call_undefined():
@@ -79,7 +100,10 @@ call: "f"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Error during the evaluation of {{ f }}: 'f' is undefined"
+    )
 
 
 def test_call_bad_name():
@@ -88,7 +112,10 @@ call: "{{ ( f }}"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Syntax error in {{ ( f }}: unexpected end of template, expected ')'."
+    )
 
 
 def test_call_bad_args():
@@ -104,4 +131,7 @@ args:
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
-    assert str(exc.value.message) == "XXX"
+    assert (
+        str(exc.value.message)
+        == "Syntax error in {{ (x }}: unexpected end of template, expected ')'."
+    )

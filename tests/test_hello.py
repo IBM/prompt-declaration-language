@@ -1,6 +1,12 @@
 import pytest
+
 from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, PDLRuntimeError, empty_scope, process_prog
+from pdl.pdl_interpreter import (
+    InterpreterState,
+    PDLRuntimeError,
+    empty_scope,
+    process_prog,
+)
 
 hello = {
     "description": "Hello world!",
@@ -114,5 +120,5 @@ repeat_data_error = {
 def test_repeat_error():
     state = InterpreterState()
     data = Program.model_validate(repeat_data_error)
-    with pytest.raises(PDLRuntimeError):    
+    with pytest.raises(PDLRuntimeError):
         process_prog(state, empty_scope, data)
