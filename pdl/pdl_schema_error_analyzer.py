@@ -117,6 +117,11 @@ def analyze_errors(defs, schema, data, loc: LocationType) -> list[str]:  # noqa:
                     ret += analyze_errors(
                         defs, schema["properties"][field], data[field], newloc
                     )
+            if "additionalProperties" in schema.keys() and not isinstance(schema["additionalProperties"], bool): 
+                for key, value in data.items():
+                    nloc = append(loc, key)
+                    ret += analyze_errors(defs, schema["additionalProperties"], data[key], nloc)
+
 
     elif is_any_of(schema):
         if len(schema["anyOf"]) == 2 and nullable(schema):
