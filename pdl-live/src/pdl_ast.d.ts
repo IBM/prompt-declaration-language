@@ -275,7 +275,6 @@ export type Fallback =
 export type Role = string | null;
 export type Path = string[];
 export type File = string;
-export type HasError = boolean;
 export type Kind = "empty";
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -351,7 +350,6 @@ export type Fallback1 =
  *
  */
 export type Role1 = string | null;
-export type HasError1 = boolean;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -478,7 +476,6 @@ export type Fallback2 =
  *
  */
 export type Role2 = string | null;
-export type HasError2 = boolean;
 export type Kind2 = "include";
 /**
  * Name of the file to include.
@@ -584,7 +581,6 @@ export type Fallback3 =
  *
  */
 export type Role3 = string | null;
-export type HasError3 = boolean;
 export type Kind3 = "read";
 /**
  * Name of the file to read. If `None`, read the standard input.
@@ -674,7 +670,6 @@ export type Fallback4 =
  * Role of associated to the message.
  */
 export type Role4 = string | null;
-export type HasError4 = boolean;
 export type Kind4 = "message";
 /**
  * Content of the message.
@@ -803,7 +798,6 @@ export type Fallback5 =
  *
  */
 export type Role5 = string | null;
-export type HasError5 = boolean;
 export type Kind5 = "object";
 export type Object =
   | {
@@ -932,7 +926,6 @@ export type Fallback6 =
  *
  */
 export type Role6 = string | null;
-export type HasError6 = boolean;
 export type Kind6 = "array";
 export type Array =
   | number
@@ -1058,7 +1051,6 @@ export type Fallback7 =
  *
  */
 export type Role7 = string | null;
-export type HasError7 = boolean;
 export type Kind7 = "sequence";
 export type Sequence =
   | number
@@ -1184,7 +1176,6 @@ export type Fallback8 =
  *
  */
 export type Role8 = string | null;
-export type HasError8 = boolean;
 export type Kind8 = "document";
 /**
  * Body of the document.
@@ -1314,7 +1305,6 @@ export type Fallback9 =
  *
  */
 export type Role9 = string | null;
-export type HasError9 = boolean;
 export type Kind9 = "for";
 /**
  * Body of the loop.
@@ -1503,7 +1493,6 @@ export type Fallback10 =
  *
  */
 export type Role10 = string | null;
-export type HasError10 = boolean;
 export type Kind10 = "repeat_until";
 /**
  * Body of the loop.
@@ -1692,7 +1681,6 @@ export type Fallback11 =
  *
  */
 export type Role11 = string | null;
-export type HasError11 = boolean;
 export type Kind11 = "repeat";
 /**
  * Body of the loop.
@@ -1886,7 +1874,6 @@ export type Fallback12 =
  *
  */
 export type Role12 = string | null;
-export type HasError12 = boolean;
 export type Kind12 = "if";
 /**
  * Branch to exectute if the condition is true.
@@ -2072,7 +2059,6 @@ export type Fallback13 =
  *
  */
 export type Role13 = string | null;
-export type HasError13 = boolean;
 export type Kind13 = "data";
 /**
  * Do not evaluate expressions inside strings.
@@ -2152,7 +2138,6 @@ export type Fallback14 =
  *
  */
 export type Role14 = string | null;
-export type HasError14 = boolean;
 export type Kind14 = "get";
 /**
  * Name of the variable to access.
@@ -2232,7 +2217,6 @@ export type Fallback15 =
  *
  */
 export type Role15 = string | null;
-export type HasError15 = boolean;
 export type Kind15 = "api";
 export type Api = string;
 /**
@@ -2367,7 +2351,6 @@ export type Fallback16 =
  *
  */
 export type Role16 = string | null;
-export type HasError16 = boolean;
 export type Kind16 = "code";
 /**
  * Programming language of the code.
@@ -2502,7 +2485,6 @@ export type Fallback17 =
  *
  */
 export type Role17 = string | null;
-export type HasError17 = boolean;
 export type Kind17 = "model";
 export type Model = string;
 export type Input1 =
@@ -2713,7 +2695,6 @@ export type Fallback18 =
  *
  */
 export type Role18 = string | null;
-export type HasError18 = boolean;
 export type Kind18 = "model";
 export type Model1 = string;
 export type Input2 =
@@ -2920,7 +2901,6 @@ export type Fallback19 =
  *
  */
 export type Role19 = string | null;
-export type HasError19 = boolean;
 export type Kind19 = "call";
 /**
  * Function to call.
@@ -3052,7 +3032,6 @@ export type Fallback20 =
  *
  */
 export type Role20 = string | null;
-export type HasError20 = boolean;
 export type Kind20 = "function";
 /**
  * Functions parameters with their types.
@@ -3207,7 +3186,6 @@ export interface FunctionBlock {
   role?: Role20;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError20;
   kind?: Kind20;
   function: Function;
   return: Return;
@@ -3290,7 +3268,6 @@ export interface CallBlock {
   role?: Role19;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError19;
   kind?: Kind19;
   call: Call;
   args?: Args;
@@ -3373,7 +3350,6 @@ export interface LitellmModelBlock {
   role?: Role18;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError18;
   kind?: Kind18;
   model: Model1;
   input?: Input2;
@@ -3455,7 +3431,6 @@ export interface BamModelBlock {
   role?: Role17;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError17;
   kind?: Kind17;
   model: Model;
   input?: Input1;
@@ -3544,7 +3519,6 @@ export interface CodeBlock {
   role?: Role16;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError16;
   kind?: Kind16;
   lan: Lan;
   code: Code;
@@ -3626,7 +3600,6 @@ export interface ApiBlock {
   role?: Role15;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError15;
   kind?: Kind15;
   api: Api;
   url: Url;
@@ -3709,7 +3682,6 @@ export interface GetBlock {
   role?: Role14;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError14;
   kind?: Kind14;
   get: Get;
 }
@@ -3790,7 +3762,6 @@ export interface DataBlock {
   role?: Role13;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError13;
   kind?: Kind13;
   data: Data;
   raw?: Raw;
@@ -3872,7 +3843,6 @@ export interface IfBlock {
   role?: Role12;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError12;
   kind?: Kind12;
   if: If;
   then: Then;
@@ -3956,7 +3926,6 @@ export interface RepeatBlock {
   role?: Role11;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError11;
   kind?: Kind11;
   repeat: Repeat2;
   num_iterations: NumIterations;
@@ -4040,7 +4009,6 @@ export interface RepeatUntilBlock {
   role?: Role10;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError10;
   kind?: Kind10;
   repeat: Repeat1;
   until: Until;
@@ -4124,7 +4092,6 @@ export interface ForBlock {
   role?: Role9;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError9;
   kind?: Kind9;
   for: For;
   repeat: Repeat;
@@ -4208,7 +4175,6 @@ export interface DocumentBlock {
   role?: Role8;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError8;
   kind?: Kind8;
   document: Document;
 }
@@ -4289,7 +4255,6 @@ export interface SequenceBlock {
   role?: Role7;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError7;
   kind?: Kind7;
   sequence: Sequence;
 }
@@ -4370,7 +4335,6 @@ export interface ArrayBlock {
   role?: Role6;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError6;
   kind?: Kind6;
   array: Array;
 }
@@ -4451,7 +4415,6 @@ export interface ObjectBlock {
   role?: Role5;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError5;
   kind?: Kind5;
   object: Object;
 }
@@ -4532,7 +4495,6 @@ export interface MessageBlock {
   role: Role4;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError4;
   kind?: Kind4;
   content: Content;
 }
@@ -4613,7 +4575,6 @@ export interface ReadBlock {
   role?: Role3;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError3;
   kind?: Kind3;
   read: Read;
   message?: Message;
@@ -4696,7 +4657,6 @@ export interface IncludeBlock {
   role?: Role2;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError2;
   kind?: Kind2;
   include: Include;
   trace?: Trace;
@@ -4775,7 +4735,6 @@ export interface ErrorBlock {
   role?: Role1;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError1;
   kind?: Kind1;
   msg: Msg;
   program: Program1;
@@ -4857,7 +4816,6 @@ export interface EmptyBlock {
   role?: Role;
   result?: unknown;
   location?: LocationType | null;
-  has_error?: HasError;
   kind?: Kind;
 }
 /**

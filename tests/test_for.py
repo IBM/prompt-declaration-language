@@ -1,7 +1,9 @@
+import pytest
+
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -81,8 +83,8 @@ for_data3 = {
 def test_for_data3():
     state = InterpreterState()
     data = Program.model_validate(for_data3)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 for_data4 = {

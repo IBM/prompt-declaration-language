@@ -1,7 +1,9 @@
-from pdl.pdl_ast import Program, RepeatBlock
+import pytest
+
+from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -118,13 +120,5 @@ repeat_data_error = {
 def test_repeat_error():
     state = InterpreterState()
     data = Program.model_validate(repeat_data_error)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    errors = 0
-    print(trace)
-    if isinstance(trace, RepeatBlock):
-        traces = trace.trace or []
-        for document in traces:
-            if contains_error(document):
-                errors += 1
-
-    assert errors == 1
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)

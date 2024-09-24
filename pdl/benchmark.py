@@ -121,7 +121,7 @@ class BaseProcessor:
                 )
 
 
-def write_log(  # pylint: disable=too-many-arguments
+def write_log(  # pylint: disable=too-many-arguments,too-many-positional-arguments
     log, index, question, truth, answer, solution, document, exc
 ):
     log.write("\n\n------------------------\n")

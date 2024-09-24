@@ -1,7 +1,6 @@
 """PDL programs are represented by the Pydantic data structure defined in this file.
 """
 
-
 from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
@@ -126,7 +125,6 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
-    has_error: bool = False
 
 
 class FunctionBlock(Block):
@@ -353,7 +351,7 @@ class MessageBlock(Block):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    role: RoleType
+    role: RoleType  # type: ignore
     """Role of associated to the message."""
     content: "BlocksType"
     """Content of the message."""
@@ -525,8 +523,9 @@ class PdlBlocks(RootModel):
 
 
 class PDLException(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
 
 
 MAX_NEW_TOKENS = 1024
@@ -602,32 +601,32 @@ def set_default_granite_model_parameters(
     if parameters is None:
         parameters = {}
     if "decoding_method" not in parameters:
-        parameters[
-            "decoding_method"
-        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+        parameters["decoding_method"] = (
+            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+        )
     if "max_tokens" in parameters and parameters["max_tokens"] is None:
-        parameters[
-            "max_tokens"
-        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        parameters["max_tokens"] = (
+            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        )
     if "min_new_tokens" not in parameters:
-        parameters[
-            "min_new_tokens"
-        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        parameters["min_new_tokens"] = (
+            MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        )
     if "repetition_penalty" not in parameters:
-        parameters[
-            "repetition_penalty"
-        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+        parameters["repetition_penalty"] = (
+            REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+        )
     if parameters["decoding_method"] == "sample":
         if "temperature" not in parameters:
-            parameters[
-                "temperature"
-            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["temperature"] = (
+                TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
         if "top_k" not in parameters:
-            parameters[
-                "top_k"
-            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["top_k"] = (
+                TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
         if "top_p" not in parameters:
-            parameters[
-                "top_p"
-            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["top_p"] = (
+                TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
     return parameters

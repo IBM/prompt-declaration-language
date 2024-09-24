@@ -193,8 +193,6 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
         d["parser"] = parser_to_dict(block.parser)
     if block.location is not None:
         d["location"] = location_to_dict(block.location)
-    if block.has_error:
-        d["has_error"] = block.has_error
     if block.fallback is not None:
         d["fallback"] = blocks_to_dict(block.fallback)
     return d
@@ -203,9 +201,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
 def blocks_to_dict(
     blocks: BlocksType,
 ) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
-    result: int | float | str | dict[str, Any] | list[
-        int | float | str | dict[str, Any]
-    ]
+    result: (
+        int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
+    )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = [block_to_dict(block) for block in blocks]
     else:

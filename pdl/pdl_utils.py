@@ -36,9 +36,11 @@ def messages_to_str(messages: Messages) -> str:
     # TODO
     return "".join(
         [
-            msg["content"]
-            if msg["role"] is None
-            else f"<|{msg['role']}|>{msg['content']}"
+            (
+                msg["content"]
+                if msg["role"] is None
+                else f"<|{msg['role']}|>{msg['content']}"
+            )
             for msg in messages
         ]
     )

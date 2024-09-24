@@ -4,10 +4,10 @@
   "description": "Interactive PDL viewer.",
   "private": true,
   "devDependencies": {
-    "@types/node": "20.8.2",
+    "@types/node": "22.6.0",
     "gts": "^5.2.0",
     "ts-loader": "^9.5.1",
-    "typescript": "~5.2.0",
+    "typescript": "~5.6.2",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
   },
@@ -25,7 +25,7 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "json-schema-to-typescript": "^13.1.2",
+    "json-schema-to-typescript": "^15.0.2",
     "ts-pattern": "^5.0.8",
     "yaml": "^2.4.1"
   }
