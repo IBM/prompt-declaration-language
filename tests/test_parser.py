@@ -1,7 +1,9 @@
+import pytest
+
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -32,8 +34,7 @@ model_parser = {
 def test_model_parser():
     state = InterpreterState()
     data = Program.model_validate(model_parser)
-    result, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == {"bob": 20, "carol": 30}
 
 
@@ -53,8 +54,8 @@ model_parser1 = {
 def test_model_parser1():
     state = InterpreterState()
     data = Program.model_validate(model_parser1)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 get_parser = {"get": "x", "parser": "json", "def": "y", "contribute": []}
@@ -64,8 +65,7 @@ def test_get_parser():
     state = InterpreterState()
     data = Program.model_validate(get_parser)
     scope = {"x": '{"a": "foo", "b": "bar"}'}
-    result, _, scope, trace = process_prog(state, scope, data)
-    assert not contains_error(trace)
+    result, _, scope, _ = process_prog(state, scope, data)
     assert result == ""
     assert scope["x"] == '{"a": "foo", "b": "bar"}'
     assert scope["y"] == {"a": "foo", "b": "bar"}
@@ -87,8 +87,7 @@ code_parser = {
 def test_code_parser():
     state = InterpreterState()
     data = Program.model_validate(code_parser)
-    result, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == {"a": "b", "c": "d"}
 
 
@@ -101,6 +100,5 @@ code_parser1 = {
 def test_code_parser1():
     state = InterpreterState()
     data = Program.model_validate(code_parser1)
-    result, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == "{'a': 'b', 'c': 'd'}"

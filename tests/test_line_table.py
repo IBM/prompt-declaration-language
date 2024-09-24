@@ -43,8 +43,7 @@ line3 = {
     "file": "tests/data/line/hello3.pdl",
     "errors": [
         "",
-        "Hello, World!",
-        "tests/data/line/hello3.pdl:6 - Type errors during spec checking",
+        "tests/data/line/hello3.pdl:6 - Type errors during spec checking:",
         "tests/data/line/hello3.pdl:6 -  World! should be of type <class 'int'>",
     ],
 }
@@ -100,8 +99,7 @@ line9 = {
     "file": "tests/data/line/hello9.pdl",
     "errors": [
         "",
-        "hello",
-        "tests/data/line/hello9.pdl:3 - Type errors during spec checking",
+        "tests/data/line/hello9.pdl:3 - Type errors during spec checking:",
         "tests/data/line/hello9.pdl:3 - hello should be of type <class 'int'>",
     ],
 }
@@ -141,8 +139,7 @@ line12 = {
     "file": "tests/data/line/hello12.pdl",
     "errors": [
         "",
-        "Hello! How are you?",
-        "tests/data/line/hello12.pdl:9 - Type errors during spec checking",
+        "tests/data/line/hello12.pdl:9 - Type errors during spec checking:",
         "tests/data/line/hello12.pdl:9 - How are you? should be of type <class 'bool'>",
     ],
 }
@@ -156,9 +153,7 @@ line13 = {
     "file": "tests/data/line/hello13.pdl",
     "errors": [
         "",
-        "0",
-        "1",
-        "tests/data/line/hello13.pdl:9 - Type errors during spec checking",
+        "tests/data/line/hello13.pdl:9 - Type errors during spec checking:",
         "tests/data/line/hello13.pdl:9 - 1 should be of type <class 'str'>",
     ],
 }
@@ -172,8 +167,7 @@ line14 = {
     "file": "tests/data/line/hello14.pdl",
     "errors": [
         "",
-        "Hello, World!Bonjour le monde!",
-        "tests/data/line/hello14.pdl:24 - Type errors in result of function call to translate",
+        "tests/data/line/hello14.pdl:24 - Type errors in result of function call to translate:",
         "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
@@ -187,10 +181,7 @@ line15 = {
     "file": "tests/data/line/hello15.pdl",
     "errors": [
         "",
-        "Hello World!",
-        "tests/data/line/hello15.pdl:6 - Variable is undefined: boolean",
-        "tests/data/line/hello15.pdl:7 - 'something' is undefined",
-        "{{ something }}",
+        "tests/data/line/hello15.pdl:6 - Error during the evaluation of {{ boolean }}: 'boolean' is undefined",
     ],
 }
 
@@ -203,8 +194,7 @@ line16 = {
     "file": "tests/data/line/hello16.pdl",
     "errors": [
         "",
-        '{"bob": 20, "carol": 30}',
-        "tests/data/line/hello16.pdl:8 - Type errors during spec checking",
+        "tests/data/line/hello16.pdl:8 - Type errors during spec checking:",
         "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
     ],
 }
@@ -218,7 +208,7 @@ line17 = {
     "file": "tests/data/line/hello17.pdl",
     "errors": [
         "",
-        "tests/data/line/hello17.pdl:3 - Type errors during spec checking",
+        "tests/data/line/hello17.pdl:3 - Type errors during spec checking:",
         "tests/data/line/hello17.pdl:3 - hello should be of type <class 'int'>",
     ],
 }
@@ -230,7 +220,10 @@ def test_line17(capsys):
 
 line18 = {
     "file": "tests/data/line/hello18.pdl",
-    "errors": ["", "0", "1", "tests/data/line/hello18.pdl:13 - 'J' is undefined"],
+    "errors": [
+        "",
+        "tests/data/line/hello18.pdl:13 - Error during the evaluation of {{ J == 5 }}: 'J' is undefined",
+    ],
 }
 
 
@@ -242,10 +235,9 @@ line19 = {
     "file": "tests/data/line/hello19.pdl",
     "errors": [
         "",
-        "Hello,",
-        "tests/data/line/hello19.pdl:6 - 'models' is undefined",
-        "tests/data/line/hello19.pdl:6 - Type errors during spec checking",
-        "tests/data/line/hello19.pdl:6 -  should be of type <class 'int'>",
+        "tests/data/line/hello19.pdl:6 - Error during the evaluation of {{ models }}: 'models' is undefined",
+        # "tests/data/line/hello19.pdl:6 - Type errors during spec checking:",
+        # "tests/data/line/hello19.pdl:6 -  should be of type <class 'int'>",
     ],
 }
 
@@ -258,8 +250,7 @@ line20 = {
     "file": "tests/data/line/hello20.pdl",
     "errors": [
         "",
-        "tests/data/line/hello20.pdl:3 - 'NAME' is undefined",
-        "Who is{{ NAME }}?",
+        "tests/data/line/hello20.pdl:3 - Error during the evaluation of Who is{{ NAME }}?: 'NAME' is undefined",
     ],
 }
 
@@ -270,7 +261,10 @@ def test_line20(capsys):
 
 line21 = {
     "file": "tests/data/line/hello21.pdl",
-    "errors": ["", "tests/data/line/hello21.pdl:3 - 'QUESTION' is undefined", "null"],
+    "errors": [
+        "",
+        "tests/data/line/hello21.pdl:3 - Error during the evaluation of {{ QUESTION }}: 'QUESTION' is undefined",
+    ],
 }
 
 
@@ -282,8 +276,7 @@ line22 = {
     "file": "tests/data/line/hello22.pdl",
     "errors": [
         "",
-        "tests/data/line/hello22.pdl:4 - 'I' is undefined",
-        "{{ I }}",
+        "tests/data/line/hello22.pdl:4 - Error during the evaluation of {{ I }}: 'I' is undefined",
     ],
 }
 
@@ -296,8 +289,7 @@ line23 = {
     "file": "tests/data/line/hello23.pdl",
     "errors": [
         "",
-        "tests/data/line/hello23.pdl:5 - 'I' is undefined",
-        "{{ I }}",
+        "tests/data/line/hello23.pdl:5 - Error during the evaluation of {{ I }}: 'I' is undefined",
     ],
 }
 
@@ -310,14 +302,7 @@ line24 = {
     "file": "tests/data/line/hello24.pdl",
     "errors": [
         "",
-        "Hello, World!null",
-        "tests/data/line/hello24.pdl:24 - 'GEN1' is undefined",
-        "tests/data/line/hello24.pdl:25 - 'GEN2' is undefined",
-        "tests/data/line/hello24.pdl:23 - Type errors during function call to translate",
-        "tests/data/line/hello24.pdl:21 - None should be of type <class 'str'>",
-        "tests/data/line/hello24.pdl:25 - None should be of type <class 'str'>",
-        "tests/data/line/hello24.pdl:21 - Type errors during spec checking",
-        "tests/data/line/hello24.pdl:24 - None should be of type <class 'str'>",
+        "tests/data/line/hello24.pdl:24 - Error during the evaluation of Hello,{{ GEN1 }}: 'GEN1' is undefined",
     ],
 }
 
@@ -345,15 +330,7 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:13 - 'questions2' is undefined",
-        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists",
-        "tests/data/line/hello26.pdl:12 - Lists inside the For block must be of the same length",
-        "Here is the code:",
-        "```json",
-        "{",
-        '  "bob": "20",',
-        '  "carol": "30"',
-        "}",
+        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists.",
     ],
 }
 
@@ -362,12 +339,24 @@ def test_line26(capsys):
     do_test(line26, capsys)
 
 
+line27 = {
+    "file": "tests/data/line/hello27.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello27.pdl:12 - Lists inside the For block must be of the same length.",
+    ],
+}
+
+
+def test_line27(capsys):
+    do_test(line27, capsys)
+
+
 line28 = {
     "file": "tests/data/line/hello28.pdl",
     "errors": [
-        "Hello! {{ QUESTION1 }}",
-        "tests/data/line/hello28.pdl:9 - 'QUESTION1' is undefined",
         "",
+        "tests/data/line/hello28.pdl:9 - Error during the evaluation of {{ QUESTION1 }}: 'QUESTION1' is undefined",
     ],
 }
 
@@ -379,12 +368,8 @@ def test_line28(capsys):
 line29 = {
     "file": "tests/data/line/hello29.pdl",
     "errors": [
-        "Hello! null",
-        "tests/data/line/hello29.pdl:10 - 'QUESTION1' is undefined",
-        "tests/data/line/hello29.pdl:11 - 'QUESTION2' is undefined",
-        "tests/data/line/hello29.pdl:13 - 'QUESTION3' is undefined",
-        "tests/data/line/hello29.pdl:15 - 'QUESTION4' is undefined",
         "",
+        "tests/data/line/hello29.pdl:10 - Error during the evaluation of {{ QUESTION1 }}: 'QUESTION1' is undefined",
     ],
 }
 
@@ -397,8 +382,7 @@ line30 = {
     "file": "tests/data/line/hello30.pdl",
     "errors": [
         "",
-        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists",
-        "[]",
+        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists.",
     ],
 }
 

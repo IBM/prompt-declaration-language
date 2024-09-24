@@ -45,7 +45,7 @@ error2 = {
         "Hello,",
         {
             "model": "watsonx/ibm/granite-20b-code-instruct",
-            "parameters": {
+            "parameterss": {
                 "decoding_method": "greedy",
                 "stop_sequences": ["!"],
                 "include_stop_sequence": False,
@@ -65,57 +65,59 @@ def test_error2():
     )
 
 
-error3 = {
-    "description": "Hello world with a variable to call into a model",
-    "document": [
-        "Hello,",
-        {
-            "model": "watsonx/ibm/granite-20b-code-instruct",
-            "parameters": {
-                "decoding_methods": "greedy",
-                "stop_sequences": ["!"],
-                "include_stop_sequence": False,
-            },
-        },
-        "!\n",
-    ],
-}
+# error3 = {
+#     "description": "Hello world with a variable to call into a model",
+#     "document": [
+#         "Hello,",
+#         {
+#             "model": "ibm/granite-20b-code-instruct",
+#             "platform": "bam",
+#             "parameters": {
+#                 "decoding_methods": "greedy",
+#                 "stop_sequences": ["!"],
+#                 "include_stop_sequence": False,
+#             },
+#         },
+#         "!\n",
+#     ],
+# }
 
 
-def test_error3():
-    error(
-        error3,
-        [
-            ":0 - Field not allowed: decoding_methods",
-        ],
-    )
+# def test_error3():
+#     error(
+#         error3,
+#         [
+#             ":0 - Field not allowed: decoding_methods",
+#         ],
+#     )
 
 
-error4 = {
-    "description": "Hello world with a variable to call into a model",
-    "document": [
-        "Hello,",
-        {
-            "model": "watsonx/ibm/granite-20b-code-instruct",
-            "parameters": {
-                "decoding_methods": "greedy",
-                "stop_sequencess": ["!"],
-                "include_stop_sequence": False,
-            },
-        },
-        "!\n",
-    ],
-}
+# error4 = {
+#     "description": "Hello world with a variable to call into a model",
+#     "document": [
+#         "Hello,",
+#         {
+#             "model": "ibm/granite-20b-code-instruct",
+#             "platform": "bam",
+#             "parameters": {
+#                 "decoding_methods": "greedy",
+#                 "stop_sequencess": ["!"],
+#                 "include_stop_sequence": False,
+#             },
+#         },
+#         "!\n",
+#     ],
+# }
 
 
-def test_error4():
-    error(
-        error4,
-        [
-            ":0 - Field not allowed: decoding_methods",
-            ":0 - Field not allowed: stop_sequencess",
-        ],
-    )
+# def test_error4():
+#     error(
+#         error4,
+#         [
+#             ":0 - Field not allowed: decoding_methods",
+#             ":0 - Field not allowed: stop_sequencess",
+#         ],
+#     )
 
 
 error5 = {

@@ -10,7 +10,7 @@ document:
   input: 
     document:
     - for: 
-        question: "Hello"
+        question: "{{ [ ] }}"
         answer: "{{ data.answers }}"
       repeat:
         document:

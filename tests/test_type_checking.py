@@ -1,9 +1,10 @@
+import pytest
 import yaml
 
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
@@ -168,8 +169,7 @@ function_call = {
 def test_function_call():
     state = InterpreterState()
     data = Program.model_validate(function_call)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello Bob!"
 
 
@@ -190,8 +190,7 @@ function_call1 = {
 def test_function_call1():
     state = InterpreterState()
     data = Program.model_validate(function_call1)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello Bob!"
 
 
@@ -212,8 +211,7 @@ function_call2 = {
 def test_function_call2():
     state = InterpreterState()
     data = Program.model_validate(function_call2)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello 42!"
 
 
@@ -234,8 +232,7 @@ function_call3 = {
 def test_function_call3():
     state = InterpreterState()
     data = Program.model_validate(function_call3)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == 'Hello ["Bob", "Carrol"]!'
 
 
@@ -256,8 +253,7 @@ function_call4 = {
 def test_function_call4():
     state = InterpreterState()
     data = Program.model_validate(function_call4)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == 'Hello {"bob": "caroll"}!'
 
 
@@ -278,8 +274,7 @@ function_call5 = {
 def test_function_call5():
     state = InterpreterState()
     data = Program.model_validate(function_call5)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello true!"
 
 
@@ -300,8 +295,7 @@ function_call6 = {
 def test_function_call6():
     state = InterpreterState()
     data = Program.model_validate(function_call6)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello 6.6!"
 
 
@@ -322,8 +316,7 @@ function_call7 = {
 def test_function_call7():
     state = InterpreterState()
     data = Program.model_validate(function_call7)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello 6.6!"
 
 
@@ -344,8 +337,8 @@ function_call8 = {
 def test_function_call8():
     state = InterpreterState()
     data = Program.model_validate(function_call8)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call9 = {
@@ -365,8 +358,7 @@ function_call9 = {
 def test_function_call9():
     state = InterpreterState()
     data = Program.model_validate(function_call9)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello 6.6 street!"
 
 
@@ -387,8 +379,8 @@ function_call10 = {
 def test_function_call10():
     state = InterpreterState()
     data = Program.model_validate(function_call10)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call11 = {
@@ -408,8 +400,8 @@ function_call11 = {
 def test_function_call11():
     state = InterpreterState()
     data = Program.model_validate(function_call11)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call12 = {
@@ -429,8 +421,8 @@ function_call12 = {
 def test_function_call12():
     state = InterpreterState()
     data = Program.model_validate(function_call12)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call13 = {
@@ -450,8 +442,8 @@ function_call13 = {
 def test_function_call13():
     state = InterpreterState()
     data = Program.model_validate(function_call13)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call14 = {
@@ -471,8 +463,8 @@ function_call14 = {
 def test_function_call14():
     state = InterpreterState()
     data = Program.model_validate(function_call14)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call15 = {
@@ -493,8 +485,7 @@ function_call15 = {
 def test_function_call15():
     state = InterpreterState()
     data = Program.model_validate(function_call15)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello 6.6 street!"
 
 
@@ -516,8 +507,8 @@ function_call16 = {
 def test_function_call16():
     state = InterpreterState()
     data = Program.model_validate(function_call16)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 function_call17 = {
@@ -538,8 +529,7 @@ function_call17 = {
 def test_function_call17():
     state = InterpreterState()
     data = Program.model_validate(function_call17)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "[1, 2, 3]"
 
 
@@ -561,8 +551,8 @@ function_call18 = {
 def test_function_call18():
     state = InterpreterState()
     data = Program.model_validate(function_call18)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
 hello = {
@@ -575,8 +565,7 @@ hello = {
 def test_hello():
     state = InterpreterState()
     data = Program.model_validate(hello)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    document, _, _, _ = process_prog(state, empty_scope, data)
     assert document == "Hello, world!"
 
 
@@ -590,8 +579,7 @@ hello1 = {
 def test_hello1():
     state = InterpreterState()
     data = Program.model_validate(hello1)
-    result, _, _, trace = process_prog(state, empty_scope, data)
-    assert not contains_error(trace)
+    result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == {"a": "Hello", "b": "World"}
 
 
@@ -605,5 +593,5 @@ hello2 = {
 def test_hello2():
     state = InterpreterState()
     data = Program.model_validate(hello2)
-    _, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)

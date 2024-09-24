@@ -126,7 +126,6 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
-    has_error: bool = False
 
 
 class FunctionBlock(Block):
@@ -525,8 +524,9 @@ class PdlBlocks(RootModel):
 
 
 class PDLException(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
 
 
 MAX_NEW_TOKENS = 1024
