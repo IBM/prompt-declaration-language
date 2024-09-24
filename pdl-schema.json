@@ -14626,23 +14626,3 @@
     }
   ]
 }
-usage:  [-h] [--schema | --no-schema] [-l LOG] [-f DATA_FILE] [-d DATA]
-        [--stream {result,background,none}] [-t [TRACE]]
-        [pdl]
-
-positional arguments:
-  pdl                   pdl file
-
-options:
-  -h, --help            show this help message and exit
-  --schema, --no-schema
-                        generate PDL Json Schema
-  -l LOG, --log LOG     log file
-  -f DATA_FILE, --data-file DATA_FILE
-                        initial scope data file
-  -d DATA, --data DATA  scope data
-  --stream {result,background,none}
-                        stream the result or the background messages on the
-                        standard output
-  -t [TRACE], --trace [TRACE]
-                        output trace for live document
