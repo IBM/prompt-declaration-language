@@ -42,6 +42,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     IterationType,
+    LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocationType,
@@ -60,7 +61,6 @@ from .pdl_ast import (
     RepeatUntilBlock,
     RoleType,
     ScopeType,
-    SequenceBlock,
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict
@@ -323,7 +323,7 @@ def step_advanced_block(
         ) = yield from step_blocks_of(
             block,
             "fallback",
-            IterationType.SEQUENCE,
+            IterationType.LASTOF,
             state,
             scope,
             loc=loc,
@@ -427,11 +427,11 @@ def step_block_body(
                 scope,
                 loc,
             )
-        case SequenceBlock():
+        case LastOfBlock():
             result, background, scope, trace = yield from step_blocks_of(
                 block,
-                "sequence",
-                IterationType.SEQUENCE,
+                "lastof",
+                IterationType.LASTOF,
                 state,
                 scope,
                 loc,
@@ -489,7 +489,7 @@ def step_block_body(
             content, background, scope, trace = yield from step_blocks_of(
                 block,
                 "content",
-                IterationType.SEQUENCE,
+                IterationType.LASTOF,
                 state,
                 scope,
                 loc,
@@ -499,11 +499,11 @@ def step_block_body(
             b = process_condition_of(block, "condition", scope, loc, "if")
             if b:
                 result, background, scope, trace = yield from step_blocks_of(
-                    block, "then", IterationType.SEQUENCE, state, scope, loc
+                    block, "then", IterationType.LASTOF, state, scope, loc
                 )
             elif block.elses is not None:
                 result, background, scope, trace = yield from step_blocks_of(
-                    block, "elses", IterationType.SEQUENCE, state, scope, loc, "else"
+                    block, "elses", IterationType.LASTOF, state, scope, loc, "else"
                 )
             else:
                 result = ""
@@ -534,7 +534,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -601,7 +601,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -643,7 +643,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -712,7 +712,7 @@ def step_defs(
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
         result, _, _, blocks_trace = yield from step_blocks(
-            IterationType.SEQUENCE, state, scope, blocks, newloc
+            IterationType.LASTOF, state, scope, blocks, newloc
         )
         scope = scope | {x: result}
         defs_trace[x] = blocks_trace
@@ -777,7 +777,7 @@ def step_blocks(
             for i, block in enumerate(blocks):
                 scope = scope | {"context": messages_concat(context_init, background)}
                 new_loc = append(loc, "[" + str(i) + "]")
-                if iteration_type == IterationType.SEQUENCE and state.yield_result:
+                if iteration_type == IterationType.LASTOF and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
                 (
                     iteration_result,
@@ -812,7 +812,7 @@ def combine_results(iteration_type: IterationType, results: list[Any]):
     match iteration_type:
         case IterationType.ARRAY:
             result = results
-        case IterationType.SEQUENCE:
+        case IterationType.LASTOF:
             if len(results) > 0:
                 result = results[-1]
             else:
@@ -963,7 +963,7 @@ def step_call_model(
         model_input_result, _, _, input_trace = yield from step_blocks_of(
             concrete_block,
             "input",
-            IterationType.SEQUENCE,
+            IterationType.LASTOF,
             state.with_yield_result(False).with_yield_background(False),
             scope,
             loc,
@@ -1151,7 +1151,7 @@ def step_call_api(
     input_value, _, _, block = yield from step_blocks_of(
         block,
         "input",
-        IterationType.SEQUENCE,
+        IterationType.LASTOF,
         state.with_yield_result(False).with_yield_background(False),
         scope,
         loc,
@@ -1181,7 +1181,7 @@ def step_call_code(
     code_s, _, _, block = yield from step_blocks_of(
         block,
         "code",
-        IterationType.SEQUENCE,
+        IterationType.LASTOF,
         state.with_yield_result(False).with_yield_background(False),
         scope,
         loc,
@@ -1253,7 +1253,7 @@ def step_call(
     )
     try:
         result, background, _, f_trace = yield from step_blocks(
-            IterationType.SEQUENCE, state, f_scope, f_body, fun_loc
+            IterationType.LASTOF, state, f_scope, f_body, fun_loc
         )
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(

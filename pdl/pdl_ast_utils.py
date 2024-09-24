@@ -17,6 +17,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LastOfBlock,
     MessageBlock,
     ModelBlock,
     ObjectBlock,
@@ -25,7 +26,6 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
-    SequenceBlock,
 )
 
 
@@ -54,8 +54,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DocumentBlock():
             iter_blocks(f, block.document)
-        case SequenceBlock():
-            iter_blocks(f, block.sequence)
+        case LastOfBlock():
+            iter_blocks(f, block.lastof)
         case ArrayBlock():
             iter_blocks(f, block.array)
         case ObjectBlock():

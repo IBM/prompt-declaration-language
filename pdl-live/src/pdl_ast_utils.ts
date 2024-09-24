@@ -47,9 +47,9 @@ export function map_block_children(
       const document = map_blocks(f, block.document);
       return {...block, document: document};
     })
-    .with({kind: 'sequence'}, block => {
-      const sequence = map_blocks(f, block.sequence);
-      return {...block, sequence: sequence};
+    .with({kind: 'lastof'}, block => {
+      const lastof = map_blocks(f, block.lastof);
+      return {...block, lastof: lastof};
     })
     .with({kind: 'array'}, block => {
       const array = map_blocks(f, block.array);
@@ -150,8 +150,8 @@ export function iter_block_children(
     .with({kind: 'document'}, block => {
       iter_blocks(f, block.document);
     })
-    .with({kind: 'sequence'}, block => {
-      iter_blocks(f, block.sequence);
+    .with({kind: 'lastof'}, block => {
+      iter_blocks(f, block.lastof);
     })
     .with({kind: 'array'}, block => {
       iter_blocks(f, block.array);

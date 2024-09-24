@@ -74,7 +74,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -149,7 +149,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -282,7 +282,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -357,7 +357,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -495,7 +495,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -570,7 +570,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -684,7 +684,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -759,7 +759,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -892,7 +892,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -967,7 +967,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -1096,7 +1096,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -1171,7 +1171,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -1281,7 +1281,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -1356,7 +1356,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -1489,7 +1489,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -1564,7 +1564,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -1697,7 +1697,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -1772,7 +1772,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -1857,7 +1857,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -2255,7 +2255,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -2330,7 +2330,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -2463,7 +2463,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -2538,7 +2538,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -2678,7 +2678,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -2753,7 +2753,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -2868,7 +2868,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -2943,7 +2943,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -3076,7 +3076,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -3151,7 +3151,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -3289,7 +3289,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -3364,7 +3364,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -3485,7 +3485,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -3560,7 +3560,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -3693,7 +3693,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -3768,7 +3768,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -3945,7 +3945,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -4020,7 +4020,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -4153,7 +4153,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -4228,7 +4228,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -4357,7 +4357,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -4432,7 +4432,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -4544,7 +4544,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -4619,7 +4619,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -4752,7 +4752,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -4827,7 +4827,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -4982,7 +4982,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -5057,7 +5057,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -5190,7 +5190,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -5265,7 +5265,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -5398,7 +5398,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -5473,7 +5473,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -5585,7 +5585,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -5660,7 +5660,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -5793,7 +5793,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -5868,7 +5868,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -6002,7 +6002,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -6077,7 +6077,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -6167,7 +6167,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -6242,7 +6242,7 @@
                           "$ref": "#/$defs/DocumentBlock"
                         },
                         {
-                          "$ref": "#/$defs/SequenceBlock"
+                          "$ref": "#/$defs/LastOfBlock"
                         },
                         {
                           "$ref": "#/$defs/ArrayBlock"
@@ -6362,7 +6362,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -6437,7 +6437,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -6570,7 +6570,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -6645,7 +6645,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -6786,7 +6786,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -6861,7 +6861,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -6986,7 +6986,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -7061,7 +7061,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -7194,7 +7194,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -7269,7 +7269,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -7433,7 +7433,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -7508,7 +7508,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -7641,7 +7641,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -7716,7 +7716,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -7849,7 +7849,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -7924,7 +7924,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -8006,7 +8006,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -8081,7 +8081,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -8210,7 +8210,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -8285,7 +8285,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -8418,7 +8418,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -8493,7 +8493,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -8627,7 +8627,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -8666,49 +8666,16 @@
     },
     "IterationType": {
       "enum": [
-        "sequence",
+        "lastof",
         "array",
         "document"
       ],
       "title": "IterationType",
       "type": "string"
     },
-    "LengthPenalty": {
-      "additionalProperties": true,
-      "properties": {
-        "decay_factor": {
-          "anyOf": [
-            {
-              "exclusiveMinimum": 1.0,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Decay factor"
-        },
-        "start_index": {
-          "anyOf": [
-            {
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Start index"
-        }
-      },
-      "title": "LengthPenalty",
-      "type": "object"
-    },
-    "LitellmModelBlock": {
+    "LastOfBlock": {
       "additionalProperties": false,
-      "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
+      "description": "Return the value of the last block if the list of blocks.",
       "properties": {
         "description": {
           "anyOf": [
@@ -8780,7 +8747,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -8855,7 +8822,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -8988,7 +8955,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -9063,7 +9030,638 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ObjectBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MessageBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
+          "title": "Role"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "const": "lastof",
+          "default": "lastof",
+          "enum": [
+            "lastof"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lastof": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LastOfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ObjectBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MessageBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Lastof"
+        }
+      },
+      "required": [
+        "lastof"
+      ],
+      "title": "LastOfBlock",
+      "type": "object"
+    },
+    "LengthPenalty": {
+      "additionalProperties": true,
+      "properties": {
+        "decay_factor": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 1.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decay factor"
+        },
+        "start_index": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start index"
+        }
+      },
+      "title": "LengthPenalty",
+      "type": "object"
+    },
+    "LitellmModelBlock": {
+      "additionalProperties": false,
+      "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/BamModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ApiBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/DocumentBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/FunctionBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CallBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LitellmModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/BamModelBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/CodeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ApiBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/GetBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DataBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/RepeatUntilBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ForBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/DocumentBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/LastOfBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ArrayBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ObjectBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/MessageBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ReadBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/IncludeBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/ErrorBlock"
+                    },
+                    {
+                      "$ref": "#/$defs/EmptyBlock"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/BamModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ApiBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/DocumentBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ApiBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DocumentBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -9196,7 +9794,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -9271,7 +9869,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -9356,7 +9954,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -9919,7 +10517,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -9994,7 +10592,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -10127,7 +10725,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -10202,7 +10800,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -10330,7 +10928,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -10405,7 +11003,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -10789,7 +11387,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -10864,7 +11462,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -10997,7 +11595,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -11072,7 +11670,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -11204,7 +11802,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -11283,7 +11881,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -11371,7 +11969,7 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
-          "$ref": "#/$defs/SequenceBlock"
+          "$ref": "#/$defs/LastOfBlock"
         },
         {
           "$ref": "#/$defs/ArrayBlock"
@@ -11448,7 +12046,7 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
-          "$ref": "#/$defs/SequenceBlock"
+          "$ref": "#/$defs/LastOfBlock"
         },
         {
           "$ref": "#/$defs/ArrayBlock"
@@ -11523,7 +12121,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -11631,7 +12229,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -11706,7 +12304,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -11794,7 +12392,7 @@
           "$ref": "#/$defs/DocumentBlock"
         },
         {
-          "$ref": "#/$defs/SequenceBlock"
+          "$ref": "#/$defs/LastOfBlock"
         },
         {
           "$ref": "#/$defs/ArrayBlock"
@@ -11919,7 +12517,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -11994,7 +12592,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -12127,7 +12725,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -12202,7 +12800,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -12442,7 +13040,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -12517,7 +13115,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -12650,7 +13248,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -12725,7 +13323,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -12854,7 +13452,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -12929,7 +13527,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -12967,7 +13565,7 @@
         },
         "as": {
           "$ref": "#/$defs/IterationType",
-          "default": "sequence",
+          "default": "lastof",
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
@@ -13024,7 +13622,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -13099,7 +13697,7 @@
                           "$ref": "#/$defs/DocumentBlock"
                         },
                         {
-                          "$ref": "#/$defs/SequenceBlock"
+                          "$ref": "#/$defs/LastOfBlock"
                         },
                         {
                           "$ref": "#/$defs/ArrayBlock"
@@ -13219,7 +13817,7 @@
                 "$ref": "#/$defs/DocumentBlock"
               },
               {
-                "$ref": "#/$defs/SequenceBlock"
+                "$ref": "#/$defs/LastOfBlock"
               },
               {
                 "$ref": "#/$defs/ArrayBlock"
@@ -13294,7 +13892,7 @@
                       "$ref": "#/$defs/DocumentBlock"
                     },
                     {
-                      "$ref": "#/$defs/SequenceBlock"
+                      "$ref": "#/$defs/LastOfBlock"
                     },
                     {
                       "$ref": "#/$defs/ArrayBlock"
@@ -13427,7 +14025,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -13502,7 +14100,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -13631,7 +14229,7 @@
               "$ref": "#/$defs/DocumentBlock"
             },
             {
-              "$ref": "#/$defs/SequenceBlock"
+              "$ref": "#/$defs/LastOfBlock"
             },
             {
               "$ref": "#/$defs/ArrayBlock"
@@ -13706,7 +14304,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -13743,7 +14341,7 @@
         },
         "as": {
           "$ref": "#/$defs/IterationType",
-          "default": "sequence",
+          "default": "lastof",
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
@@ -13800,7 +14398,7 @@
                     "$ref": "#/$defs/DocumentBlock"
                   },
                   {
-                    "$ref": "#/$defs/SequenceBlock"
+                    "$ref": "#/$defs/LastOfBlock"
                   },
                   {
                     "$ref": "#/$defs/ArrayBlock"
@@ -13875,7 +14473,7 @@
                           "$ref": "#/$defs/DocumentBlock"
                         },
                         {
-                          "$ref": "#/$defs/SequenceBlock"
+                          "$ref": "#/$defs/LastOfBlock"
                         },
                         {
                           "$ref": "#/$defs/ArrayBlock"
@@ -13919,604 +14517,6 @@
         "until"
       ],
       "title": "RepeatUntilBlock",
-      "type": "object"
-    },
-    "SequenceBlock": {
-      "additionalProperties": false,
-      "description": "Return the value of the last block if the list of blocks.",
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/ForBlock"
-              },
-              {
-                "$ref": "#/$defs/DocumentBlock"
-              },
-              {
-                "$ref": "#/$defs/SequenceBlock"
-              },
-              {
-                "$ref": "#/$defs/ArrayBlock"
-              },
-              {
-                "$ref": "#/$defs/ObjectBlock"
-              },
-              {
-                "$ref": "#/$defs/MessageBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ForBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DocumentBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/SequenceBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ArrayBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ObjectBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/MessageBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ReadBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/EmptyBlock"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
-        },
-        "contribute": {
-          "default": [
-            "result",
-            "context"
-          ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "$ref": "#/$defs/ContributeTarget"
-          },
-          "title": "Contribute",
-          "type": "array"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/SequenceBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/SequenceBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ArrayBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ObjectBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/MessageBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Block to execute in case of error.\n    ",
-          "title": "Fallback"
-        },
-        "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
-          "title": "Role"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "kind": {
-          "const": "sequence",
-          "default": "sequence",
-          "enum": [
-            "sequence"
-          ],
-          "title": "Kind",
-          "type": "string"
-        },
-        "sequence": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/DocumentBlock"
-            },
-            {
-              "$ref": "#/$defs/SequenceBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DocumentBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/SequenceBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ArrayBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ObjectBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/MessageBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "title": "Sequence"
-        }
-      },
-      "required": [
-        "sequence"
-      ],
-      "title": "SequenceBlock",
       "type": "object"
     },
     "TextGenerationReturnOptions": {

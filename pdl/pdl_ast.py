@@ -43,7 +43,7 @@ class BlockKind(StrEnum):
     GET = "get"
     DATA = "data"
     DOCUMENT = "document"
-    SEQUENCE = "sequence"
+    LASTOF = "lastof"
     ARRAY = "array"
     OBJECT = "object"
     MESSAGE = "message"
@@ -326,11 +326,11 @@ class DocumentBlock(Block):
     """
 
 
-class SequenceBlock(Block):
+class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
-    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
-    sequence: "BlocksType"
+    kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
+    lastof: "BlocksType"
 
 
 class ArrayBlock(Block):
@@ -375,7 +375,7 @@ class IfBlock(Block):
 
 
 class IterationType(StrEnum):
-    SEQUENCE = "sequence"
+    LASTOF = "lastof"
     ARRAY = "array"
     DOCUMENT = "document"
 
@@ -407,7 +407,7 @@ class RepeatBlock(Block):
     num_iterations: int
     """Number of iterations to perform.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -424,7 +424,7 @@ class RepeatUntilBlock(Block):
     until: ExpressionType
     """Condition of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -483,7 +483,7 @@ AdvancedBlockType: TypeAlias = (
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock

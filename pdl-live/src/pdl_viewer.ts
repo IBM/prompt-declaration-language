@@ -169,9 +169,9 @@ export function show_block(data: PdlBlock) {
       const doc_child = show_blocks(data.document);
       body.appendChild(doc_child);
     })
-    .with({kind: 'sequence'}, data => {
-      body.classList.add('pdl_sequence');
-      const doc_child = show_blocks(data.sequence);
+    .with({kind: 'lastof'}, data => {
+      body.classList.add('pdl_lastof');
+      const doc_child = show_blocks(data.lastof);
       body.appendChild(doc_child);
     })
     .with({kind: 'array'}, data => {
@@ -265,7 +265,7 @@ export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
   }
   if (trace.length > 0) {
     const iteration = document.createElement('div');
-    iteration.classList.add('pdl_block', 'pdl_sequence');
+    iteration.classList.add('pdl_block', 'pdl_lastof');
     const child = show_blocks(trace.slice(-1)[0]);
     iteration.appendChild(child);
     doc_fragment.appendChild(iteration);

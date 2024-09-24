@@ -29,7 +29,7 @@ def test_for_data():
 
 repeat_until_data = {
     "description": "Repeat until",
-    "sequence": [
+    "lastof": [
         {
             "def": "I",
             "document": [{"lan": "python", "code": "result = 0"}],

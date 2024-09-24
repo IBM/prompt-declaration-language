@@ -22,6 +22,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocationType,
@@ -33,7 +34,6 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
-    SequenceBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -125,8 +125,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                 d["input"] = blocks_to_dict(block.input)
         case DocumentBlock():
             d["document"] = blocks_to_dict(block.document)
-        case SequenceBlock():
-            d["sequence"] = blocks_to_dict(block.sequence)
+        case LastOfBlock():
+            d["lastof"] = blocks_to_dict(block.lastof)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array)
         case ObjectBlock():

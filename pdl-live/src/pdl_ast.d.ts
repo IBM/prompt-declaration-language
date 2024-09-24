@@ -25,7 +25,7 @@ export type Program =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -173,7 +173,7 @@ export type Pdl =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -197,7 +197,7 @@ export type Pdl =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -232,7 +232,7 @@ export type Fallback =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -256,7 +256,7 @@ export type Fallback =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -308,7 +308,7 @@ export type Fallback1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -332,7 +332,7 @@ export type Fallback1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -365,7 +365,7 @@ export type Program1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -389,7 +389,7 @@ export type Program1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -432,7 +432,7 @@ export type Fallback2 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -456,7 +456,7 @@ export type Fallback2 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -493,7 +493,7 @@ export type Trace =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -536,7 +536,7 @@ export type Fallback3 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -560,7 +560,7 @@ export type Fallback3 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -625,7 +625,7 @@ export type Fallback4 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -649,7 +649,7 @@ export type Fallback4 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -683,7 +683,7 @@ export type Content =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -707,7 +707,7 @@ export type Content =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -750,7 +750,7 @@ export type Fallback5 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -774,7 +774,7 @@ export type Fallback5 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -808,7 +808,7 @@ export type Object =
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -833,7 +833,7 @@ export type Object =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -876,7 +876,7 @@ export type Fallback6 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -900,7 +900,7 @@ export type Fallback6 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -932,7 +932,7 @@ export type Array =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -956,7 +956,7 @@ export type Array =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -999,7 +999,7 @@ export type Fallback7 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1023,7 +1023,7 @@ export type Fallback7 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1038,8 +1038,8 @@ export type Fallback7 =
  *
  */
 export type Role7 = string | null;
-export type Kind7 = "sequence";
-export type Sequence =
+export type Kind7 = "lastof";
+export type Lastof =
   | number
   | string
   | FunctionBlock
@@ -1055,7 +1055,7 @@ export type Sequence =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1079,7 +1079,7 @@ export type Sequence =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1122,7 +1122,7 @@ export type Fallback8 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1146,7 +1146,7 @@ export type Fallback8 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1182,7 +1182,7 @@ export type Document =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1206,7 +1206,7 @@ export type Document =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1249,7 +1249,7 @@ export type Fallback9 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1273,7 +1273,7 @@ export type Fallback9 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1309,7 +1309,7 @@ export type Repeat =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1333,7 +1333,7 @@ export type Repeat =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1346,7 +1346,7 @@ export type Repeat =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType = "sequence" | "array" | "document";
+export type IterationType = "lastof" | "array" | "document";
 export type Trace1 =
   | (
       | number
@@ -1364,7 +1364,7 @@ export type Trace1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1388,7 +1388,7 @@ export type Trace1 =
           | RepeatUntilBlock
           | ForBlock
           | DocumentBlock
-          | SequenceBlock
+          | LastOfBlock
           | ArrayBlock
           | ObjectBlock
           | MessageBlock
@@ -1433,7 +1433,7 @@ export type Fallback10 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1457,7 +1457,7 @@ export type Fallback10 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1493,7 +1493,7 @@ export type Repeat1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1517,7 +1517,7 @@ export type Repeat1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1530,7 +1530,7 @@ export type Repeat1 =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType1 = "sequence" | "array" | "document";
+export type IterationType1 = "lastof" | "array" | "document";
 export type Trace2 =
   | (
       | number
@@ -1548,7 +1548,7 @@ export type Trace2 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1572,7 +1572,7 @@ export type Trace2 =
           | RepeatUntilBlock
           | ForBlock
           | DocumentBlock
-          | SequenceBlock
+          | LastOfBlock
           | ArrayBlock
           | ObjectBlock
           | MessageBlock
@@ -1617,7 +1617,7 @@ export type Fallback11 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1641,7 +1641,7 @@ export type Fallback11 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1677,7 +1677,7 @@ export type Repeat2 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1701,7 +1701,7 @@ export type Repeat2 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1719,7 +1719,7 @@ export type NumIterations = number;
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType2 = "sequence" | "array" | "document";
+export type IterationType2 = "lastof" | "array" | "document";
 export type Trace3 =
   | (
       | number
@@ -1737,7 +1737,7 @@ export type Trace3 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1761,7 +1761,7 @@ export type Trace3 =
           | RepeatUntilBlock
           | ForBlock
           | DocumentBlock
-          | SequenceBlock
+          | LastOfBlock
           | ArrayBlock
           | ObjectBlock
           | MessageBlock
@@ -1806,7 +1806,7 @@ export type Fallback12 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1830,7 +1830,7 @@ export type Fallback12 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1866,7 +1866,7 @@ export type Then =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1890,7 +1890,7 @@ export type Then =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1919,7 +1919,7 @@ export type Else =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -1943,7 +1943,7 @@ export type Else =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -1988,7 +1988,7 @@ export type Fallback13 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2012,7 +2012,7 @@ export type Fallback13 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2066,7 +2066,7 @@ export type Fallback14 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2090,7 +2090,7 @@ export type Fallback14 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2144,7 +2144,7 @@ export type Fallback15 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2168,7 +2168,7 @@ export type Fallback15 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2209,7 +2209,7 @@ export type Input =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2233,7 +2233,7 @@ export type Input =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2276,7 +2276,7 @@ export type Fallback16 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2300,7 +2300,7 @@ export type Fallback16 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2341,7 +2341,7 @@ export type Code =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2365,7 +2365,7 @@ export type Code =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2408,7 +2408,7 @@ export type Fallback17 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2432,7 +2432,7 @@ export type Fallback17 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2465,7 +2465,7 @@ export type Input1 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2489,7 +2489,7 @@ export type Input1 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2515,7 +2515,7 @@ export type Trace4 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2616,7 +2616,7 @@ export type Fallback18 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2640,7 +2640,7 @@ export type Fallback18 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2673,7 +2673,7 @@ export type Input2 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2697,7 +2697,7 @@ export type Input2 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2723,7 +2723,7 @@ export type Trace5 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2820,7 +2820,7 @@ export type Fallback19 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2844,7 +2844,7 @@ export type Fallback19 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2881,7 +2881,7 @@ export type Trace6 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2905,7 +2905,7 @@ export type Trace6 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -2949,7 +2949,7 @@ export type Fallback20 =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -2973,7 +2973,7 @@ export type Fallback20 =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -3016,7 +3016,7 @@ export type Return =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -3040,7 +3040,7 @@ export type Return =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -3068,7 +3068,7 @@ export type PdlBlock =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -3092,7 +3092,7 @@ export type PdlBlocks =
   | RepeatUntilBlock
   | ForBlock
   | DocumentBlock
-  | SequenceBlock
+  | LastOfBlock
   | ArrayBlock
   | ObjectBlock
   | MessageBlock
@@ -3116,7 +3116,7 @@ export type PdlBlocks =
       | RepeatUntilBlock
       | ForBlock
       | DocumentBlock
-      | SequenceBlock
+      | LastOfBlock
       | ArrayBlock
       | ObjectBlock
       | MessageBlock
@@ -3173,7 +3173,7 @@ export interface Defs {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3197,7 +3197,7 @@ export interface Defs {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3254,7 +3254,7 @@ export interface Defs1 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3278,7 +3278,7 @@ export interface Defs1 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3337,7 +3337,7 @@ export interface Defs2 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3361,7 +3361,7 @@ export interface Defs2 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3421,7 +3421,7 @@ export interface Defs3 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3445,7 +3445,7 @@ export interface Defs3 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3501,7 +3501,7 @@ export interface Defs4 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3525,7 +3525,7 @@ export interface Defs4 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3582,7 +3582,7 @@ export interface Defs5 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3606,7 +3606,7 @@ export interface Defs5 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3661,7 +3661,7 @@ export interface Defs6 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3685,7 +3685,7 @@ export interface Defs6 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3741,7 +3741,7 @@ export interface Defs7 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3765,7 +3765,7 @@ export interface Defs7 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3823,7 +3823,7 @@ export interface Defs8 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3847,7 +3847,7 @@ export interface Defs8 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3905,7 +3905,7 @@ export interface Defs9 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -3929,7 +3929,7 @@ export interface Defs9 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -3987,7 +3987,7 @@ export interface Defs10 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4011,7 +4011,7 @@ export interface Defs10 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4069,7 +4069,7 @@ export interface Defs11 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4093,7 +4093,7 @@ export interface Defs11 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4148,7 +4148,7 @@ export interface Defs12 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4172,7 +4172,7 @@ export interface Defs12 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4185,7 +4185,7 @@ export interface Defs12 {
 /**
  * Return the value of the last block if the list of blocks.
  */
-export interface SequenceBlock {
+export interface LastOfBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
@@ -4197,7 +4197,7 @@ export interface SequenceBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind7;
-  sequence: Sequence;
+  lastof: Lastof;
 }
 /**
  * Type specification of the result of the block.
@@ -4227,7 +4227,7 @@ export interface Defs13 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4251,7 +4251,7 @@ export interface Defs13 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4306,7 +4306,7 @@ export interface Defs14 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4330,7 +4330,7 @@ export interface Defs14 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4385,7 +4385,7 @@ export interface Defs15 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4409,7 +4409,7 @@ export interface Defs15 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4464,7 +4464,7 @@ export interface Defs16 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4488,7 +4488,7 @@ export interface Defs16 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4545,7 +4545,7 @@ export interface Defs17 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4569,7 +4569,7 @@ export interface Defs17 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4625,7 +4625,7 @@ export interface Defs18 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4649,7 +4649,7 @@ export interface Defs18 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4702,7 +4702,7 @@ export interface Defs19 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4726,7 +4726,7 @@ export interface Defs19 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
@@ -4780,7 +4780,7 @@ export interface Defs20 {
     | RepeatUntilBlock
     | ForBlock
     | DocumentBlock
-    | SequenceBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -4804,7 +4804,7 @@ export interface Defs20 {
         | RepeatUntilBlock
         | ForBlock
         | DocumentBlock
-        | SequenceBlock
+        | LastOfBlock
         | ArrayBlock
         | ObjectBlock
         | MessageBlock
