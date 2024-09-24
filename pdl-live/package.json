@@ -25,7 +25,7 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "json-schema-to-typescript": "^13.1.2",
+    "json-schema-to-typescript": "^15.0.2",
     "ts-pattern": "^5.0.8",
     "yaml": "^2.4.1"
   }
