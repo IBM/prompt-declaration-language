@@ -201,9 +201,9 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
 def blocks_to_dict(
     blocks: BlocksType,
 ) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
-    result: int | float | str | dict[str, Any] | list[
-        int | float | str | dict[str, Any]
-    ]
+    result: (
+        int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
+    )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = [block_to_dict(block) for block in blocks]
     else:

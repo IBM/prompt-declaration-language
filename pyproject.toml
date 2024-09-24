@@ -6,21 +6,21 @@ build-backend = "setuptools.build_meta"
 name = "pdl"
 version = "0.0.1"
 dependencies = [
-  "pydantic",
-  "ibm-generative-ai",
-  "requests",
-  "python-dotenv",
-  "jinja2",
-  "PyYAML",
-  "jsonschema",
-  "litellm",
-  "termcolor",
-  "ipython"
+  "pydantic~=2.0",
+  "ibm-generative-ai~=3.0",
+  "requests~=2.0",
+  "python-dotenv~=1.0",
+  "jinja2~=3.0",
+  "PyYAML~=6.0",
+  "jsonschema~=4.0",
+  "litellm~=1.47",
+  "termcolor~=2.0",
+  "ipython~=8.0"
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
   { name="Louis Mandel", email="lmandel@us.ibm.com"},
-  { name="Claudio Spiess" },
+  { name="Claudio Spiess", email="claudiosv@users.noreply.github.com" },
   { name="Martin Hirzel", email="hirzel@us.ibm.com" }
 ]
 description = "Prompt Declaration Language"
@@ -34,22 +34,22 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-  "black",
-  "pre-commit",
-  "pytest"
+  "pre-commit~=3.0",
+  "pytest~=8.0",
+  "pydantic~=2.9"
 ]
 examples = [
-  "wikipedia",
-  "textdistance",
-  "faiss-cpu",
-  "datasets",
-  "sympy"
+  "wikipedia~=1.0",
+  "textdistance~=4.0",
+  "faiss-cpu~=1.0",
+  "datasets>2,<4",
+  "sympy~=1.0"
 ]
 docs = [
-  "mkdocs",
-  "mkdocstrings[python]",
-  "mkdocs-material",
-  "pymdown-extensions"
+  "mkdocs~=1.0",
+  "mkdocstrings[python]~=0.0",
+  "mkdocs-material~=9.0",
+  "pymdown-extensions~=10.0"
 ]
 all = [ "pdl[dev,examples,docs]" ]
 
