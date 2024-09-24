@@ -60,4 +60,5 @@ Repository = "https://github.com/IBM/prompt-declaration-language"
 Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 
 [project.scripts]
-pdl = "pdl.pdl:main"
+pdl-local = "pdl.pdl:main"
+pdl = "pdl.pdl_runner:main" 
