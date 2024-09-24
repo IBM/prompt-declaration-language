@@ -724,7 +724,7 @@ BlockTypeTVarStepBlocksOf = TypeVar(
 )
 
 
-def step_blocks_of(  # pylint: disable=too-many-arguments
+def step_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     block: BlockTypeTVarStepBlocksOf,
     field: str,
     iteration_type: IterationType,
