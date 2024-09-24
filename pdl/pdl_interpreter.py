@@ -88,11 +88,11 @@ class PDLRuntimeError(PDLException):
         trace: Optional[BlockType] = None,
         fallback: Optional[Any] = None,
     ):
+        super().__init__(self.message)
         self.loc = loc
         self.trace = trace
         self.fallback = fallback
         self.message = message
-        super().__init__(self.message)
 
 
 class PDLRuntimeExpressionError(PDLRuntimeError):
@@ -103,10 +103,19 @@ class PDLRuntimeParserError(PDLRuntimeError):
     pass
 
 
-class PDLRuntimeStepBlocksError(PDLRuntimeError):
-    def __init__(self, message: str, blocks: list[BlockType]):
-        super().__init__(message)
+class PDLRuntimeStepBlocksError(PDLException):
+    def __init__(
+        self,
+        message: str,
+        blocks: list[BlockType],
+        loc: Optional[LocationType] = None,
+        fallback: Optional[Any] = None,
+    ):
+        super().__init__(self.message)
+        self.loc = loc
         self.blocks = blocks
+        self.fallback = fallback
+        self.message = message
 
 
 empty_scope: ScopeType = {"context": []}
@@ -760,20 +769,30 @@ def step_blocks(
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )
+        new_loc = None
         background = []
         trace = []
         context_init = scope["context"]
-        for i, block in enumerate(blocks):
-            scope = scope | {"context": messages_concat(context_init, background)}
-            newloc = append(loc, "[" + str(i) + "]")
-            if iteration_type == IterationType.SEQUENCE and state.yield_result:
-                iteration_state = state.with_yield_result(i + 1 == len(blocks))
-            iteration_result, iteration_background, scope, t = yield from step_block(
-                iteration_state, scope, block, newloc
-            )
-            results.append(iteration_result)
-            background = messages_concat(background, iteration_background)
-            trace.append(t)  # type: ignore
+        try:
+            for i, block in enumerate(blocks):
+                scope = scope | {"context": messages_concat(context_init, background)}
+                new_loc = append(loc, "[" + str(i) + "]")
+                if iteration_type == IterationType.SEQUENCE and state.yield_result:
+                    iteration_state = state.with_yield_result(i + 1 == len(blocks))
+                (
+                    iteration_result,
+                    iteration_background,
+                    scope,
+                    t,
+                ) = yield from step_block(iteration_state, scope, block, new_loc)
+                results.append(iteration_result)
+                background = messages_concat(background, iteration_background)
+                trace.append(t)  # type: ignore
+        except PDLRuntimeError as exc:
+            trace.append(exc.trace)  # type: ignore
+            raise PDLRuntimeStepBlocksError(
+                message=exc.message, blocks=trace, loc=exc.loc or new_loc
+            ) from exc
     else:
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
