@@ -406,6 +406,7 @@ line30 = {
 def test_line30(capsys):
     do_test(line30, capsys)
 
+
 line31 = {
     "file": "tests/data/line/hello31.pdl",
     "errors": [
