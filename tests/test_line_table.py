@@ -405,3 +405,18 @@ line30 = {
 
 def test_line30(capsys):
     do_test(line30, capsys)
+
+
+line31 = {
+    "file": "tests/data/line/hello31.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello31.pdl:0 - Missing required field: function",
+        "tests/data/line/hello31.pdl:0 - Missing required field: return",
+        "tests/data/line/hello31.pdl:11 - Field not allowed: show_result",
+    ],
+}
+
+
+def test_line31(capsys):
+    do_test(line31, capsys)

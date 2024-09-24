@@ -1,0 +1,11 @@
+defs:
+
+  # ... several other defs, ~85 lines
+  get_current_weather:
+    function:
+      subject: str
+    return:
+      api: https
+      url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
+      input: "{{ subject }}"
+      show_result: false
