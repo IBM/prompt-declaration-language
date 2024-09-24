@@ -10,7 +10,13 @@ from typing import Any, Generator, Optional, Sequence, TypeVar
 import litellm
 import requests
 import yaml
-from jinja2 import Environment, StrictUndefined, Template, UndefinedError
+from jinja2 import (
+    Environment,
+    StrictUndefined,
+    Template,
+    TemplateSyntaxError,
+    UndefinedError,
+)
 from jinja2.runtime import Undefined
 from pydantic import BaseModel
 
@@ -79,7 +85,7 @@ class PDLRuntimeError(PDLException):
         self,
         message: str,
         loc: Optional[LocationType] = None,
-        trace: Optional[BlocksType] = None,
+        trace: Optional[BlockType] = None,
         fallback: Optional[Any] = None,
     ):
         self.loc = loc
@@ -97,7 +103,7 @@ class PDLRuntimeParserError(PDLRuntimeError):
     pass
 
 
-class PDLRuntimeStepBlocksError(PDLException):
+class PDLRuntimeStepBlocksError(PDLRuntimeError):
     def __init__(self, message: str, blocks: list[BlockType]):
         super().__init__(message)
         self.blocks = blocks
@@ -166,8 +172,12 @@ def generate(
     except PDLParseError as exc:
         print("\n".join(exc.message), file=sys.stderr)
     except PDLRuntimeError as exc:
-        print(get_loc_string(exc.loc) + exc.message, file=sys.stderr)
-        if trace_file:
+        if exc.loc is None:
+            message = exc.message
+        else:
+            message = get_loc_string(exc.loc) + exc.message
+        print(message, file=sys.stderr)
+        if trace_file and exc.trace is not None:
             write_trace(trace_file, exc.trace)
 
 
@@ -329,7 +339,8 @@ def step_advanced_block(
             raise PDLRuntimeError(
                 message,
                 loc=loc,
-                trace=ErrorBlock(msg=message, program=trace, fallback=result),
+                trace=ErrorBlock(msg=message, program=trace),
+                fallback=result,
             )
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
@@ -556,7 +567,7 @@ def step_block_body(
                     )
                 lengths.append(len(lst))
             if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                msg = "Lists inside the For block must be of the same length"
+                msg = "Lists inside the For block must be of the same length."
                 for_loc = append(block.location or empty_block_location, "for")
                 raise PDLRuntimeError(
                     msg,
@@ -820,13 +831,8 @@ def process_expr_of(
     return result, trace
 
 
-BlockTypeTVarProcessCondOf = TypeVar(
-    "BlockTypeTVarProcessCondOf", bound=AdvancedBlockType
-)
-
-
 def process_condition_of(
-    block: BlockTypeTVarProcessCondOf,
+    block: AdvancedBlockType,
     field: str,
     scope: ScopeType,
     loc: LocationType,
@@ -873,6 +879,10 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
                 f"Error during the evaluation of {expr}: {exc.message}", loc
+            ) from exc
+        except TemplateSyntaxError as exc:
+            raise PDLRuntimeExpressionError(
+                f"Syntax error in {expr}: {exc.message}", loc
             ) from exc
 
         return s
@@ -976,7 +986,7 @@ def step_call_model(
         message = f"Error during model call: {repr(exc)}"
         raise PDLRuntimeError(
             message,
-            loc=exc.loc or loc,
+            loc=loc,
             trace=ErrorBlock(msg=message, location=loc, program=concrete_block),
         ) from exc
 
@@ -1139,7 +1149,7 @@ def step_call_api(
         message = f"API error: {repr(exc)}"
         raise PDLRuntimeError(
             message,
-            loc=exc.loc or loc,
+            loc=loc,
             trace=ErrorBlock(msg=message, program=block),
         ) from exc
     return result, background, scope, trace
@@ -1166,7 +1176,7 @@ def step_call_code(
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
-                    loc=exc.loc or loc,
+                    loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
         case _:
@@ -1299,7 +1309,7 @@ def step_include(
         message = f"Attempting to include invalid yaml: {str(file)}\n{exc.message}"
         raise PDLRuntimeError(
             message,
-            loc=exc.loc or loc,
+            loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
 
@@ -1334,7 +1344,11 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
                     matcher = re.fullmatch
                 case _:
                     assert False
-            m = matcher(regex, text, flags=re.M)
+            try:
+                m = matcher(regex, text, flags=re.M)
+            except Exception as exc:
+                msg = f"Fail to parse with regex {regex}: {repr(exc)}"
+                raise PDLRuntimeParserError(msg) from exc
             if m is None:
                 return None
             if parser.spec is None:
