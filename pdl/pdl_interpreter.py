@@ -88,7 +88,7 @@ class PDLRuntimeError(PDLException):
         trace: Optional[BlockType] = None,
         fallback: Optional[Any] = None,
     ):
-        super().__init__(self.message)
+        super().__init__(message)
         self.loc = loc
         self.trace = trace
         self.fallback = fallback
@@ -111,7 +111,7 @@ class PDLRuntimeStepBlocksError(PDLException):
         loc: Optional[LocationType] = None,
         fallback: Optional[Any] = None,
     ):
-        super().__init__(self.message)
+        super().__init__(message)
         self.loc = loc
         self.blocks = blocks
         self.fallback = fallback
@@ -897,11 +897,11 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 s = template.render(scope)
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
-                f"Error during the evaluation of {expr}: {exc.message}", loc
+                f"Error during the evaluation of {expr}: {repr(exc)}", loc
             ) from exc
         except TemplateSyntaxError as exc:
             raise PDLRuntimeExpressionError(
-                f"Syntax error in {expr}: {exc.message}", loc
+                f"Syntax error in {expr}: {repr(exc)}", loc
             ) from exc
 
         return s
