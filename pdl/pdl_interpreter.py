@@ -897,11 +897,11 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 s = template.render(scope)
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
-                f"Error during the evaluation of {expr}: {repr(exc)}", loc
+                f"Error during the evaluation of {expr}: {exc}", loc
             ) from exc
         except TemplateSyntaxError as exc:
             raise PDLRuntimeExpressionError(
-                f"Syntax error in {expr}: {repr(exc)}", loc
+                f"Syntax error in {expr}: {exc}", loc
             ) from exc
 
         return s
