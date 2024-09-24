@@ -86,12 +86,10 @@ class PDLRuntimeError(PDLException):
         self.trace = trace
         self.fallback = fallback
         self.message = message
-        if loc is not None:
-            self.message = get_loc_string(loc) + message
-        super().__init__(message)
+        super().__init__(self.message)
 
 
-class PDLRuntimeExpressionError(PDLException):
+class PDLRuntimeExpressionError(PDLRuntimeError):
     pass
 
 
@@ -167,6 +165,10 @@ def generate(
             write_trace(trace_file, trace)
     except PDLParseError as exc:
         print("\n".join(exc.message), file=sys.stderr)
+    except PDLRuntimeError as exc:
+        print(get_loc_string(exc.loc) + exc.message, file=sys.stderr)
+        if trace_file:
+            write_trace(trace_file, exc.trace)
 
 
 def write_trace(
@@ -252,7 +254,7 @@ def step_block(
         except PDLRuntimeExpressionError as exc:
             raise PDLRuntimeError(
                 exc.message,
-                loc=loc,
+                loc=exc.loc or loc,
                 trace=ErrorBlock(msg=exc.message, location=loc, program=block),
             ) from exc
         background = [{"role": state.role, "content": stringify(result)}]
@@ -314,7 +316,7 @@ def step_advanced_block(
         except PDLRuntimeParserError as exc:
             raise PDLRuntimeError(
                 exc.message,
-                loc=loc,
+                loc=exc.loc or loc,
                 trace=ErrorBlock(msg=exc.message, program=trace, fallback=result),
             ) from exc
     if block.assign is not None:
@@ -367,7 +369,7 @@ def step_block_body(
             except PDLRuntimeExpressionError as exc:
                 raise PDLRuntimeError(
                     exc.message,
-                    loc=loc,
+                    loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, location=loc, program=block),
                 ) from exc
             background = [{"role": state.role, "content": stringify(result)}]
@@ -439,7 +441,7 @@ def step_block_body(
                     trace = block.model_copy(update={"object": obj})
                     raise PDLRuntimeError(
                         exc.message,
-                        loc=loc,
+                        loc=exc.loc or loc,
                         trace=trace,
                     ) from exc
                 assert isinstance(values, list)
@@ -526,7 +528,7 @@ def step_block_body(
                 trace = block.model_copy(update={"trace": iterations_trace})
                 raise PDLRuntimeError(
                     exc.message,
-                    loc=repeat_loc,
+                    loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
             result = combine_results(block.iteration_type, results)
@@ -593,7 +595,7 @@ def step_block_body(
                 trace = block.model_copy(update={"trace": iter_trace})
                 raise PDLRuntimeError(
                     exc.message,
-                    loc=repeat_loc,
+                    loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
             result = combine_results(block.iteration_type, results)
@@ -636,7 +638,7 @@ def step_block_body(
                 trace = block.model_copy(update={"trace": iterations_trace})
                 raise PDLRuntimeError(
                     exc.message,
-                    loc=repeat_loc,
+                    loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
             result = combine_results(block.iteration_type, results)
@@ -725,7 +727,7 @@ def step_blocks_of(  # pylint: disable=too-many-arguments
         trace = block.model_copy(update={field: exc.blocks})
         raise PDLRuntimeError(
             exc.message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=trace,
         ) from exc
     trace = block.model_copy(update={field: blocks})
@@ -811,7 +813,7 @@ def process_expr_of(
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, location=loc, program=block),
         ) from exc
     trace = block.model_copy(update={field: result})
@@ -837,7 +839,7 @@ def process_condition_of(
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, location=loc, program=block),
         ) from exc
     return result
@@ -870,7 +872,7 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 s = template.render(scope)
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
-                f"Error during the evaluation of {expr}: {exc.message}"
+                f"Error during the evaluation of {expr}: {exc.message}", loc
             ) from exc
 
         return s
@@ -974,7 +976,7 @@ def step_call_model(
         message = f"Error during model call: {repr(exc)}"
         raise PDLRuntimeError(
             message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=message, location=loc, program=concrete_block),
         ) from exc
 
@@ -1137,7 +1139,7 @@ def step_call_api(
         message = f"API error: {repr(exc)}"
         raise PDLRuntimeError(
             message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=message, program=block),
         ) from exc
     return result, background, scope, trace
@@ -1164,7 +1166,7 @@ def step_call_code(
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
-                    loc=loc,
+                    loc=exc.loc or loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
         case _:
@@ -1201,7 +1203,7 @@ def step_call(
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, location=loc, program=block),
         ) from exc
     args_loc = append(loc, "args")
@@ -1227,7 +1229,7 @@ def step_call(
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(
             exc.message,
-            loc=exc.loc,
+            loc=exc.loc or fun_loc,
             trace=block.model_copy(update={"trace": exc.trace}),
         ) from exc
     trace = block.model_copy(update={"trace": f_trace})
@@ -1297,7 +1299,7 @@ def step_include(
         message = f"Attempting to include invalid yaml: {str(file)}\n{exc.message}"
         raise PDLRuntimeError(
             message,
-            loc=loc,
+            loc=exc.loc or loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
 
