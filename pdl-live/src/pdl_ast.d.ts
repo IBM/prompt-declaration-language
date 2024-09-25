@@ -152,7 +152,7 @@ export type Contribute = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 export type Description21 = string | null;
 export type Spec21 = {
   [k: string]: unknown;
@@ -287,7 +287,7 @@ export type Contribute1 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser1 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser1 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -411,7 +411,7 @@ export type Contribute2 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser2 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser2 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -515,7 +515,7 @@ export type Contribute3 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser3 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser3 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -604,7 +604,7 @@ export type Contribute4 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser4 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser4 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -729,7 +729,7 @@ export type Contribute5 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser5 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser5 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -855,7 +855,7 @@ export type Contribute6 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser6 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser6 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -978,7 +978,7 @@ export type Contribute7 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser7 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser7 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1101,7 +1101,7 @@ export type Contribute8 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser8 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser8 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1228,7 +1228,7 @@ export type Contribute9 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser9 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser9 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1412,7 +1412,7 @@ export type Contribute10 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser10 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser10 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1596,7 +1596,7 @@ export type Contribute11 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser11 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser11 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1785,7 +1785,7 @@ export type Contribute12 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser12 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser12 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -1967,7 +1967,7 @@ export type Contribute13 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser13 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser13 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2045,7 +2045,7 @@ export type Contribute14 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser14 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser14 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2123,7 +2123,7 @@ export type Contribute15 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser15 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser15 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2255,7 +2255,7 @@ export type Contribute16 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser16 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser16 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2387,7 +2387,7 @@ export type Contribute17 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser17 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2595,7 +2595,7 @@ export type Contribute18 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser18 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser18 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2799,7 +2799,7 @@ export type Contribute19 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser19 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser19 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *
@@ -2928,7 +2928,7 @@ export type Contribute20 = ContributeTarget[];
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser20 = ("json" | "yaml") | PdlParser | RegexParser | null;
+export type Parser20 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
 /**
  * Block to execute in case of error.
  *

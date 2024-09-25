@@ -1,5 +1,6 @@
 import pytest
 
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
@@ -102,3 +103,17 @@ def test_code_parser1():
     data = Program.model_validate(code_parser1)
     result, _, _, _ = process_prog(state, empty_scope, data)
     assert result == "{'a': 'b', 'c': 'd'}"
+
+
+jsonl_parser = """
+text: |
+  { "a": 1, "b": 2}
+  { "a": "hello" }
+  { "b": "bye"}
+parser: jsonl
+"""
+
+
+def test_json_parser():
+    result = exec_str(jsonl_parser)
+    assert result == [{"a": 1, "b": 2}, {"a": "hello"}, {"b": "bye"}]

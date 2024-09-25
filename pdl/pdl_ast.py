@@ -82,7 +82,7 @@ class RegexParser(Parser):
     mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
 
 
-ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
+ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
 RoleType: TypeAlias = Optional[str]
 
 
