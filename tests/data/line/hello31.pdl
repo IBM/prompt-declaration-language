@@ -5,7 +5,5 @@ defs:
     function:
       subject: str
     return:
-      api: https
-      url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-      input: "{{ subject }}"
+      text: hello
       show_result: false

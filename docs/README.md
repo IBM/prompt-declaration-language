@@ -16,13 +16,13 @@ PDL provides the following features:
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files, including JSON data
 - Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle
-- Ability to call out to REST APIs
+- Ability to call out to REST APIs with Python code
 - Type checking input and output of model calls
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
+The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
@@ -113,7 +113,7 @@ text:
     include_stop_sequence: true
 ```
 
-The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
+The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the text to be produced. In this example, the text starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
@@ -127,7 +127,7 @@ we obtain the following document:
 Hello, World!
 ```
 
-where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, as well as REST APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
+where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
 
@@ -218,9 +218,9 @@ assign the result to variable `CODE`.
 
 Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
-The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
+The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire text produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
-When we execute this program with the PDL interpreter, we obtain the following document:
+When we execute this program with the PDL interpreter, we obtain the following text:
 
 ```
 
@@ -386,7 +386,7 @@ in the right pane.
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 
-## Additional Notes and Future Work
+## Additional Notes
 
 When using Granite models on Watsonx, we use the following defaults for model parameters:
   - `decoding_method`: `greedy`
@@ -398,8 +398,6 @@ When using Granite models on Watsonx, we use the following defaults for model pa
   - `temperature`: 0.7
   - `top_p`: 0.85
   - `top_k`: 50
-
-- Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
 For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
 

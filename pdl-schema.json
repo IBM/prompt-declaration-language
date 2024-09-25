@@ -1,616 +1,5 @@
 {
   "$defs": {
-    "ApiBlock": {
-      "additionalProperties": false,
-      "description": "Call an API.",
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/ForBlock"
-              },
-              {
-                "$ref": "#/$defs/TextBlock"
-              },
-              {
-                "$ref": "#/$defs/LastOfBlock"
-              },
-              {
-                "$ref": "#/$defs/ArrayBlock"
-              },
-              {
-                "$ref": "#/$defs/ObjectBlock"
-              },
-              {
-                "$ref": "#/$defs/MessageBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/$defs/FunctionBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CallBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LitellmModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/BamModelBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/GetBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/DataBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/RepeatUntilBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ForBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/TextBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/LastOfBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ArrayBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ObjectBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/MessageBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ReadBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/IncludeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ErrorBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/EmptyBlock"
-                    }
-                  ]
-                },
-                "type": "array"
-              }
-            ]
-          },
-          "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
-        },
-        "contribute": {
-          "default": [
-            "result",
-            "context"
-          ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "$ref": "#/$defs/ContributeTarget"
-          },
-          "title": "Contribute",
-          "type": "array"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/TextBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LastOfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ArrayBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ObjectBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/MessageBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Block to execute in case of error.\n    ",
-          "title": "Fallback"
-        },
-        "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
-          "title": "Role"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "kind": {
-          "const": "api",
-          "default": "api",
-          "enum": [
-            "api"
-          ],
-          "title": "Kind",
-          "type": "string"
-        },
-        "api": {
-          "title": "Api",
-          "type": "string"
-        },
-        "url": {
-          "description": "URL of the endpoint.",
-          "title": "Url",
-          "type": "string"
-        },
-        "input": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/FunctionBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CallBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/GetBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/DataBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/RepeatUntilBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ForBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/TextBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/LastOfBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ArrayBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ObjectBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/MessageBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ReadBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/IncludeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ErrorBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/EmptyBlock"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "description": "Arguments to the request.\n    ",
-          "title": "Input"
-        }
-      },
-      "required": [
-        "api",
-        "url",
-        "input"
-      ],
-      "title": "ApiBlock",
-      "type": "object"
-    },
     "ArrayBlock": {
       "additionalProperties": false,
       "description": "Return the array of values computed by each block of the list of blocks.",
@@ -661,9 +50,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -734,9 +120,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -870,9 +253,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -943,9 +323,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -1074,9 +451,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -1147,9 +521,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -1259,9 +630,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -1332,9 +700,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -1468,9 +833,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -1541,9 +903,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -1676,9 +1035,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -1749,9 +1105,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -1834,9 +1187,6 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -2234,9 +1584,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -2307,9 +1654,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -2443,9 +1787,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -2516,9 +1857,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -2658,9 +1996,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -2731,9 +2066,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -2848,9 +2180,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -2921,9 +2250,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -3057,9 +2383,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -3130,9 +2453,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -3270,9 +2590,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -3343,9 +2660,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -3466,9 +2780,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -3539,9 +2850,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -3675,9 +2983,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -3748,9 +3053,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -3927,9 +3229,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -4000,9 +3299,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -4136,9 +3432,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -4209,9 +3502,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -4366,9 +3656,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -4439,9 +3726,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -4575,9 +3859,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -4648,9 +3929,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -4783,9 +4061,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -4856,9 +4131,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -4970,9 +4242,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -5043,9 +4312,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -5179,9 +4445,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -5252,9 +4515,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -5388,9 +4648,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -5461,9 +4718,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -5553,9 +4807,6 @@
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
@@ -5626,9 +4877,6 @@
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/ApiBlock"
                         },
                         {
                           "$ref": "#/$defs/GetBlock"
@@ -5748,9 +4996,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -5821,9 +5066,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -5957,9 +5199,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -6030,9 +5269,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -6173,9 +5409,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -6246,9 +5479,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -6373,9 +5603,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -6446,9 +5673,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -6582,9 +5806,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -6655,9 +5876,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -6821,9 +6039,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -6894,9 +6109,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -7030,9 +6242,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7103,9 +6312,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -7238,9 +6444,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7311,9 +6514,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -7395,9 +6595,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7468,9 +6665,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -7599,9 +6793,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -7672,9 +6863,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -7808,9 +6996,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7881,9 +7066,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -8017,9 +7199,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -8137,9 +7316,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -8210,9 +7386,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -8346,9 +7519,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -8419,9 +7589,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -8550,9 +7717,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -8623,9 +7787,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -8769,9 +7930,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -8842,9 +8000,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -8978,9 +8133,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -9051,9 +8203,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -9186,9 +8335,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -9259,9 +8405,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -9344,9 +8487,6 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ApiBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -9909,9 +9049,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -9982,9 +9119,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -10118,9 +9252,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -10191,9 +9322,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -10321,9 +9449,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -10394,9 +9519,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -10780,9 +9902,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -10853,9 +9972,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -10989,9 +10105,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -11062,9 +10175,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -11196,9 +10306,6 @@
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
@@ -11273,9 +10380,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -11363,9 +10467,6 @@
           "$ref": "#/$defs/CodeBlock"
         },
         {
-          "$ref": "#/$defs/ApiBlock"
-        },
-        {
           "$ref": "#/$defs/GetBlock"
         },
         {
@@ -11440,9 +10541,6 @@
           "$ref": "#/$defs/CodeBlock"
         },
         {
-          "$ref": "#/$defs/ApiBlock"
-        },
-        {
           "$ref": "#/$defs/GetBlock"
         },
         {
@@ -11513,9 +10611,6 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -11623,9 +10718,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -11696,9 +10788,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -11786,9 +10875,6 @@
           "$ref": "#/$defs/CodeBlock"
         },
         {
-          "$ref": "#/$defs/ApiBlock"
-        },
-        {
           "$ref": "#/$defs/GetBlock"
         },
         {
@@ -11859,9 +10945,6 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ApiBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -11990,9 +11073,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -12063,9 +11143,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -12199,9 +11276,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -12272,9 +11346,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -12514,9 +11585,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -12587,9 +11655,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -12723,9 +11788,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -12796,9 +11858,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -12927,9 +11986,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -13000,9 +12056,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -13097,9 +12150,6 @@
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
@@ -13170,9 +12220,6 @@
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/ApiBlock"
                         },
                         {
                           "$ref": "#/$defs/GetBlock"
@@ -13292,9 +12339,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -13365,9 +12409,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -13501,9 +12542,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -13574,9 +12612,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -13705,9 +12740,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -13778,9 +12810,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -13874,9 +12903,6 @@
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
-                    "$ref": "#/$defs/ApiBlock"
-                  },
-                  {
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
@@ -13947,9 +12973,6 @@
                         },
                         {
                           "$ref": "#/$defs/CodeBlock"
-                        },
-                        {
-                          "$ref": "#/$defs/ApiBlock"
                         },
                         {
                           "$ref": "#/$defs/GetBlock"
@@ -14069,9 +13092,6 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
-                "$ref": "#/$defs/ApiBlock"
-              },
-              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -14142,9 +13162,6 @@
                     },
                     {
                       "$ref": "#/$defs/CodeBlock"
-                    },
-                    {
-                      "$ref": "#/$defs/ApiBlock"
                     },
                     {
                       "$ref": "#/$defs/GetBlock"
@@ -14278,9 +13295,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -14351,9 +13365,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -14482,9 +13493,6 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
-              "$ref": "#/$defs/ApiBlock"
-            },
-            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -14555,9 +13563,6 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/ApiBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"

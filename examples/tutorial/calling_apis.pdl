@@ -21,12 +21,15 @@ text:
     include_stop_sequence: false
   def: LOCATION
   contribute: []
-- api: https
-  url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-  input: '{{ LOCATION }}'
+- lan: python
+  code: |
+    import requests
+    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q={{ LOCATION }}') 
+    result = response.content
   def: WEATHER
   contribute: []
+
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
       Explain the weather from the following JSON.
-      `{{ WEATHER }}` 
+      `{{ WEATHER }}`
