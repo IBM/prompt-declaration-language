@@ -213,6 +213,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -823,6 +824,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -1420,6 +1422,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -2394,6 +2397,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -3007,6 +3011,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -3624,6 +3629,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -4084,6 +4090,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -4522,6 +4529,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -5125,6 +5133,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -5902,6 +5911,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -6526,6 +6536,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -6973,6 +6984,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -7750,6 +7762,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -8287,6 +8300,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -8918,6 +8932,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -10057,6 +10072,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -10927,6 +10943,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -12057,6 +12074,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -12580,6 +12598,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -13357,6 +13376,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"
@@ -14133,6 +14153,7 @@
             {
               "enum": [
                 "json",
+                "jsonl",
                 "yaml"
               ],
               "type": "string"

@@ -1343,6 +1343,17 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
                 ) from exc
+        case "jsonl":
+            result = []
+            try:
+                for line in text.split("\n"):
+                    if line == "":
+                        continue
+                    result.append(json.loads(line))
+            except Exception as exc:
+                raise PDLRuntimeParserError(
+                    f"Attempted to parse ill-formed JSON: {repr(exc)}"
+                ) from exc
         case "yaml":
             try:
                 result = yaml.safe_load(text)
