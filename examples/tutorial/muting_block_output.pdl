@@ -9,7 +9,7 @@ defs:
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop: ["\n"]
-document:
+text:
 - call: translate
   contribute: []
   def: FRENCH

@@ -1,5 +1,5 @@
 description: CodeLLM-Devkit Assistant
-document: 
+text: 
 - read:
   def: project
   message: "Please enter the path to your Java project:\n"
@@ -41,7 +41,7 @@ document:
           Question: What are all the classes?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -52,7 +52,7 @@ document:
           Question: What are all the constructors of class org.ibm.App?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -63,7 +63,7 @@ document:
           Question: What are all the fields of class org.ibm.App?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -75,7 +75,7 @@ document:
           Question: What are all the methods of class org.ibm.App?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -86,7 +86,7 @@ document:
           Question: Show me the call graph of class "org.ibm.App"
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -97,7 +97,7 @@ document:
           Question: What is the code of method Foo(string) of class org.ibm.App?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -108,7 +108,7 @@ document:
           Question: Generate a summary for method Foo(string) of class org.ibm.App
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |
@@ -121,7 +121,7 @@ document:
           Question: Generate a different comment for method Foo(string) in class org.ibm.App?
           Answer:
           ```
-          document:
+          text:
           - lan: python
             code: 
             - |

@@ -1,5 +1,5 @@
 description: Demo of PoT template
-document:
+text:
   - include: ../PoT.pdl
   - def: ANSWER
     call: program_of_thought

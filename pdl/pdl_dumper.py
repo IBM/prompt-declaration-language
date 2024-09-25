@@ -15,7 +15,6 @@ from .pdl_ast import (
     CodeBlock,
     ContributeTarget,
     DataBlock,
-    DocumentBlock,
     ErrorBlock,
     ForBlock,
     FunctionBlock,
@@ -34,6 +33,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
+    TextBlock,
 )
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
@@ -123,8 +123,8 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["url"] = block.url
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input)
-        case DocumentBlock():
-            d["document"] = blocks_to_dict(block.document)
+        case TextBlock():
+            d["text"] = blocks_to_dict(block.text)
         case LastOfBlock():
             d["lastof"] = blocks_to_dict(block.lastof)
         case ArrayBlock():

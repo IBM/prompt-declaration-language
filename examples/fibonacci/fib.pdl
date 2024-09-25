@@ -1,5 +1,5 @@
 description: Fibonacci
-document:
+text:
 - def: CODE
   model: watsonx/ibm/granite-20b-code-instruct
   input: "Write a Python function to compute the Fibonacci sequence\n\n"

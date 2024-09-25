@@ -1,7 +1,7 @@
 description: Hello world to call into a model
 defs:
   model: watsonx/ibm/granite-34b-code-instruct
-document:
+text:
 - Hello,
 - model: "{{ model }}"
   spec: int

@@ -1,7 +1,7 @@
 from pdl.pdl import exec_str
 
 HELLO = """
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-20b-code-instruct
   parameters:

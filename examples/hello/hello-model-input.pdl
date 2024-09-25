@@ -1,5 +1,5 @@
 description: Hello world with model input
-document:
+text:
 - model: watsonx/ibm/granite-34b-code-instruct
   input: "Hello,"
   parameters:

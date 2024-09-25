@@ -5,7 +5,7 @@ defs:
       name: str
     return: Hello {{ name }}!
   alias: hello
-document:
+text:
 - call: "{{ alias }}"
   args:
     name: World

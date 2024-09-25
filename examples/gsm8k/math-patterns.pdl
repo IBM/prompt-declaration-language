@@ -7,7 +7,7 @@ defs:
 # try all examples and collect which ones _fail_
 # cluster by similarity, or classify e.g. 5 classes that don't work
 
-document:
+text:
   - include: ../prompt_library/ReWOO.pdl
   - include: ../prompt_library/ReAct.pdl
   - include: ../prompt_library/CoT.pdl

@@ -4,7 +4,7 @@ defs:
     function:
       name: str
     return: Hello {{ name }}!
-document:
+text:
 - call: hello
   args:
     name: World

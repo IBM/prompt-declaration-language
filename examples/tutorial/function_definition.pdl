@@ -1,5 +1,5 @@
 description: function def and call
-document:
+text:
 - def: translate
   function:
     sentence: str

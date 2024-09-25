@@ -9,4 +9,4 @@ for:
   name: "{{ names }}"
 repeat:
   "{{ name }}'s number is {{ number }}\n"
-as: document
+as: text

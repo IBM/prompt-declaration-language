@@ -1,5 +1,5 @@
 description: GSM Hard Bug Finder
-document: 
+text: 
 - "{{ question }}"
 - "\n"
 - "Does the following code accurately solve this problem?\n\n"

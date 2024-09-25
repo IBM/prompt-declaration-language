@@ -99,7 +99,7 @@ class PDLMagics(Magics):
       background-color: rgb(238, 184, 112);
     }
 
-    .pdl_document {
+    .pdl_text {
       background-color: rgb(219, 215, 250);
     }
 

@@ -3,12 +3,12 @@ from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 python_data = {
     "description": "Hello world showing call out to python code",
-    "document": [
+    "text": [
         "Hello, ",
         {
             "lan": "python",
             "code": {
-                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+                "text": ["import random\n", "import string\n", "result = 'Tracy'"]
             },
         },
         "!\n",
@@ -19,17 +19,17 @@ python_data = {
 def test_python():
     state = InterpreterState()
     data = Program.model_validate(python_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, Tracy!\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, Tracy!\n"
 
 
 def show_result_data(show):
     return {
         "description": "Using a weather API and LLM to make a small weather app",
-        "document": [
+        "text": [
             {
                 "def": "QUERY",
-                "document": [
+                "text": [
                     {"lan": "python", "code": ["result = 'How can I help you?: '"]}
                 ],
                 "contribute": show,
@@ -41,8 +41,8 @@ def show_result_data(show):
 def test_contribute_result():
     state = InterpreterState()
     data = Program.model_validate(show_result_data(["result"]))
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "How can I help you?: "
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "How can I help you?: "
 
 
 def test_contribute_context():
@@ -55,5 +55,5 @@ def test_contribute_context():
 def test_contribute_false():
     state = InterpreterState()
     data = Program.model_validate(show_result_data([]))
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == ""
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == ""

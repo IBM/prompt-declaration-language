@@ -1,5 +1,5 @@
 description: Hello world with function definition and call
-document:
+text:
 - def: hello
   function:
     name: str

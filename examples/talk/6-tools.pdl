@@ -1,5 +1,5 @@
 description: tool use
-document:
+text:
 - |-
   What is 18 + 12 x 3?
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}

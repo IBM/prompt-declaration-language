@@ -367,7 +367,7 @@ defs:
     - "{{filtered}}"
 
 
-document:
+text:
 - "----- Loading seed examples -----\n\n"
 - def: seed_examples
   read: ./qna.yaml

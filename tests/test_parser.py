@@ -12,7 +12,7 @@ model_parser = {
     "model": "watsonx/ibm/granite-20b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
-        "document": [
+        "text": [
             "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
             '{"a": 0, "b": 0}',
             "\n",
@@ -42,7 +42,7 @@ model_parser1 = {
     "model": "watsonx/ibm/granite-34b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
-        "document": [
+        "text": [
             "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively. Write 30 in letters",
         ]
     },
@@ -75,7 +75,7 @@ code_parser = {
     "lan": "python",
     "parser": "json",
     "code": {
-        "document": [
+        "text": [
             "import json\n",
             "r = {'a':'b', 'c':'d'}\n",
             "result=json.dumps(r)",

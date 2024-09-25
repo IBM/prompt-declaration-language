@@ -164,9 +164,9 @@ export function show_block(data: PdlBlock) {
         body.appendChild(show_result_or_code(data));
       }
     })
-    .with({kind: 'document'}, data => {
-      body.classList.add('pdl_document');
-      const doc_child = show_blocks(data.document);
+    .with({kind: 'text'}, data => {
+      body.classList.add('pdl_text');
+      const doc_child = show_blocks(data.text);
       body.appendChild(doc_child);
     })
     .with({kind: 'lastof'}, data => {

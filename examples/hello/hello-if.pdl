@@ -1,5 +1,5 @@
 description: Hello world with condition
-document:
+text:
 - 'Hello! '
 - lan: python
   code: |

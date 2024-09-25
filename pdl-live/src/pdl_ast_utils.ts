@@ -43,9 +43,9 @@ export function map_block_children(
     })
     .with({kind: 'get'}, block => block)
     .with({kind: 'data'}, block => block)
-    .with({kind: 'document'}, block => {
-      const document = map_blocks(f, block.document);
-      return {...block, document: document};
+    .with({kind: 'text'}, block => {
+      const text = map_blocks(f, block.text);
+      return {...block, text: text};
     })
     .with({kind: 'lastof'}, block => {
       const lastof = map_blocks(f, block.lastof);
@@ -147,8 +147,8 @@ export function iter_block_children(
     })
     .with({kind: 'get'}, () => {})
     .with({kind: 'data'}, () => {})
-    .with({kind: 'document'}, block => {
-      iter_blocks(f, block.document);
+    .with({kind: 'text'}, block => {
+      iter_blocks(f, block.text);
     })
     .with({kind: 'lastof'}, block => {
       iter_blocks(f, block.lastof);

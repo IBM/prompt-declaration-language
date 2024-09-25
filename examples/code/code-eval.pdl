@@ -5,7 +5,7 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-document:
+text:
 - "\n{{ CODE.source_code }}\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION

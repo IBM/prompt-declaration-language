@@ -1,4 +1,4 @@
-document:
+text:
 - include: ../tools.pdl
 - include: ../ReAct.pdl
 - include: ../../granite/granite_defs.pdl

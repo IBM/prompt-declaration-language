@@ -33,7 +33,6 @@ from .pdl_ast import (
     CodeBlock,
     ContributeTarget,
     DataBlock,
-    DocumentBlock,
     EmptyBlock,
     ErrorBlock,
     ForBlock,
@@ -61,6 +60,7 @@ from .pdl_ast import (
     RepeatUntilBlock,
     RoleType,
     ScopeType,
+    TextBlock,
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict
@@ -418,11 +418,11 @@ def step_block_body(
                 yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
-        case DocumentBlock():
+        case TextBlock():
             result, background, scope, trace = yield from step_blocks_of(
                 block,
-                "document",
-                IterationType.DOCUMENT,
+                "text",
+                IterationType.TEXT,
                 state,
                 scope,
                 loc,
@@ -520,7 +520,7 @@ def step_block_body(
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -585,7 +585,7 @@ def step_block_body(
                     fallback=[],
                 )
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -629,7 +629,7 @@ def step_block_body(
             iterations_trace = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -817,7 +817,7 @@ def combine_results(iteration_type: IterationType, results: list[Any]):
                 result = results[-1]
             else:
                 result = None
-        case IterationType.DOCUMENT:
+        case IterationType.TEXT:
             result = "".join([stringify(r) for r in results])
         case _:
             assert False

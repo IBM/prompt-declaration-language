@@ -1,5 +1,5 @@
 description: Calculator tool use using Granite models via watsonx.ai.
-document:
+text:
 - |-
   What is 18 + 12 x 3?
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}

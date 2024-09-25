@@ -13,15 +13,15 @@ def parse_prog_str(prog_str):
 def test_role1():
     prog_str = """
 description: Test role
-document:
+text:
 - defs:
     ctx1: "{{context}}"
-  document: A
+  text: A
   role: A
 - Hi
 - defs:
     ctx2: "{{context}}"
-  document: B
+  text: B
   role: B
 role: Top
 """

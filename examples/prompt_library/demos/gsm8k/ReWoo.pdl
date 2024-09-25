@@ -24,7 +24,7 @@ defs:
             - observation: 1200
             # - thought: "He sold #E2 this month."
             # - action: "Finish[#E2]"
-document:
+text:
   - include: examples/prompt_library/tools.pdl
   - include: examples/prompt_library/ReWoo.pdl
   - call: rewoo

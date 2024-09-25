@@ -4,7 +4,7 @@ defs:
       question: str
       model: str
     return:
-      document:
+      text:
       - |
         What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
         Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
@@ -28,7 +28,7 @@ defs:
 
         {{ question }}
       - repeat:
-          document:
+          text:
           - def: thought
             model: "{{ model }}"
             parameters:
@@ -46,7 +46,7 @@ defs:
           - def: observation
             if: '{{ action.name == "Search" }}'
             then:
-              document:
+              text:
               - "\nObs: "
               - lan: python
                 code: |
@@ -57,5 +57,5 @@ defs:
                   except wikipedia.WikipediaException as e:
                     result = str(e)
         until: '{{ action.name != "Search" }}'
-        as: document
+        as: text
 

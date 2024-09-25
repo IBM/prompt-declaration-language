@@ -3,7 +3,7 @@ from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 regex_data = {
     "description": "Parsing using regex",
-    "document": "Malcolm Reynolds",
+    "text": "Malcolm Reynolds",
     "parser": {
         "spec": {"first_name": "str", "last_name": "str"},
         "regex": "(?P<first_name>\\w+) (?P<last_name>\\w+)",

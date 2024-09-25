@@ -2,7 +2,7 @@ description: Demo of ReAct template
 defs:
   available_tools:
     data: ["Search"]
-document:
+text:
   - include: ../ReAct.pdl
   - include: ../../granite/granite_defs.pdl
   - def: filtered_tools
