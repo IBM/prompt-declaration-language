@@ -507,7 +507,7 @@ class Program(RootModel):
     Prompt Declaration Language program (PDL)
     """
 
-    root: BlockType
+    root: BlocksType
     """Entry point to parse a PDL program using Pydantic.
     """
 

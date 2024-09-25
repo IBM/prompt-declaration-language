@@ -1,5 +1,6 @@
 import pytest
 
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
@@ -122,3 +123,12 @@ def test_repeat_error():
     data = Program.model_validate(repeat_data_error)
     with pytest.raises(PDLRuntimeError):
         process_prog(state, empty_scope, data)
+
+
+def test_program_as_list():
+    prog = """
+    - Hello
+    - Bye
+    """
+    result = exec_str(prog)
+    assert result == "Bye"

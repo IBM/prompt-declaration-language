@@ -63,7 +63,7 @@ from .pdl_ast import (
     TextBlock,
     empty_block_location,
 )
-from .pdl_dumper import block_to_dict
+from .pdl_dumper import blocks_to_dict
 from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
@@ -85,7 +85,7 @@ class PDLRuntimeError(PDLException):
         self,
         message: str,
         loc: Optional[LocationType] = None,
-        trace: Optional[BlockType] = None,
+        trace: Optional[BlocksType] = None,
         fallback: Optional[Any] = None,
     ):
         super().__init__(message)
@@ -192,7 +192,7 @@ def generate(
 
 def write_trace(
     trace_file: str | Path,
-    trace: BlockType,
+    trace: BlocksType,
 ):
     """Write the execution trace into a file.
 
@@ -201,20 +201,20 @@ def write_trace(
         trace: Execution trace.
     """
     with open(trace_file, "w", encoding="utf-8") as fp:
-        json.dump(block_to_dict(trace), fp)
+        json.dump(blocks_to_dict(trace), fp)
 
 
 def process_prog(
     state: InterpreterState,
-    initial_scope: ScopeType,
+    scope: ScopeType,
     prog: Program,
     loc: LocationType = empty_block_location,
-) -> tuple[Any, Messages, ScopeType, BlockType]:
+) -> tuple[Any, Messages, ScopeType, BlocksType]:
     """Execute a PDL program.
 
     Args:
         state: Initial state of the interpreter.
-        initial_scope: Environment defining the variables in scope to execute the program.
+        scope: Environment defining the variables in scope to execute the program.
         prog: Program to execute.
         loc: Source code location mapping. Defaults to empty_block_location.
 
@@ -224,10 +224,12 @@ def process_prog(
     Raises:
         PDLRuntimeError: If the program raises an error.
     """
-    scope: ScopeType = empty_scope | initial_scope
-    doc_generator = step_block(state, scope, block=prog.root, loc=loc)
-    for result, document, scope, trace in schedule([doc_generator]):
-        return result, document, scope, trace
+    scope = empty_scope | scope
+    doc_generator = step_blocks(
+        IterationType.LASTOF, state, scope, blocks=prog.root, loc=loc
+    )
+    for result, document, final_scope, trace in schedule([doc_generator]):
+        return result, document, final_scope, trace
     assert False
     # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
     # # result, document, scope, trace = schedule(doc_generator)
@@ -1318,9 +1320,9 @@ def step_include(
 ) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock]]:
     file = state.cwd / block.include
     try:
-        prog, newloc = parse_file(file)
-        result, background, scope, trace = yield from step_block(
-            state, scope, prog.root, newloc
+        prog, new_loc = parse_file(file)
+        result, background, scope, trace = yield from step_blocks(
+            IterationType.LASTOF, state, scope, prog.root, new_loc
         )
         include_trace = block.model_copy(update={"trace": trace})
         return result, background, scope, include_trace
@@ -1330,6 +1332,13 @@ def step_include(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
+        ) from exc
+    except PDLRuntimeStepBlocksError as exc:
+        trace = block.model_copy(update={"trace": exc.blocks})
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=trace,
         ) from exc
 
 

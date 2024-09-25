@@ -63,8 +63,10 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
-def program_to_dict(prog: pdl_ast.Program) -> int | float | str | dict[str, Any]:
-    return block_to_dict(prog.root)
+def program_to_dict(
+    prog: pdl_ast.Program,
+) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
+    return blocks_to_dict(prog.root)
 
 
 def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any]:
