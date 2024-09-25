@@ -105,15 +105,13 @@ def test_code_parser1():
     assert result == "{'a': 'b', 'c': 'd'}"
 
 
-jsonl_parser = """
-text: |
-  { "a": 1, "b": 2}
-  { "a": "hello" }
-  { "b": "bye"}
-parser: jsonl
-"""
-
-
 def test_json_parser():
+    jsonl_parser = """
+    text: |
+        { "a": 1, "b": 2}
+        { "a": "hello" }
+        { "b": "bye"}
+    parser: jsonl
+    """
     result = exec_str(jsonl_parser)
     assert result == [{"a": 1, "b": 2}, {"a": "hello"}, {"b": "bye"}]
