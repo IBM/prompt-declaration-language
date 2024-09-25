@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Generator, Optional, Sequence, TypeVar
 
 import litellm
-import requests
 import yaml
 from jinja2 import (
     Environment,

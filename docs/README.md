@@ -58,7 +58,7 @@ For more information, see [documentation](https://docs.litellm.ai/docs/providers
 To run the interpreter:
 
 ```
-pdl <path/to/example.yaml>
+pdl-local <path/to/example.yaml>
 ```
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of ready-to-use prompting patterns. 
@@ -71,30 +71,30 @@ useful for debugging.
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-pdl --log <my-logfile> <my-example>
+pdl-local --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-pdl --data <JSON-or-YAML-data> <my-example>
+pdl-local --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-pdl --data-file <JSON-or-YAML-file> <my-example>
+pdl-local --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl --trace <file.json> <my-example> 
+pdl-local --trace <file.json> <my-example> 
 ```
 
 For more information:
 ```
-pdl --help
+pdl-local --help
 ```
 
 ## Overview
@@ -118,7 +118,7 @@ The `description` field is a description for the program. Field `text` contains 
 When we execute this program using the PDL interpreter:
 
 ```
-pdl examples/hello/hello.pdl
+pdl-local examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -134,7 +134,7 @@ A PDL program computes 2 data structures. The first is a JSON corresponding to t
 The PDL interpreter can also stream the background conversation instead of the result:
 
 ```
-pdl --stream background examples/hello/hello.pdl
+pdl-local --stream background examples/hello/hello.pdl
 ```
 
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.

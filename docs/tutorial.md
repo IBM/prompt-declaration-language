@@ -21,7 +21,7 @@ This program has a `description` field, which contains a title. The `description
 To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
- pdl examples/tutorial/simple_program.pdl
+pdl-local examples/tutorial/simple_program.pdl
 ```
 
 This results in the following output:
@@ -396,12 +396,13 @@ text:
     response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q={{ LOCATION }}') 
     result = response.content
   def: WEATHER
+  parser: json
   contribute: []
 
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
-      Explain the weather from the following JSON.
-      `{{ WEATHER }}`
+      Explain the weather from the following JSON:
+      {{ WEATHER }}
 ```
 
 In this program, we first prompt the user to enter a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python. Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
