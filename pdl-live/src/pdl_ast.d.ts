@@ -32,7 +32,32 @@ export type Program =
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
-  | EmptyBlock;
+  | EmptyBlock
+  | (
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | ApiBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[];
 /**
  * Documentation associated to the block.
  *
