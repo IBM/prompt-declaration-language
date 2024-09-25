@@ -37,10 +37,6 @@ export function map_block_children(
       const code = map_blocks(f, block.code);
       return {...block, code: code};
     })
-    .with({kind: 'api'}, block => {
-      const input = map_blocks(f, block.input);
-      return {...block, input: input};
-    })
     .with({kind: 'get'}, block => block)
     .with({kind: 'data'}, block => block)
     .with({kind: 'text'}, block => {
@@ -141,9 +137,6 @@ export function iter_block_children(
     })
     .with({kind: 'code'}, block => {
       iter_blocks(f, block.code);
-    })
-    .with({kind: 'api'}, block => {
-      iter_blocks(f, block.input);
     })
     .with({kind: 'get'}, () => {})
     .with({kind: 'data'}, () => {})

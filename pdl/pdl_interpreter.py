@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Generator, Optional, Sequence, TypeVar
 
 import litellm
-import requests
 import yaml
 from jinja2 import (
     Environment,
@@ -22,7 +21,6 @@ from pydantic import BaseModel
 
 from .pdl_ast import (
     AdvancedBlockType,
-    ApiBlock,
     ArrayBlock,
     BamModelBlock,
     BamTextGenerationParameters,
@@ -408,14 +406,6 @@ def step_block_body(
             else:
                 result, trace = process_expr_of(block, "data", scope, loc)
             background = [{"role": state.role, "content": stringify(result)}]
-            if state.yield_result:
-                yield YieldResultMessage(result)
-            if state.yield_background:
-                yield YieldBackgroundMessage(background)
-        case ApiBlock():
-            result, background, scope, trace = yield from step_call_api(
-                state, scope, block, loc
-            )
             if state.yield_result:
                 yield YieldResultMessage(result)
             if state.yield_background:
@@ -1144,36 +1134,6 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
         case _:
             assert False
     return msg
-
-
-def step_call_api(
-    state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, ApiBlock]]:
-    background: Messages
-    input_value, _, _, block = yield from step_blocks_of(
-        block,
-        "input",
-        IterationType.LASTOF,
-        state.with_yield_result(False).with_yield_background(False),
-        scope,
-        loc,
-    )
-    input_str = block.url + stringify(input_value)
-    try:
-        append_log(state, "API Input", input_str)
-        response = requests.get(input_str)
-        result = response.json()
-        background = [{"role": state.role, "content": stringify(result)}]
-        append_log(state, "API Output", background)
-        trace = block.model_copy(update={"result": result})
-    except Exception as exc:
-        message = f"API error: {repr(exc)}"
-        raise PDLRuntimeError(
-            message,
-            loc=loc,
-            trace=ErrorBlock(msg=message, program=block),
-        ) from exc
-    return result, background, scope, trace
 
 
 def step_call_code(

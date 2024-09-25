@@ -397,7 +397,7 @@ line31 = {
         "",
         "tests/data/line/hello31.pdl:0 - Missing required field: function",
         "tests/data/line/hello31.pdl:0 - Missing required field: return",
-        "tests/data/line/hello31.pdl:11 - Field not allowed: show_result",
+        "tests/data/line/hello31.pdl:9 - Field not allowed: show_result",
     ],
 }
 

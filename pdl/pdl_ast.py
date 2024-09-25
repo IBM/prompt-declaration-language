@@ -39,7 +39,6 @@ class BlockKind(StrEnum):
     CALL = "call"
     MODEL = "model"
     CODE = "code"
-    API = "api"
     GET = "get"
     DATA = "data"
     TEXT = "text"
@@ -287,18 +286,6 @@ class CodeBlock(Block):
     """
 
 
-class ApiBlock(Block):
-    """Call an API."""
-
-    kind: Literal[BlockKind.API] = BlockKind.API
-    api: str
-    url: str
-    """URL of the endpoint."""
-    input: "BlocksType"
-    """Arguments to the request.
-    """
-
-
 class GetBlock(Block):
     """Get the value of a variable."""
 
@@ -475,7 +462,6 @@ AdvancedBlockType: TypeAlias = (
     | LitellmModelBlock
     | BamModelBlock
     | CodeBlock
-    | ApiBlock
     | GetBlock
     | DataBlock
     | IfBlock
