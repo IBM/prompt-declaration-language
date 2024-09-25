@@ -1,4 +1,4 @@
-document:
+text:
 - |
   What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
   Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
@@ -20,7 +20,7 @@ document:
 
   When was the discoverer of the Hudson River born?
 - repeat:
-    document:
+    text:
     - def: thought
       model: watsonx/ibm/granite-34b-code-instruct
       parameters:
@@ -37,7 +37,7 @@ document:
     - def: observation
       if: '{{ action.name == "Search" }}'
       then:
-        document:
+        text:
         - "Obs: "
         - lan: python
           code: |
@@ -48,5 +48,5 @@ document:
             except wikipedia.WikipediaException as e:
               result = str(e)
   until: '{{ action.name != "Search" }}'
-  as: document
+  as: text
 - "\n"

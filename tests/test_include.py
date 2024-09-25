@@ -5,7 +5,7 @@ from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 include_data = {
     "description": "Include test",
-    "document": [
+    "text": [
         "Start\n",
         {"include": "./data/hello.pdl"},
         "End",
@@ -16,9 +16,9 @@ include_data = {
 def test_include():
     state = InterpreterState(cwd=Path(__file__).parent)
     data = Program.model_validate(include_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
     assert (
-        document
+        text
         == """Start
 Hello, world!
 This is your first PDL program
@@ -29,7 +29,7 @@ End"""
 
 biz = {
     "description": "Include test",
-    "document": [
+    "text": [
         {"include": "data/function.pdl"},
         {
             "call": "template",
@@ -46,8 +46,8 @@ biz = {
 def test_biz():
     state = InterpreterState(cwd=Path(__file__).parent)
     data = Program.model_validate(biz)
-    document, _, _, _ = process_prog(state, empty_scope, data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
     assert (
-        document
+        text
         == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"
     )

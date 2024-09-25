@@ -3,7 +3,7 @@ defs:
   CODE:
     read: ./data.yaml
     parser: yaml
-document:
+text:
 - "\n{{ CODE.source_code }}\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:

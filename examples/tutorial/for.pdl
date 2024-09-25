@@ -1,5 +1,5 @@
 description: for loop
-document:
+text:
 - for:
     i: [1, 2, 3, 4]
   repeat: 

@@ -24,7 +24,7 @@ def error(raw_data, assertion):
 
 error1 = {
     "description": "Hello world!",
-    "documents": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
+    "texts": ["Hello, world!\n", "This is your first prompt descriptor!\n"],
 }
 
 
@@ -34,14 +34,14 @@ def test_error1():
         [
             ":0 - Missing required field: return",
             ":0 - Missing required field: function",
-            ":0 - Field not allowed: documents",
+            ":0 - Field not allowed: texts",
         ],
     )
 
 
 error2 = {
     "description": "Hello world with a variable to call into a model",
-    "document": [
+    "text": [
         "Hello,",
         {
             "model": "watsonx/ibm/granite-20b-code-instruct",
@@ -67,11 +67,10 @@ def test_error2():
 
 # error3 = {
 #     "description": "Hello world with a variable to call into a model",
-#     "document": [
+#     "text": [
 #         "Hello,",
 #         {
-#             "model": "ibm/granite-20b-code-instruct",
-#             "platform": "bam",
+#             "model": "watsonx/ibm/granite-20b-code-instruct",
 #             "parameters": {
 #                 "decoding_methods": "greedy",
 #                 "stop_sequences": ["!"],
@@ -94,11 +93,10 @@ def test_error2():
 
 # error4 = {
 #     "description": "Hello world with a variable to call into a model",
-#     "document": [
+#     "text": [
 #         "Hello,",
 #         {
-#             "model": "ibm/granite-20b-code-instruct",
-#             "platform": "bam",
+#             "model": "watsonx/ibm/granite-20b-code-instruct",
 #             "parameters": {
 #                 "decoding_methods": "greedy",
 #                 "stop_sequencess": ["!"],
@@ -122,12 +120,12 @@ def test_error2():
 
 error5 = {
     "description": "Hello world showing call out to python code",
-    "document": [
+    "text": [
         "Hello, ",
         {
             "lans": "python",
             "code": {
-                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+                "text": ["import random\n", "import string\n", "result = 'Tracy'"]
             },
         },
         "!\n",
@@ -147,12 +145,12 @@ def test_error5():
 
 error6 = {
     "description": "Hello world showing call out to python code",
-    "document": [
+    "text": [
         "Hello, ",
         {
             "lans": "python",
             "codes": {
-                "document": ["import random\n", "import string\n", "result = 'Tracy'"]
+                "text": ["import random\n", "import string\n", "result = 'Tracy'"]
             },
         },
         "!\n",

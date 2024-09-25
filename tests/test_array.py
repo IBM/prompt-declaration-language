@@ -32,7 +32,7 @@ repeat_until_data = {
     "lastof": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": "result = 0"}],
+            "text": [{"lan": "python", "code": "result = 0"}],
         },
         {
             "repeat": [

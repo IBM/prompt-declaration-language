@@ -1,14 +1,14 @@
 description: Hello world showing call out to python code with condition
-document:
+text:
 - def: I
   lan: python
   code: result = 0
 - "\n"
 - repeat:
-    document:
+    text:
     - def: I
       lan: python
       code: result = {{ I }} + 1
     - "\n"
   until: '{{ J == 5 }}'
-  as: document
+  as: text

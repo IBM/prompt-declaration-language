@@ -1,5 +1,5 @@
 description: Variable def and use, model input
-document: 
+text: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   def: name

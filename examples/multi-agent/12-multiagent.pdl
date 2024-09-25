@@ -1,4 +1,4 @@
-document:
+text:
 - include: ./react-fun.pdl
 - include: ../granite/granite_defs.pdl
 - def: QUESTION
@@ -15,7 +15,7 @@ document:
 - def: ANSWER
   model: watsonx/ibm/granite-34b-code-instruct
   input:
-    document: |
+    text: |
       Get the topic from the following:
       {{ PROPOSED }}
 - "\n\n----- Verifying answer... -----\n\n"

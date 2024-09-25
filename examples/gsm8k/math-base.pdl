@@ -1,5 +1,5 @@
 description: math problem
-document:
+text:
 
 - model: watsonx/meta-llama/llama-3-70b-instruct
   def: PDL

@@ -1,5 +1,5 @@
 description: PDL code with input block
-document:
+text:
 - "A multiline stdin input.\n"
 - read:
   multiline: true

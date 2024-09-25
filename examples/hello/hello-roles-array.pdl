@@ -1,5 +1,5 @@
 description: Model call with explicit messages input
-document:
+text:
 - def: prompt
   array:
   - role: system

@@ -1,10 +1,10 @@
 description: math problem
-document:
+text:
 
 - model: watsonx/meta-llama/llama-3-70b-instruct
   def: PDL
   input:
-    document:
+    text:
     - |
       Question: A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. 
       Over three hundred years, it has consumed 847 people. Ships have been built larger over time, 
@@ -14,7 +14,7 @@ document:
       Answer:
       ```
       description: my answer
-      document:
+      text:
       - Let's call the number of people on the first ship x.
       - lan: python
         def: equation
@@ -47,7 +47,7 @@ document:
       Answer: 
       ```
       description: my answer
-      document:
+      text:
       - Roger started with 5 tennis balls
       - lan: python
         def: tennis_balls
@@ -82,7 +82,7 @@ document:
       Answer:
       ```
       description: my answer
-      document:
+      text:
       - Betty needs $100 for the wallet.
       - lan: python
         def: cost

@@ -10,11 +10,11 @@ from pdl.pdl_interpreter import (
 
 var_data = {
     "description": "Hello world with variable use",
-    "document": [
+    "text": [
         "Hello,",
         {
             "def": "NAME",
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
@@ -37,17 +37,17 @@ var_data = {
 def test_var():
     state = InterpreterState()
     data = Program.model_validate(var_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!\nTell me about World?\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!\nTell me about World?\n"
 
 
 var_shared_scope_data = {
     "description": "Hello world with variable use",
-    "document": [
+    "text": [
         "Hello,",
         {
             "def": "NAME",
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
@@ -73,23 +73,23 @@ var_shared_scope_data = {
 def test_code_shared_scope():
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, WorlddlroW !\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, WorlddlroW !\n"
 
 
 var_shared_scope_mutate_data = {
     "description": "Hello world with variable use",
-    "document": [
+    "text": [
         "Hello, ",
         {
             "def": "NAME",
-            "document": "foo",
+            "text": "foo",
             "contribute": [],
         },
         {
             "def": "I",
             "lan": "python",
-            "code": {"document": ["NAME = NAME[::-1]\n", "result = NAME"]},
+            "code": {"text": ["NAME = NAME[::-1]\n", "result = NAME"]},
             "contribute": [],
         },
         {"get": "NAME"},
@@ -106,13 +106,13 @@ def test_code_shared_scope_no_mutate():
 
     state = InterpreterState()
     data = Program.model_validate(var_shared_scope_mutate_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, foooof"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, foooof"
 
 
 code_var_data = {
     "description": "simple python",
-    "document": [
+    "text": [
         {
             "def": "I",
             "lan": "python",
@@ -125,14 +125,14 @@ code_var_data = {
 def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
-    document, _, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"context": [{"role": None, "content": document}], "I": 0}
-    assert document == "0"
+    text, _, scope, _ = process_prog(state, empty_scope, data)
+    assert scope == {"context": [{"role": None, "content": text}], "I": 0}
+    assert text == "0"
 
 
 missing_var = {
     "description": "simple python",
-    "document": [{"get": "somevar"}],
+    "text": [{"get": "somevar"}],
 }
 
 
@@ -145,7 +145,7 @@ def test_missing_var():
 
 missing_call = {
     "description": "simple python",
-    "document": [{"call": "somevar"}],
+    "text": [{"call": "somevar"}],
 }
 
 

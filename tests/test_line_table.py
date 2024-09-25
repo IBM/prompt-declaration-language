@@ -16,7 +16,7 @@ line = {
         "",
         "tests/data/line/hello.pdl:0 - Missing required field: return",
         "tests/data/line/hello.pdl:0 - Missing required field: function",
-        "tests/data/line/hello.pdl:2 - Field not allowed: documents",
+        "tests/data/line/hello.pdl:2 - Field not allowed: texts",
     ],
 }
 

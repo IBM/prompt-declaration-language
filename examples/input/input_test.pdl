@@ -1,7 +1,7 @@
 description: Hello world!
 defs:
   file: ./data.txt
-document:
+text:
 - read: "{{ file }}"
   def: HELLO
   contribute: []

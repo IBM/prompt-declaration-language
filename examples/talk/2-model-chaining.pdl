@@ -1,5 +1,5 @@
 description: Model chaining
-document: 
+text: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:

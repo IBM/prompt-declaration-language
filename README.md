@@ -98,7 +98,7 @@ In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```yaml
 description: Hello world
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
@@ -108,7 +108,7 @@ document:
     include_stop_sequence: true
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
+The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the text to be produced. In this example, the text starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
@@ -190,7 +190,7 @@ defs:
   CODE:
     read: ./data.yaml
     parser: yaml
-document:
+text:
 - "\n{{ CODE.source_code }}\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:
@@ -211,11 +211,11 @@ In this program we first define some variables using the `defs` construct. Here 
 A `read` block can be used to read from a file or stdin. In this case, we read the content of the file `./data.yaml`, parse it as YAML using the `parser` construct, then
 assign the result to variable `CODE`.
 
-Next we define a `document`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
+Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
-The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
+The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire text produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
-When we execute this program with the PDL interpreter, we obtain the following document:
+When we execute this program with the PDL interpreter, we obtain the following text:
 
 ```
 
@@ -247,7 +247,7 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-document:
+text:
 - "\n{{ CODE.source_code }}\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
@@ -320,7 +320,7 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-document:
+text:
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   contribute: []
@@ -355,8 +355,8 @@ document:
     metric: "{{ EVAL }}"
 ```
 
-The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `contribute` set to `[]`. The `contribute` construct can be used to specify how the result of a block is contributed to the overall result, and the background context document.
-Setting it to `result` contributes the result of the block to the overall result, but not to the background context document. Similarly, setting it to `context` contributes
+The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `contribute` set to `[]`. The `contribute` construct can be used to specify how the result of a block is contributed to the overall result, and the background context.
+Setting it to `result` contributes the result of the block to the overall result, but not to the background context. Similarly, setting it to `context` contributes
 the result of the block to the background context but not the overall result. By default, the result of every block is contributed to both. For the blocks in the program above, we use a `def` construct to save the intermediate result of each block.
 
 The output of this program is the corresponding serialized JSON object, with the appropriate treatment of quotation marks. Such PDL programs can be bootstrapped in a bash or Python script or piped into a JSONL file to create data en masse.

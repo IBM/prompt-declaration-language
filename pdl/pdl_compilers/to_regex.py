@@ -12,7 +12,6 @@ from ..pdl_ast import (
     CallBlock,
     CodeBlock,
     DataBlock,
-    DocumentBlock,
     ExpressionType,
     ForBlock,
     FunctionBlock,
@@ -25,6 +24,7 @@ from ..pdl_ast import (
     ReadBlock,
     RepeatBlock,
     RepeatUntilBlock,
+    TextBlock,
 )
 
 
@@ -201,9 +201,9 @@ class ReJson(Re):
             r"(?P<key>(?&whitespace)(?&string)(?&whitespace))"
             r"(?P<value>(?&whitespace)((?&boolean)|(?&number)|(?&string)|(?&array)|(? &object)|null)(?&whitespace))"
             r"(?P<object>\{((?&whitespace)|(?&key):(?&value)(,(?&key):(?&value))*)\})"
-            r"(?P<document>(?&object)|(?&array))"
+            r"(?P<text>(?&object)|(?&array))"
             r")"
-            r"(?&document)"
+            r"(?&text)"
         )
 
 
@@ -312,8 +312,8 @@ def compile_block(
             regex = data_to_regex(v)
         case ApiBlock():
             regex = ReJson()
-        case DocumentBlock():
-            regex, scope = compile_blocks(scope, block.document)
+        case TextBlock():
+            regex, scope = compile_blocks(scope, block.text)
         case IfBlock():
             then_regex, then_scope = compile_blocks(scope, block.then)
             else_regex, else_scope = (

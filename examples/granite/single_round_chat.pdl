@@ -1,5 +1,5 @@
 description: Granite Single-Round Chat
-document:
+text:
 - include: ./granite_defs.pdl
 - role: system
   content: "{{ SYSTEM_CONTENT_CHAT }}"

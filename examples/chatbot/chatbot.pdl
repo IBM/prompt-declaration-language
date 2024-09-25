@@ -1,9 +1,9 @@
 description: chatbot
-document:
+text:
 - read:
   message: "What is your query?\n"
 - repeat:
-    document:
+    text:
     - model: watsonx/ibm/granite-13b-chat-v2
     - read:
       def: eval
@@ -11,11 +11,11 @@ document:
       contribute: []
     - if: "{{ eval == 'no' }}"
       then:
-        document:
+        text:
         - read:
           message: "Why not?\n"
   until: "{{ eval == 'yes'}}"
-  as: document
+  as: text
 role: user
 
 

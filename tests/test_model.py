@@ -3,7 +3,7 @@ from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
-    "document": [
+    "text": [
         "Hello,",
         {
             "model": "watsonx/ibm/granite-34b-code-instruct",
@@ -22,17 +22,17 @@ model_data = {
 def test_model():
     state = InterpreterState()
     data = Program.model_validate(model_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!\n"
 
 
 model_chain_data = {
     "description": "Hello world showing model chaining",
-    "document": [
+    "text": [
         "Hello,",
         {
             "def": "SOMEONE",
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
@@ -50,7 +50,7 @@ model_chain_data = {
         "?\n",
         {
             "def": "RESULT",
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/google/flan-t5-xl",
                     "parameters": {
@@ -71,23 +71,23 @@ model_chain_data = {
 def test_model_chain():
     state = InterpreterState()
     data = Program.model_validate(model_chain_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
     assert (
-        document
+        text
         == 'Hello, World!\nWho is World?\nWorld is a fictional character in the popular science fiction television series "The X-Files\n'
     )
 
 
 multi_shot_data = {
     "description": "Hello world showing model chaining",
-    "document": [
+    "text": [
         {
             "def": "LOCATION",
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "input": {
-                        "document": [
+                        "text": [
                             "Question: What is the weather in London?\n",
                             "London\n",
                             "Question: What's the weather in Paris?\n",
@@ -113,13 +113,13 @@ multi_shot_data = {
 def test_multi_shot():
     state = InterpreterState()
     data = Program.model_validate(multi_shot_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Armonk"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Armonk"
 
 
 model_data_missing_parameters = {
     "description": "Hello world with a variable to call into a model",
-    "document": [
+    "text": [
         "Hello,\n",
         {
             "model": "watsonx/ibm/granite-34b-code-instruct",
@@ -135,9 +135,9 @@ model_data_missing_parameters = {
 def test_data_missing_parameters():
     state = InterpreterState()
     data = Program.model_validate(model_data_missing_parameters)
-    document, _, _, _ = process_prog(state, empty_scope, data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
     assert (
-        document
+        text
         == 'Hello,\n\nI have a question about the use of the word "in" in the sentence: "The cake was baked in the oven.'
     )
 
@@ -145,7 +145,7 @@ def test_data_missing_parameters():
 model_parameter = {
     "description": "Hello world with a variable",
     "defs": {"model": "watsonx/ibm/granite-34b-code-instruct"},
-    "document": [
+    "text": [
         "Hello,",
         {
             "model": "{{ model }}",
@@ -158,14 +158,14 @@ model_parameter = {
 def test_model_parameter():
     state = InterpreterState()
     data = Program.model_validate(model_parameter)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!"
 
 
 model_parameter1 = {
     "description": "Hello world with a variable",
     "defs": {"model": "granite-34b-code-instruct"},
-    "document": [
+    "text": [
         "Hello,",
         {
             "model": "watsonx/ibm/{{ model }}",
@@ -178,13 +178,13 @@ model_parameter1 = {
 def test_model_parameter1():
     state = InterpreterState()
     data = Program.model_validate(model_parameter1)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!"
 
 
 litellm_mock = {
     "description": "call LiteLLM with a mock response",
-    "document": [
+    "text": [
         "Hello,",
         {
             "model": "watsonx/ibm/granite-34b-code-instruct-v2",
@@ -198,5 +198,5 @@ litellm_mock = {
 def test_litellm_mock():
     state = InterpreterState()
     data = Program.model_validate(litellm_mock)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!"

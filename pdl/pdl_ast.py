@@ -42,7 +42,7 @@ class BlockKind(StrEnum):
     API = "api"
     GET = "get"
     DATA = "data"
-    DOCUMENT = "document"
+    TEXT = "text"
     LASTOF = "lastof"
     ARRAY = "array"
     OBJECT = "object"
@@ -317,12 +317,12 @@ class DataBlock(Block):
     """Do not evaluate expressions inside strings."""
 
 
-class DocumentBlock(Block):
+class TextBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
-    kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
-    document: "BlocksType"
-    """Body of the document.
+    kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
+    text: "BlocksType"
+    """Body of the text.
     """
 
 
@@ -377,7 +377,7 @@ class IfBlock(Block):
 class IterationType(StrEnum):
     LASTOF = "lastof"
     ARRAY = "array"
-    DOCUMENT = "document"
+    TEXT = "text"
 
 
 class ForBlock(Block):
@@ -482,7 +482,7 @@ AdvancedBlockType: TypeAlias = (
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
-    | DocumentBlock
+    | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock

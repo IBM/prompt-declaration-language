@@ -24,13 +24,13 @@ data:
 def test_object():
     prog_str = """
 data:
-  document: Hello
+  text: Hello
   model:
     - a
     - b
 """
     result = exec_str(prog_str)
-    assert result == {"document": "Hello", "model": ["a", "b"]}
+    assert result == {"text": "Hello", "model": ["a", "b"]}
 
 
 def test_expr():
@@ -39,13 +39,13 @@ defs:
   x: a
   y: b
 data:
-  document: Hello
+  text: Hello
   model:
     - "{{ x }}"
     - "{{ y }}"
 """
     result = exec_str(prog_str)
-    assert result == {"document": "Hello", "model": ["a", "b"]}
+    assert result == {"text": "Hello", "model": ["a", "b"]}
 
 
 def test_raw():
@@ -54,11 +54,11 @@ defs:
   x: a
   y: b
 data:
-  document: Hello
+  text: Hello
   model:
     - "{{ x }}"
     - "{{ y }}"
 raw: true
 """
     result = exec_str(prog_str)
-    assert result == {"document": "Hello", "model": ["{{ x }}", "{{ y }}"]}
+    assert result == {"text": "Hello", "model": ["{{ x }}", "{{ y }}"]}

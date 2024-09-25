@@ -42,7 +42,7 @@ def test_jinja_syntax():
 
 def test_parser_json():
     prog_str = """
-document: "{ x: 1 + 1 }"
+text: "{ x: 1 + 1 }"
 parser: json
 """
     with pytest.raises(PDLRuntimeError) as exc:
@@ -55,7 +55,7 @@ parser: json
 
 def test_parser_regex():
     prog_str = """
-document: "Hello"
+text: "Hello"
 parser:
   regex: "("
 """
@@ -69,7 +69,7 @@ parser:
 
 def test_type_result():
     prog_str = """
-document: "Hello"
+text: "Hello"
 spec: int
 """
     with pytest.raises(PDLRuntimeError) as exc:
@@ -82,7 +82,7 @@ spec: int
 
 def test_get():
     prog_str = """
-document:
+text:
 - "Hello"
 - get: x
 """
