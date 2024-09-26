@@ -863,17 +863,21 @@ def process_condition_of(
     return result
 
 
+EXPR_START_STRING = "${"
+EXPR_END_STRING = "}"
+
+
 def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
     result: Any
     if isinstance(expr, str):
         try:
-            if expr.startswith("${") and expr.endswith("}"):
+            if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
                 # `expr` might be a single expression and should not be stringify
                 env = Environment(
                     block_start_string="{%%%%%PDL%%%%%%%%%%",
                     block_end_string="%%%%%PDL%%%%%%%%%%}",
-                    variable_start_string="${",
-                    variable_end_string="}",
+                    variable_start_string=EXPR_START_STRING,
+                    variable_end_string=EXPR_END_STRING,
                     undefined=StrictUndefined,
                 )
                 expr_ast = env.parse(expr)
@@ -898,8 +902,8 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 keep_trailing_newline=True,
                 block_start_string="{%%%%%PDL%%%%%%%%%%",
                 block_end_string="%%%%%PDL%%%%%%%%%%}",
-                variable_start_string="${",
-                variable_end_string="}",
+                variable_start_string=EXPR_START_STRING,
+                variable_end_string=EXPR_END_STRING,
                 # comment_start_string="",
                 # comment_end_string="",
                 autoescape=False,
@@ -1397,7 +1401,7 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
 
 
 def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
-    return process_expr(scope, "${ " + var + " }", loc)
+    return process_expr(scope, f"{EXPR_START_STRING} var {EXPR_END_STRING}", loc)
 
 
 def append_log(state: InterpreterState, title, somestring):
