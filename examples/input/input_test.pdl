@@ -2,7 +2,7 @@ description: Hello world!
 defs:
   file: ./data.txt
 text:
-- read: "{{ file }}"
+- read: ${ file }
   def: HELLO
   contribute: []
 - get: HELLO

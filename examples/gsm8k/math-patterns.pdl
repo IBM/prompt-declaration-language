@@ -15,17 +15,17 @@ text:
     call: filter_tools_by_name
     contribute: []
     args:
-      tools: "{{ default_tools }}"
-      tool_names: "{{ available_tools }}"
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
   - call: react
     args:
       question: "When did the Battle of White Plains take place?"
       model: watsonx/meta-llama/llama-3-70b-instruct
-      tools: "{{ filtered_tools }}"
+      tools: ${ filtered_tools }
   - |
-    {{ demos }}Question: {{ question }}
+    ${ demos }Question: ${ question }
     Answer: Let's think step by step. 
-  - model: "{{ model }}"
+  - model: ${ model }
     def: PDL
     parameters:
       stop_sequences: ["<|endoftext|>"]

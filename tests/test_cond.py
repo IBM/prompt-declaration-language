@@ -77,7 +77,7 @@ cond_data = {
                                     " >>",
                                 ],
                             },
-                            "if": '{{ REASON_OR_CALC.endswith("<<") }}',
+                            "if": '${ REASON_OR_CALC.endswith("<<") }',
                         },
                     ]
                 },
@@ -156,7 +156,7 @@ def cond_data1(show, name):
             },
             {
                 "then": [", hello there!\n"],
-                "if": '{{ NAME.endswith("' + name + '") }}',
+                "if": '${ NAME.endswith("' + name + '") }',
                 "else": "",
             },
         ],
@@ -194,13 +194,13 @@ repeat_until_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": "result = {{ I }} + 1",
+                            "code": "result = ${ I } + 1",
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
         },
     ],
 }
@@ -235,13 +235,13 @@ repeat_until_array_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": "result = {{ I }} + 1",
+                            "code": "result = ${ I } + 1",
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
             "as": "array",
         },
     ],
@@ -270,13 +270,13 @@ repeat_until_text_data = {
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": ["result = {{ I }} + 1"],
+                            "code": ["result = ${ I } + 1"],
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
             "as": "text",
         },
     ],
@@ -321,14 +321,14 @@ repeat_until_str_data = {
                         "text": [
                             {
                                 "lan": "python",
-                                "code": ["result = {{ I }} + 1"],
+                                "code": ["result = ${ I } + 1"],
                             }
                         ],
                     },
                     "\n",
                 ],
             },
-            "until": '{{ I in "5" }}',
+            "until": '${ I in "5" }',
             "as": "text",
         },
     ],

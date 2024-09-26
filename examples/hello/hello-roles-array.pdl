@@ -8,5 +8,5 @@ text:
     content: Write a Python function that implement merge sort.
   contribute: []
 - model: watsonx/ibm/granite-8b-code-instruct
-  input: "{{ prompt }}"
+  input: ${ prompt }
 

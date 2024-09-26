@@ -4,6 +4,6 @@ text:
   function: 
   return:
     - get: boolean
-    - "{{ something }}"
+    - ${ something }
 - "Hello World!\n"
 - call: stutter

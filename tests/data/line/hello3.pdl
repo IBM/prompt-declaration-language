@@ -3,7 +3,7 @@ defs:
   model: watsonx/ibm/granite-34b-code-instruct
 text:
 - Hello,
-- model: "{{ model }}"
+- model: ${ model }
   spec: int
   parameters:
     decoding_method: greedy

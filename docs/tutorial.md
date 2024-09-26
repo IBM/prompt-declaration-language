@@ -110,10 +110,10 @@ text:
     stop:
     - '!'
     include_stop_sequence: true
-- "\nGEN is equal to: {{ GEN }}"
+- "\nGEN is equal to: ${ GEN }"
 ```
 
-Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `{{ }}` for accessing the value of a variable.
+Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `${ }` for accessing the value of a variable.
 
 When we execute this program, we obtain:
 ```
@@ -165,7 +165,7 @@ text:
     sentence: str
     language: str
   return:
-  - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+  - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
   - model: watsonx/ibm/granite-20b-multilingual
     parameters:
       stop: ["\n"]
@@ -203,7 +203,7 @@ defs:
       sentence: str
       language: str
     return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop: ["\n"]
@@ -237,7 +237,7 @@ defs:
       sentence: str
       language: str
     return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop: ["\n"]
@@ -248,7 +248,7 @@ text:
   args:
     sentence: I love Paris!
     language: French
-- "The french sentence was: {{ FRENCH }}"
+- "The french sentence was: ${ FRENCH }"
 ```
 
 The call to the translator with French as language does not produce an output. However, we save the result in variable `FRENCH` and use it in the last sentence of the document. When we execute this program, we obtain:
@@ -325,9 +325,9 @@ defs:
   PERSON:
     read: ./input.json
     parser: json
-text:
-- "{{ PERSON.name }} lives at the following address:\n"
-- "{{ PERSON.address.number }} {{ PERSON.address.street }} in the town of {{ PERSON.address.town }}, {{ PERSON.address.state }}"
+text: |
+  ${ PERSON.name } lives at the following address:
+  ${ PERSON.address.number } ${ PERSON.address.street } in the town of ${ PERSON.address.town }, ${ PERSON.address.state }
 ```
 
 When we execute this program, we obtain:
@@ -381,7 +381,7 @@ text:
       Paris
       Question: Tell me the weather in Lagos?
       Lagos
-      Question: {{ QUERY }}
+      Question: ${ QUERY }
   parameters:
     stop:
     - Question
@@ -392,13 +392,13 @@ text:
   contribute: []
 - api: https
   url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-  input: '{{ LOCATION }}'
+  input: '${ LOCATION }'
   def: WEATHER
   contribute: []
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
       Explain the weather from the following JSON.
-      `{{ WEATHER }}`
+      `${ WEATHER }`
 ```
 
 In this program, we first prompt the user to enter a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call. Currently we only support simple `GET` calls as shown above, but will improve this interface in the future. Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
@@ -424,14 +424,14 @@ text:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
 
 
       Explain the following code:
       ```
-      {{ CODE.source_code }}```
+      ${ CODE.source_code }```
 - def: EVAL
   contribute: []
   lan: python
@@ -439,16 +439,16 @@ text:
     |
     import textdistance
     expl = """
-    {{ EXPLANATION }}
+    ${ EXPLANATION }
     """
     truth = """
-    {{ TRUTH }}
+    ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data: 
-    input: "{{ CODE }}"
-    output: "{{ EXPLANATION }}"
-    metric: "{{ EVAL }}"
+    input: ${ CODE }
+    output: ${ EXPLANATION }
+    metric: ${ EVAL }
 ```
 
 ## Include Block
@@ -465,13 +465,13 @@ text:
   def: prompts
   spec: {prompts: [str]}
   contribute: []
-- "{{ SYSTEM_CONTENT_CHAT }}"
+- ${ SYSTEM_CONTENT_CHAT }
 - for:
-    prompt: "{{ prompts.prompts }}"
+    prompt: ${ prompts.prompts }
   repeat:
     text:
     - |
-      {{ prompt }}
+      ${ prompt }
     - model: watsonx/ibm/granite-13b-chat-v2
       parameters:
         decoding_method: sample
@@ -536,7 +536,7 @@ text:
             - '<<'
             - "Question"
             include_stop_sequence: true
-        - if: '{{ REASON_OR_CALC.endswith("<<") }}'
+        - if: ${ REASON_OR_CALC.endswith("<<") }
           then:
             text:
             - def: EXPR
@@ -550,9 +550,9 @@ text:
             - '= '
             - def: RESULT
               lan: python
-              code: result = {{ EXPR }}
+              code: result = ${ EXPR }
             - ' >>'
-      until: '{{ "The answer is" in REASON_OR_CALC }}'
+      until: ${ "The answer is" in REASON_OR_CALC }
       as: text
     - "\n\n"
   as: text
@@ -582,7 +582,7 @@ text:
 - for:
     i: [1, 2, 3, 4]
   repeat: 
-    "{{ i }}\n"
+    ${ i }
 ```
 
 This program outputs the following list:
@@ -598,7 +598,8 @@ text:
     i: [1, 2, 3, 4]
   repeat: 
     text:
-    - "{{ i }}\n"
+    - ${ i }
+    - "\n"
   as: text
 ```
 
@@ -627,11 +628,11 @@ defs:
 
 text:
 - for:
-    number: "{{ numbers }}"
-    name: "{{ names }}"
+    number: ${ numbers }
+    name: ${ names }
   repeat:
     text:
-      "{{ name }}'s number is {{ number }}\n"
+      "${ name }'s number is ${ number }\n"
   as: text
 ```
 
@@ -664,12 +665,12 @@ text:
     input:
       text:
       - for: 
-          question: "{{ data.questions }}"
-          answer: "{{ data.answers }}"
+          question: ${ data.questions }
+          answer: ${ data.answers }
         repeat:
           - |
-            {{ question }}
-            {{ answer }}
+            ${ question }
+            ${ answer }
         as: text
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
@@ -825,7 +826,7 @@ text:
     args:
       question: Ketty saves 20000 dollars to the bank. After three years, the sum with compound interest rate is 1000 dollars more than the sum with simple interest rate. What is the interest rate of the bank?
       model: ibm/granite-34b-code-instruct
-  - "\nAnswer: {{ ANSWER }}"
+  - "\nAnswer: ${ ANSWER }"
 ```
 
 ### ReAct (Yao, 2023)
@@ -868,7 +869,7 @@ text:
     args:
      question: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct
-     tools: "{{ default_tools }}"
+     tools: ${ default_tools }
      trajectories: []
 ```
 
@@ -917,7 +918,7 @@ text:
     args:
      question: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct
-     tools: "{{ default_tools }}"
+     tools: ${ default_tools }
      trajectories:
       - - question: "What is the minimum elevation for the area that the eastern sector of the Colorado orogeny extends into, in meters?"
           - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
@@ -943,7 +944,7 @@ text:
     args:
       task: "When did the Battle of White Plains take place?"
       model: ibm/granite-34b-code-instruct
-      tools: "{{ default_tools }}"
+      tools: ${ default_tools }
       trajectories:
         - - question: Thomas, Toby, and Rebecca worked a total of 157 hours in one week. Thomas worked x hours. Toby worked 10 hours less than twice what Thomas worked, and Rebecca worked 8 hours less than Toby. How many hours did Rebecca work?
           - thought: Given Thomas worked x hours, translate the problem into algebraic expressions and solve with Wolfram Alpha.

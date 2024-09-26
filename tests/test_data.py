@@ -41,8 +41,8 @@ defs:
 data:
   text: Hello
   model:
-    - "{{ x }}"
-    - "{{ y }}"
+    - "${ x }"
+    - "${ y }"
 """
     result = exec_str(prog_str)
     assert result == {"text": "Hello", "model": ["a", "b"]}
@@ -56,9 +56,9 @@ defs:
 data:
   text: Hello
   model:
-    - "{{ x }}"
-    - "{{ y }}"
+    - "${ x }"
+    - "${ y }"
 raw: true
 """
     result = exec_str(prog_str)
-    assert result == {"text": "Hello", "model": ["{{ x }}", "{{ y }}"]}
+    assert result == {"text": "Hello", "model": ["${ x }", "${ y }"]}

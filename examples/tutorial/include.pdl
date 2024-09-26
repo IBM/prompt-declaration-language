@@ -6,13 +6,13 @@ text:
   def: prompts
   spec: {prompts: [str]}
   contribute: []
-- "{{ SYSTEM_CONTENT_CHAT }}"
+- ${ SYSTEM_CONTENT_CHAT }
 - for:
-    prompt: "{{ prompts.prompts }}"
+    prompt: ${ prompts.prompts }
   repeat:
     text:
     - |
-      {{ prompt }}
+      ${ prompt }
     - model: watsonx/ibm/granite-13b-chat-v2
       parameters:
         decoding_method: sample

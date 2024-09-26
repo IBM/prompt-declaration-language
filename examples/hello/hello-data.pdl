@@ -4,7 +4,7 @@ text:
 - def: stutter
   function: 
   return:
-    - "{{ something }}"
+    - ${ something }
 - "Hello World!\n"
 - call: stutter
 - "\n"

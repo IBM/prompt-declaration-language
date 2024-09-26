@@ -5,8 +5,8 @@ defs:
   names: 
     data: ["Bob", "Carol", "David", "Ernest"]
 for:
-  number: "{{ numbers }}"
-  name: "{{ names }}"
+  number: ${ numbers }
+  name: ${ names }
 repeat:
-  "{{ name }}'s number is {{ number }}\n"
+  "${ name }'s number is ${ number }\n"
 as: text

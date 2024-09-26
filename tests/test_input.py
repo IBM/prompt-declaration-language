@@ -44,7 +44,7 @@ def test_input_json():
 input_json_data_defs = {
     "description": "Input block example with json input",
     "defs": {"data": {"read": "tests/data/input1.json", "parser": "json"}},
-    "text": ["The name in the input is: {{ data.name }}"],
+    "text": ["The name in the input is: ${ data.name }"],
 }
 
 
@@ -62,7 +62,7 @@ input_json_data_defs1 = {
             "read": "tests/data/input_data.txt",
         }
     },
-    "text": ["{{ data }}"],
+    "text": ["${ data }"],
 }
 
 

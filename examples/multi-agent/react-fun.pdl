@@ -26,17 +26,17 @@ defs:
         Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
         director, screenwriter, actor
 
-        {{ question }}
+        ${ question }
       - repeat:
           text:
           - def: thought
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
               stop:
               - "Act:"
               include_stop_sequence: true
           - def: action
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
               stop:
               - "\n"
@@ -44,7 +44,7 @@ defs:
             parser: json
             spec: {name: str, arguments: {topic: str}}
           - def: observation
-            if: '{{ action.name == "Search" }}'
+            if: ${ action.name == "Search" }
             then:
               text:
               - "\nObs: "
@@ -53,9 +53,9 @@ defs:
                   import warnings, wikipedia
                   warnings.simplefilter("ignore")
                   try:
-                    result = wikipedia.summary("{{ action.arguments.topic }}")
+                    result = wikipedia.summary("${ action.arguments.topic }")
                   except wikipedia.WikipediaException as e:
                     result = str(e)
-        until: '{{ action.name != "Search" }}'
+        until: ${ action.name != "Search" }
         as: text
 

@@ -49,7 +49,7 @@ def test_function_params():
 hello_stutter = {
     "description": "Repeat the context",
     "text": [
-        {"def": "stutter", "function": None, "return": "{{ context[0].content }}"},
+        {"def": "stutter", "function": None, "return": "${ context[0].content }"},
         "Hello World!\n",
         {"call": "stutter"},
     ],
@@ -66,7 +66,7 @@ def test_function_implicit_context():
 hello_bye = {
     "description": "Repeat the context",
     "text": [
-        {"def": "stutter", "function": {}, "return": "{{ context[0].content }}"},
+        {"def": "stutter", "function": {}, "return": "${ context[0].content }"},
         "Hello World!\n",
         {"call": "stutter", "args": {"context": [{"role": None, "content": "Bye!"}]}},
     ],
@@ -90,7 +90,7 @@ hello_call_template = {
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "{{ alias }}", "args": {"name": "World"}},
+        {"call": "${ alias }", "args": {"name": "World"}},
     ],
 }
 

@@ -3,9 +3,9 @@ defs:
   hello:
     function:
       name: str
-    return: Hello {{ name }}!
+    return: Hello ${ name }!
   alias: hello
 text:
-- call: "{{ alias }}"
+- call: ${ alias }
   args:
     name: World

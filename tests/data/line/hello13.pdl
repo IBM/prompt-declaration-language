@@ -8,8 +8,8 @@ text:
     text:
     - def: I
       lan: python
-      code: result = {{ I }} + 1
+      code: result = ${ I } + 1
       spec: str
     - "\n"
-  until: '{{ I == 5 }}'
+  until: '${ I == 5 }'
   as: text

@@ -1,5 +1,6 @@
 import pytest
 
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
@@ -10,8 +11,8 @@ from pdl.pdl_interpreter import (
 
 arith_data = {
     "description": "Test arith",
-    "defs": {"X": "{{ 1 + 1 }}"},
-    "text": "{{ X }}",
+    "defs": {"X": "${ 1 + 1 }"},
+    "text": "${ X }",
 }
 
 
@@ -25,7 +26,7 @@ def test_arith():
 
 var_data = {
     "defs": {"X": {"data": 1}, "Y": {"data": 2}},
-    "text": "{{ X + Y }}",
+    "text": "${ X + Y }",
 }
 
 
@@ -37,7 +38,7 @@ def test_var():
 
 
 true_data = {
-    "text": "{{ 1 < 2 }}",
+    "text": "${ 1 < 2 }",
 }
 
 
@@ -49,7 +50,7 @@ def test_true():
 
 
 false_data = {
-    "text": "{{ 1 >= 2 }}",
+    "text": "${ 1 >= 2 }",
 }
 
 
@@ -60,7 +61,7 @@ def test_false():
     assert result == "false"
 
 
-undefined_var_data = {"text": "Hello {{ X }}"}
+undefined_var_data = {"text": "Hello ${ X }"}
 
 
 def test_undefined_var():
@@ -80,7 +81,7 @@ def test_autoescape():
     assert text == "<|system|>"
 
 
-var_data1 = {"defs": {"X": "something"}, "text": "{{ X }}"}
+var_data1 = {"defs": {"X": "something"}, "text": "${ X }"}
 
 
 def test_var1():
@@ -92,7 +93,7 @@ def test_var1():
 
 var_data2 = {
     "defs": {"X": "something", "Y": "something else"},
-    "text": "{{ [X, Y] }}",
+    "text": "${ [X, Y] }",
 }
 
 
@@ -105,7 +106,7 @@ def test_var2():
     assert scope["Y"] == "something else"
 
 
-list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "{{ X }}"}, "text": "{{ X }}"}
+list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "${ X }"}, "text": "${ X }"}
 
 
 def test_list():
@@ -139,3 +140,39 @@ def test_jinja_block():
     data = Program.model_validate(jinja_block_data)
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == " X  X "
+
+
+def test_expr_detection1():
+    prog = """
+lastof: '${ 1 }'
+spec: int
+"""
+    result = exec_str(prog)
+    assert result == 1
+
+
+def test_expr_detection2():
+    prog = """
+lastof: '${ { "a": 1 }["a"] }'
+spec: int
+"""
+    result = exec_str(prog)
+    assert result == 1
+
+
+def test_expr_detection3():
+    prog = """
+lastof: '${ 1 } ${ 2 }'
+spec: str
+"""
+    result = exec_str(prog)
+    assert result == "1 2"
+
+
+def test_expr_detection4():
+    prog = """
+lastof: '${ 1 } { 2 }'
+spec: str
+"""
+    result = exec_str(prog)
+    assert result == "1 { 2 }"

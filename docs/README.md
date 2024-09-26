@@ -196,27 +196,27 @@ defs:
     read: ./data.yaml
     parser: yaml
 text:
-- "\n{{ CODE.source_code }}\n"
+- "\n${ CODE.source_code }\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
         repo: 
-        {{ CODE.repo_info.repo }}
-        path: {{ CODE.repo_info.path }}
-        Function_name: {{ CODE.repo_info.function_name }}
+        ${ CODE.repo_info.repo }
+        path: ${ CODE.repo_info.path }
+        Function_name: ${ CODE.repo_info.function_name }
 
 
         Explain the following code:
         ```
-        {{ CODE.source_code }}```
+        ${ CODE.source_code }```
 ```
 
 In this program we first define some variables using the `defs` construct. Here `CODE` is defined to be a new variable, holding the result of the `read` block that follows.
 A `read` block can be used to read from a file or stdin. In this case, we read the content of the file `./data.yaml`, parse it as YAML using the `parser` construct, then
 assign the result to variable `CODE`.
 
-Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
+Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `${ var }` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
 The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
@@ -253,20 +253,20 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- "\n{{ CODE.source_code }}\n"
+- "\n${ CODE.source_code }\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
 
 
       Explain the following code:
       ```
-      {{ CODE.source_code }}```
+      ${ CODE.source_code }```
 - |
 
 
@@ -277,10 +277,10 @@ text:
   code: |
     import textdistance
     expl = """
-    {{ EXPLANATION }}
+    ${ EXPLANATION }
     """
     truth = """
-    {{ TRUTH }}
+    ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 
@@ -333,14 +333,14 @@ text:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
 
 
       Explain the following code:
       ```
-      {{ CODE.source_code }}```
+      ${ CODE.source_code }```
 - def: EVAL
   contribute: []
   lan: python
@@ -348,16 +348,16 @@ text:
     |
     import textdistance
     expl = """
-    {{ EXPLANATION }}
+    ${ EXPLANATION }
     """
     truth = """
-    {{ TRUTH }}
+    ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data: 
-    input: "{{ CODE }}"
-    output: "{{ EXPLANATION }}"
-    metric: "{{ EVAL }}"
+    input: ${ CODE }
+    output: ${ EXPLANATION }
+    metric: ${ EVAL }
 ```
 
 The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `contribute` set to `[]`. The `contribute` construct can be used to specify how the result of a block is contributed to the overall result, and the background context.

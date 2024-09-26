@@ -15,12 +15,12 @@ def test_role1():
 description: Test role
 text:
 - defs:
-    ctx1: "{{context}}"
+    ctx1: ${context}
   text: A
   role: A
 - Hi
 - defs:
-    ctx2: "{{context}}"
+    ctx2: ${context}
   text: B
   role: B
 role: Top

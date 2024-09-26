@@ -9,11 +9,11 @@ text:
     call: filter_tools_by_name
     contribute: []
     args:
-      tools: "{{ default_tools }}"
-      tool_names: "{{ available_tools }}"
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
   - call: react_json
     args:
      question: "When did the Battle of White Plains take place?"
      model: meta-llama/llama-3-70b-instruct
-     tools: "{{ filtered_tools }}"
+     tools: ${ filtered_tools }
      trajectories: []

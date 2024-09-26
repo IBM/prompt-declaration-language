@@ -8,7 +8,7 @@ text:
     text:
     - def: I
       lan: python
-      code: result = {{ I }} + 1
+      code: result = ${ I } + 1
     - "\n"
-  until: '{{ J == 5 }}'
+  until: '${ J == 5 }'
   as: text

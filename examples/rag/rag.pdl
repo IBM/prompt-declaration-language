@@ -30,7 +30,7 @@ text:
   lan: python
   spec: {prompt: [str], code: [str]}
   code: |
-    key = PDL_SESSION.embed("{{ TEST_PROMPT }}")
+    key = PDL_SESSION.embed("${ TEST_PROMPT }")
     nearest = PDL_SESSION.vec_db.get_nearest_examples("embeddings", key, 5)
     result = {col: nearest.examples[col] for col in ["prompt", "code"]}
   contribute: []
@@ -39,16 +39,16 @@ text:
 
     Here are some examples, complete the last one:
 - for:
-    prompt: "{{ RETRIEVED.prompt }}"
-    code: "{{ RETRIEVED.code }}"
+    prompt: ${ RETRIEVED.prompt }
+    code: ${ RETRIEVED.code }
   repeat:
   - |
 
-    Q: {{ prompt }}
-    A: ```{{ code }}```
+    Q: ${ prompt }
+    A: ```${ code }```
 - |-
 
-    Q: {{ TEST_PROMPT }}
+    Q: ${ TEST_PROMPT }
     A: ```
 - model: watsonx/ibm/granite-20b-code-instruct-v2
   parameters:

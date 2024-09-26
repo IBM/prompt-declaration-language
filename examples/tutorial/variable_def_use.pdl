@@ -8,4 +8,4 @@ text:
     stop:
     - '!'
     include_stop_sequence: true
-- "\nGEN is equal to: {{ GEN }}"
+- "\nGEN is equal to: ${ GEN }"

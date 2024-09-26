@@ -3,7 +3,7 @@ text:
 
 - model: watsonx/meta-llama/llama-3-70b-instruct
   def: PDL
-  input: "Question: {{ question }}"
+  input: "Question: ${ question }"
   parameters:
     stop_sequences: ["Question"]
     include_stop_sequence: false

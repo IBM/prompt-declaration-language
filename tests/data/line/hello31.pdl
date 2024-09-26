@@ -7,5 +7,5 @@ defs:
     return:
       api: https
       url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-      input: "{{ subject }}"
+      input: ${ subject }
       show_result: false

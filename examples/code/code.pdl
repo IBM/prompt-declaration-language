@@ -4,17 +4,17 @@ defs:
     read: ./data.yaml
     parser: yaml
 text:
-- "\n{{ CODE.source_code }}\n"
+- "\n${ CODE.source_code }\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
         repo: 
-        {{ CODE.repo_info.repo }}
-        path: {{ CODE.repo_info.path }}
-        Function_name: {{ CODE.repo_info.function_name }}
+        ${ CODE.repo_info.repo }
+        path: ${ CODE.repo_info.path }
+        Function_name: ${ CODE.repo_info.function_name }
 
 
         Explain the following code:
         ```
-        {{ CODE.source_code }}```
+        ${ CODE.source_code }```
