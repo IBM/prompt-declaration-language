@@ -1,7 +1,6 @@
 from typing import Callable, Sequence
 
 from .pdl_ast import (
-    ApiBlock,
     ArrayBlock,
     Block,
     BlocksType,
@@ -46,8 +45,6 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 iter_blocks(f, block.input)
         case CodeBlock():
             iter_blocks(f, block.code)
-        case ApiBlock():
-            iter_blocks(f, block.input)
         case GetBlock():
             pass
         case DataBlock():

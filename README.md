@@ -11,13 +11,13 @@ PDL provides the following features:
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files, including JSON data
 - Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle
-- Ability to call out to REST APIs
+- Ability to call out to REST APIs with Python code
 - Type checking input and output of model calls
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
+The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
@@ -53,7 +53,7 @@ For more information, see [documentation](https://docs.litellm.ai/docs/providers
 To run the interpreter:
 
 ```
-pdl <path/to/example.yaml>
+pdl-local <path/to/example.yaml>
 ```
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of ready-to-use prompting patterns. 
@@ -66,30 +66,30 @@ useful for debugging.
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-pdl --log <my-logfile> <my-example>
+pdl-local --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-pdl --data <JSON-or-YAML-data> <my-example>
+pdl-local --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-pdl --data-file <JSON-or-YAML-file> <my-example>
+pdl-local --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl --trace <file.json> <my-example> 
+pdl-local --trace <file.json> <my-example> 
 ```
 
 For more information:
 ```
-pdl --help
+pdl-local --help
 ```
 
 ## Overview
@@ -113,7 +113,7 @@ The `description` field is a description for the program. Field `text` contains 
 When we execute this program using the PDL interpreter:
 
 ```
-pdl examples/hello/hello.pdl
+pdl-local examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -122,14 +122,14 @@ we obtain the following document:
 Hello, World!
 ```
 
-where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, as well as REST APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
+where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
 
 The PDL interpreter can also stream the background conversation instead of the result:
 
 ```
-pdl --stream background examples/hello/hello.pdl
+pdl-local --stream background examples/hello/hello.pdl
 ```
 
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
@@ -381,7 +381,7 @@ in the right pane.
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 
-## Additional Notes and Future Work
+## Additional Notes
 
 When using Granite models on Watsonx, we use the following defaults for model parameters:
   - `decoding_method`: `greedy`
@@ -393,8 +393,6 @@ When using Granite models on Watsonx, we use the following defaults for model pa
   - `temperature`: 0.7
   - `top_p`: 0.85
   - `top_k`: 50
-
-- Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
 For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
 

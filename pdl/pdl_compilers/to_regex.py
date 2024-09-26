@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import TypeAlias
 
 from ..pdl_ast import (
-    ApiBlock,
     BamModelBlock,
     Block,
     BlocksType,
@@ -310,8 +309,6 @@ def compile_block(
             regex = ReStar(ReAnyChar())  # XXX TODO
         case DataBlock(data=v):
             regex = data_to_regex(v)
-        case ApiBlock():
-            regex = ReJson()
         case TextBlock():
             regex, scope = compile_blocks(scope, block.text)
         case IfBlock():

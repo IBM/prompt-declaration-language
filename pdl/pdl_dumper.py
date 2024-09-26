@@ -5,7 +5,6 @@ import yaml
 
 from . import pdl_ast
 from .pdl_ast import (
-    ApiBlock,
     ArrayBlock,
     BamModelBlock,
     BamTextGenerationParameters,
@@ -120,11 +119,6 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["data"] = block.data
             if block.raw:
                 d["raw"] = block.raw
-        case ApiBlock():
-            d["api"] = block.api
-            d["url"] = block.url
-            if block.input is not None:
-                d["input"] = blocks_to_dict(block.input)
         case TextBlock():
             d["text"] = blocks_to_dict(block.text)
         case LastOfBlock():

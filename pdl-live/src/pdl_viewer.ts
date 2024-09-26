@@ -108,10 +108,6 @@ export function show_block(data: PdlBlock) {
       body.classList.add('pdl_code');
       body.appendChild(show_result_or_code(data));
     })
-    .with({kind: 'api'}, data => {
-      body.classList.add('pdl_api');
-      body.appendChild(show_result_or_code(data));
-    })
     .with({kind: 'get'}, data => {
       body.classList.add('pdl_get');
       body.appendChild(show_result_or_code(data));

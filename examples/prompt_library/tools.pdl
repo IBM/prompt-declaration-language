@@ -74,10 +74,12 @@ defs:
     function:
       subject: str
     return:
-      - api: https
-        url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-        input: ${ subject }
+      - lan: python
         contribute: []
+        code: |
+          import requests
+          response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ subject }') 
+          result = response.content
 
   default_tools:
     data:
