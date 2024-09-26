@@ -10,4 +10,4 @@ text:
   def: NAME
 - |
 
-  Who is{{ NAME }}?
+  Who is${ NAME }?

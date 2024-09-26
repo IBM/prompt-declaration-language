@@ -9,12 +9,12 @@ text:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
       contribute: []
-    - if: "{{ eval == 'no' }}"
+    - if: ${ eval == 'no' }
       then:
         text:
         - read:
           message: "Why not?\n"
-  until: "{{ eval == 'yes'}}"
+  until: ${ eval == 'yes'}
   as: text
 role: user
 

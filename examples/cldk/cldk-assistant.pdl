@@ -17,7 +17,7 @@ text:
     # Initialize the Codellm-DevKit object with the project directory, language, and backend.
     cldk = CLDK("java")
     cldk_state = cldk.analysis(
-        project_path="{{ project }}",   # Change this to the path of the project you want to analyze.
+        project_path="${ project }",   # Change this to the path of the project you want to analyze.
         # language="java",  # The language of the project.
         # backend="codeanalyzer",  # The backend to use for the analysis.
         # analysis_db="/tmp",  # A temporary directory to store the analysis results.
@@ -32,7 +32,7 @@ text:
     message: "\n\nHow can I help you [Type 'quit' to quit]?\n"
     contribute: []
   - "\n***Generating PDL code for your query:\n"
-  - if: "{{ query != 'quit'}}"
+  - if: ${ query != 'quit'}
     then: 
     - model: watsonx/ibm/granite-20b-code-instruct
       def: PDL
@@ -133,7 +133,7 @@ text:
 
           If the query contains something about a field be sure to call a model.
           
-          Question: {{ query }}
+          Question: ${ query }
 
 
       parameters:
@@ -150,7 +150,7 @@ text:
         from pdl.pdl_interpreter import empty_scope
         import re
         import yaml
-        s = """'{{ PDL }}'"""
+        s = """'${ PDL }'"""
         print(s)
         pdl = s.split("```")[1]
         obj = yaml.safe_load(pdl)
@@ -158,7 +158,7 @@ text:
         data = Program.model_validate(obj)
         
         result, _, _, _ = process_prog(state, empty_scope, data)
-  until: "{{ query == 'quit' }}"
+  until: ${ query == 'quit' }
 
   
 

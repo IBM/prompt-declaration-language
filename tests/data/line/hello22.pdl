@@ -1,4 +1,4 @@
 description: Hello world showing call out to python code with condition
 text:
-- if: "{{ true }}"
-  then: "{{ I }}"
+- if: ${ true }
+  then: ${ I }

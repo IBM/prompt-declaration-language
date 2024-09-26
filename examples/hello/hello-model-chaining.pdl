@@ -10,7 +10,7 @@ text:
   def: NAME
 - |-
   !
-  Who is{{ NAME }}?
+  Who is${ NAME }?
 - "\n"
 - model: watsonx/google/flan-t5-xl
   parameters:

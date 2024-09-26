@@ -6,6 +6,6 @@ text:
     result = True
   defss: QUESTION
   contribute: []
-- if: '{{ QUESTION }}'
+- if: '${ QUESTION }'
   then: How are you?
   spec: bool

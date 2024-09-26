@@ -6,37 +6,37 @@ from pdl.pdl_interpreter import PDLRuntimeError
 
 def test_jinja_undefined():
     prog_str = """
-"{{ x }}"
+${ x }
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Error during the evaluation of {{ x }}: 'x' is undefined"
+        == "Error during the evaluation of ${ x }: 'x' is undefined"
     )
 
 
 def test_jinja_access():
     prog_str = """
-"{{ {}['x'] }}"
+${ {}['x'] }
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Error during the evaluation of {{ {}['x'] }}: 'dict object' has no attribute 'x'"
+        == "Error during the evaluation of ${ {}['x'] }: 'dict object' has no attribute 'x'"
     )
 
 
 def test_jinja_syntax():
     prog_str = """
-"{{ {}[ }}"
+${ {}[ }
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Syntax error in {{ {}[ }}: unexpected 'end of template'"
+        == "Syntax error in ${ {}[ }: unexpected '}', expected ']'"
     )
 
 
@@ -90,7 +90,7 @@ text:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Error during the evaluation of {{ x }}: 'x' is undefined"
+        == "Error during the evaluation of ${ x }: 'x' is undefined"
     )
 
 
@@ -102,19 +102,19 @@ call: "f"
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Error during the evaluation of {{ f }}: 'f' is undefined"
+        == "Error during the evaluation of ${ f }: 'f' is undefined"
     )
 
 
 def test_call_bad_name():
     prog_str = """
-call: "{{ ( f }}"
+call: ${ ( f }
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Syntax error in {{ ( f }}: unexpected end of template, expected ')'."
+        == "Syntax error in ${ ( f }: unexpected '}', expected ')'"
     )
 
 
@@ -127,11 +127,11 @@ defs:
       return: Hello
 call: "f"
 args:
-    x: "{{ (x }}"
+    x: ${ (x }
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Syntax error in {{ (x }}: unexpected end of template, expected ')'."
+        == "Syntax error in ${ (x }: unexpected '}', expected ')'"
     )

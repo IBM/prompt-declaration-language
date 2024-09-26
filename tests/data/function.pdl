@@ -7,11 +7,11 @@ defs:
       notes: str
     return:
     - |
-      {{ preamble }}
-      ### Question: {{ question }}
+      ${ preamble }
+      ### Question: ${ question }
 
       ### Notes:
-      {{ notes }}
+      ${ notes }
 
       ### Answer:
 text: ""

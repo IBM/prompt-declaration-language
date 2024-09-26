@@ -5,7 +5,7 @@ defs:
       sentence: str
       language: str
     return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop: ["\n"]
@@ -16,4 +16,4 @@ text:
   args:
     sentence: I love Paris!
     language: French
-- "The french sentence was: {{ FRENCH }}"
+- "The french sentence was: ${ FRENCH }"

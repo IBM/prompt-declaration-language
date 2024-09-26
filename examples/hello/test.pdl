@@ -3,5 +3,5 @@ text:
 - model: "foo"
   parameters:
     foo:
-      data: "{{ translateText(sentence2) }}"
+      data: ${ translateText(sentence2) }
       raw: true

@@ -11,29 +11,29 @@ defs:
         contribute: []
         data: 1
       - for:
-          trajectory: "{{ trajectory }}"
+          trajectory: ${ trajectory }
         repeat:
           - defs: 
               type:
-                text: "{{ trajectory.keys()|first }}"
+                text: ${ trajectory.keys()|first }
               content:
-                text: "{{ trajectory.values()|first }}"
-          - if: "{{ type == 'question'}}"
+                text: ${ trajectory.values()|first }
+          - if: ${ type == 'question'}
             then: |
-              Task: {{ content }}
-          - if: "{{ type == 'thought'}}"
+              Task: ${ content }
+          - if: ${ type == 'thought'}
             then: |-
-              Plan: {{ content }}
-          - if: "{{ type == 'action'}}"
+              Plan: ${ content }
+          - if: ${ type == 'action'}
             then:
-              - " #E{{ i }} = {{ content }}\n"
+              - " #E${ i } = ${ content }\n"
               - defs:
                   i:
-                    data: "{{ i+1 }}"
-          - if: "{{ type == 'observation'}}"
+                    data: ${ i+1 }
+          - if: ${ type == 'observation'}
             then: ""
-          - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
-            then: "{{ type }}: {{ content }}"
+          - if: ${ type not in ['question', 'thought', 'action', 'observation'] }
+            then: "${ type }: ${ content }"
       - "\n"
 
   rewoo:
@@ -48,7 +48,7 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "{{ tools }}"
+              tools: ${ tools }
       - |
         For the following task, make plans that can solve the problem step by step. For each plan, indicate 
         which external tool together with tool input to retrieve evidence. You can store the evidence into a 
@@ -56,36 +56,36 @@ defs:
 
         Tools can be one of the following:
       - for:
-          i: "{{ range(1, (tools|length)+1)|list }}"
-          name: "{{ TOOL_INFO.names }}"
-          sig: "{{ TOOL_INFO.signatures }}"
-          desc: "{{ TOOL_INFO.descriptions }}"
+          i: ${ range(1, (tools|length)+1)|list }
+          name: ${ TOOL_INFO.names }
+          sig: ${ TOOL_INFO.signatures }
+          desc: ${ TOOL_INFO.descriptions }
         repeat: |
-          ({{i}}) {{ sig }}: {{ desc }}
+          (${i}) ${ sig }: ${ desc }
       - "\n"
       - for:
-          tool: "{{ tools }}"
+          tool: ${ tools }
         repeat:
           for:
-            example: "{{ tool.examples }}"
+            example: ${ tool.examples }
           repeat:
             call: rewoo_block
             args:
-              trajectory: "{{ example }}"
+              trajectory: ${ example }
       - for:
-          traj: "{{ trajectories }}"
+          traj: ${ trajectories }
         repeat:
           call: rewoo_block
           args:
-            trajectory: "{{ traj }}"
+            trajectory: ${ traj }
       - "\n"
       - |
         Begin! 
         Describe your plans with rich details. Each Plan should be followed by only one #E.
 
-        Task: {{ task }}
+        Task: ${ task }
       - def: PLANS
-        model: "{{ model }}"
+        model: ${ model }
         parser: # plan, step_name, tool, tool_input
           regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<tool>\w+)\s*\[(?P<tool_input>[^\]]+)\]'
           mode: findall
@@ -94,27 +94,27 @@ defs:
           stop_sequences:
             - "<|endoftext|>"
           include_stop_sequence: false
-      - if: "{{ show_plans }}"
+      - if: ${ show_plans }
         then:
           - "\n\n\u001b[34m--- Extracted Blueprint ---\n"
           - for:
-              plan: "{{ PLANS }}"
+              plan: ${ PLANS }
             repeat:
-              - "\u001b[31mPlan: {{ plan[0] }}\n"
-              - "\u001b[32m{{ plan[1] }} = {{ plan[2] }}[{{ plan[3] }}]\n"
+              - "\u001b[31mPlan: ${ plan[0] }\n"
+              - "\u001b[32m${ plan[1] } = ${ plan[2] }[${ plan[3] }]\n"
           - "\n\u001b[37m"
       - defs:
           output:
             data: {}
           plans:
             for:
-              plan: "{{ PLANS }}"
+              plan: ${ PLANS }
             repeat:
               - defs:
-                  PLAN: "{{ plan[0] }}"
-                  ID: "{{ plan[1] }}"
-                  ACTION: "{{ plan[2] }}"
-                  SUBJECT: "{{ plan[3] }}"
+                  PLAN: ${ plan[0] }
+                  ID: ${ plan[1] }
+                  ACTION: ${ plan[2] }
+                  SUBJECT: ${ plan[3] }
                   SUBJECT_REPLACED:
                     lan: python
                     code: |-
@@ -123,13 +123,13 @@ defs:
                           SUBJECT = SUBJECT.replace(k, v)
                       result = SUBJECT
                   raw_tool_output:
-                    if: "{{ ACTION in TOOL_INFO.names }}"
+                    if: ${ ACTION in TOOL_INFO.names }
                     then:
-                      call: "{{ ACTION }}"
+                      call: ${ ACTION }
                       args:
-                        subject: "{{ SUBJECT_REPLACED }}"
-                    else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-                  tool_output: "{{ raw_tool_output }}"
+                        subject: ${ SUBJECT_REPLACED }
+                    else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') } and Finish[<answer>]."
+                  tool_output: ${ raw_tool_output }
               - def: output
                 contribute: []
                 lan: python
@@ -137,41 +137,41 @@ defs:
                   output[ID] = str(tool_output)
                   result = output
               # - data:
-              #     plan: "{{ PLAN }}"
-              #     key: "{{ ID }}"
-              #     value: "{{ tool_output }}"
-              #     subject: "{{ SUBJECT }}"
-              #     subject_replaced: "{{ SUBJECT_REPLACED }}"
+              #     plan: ${ PLAN }
+              #     key: ${ ID }
+              #     value: ${ tool_output }
+              #     subject: ${ SUBJECT }
+              #     subject_replaced: ${ SUBJECT_REPLACED }
               - |
-                Plan: {{ PLAN }}
-                Evidence: {{ tool_output }}
+                Plan: ${ PLAN }
+                Evidence: ${ tool_output }
       # - def: EVIDENCE
       #   contribute: []
       #   text:
       #     for:
-      #       plan: "{{ plans }}"
+      #       plan: ${ plans }
       #     repeat:
       #       - |
-      #         Plan: {{ plan.plan }}
-      #         Evidence: {{ plan.value }}
+      #         Plan: ${ plan.plan }
+      #         Evidence: ${ plan.value }
       - def: solution_input
         text: |-
           Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
 
-          {{ plans|join }}
+          ${ plans|join }
           Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
 
-          Task: {{ task }}
+          Task: ${ task }
           Response:
       - def: SOLUTION
-        model: "{{ model }}"
+        model: ${ model }
         parameters:
           decoding_method: greedy
           stop_sequences:
             - "<|endoftext|>"
           include_stop_sequence: false
         input:
-          text: "{{ solution_input }}"
+          text: ${ solution_input }
       - "\n\nJSON Output: "
       - data:
-          answer: "{{ SOLUTION }}"
+          answer: ${ SOLUTION }

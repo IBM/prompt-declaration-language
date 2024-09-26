@@ -2,8 +2,8 @@ description: Granite Single-Round Chat
 text:
 - include: ./granite_defs.pdl
 - role: system
-  content: "{{ SYSTEM_CONTENT_CHAT }}"
-- "{{ PROMPT }}"
+  content: ${ SYSTEM_CONTENT_CHAT }
+- ${ PROMPT }
 - model: watsonx/ibm/granite-13b-chat-v2
   parameters:
     decoding_method: sample

@@ -3,7 +3,7 @@ text:
 - include: ../granite/granite_defs.pdl
 - role: system
   contribute: [context]
-  text: "{{ SYSTEM_CONTENT_CHAT }}"
+  text: ${ SYSTEM_CONTENT_CHAT }
 - "Type `quit` to exit this chatbot.\n"
 - repeat:
     text:
@@ -13,7 +13,7 @@ text:
       contribute: [context]
     - model: watsonx/ibm/granite-13b-chat-v2
     - "\n\n"
-  until: "{{ query == 'quit'}}"
+  until: ${ query == 'quit'}
   as: text
 role: user
 

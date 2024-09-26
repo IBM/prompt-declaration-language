@@ -23,7 +23,7 @@ text:
           from sympy import *
           x = symbols('x')
           result = x + 2*x + 4*x
-      - "The equation is {{ equation }} = 847.\n"
+      - "The equation is ${ equation } = 847.\n"
       - "Solving for x, we get "
       - lan: python
         def: RESULT
@@ -31,15 +31,15 @@ text:
         - |
           from sympy import *
           x = symbols('x')
-          result = solve({{ equation }} - 847, x)[0]
-      - "\nThe answer is {{RESULT}}."
+          result = solve(${ equation } - 847, x)[0]
+      - "\nThe answer is ${RESULT}."
       - lan: python
         def: FINAL
         code:
         - |
-          result = {{ RESULT }}
+          result = ${ RESULT }
       - "\n#### "
-      - "{{ FINAL }}"
+      - ${ FINAL }
       ```
       Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
       Each can has 3 tennis balls. How many tennis balls does he have now?
@@ -53,22 +53,22 @@ text:
         data: 5
       - "\n2 cans of 3 tennis balls each is\n"
       - def: bought_balls
-        data: "{{ 2 * 3 }}"
+        data: ${ 2 * 3 }
       - "\ntennis balls. The answer is\n"
       - def: RESULT
-        data: "{{ tennis_balls + bought_balls }}"
+        data: ${ tennis_balls + bought_balls }
       - lan: python
         def: FINAL
         code:
         - |
-          result = {{ RESULT }}
+          result = ${ RESULT }
       - "\n#### "
-      - "{{ FINAL }}"
+      - ${ FINAL }
       ```
 
     
 
-    - "Question: {{ question }}"
+    - "Question: ${ question }"
   parameters:
     stop_sequences: ["Question"]
     include_stop_sequence: false
@@ -81,7 +81,7 @@ text:
     from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
-    s = """'{{ PDL }}'"""
+    s = """'${ PDL }'"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
     state = InterpreterState()

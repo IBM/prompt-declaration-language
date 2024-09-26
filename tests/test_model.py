@@ -148,7 +148,7 @@ model_parameter = {
     "text": [
         "Hello,",
         {
-            "model": "{{ model }}",
+            "model": "${ model }",
             "parameters": {"stop_sequences": ["!"], "mock_response": " World!"},
         },
     ],
@@ -168,7 +168,7 @@ model_parameter1 = {
     "text": [
         "Hello,",
         {
-            "model": "watsonx/ibm/{{ model }}",
+            "model": "watsonx/ibm/${ model }",
             "parameters": {"stop_sequences": ["!"], "mock_response": " World!"},
         },
     ],

@@ -35,7 +35,7 @@ text:
       parser: json
       spec: {name: str, arguments: {topic: str}}
     - def: observation
-      if: '{{ action.name == "Search" }}'
+      if: ${ action.name == "Search" }
       then:
         text:
         - "Obs: "
@@ -44,9 +44,9 @@ text:
             import warnings, wikipedia
             warnings.simplefilter("ignore")
             try:
-              result = wikipedia.summary("{{ action.arguments.topic }}")
+              result = wikipedia.summary("${ action.arguments.topic }")
             except wikipedia.WikipediaException as e:
               result = str(e)
-  until: '{{ action.name != "Search" }}'
+  until: ${ action.name != "Search" }
   as: text
 - "\n"

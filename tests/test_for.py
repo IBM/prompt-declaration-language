@@ -15,7 +15,7 @@ for_data = {
             "for": {
                 "i": [1, 2, 3, 4],
             },
-            "repeat": ["{{ i }}\n"],
+            "repeat": ["${ i }\n"],
             "as": "text",
         }
     ],
@@ -34,7 +34,7 @@ for_data1 = {
     "text": [
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"]},
-            "repeat": ["{{ i }}: {{ name }}\n"],
+            "repeat": ["${ i }: ${ name }\n"],
             "as": "text",
         }
     ],
@@ -53,8 +53,8 @@ for_data2 = {
     "defs": {"ids": {"data": [5, 6, 7, 8]}},
     "text": [
         {
-            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "{{ ids }}"},
-            "repeat": ["{{ i }}: {{ name }}: {{ id }}\n"],
+            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
+            "repeat": ["${ i }: ${ name }: ${ id }\n"],
             "as": "text",
         }
     ],
@@ -73,8 +73,8 @@ for_data3 = {
     "defs": {"ids": {"data": [5, 6]}},
     "text": [
         {
-            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "{{ ids }}"},
-            "repeat": ["{{ i }}: {{ name }}: {{ id }}\n"],
+            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
+            "repeat": ["${ i }: ${ name }: ${ id }\n"],
         }
     ],
 }
@@ -93,7 +93,7 @@ for_data4 = {
         {
             "def": "x",
             "for": {"i": [1, 2, 3, 4]},
-            "repeat": "{{ i + 1 }}",
+            "repeat": "${ i + 1 }",
         }
     ],
 }
@@ -113,7 +113,7 @@ for_as_text_data4 = {
         {
             "def": "x",
             "for": {"i": [1, 2, 3, 4]},
-            "repeat": "{{ i + 1 }}",
+            "repeat": "${ i + 1 }",
             "as": "text",
         }
     ],
@@ -135,7 +135,7 @@ for_data5 = {
             "def": "x",
             "text": {
                 "for": {"i": [1, 2, 3, 4]},
-                "repeat": "{{ i }}",
+                "repeat": "${ i }",
             },
         }
     ],
@@ -149,7 +149,7 @@ for_data5 = {
             "def": "x",
             "text": {
                 "for": {"i": [1, 2, 3, 4]},
-                "repeat": "{{ i }}",
+                "repeat": "${ i }",
             },
         }
     ],

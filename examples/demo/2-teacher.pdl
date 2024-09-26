@@ -5,7 +5,7 @@ defs:
     function:
       sys_prompt: str
       prompt: str
-    return: <s> [INST] {{sys_prompt}} {{prompt}} [/INST]
+    return: <s> [INST] ${sys_prompt} ${prompt} [/INST]
   teacher_stop_token: </s>
 
 
@@ -18,7 +18,7 @@ defs:
     return:
       data:
         introduction: |
-          You are asked to come up with a set of {{num_samples}} diverse questions - {{task_description}}.
+          You are asked to come up with a set of ${num_samples} diverse questions - ${task_description}.
         principles: |
           Please follow these guiding principles when generating responses:
           * Use proper grammar and punctuation.
@@ -33,9 +33,9 @@ defs:
           ### Question 1: 
         examples: |
           To better assist you with this task, here is an example:
-          ### Question 1: {{icl_question}}
+          ### Question 1: ${icl_question}
         generation: |
-          Now generate {{num_samples}} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
+          Now generate ${num_samples} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
         max_new_tokens: 10000
 
   gen_questions_freeform_inner:
@@ -51,35 +51,35 @@ defs:
           call: question_template_freeform
           spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
           args:
-            num_samples: "{{num_samples}}"
-            task_description: "{{task_description}}"
-            icl_question: "{{icl_question}}"
+            num_samples: ${num_samples}
+            task_description: ${task_description}
+            icl_question: ${icl_question}
         teacher_input:
           call: teacher_template
           args:
-            sys_prompt: "{{teacher_sys_prompt}}"
+            sys_prompt: ${teacher_sys_prompt}
             prompt: |-
-              {{prompt_data.introduction}}
-              {{prompt_data.principles}}
-              {{prompt_data.examples}}
-              {{prompt_data.generation}}
+              ${prompt_data.introduction}
+              ${prompt_data.principles}
+              ${prompt_data.examples}
+              ${prompt_data.generation}
         teacher_output:
-          model: "{{teacher_model}}"
-          input: "{{teacher_input}}"
+          model: ${teacher_model}
+          input: ${teacher_input}
           parameters:
-            stop: ["{{teacher_stop_token}}"]
+            stop: ["${teacher_stop_token}"]
             include_stop_sequence: false
-            max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
     - for:
-        question: "{{teacher_output}}"
+        question: ${teacher_output}
       repeat:
         data:
-          icl_question: "{{icl_question}}"
-          icl_answer: "{{icl_answer}}"
-          question: "{{question}}"
+          icl_question: ${icl_question}
+          icl_answer: ${icl_answer}
+          question: ${question}
 
   gen_questions_freeform:
     function:
@@ -90,17 +90,17 @@ defs:
     - defs:
         list_of_lists:
           for:
-            example: "{{seed_examples}}"
+            example: ${seed_examples}
           repeat:
             call: gen_questions_freeform_inner
             args:
               num_samples: 2
-              task_description: "{{task_description}}"
-              icl_question: "{{example.question}}"
-              icl_answer: "{{example.answer}}"
+              task_description: ${task_description}
+              icl_question: ${example.question}
+              icl_answer: ${example.answer}
     - lan: python
       code: | # flatten list_of_lists into simple list
-          result = [q for qs in {{list_of_lists}} for q in qs]
+          result = [q for qs in ${list_of_lists} for q in qs]
 
 
   filter_questions_template:
@@ -118,12 +118,12 @@ defs:
           * The questions should be in English.
           * The questions should be 1 to 2 sentences long and should be properly formatted.
           * The question should not be offensive, abusive, or harmful. It should be safe and respectful.
-          * The question should be relevant to the task given - {{task_description}}.
+          * The question should be relevant to the task given - ${task_description}.
           If the question meets the above requirements, please rate it 1. If not, please rate it 0.
         generation: |
           Begin your evaluation by providing a short explanation. Be as objective as possible. After providing your explanation, you must rate the question on a scale of 0 or 1 as mentioned above by strictly following this format: \"[[rating]]\", for example: \"Rating: [[1]]\"
           Here is the question you need to evaluate:
-          {{question}}
+          ${question}
         max_new_tokens: 256
 
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/filter_questions.py
@@ -138,29 +138,29 @@ defs:
           call: filter_questions_template
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
-            task_description: "{{task_description}}"
-            question: "{{question}}"
+            task_description: ${task_description}
+            question: ${question}
         teacher_input:
           call: teacher_template
           args:
-            sys_prompt: "{{teacher_sys_prompt}}"
+            sys_prompt: ${teacher_sys_prompt}
             prompt: |-
-              {{prompt_data.introduction}}
-              {{prompt_data.principles}}
-              {{prompt_data.generation}}
+              ${prompt_data.introduction}
+              ${prompt_data.principles}
+              ${prompt_data.generation}
         teacher_output:
-          model: "{{teacher_model}}"
-          input: "{{teacher_input}}"
+          model: ${teacher_model}
+          input: ${teacher_input}
           parameters:
-            stop: ["{{teacher_stop_token}}"]
+            stop: ["${teacher_stop_token}"]
             include_stop_sequence: false
-            max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - "{{ teacher_output.rating | float }}"
+    - ${ teacher_output.rating | float }
 
   filter_questions:
     function:
@@ -171,21 +171,21 @@ defs:
     - defs:
         list_of_pairs:
           for:
-            question: "{{questions}}"
+            question: ${questions}
           repeat:
           - def: filter_output
             call: filter_questions_inner
             args:
-              task_description: "{{task_description}}"
-              question: "{{question.question}}"
+              task_description: ${task_description}
+              question: ${question.question}
           - data:
-              question: "{{question}}"
-              keep: "{{filter_output}}"
+              question: ${question}
+              keep: ${filter_output}
         filtered:
           lan: python
           code: | # keep only if "keep" column is non-zero
-              result = [p["question"] for p in {{list_of_pairs}} if p["keep"]]
-    - "{{filtered}}"
+              result = [p["question"] for p in ${ list_of_pairs } if p["keep"]]
+    - ${filtered}
 
 
   answer_template:
@@ -206,13 +206,13 @@ defs:
         examples: |
           To better assist you with this task, here is an example:
           [Question]
-          {{icl_question}}
+          ${icl_question}
           [Response]
-          {{icl_response}}
+          ${icl_response}
         generation: |
           Now generate a response to the following prompt. Remember to use the same style and format as the example above.
           [Question]
-          {{question}}
+          ${question}
           [Response]
         max_new_tokens: 2048
         additional_stop_tokens:
@@ -229,36 +229,36 @@ defs:
           call: answer_template
           spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
           args:
-            icl_question: "{{question.icl_question}}"
-            icl_response: "{{question.icl_answer}}"
-            question: "{{question.question}}"
+            icl_question: ${question.icl_question}
+            icl_response: ${question.icl_answer}
+            question: ${question.question}
         teacher_input:
           call: teacher_template
           args:
-            sys_prompt: "{{teacher_sys_prompt}}"
+            sys_prompt: ${teacher_sys_prompt}
             prompt: |-
-              {{prompt_data.introduction}}
-              {{prompt_data.principles}}
-              {{prompt_data.examples}}
-              {{prompt_data.generation}}
+              ${prompt_data.introduction}
+              ${prompt_data.principles}
+              ${prompt_data.examples}
+              ${prompt_data.generation}
         teacher_output:
-          model: "{{teacher_model}}"
-          input: "{{teacher_input}}"
+          model: ${teacher_model}
+          input: ${teacher_input}
           parameters:
-            stop: "{{ [teacher_stop_token] + prompt_data.additional_stop_tokens }}"
+            stop: ${ [teacher_stop_token] + prompt_data.additional_stop_tokens }
             include_stop_sequence: false
-            max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: ${prompt_data.max_new_tokens}
         parsed_answer:
           lan: python
           code: | # parse model output
-            result = """ {{teacher_output}} """.strip()
+            result = """ ${teacher_output} """.strip()
             if "[Response]" in result:
               result = result[result.find("[Response]") + len("[Response]"):]
             if "[Question]" in result:
               result = result[:result.find("[Question]")]
     - data:
-        question: "{{question.question}}"
-        answer: "{{parsed_answer}}"
+        question: ${question.question}
+        answer: ${parsed_answer}
 
   gen_answers:
     function:
@@ -269,15 +269,15 @@ defs:
         all_results:
           spec: [{question: str, answer: str}]
           for:
-            question: "{{ questions }}"
+            question: ${ questions }
           repeat:
             call: gen_answers_inner
             args:
-              question: "{{question}}"
+              question: ${question}
     - lan: python
       spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
-          result = [r for r in {{all_results}} if len(r["answer"]) > 0]
+          result = [r for r in ${all_results} if len(r["answer"]) > 0]
 
 
   filter_qa_template:
@@ -300,9 +300,9 @@ defs:
 
           Here is the question and the answer you need to evaluate:
           [Question]
-          {{question}}
+          ${question}
           [Answer]
-          {{answer}}
+          ${answer}
         max_new_tokens: 256
 
   filter_question_answer_pair_inner:
@@ -316,28 +316,28 @@ defs:
           call: filter_qa_template
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
-            question: "{{question}}"
-            answer: "{{answer}}"
+            question: ${question}
+            answer: ${answer}
         teacher_input:
           call: teacher_template
           args:
-            sys_prompt: "{{teacher_sys_prompt}}"
+            sys_prompt: ${teacher_sys_prompt}
             prompt: |-
-              {{prompt_data.introduction}}
-              {{prompt_data.principles}}
-              {{prompt_data.generation}}
+              ${prompt_data.introduction}
+              ${prompt_data.principles}
+              ${prompt_data.generation}
         teacher_output:
-          model: "{{teacher_model}}"
-          input: "{{teacher_input}}"
+          model: ${teacher_model}
+          input: ${teacher_input}
           parameters:
-            stop: ["{{teacher_stop_token}}"]
+            stop: ["${teacher_stop_token}"]
             include_stop_sequence: false
-            max_new_tokens: "{{prompt_data.max_new_tokens}}"
+            max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - "{{ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}}"
+    - ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
 
   filter_question_answer_pair:
     function:
@@ -347,23 +347,23 @@ defs:
     - defs:
         ratings:
           for:
-            qa_pair: "{{qa_pairs}}"
+            qa_pair: ${qa_pairs}
           repeat:
           - def: filter_output
             call: filter_question_answer_pair_inner
             spec: float
             args:
-              question: "{{qa_pair.question}}"
-              answer: "{{qa_pair.answer}}"
+              question: ${qa_pair.question}
+              answer: ${qa_pair.answer}
           - data:
-              qa_pair: "{{qa_pair}}"
-              rating: "{{filter_output}}"
+              qa_pair: ${qa_pair}
+              rating: ${filter_output}
         filtered:
           lan: python
           spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
-              result = [p["qa_pair"] for p in {{ratings}} if p["rating"] >= 2]
-    - "{{filtered}}"
+              result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]
+    - ${filtered}
 
 
 text:
@@ -376,22 +376,22 @@ text:
   call: gen_questions_freeform
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
-    task_description: "{{seed_examples.task_description}}"
-    seed_examples: "{{seed_examples.seed_examples}}"
+    task_description: ${seed_examples.task_description}
+    seed_examples: ${seed_examples.seed_examples}
 - "\n\n----- Filtering questions -----\n\n"
 - def: filtered_questions
   call: filter_questions
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
-    task_description: "{{seed_examples.task_description}}"
-    questions: "{{generated_questions}}"
+    task_description: ${seed_examples.task_description}
+    questions: ${generated_questions}
 - "\n\n----- Generating answers -----\n\n"
 - def: qa_pairs
   call: gen_answers
   args:
-    questions: "{{filtered_questions}}" 
+    questions: ${filtered_questions} 
 - "\n\n----- Filtering QA pairs -----\n\n"
 - call: filter_question_answer_pair
   args:
-    qa_pairs: "{{qa_pairs}}"
+    qa_pairs: ${qa_pairs}
 

@@ -11,12 +11,12 @@ text:
     input:
       text:
       - for: 
-          question: "{{ data.questions }}"
-          answer: "{{ data.answers }}"
+          question: ${ data.questions }
+          answer: ${ data.answers }
         repeat:
           - |
-            {{ question }}
-            {{ answer }}
+            ${ question }
+            ${ answer }
         as: text
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 

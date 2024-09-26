@@ -12,7 +12,7 @@ text:
       Paris
       Question: Tell me the weather in Lagos?
       Lagos
-      Question: {{ QUERY }}
+      Question: ${ QUERY }
   parameters:
     stop:
     - Question
@@ -24,7 +24,7 @@ text:
 - lan: python
   code: |
     import requests
-    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q={{ LOCATION }}') 
+    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
     result = response.content
   def: WEATHER
   parser: json
@@ -33,5 +33,5 @@ text:
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
       Explain the weather from the following JSON:
-      {{ WEATHER }}
+      ${ WEATHER }
   

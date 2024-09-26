@@ -3,7 +3,7 @@ defs:
   hello:
     function:
       name: str
-    return: Hello {{ name }}!
+    return: Hello ${ name }!
 text:
 - call: hello
   args:

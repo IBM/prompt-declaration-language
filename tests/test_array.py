@@ -16,7 +16,7 @@ for_data = {
     "for": {
         "i": [1, 2, 3, 4],
     },
-    "repeat": "{{ i }}",
+    "repeat": "${ i }",
 }
 
 
@@ -39,10 +39,10 @@ repeat_until_data = {
                 {
                     "def": "I",
                     "lan": "python",
-                    "code": ["result = {{ I }} + 1"],
+                    "code": ["result = ${ I } + 1"],
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
             "as": "array",
         },
     ],

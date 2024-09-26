@@ -6,4 +6,4 @@ text:
     result = True
   def: QUESTION
   contribute: []
-- "{{ QUESTION1 }}"
+- ${ QUESTION1 }

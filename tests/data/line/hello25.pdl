@@ -12,7 +12,7 @@ text:
     sentence: str
     language: str
   return:
-    - "\nTranslate the sentence '{{ sentence1 }}' to {{ language }}\n"
+    - "\nTranslate the sentence '${ sentence1 }' to ${ language }\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop:
@@ -22,5 +22,5 @@ text:
 - call: translate
   spec: str
   args:
-    sentence: Hello,{{ GEN }}
+    sentence: Hello,${ GEN }
     language: French

@@ -19,7 +19,7 @@ text:
           user:
             pre_message: ""
             post_message: ""
-    - if: '{{ REASON_OR_CALC.endswith("<<") }}'
+    - if: ${ REASON_OR_CALC.endswith("<<") }
       then:
         text:
         - def: EXPR
@@ -37,8 +37,8 @@ text:
         - '= '
         - def: RESULT
           lan: python
-          code: result = {{ EXPR }}
+          code: result = ${ EXPR }
         - ' >>'
   as: text
-  until: '{{ "The answer is" in REASON_OR_CALC }}'
+  until: ${ "The answer is" in REASON_OR_CALC }
 - "\n"

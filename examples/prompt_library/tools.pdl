@@ -23,9 +23,9 @@ defs:
                 result = wikipedia.summary(subject)
               except wikipedia.WikipediaException as e:
                 result = str(error)
-      - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]"
-        else: "{{ result }}"
+      - if: ${ wrap_document }
+        then: "[Document]\n${ result }\n[End]"
+        else: ${ result }
 
   Search:
     function:
@@ -45,16 +45,16 @@ defs:
                   return str(e)
 
               result = main(**arguments)
-      - if: "{{ wrap_document }}"
-        then: "[Document]\n{{ result }}\n[End]"
-        else: "{{ result }}"
+      - if: ${ wrap_document }
+        then: "[Document]\n${ result }\n[End]"
+        else: ${ result }
 
   default_model: "ibm/granite-34-code-instruct"
   LLM:
     function:
       subject: str
     return:
-      model: "{{ default_model }}"
+      model: ${ default_model }
       parameters:
         stop_sequences:
           - "<|endoftext|>"
@@ -68,7 +68,7 @@ defs:
       lan: python
       code: |
         import math
-        result = {{ subject }}
+        result = ${ subject }
 
   get_current_weather:
     function:
@@ -78,7 +78,7 @@ defs:
         contribute: []
         code: |
           import requests
-          response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q={{ subject }}') 
+          response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ subject }') 
           result = response.content
 
   default_tools:
@@ -187,7 +187,7 @@ defs:
       tools: { list: obj }
       tool_names: { list: str }
     return:
-      data: "{{ tools|selectattr('name', 'in', tool_names)|list }}"
+      data: ${ tools|selectattr('name', 'in', tool_names)|list }
 
   list_tools:
     function:
@@ -196,20 +196,20 @@ defs:
       - defs:
           signatures:
             for:
-              tool: "{{ tools }}"
-            repeat: "{{ tool.name }}[<{{ tool.parameters|join('>, <', attribute='name') }}>]"
+              tool: ${ tools }
+            repeat: "${ tool.name }[<${ tool.parameters|join('>, <', attribute='name') }>]"
           typed_signatures:
             for:
-              tool: "{{ tools }}"
+              tool: ${ tools }
             repeat:
               - defs:
                   parameters:
                     for:
-                      param: "{{ tool.parameters }}"
-                    repeat: "{{ param.name}}: {{ param.type }}"
-              - "{{ tool.name }}({{ parameters|join(', ') }})"
+                      param: ${ tool.parameters }
+                    repeat: "${ param.name }: ${ param.type }"
+              - "${ tool.name }(${ parameters|join(', ') })"
       - data:
-          names: "{{ tools|map(attribute='name')|list }}"
-          signatures: "{{ signatures }}"
-          typed_signatures: "{{ typed_signatures }}"
-          descriptions: "{{ tools|map(attribute='description')|list }}"
+          names: ${ tools|map(attribute='name')|list }
+          signatures: ${ signatures }
+          typed_signatures: ${ typed_signatures }
+          descriptions: ${ tools|map(attribute='description')|list }

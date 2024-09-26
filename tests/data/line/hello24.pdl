@@ -14,12 +14,12 @@ text:
     language: str
   spec: int
   return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
     - model: watsonx/ibm/granite-34b-code-instruct
       parameters:
         mock_response: " World!"
 - call: translate
   spec: str
   args:
-    sentence: Hello,{{ GEN1 }}
-    language: "{{ GEN2 }}"
+    sentence: Hello,${ GEN1 }
+    language: ${ GEN2 }
