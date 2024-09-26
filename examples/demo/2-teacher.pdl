@@ -152,7 +152,7 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: [${teacher_stop_token}]
+            stop: ["${teacher_stop_token}"]
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
