@@ -864,6 +864,7 @@ def process_condition_of(
 
 
 def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
+    result: Any
     if isinstance(expr, str):
         try:
             env = Environment(
@@ -884,9 +885,9 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                     result = expr
                 else:
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
-                    result = env.compile_expression(expr[2:-1], undefined_to_none=False)(
-                        scope
-                    )
+                    result = env.compile_expression(
+                        expr[2:-1], undefined_to_none=False
+                    )(scope)
                     if isinstance(result, Undefined):
                         raise UndefinedError(str(result))
             else:
