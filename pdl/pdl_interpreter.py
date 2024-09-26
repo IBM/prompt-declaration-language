@@ -884,14 +884,21 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 undefined=StrictUndefined,
             )
             expr_ast = env.parse(expr)
-            if len(expr_ast.body[0].nodes) == 1 and not isinstance(
-                expr_ast.body[0].nodes, TemplateData
-            ):
-                result = env.compile_expression(expr[2:-1], undefined_to_none=False)(
-                    scope
-                )
-                if isinstance(result, Undefined):
-                    raise UndefinedError(str(result))
+            if len(expr_ast.body) == 1:
+                expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
+            else:
+                expr_ast_nodes = []
+            if len(expr_ast_nodes) == 1:
+                if isinstance(expr_ast_nodes[0], TemplateData):
+                    # `expr` is a string that do not include jinja expression
+                    result = expr
+                else:
+                    # `expr` has the shape `${ ... }`: it is a single jinja expression
+                    result = env.compile_expression(expr[2:-1], undefined_to_none=False)(
+                        scope
+                    )
+                    if isinstance(result, Undefined):
+                        raise UndefinedError(str(result))
             else:
                 template = Template(
                     expr,
@@ -1427,7 +1434,7 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
 
 
 def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
-    return process_expr(scope, "{{ " + var + " }}", loc)
+    return process_expr(scope, "${ " + var + " }", loc)
 
 
 def append_log(state: InterpreterState, title, somestring):
