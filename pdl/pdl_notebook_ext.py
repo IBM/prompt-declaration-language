@@ -13,10 +13,19 @@ from .pdl_dumper import block_to_dict
 class PDLMagics(Magics):
     @cell_magic
     @magic_arguments()
-    @argument('-r', '--reset-context', action='store_true',
-        default=False, help='Reset the background context to the empty list.')
-    @argument('--viewer', action='store_true',
-        default=False, help='Show the execution trace in the PDL viewer.')
+    @argument(
+        "-r",
+        "--reset-context",
+        action="store_true",
+        default=False,
+        help="Reset the background context to the empty list.",
+    )
+    @argument(
+        "--viewer",
+        action="store_true",
+        default=False,
+        help="Show the execution trace in the PDL viewer.",
+    )
     @needs_local_scope
     def pdl(self, line, cell, local_ns):
         line = line.strip()
@@ -32,7 +41,7 @@ class PDLMagics(Magics):
                     yield_result=True, yield_background=False, batch=0
                 ),
                 scope=scope,
-                output="all"
+                output="all",
             )
         except Exception as err:
             print(err)
@@ -40,7 +49,7 @@ class PDLMagics(Magics):
         for x, v in pdl_output["scope"].items():
             local_ns[x] = v
         if args.viewer:
-          display_html(self.pdl_viewer(block_to_dict(pdl_output["trace"])))
+            display_html(self.pdl_viewer(block_to_dict(pdl_output["trace"])))
 
     def pdl_viewer(self, trace):
         trace_str = json.dumps(trace)
