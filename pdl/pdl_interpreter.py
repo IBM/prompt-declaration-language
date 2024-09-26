@@ -1401,7 +1401,7 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
 
 
 def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
-    return process_expr(scope, f"{EXPR_START_STRING} var {EXPR_END_STRING}", loc)
+    return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
 
 
 def append_log(state: InterpreterState, title, somestring):
