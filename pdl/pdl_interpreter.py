@@ -867,43 +867,46 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
     result: Any
     if isinstance(expr, str):
         try:
-            env = Environment(
-                block_start_string="{%%%%%PDL%%%%%%%%%%",
-                block_end_string="%%%%%PDL%%%%%%%%%%}",
-                variable_start_string="${",
-                variable_end_string="}",
-                undefined=StrictUndefined,
-            )
-            expr_ast = env.parse(expr)
-            if len(expr_ast.body) == 1:
-                expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
-            else:
-                expr_ast_nodes = []
-            if len(expr_ast_nodes) == 1:
-                if isinstance(expr_ast_nodes[0], TemplateData):
-                    # `expr` is a string that do not include jinja expression
-                    result = expr
+            if expr.startswith("${") and expr.endswith("}"):
+                # `expr` might be a single expression and should not be stringify
+                env = Environment(
+                    block_start_string="{%%%%%PDL%%%%%%%%%%",
+                    block_end_string="%%%%%PDL%%%%%%%%%%}",
+                    variable_start_string="${",
+                    variable_end_string="}",
+                    undefined=StrictUndefined,
+                )
+                expr_ast = env.parse(expr)
+                if len(expr_ast.body) == 1:
+                    expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
                 else:
+                    expr_ast_nodes = []
+                if len(expr_ast_nodes) == 1:
+                    if isinstance(expr_ast_nodes[0], TemplateData):
+                        # `expr` is a string that do not include jinja expression
+                        return expr
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
                     result = env.compile_expression(
                         expr[2:-1], undefined_to_none=False
                     )(scope)
                     if isinstance(result, Undefined):
                         raise UndefinedError(str(result))
-            else:
-                template = Template(
-                    expr,
-                    keep_trailing_newline=True,
-                    block_start_string="{%%%%%PDL%%%%%%%%%%",
-                    block_end_string="%%%%%PDL%%%%%%%%%%}",
-                    variable_start_string="${",
-                    variable_end_string="}",
-                    # comment_start_string="",
-                    # comment_end_string="",
-                    autoescape=False,
-                    undefined=StrictUndefined,
-                )
-                result = template.render(scope)
+                    return result
+            # `expr` is not a single jinja expression
+            template = Template(
+                expr,
+                keep_trailing_newline=True,
+                block_start_string="{%%%%%PDL%%%%%%%%%%",
+                block_end_string="%%%%%PDL%%%%%%%%%%}",
+                variable_start_string="${",
+                variable_end_string="}",
+                # comment_start_string="",
+                # comment_end_string="",
+                autoescape=False,
+                undefined=StrictUndefined,
+            )
+            result = template.render(scope)
+            return result
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
                 f"Error during the evaluation of {expr}: {exc}", loc
@@ -913,7 +916,6 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 f"Syntax error in {expr}: {exc}", loc
             ) from exc
 
-        return result
     if isinstance(expr, list):
         result = []
         for index, x in enumerate(expr):
