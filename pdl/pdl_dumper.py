@@ -1,5 +1,5 @@
 import json
-from typing import Any, Sequence
+from typing import Any, Sequence, TypeAlias
 
 import yaml
 
@@ -63,12 +63,14 @@ def dumps_json(data, **kwargs):
 
 
 def program_to_dict(
-    prog: pdl_ast.Program,
+    prog: pdl_ast.Program, json_compatible: bool = False
 ) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
-    return blocks_to_dict(prog.root)
+    return blocks_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any]:
+def block_to_dict(
+    block: pdl_ast.BlockType, json_compatible: bool
+) -> int | float | str | dict[str, Any]:
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
@@ -78,13 +80,15 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
     if block.spec is not None:
         d["spec"] = block.spec
     if block.defs is not None:
-        d["defs"] = {x: blocks_to_dict(b) for x, b in block.defs.items()}
+        d["defs"] = {
+            x: blocks_to_dict(b, json_compatible) for x, b in block.defs.items()
+        }
     match block:
         case BamModelBlock():
             d["platform"] = block.platform
             d["model"] = block.model
             if block.input is not None:
-                d["input"] = blocks_to_dict(block.input)
+                d["input"] = blocks_to_dict(block.input, json_compatible)
             if block.prompt_id is not None:
                 d["prompt_id"] = block.prompt_id
             if block.parameters is not None:
@@ -102,7 +106,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["platform"] = block.platform
             d["model"] = block.model
             if block.input is not None:
-                d["input"] = blocks_to_dict(block.input)
+                d["input"] = blocks_to_dict(block.input, json_compatible)
             if block.parameters is not None:
                 if isinstance(block.parameters, LitellmParameters):
                     d["parameters"] = block.parameters.model_dump(
@@ -112,7 +116,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
                     d["parameters"] = block.parameters
         case CodeBlock():
             d["lan"] = block.lan
-            d["code"] = blocks_to_dict(block.code)
+            d["code"] = blocks_to_dict(block.code, json_compatible)
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
@@ -120,18 +124,21 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             if block.raw:
                 d["raw"] = block.raw
         case TextBlock():
-            d["text"] = blocks_to_dict(block.text)
+            d["text"] = blocks_to_dict(block.text, json_compatible)
         case LastOfBlock():
-            d["lastOf"] = blocks_to_dict(block.lastOf)
+            d["lastOf"] = blocks_to_dict(block.lastof, json_compatible)
         case ArrayBlock():
-            d["array"] = blocks_to_dict(block.array)
+            d["array"] = blocks_to_dict(block.array, json_compatible)
         case ObjectBlock():
             if isinstance(block.object, dict):
-                d["object"] = {k: blocks_to_dict(b) for k, b in block.object.items()}
+                d["object"] = {
+                    k: blocks_to_dict(b, json_compatible)
+                    for k, b in block.object.items()
+                }
             else:
-                d["object"] = [blocks_to_dict(b) for b in block.object]
+                d["object"] = [blocks_to_dict(b, json_compatible) for b in block.object]
         case MessageBlock():
-            d["content"] = blocks_to_dict(block.content)
+            d["content"] = blocks_to_dict(block.content, json_compatible)
         case ReadBlock():
             d["read"] = block.read
             d["message"] = block.message
@@ -140,41 +147,49 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
             d["include"] = block.include
         case IfBlock():
             d["if"] = block.condition
-            d["then"] = blocks_to_dict(block.then)
+            d["then"] = blocks_to_dict(block.then, json_compatible)
             if block.elses is not None:
-                d["else"] = blocks_to_dict(block.elses)
+                d["else"] = blocks_to_dict(block.elses, json_compatible)
             if block.if_result is not None:
                 d["if_result"] = block.if_result
         case RepeatBlock():
-            d["repeat"] = blocks_to_dict(block.repeat)
+            d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
             d["as"] = block.iteration_type
             if block.trace is not None:
-                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+                d["trace"] = [
+                    blocks_to_dict(blocks, json_compatible) for blocks in block.trace
+                ]
         case RepeatUntilBlock():
-            d["repeat"] = blocks_to_dict(block.repeat)
+            d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
             d["as"] = block.iteration_type
             if block.trace is not None:
-                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+                d["trace"] = [
+                    blocks_to_dict(blocks, json_compatible) for blocks in block.trace
+                ]
         case ForBlock():
             d["for"] = block.fors
-            d["repeat"] = blocks_to_dict(block.repeat)
+            d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["as"] = block.iteration_type
             if block.trace is not None:
-                d["trace"] = [blocks_to_dict(blocks) for blocks in block.trace]
+                d["trace"] = [
+                    blocks_to_dict(blocks, json_compatible) for blocks in block.trace
+                ]
         case FunctionBlock():
             d["function"] = block.function
-            d["return"] = blocks_to_dict(block.returns)
+            d["return"] = blocks_to_dict(block.returns, json_compatible)
             # if block.scope is not None:
-            #     d["scope"] = scope_to_dict(block.scope)
+            #     d["scope"] = scope_to_dict(block.scope, json_compatible)
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
             if block.trace is not None:
-                d["trace"] = blocks_to_dict(block.trace)  # pyright: ignore
+                d["trace"] = blocks_to_dict(
+                    block.trace, json_compatible
+                )  # pyright: ignore
         case ErrorBlock():
-            d["program"] = blocks_to_dict(block.program)
+            d["program"] = blocks_to_dict(block.program, json_compatible)
             d["msg"] = block.msg
     if block.assign is not None:
         d["def"] = block.assign
@@ -183,27 +198,40 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
     if block.result is not None:
         if isinstance(block.result, FunctionBlock):
             d["result"] = ""
+        elif json_compatible:
+            d["result"] = as_json(block.result)
         else:
             d["result"] = block.result
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
-    if block.location is not None:
-        d["location"] = location_to_dict(block.location)
+    # if block.location is not None:
+    #     d["location"] = location_to_dict(block.location)
     if block.fallback is not None:
-        d["fallback"] = blocks_to_dict(block.fallback)
+        d["fallback"] = blocks_to_dict(block.fallback, json_compatible)
     return d
 
+JSON_TYPE: TypeAlias = None | bool | int | float | str | dict[str, "JSON_TYPE"]
+
+def as_json(value: Any) -> JSON_TYPE:
+    if value is None:
+        return None
+    if isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, dict):
+        return { str(k): as_json(v) for k, v in value.items() }
+    else:
+        str(value)
 
 def blocks_to_dict(
-    blocks: BlocksType,
+    blocks: BlocksType, json_compatible: bool
 ) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
     result: (
         int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
     )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        result = [block_to_dict(block) for block in blocks]
+        result = [block_to_dict(block, json_compatible) for block in blocks]
     else:
-        result = block_to_dict(blocks)
+        result = block_to_dict(blocks, json_compatible)
     return result
 
 
@@ -218,7 +246,7 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
             p = {}
             p["description"] = parser.description
             p["spec"] = parser.spec
-            p["pdl"] = blocks_to_dict(parser.pdl)
+            p["pdl"] = blocks_to_dict(parser.pdl, False)
         case _:
             assert False
     return p
