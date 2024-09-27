@@ -49,12 +49,16 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
+        working-directory: ./pdl-live
         run: npm install
       - name: Generate pdl_ast.d.ts
+        working-directory: ./pdl-live
         run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
       - name: Build viewer
+        working-directory: ./pdl-live
         run: npm run build
       - name: Copy viewer
+        working-directory: ./pdl-live
         run: cp ./dist/bundle.js ../docs/dist/bundle.js
       # Docs
       - name: Setup Pages
