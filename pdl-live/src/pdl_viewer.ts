@@ -17,6 +17,11 @@ export function show_output(data: PdlBlocks) {
     .with({result: P.string}, data => {
       div.innerHTML = htmlize(data.result);
     })
+    .with({result: P._}, data => {
+      const code = document.createElement('pre');
+      code.innerHTML = htmlize(data.result)
+      div.appendChild(code);
+    })
     .otherwise(() => {
       div.innerHTML = '☐';
     });
@@ -114,7 +119,9 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'data'}, data => {
       body.classList.add('pdl_data');
-      body.appendChild(show_result_or_code(data));
+      const code = document.createElement('pre');
+      code.appendChild(show_result_or_code(data))
+      body.appendChild(code);
     })
     .with({kind: 'if'}, data => {
       body.classList.add('pdl_if');
@@ -360,7 +367,7 @@ export function htmlize(x: unknown): string {
       s = s.split('\n').join('<br>');
       return s;
     })
-    .otherwise(x => htmlize(JSON.stringify(x)));
+    .otherwise(x => htmlize(JSON.stringify(x, null, 2)));
   return html;
 }
 
