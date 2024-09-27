@@ -76,7 +76,7 @@ spec: int
         exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Type errors during spec checking:\n:0 - Hello should be of type <class 'int'>"
+        == "Type errors during spec checking:\nline 0 - Hello should be of type <class 'int'>"
     )
 
 

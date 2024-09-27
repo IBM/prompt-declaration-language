@@ -186,7 +186,10 @@ def generate(
             message = get_loc_string(exc.loc) + exc.message
         print(message, file=sys.stderr)
         if trace_file and exc.trace is not None:
-            write_trace(trace_file, exc.trace)
+            try:
+                write_trace(trace_file, exc.trace)
+            except Exception:
+                print("Fail to generate the trace", file=sys.stderr)
 
 
 def write_trace(
