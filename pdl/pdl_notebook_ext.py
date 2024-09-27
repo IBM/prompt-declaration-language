@@ -49,7 +49,11 @@ class PDLMagics(Magics):
         for x, v in pdl_output["scope"].items():
             local_ns[x] = v
         if args.viewer:
-            display_html(self.pdl_viewer(block_to_dict(pdl_output["trace"])))
+            display_html(
+                self.pdl_viewer(
+                    block_to_dict(pdl_output["trace"], json_compatible=True)
+                )
+            )
 
     def pdl_viewer(self, trace):
         trace_str = json.dumps(trace)
