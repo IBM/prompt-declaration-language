@@ -43,19 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Docs
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install required packages
-        run: pip install -U mkdocs "mkdocstrings[python]" mkdocs-material pymdown-extensions
-      - name: Build site (_site directory name is used for Jekyll compatiblity)
-        run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
-        env:
-          CI: true
       # Viewer
       - name: Set up node
         uses: actions/setup-node@v4
@@ -69,6 +56,19 @@ jobs:
         run: npm run build
       - name: Copy viewer
         run: cp ./dist/bundle.js ../docs/dist/bundle.js
+      # Docs
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install required packages
+        run: pip install -U mkdocs "mkdocstrings[python]" mkdocs-material pymdown-extensions
+      - name: Build site (_site directory name is used for Jekyll compatiblity)
+        run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
+        env:
+          CI: true
       # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
