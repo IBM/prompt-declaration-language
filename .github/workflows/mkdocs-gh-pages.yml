@@ -35,18 +35,6 @@ jobs:
         working-directory: ./pdl-live
     steps:
       - uses: actions/checkout@v4
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies
-        run: npm install
-      - name: Generate pdl_ast.d.ts
-        run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
-      - name: Build viewer
-        run: npm run build
-      - name: Copy viewer
-        run: cp ./dist/bundle.js ../docs/dist/bundle.js
 
   # Build docs
   build:
@@ -55,6 +43,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # Docs
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Setup Python
@@ -67,6 +56,20 @@ jobs:
         run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
         env:
           CI: true
+      # Viewer
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Generate pdl_ast.d.ts
+        run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
+      - name: Build viewer
+        run: npm run build
+      - name: Copy viewer
+        run: cp ./dist/bundle.js ../docs/dist/bundle.js
+      # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
