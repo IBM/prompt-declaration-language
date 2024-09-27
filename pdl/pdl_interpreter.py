@@ -186,10 +186,7 @@ def generate(
             message = get_loc_string(exc.loc) + exc.message
         print(message, file=sys.stderr)
         if trace_file and exc.trace is not None:
-            try:
-                write_trace(trace_file, exc.trace)
-            except Exception:
-                print("Fail to generate the trace", file=sys.stderr)
+            write_trace(trace_file, exc.trace)
 
 
 def write_trace(
@@ -202,8 +199,11 @@ def write_trace(
         trace_file:  File to save the execution trace.
         trace: Execution trace.
     """
-    with open(trace_file, "w", encoding="utf-8") as fp:
-        json.dump(blocks_to_dict(trace), fp)
+    try:
+        with open(trace_file, "w", encoding="utf-8") as fp:
+            json.dump(blocks_to_dict(trace), fp)
+    except Exception:
+        print("Fail to generate the trace", file=sys.stderr)
 
 
 def process_prog(
