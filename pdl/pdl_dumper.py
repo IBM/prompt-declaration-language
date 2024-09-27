@@ -126,7 +126,7 @@ def block_to_dict(
         case TextBlock():
             d["text"] = blocks_to_dict(block.text, json_compatible)
         case LastOfBlock():
-            d["lastOf"] = blocks_to_dict(block.lastof, json_compatible)
+            d["lastOf"] = blocks_to_dict(block.lastOf, json_compatible)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array, json_compatible)
         case ObjectBlock():
@@ -210,17 +210,19 @@ def block_to_dict(
         d["fallback"] = blocks_to_dict(block.fallback, json_compatible)
     return d
 
-JSON_TYPE: TypeAlias = None | bool | int | float | str | dict[str, "JSON_TYPE"]
 
-def as_json(value: Any) -> JSON_TYPE:
+JsonType: TypeAlias = None | bool | int | float | str | dict[str, "JsonType"]
+
+
+def as_json(value: Any) -> JsonType:
     if value is None:
         return None
     if isinstance(value, (bool, int, float, str)):
         return value
     if isinstance(value, dict):
-        return { str(k): as_json(v) for k, v in value.items() }
-    else:
-        str(value)
+        return {str(k): as_json(v) for k, v in value.items()}
+    return str(value)
+
 
 def blocks_to_dict(
     blocks: BlocksType, json_compatible: bool
