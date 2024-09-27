@@ -32,9 +32,9 @@ def test_error1():
     error(
         error1,
         [
-            ":0 - Missing required field: return",
-            ":0 - Missing required field: function",
-            ":0 - Field not allowed: texts",
+            "line 0 - Missing required field: return",
+            "line 0 - Missing required field: function",
+            "line 0 - Field not allowed: texts",
         ],
     )
 
@@ -60,7 +60,7 @@ def test_error2():
     error(
         error2,
         [
-            ":0 - Field not allowed: parameterss",
+            "line 0 - Field not allowed: parameterss",
         ],
     )
 
@@ -137,8 +137,8 @@ def test_error5():
     error(
         error5,
         [
-            ":0 - Missing required field: lan",
-            ":0 - Field not allowed: lans",
+            "line 0 - Missing required field: lan",
+            "line 0 - Field not allowed: lans",
         ],
     )
 
