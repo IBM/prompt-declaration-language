@@ -122,7 +122,7 @@ def block_to_dict(block: pdl_ast.BlockType) -> int | float | str | dict[str, Any
         case TextBlock():
             d["text"] = blocks_to_dict(block.text)
         case LastOfBlock():
-            d["lastof"] = blocks_to_dict(block.lastof)
+            d["lastOf"] = blocks_to_dict(block.lastOf)
         case ArrayBlock():
             d["array"] = blocks_to_dict(block.array)
         case ObjectBlock():

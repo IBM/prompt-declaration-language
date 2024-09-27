@@ -43,9 +43,9 @@ export function map_block_children(
       const text = map_blocks(f, block.text);
       return {...block, text: text};
     })
-    .with({kind: 'lastof'}, block => {
-      const lastof = map_blocks(f, block.lastof);
-      return {...block, lastof: lastof};
+    .with({kind: 'lastOf'}, block => {
+      const lastOf = map_blocks(f, block.lastOf);
+      return {...block, lastOf: lastOf};
     })
     .with({kind: 'array'}, block => {
       const array = map_blocks(f, block.array);
@@ -143,8 +143,8 @@ export function iter_block_children(
     .with({kind: 'text'}, block => {
       iter_blocks(f, block.text);
     })
-    .with({kind: 'lastof'}, block => {
-      iter_blocks(f, block.lastof);
+    .with({kind: 'lastOf'}, block => {
+      iter_blocks(f, block.lastOf);
     })
     .with({kind: 'array'}, block => {
       iter_blocks(f, block.array);
