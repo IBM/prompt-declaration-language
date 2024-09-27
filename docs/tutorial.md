@@ -571,7 +571,7 @@ The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` a
 
 When we execute this program, we obtain 3 math problems like the ones in the [examples](https://github.com/IBM/prompt-declaration-language//blob/main/examples/arith/). 
 
-Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together (which is the case of top-level programs in general), then we need the keyword `text` to preceed a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastof` block.
+Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together (which is the case of top-level programs in general), then we need the keyword `text` to precede a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastOf` block.
 
 Similarly, the `read` block has an annotation `as: text`. This means that the result of each iteration is stringified and collated to the overall result of the `repeat` block which is of type string in this case.
 

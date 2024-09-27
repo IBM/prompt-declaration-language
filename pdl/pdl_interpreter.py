@@ -423,7 +423,7 @@ def step_block_body(
         case LastOfBlock():
             result, background, scope, trace = yield from step_blocks_of(
                 block,
-                "lastof",
+                "lastOf",
                 IterationType.LASTOF,
                 state,
                 scope,

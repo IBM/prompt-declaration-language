@@ -42,7 +42,7 @@ class BlockKind(StrEnum):
     GET = "get"
     DATA = "data"
     TEXT = "text"
-    LASTOF = "lastof"
+    LASTOF = "lastOf"
     ARRAY = "array"
     OBJECT = "object"
     MESSAGE = "message"
@@ -317,7 +317,7 @@ class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
     kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
-    lastof: "BlocksType"
+    lastOf: "BlocksType"
 
 
 class ArrayBlock(Block):
@@ -362,7 +362,7 @@ class IfBlock(Block):
 
 
 class IterationType(StrEnum):
-    LASTOF = "lastof"
+    LASTOF = "lastOf"
     ARRAY = "array"
     TEXT = "text"
 

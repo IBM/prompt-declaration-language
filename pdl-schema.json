@@ -7259,7 +7259,7 @@
     },
     "IterationType": {
       "enum": [
-        "lastof",
+        "lastOf",
         "array",
         "text"
       ],
@@ -7682,15 +7682,15 @@
           "default": null
         },
         "kind": {
-          "const": "lastof",
-          "default": "lastof",
+          "const": "lastOf",
+          "default": "lastOf",
           "enum": [
-            "lastof"
+            "lastOf"
           ],
           "title": "Kind",
           "type": "string"
         },
-        "lastof": {
+        "lastOf": {
           "anyOf": [
             {
               "type": "integer"
@@ -7842,7 +7842,7 @@
         }
       },
       "required": [
-        "lastof"
+        "lastOf"
       ],
       "title": "LastOfBlock",
       "type": "object"
@@ -12117,7 +12117,7 @@
         },
         "as": {
           "$ref": "#/$defs/IterationType",
-          "default": "lastof",
+          "default": "lastOf",
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
@@ -12870,7 +12870,7 @@
         },
         "as": {
           "$ref": "#/$defs/IterationType",
-          "default": "lastof",
+          "default": "lastOf",
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {

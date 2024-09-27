@@ -1029,7 +1029,7 @@ export type Fallback7 =
  *
  */
 export type Role7 = string | null;
-export type Kind7 = "lastof";
+export type Kind7 = "lastOf";
 export type Lastof =
   | number
   | string
@@ -1327,7 +1327,7 @@ export type Repeat =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType = "lastof" | "array" | "text";
+export type IterationType = "lastOf" | "array" | "text";
 export type Trace1 =
   | (
       | number
@@ -1505,7 +1505,7 @@ export type Repeat1 =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType1 = "lastof" | "array" | "text";
+export type IterationType1 = "lastOf" | "array" | "text";
 export type Trace2 =
   | (
       | number
@@ -1688,7 +1688,7 @@ export type NumIterations = number;
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType2 = "lastof" | "array" | "text";
+export type IterationType2 = "lastOf" | "array" | "text";
 export type Trace3 =
   | (
       | number
@@ -3892,7 +3892,7 @@ export interface LastOfBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind7;
-  lastof: Lastof;
+  lastOf: Lastof;
 }
 /**
  * Type specification of the result of the block.

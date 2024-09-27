@@ -52,7 +52,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case TextBlock():
             iter_blocks(f, block.text)
         case LastOfBlock():
-            iter_blocks(f, block.lastof)
+            iter_blocks(f, block.lastOf)
         case ArrayBlock():
             iter_blocks(f, block.array)
         case ObjectBlock():
