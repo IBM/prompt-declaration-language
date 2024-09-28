@@ -1,4 +1,4 @@
-document:
+text:
 - include: ../tools.pdl
 - include: ../ReAct.pdl
 - include: ../../granite/granite_defs.pdl
@@ -6,7 +6,7 @@ document:
   call: filter_tools_by_name
   contribute: []
   args:
-    tools: "{{ default_tools }}"
+    tools: ${ default_tools }
     tool_names: ["Search"]
 - def: QUESTION
   read: 
@@ -16,10 +16,10 @@ document:
   args:
     context:
     - role: system
-      content: "{{ granite_models.granite_7b_lab.system_prompt }}"
-    question: "{{ QUESTION }}"
+      content: ${ granite_models.granite_7b_lab.system_prompt }
+    question: ${ QUESTION }
     model: ibm/granite-7b-lab
-    tools: "{{ filtered_tools }}"
+    tools: ${ filtered_tools }
     trajectories: []
 - "\n\n----- Verifying answer... -----\n\n"
 - def: VERIFIED
@@ -28,11 +28,11 @@ document:
     context: [{"role": "system", "content": ""}]
     question: |-
       Is this the right answer to this question?
-      "{{ QUESTION }}"
-      Proposed answer: {{ PROPOSED.answer.topic }}
+      ${ QUESTION }
+      Proposed answer: ${ PROPOSED.answer.topic }
 
       Please answer as True or False.
     model: ibm/granite-34b-code-instruct
-    tools: "{{ filtered_tools }}"
+    tools: ${ filtered_tools }
     trajectories: []
-- "\n\nThe answer '{{ PROPOSED.answer.topic }}' has been verified as '{{VERIFIED.answer.topic}}'.\n"
+- "\n\nThe answer '${ PROPOSED.answer.topic }' has been verified as '${VERIFIED.answer.topic}'.\n"

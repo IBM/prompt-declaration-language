@@ -4,7 +4,7 @@ defs:
     data:
       p: 1
 for:
-  k: "{{ val }}"
+  k: ${ val }
 repeat:
   hello
   

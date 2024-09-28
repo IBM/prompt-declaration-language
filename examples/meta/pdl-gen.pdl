@@ -1,5 +1,5 @@
 description: Teaching PDL
-document:
+text:
 - lan: python
   code:
   - |
@@ -18,7 +18,7 @@ document:
   parameters:
     decoding_method: greedy
   input:
-    document:
+    text:
     - |-
       Question: Write the following prompts in PDL:
       Hello world!
@@ -27,7 +27,7 @@ document:
       Answer:
       ```
       description: Hello world!
-      document:
+      text:
       - "Hello, world!\n"
       - "This is your first prompt descriptor!\n"      
       ```
@@ -45,7 +45,7 @@ document:
       Answer:
       ```
       description: Example of PDL code block
-      document:
+      text:
       - lan: python
         code:
         - |
@@ -59,7 +59,7 @@ document:
           result = ''.join(contents)
       ```
 
-      Question: Write a PDL script with the following document:
+      Question: Write a PDL script with the following text:
       Hello world!
       This is your first prompt descriptor!
 
@@ -69,17 +69,17 @@ document:
       Answer:
       ```
       description: Hello world with a nested block
-      document:
+      text:
       - |
         Hello, world!
         This is your first prompt descriptor!
-      - document:
+      - text:
         - |
           This sentence repeats!
         repeats: 3
       ```
 
-      Question: Write a PDL script with the following document:
+      Question: Write a PDL script with the following text:
       Hello world!
       This is your first prompt descriptor!
 
@@ -89,11 +89,11 @@ document:
       Answer:
       ```
       description: Hello world with a nested block
-      document:
+      text:
       - |
         Hello, world!
         This is your first prompt descriptor!
-      - document:
+      - text:
         - |
           This sentence repeats!
         repeats: 4
@@ -104,7 +104,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
@@ -115,7 +115,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
@@ -130,7 +130,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
@@ -141,7 +141,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: watsonx/ibm/granite-20b-code-instruct
         parameters:
           decoding_method: greedy
@@ -155,7 +155,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
@@ -167,7 +167,7 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
@@ -179,7 +179,7 @@ document:
       Answer:
       ```
       description: Example of PDL code block
-      document:
+      text:
       - lan: python
         code:
         - |
@@ -199,7 +199,7 @@ document:
       Answer:
       ```
       description: Example of PDL code block
-      document:
+      text:
       - lan: python
         code:
         - |
@@ -221,12 +221,12 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
-          document:
+          text:
           - |-
             Hello Bob
             Bye Bob
@@ -240,12 +240,12 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
-          document:
+          text:
           - |-
             The sound of music
             OK Corral
@@ -260,12 +260,12 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
-          document:
+          text:
           - |-
             The wide world
             Apples and oranges are fruit
@@ -282,12 +282,12 @@ document:
       Answer:
       ```
       description: PDL with model call
-      document:
+      text:
       - model: "watsonx/google/flan-t5-xl"
         parameters:
           decoding_method: greedy
         input:
-          document:
+          text:
           - |-
             The singer sings a song
             The dancer dances to a song
@@ -301,7 +301,7 @@ document:
       Answer:
       ```
       description: Using a weather API and LLM to make a small weather app
-      document:
+      text:
       - lan: python
         code:
         - |

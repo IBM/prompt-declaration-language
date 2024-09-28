@@ -1,5 +1,5 @@
 description: Hello world with variable def and use
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   def: GEN
@@ -8,4 +8,4 @@ document:
     stop:
     - '!'
     include_stop_sequence: true
-- "\nGEN is equal to: {{ GEN }}"
+- "\nGEN is equal to: ${ GEN }"

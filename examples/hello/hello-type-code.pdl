@@ -1,6 +1,6 @@
 
 description: Hello world showing call out to python code
-document:
+text:
 - lan: python
   spec: int
   code: |

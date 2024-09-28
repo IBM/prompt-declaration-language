@@ -9,6 +9,7 @@ on:
     paths:
       - "mkdocs.yml"
       - "docs/**"
+      - "pdl-live"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,35 +27,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build viewer
-  viewer:
-    name: Build PDL live viewer
+  # Build docs
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./pdl-live
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Viewer
       - name: Set up node
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
+        working-directory: ./pdl-live
         run: npm install
       - name: Generate pdl_ast.d.ts
+        working-directory: ./pdl-live
         run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
       - name: Build viewer
+        working-directory: ./pdl-live
         run: npm run build
       - name: Copy viewer
+        working-directory: ./pdl-live
         run: cp ./dist/bundle.js ../docs/dist/bundle.js
-
-  # Build docs
-  build:
-    runs-on: ubuntu-latest
-    needs: viewer
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # Docs
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Setup Python
@@ -67,6 +63,7 @@ jobs:
         run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
         env:
           CI: true
+      # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 

@@ -5,11 +5,11 @@ defs:
       sentence: str
       language: str
     return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}.\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop: ["\n"]
-document:
+text:
 - call: translate
   args:
     sentence: I love Paris!

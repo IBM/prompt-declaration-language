@@ -3,8 +3,8 @@ defs:
   hello:
     function:
       name: str
-    return: Hello {{ name }}!
-document:
+    return: Hello ${ name }!
+text:
 - call: hello
   args:
     name: World

@@ -1,5 +1,5 @@
 description: Hello world showing call out to python code with condition
-document:
-- if: "{{ false }}"
+text:
+- if: ${ false }
   then: "hello"
-  else: "{{ I }}"
+  else: ${ I }

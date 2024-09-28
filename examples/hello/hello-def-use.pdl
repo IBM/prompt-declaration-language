@@ -1,5 +1,5 @@
 description: Hello world with variable use
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
@@ -10,4 +10,4 @@ document:
   def: NAME
 - |
 
-  Who is{{ NAME }}?
+  Who is${ NAME }?

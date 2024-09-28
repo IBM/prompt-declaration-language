@@ -1,9 +1,9 @@
 from pdl.pdl import exec_program
-from pdl.pdl_ast import DocumentBlock, LitellmModelBlock, LitellmParameters, Program
+from pdl.pdl_ast import LitellmModelBlock, LitellmParameters, Program, TextBlock
 
 hello = Program(
-    DocumentBlock(
-        document=[
+    TextBlock(
+        text=[
             "Hello,",
             LitellmModelBlock(
                 model="watsonx/ibm/granite-20b-code-instruct",

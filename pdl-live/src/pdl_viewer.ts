@@ -17,6 +17,11 @@ export function show_output(data: PdlBlocks) {
     .with({result: P.string}, data => {
       div.innerHTML = htmlize(data.result);
     })
+    .with({result: P._}, data => {
+      const code = document.createElement('pre');
+      code.innerHTML = htmlize(data.result)
+      div.appendChild(code);
+    })
     .otherwise(() => {
       div.innerHTML = '☐';
     });
@@ -108,17 +113,15 @@ export function show_block(data: PdlBlock) {
       body.classList.add('pdl_code');
       body.appendChild(show_result_or_code(data));
     })
-    .with({kind: 'api'}, data => {
-      body.classList.add('pdl_api');
-      body.appendChild(show_result_or_code(data));
-    })
     .with({kind: 'get'}, data => {
       body.classList.add('pdl_get');
       body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'data'}, data => {
       body.classList.add('pdl_data');
-      body.appendChild(show_result_or_code(data));
+      const code = document.createElement('pre');
+      code.appendChild(show_result_or_code(data))
+      body.appendChild(code);
     })
     .with({kind: 'if'}, data => {
       body.classList.add('pdl_if');
@@ -164,14 +167,14 @@ export function show_block(data: PdlBlock) {
         body.appendChild(show_result_or_code(data));
       }
     })
-    .with({kind: 'document'}, data => {
-      body.classList.add('pdl_document');
-      const doc_child = show_blocks(data.document);
+    .with({kind: 'text'}, data => {
+      body.classList.add('pdl_text');
+      const doc_child = show_blocks(data.text);
       body.appendChild(doc_child);
     })
-    .with({kind: 'sequence'}, data => {
-      body.classList.add('pdl_sequence');
-      const doc_child = show_blocks(data.sequence);
+    .with({kind: 'lastOf'}, data => {
+      body.classList.add('pdl_lastOf');
+      const doc_child = show_blocks(data.lastOf);
       body.appendChild(doc_child);
     })
     .with({kind: 'array'}, data => {
@@ -265,7 +268,7 @@ export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
   }
   if (trace.length > 0) {
     const iteration = document.createElement('div');
-    iteration.classList.add('pdl_block', 'pdl_sequence');
+    iteration.classList.add('pdl_block', 'pdl_lastOf');
     const child = show_blocks(trace.slice(-1)[0]);
     iteration.appendChild(child);
     doc_fragment.appendChild(iteration);
@@ -364,7 +367,7 @@ export function htmlize(x: unknown): string {
       s = s.split('\n').join('<br>');
       return s;
     })
-    .otherwise(x => htmlize(JSON.stringify(x)));
+    .otherwise(x => htmlize(JSON.stringify(x, null, 2)));
   return html;
 }
 

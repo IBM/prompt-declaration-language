@@ -7,7 +7,7 @@ defs:
 # try all examples and collect which ones _fail_
 # cluster by similarity, or classify e.g. 5 classes that don't work
 
-document:
+text:
   - include: ../prompt_library/ReWOO.pdl
   - include: ../prompt_library/ReAct.pdl
   - include: ../prompt_library/CoT.pdl
@@ -15,17 +15,17 @@ document:
     call: filter_tools_by_name
     contribute: []
     args:
-      tools: "{{ default_tools }}"
-      tool_names: "{{ available_tools }}"
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
   - call: react
     args:
       question: "When did the Battle of White Plains take place?"
       model: watsonx/meta-llama/llama-3-70b-instruct
-      tools: "{{ filtered_tools }}"
+      tools: ${ filtered_tools }
   - |
-    {{ demos }}Question: {{ question }}
+    ${ demos }Question: ${ question }
     Answer: Let's think step by step. 
-  - model: "{{ model }}"
+  - model: ${ model }
     def: PDL
     parameters:
       stop_sequences: ["<|endoftext|>"]

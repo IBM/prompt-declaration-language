@@ -16,13 +16,13 @@ PDL provides the following features:
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files, including JSON data
 - Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle
-- Ability to call out to REST APIs
+- Ability to call out to REST APIs with Python code
 - Type checking input and output of model calls
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, apis, etc...). 
+The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
@@ -58,7 +58,7 @@ For more information, see [documentation](https://docs.litellm.ai/docs/providers
 To run the interpreter:
 
 ```
-pdl <path/to/example.yaml>
+pdl-local <path/to/example.yaml>
 ```
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of ready-to-use prompting patterns. 
@@ -71,30 +71,30 @@ useful for debugging.
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-pdl --log <my-logfile> <my-example>
+pdl-local --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-pdl --data <JSON-or-YAML-data> <my-example>
+pdl-local --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-pdl --data-file <JSON-or-YAML-file> <my-example>
+pdl-local --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl --trace <file.json> <my-example> 
+pdl-local --trace <file.json> <my-example> 
 ```
 
 For more information:
 ```
-pdl --help
+pdl-local --help
 ```
 
 ## Overview
@@ -103,7 +103,7 @@ In PDL, we can write some YAML to create a prompt and call an LLM:
 
 ```yaml
 description: Hello world
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
@@ -113,12 +113,12 @@ document:
     include_stop_sequence: true
 ```
 
-The `description` field is a description for the program. Field `document` contains a list of either strings or *block*s which together form the document to be produced. In this example, the document starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
+The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the text to be produced. In this example, the text starts with the string `"Hello"` followed by a block that calls out to a model. In this case, it is model with id `watsonx/ibm/granite-34b-code-instruct` from [watsonx](https://www.ibm.com/watsonx), via LiteLLM, with the indicated parameters: the stop sequence is `!`, which is to be included in the output. The input to the model call is everything that has been produced so far in the document (here `Hello`).
 
 When we execute this program using the PDL interpreter:
 
 ```
-pdl examples/hello/hello.pdl
+pdl-local examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -127,14 +127,14 @@ we obtain the following document:
 Hello, World!
 ```
 
-where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, as well as REST APIs and makes it easy to compose them together with control structures (sequencing, conditions, loops).
+where the portion `, World!` was produced by granite. In general, PDL provides blocks for calling models, Python code, and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
 
 The PDL interpreter can also stream the background conversation instead of the result:
 
 ```
-pdl --stream background examples/hello/hello.pdl
+pdl-local --stream background examples/hello/hello.pdl
 ```
 
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
@@ -195,32 +195,32 @@ defs:
   CODE:
     read: ./data.yaml
     parser: yaml
-document:
-- "\n{{ CODE.source_code }}\n"
+text:
+- "\n${ CODE.source_code }\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
         repo: 
-        {{ CODE.repo_info.repo }}
-        path: {{ CODE.repo_info.path }}
-        Function_name: {{ CODE.repo_info.function_name }}
+        ${ CODE.repo_info.repo }
+        path: ${ CODE.repo_info.path }
+        Function_name: ${ CODE.repo_info.function_name }
 
 
         Explain the following code:
         ```
-        {{ CODE.source_code }}```
+        ${ CODE.source_code }```
 ```
 
 In this program we first define some variables using the `defs` construct. Here `CODE` is defined to be a new variable, holding the result of the `read` block that follows.
 A `read` block can be used to read from a file or stdin. In this case, we read the content of the file `./data.yaml`, parse it as YAML using the `parser` construct, then
 assign the result to variable `CODE`.
 
-Next we define a `document`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `{{ var }}` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
+Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `${ var }` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
-The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire document produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
+The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire text produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
-When we execute this program with the PDL interpreter, we obtain the following document:
+When we execute this program with the PDL interpreter, we obtain the following text:
 
 ```
 
@@ -252,21 +252,21 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-document:
-- "\n{{ CODE.source_code }}\n"
+text:
+- "\n${ CODE.source_code }\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
 
 
       Explain the following code:
       ```
-      {{ CODE.source_code }}```
+      ${ CODE.source_code }```
 - |
 
 
@@ -277,10 +277,10 @@ document:
   code: |
     import textdistance
     expl = """
-    {{ EXPLANATION }}
+    ${ EXPLANATION }
     """
     truth = """
-    {{ TRUTH }}
+    ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 
@@ -325,7 +325,7 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-document:
+text:
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   contribute: []
@@ -333,14 +333,14 @@ document:
      |
       Here is some info about the location of the function in the repo.
       repo: 
-      {{ CODE.repo_info.repo }}
-      path: {{ CODE.repo_info.path }}
-      Function_name: {{ CODE.repo_info.function_name }}
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
 
 
       Explain the following code:
       ```
-      {{ CODE.source_code }}```
+      ${ CODE.source_code }```
 - def: EVAL
   contribute: []
   lan: python
@@ -348,20 +348,20 @@ document:
     |
     import textdistance
     expl = """
-    {{ EXPLANATION }}
+    ${ EXPLANATION }
     """
     truth = """
-    {{ TRUTH }}
+    ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data: 
-    input: "{{ CODE }}"
-    output: "{{ EXPLANATION }}"
-    metric: "{{ EVAL }}"
+    input: ${ CODE }
+    output: ${ EXPLANATION }
+    metric: ${ EVAL }
 ```
 
-The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `contribute` set to `[]`. The `contribute` construct can be used to specify how the result of a block is contributed to the overall result, and the background context document.
-Setting it to `result` contributes the result of the block to the overall result, but not to the background context document. Similarly, setting it to `context` contributes
+The data block takes various variables and combines their values into a JSON object with fields `input`, `output`, and `metric`. We mute the output of all the other blocks with `contribute` set to `[]`. The `contribute` construct can be used to specify how the result of a block is contributed to the overall result, and the background context.
+Setting it to `result` contributes the result of the block to the overall result, but not to the background context. Similarly, setting it to `context` contributes
 the result of the block to the background context but not the overall result. By default, the result of every block is contributed to both. For the blocks in the program above, we use a `def` construct to save the intermediate result of each block.
 
 The output of this program is the corresponding serialized JSON object, with the appropriate treatment of quotation marks. Such PDL programs can be bootstrapped in a bash or Python script or piped into a JSONL file to create data en masse.
@@ -386,7 +386,7 @@ in the right pane.
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 
-## Additional Notes and Future Work
+## Additional Notes
 
 When using Granite models on Watsonx, we use the following defaults for model parameters:
   - `decoding_method`: `greedy`
@@ -398,8 +398,6 @@ When using Granite models on Watsonx, we use the following defaults for model pa
   - `temperature`: 0.7
   - `top_p`: 0.85
   - `top_k`: 50
-
-- Only simple GETs are supported for API calls currently (see example: `examples/hello/weather.json`). We plan to more fully support API calls in the future.
 
 For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
 

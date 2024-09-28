@@ -39,11 +39,10 @@ class BlockKind(StrEnum):
     CALL = "call"
     MODEL = "model"
     CODE = "code"
-    API = "api"
     GET = "get"
     DATA = "data"
-    DOCUMENT = "document"
-    SEQUENCE = "sequence"
+    TEXT = "text"
+    LASTOF = "lastOf"
     ARRAY = "array"
     OBJECT = "object"
     MESSAGE = "message"
@@ -82,7 +81,7 @@ class RegexParser(Parser):
     mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
 
 
-ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
+ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
 RoleType: TypeAlias = Optional[str]
 
 
@@ -287,18 +286,6 @@ class CodeBlock(Block):
     """
 
 
-class ApiBlock(Block):
-    """Call an API."""
-
-    kind: Literal[BlockKind.API] = BlockKind.API
-    api: str
-    url: str
-    """URL of the endpoint."""
-    input: "BlocksType"
-    """Arguments to the request.
-    """
-
-
 class GetBlock(Block):
     """Get the value of a variable."""
 
@@ -317,20 +304,20 @@ class DataBlock(Block):
     """Do not evaluate expressions inside strings."""
 
 
-class DocumentBlock(Block):
+class TextBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
-    kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
-    document: "BlocksType"
-    """Body of the document.
+    kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
+    text: "BlocksType"
+    """Body of the text.
     """
 
 
-class SequenceBlock(Block):
+class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
-    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
-    sequence: "BlocksType"
+    kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
+    lastOf: "BlocksType"
 
 
 class ArrayBlock(Block):
@@ -351,8 +338,8 @@ class MessageBlock(Block):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    role: RoleType  # type: ignore
-    """Role of associated to the message."""
+    role: RoleType  # pyright: ignore
+    """Role of associated to the message."""  # pyright: ignore
     content: "BlocksType"
     """Content of the message."""
 
@@ -375,9 +362,9 @@ class IfBlock(Block):
 
 
 class IterationType(StrEnum):
-    SEQUENCE = "sequence"
+    LASTOF = "lastOf"
     ARRAY = "array"
-    DOCUMENT = "document"
+    TEXT = "text"
 
 
 class ForBlock(Block):
@@ -407,7 +394,7 @@ class RepeatBlock(Block):
     num_iterations: int
     """Number of iterations to perform.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -424,7 +411,7 @@ class RepeatUntilBlock(Block):
     until: ExpressionType
     """Condition of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -475,15 +462,14 @@ AdvancedBlockType: TypeAlias = (
     | LitellmModelBlock
     | BamModelBlock
     | CodeBlock
-    | ApiBlock
     | GetBlock
     | DataBlock
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
-    | DocumentBlock
-    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -507,7 +493,7 @@ class Program(RootModel):
     Prompt Declaration Language program (PDL)
     """
 
-    root: BlockType
+    root: BlocksType
     """Entry point to parse a PDL program using Pydantic.
     """
 

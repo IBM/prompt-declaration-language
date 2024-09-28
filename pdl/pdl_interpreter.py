@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Generator, Optional, Sequence, TypeVar
 
 import litellm
-import requests
 import yaml
 from jinja2 import (
     Environment,
@@ -17,12 +16,12 @@ from jinja2 import (
     TemplateSyntaxError,
     UndefinedError,
 )
+from jinja2.nodes import TemplateData
 from jinja2.runtime import Undefined
 from pydantic import BaseModel
 
 from .pdl_ast import (
     AdvancedBlockType,
-    ApiBlock,
     ArrayBlock,
     BamModelBlock,
     BamTextGenerationParameters,
@@ -33,7 +32,6 @@ from .pdl_ast import (
     CodeBlock,
     ContributeTarget,
     DataBlock,
-    DocumentBlock,
     EmptyBlock,
     ErrorBlock,
     ForBlock,
@@ -42,6 +40,7 @@ from .pdl_ast import (
     IfBlock,
     IncludeBlock,
     IterationType,
+    LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocationType,
@@ -60,10 +59,10 @@ from .pdl_ast import (
     RepeatUntilBlock,
     RoleType,
     ScopeType,
-    SequenceBlock,
+    TextBlock,
     empty_block_location,
 )
-from .pdl_dumper import block_to_dict
+from .pdl_dumper import blocks_to_dict
 from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
@@ -85,7 +84,7 @@ class PDLRuntimeError(PDLException):
         self,
         message: str,
         loc: Optional[LocationType] = None,
-        trace: Optional[BlockType] = None,
+        trace: Optional[BlocksType] = None,
         fallback: Optional[Any] = None,
     ):
         super().__init__(message)
@@ -192,7 +191,7 @@ def generate(
 
 def write_trace(
     trace_file: str | Path,
-    trace: BlockType,
+    trace: BlocksType,
 ):
     """Write the execution trace into a file.
 
@@ -200,21 +199,24 @@ def write_trace(
         trace_file:  File to save the execution trace.
         trace: Execution trace.
     """
-    with open(trace_file, "w", encoding="utf-8") as fp:
-        json.dump(block_to_dict(trace), fp)
+    try:
+        with open(trace_file, "w", encoding="utf-8") as fp:
+            json.dump(blocks_to_dict(trace, json_compatible=True), fp)
+    except Exception:
+        print("Fail to generate the trace", file=sys.stderr)
 
 
 def process_prog(
     state: InterpreterState,
-    initial_scope: ScopeType,
+    scope: ScopeType,
     prog: Program,
     loc: LocationType = empty_block_location,
-) -> tuple[Any, Messages, ScopeType, BlockType]:
+) -> tuple[Any, Messages, ScopeType, BlocksType]:
     """Execute a PDL program.
 
     Args:
         state: Initial state of the interpreter.
-        initial_scope: Environment defining the variables in scope to execute the program.
+        scope: Environment defining the variables in scope to execute the program.
         prog: Program to execute.
         loc: Source code location mapping. Defaults to empty_block_location.
 
@@ -224,10 +226,12 @@ def process_prog(
     Raises:
         PDLRuntimeError: If the program raises an error.
     """
-    scope: ScopeType = empty_scope | initial_scope
-    doc_generator = step_block(state, scope, block=prog.root, loc=loc)
-    for result, document, scope, trace in schedule([doc_generator]):
-        return result, document, scope, trace
+    scope = empty_scope | scope
+    doc_generator = step_blocks(
+        IterationType.LASTOF, state, scope, blocks=prog.root, loc=loc
+    )
+    for result, document, final_scope, trace in schedule([doc_generator]):
+        return result, document, final_scope, trace
     assert False
     # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
     # # result, document, scope, trace = schedule(doc_generator)
@@ -323,7 +327,7 @@ def step_advanced_block(
         ) = yield from step_blocks_of(
             block,
             "fallback",
-            IterationType.SEQUENCE,
+            IterationType.LASTOF,
             state,
             scope,
             loc=loc,
@@ -410,28 +414,20 @@ def step_block_body(
                 yield YieldResultMessage(result)
             if state.yield_background:
                 yield YieldBackgroundMessage(background)
-        case ApiBlock():
-            result, background, scope, trace = yield from step_call_api(
-                state, scope, block, loc
-            )
-            if state.yield_result:
-                yield YieldResultMessage(result)
-            if state.yield_background:
-                yield YieldBackgroundMessage(background)
-        case DocumentBlock():
+        case TextBlock():
             result, background, scope, trace = yield from step_blocks_of(
                 block,
-                "document",
-                IterationType.DOCUMENT,
+                "text",
+                IterationType.TEXT,
                 state,
                 scope,
                 loc,
             )
-        case SequenceBlock():
+        case LastOfBlock():
             result, background, scope, trace = yield from step_blocks_of(
                 block,
-                "sequence",
-                IterationType.SEQUENCE,
+                "lastOf",
+                IterationType.LASTOF,
                 state,
                 scope,
                 loc,
@@ -489,7 +485,7 @@ def step_block_body(
             content, background, scope, trace = yield from step_blocks_of(
                 block,
                 "content",
-                IterationType.SEQUENCE,
+                IterationType.LASTOF,
                 state,
                 scope,
                 loc,
@@ -499,11 +495,11 @@ def step_block_body(
             b = process_condition_of(block, "condition", scope, loc, "if")
             if b:
                 result, background, scope, trace = yield from step_blocks_of(
-                    block, "then", IterationType.SEQUENCE, state, scope, loc
+                    block, "then", IterationType.LASTOF, state, scope, loc
                 )
             elif block.elses is not None:
                 result, background, scope, trace = yield from step_blocks_of(
-                    block, "elses", IterationType.SEQUENCE, state, scope, loc, "else"
+                    block, "elses", IterationType.LASTOF, state, scope, loc, "else"
                 )
             else:
                 result = ""
@@ -520,7 +516,7 @@ def step_block_body(
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -534,7 +530,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -585,7 +581,7 @@ def step_block_body(
                     fallback=[],
                 )
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -601,7 +597,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -629,7 +625,7 @@ def step_block_body(
             iterations_trace = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.DOCUMENT
+                state.yield_result and block.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
@@ -643,7 +639,7 @@ def step_block_body(
                         scope,
                         body_trace,
                     ) = yield from step_blocks(
-                        IterationType.SEQUENCE,
+                        IterationType.LASTOF,
                         iteration_state,
                         scope,
                         block.repeat,
@@ -712,7 +708,7 @@ def step_defs(
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
         result, _, _, blocks_trace = yield from step_blocks(
-            IterationType.SEQUENCE, state, scope, blocks, newloc
+            IterationType.LASTOF, state, scope, blocks, newloc
         )
         scope = scope | {x: result}
         defs_trace[x] = blocks_trace
@@ -724,7 +720,7 @@ BlockTypeTVarStepBlocksOf = TypeVar(
 )
 
 
-def step_blocks_of(  # pylint: disable=too-many-arguments
+def step_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     block: BlockTypeTVarStepBlocksOf,
     field: str,
     iteration_type: IterationType,
@@ -777,7 +773,7 @@ def step_blocks(
             for i, block in enumerate(blocks):
                 scope = scope | {"context": messages_concat(context_init, background)}
                 new_loc = append(loc, "[" + str(i) + "]")
-                if iteration_type == IterationType.SEQUENCE and state.yield_result:
+                if iteration_type == IterationType.LASTOF and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
                 (
                     iteration_result,
@@ -812,12 +808,12 @@ def combine_results(iteration_type: IterationType, results: list[Any]):
     match iteration_type:
         case IterationType.ARRAY:
             result = results
-        case IterationType.SEQUENCE:
+        case IterationType.LASTOF:
             if len(results) > 0:
                 result = results[-1]
             else:
                 result = None
-        case IterationType.DOCUMENT:
+        case IterationType.TEXT:
             result = "".join([stringify(r) for r in results])
         case _:
             assert False
@@ -870,31 +866,54 @@ def process_condition_of(
     return result
 
 
+EXPR_START_STRING = "${"
+EXPR_END_STRING = "}"
+
+
 def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
+    result: Any
     if isinstance(expr, str):
         try:
-            if expr.startswith("{{") and expr.endswith("}}") and "}}" not in expr[:-2]:
+            if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
+                # `expr` might be a single expression and should not be stringify
                 env = Environment(
                     block_start_string="{%%%%%PDL%%%%%%%%%%",
                     block_end_string="%%%%%PDL%%%%%%%%%%}",
+                    variable_start_string=EXPR_START_STRING,
+                    variable_end_string=EXPR_END_STRING,
                     undefined=StrictUndefined,
                 )
-
-                s = env.compile_expression(expr[2:-2], undefined_to_none=False)(scope)
-                if isinstance(s, Undefined):
-                    raise UndefinedError(str(s))
-            else:
-                template = Template(
-                    expr,
-                    keep_trailing_newline=True,
-                    block_start_string="{%%%%%PDL%%%%%%%%%%",
-                    block_end_string="%%%%%PDL%%%%%%%%%%}",
-                    # comment_start_string="",
-                    # comment_end_string="",
-                    autoescape=False,
-                    undefined=StrictUndefined,
-                )
-                s = template.render(scope)
+                expr_ast = env.parse(expr)
+                if len(expr_ast.body) == 1:
+                    expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
+                else:
+                    expr_ast_nodes = []
+                if len(expr_ast_nodes) == 1:
+                    if isinstance(expr_ast_nodes[0], TemplateData):
+                        # `expr` is a string that do not include jinja expression
+                        return expr
+                    # `expr` has the shape `${ ... }`: it is a single jinja expression
+                    result = env.compile_expression(
+                        expr[2:-1], undefined_to_none=False
+                    )(scope)
+                    if isinstance(result, Undefined):
+                        raise UndefinedError(str(result))
+                    return result
+            # `expr` is not a single jinja expression
+            template = Template(
+                expr,
+                keep_trailing_newline=True,
+                block_start_string="{%%%%%PDL%%%%%%%%%%",
+                block_end_string="%%%%%PDL%%%%%%%%%%}",
+                variable_start_string=EXPR_START_STRING,
+                variable_end_string=EXPR_END_STRING,
+                # comment_start_string="",
+                # comment_end_string="",
+                autoescape=False,
+                undefined=StrictUndefined,
+            )
+            result = template.render(scope)
+            return result
         except UndefinedError as exc:
             raise PDLRuntimeExpressionError(
                 f"Error during the evaluation of {expr}: {exc}", loc
@@ -904,7 +923,6 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
                 f"Syntax error in {expr}: {exc}", loc
             ) from exc
 
-        return s
     if isinstance(expr, list):
         result = []
         for index, x in enumerate(expr):
@@ -963,7 +981,7 @@ def step_call_model(
         model_input_result, _, _, input_trace = yield from step_blocks_of(
             concrete_block,
             "input",
-            IterationType.SEQUENCE,
+            IterationType.LASTOF,
             state.with_yield_result(False).with_yield_background(False),
             scope,
             loc,
@@ -1144,36 +1162,6 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     return msg
 
 
-def step_call_api(
-    state: InterpreterState, scope: ScopeType, block: ApiBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, ApiBlock]]:
-    background: Messages
-    input_value, _, _, block = yield from step_blocks_of(
-        block,
-        "input",
-        IterationType.SEQUENCE,
-        state.with_yield_result(False).with_yield_background(False),
-        scope,
-        loc,
-    )
-    input_str = block.url + stringify(input_value)
-    try:
-        append_log(state, "API Input", input_str)
-        response = requests.get(input_str)
-        result = response.json()
-        background = [{"role": state.role, "content": stringify(result)}]
-        append_log(state, "API Output", background)
-        trace = block.model_copy(update={"result": result})
-    except Exception as exc:
-        message = f"API error: {repr(exc)}"
-        raise PDLRuntimeError(
-            message,
-            loc=loc,
-            trace=ErrorBlock(msg=message, program=block),
-        ) from exc
-    return result, background, scope, trace
-
-
 def step_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
 ) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, CodeBlock]]:
@@ -1181,7 +1169,7 @@ def step_call_code(
     code_s, _, _, block = yield from step_blocks_of(
         block,
         "code",
-        IterationType.SEQUENCE,
+        IterationType.LASTOF,
         state.with_yield_result(False).with_yield_background(False),
         scope,
         loc,
@@ -1253,7 +1241,7 @@ def step_call(
     )
     try:
         result, background, _, f_trace = yield from step_blocks(
-            IterationType.SEQUENCE, state, f_scope, f_body, fun_loc
+            IterationType.LASTOF, state, f_scope, f_body, fun_loc
         )
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(
@@ -1318,9 +1306,9 @@ def step_include(
 ) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock]]:
     file = state.cwd / block.include
     try:
-        prog, newloc = parse_file(file)
-        result, background, scope, trace = yield from step_block(
-            state, scope, prog.root, newloc
+        prog, new_loc = parse_file(file)
+        result, background, scope, trace = yield from step_blocks(
+            IterationType.LASTOF, state, scope, prog.root, new_loc
         )
         include_trace = block.model_copy(update={"trace": trace})
         return result, background, scope, include_trace
@@ -1331,6 +1319,13 @@ def step_include(
             loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
+    except PDLRuntimeStepBlocksError as exc:
+        trace = block.model_copy(update={"trace": exc.blocks})
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=trace,
+        ) from exc
 
 
 def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
@@ -1339,6 +1334,17 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
         case "json":
             try:
                 result = json.loads(text)
+            except Exception as exc:
+                raise PDLRuntimeParserError(
+                    f"Attempted to parse ill-formed JSON: {repr(exc)}"
+                ) from exc
+        case "jsonl":
+            result = []
+            try:
+                for line in text.split("\n"):
+                    if line == "":
+                        continue
+                    result.append(json.loads(line))
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
@@ -1398,7 +1404,7 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
 
 
 def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
-    return process_expr(scope, "{{ " + var + " }}", loc)
+    return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
 
 
 def append_log(state: InterpreterState, title, somestring):

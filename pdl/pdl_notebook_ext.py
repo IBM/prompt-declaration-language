@@ -14,56 +14,46 @@ class PDLMagics(Magics):
     @cell_magic
     @magic_arguments()
     @argument(
-        "result_name",
-        nargs="?",
-        default=None,
-        help="""Variable where to store the result of the execution of the provided PDL program.""",
+        "-r",
+        "--reset-context",
+        action="store_true",
+        default=False,
+        help="Reset the background context to the empty list.",
+    )
+    @argument(
+        "--viewer",
+        action="store_true",
+        default=False,
+        help="Show the execution trace in the PDL viewer.",
     )
     @needs_local_scope
     def pdl(self, line, cell, local_ns):
         line = line.strip()
         args = parse_argstring(self.pdl, line)
-        try:
-            result = exec_str(
-                cell,
-                config=InterpreterConfig(
-                    yield_result=True, yield_background=False, batch=0
-                ),
-                scope=local_ns,
-            )
-        except Exception as err:
-            print(err)
-            return
-        if args.result_name is not None:
-            local_ns[args.result_name] = result
-
-    @cell_magic
-    @magic_arguments()
-    @argument(
-        "result_name",
-        nargs="?",
-        default=None,
-        help="""Variable where to store the result of the execution of the provided PDL program.""",
-    )
-    @needs_local_scope
-    def pdl_debug(self, line, cell, local_ns):
-        line = line.strip()
-        args = parse_argstring(self.pdl_debug, line)
+        if args.reset_context:
+            scope = local_ns | {"context": []}
+        else:
+            scope = local_ns
         try:
             pdl_output = exec_str(
                 cell,
                 config=InterpreterConfig(
-                    yield_result=False, yield_background=False, batch=0
+                    yield_result=True, yield_background=False, batch=0
                 ),
-                scope=local_ns,
+                scope=scope,
                 output="all",
             )
         except Exception as err:
             print(err)
             return
-        if args.result_name is not None:
-            local_ns[args.result_name] = pdl_output["result"]
-        display_html(self.pdl_viewer(block_to_dict(pdl_output["trace"])))
+        for x, v in pdl_output["scope"].items():
+            local_ns[x] = v
+        if args.viewer:
+            display_html(
+                self.pdl_viewer(
+                    block_to_dict(pdl_output["trace"], json_compatible=True)
+                )
+            )
 
     def pdl_viewer(self, trace):
         trace_str = json.dumps(trace)
@@ -99,7 +89,7 @@ class PDLMagics(Magics):
       background-color: rgb(238, 184, 112);
     }
 
-    .pdl_document {
+    .pdl_text {
       background-color: rgb(219, 215, 250);
     }
 

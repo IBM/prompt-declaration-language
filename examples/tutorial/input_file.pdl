@@ -1,4 +1,4 @@
 description: PDL code with input block
-document:
+text:
 - read: ./data.txt
   def: HELLO

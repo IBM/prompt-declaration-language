@@ -1,5 +1,5 @@
 description: Hello world showing call out to python code
-document:
+text:
 - 'Hello, '
 - lans: python
   code: |

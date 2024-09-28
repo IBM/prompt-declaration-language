@@ -1,9 +1,9 @@
 description: Hello world showing call out to python code with condition
-document:
+text:
 - 'Hello! '
 - lan: python
   code: |
     result = True
   def: QUESTION
   contribute: []
-- "{{ QUESTION1 }}"
+- ${ QUESTION1 }

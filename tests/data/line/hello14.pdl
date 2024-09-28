@@ -1,5 +1,5 @@
 description: Hello world with model chaining
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   def: GEN
@@ -14,7 +14,7 @@ document:
     language: str
   spec: int
   return:
-    - "\nTranslate the sentence '{{ sentence }}' to {{ language }}\n"
+    - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
         stop:
@@ -24,5 +24,5 @@ document:
 - call: translate
   spec: str
   args:
-    sentence: Hello,{{ GEN }}
+    sentence: Hello,${ GEN }
     language: French

@@ -3,7 +3,7 @@ from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
 cond_data = {
     "description": "Arithmetic Expressions",
-    "document": [
+    "text": [
         "Question: Noah charges $60 for a large painting and $30 for a small painting.\n",
         "Last month he sold eight large paintings and four small paintings.\n",
         "If he sold twice as much this month, how much is his sales for this month?\n",
@@ -30,11 +30,11 @@ cond_data = {
         "Therefore he sold << 180*3= 540 >> this month.\n",
         "The answer is $540.\n\n",
         {
-            "document": [
+            "text": [
                 "Question: ",
                 {
                     "def": "QUESTION",
-                    "document": [
+                    "text": [
                         {
                             "model": "watsonx/ibm/granite-20b-code-instruct",
                             "parameters": {
@@ -46,7 +46,7 @@ cond_data = {
                 },
                 "Answer: Let's think step by step.\n",
                 {
-                    "document": [
+                    "text": [
                         {
                             "def": "REASON_OR_CALC",
                             "model": "watsonx/ibm/granite-20b-code-instruct",
@@ -57,7 +57,7 @@ cond_data = {
                         },
                         {
                             "then": {
-                                "document": [
+                                "text": [
                                     {
                                         "def": "EXPR",
                                         "model": "watsonx/ibm/granite-20b-code-instruct",
@@ -71,13 +71,13 @@ cond_data = {
                                         "def": "RESULT",
                                         "lan": "python",
                                         "code": {
-                                            "document": ["result = ", {"get": "EXPR"}]
+                                            "text": ["result = ", {"get": "EXPR"}]
                                         },
                                     },
                                     " >>",
                                 ],
                             },
-                            "if": '{{ REASON_OR_CALC.endswith("<<") }}',
+                            "if": '${ REASON_OR_CALC.endswith("<<") }',
                         },
                     ]
                 },
@@ -130,21 +130,21 @@ assert_data = [
 # def test_cond():
 #    state = InterpreterState()
 #    data = Program.model_validate(cond_data)
-#    document, _, _, _ = process_prog(state, empty_scope, data)
-#    assert document == "".join(assert_data)
+#    text, _, _, _ = process_prog(state, empty_scope, data)
+#    assert text == "".join(assert_data)
 
 
 def cond_data1(show, name):
     return {
         "description": "Hello world showing call out to python code with condition",
-        "document": [
+        "text": [
             {
                 "def": "NAME",
-                "document": [
+                "text": [
                     {
                         "lan": "python",
                         "code": {
-                            "document": [
+                            "text": [
                                 "import random\n",
                                 "import string\n",
                                 "result = 'Tracy'",
@@ -156,7 +156,7 @@ def cond_data1(show, name):
             },
             {
                 "then": [", hello there!\n"],
-                "if": '{{ NAME.endswith("' + name + '") }}',
+                "if": '${ NAME.endswith("' + name + '") }',
                 "else": "",
             },
         ],
@@ -166,8 +166,8 @@ def cond_data1(show, name):
 def test_cond1():
     state = InterpreterState()
     data = Program.model_validate(cond_data1([], "blah"))
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == ""
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == ""
 
 
 def test_cond2():
@@ -175,32 +175,32 @@ def test_cond2():
     data = Program.model_validate(
         cond_data1([ContributeTarget.RESULT, ContributeTarget.CONTEXT], "acy")
     )
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Tracy, hello there!\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Tracy, hello there!\n"
 
 
 repeat_until_data = {
     "description": "Hello world showing call out to python code with condition",
-    "document": [
+    "text": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lan": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
             "repeat": [
                 {
-                    "document": [
+                    "text": [
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": "result = {{ I }} + 1",
+                            "code": "result = ${ I } + 1",
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
         },
     ],
 }
@@ -209,8 +209,8 @@ repeat_until_data = {
 def test_repeat_until():
     state = InterpreterState()
     data = Program.model_validate(repeat_until_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "".join(
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "".join(
         [
             "0",
             "\n",
@@ -222,26 +222,26 @@ def test_repeat_until():
 
 repeat_until_array_data = {
     "description": "Hello world showing call out to python code with condition",
-    "document": [
+    "text": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lan": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
             "repeat": [
                 {
-                    "document": [
+                    "text": [
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": "result = {{ I }} + 1",
+                            "code": "result = ${ I } + 1",
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
             "as": "array",
         },
     ],
@@ -251,43 +251,43 @@ repeat_until_array_data = {
 def test_repeat_until_array():
     state = InterpreterState()
     data = Program.model_validate(repeat_until_array_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "".join(["0", "\n", '["1\\n", "2\\n", "3\\n", "4\\n", "5\\n"]'])
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "".join(["0", "\n", '["1\\n", "2\\n", "3\\n", "4\\n", "5\\n"]'])
 
 
-repeat_until_document_data = {
+repeat_until_text_data = {
     "description": "Hello world showing call out to python code with condition",
-    "document": [
+    "text": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lan": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
             "repeat": [
                 {
-                    "document": [
+                    "text": [
                         {
                             "def": "I",
                             "lan": "python",
-                            "code": ["result = {{ I }} + 1"],
+                            "code": ["result = ${ I } + 1"],
                         },
                         "\n",
                     ]
                 }
             ],
-            "until": "{{ I == 5 }}",
-            "as": "document",
+            "until": "${ I == 5 }",
+            "as": "text",
         },
     ],
 }
 
 
-def test_repeat_until_document():
+def test_repeat_until_text():
     state = InterpreterState()
-    data = Program.model_validate(repeat_until_document_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "".join(
+    data = Program.model_validate(repeat_until_text_data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "".join(
         [
             "0",
             "\n",
@@ -307,29 +307,29 @@ def test_repeat_until_document():
 
 repeat_until_str_data = {
     "description": "Hello world showing call out to python code with condition",
-    "document": [
+    "text": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lan": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
             "repeat": {
-                "document": [
+                "text": [
                     {
                         "def": "I",
-                        "document": [
+                        "text": [
                             {
                                 "lan": "python",
-                                "code": ["result = {{ I }} + 1"],
+                                "code": ["result = ${ I } + 1"],
                             }
                         ],
                     },
                     "\n",
                 ],
             },
-            "until": '{{ I in "5" }}',
-            "as": "document",
+            "until": '${ I in "5" }',
+            "as": "text",
         },
     ],
 }
@@ -338,8 +338,8 @@ repeat_until_str_data = {
 def test_repeat_until_str():
     state = InterpreterState()
     data = Program.model_validate(repeat_until_str_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "".join(
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "".join(
         [
             "0",
             "\n",

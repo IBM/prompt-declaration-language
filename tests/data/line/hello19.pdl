@@ -1,9 +1,9 @@
 description: Hello world to call into a model
 defs:
   model: watsonx/ibm/granite-34b-code-instruct
-document:
+text:
 - Hello,
-- model: "{{ models }}"
+- model: ${ models }
   spec: int
   parameters:
     decoding_method: greedy

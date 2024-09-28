@@ -1,10 +1,10 @@
 description: math problem
-document:
+text:
 
 - model: watsonx/meta-llama/llama-3-70b-instruct
   def: PROGRAM
   input:
-    document:
+    text:
     - |
       
       Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
@@ -23,7 +23,7 @@ document:
 
     
 
-    - "Question: {{ question }}"
+    - "Question: ${ question }"
   parameters:
     stop_sequences: ["Question"]
     include_stop_sequence: false

@@ -2,19 +2,19 @@ description: Demo of ReAct template
 defs:
   available_tools:
     data: ["Search"]
-document:
+text:
   - include: ../ReWOO.pdl
   # - def: filtered_tools
   #   call: filter_tools_by_name
   #   contribute: []
   #   args:
-  #     tools: "{{ default_tools }}"
-  #     tool_names: "{{ available_tools }}"
+  #     tools: ${ default_tools }
+  #     tool_names: ${ available_tools }
   - call: rewoo
     args:
       task: "When did the Battle of White Plains take place?"
       model: ibm/granite-34b-code-instruct
-      tools: "{{ default_tools }}"
+      tools: ${ default_tools }
       trajectories:
         - - question: Thomas, Toby, and Rebecca worked a total of 157 hours in one week. Thomas worked x hours. Toby worked 10 hours less than twice what Thomas worked, and Rebecca worked 8 hours less than Toby. How many hours did Rebecca work?
           - thought: Given Thomas worked x hours, translate the problem into algebraic expressions and solve with Wolfram Alpha.

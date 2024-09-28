@@ -152,13 +152,13 @@ def test_pdltype_to_jsonschema():
 function_call = {
     "description": "Call hello",
     "defs": {"name": "Bob"},
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {},
             "return": {
-                "document": ["Hello ", {"get": "name"}, "!"],
+                "text": ["Hello ", {"get": "name"}, "!"],
             },
         },
         {"call": "hello"},
@@ -169,18 +169,18 @@ function_call = {
 def test_function_call():
     state = InterpreterState()
     data = Program.model_validate(function_call)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello Bob!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello Bob!"
 
 
 function_call1 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "str"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": "Bob"}},
     ],
@@ -190,18 +190,18 @@ function_call1 = {
 def test_function_call1():
     state = InterpreterState()
     data = Program.model_validate(function_call1)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello Bob!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello Bob!"
 
 
 function_call2 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "int"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 42}},
     ],
@@ -211,18 +211,18 @@ function_call2 = {
 def test_function_call2():
     state = InterpreterState()
     data = Program.model_validate(function_call2)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello 42!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello 42!"
 
 
 function_call3 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "list"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": ["Bob", "Carrol"]}},
     ],
@@ -232,18 +232,18 @@ function_call3 = {
 def test_function_call3():
     state = InterpreterState()
     data = Program.model_validate(function_call3)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == 'Hello ["Bob", "Carrol"]!'
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == 'Hello ["Bob", "Carrol"]!'
 
 
 function_call4 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "obj"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": {"bob": "caroll"}}},
     ],
@@ -253,18 +253,18 @@ function_call4 = {
 def test_function_call4():
     state = InterpreterState()
     data = Program.model_validate(function_call4)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == 'Hello {"bob": "caroll"}!'
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == 'Hello {"bob": "caroll"}!'
 
 
 function_call5 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "bool"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": True}},
     ],
@@ -274,18 +274,18 @@ function_call5 = {
 def test_function_call5():
     state = InterpreterState()
     data = Program.model_validate(function_call5)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello true!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello true!"
 
 
 function_call6 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -295,18 +295,18 @@ function_call6 = {
 def test_function_call6():
     state = InterpreterState()
     data = Program.model_validate(function_call6)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello 6.6!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello 6.6!"
 
 
 function_call7 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -316,18 +316,18 @@ function_call7 = {
 def test_function_call7():
     state = InterpreterState()
     data = Program.model_validate(function_call7)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello 6.6!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello 6.6!"
 
 
 function_call8 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "floats"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": 6.6}},
     ],
@@ -343,12 +343,12 @@ def test_function_call8():
 
 function_call9 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
-            "return": {"document": ["Hello ", {"get": "name"}, " {{ address}}", "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street"}},
     ],
@@ -358,18 +358,18 @@ function_call9 = {
 def test_function_call9():
     state = InterpreterState()
     data = Program.model_validate(function_call9)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello 6.6 street!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello 6.6 street!"
 
 
 function_call10 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": ["Hello ", {"get": "name"}, " ${ address}", "!"],
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street", "extra": "stuff"}},
     ],
@@ -385,12 +385,12 @@ def test_function_call10():
 
 function_call11 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {},
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": ["Hello ", {"get": "name"}, " ${ address}", "!"],
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street", "extra": "stuff"}},
     ],
@@ -406,12 +406,12 @@ def test_function_call11():
 
 function_call12 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": ["Hello ", {"get": "name"}, " ${ address}", "!"],
         },
         {"call": "hello", "args": {}},
     ],
@@ -427,7 +427,7 @@ def test_function_call12():
 
 function_call13 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
@@ -448,12 +448,12 @@ def test_function_call13():
 
 function_call14 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {},
-            "return": ["Hello ", "{{ something }}", "!"],
+            "return": ["Hello ", "${ something }", "!"],
         },
         {"call": "hello", "args": {}},
     ],
@@ -469,13 +469,13 @@ def test_function_call14():
 
 function_call15 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
             "spec": "str",
-            "return": {"document": ["Hello ", {"get": "name"}, " {{ address}}", "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street"}},
     ],
@@ -485,19 +485,19 @@ function_call15 = {
 def test_function_call15():
     state = InterpreterState()
     data = Program.model_validate(function_call15)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello 6.6 street!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello 6.6 street!"
 
 
 function_call16 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "float", "address": "str"},
             "spec": "int",
-            "return": ["Hello ", {"get": "name"}, " {{ address}}", "!"],
+            "return": ["Hello ", {"get": "name"}, " ${ address}", "!"],
         },
         {"call": "hello", "args": {"name": 6.6, "address": "street"}},
     ],
@@ -513,7 +513,7 @@ def test_function_call16():
 
 function_call17 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
@@ -529,13 +529,13 @@ function_call17 = {
 def test_function_call17():
     state = InterpreterState()
     data = Program.model_validate(function_call17)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "[1, 2, 3]"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "[1, 2, 3]"
 
 
 function_call18 = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
@@ -558,15 +558,15 @@ def test_function_call18():
 hello = {
     "description": "Hello world!",
     "spec": "str",
-    "document": ["Hello, world!"],
+    "text": ["Hello, world!"],
 }
 
 
 def test_hello():
     state = InterpreterState()
     data = Program.model_validate(hello)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, world!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, world!"
 
 
 hello1 = {

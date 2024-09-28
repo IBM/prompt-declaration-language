@@ -4,7 +4,7 @@ defs:
       question: str
       model: str
     return:
-      document:
+      text:
       - |
         What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
         Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
@@ -26,17 +26,17 @@ defs:
         Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
         director, screenwriter, actor
 
-        {{ question }}
+        ${ question }
       - repeat:
-          document:
+          text:
           - def: thought
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
               stop:
               - "Act:"
               include_stop_sequence: true
           - def: action
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
               stop:
               - "\n"
@@ -44,18 +44,18 @@ defs:
             parser: json
             spec: {name: str, arguments: {topic: str}}
           - def: observation
-            if: '{{ action.name == "Search" }}'
+            if: ${ action.name == "Search" }
             then:
-              document:
+              text:
               - "\nObs: "
               - lan: python
                 code: |
                   import warnings, wikipedia
                   warnings.simplefilter("ignore")
                   try:
-                    result = wikipedia.summary("{{ action.arguments.topic }}")
+                    result = wikipedia.summary("${ action.arguments.topic }")
                   except wikipedia.WikipediaException as e:
                     result = str(e)
-        until: '{{ action.name != "Search" }}'
-        as: document
+        until: ${ action.name != "Search" }
+        as: text
 

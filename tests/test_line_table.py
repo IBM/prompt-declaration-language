@@ -16,7 +16,7 @@ line = {
         "",
         "tests/data/line/hello.pdl:0 - Missing required field: return",
         "tests/data/line/hello.pdl:0 - Missing required field: function",
-        "tests/data/line/hello.pdl:2 - Field not allowed: documents",
+        "tests/data/line/hello.pdl:2 - Field not allowed: texts",
     ],
 }
 
@@ -181,7 +181,7 @@ line15 = {
     "file": "tests/data/line/hello15.pdl",
     "errors": [
         "",
-        "tests/data/line/hello15.pdl:6 - Error during the evaluation of {{ boolean }}: 'boolean' is undefined",
+        "tests/data/line/hello15.pdl:6 - Error during the evaluation of ${ boolean }: 'boolean' is undefined",
     ],
 }
 
@@ -222,7 +222,7 @@ line18 = {
     "file": "tests/data/line/hello18.pdl",
     "errors": [
         "",
-        "tests/data/line/hello18.pdl:13 - Error during the evaluation of {{ J == 5 }}: 'J' is undefined",
+        "tests/data/line/hello18.pdl:13 - Error during the evaluation of ${ J == 5 }: 'J' is undefined",
     ],
 }
 
@@ -235,7 +235,7 @@ line19 = {
     "file": "tests/data/line/hello19.pdl",
     "errors": [
         "",
-        "tests/data/line/hello19.pdl:6 - Error during the evaluation of {{ models }}: 'models' is undefined",
+        "tests/data/line/hello19.pdl:6 - Error during the evaluation of ${ models }: 'models' is undefined",
         # "tests/data/line/hello19.pdl:6 - Type errors during spec checking:",
         # "tests/data/line/hello19.pdl:6 -  should be of type <class 'int'>",
     ],
@@ -250,7 +250,7 @@ line20 = {
     "file": "tests/data/line/hello20.pdl",
     "errors": [
         "",
-        "tests/data/line/hello20.pdl:3 - Error during the evaluation of Who is{{ NAME }}?: 'NAME' is undefined",
+        "tests/data/line/hello20.pdl:3 - Error during the evaluation of Who is${ NAME }?: 'NAME' is undefined",
     ],
 }
 
@@ -263,7 +263,7 @@ line21 = {
     "file": "tests/data/line/hello21.pdl",
     "errors": [
         "",
-        "tests/data/line/hello21.pdl:3 - Error during the evaluation of {{ QUESTION }}: 'QUESTION' is undefined",
+        "tests/data/line/hello21.pdl:3 - Error during the evaluation of ${ QUESTION }: 'QUESTION' is undefined",
     ],
 }
 
@@ -276,7 +276,7 @@ line22 = {
     "file": "tests/data/line/hello22.pdl",
     "errors": [
         "",
-        "tests/data/line/hello22.pdl:4 - Error during the evaluation of {{ I }}: 'I' is undefined",
+        "tests/data/line/hello22.pdl:4 - Error during the evaluation of ${ I }: 'I' is undefined",
     ],
 }
 
@@ -289,7 +289,7 @@ line23 = {
     "file": "tests/data/line/hello23.pdl",
     "errors": [
         "",
-        "tests/data/line/hello23.pdl:5 - Error during the evaluation of {{ I }}: 'I' is undefined",
+        "tests/data/line/hello23.pdl:5 - Error during the evaluation of ${ I }: 'I' is undefined",
     ],
 }
 
@@ -302,7 +302,7 @@ line24 = {
     "file": "tests/data/line/hello24.pdl",
     "errors": [
         "",
-        "tests/data/line/hello24.pdl:24 - Error during the evaluation of Hello,{{ GEN1 }}: 'GEN1' is undefined",
+        "tests/data/line/hello24.pdl:24 - Error during the evaluation of Hello,${ GEN1 }: 'GEN1' is undefined",
     ],
 }
 
@@ -317,7 +317,7 @@ line25 = {
         "",
         "Hello, World!",
         "tests/data/line/hello25.pdl:15 - 'sentence1' is undefined",
-        "{{ translateText(sentence2) }}",
+        "${ translateText(sentence2) }",
     ],
 }
 
@@ -356,7 +356,7 @@ line28 = {
     "file": "tests/data/line/hello28.pdl",
     "errors": [
         "",
-        "tests/data/line/hello28.pdl:9 - Error during the evaluation of {{ QUESTION1 }}: 'QUESTION1' is undefined",
+        "tests/data/line/hello28.pdl:9 - Error during the evaluation of ${ QUESTION1 }: 'QUESTION1' is undefined",
     ],
 }
 
@@ -369,7 +369,7 @@ line29 = {
     "file": "tests/data/line/hello29.pdl",
     "errors": [
         "",
-        "tests/data/line/hello29.pdl:10 - Error during the evaluation of {{ QUESTION1 }}: 'QUESTION1' is undefined",
+        "tests/data/line/hello29.pdl:10 - Error during the evaluation of ${ QUESTION1 }: 'QUESTION1' is undefined",
     ],
 }
 
@@ -397,7 +397,7 @@ line31 = {
         "",
         "tests/data/line/hello31.pdl:0 - Missing required field: function",
         "tests/data/line/hello31.pdl:0 - Missing required field: return",
-        "tests/data/line/hello31.pdl:11 - Field not allowed: show_result",
+        "tests/data/line/hello31.pdl:9 - Field not allowed: show_result",
     ],
 }
 

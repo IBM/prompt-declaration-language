@@ -1,11 +1,11 @@
 description: Hello world showing call out to python code with condition
-document:
+text:
 - 'Hello! '
 - lan: python
   code: |
     result = True
   def: QUESTION
   contribute: []
-- if: '{{ QUESTION }}'
+- if: '${ QUESTION }'
   then: How are you?
   spec: bool

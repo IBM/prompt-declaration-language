@@ -1,5 +1,5 @@
 description: Variable def and use, model input
-document: 
+text: 
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   def: name
@@ -9,4 +9,4 @@ document:
 - "\n"
 - model: watsonx/ibm/granite-20b-multilingual
   input:
-      - "Translate the word '{{ name | trim }}' to French\n"
+      - "Translate the word '${ name | trim }' to French\n"
