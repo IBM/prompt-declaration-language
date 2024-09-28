@@ -19,7 +19,7 @@ export function show_output(data: PdlBlocks) {
     })
     .with({result: P._}, data => {
       const code = document.createElement('pre');
-      code.innerHTML = htmlize(data.result)
+      code.innerHTML = htmlize(data.result);
       div.appendChild(code);
     })
     .otherwise(() => {
@@ -120,7 +120,7 @@ export function show_block(data: PdlBlock) {
     .with({kind: 'data'}, data => {
       body.classList.add('pdl_data');
       const code = document.createElement('pre');
-      code.appendChild(show_result_or_code(data))
+      code.appendChild(show_result_or_code(data));
       body.appendChild(code);
     })
     .with({kind: 'if'}, data => {
@@ -151,10 +151,11 @@ export function show_block(data: PdlBlock) {
       // TODO
       body.classList.add('pdl_function');
       body.classList.add('pdl_show_result_false');
-      const args = document.createElement('pre');
-      args.innerHTML = htmlize(stringify({function: data.function}));
-      body.appendChild(args);
-      body.appendChild(show_blocks(data.return));
+      body.innerHTML = htmlize(null)
+      // const args = document.createElement('pre');
+      // args.innerHTML = htmlize(stringify({function: data.function}));
+      // body.appendChild(args);
+      // body.appendChild(show_blocks(data.return));
     })
     .with({kind: 'call'}, data => {
       body.classList.add('pdl_call');
