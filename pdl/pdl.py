@@ -197,10 +197,10 @@ def main():
         return
 
     if args.sandbox:
-        WATSONX_APIKEY = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
-        WATSONX_URL = "WATSONX_URL=" + os.environ["WATSONX_URL"]
-        WATSONX_PROJECT_ID = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
-        LOCAL_DIR = os.getcwd() + ":/local"     
+        watsonx_apikey = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
+        watsonx_url = "WATSONX_URL=" + os.environ["WATSONX_URL"]
+        watsonx_project_id = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
+        local_dir = os.getcwd() + ":/local"
         try:
             args = sys.argv[1:]
             args.remove("--sandbox")
@@ -209,15 +209,15 @@ def main():
                     "docker",
                     "run",
                     "-v",
-                    LOCAL_DIR,
+                    local_dir,
                     "-w",
                     "/local",
                     "-e",
-                    WATSONX_APIKEY,
+                    watsonx_apikey,
                     "-e",
-                    WATSONX_URL,
+                    watsonx_url,
                     "-e",
-                    WATSONX_PROJECT_ID,
+                    watsonx_project_id,
                     "--rm",
                     "-it",
                     "pdl",
