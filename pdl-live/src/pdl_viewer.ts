@@ -160,9 +160,9 @@ export function show_block(data: PdlBlock) {
     .with({kind: 'call'}, data => {
       body.classList.add('pdl_call');
       if (data.trace) {
-        const args = document.createElement('pre');
-        args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
-        body.appendChild(args);
+        // const args = document.createElement('pre');
+        // args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
+        // body.appendChild(args);
         body.appendChild(show_blocks(data.trace));
       } else {
         body.appendChild(show_result_or_code(data));
