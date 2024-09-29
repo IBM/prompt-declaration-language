@@ -1,3 +1,6 @@
+import os
+import subprocess
+import sys
 import argparse
 import json
 from pathlib import Path
@@ -18,6 +21,11 @@ from .pdl_ast import (
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
+
+WATSONX_APIKEY = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
+WATSONX_URL = "WATSONX_URL=" + os.environ["WATSONX_URL"]
+WATSONX_PROJECT_ID = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
+LOCAL_DIR = os.getcwd() + ":/local"
 
 
 class InterpreterConfig(TypedDict, total=False):
@@ -143,6 +151,11 @@ def exec_file(
 def main():
     parser = argparse.ArgumentParser("")
     parser.add_argument(
+        "--sandbox",
+        action=argparse.BooleanOptionalAction,
+        help="run the interpreter in a container. A docker daemon must be running."
+    )
+    parser.add_argument(
         "--schema",
         action=argparse.BooleanOptionalAction,
         help="generate PDL Json Schema",
@@ -183,6 +196,40 @@ def main():
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
+
+    if args.pdl is None:
+        parser.print_help()
+        return
+
+    if args.sandbox:
+        try:
+            args = sys.argv[1:]
+            args.remove("--sandbox")
+            subprocess.run(
+            [
+                "docker",
+                "run",
+                "-v",
+                LOCAL_DIR,
+                "-w",
+                "/local",
+                "-e",
+                WATSONX_APIKEY,
+                "-e",
+                WATSONX_URL,
+                "-e",
+                WATSONX_PROJECT_ID,
+                "--rm",
+                "-it",
+                "pdl",
+                *args,
+            ],
+            check=True,
+            )
+        except Exception as e:
+            print("An error occured while running docker. Is the docker daemon running?")
+        return
+
     if args.schema:
         schema, top_level_schema = models_json_schema(
             [
@@ -196,9 +243,7 @@ def main():
         print(json.dumps(top_level_schema, indent=2))
         return
 
-    if args.pdl is None:
-        parser.print_help()
-        return
+
 
     initial_scope = {}
     if args.data_file is not None:

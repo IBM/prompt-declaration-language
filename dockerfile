@@ -13,4 +13,4 @@ RUN pip install '.[all]'
 
 
 # Run app.py when the container launches
-ENTRYPOINT ["pdl-local"]
+ENTRYPOINT ["pdl"]
