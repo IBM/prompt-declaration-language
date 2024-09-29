@@ -22,11 +22,6 @@ from .pdl_ast import (
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
 
-WATSONX_APIKEY = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
-WATSONX_URL = "WATSONX_URL=" + os.environ["WATSONX_URL"]
-WATSONX_PROJECT_ID = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
-LOCAL_DIR = os.getcwd() + ":/local"
-
 
 class InterpreterConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
@@ -202,6 +197,10 @@ def main():
         return
 
     if args.sandbox:
+        WATSONX_APIKEY = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
+        WATSONX_URL = "WATSONX_URL=" + os.environ["WATSONX_URL"]
+        WATSONX_PROJECT_ID = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
+        LOCAL_DIR = os.getcwd() + ":/local"     
         try:
             args = sys.argv[1:]
             args.remove("--sandbox")
