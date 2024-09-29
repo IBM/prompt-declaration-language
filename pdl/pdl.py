@@ -1,8 +1,8 @@
+import argparse
+import json
 import os
 import subprocess
 import sys
-import argparse
-import json
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
 
@@ -153,7 +153,7 @@ def main():
     parser.add_argument(
         "--sandbox",
         action=argparse.BooleanOptionalAction,
-        help="run the interpreter in a container. A docker daemon must be running."
+        help="run the interpreter in a container. A docker daemon must be running.",
     )
     parser.add_argument(
         "--schema",
@@ -206,28 +206,30 @@ def main():
             args = sys.argv[1:]
             args.remove("--sandbox")
             subprocess.run(
-            [
-                "docker",
-                "run",
-                "-v",
-                LOCAL_DIR,
-                "-w",
-                "/local",
-                "-e",
-                WATSONX_APIKEY,
-                "-e",
-                WATSONX_URL,
-                "-e",
-                WATSONX_PROJECT_ID,
-                "--rm",
-                "-it",
-                "pdl",
-                *args,
-            ],
-            check=True,
+                [
+                    "docker",
+                    "run",
+                    "-v",
+                    LOCAL_DIR,
+                    "-w",
+                    "/local",
+                    "-e",
+                    WATSONX_APIKEY,
+                    "-e",
+                    WATSONX_URL,
+                    "-e",
+                    WATSONX_PROJECT_ID,
+                    "--rm",
+                    "-it",
+                    "pdl",
+                    *args,
+                ],
+                check=True,
             )
-        except Exception as e:
-            print("An error occured while running docker. Is the docker daemon running?")
+        except Exception:
+            print(
+                "An error occured while running docker. Is the docker daemon running?"
+            )
         return
 
     if args.schema:
@@ -242,8 +244,6 @@ def main():
         top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
         return
-
-
 
     initial_scope = {}
     if args.data_file is not None:
