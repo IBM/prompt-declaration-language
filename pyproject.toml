@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pdl"
-version = "0.0.1"
+name = "prompt-declaration-language"
+dynamic = ["version"]
 dependencies = [
   "pydantic~=2.0",
   "ibm-generative-ai~=3.0",
@@ -56,9 +56,14 @@ all = [ "pdl[dev,examples,docs]" ]
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"
 Documentation = "https://ibm.github.io/prompt-declaration-language/tutorial/"
+Source = "https://github.com/IBM/prompt-declaration-language"
 Repository = "https://github.com/IBM/prompt-declaration-language"
 Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 
 [project.scripts]
-pdl-local = "pdl.pdl:main"
-pdl = "pdl.pdl_runner:main" 
+pdl = "pdl.pdl:main"
+
+[tool.setuptools_scm]
+
+[tool.setuptools.packages.find]
+where = ["src"]
