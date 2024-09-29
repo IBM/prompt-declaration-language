@@ -63,5 +63,7 @@ Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 [project.scripts]
 pdl = "pdl.pdl:main"
 
+[tool.setuptools_scm]
+
 [tool.setuptools.packages.find]
 where = ["src"]
