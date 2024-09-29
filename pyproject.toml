@@ -56,6 +56,7 @@ all = [ "pdl[dev,examples,docs]" ]
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"
 Documentation = "https://ibm.github.io/prompt-declaration-language/tutorial/"
+Source = "https://github.com/IBM/prompt-declaration-language"
 Repository = "https://github.com/IBM/prompt-declaration-language"
 Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 
