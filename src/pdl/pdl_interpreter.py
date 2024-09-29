@@ -172,9 +172,6 @@ def generate(
                 print(stringify(result))
         else:
             print()
-        with open(log_file, "w", encoding="utf-8") as log_fp:
-            for line in state.log:
-                log_fp.write(line)
         if trace_file:
             write_trace(trace_file, trace)
     except PDLParseError as exc:
@@ -187,6 +184,11 @@ def generate(
         print(message, file=sys.stderr)
         if trace_file and exc.trace is not None:
             write_trace(trace_file, exc.trace)
+    finally:
+        if state is not None:
+            with open(log_file, "w", encoding="utf-8") as log_fp:
+                for line in state.log:
+                    log_fp.write(line)
 
 
 def write_trace(
