@@ -1,0 +1,9 @@
+description: Wikipedia example using the react_fun function definition
+text:
+  - include: ./react_fun.pdl
+  - call: react
+    args:
+      question: How many years ago was the discoverer of the Hudson River born?
+      model: watsonx/ibm/granite-34b-code-instruct
+
+

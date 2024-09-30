@@ -1,0 +1,9 @@
+defs:
+
+  # ... several other defs, ~85 lines
+  get_current_weather:
+    function:
+      subject: str
+    return:
+      text: hello
+      show_result: false

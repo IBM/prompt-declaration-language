@@ -1,7 +1,6 @@
 """PDL programs are represented by the Pydantic data structure defined in this file.
 """
 
-
 from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
@@ -40,11 +39,10 @@ class BlockKind(StrEnum):
     CALL = "call"
     MODEL = "model"
     CODE = "code"
-    API = "api"
     GET = "get"
     DATA = "data"
-    DOCUMENT = "document"
-    SEQUENCE = "sequence"
+    TEXT = "text"
+    LASTOF = "lastOf"
     ARRAY = "array"
     OBJECT = "object"
     MESSAGE = "message"
@@ -83,7 +81,7 @@ class RegexParser(Parser):
     mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
 
 
-ParserType: TypeAlias = Literal["json", "yaml"] | PdlParser | RegexParser
+ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
 RoleType: TypeAlias = Optional[str]
 
 
@@ -126,7 +124,6 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
-    has_error: bool = False
 
 
 class FunctionBlock(Block):
@@ -289,18 +286,6 @@ class CodeBlock(Block):
     """
 
 
-class ApiBlock(Block):
-    """Call an API."""
-
-    kind: Literal[BlockKind.API] = BlockKind.API
-    api: str
-    url: str
-    """URL of the endpoint."""
-    input: "BlocksType"
-    """Arguments to the request.
-    """
-
-
 class GetBlock(Block):
     """Get the value of a variable."""
 
@@ -319,20 +304,20 @@ class DataBlock(Block):
     """Do not evaluate expressions inside strings."""
 
 
-class DocumentBlock(Block):
+class TextBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
-    kind: Literal[BlockKind.DOCUMENT] = BlockKind.DOCUMENT
-    document: "BlocksType"
-    """Body of the document.
+    kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
+    text: "BlocksType"
+    """Body of the text.
     """
 
 
-class SequenceBlock(Block):
+class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
-    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
-    sequence: "BlocksType"
+    kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
+    lastOf: "BlocksType"
 
 
 class ArrayBlock(Block):
@@ -353,8 +338,8 @@ class MessageBlock(Block):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    role: RoleType
-    """Role of associated to the message."""
+    role: RoleType  # pyright: ignore
+    """Role of associated to the message."""  # pyright: ignore
     content: "BlocksType"
     """Content of the message."""
 
@@ -377,9 +362,9 @@ class IfBlock(Block):
 
 
 class IterationType(StrEnum):
-    SEQUENCE = "sequence"
+    LASTOF = "lastOf"
     ARRAY = "array"
-    DOCUMENT = "document"
+    TEXT = "text"
 
 
 class ForBlock(Block):
@@ -409,7 +394,7 @@ class RepeatBlock(Block):
     num_iterations: int
     """Number of iterations to perform.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -426,7 +411,7 @@ class RepeatUntilBlock(Block):
     until: ExpressionType
     """Condition of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.SEQUENCE)
+    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -477,15 +462,14 @@ AdvancedBlockType: TypeAlias = (
     | LitellmModelBlock
     | BamModelBlock
     | CodeBlock
-    | ApiBlock
     | GetBlock
     | DataBlock
     | IfBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
-    | DocumentBlock
-    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
     | ArrayBlock
     | ObjectBlock
     | MessageBlock
@@ -509,7 +493,7 @@ class Program(RootModel):
     Prompt Declaration Language program (PDL)
     """
 
-    root: BlockType
+    root: BlocksType
     """Entry point to parse a PDL program using Pydantic.
     """
 
@@ -525,8 +509,9 @@ class PdlBlocks(RootModel):
 
 
 class PDLException(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
 
 
 MAX_NEW_TOKENS = 1024
@@ -602,32 +587,32 @@ def set_default_granite_model_parameters(
     if parameters is None:
         parameters = {}
     if "decoding_method" not in parameters:
-        parameters[
-            "decoding_method"
-        ] = DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+        parameters["decoding_method"] = (
+            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+        )
     if "max_tokens" in parameters and parameters["max_tokens"] is None:
-        parameters[
-            "max_tokens"
-        ] = MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        parameters["max_tokens"] = (
+            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        )
     if "min_new_tokens" not in parameters:
-        parameters[
-            "min_new_tokens"
-        ] = MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        parameters["min_new_tokens"] = (
+            MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+        )
     if "repetition_penalty" not in parameters:
-        parameters[
-            "repetition_penalty"
-        ] = REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+        parameters["repetition_penalty"] = (
+            REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+        )
     if parameters["decoding_method"] == "sample":
         if "temperature" not in parameters:
-            parameters[
-                "temperature"
-            ] = TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["temperature"] = (
+                TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
         if "top_k" not in parameters:
-            parameters[
-                "top_k"
-            ] = TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["top_k"] = (
+                TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
         if "top_p" not in parameters:
-            parameters[
-                "top_p"
-            ] = TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            parameters["top_p"] = (
+                TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+            )
     return parameters

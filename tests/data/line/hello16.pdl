@@ -1,5 +1,5 @@
 description: Hello world to call into a model
-document:
+text:
 - read: ./hello16_data.json
   parser: json
   def: data
@@ -9,15 +9,15 @@ document:
   def: model_output
   spec: {"bob": int, "carol": str}
   input: 
-    document:
+    text:
     - for: 
-        question: "{{ data.questions }}"
-        answer: "{{ data.answers }}"
+        question: ${ data.questions }
+        answer: ${ data.answers }
       repeat:
         - |
-          {{ question }}
-          {{ answer }}
-      as: document
+          ${ question }
+          ${ answer }
+      as: text
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
   parser: yaml
   parameters:

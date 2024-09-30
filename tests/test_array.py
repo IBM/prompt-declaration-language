@@ -16,7 +16,7 @@ for_data = {
     "for": {
         "i": [1, 2, 3, 4],
     },
-    "repeat": "{{ i }}",
+    "repeat": "${ i }",
 }
 
 
@@ -29,21 +29,20 @@ def test_for_data():
 
 repeat_until_data = {
     "description": "Repeat until",
-    "sequence": [
+    "lastOf": [
         {
             "def": "I",
-            "document": [{"lan": "python", "code": "result = 0"}],
-            "contribute": [],
+            "text": [{"lan": "python", "code": "result = 0"}],
         },
         {
             "repeat": [
                 {
                     "def": "I",
                     "lan": "python",
-                    "code": ["result = {{ I }} + 1"],
+                    "code": ["result = ${ I } + 1"],
                 }
             ],
-            "until": "{{ I == 5 }}",
+            "until": "${ I == 5 }",
             "as": "array",
         },
     ],

@@ -1,5 +1,5 @@
 description: tool use
-document:
+text:
 - |-
   What is 18 + 12 x 3?
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
@@ -17,8 +17,8 @@ document:
     stop: ["\n"]
   parser: json
   spec: {name: str, arguments: {expr: str}}
-- if: '{{ action.name == "Calc" }}'
+- if: ${ action.name == "Calc" }
   then:
   - "Obs: "
   - lan: python
-    code: result = {{ action.arguments.expr }}
+    code: result = ${ action.arguments.expr }

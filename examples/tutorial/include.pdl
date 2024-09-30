@@ -1,21 +1,21 @@
 description: Granite Multi-Round Chat
-document:
+text:
 - include: ../granite/granite_defs.pdl
 - read: ../granite/multi-prompts.json
   parser: json
   def: prompts
   spec: {prompts: [str]}
   contribute: []
-- "{{ SYSTEM_CONTENT_CHAT }}"
+- ${ SYSTEM_CONTENT_CHAT }
 - for:
-    prompt: "{{ prompts.prompts }}"
+    prompt: ${ prompts.prompts }
   repeat:
-    document:
+    text:
     - |
-      {{ prompt }}
+      ${ prompt }
     - model: watsonx/ibm/granite-13b-chat-v2
       parameters:
         decoding_method: sample
         max_new_tokens: 512
-  as: document
+  as: text
 role: user

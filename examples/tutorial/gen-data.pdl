@@ -4,20 +4,20 @@ defs:
     read: ./gen-data.yaml
     parser: yaml
     spec: { questions: [str], answers: [obj] }
-document:
+text:
   - model: watsonx/ibm/granite-20b-code-instruct
     def: model_output
     spec: {name: str, age: int}
     input:
-      document:
+      text:
       - for: 
-          question: "{{ data.questions }}"
-          answer: "{{ data.answers }}"
+          question: ${ data.questions }
+          answer: ${ data.answers }
         repeat:
           - |
-            {{ question }}
-            {{ answer }}
-        as: document
+            ${ question }
+            ${ answer }
+        as: text
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
         and set them appropriately. Write the age in letters.

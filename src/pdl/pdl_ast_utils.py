@@ -1,7 +1,6 @@
 from typing import Callable, Sequence
 
 from .pdl_ast import (
-    ApiBlock,
     ArrayBlock,
     Block,
     BlocksType,
@@ -9,7 +8,6 @@ from .pdl_ast import (
     CallBlock,
     CodeBlock,
     DataBlock,
-    DocumentBlock,
     EmptyBlock,
     ErrorBlock,
     ForBlock,
@@ -17,6 +15,7 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    LastOfBlock,
     MessageBlock,
     ModelBlock,
     ObjectBlock,
@@ -25,7 +24,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RepeatUntilBlock,
-    SequenceBlock,
+    TextBlock,
 )
 
 
@@ -46,16 +45,14 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 iter_blocks(f, block.input)
         case CodeBlock():
             iter_blocks(f, block.code)
-        case ApiBlock():
-            iter_blocks(f, block.input)
         case GetBlock():
             pass
         case DataBlock():
             pass
-        case DocumentBlock():
-            iter_blocks(f, block.document)
-        case SequenceBlock():
-            iter_blocks(f, block.sequence)
+        case TextBlock():
+            iter_blocks(f, block.text)
+        case LastOfBlock():
+            iter_blocks(f, block.lastOf)
         case ArrayBlock():
             iter_blocks(f, block.array)
         case ObjectBlock():

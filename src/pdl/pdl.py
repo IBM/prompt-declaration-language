@@ -1,5 +1,8 @@
 import argparse
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
 
@@ -143,6 +146,11 @@ def exec_file(
 def main():
     parser = argparse.ArgumentParser("")
     parser.add_argument(
+        "--sandbox",
+        action=argparse.BooleanOptionalAction,
+        help="run the interpreter in a container. A docker daemon must be running.",
+    )
+    parser.add_argument(
         "--schema",
         action=argparse.BooleanOptionalAction,
         help="generate PDL Json Schema",
@@ -183,6 +191,46 @@ def main():
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
+
+    if args.pdl is None:
+        parser.print_help()
+        return
+
+    if args.sandbox:
+        watsonx_apikey = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
+        watsonx_url = "WATSONX_URL=" + os.environ["WATSONX_URL"]
+        watsonx_project_id = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
+        local_dir = os.getcwd() + ":/local"
+        try:
+            args = sys.argv[1:]
+            args.remove("--sandbox")
+            subprocess.run(
+                [
+                    "docker",
+                    "run",
+                    "-v",
+                    local_dir,
+                    "-w",
+                    "/local",
+                    "-e",
+                    watsonx_apikey,
+                    "-e",
+                    watsonx_url,
+                    "-e",
+                    watsonx_project_id,
+                    "--rm",
+                    "-it",
+                    "pdl",
+                    *args,
+                ],
+                check=True,
+            )
+        except Exception:
+            print(
+                "An error occured while running docker. Is the docker daemon running?"
+            )
+        return
+
     if args.schema:
         schema, top_level_schema = models_json_schema(
             [
@@ -194,8 +242,6 @@ def main():
         )
         top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
-    if args.pdl is None:
-        parser.print_help()
         return
 
     initial_scope = {}

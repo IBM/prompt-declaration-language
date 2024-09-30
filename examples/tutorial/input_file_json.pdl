@@ -3,6 +3,6 @@ defs:
   PERSON:
     read: ./input.json
     parser: json
-document:
-- "{{ PERSON.name }} lives at the following address:\n"
-- "{{ PERSON.address.number }} {{ PERSON.address.street }} in the town of {{ PERSON.address.town }}, {{ PERSON.address.state }}"
+text:
+- "${ PERSON.name } lives at the following address:\n"
+- "${ PERSON.address.number } ${ PERSON.address.street } in the town of ${ PERSON.address.town }, ${ PERSON.address.state }"

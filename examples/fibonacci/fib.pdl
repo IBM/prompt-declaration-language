@@ -1,5 +1,5 @@
 description: Fibonacci
-document:
+text:
 - def: CODE
   model: watsonx/ibm/granite-20b-code-instruct
   input: "Write a Python function to compute the Fibonacci sequence\n\n"
@@ -16,13 +16,13 @@ document:
 - def: EXTRACTED
   lan: python
   code: |
-    s = """'{{ CODE }} '"""
+    s = """'${ CODE } '"""
     result = s.split("```")[1].replace("python", "")
 - def: RESULT
   lan: python
   code: |
-    {{ EXTRACTED }}
-    result = fib({{ N }})
+    ${ EXTRACTED }
+    result = fib(${ N })
   contribute: []
 - 'The result is: '
 - get: RESULT

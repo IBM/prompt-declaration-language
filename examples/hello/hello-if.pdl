@@ -1,5 +1,5 @@
 description: Hello world with condition
-document:
+text:
 - 'Hello! '
 - lan: python
   code: |
@@ -7,5 +7,5 @@ document:
     result = random.choice([False, True])
   def: QUESTION
   contribute: []
-- if: '{{ QUESTION }}'
+- if: ${ QUESTION }
   then: How are you?

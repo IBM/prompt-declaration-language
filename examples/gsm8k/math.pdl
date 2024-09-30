@@ -1,10 +1,10 @@
 description: math problem
-document:
+text:
 
 - model: watsonx/meta-llama/llama-3-70b-instruct
   def: PDL
   input:
-    document:
+    text:
     - |
       Question: A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. 
       Over three hundred years, it has consumed 847 people. Ships have been built larger over time, 
@@ -14,7 +14,7 @@ document:
       Answer:
       ```
       description: my answer
-      document:
+      text:
       - Let's call the number of people on the first ship x.
       - lan: python
         def: equation
@@ -23,7 +23,7 @@ document:
           from sympy import *
           x = symbols('x')
           result = x + 2*x + 4*x
-      - "The equation is {{ equation }} = 847.\n"
+      - "The equation is ${ '${' } equation ${ '}' } = 847.\n"
       - "Solving for x, we get "
       - lan: python
         def: RESULT
@@ -31,15 +31,15 @@ document:
         - |
           from sympy import *
           x = symbols('x')
-          result = solve({{ equation }} - 847, x)[0]
-      - "\nThe answer is {{RESULT}}."
+          result = solve(${ '${' } equation ${ '}' } - 847, x)[0]
+      - "\nThe answer is ${ '${' } RESULT ${ '}' }."
       - lan: python
         def: FINAL
         code:
         - |
-          result = {{ RESULT }}
+          result = ${ '${' } RESULT ${ '}' }
       - "\n#### "
-      - "{{ FINAL }}"
+      - ${ '${' } FINAL ${ '}' }"
       ```
       Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
       Each can has 3 tennis balls. How many tennis balls does he have now?
@@ -47,7 +47,7 @@ document:
       Answer: 
       ```
       description: my answer
-      document:
+      text:
       - Roger started with 5 tennis balls
       - lan: python
         def: tennis_balls
@@ -65,14 +65,14 @@ document:
         def: RESULT
         code:
         - |
-          result = {{ tennis_balls }} + {{ bought_balls }}
+          result = ${ '${' } tennis_balls ${ '}' } + ${ '${' } bought_balls ${ '}' }
       - lan: python
         def: FINAL
         code:
         - |
-          result = {{ RESULT }}
+          result = ${ '${' } RESULT ${ '}' }
       - "\n#### "
-      - "{{ FINAL }}"
+      - "${ '${' } FINAL ${ '}' }"
       ```
 
       Question: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. 
@@ -82,7 +82,7 @@ document:
       Answer:
       ```
       description: my answer
-      document:
+      text:
       - Betty needs $100 for the wallet.
       - lan: python
         def: cost
@@ -94,13 +94,13 @@ document:
         def: betty_already_has
         code: 
         - |
-          result = {{ cost }} / 2
+          result = ${ '${' } cost ${ '}' } / 2
       - "\nHalf of the money she needs is\n"
       - lan: python
         def: half_cost
         code: 
         - |
-          result = {{ cost }} / 2
+          result = ${ '${' } cost ${ '}' } / 2
       - "\nBetty's parents gave her:\n"
       - lan: python
         def: money_from_parents
@@ -112,34 +112,34 @@ document:
         def: money_from_grandparents
         code: 
         - |
-          result = {{money_from_parents}} * 2
+          result = ${ '${' } money_from_parents ${ '}' } * 2
       - "\nSo Betty has:\n"
       - lan: python
         def: money_betty_has
         code: 
         - |
-          result = {{ betty_already_has }} + {{ money_from_parents }} + {{ money_from_grandparents }}
+          result = ${ '${' }  betty_already_has ${ '}' }  + ${ '${' }  money_from_parents ${ '}' }  + ${ '${' }  money_from_grandparents ${ '}' } 
       - "\nTo buy the wallet, Betty needs\n"
       - lan: python
         def: money_needed
         code: 
         - |
-          result = {{ cost }} - {{ money_betty_has }}
-      - "\nThe answer is {{ money_needed }}."
+          result = ${ '${' } cost ${ '}' } - ${ '${' } money_betty_has ${ '}' }
+      - "\nThe answer is ${ '${' } money_needed ${ '}' }."
       - lan: python
         def: FINAL
         code:
         - |
-          result = {{ money_needed }}
+          result = ${ '${' } money_needed ${ '}' }
       - "\n#### "
-      - "{{ FINAL }}"
+      - "${ '${' } FINAL ${ '}' }"
       ```
     
 
-    - "Question: {{ question }}"
+    - "Question: ${ question }"
     - If numbers are very large, do not modify them.
     - Please pay attention when using the sympy library to import and use it correctly.
-    - The answer final line should be {{ FINAL }}.
+    - The answer final line should be ${ '${' } FINAL ${ '}' }.
   
   parameters:
     stop_sequences: ["Question"]
@@ -153,7 +153,7 @@ document:
     from pdl.pdl_interpreter import empty_scope
     import re
     import yaml
-    s = """'{{ PDL }}'"""
+    s = """'${ PDL }'"""
     pdl = s.split("```")[1]
     obj = yaml.safe_load(pdl)
     state = InterpreterState()

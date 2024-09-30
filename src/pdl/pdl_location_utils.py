@@ -92,7 +92,11 @@ def get_line_map(prog: str) -> dict[str, int]:
 
 
 def get_loc_string(loc: LocationType) -> str:
-    return loc.file + ":" + str(get_line(loc.table, loc.path)) + " - "
+    if loc.file == "":
+        msg = "line " + str(get_line(loc.table, loc.path)) + " - "
+    else:
+        msg = loc.file + ":" + str(get_line(loc.table, loc.path)) + " - "
+    return msg
 
 
 def get_line(table: dict[str, int], p: list[str]) -> int:

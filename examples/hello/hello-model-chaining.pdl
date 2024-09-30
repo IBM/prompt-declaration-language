@@ -1,5 +1,5 @@
 description: Hello world showing model chaining
-document:
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
@@ -10,7 +10,7 @@ document:
   def: NAME
 - |-
   !
-  Who is{{ NAME }}?
+  Who is${ NAME }?
 - "\n"
 - model: watsonx/google/flan-t5-xl
   parameters:
