@@ -26,10 +26,6 @@ The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it i
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
-## Demo Video
-
-<iframe src=https://github.com/user-attachments/assets/2629bf1e-bc54-4c45-b598-47914ab05a45 width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>
-
 
 ## Interpreter Installation
 
@@ -61,7 +57,7 @@ To run the interpreter:
 pdl-local <path/to/example.yaml>
 ```
 
-The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns, see [prompt-library](https://github.com/IBM/prompt-declaration-language/blob/main/examples/prompt_library) for a library of ready-to-use prompting patterns. 
+The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
 
 We highly recommend using VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
 
