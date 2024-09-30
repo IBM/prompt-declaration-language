@@ -7,4 +7,3 @@ text:
 - call: hello
   args:
     name: World
-- "\n"

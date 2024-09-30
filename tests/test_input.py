@@ -1,7 +1,11 @@
 from pathlib import Path
 
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
+from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
+    InterpreterState,
+    empty_scope,
+    process_prog,
+)
 
 input_data = {
     "description": "Input block example",
