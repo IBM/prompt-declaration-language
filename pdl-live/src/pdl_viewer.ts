@@ -90,7 +90,7 @@ export function show_array(array: PdlBlocks) {
   match(array)
     .with(P.array(P._), data => {
       for (const doc of data) {
-        const child = show_blocks('lastOf', doc);
+        const child = show_lastOf(doc);
         doc_fragment.appendChild(child);
         doc_fragment.appendChild(comma);
       }
@@ -183,9 +183,12 @@ export function show_block(data: PdlBlock) {
       body.appendChild(show_result_or_code(data));
     })
     .with({kind: 'include'}, data => {
-      // TODO
       body.classList.add('pdl_include');
-      body.appendChild(show_result_or_code(data));
+      if (data.trace) {
+        body.appendChild(show_program(data.trace));
+      } else {
+        body.appendChild(show_result_or_code(data));
+      }
     })
     .with({kind: 'function'}, _ => {
       // TODO
