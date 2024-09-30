@@ -367,6 +367,41 @@ class IterationType(StrEnum):
     TEXT = "text"
 
 
+class JoinConfig(BaseModel):
+    pass
+
+
+class JoinText(JoinConfig):
+    iteration_type: Literal[IterationType.TEXT] = Field(
+        alias="as", default=IterationType.TEXT
+    )
+    """String concatenation of the result of each iteration.
+    """
+
+    join_string: str = Field(alias="with", default="")
+    """String used to concatenate each iteration of the loop.
+    """
+
+
+class JoinArray(JoinConfig):
+    iteration_type: Literal[IterationType.ARRAY] = Field(
+        alias="as", default=IterationType.ARRAY
+    )
+    """Return the result of each iteration as an array.
+    """
+
+
+class JoinLastOf(JoinConfig):
+    iteration_type: Literal[IterationType.LASTOF] = Field(
+        alias="as", default=IterationType.LASTOF
+    )
+    """Return the result of the last iteration.
+    """
+
+
+JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
+
+
 class ForBlock(Block):
     """Iteration over arrays."""
 
@@ -377,7 +412,7 @@ class ForBlock(Block):
     repeat: "BlocksType"
     """Body of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -394,7 +429,7 @@ class RepeatBlock(Block):
     num_iterations: int
     """Number of iterations to perform.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -411,7 +446,7 @@ class RepeatUntilBlock(Block):
     until: ExpressionType
     """Condition of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use

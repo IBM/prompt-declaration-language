@@ -6,7 +6,8 @@ text:
   - model: watsonx/ibm/granite-20b-code-instruct
     parameters:
       decoding_method: greedy
-  - "\n"
+  join:
+    with: "\n"
   num_iterations: 2
 - 'The most important of these is '
 - def: ITEM

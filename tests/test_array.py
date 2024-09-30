@@ -17,6 +17,7 @@ for_data = {
         "i": [1, 2, 3, 4],
     },
     "repeat": "${ i }",
+    "join": {"as": "array"},
 }
 
 
@@ -43,7 +44,7 @@ repeat_until_data = {
                 }
             ],
             "until": "${ I == 5 }",
-            "as": "array",
+            "join": {"as": "array"},
         },
     ],
 }

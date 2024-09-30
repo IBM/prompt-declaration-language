@@ -12,4 +12,3 @@ text:
       spec: str
     - "\n"
   until: '${ I == 5 }'
-  as: text

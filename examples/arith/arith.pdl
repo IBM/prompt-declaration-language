@@ -39,7 +39,5 @@ text:
               code: result = ${ EXPR }
             - ' >>'
       until: ${ "The answer is" in REASON_OR_CALC }
-      as: text
     - "\n\n"
-  as: text
   num_iterations: 3

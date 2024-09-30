@@ -17,4 +17,3 @@ text:
         - "\n\nTranslate the above to ${ language }"
         - model: watsonx/ibm/granite-13b-chat-v2
   until: ${ language == 'stop' }
-  as: text

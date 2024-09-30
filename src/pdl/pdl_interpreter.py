@@ -518,11 +518,23 @@ def step_block_body(
             iterations_trace: list[BlocksType] = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 for _ in range(n):
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
                         "context": messages_concat(context_init, background)
                     }
@@ -549,7 +561,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
@@ -583,11 +595,23 @@ def step_block_body(
                     fallback=[],
                 )
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 for i in range(lengths[0]):
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
                         "context": messages_concat(context_init, background)
                     }
@@ -616,7 +640,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iter_trace})
@@ -627,11 +651,23 @@ def step_block_body(
             iterations_trace = []
             context_init = scope_init["context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 while not stop:
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
                         "context": messages_concat(context_init, background)
                     }
@@ -659,7 +695,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})

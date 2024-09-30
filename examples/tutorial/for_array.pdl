@@ -2,4 +2,6 @@ description: for loop
 for:
   i: [1, 2, 3, 4]
 repeat: 
-  ${ i }
+  - ${ i }
+join:
+  as: array

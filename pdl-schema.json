@@ -4772,9 +4772,12 @@
           "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
-        "as": {
-          "$ref": "#/$defs/IterationType",
-          "default": "array",
+        "join": {
+          "$ref": "#/$defs/JoinConfig",
+          "default": {
+            "as": "text",
+            "with": ""
+          },
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
@@ -7257,14 +7260,10 @@
       "title": "IncludeBlock",
       "type": "object"
     },
-    "IterationType": {
-      "enum": [
-        "lastOf",
-        "array",
-        "text"
-      ],
-      "title": "IterationType",
-      "type": "string"
+    "JoinConfig": {
+      "properties": {},
+      "title": "JoinConfig",
+      "type": "object"
     },
     "LastOfBlock": {
       "additionalProperties": false,
@@ -12115,9 +12114,12 @@
           "title": "Num Iterations",
           "type": "integer"
         },
-        "as": {
-          "$ref": "#/$defs/IterationType",
-          "default": "lastOf",
+        "join": {
+          "$ref": "#/$defs/JoinConfig",
+          "default": {
+            "as": "text",
+            "with": ""
+          },
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {
@@ -12868,9 +12870,12 @@
           "description": "Condition of the loop.\n    ",
           "title": "Until"
         },
-        "as": {
-          "$ref": "#/$defs/IterationType",
-          "default": "lastOf",
+        "join": {
+          "$ref": "#/$defs/JoinConfig",
+          "default": {
+            "as": "text",
+            "with": ""
+          },
           "description": "Define how to combine the result of each iteration.\n    "
         },
         "trace": {

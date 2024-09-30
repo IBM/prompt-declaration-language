@@ -39,6 +39,5 @@ text:
           lan: python
           code: result = ${ EXPR }
         - ' >>'
-  as: text
   until: ${ "The answer is" in REASON_OR_CALC }
 - "\n"
