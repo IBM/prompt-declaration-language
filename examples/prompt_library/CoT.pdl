@@ -23,7 +23,7 @@ defs:
       - |-
         Question: ${ question }
       - "Answer: Let's think step by step. "
-      - model: "${ model }"
+      - model: ${ model }
         parameters:
           decoding_method: "greedy"
           stop_sequences:
@@ -37,15 +37,15 @@ defs:
         { list: { obj: { question: str, reasoning: str, answer: str } } }
     return:
       for:
-        example: "${ examples }"
+        example: ${ examples }
       repeat:
-       text:
+        text:
           call: cot_block
           args:
-            question: "${ example.question }"
-            reasoning: "${ example.reasoning }"
-            answer: "${ example.answer }"
-      as: document
+            question: ${ example.question }
+            reasoning: ${ example.reasoning }
+            answer: ${ example.answer }
+      as: text
 
   chain_of_thought:
     function:
@@ -56,11 +56,11 @@ defs:
     return:
       - call: fewshot_cot
         args:
-          examples: "${ examples }"
+          examples: ${ examples }
       - |
         Question: ${ question }
       - "Answer: Let's think step by step. "
-      - model: "${ model }"
+      - model: ${ model }
         parameters:
           decoding_method: greedy
           stop_sequences:

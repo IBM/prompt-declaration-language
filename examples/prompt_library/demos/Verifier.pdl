@@ -8,18 +8,18 @@ text:
   - def: filtered_tools
     call: filter_tools_by_name
     args:
-      tools: "${ default_tools }"
-      tool_names: "${ available_tools }"
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
   - def: QUESTION
     read:
     message: "Please enter a question: "
   - def: GRANITE_RESULT
     call: react
     args:
-      context: "${ granite_models.granite_7b_lab.system_prompt }"
-      question: "${ QUESTION }"
+      context: ${ granite_models.granite_7b_lab.system_prompt }
+      question: ${ QUESTION }
       model: "ibm/granite-7b-lab"
-      tools: "${ filtered_tools }"
+      tools: ${ filtered_tools }
       trajectories: []
   - "\n\n-------- Verifying answer --------\n\n"
   - def: LLAMA_RESULT
@@ -33,6 +33,6 @@ text:
 
         Please answer as True or False.
       model: "watsonx/ibm/granite-34b-code-instruct"
-      tools: "${ filtered_tools }"
+      tools: ${ filtered_tools }
       trajectories: []
   - "\n\nThe answer '${ GRANITE_RESULT.answer }' has been verified as '${LLAMA_RESULT.answer}'."

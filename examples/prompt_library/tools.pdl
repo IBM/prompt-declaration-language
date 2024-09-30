@@ -26,9 +26,9 @@ defs:
                 result = f"\"{subject}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
               except wikipedia.WikipediaException as e:
                 result = str(e)
-      - if: "${ wrap_document == True }"
+      - if: ${ wrap_document == True }
         then: "[Document]\n${ result|trim }\n[End]"
-        else: "${ result|trim }"
+        else: ${ result|trim }
 
   Search_json:
     function:
@@ -48,16 +48,16 @@ defs:
                   return str(e)
 
               result = main(**arguments)
-      - if: "${ wrap_document }"
+      - if: ${ wrap_document }
         then: "[Document]\n${ result|trim }\n[End]"
-        else: "${ result }"
+        else: ${ result }
 
   default_model: "watsonx/ibm/granite-34b-code-instruct"
   LLM:
     function:
       subject: str
     return:
-      model: "${ default_model }"
+      model: ${ default_model }
       parameters:
         stop_sequences:
           - "<|endoftext|>"
@@ -208,7 +208,7 @@ defs:
       tools: { list: obj }
       tool_names: { list: str }
     return:
-      data: "${ tools|selectattr('name', 'in', tool_names)|list }"
+      data: ${ tools|selectattr('name', 'in', tool_names)|list }
 
   list_tools:
     function:
@@ -217,29 +217,29 @@ defs:
       - defs:
           signatures:
             for:
-              tool: "${ tools }"
+              tool: ${ tools }
             repeat: "${ tool.display_name }[<${ tool.parameters|join('>, <', attribute='name') }>]"
           typed_signatures:
             for:
-              tool: "${ tools }"
+              tool: ${ tools }
             repeat:
               - defs:
                   params:
                     for:
-                      param: "${ tool.parameters }"
+                      param: ${ tool.parameters }
                     repeat: "${ param.name}${ (': ' ~ param.type) if param.type else '' }"
               - "${ tool.display_name }(${ params|join(', ') })"
-          display_names: "${ tools|map(attribute='display_name')|list }"
-          pdl_functions: "${ tools|map(attribute='pdl_function')|list }"
+          display_names: ${ tools|map(attribute='display_name')|list }
+          pdl_functions: ${ tools|map(attribute='pdl_function')|list }
           name_map:
             lan: python
             code: |
               result = dict(zip(display_names, pdl_functions, strict=True))
       - data:
-          names: "${ tools|map(attribute='display_name')|list }"
-          display_names: "${ tools|map(attribute='display_name')|list }"
-          pdl_functions: "${ tools|map(attribute='pdl_function')|list }"
-          name_map: "${ name_map }"
-          signatures: "${ signatures }"
-          typed_signatures: "${ typed_signatures }"
-          descriptions: "${ tools|map(attribute='description')|list }"
+          names: ${ tools|map(attribute='display_name')|list }
+          display_names: ${ tools|map(attribute='display_name')|list }
+          pdl_functions: ${ tools|map(attribute='pdl_function')|list }
+          name_map: ${ name_map }
+          signatures: ${ signatures }
+          typed_signatures: ${ typed_signatures }
+          descriptions: ${ tools|map(attribute='description')|list }

@@ -6,26 +6,26 @@ defs:
       trajectory: { list: obj }
     return:
       - for:
-          trajectory: "${ trajectory }"
+          trajectory: ${ trajectory }
         repeat:
           - defs:
-              type: "${ trajectory.keys()|first }"
-          - if: "${ type == 'question'}"
+              type: ${ trajectory.keys()|first }
+          - if: ${ type == 'question'}
             then: |
               Question: ${ trajectory[type]|trim }
-          - if: "${ type == 'task'}"
+          - if: ${ type == 'task'}
             then: |
               Task: ${ trajectory[type]|trim }
-          - if: "${ type == 'thought'}"
+          - if: ${ type == 'thought'}
             then: |
               Tho: ${ trajectory[type]|trim }
-          - if: "${ type == 'action'}"
+          - if: ${ type == 'action'}
             then: |
               Act: ${ trajectory[type]|trim }
-          - if: "${ type == 'observation'}"
+          - if: ${ type == 'observation'}
             then: |
               Obs: ${ trajectory[type]|trim }
-          - if: "${ type not in ['question', 'task', 'thought', 'action', 'observation'] }"
+          - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
             then: "${ type }: ${ trajectory[type]|trim }"
       - "\n"
 
@@ -45,14 +45,14 @@ defs:
       tools: { list: obj }
     return:
       for:
-        tool: "${ tools }"
+        tool: ${ tools }
       repeat:
         for:
-          example: "${ tool.examples }"
+          example: ${ tool.examples }
         repeat:
           call: react_block
           args:
-            trajectory: "${ example }"
+            trajectory: ${ example }
 
   react:
     function:
@@ -65,24 +65,24 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "${ tools.append(finish_action) or tools }"
+              tools: ${ tools.append(finish_action) or tools }
       - "Available tools:\n"
       - for:
-          name: "${ TOOL_INFO.display_names }"
-          sig: "${ TOOL_INFO.signatures }"
-          desc: "${ TOOL_INFO.descriptions }"
+          name: ${ TOOL_INFO.display_names }
+          sig: ${ TOOL_INFO.signatures }
+          desc: ${ TOOL_INFO.descriptions }
         repeat: |
           ${ name }: ${ desc }
       - "\n"
       - call: demonstrate_tools
         args:
-          tools: "${ tools }"
+          tools: ${ tools }
       - for:
-          traj: "${ trajectories }"
+          traj: ${ trajectories }
         repeat:
           call: react_block
           args:
-            trajectory: "${ traj }"
+            trajectory: ${ traj }
       - "${ task }\nTho:"
       - defs:
           temperature: 0.7
@@ -90,55 +90,55 @@ defs:
         repeat:
           - repeat:
               - defs:
-                  iterations: "${ iterations+1 }"
+                  iterations: ${ iterations+1 }
               - def: THOUGHT
-                model: "${ model }"
+                model: ${ model }
                 parameters:
                   time_limit: 60000
                   random_seed: 42
                   truncate_input_tokens: 8191
                   decoding_method: sample
                   repetition_penalty: 1.1
-                  temperature: "${ temperature }"
+                  temperature: ${ temperature }
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-            until: "${ THOUGHT.endswith('Act:') or iterations>20 }"
+            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action_raw
-            model: "${ model }"
+            model: ${ model }
             parameters:
               time_limit: 60000
               random_seed: 42
               truncate_input_tokens: 8191
               decoding_method: sample
               repetition_penalty: 1.1
-              temperature: "${ temperature }"
+              temperature: ${ temperature }
               stop_sequences: ["[", "\n"]
               include_stop_sequence: false
           - defs:
-              ACTION: "${ action_raw|trim }"
+              ACTION: ${ action_raw|trim }
           - "["
           - def: SUBJECT
-            model: "${ model }"
+            model: ${ model }
             parameters:
               time_limit: 60000
               random_seed: 42
               truncate_input_tokens: 8191
               decoding_method: sample
               repetition_penalty: 1.1
-              temperature: "${ temperature }"
+              temperature: ${ temperature }
               stop_sequences: ["]", "\n"]
               include_stop_sequence: false
           - "]"
-          - if: "${ ACTION != 'Finish' }"
+          - if: ${ ACTION != 'Finish' }
             then:
               - "\nObs: "
-              - if: "${ ACTION in TOOL_INFO.display_names }"
+              - if: ${ ACTION in TOOL_INFO.display_names }
                 then:
-                  - call: "${ TOOL_INFO.name_map[ACTION] }"
+                  - call: ${ TOOL_INFO.name_map[ACTION] }
                     args:
-                      subject: "${ SUBJECT }"
+                      subject: ${ SUBJECT }
                   - "\nTho:"
-                  - model: "${ model }"
+                  - model: ${ model }
                     fallback: "Error calling model"
                     parameters:
                       time_limit: 60000
@@ -146,13 +146,13 @@ defs:
                       truncate_input_tokens: 8191
                       repetition_penalty: 1.1
                       decoding_method: sample
-                      temperature: "${ temperature }"
+                      temperature: ${ temperature }
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-        until: "${ ACTION == 'Finish' or iterations>20 }"
+        until: ${ ACTION == 'Finish' or iterations>20 }
       - data:
-          answer: "${ SUBJECT|trim }"
+          answer: ${ SUBJECT|trim }
 
   react_json:
     function:
@@ -165,24 +165,24 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "${ tools.append(finish_action) or tools }"
+              tools: ${ tools.append(finish_action) or tools }
       - "Available tools:\n" # The preprompt!
       - for:
-          name: "${ TOOL_INFO.display_names }"
-          sig: "${ TOOL_INFO.signatures }"
-          desc: "${ TOOL_INFO.descriptions }"
+          name: ${ TOOL_INFO.display_names }
+          sig: ${ TOOL_INFO.signatures }
+          desc: ${ TOOL_INFO.descriptions }
         repeat: |
           ${ name }: ${ desc }
       - "\n"
       - call: demonstrate_tools
         args:
-          tools: "${ tools }"
+          tools: ${ tools }
       - for:
-          traj: "${ trajectories }"
+          traj: ${ trajectories }
         repeat:
           call: react_block
           args:
-            trajectory: "${ traj }"
+            trajectory: ${ traj }
       - "${ task }\nTho:"
       - defs:
           temperature: 0.05
@@ -191,39 +191,39 @@ defs:
         repeat:
           - repeat:
               - defs:
-                  iterations: "${ iterations+1 }"
+                  iterations: ${ iterations+1 }
               - def: THOUGHT
-                model: "${ model }"
+                model: ${ model }
                 parameters:
-                  decoding_method: "${ decoding_method }"
-                  temperature: "${ temperature }"
+                  decoding_method: ${ decoding_method }
+                  temperature: ${ temperature }
                   stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-            until: "${ THOUGHT.endswith('Act:') or iterations>20 }"
+            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action
-            model: "${ model }"
+            model: ${ model }
             parser: json
             spec: {name: str, arguments: obj}
             parameters:
-              decoding_method: "${ decoding_method }"
-              temperature: "${ temperature }"
+              decoding_method: ${ decoding_method }
+              temperature: ${ temperature }
               stop_sequences: ["\n", "<|endoftext|>"]
               include_stop_sequence: false
-          - if: "${ action.name != 'Finish' }"
+          - if: ${ action.name != 'Finish' }
             then:
               - "\nObs: "
-              - if: "${ action.name in TOOL_INFO.display_names }"
+              - if: ${ action.name in TOOL_INFO.display_names }
                 then:
-                  - call: "${ TOOL_INFO.name_map[action.name] }"
+                  - call: ${ TOOL_INFO.name_map[action.name] }
                     args:
-                      arguments: "${ action.arguments }"
-                  - model: "${ model }"
+                      arguments: ${ action.arguments }
+                  - model: ${ model }
                     parameters:
-                      decoding_method: "${ decoding_method }"
-                      temperature: "${ temperature }"
+                      decoding_method: ${ decoding_method }
+                      temperature: ${ temperature }
                       stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') } and Finish[<answer>]."
-        until: "${ action.name == 'Finish' or iterations>20 }"
+        until: ${ action.name == 'Finish' or iterations>20 }
       - data:
-          answer: "${ action.arguments }"
+          answer: ${ action.arguments }
