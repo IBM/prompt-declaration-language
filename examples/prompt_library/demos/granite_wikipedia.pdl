@@ -31,7 +31,7 @@ document:
       stop_sequences: ["\n", "<|endoftext|>"]
       include_stop_sequence: false
     parser: json
-    spec: {name: str, arguments: {topic: str}
+    spec: {name: str, arguments: {topic: str}}
   - def: observation
     if: '${ action.name == "Search" }'
     then:

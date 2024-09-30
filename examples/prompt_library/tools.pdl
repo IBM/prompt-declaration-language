@@ -87,9 +87,14 @@ defs:
     function:
       subject: str
     return:
-      api: https
-      url: https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=
-      input: "${ subject }"
+      lan: python
+      code: |
+        import requests
+        response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }')
+        result = response.content
+      def: WEATHER
+      parser: json
+      contribute: []
 
   default_tools:
     data:
