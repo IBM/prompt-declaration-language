@@ -5,7 +5,7 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-lastOf:
+text:
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
   contribute: []
