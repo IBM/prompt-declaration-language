@@ -14,6 +14,7 @@ from .pdl_ast import (
     CodeBlock,
     ContributeTarget,
     DataBlock,
+    EmptyBlock,
     ErrorBlock,
     ForBlock,
     FunctionBlock,
@@ -145,6 +146,8 @@ def block_to_dict(
             d["multiline"] = block.multiline
         case IncludeBlock():
             d["include"] = block.include
+            if block.trace:
+                d["trace"] = blocks_to_dict(block.trace, json_compatible)
         case IfBlock():
             d["if"] = block.condition
             d["then"] = blocks_to_dict(block.then, json_compatible)
@@ -188,6 +191,8 @@ def block_to_dict(
                 d["trace"] = blocks_to_dict(
                     block.trace, json_compatible
                 )  # pyright: ignore
+        case EmptyBlock():
+            pass
         case ErrorBlock():
             d["program"] = blocks_to_dict(block.program, json_compatible)
             d["msg"] = block.msg
