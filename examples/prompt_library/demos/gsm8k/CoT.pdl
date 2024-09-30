@@ -1,5 +1,5 @@
 description: Demo of CoT template
-document:
+text:
   - include: ../../CoT.pdl
   - call: chain_of_thought
     args:

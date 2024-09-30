@@ -25,7 +25,7 @@ defs:
             - observation: 1200
             # - thought: "He sold #E2 this month."
             # - action: "Finish[#E2]"
-document:
+text:
   - include: ../../tools.pdl
   - include: ../../ReWoo.pdl
   - call: rewoo

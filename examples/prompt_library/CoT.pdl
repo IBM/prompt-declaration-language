@@ -39,7 +39,7 @@ defs:
       for:
         example: "${ examples }"
       repeat:
-        document:
+       text:
           call: cot_block
           args:
             question: "${ example.question }"

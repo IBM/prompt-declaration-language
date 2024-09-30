@@ -14,9 +14,9 @@ defs:
         repeat:
           - defs:
               type:
-                document: "${ trajectory.keys()|first }"
+               text: "${ trajectory.keys()|first }"
               content:
-                document: "${ trajectory.values()|first }"
+               text: "${ trajectory.values()|first }"
           - if: "${ type in ['task', 'question'] }"
             then: |
               Task: ${ content|trim }
@@ -140,7 +140,7 @@ defs:
                 Plan: ${ PLAN }
                 Evidence: ${ tool_output }
       - def: solution_input
-        document: |-
+       text: |-
           Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
 
           ${ plans|join }
@@ -156,6 +156,6 @@ defs:
             - "<|endoftext|>"
           include_stop_sequence: false
         input:
-          document: "${ solution_input }"
+         text: "${ solution_input }"
       - data:
           answer: "${ SOLUTION }"

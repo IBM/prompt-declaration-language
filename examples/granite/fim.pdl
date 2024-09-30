@@ -5,7 +5,7 @@ defs:
       prefix: str
       suffix: str
     return: "<fim_prefix>{{ prefix }}<fim_suffix>{{ suffix }}<fim_middle>"
-document:
+text:
 - |
   def remove_non_ascii(s: str) -> str:
       """
@@ -20,7 +20,7 @@ document:
       args:
         prefix: |
           def remove_non_ascii(s: str) -> str:
-              """ 
+              """
         suffix: |
               return result
 - "return result"

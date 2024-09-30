@@ -1,4 +1,4 @@
-document:
+text:
 - include: examples/prompt_library/tools.pdl
 - include: examples/prompt_library/ReAct.pdl
 - include: examples/granite/granite_defs.pdl

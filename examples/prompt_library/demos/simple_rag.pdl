@@ -1,5 +1,5 @@
 description: Demo of RAG template
-document:
+text:
   - include: examples/prompt_library/RAG.pdl
   - call: corpus
     args:
