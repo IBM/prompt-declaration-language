@@ -10,27 +10,30 @@ text:
     text:
     - 'Pick the odd word out: '
     - def: OPTIONS
-      model: watsonx/ibm/granite-20b-code-instruct
+      model: ibm/granite-20b-code-instruct
+      platform: bam
       parameters:
         decoding_method: greedy
-        stop:
+        stop_sequences:
         - .
         include_stop_sequence: false
     - "\nNow the reasoning:\n"
-    - model: watsonx/ibm/granite-20b-code-instruct
+    - model: ibm/granite-20b-code-instruct
+      platform: bam
       parameters:
         decoding_method: greedy
-        stop:
+        stop_sequences:
         - Pick the odd word
         - "\n"
         - So the odd one
         - .
         include_stop_sequence: false
     - "\nNow the result:\n"
-    - model: watsonx/ibm/granite-20b-code-instruct
+    - model: ibm/granite-20b-code-instruct
+      platform: bam
       parameters:
         decoding_method: greedy
-        stop:
+        stop_sequences:
         - Pick the odd word
         include_stop_sequence: false
     - "\n\n"

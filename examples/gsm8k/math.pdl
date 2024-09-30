@@ -1,7 +1,8 @@
 description: math problem
 text:
 
-- model: watsonx/meta-llama/llama-3-70b-instruct
+- model: meta-llama/llama-3-70b-instruct
+  platform: bam
   def: PDL
   input:
     text:

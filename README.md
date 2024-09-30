@@ -37,6 +37,9 @@ To install the dependencies for development of PDL and execute all the example, 
 pip3 install '.[all]'
 ```
 
+Internal IBM users can use models hosted on [BAM](https://bam.res.ibm.com/). You need to set up 2 environment variables:
+- `GENAI_API` set to `https://bam-api.res.ibm.com/`
+- `GENAI_KEY` set to your BAM API key. To obtain your key, go to the [BAM](https://bam.res.ibm.com/) main page. On the right and under the "Documentation" section, you will see a button to copy your API key.
 
 
 In order to run the examples that use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:

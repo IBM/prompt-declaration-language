@@ -1,7 +1,8 @@
 description: Hello world calling a model
 text:
 - "Hello, "
-- model: watsonx/ibm/granite-20b-multilingual
+- model: ibm/granite-20b-multilingual
+  platform: bam
   input: 
     Translate the word 'world' to French
   

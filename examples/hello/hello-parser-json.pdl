@@ -5,7 +5,8 @@ defs:
     parser: yaml
     spec: { "questions": ["str"], "answers": ["obj"] }
 text:
-  - model: watsonx/ibm/granite-34b-code-instruct
+  - model: ibm/granite-34b-code-instruct
+    platform: bam
     def: model_output
     spec: {"name": str, "age": int}
     input: 
@@ -24,7 +25,7 @@ text:
     parser: yaml
     parameters:
       decoding_method: greedy
-      stop:
+      stop_sequences:
       - '}'
       include_stop_sequence: true
 

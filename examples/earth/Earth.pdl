@@ -2,13 +2,14 @@ description: Earth circumference question
 text:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
 - def: EXPERT
-  model: watsonx/ibm/granite-34b-code-instruct
+  model: ibm/granite-34b-code-instruct
+  platform: bam
   parameters:
-    stop:
+    stop_sequences:
     - "."
     include_stop_sequence: false
 - '. Indeed, '
 - get: EXPERT
 - ' addressed this question: '
-- model: watsonx/ibm/granite-34b-code-instruct
-- "\n"
+- model: ibm/granite-34b-code-instruct
+  platform: bam

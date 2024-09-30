@@ -1,9 +1,10 @@
 description: Hello world
 text:
 - Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   parameters:
     decoding_method: greedy
-    stop:
+    stop_sequences:
     - '!'
     include_stop_sequence: true

@@ -13,7 +13,8 @@ text:
     text:
     - |
       ${ prompt }
-    - model: watsonx/ibm/granite-13b-chat-v2
+    - model: ibm/granite-13b-chat-v2
+      platform: bam
       parameters:
         decoding_method: sample
         max_new_tokens: 512

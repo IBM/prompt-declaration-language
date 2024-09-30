@@ -4,8 +4,9 @@ hello = {
     "text": [
         "Hello,",
         {
-            "model": "watsonx/ibm/granite-20b-code-instruct",
-            "parameters": {"stop": ["!"], "include_stop_sequence": True},
+            "model": "ibm/granite-34b-code-instruct",
+            "platform": "bam",
+            "parameters": {"stop_sequences": ["!"], "include_stop_sequence": True},
         },
         "\n",
     ]

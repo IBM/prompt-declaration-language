@@ -6,9 +6,10 @@ text:
     text:
     - "\nQuestion: "
     - def: QUESTION
-      model: watsonx/ibm/granite-34b-code-instruct
+      model: ibm/granite-34b-code-instruct
+      platform: bam
       parameters:
-        stop:
+        stop_sequences:
         - Answer
         - "?"
         include_stop_sequence: true
@@ -16,9 +17,10 @@ text:
     - repeat:
         text:
         - def: REASON_OR_CALC
-          model: watsonx/ibm/granite-34b-code-instruct
+          model: ibm/granite-34b-code-instruct
+          platform: bam
           parameters:
-            stop:
+            stop_sequences:
             - '<<'
             - "Question"
             include_stop_sequence: true
@@ -26,9 +28,10 @@ text:
           then:
             text:
             - def: EXPR
-              model: watsonx/ibm/granite-34b-code-instruct
+              model: ibm/granite-34b-code-instruct
+              platform: bam
               parameters:
-                stop:
+                stop_sequences:
                 - '='
                 - "\n"
                 - "Question"

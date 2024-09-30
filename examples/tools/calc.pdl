@@ -12,9 +12,10 @@ text:
   Out of 1400 participants, 400 passed the test. What percentage is that?
   Act: 
 - def: action
-  model: watsonx/ibm/granite-8b-code-instruct
+  model: ibm/granite-8b-code-instruct
+  platform: bam
   parameters:
-    STOP_SEQUENCES: ["\n"]
+    stop_sequences: ["\n"]
   parser: json
   spec: {name: str, arguments: {expr: str}}
 - if: ${ action.name == "Calc" }

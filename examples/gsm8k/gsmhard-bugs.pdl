@@ -4,7 +4,8 @@ text:
 - "\n"
 - "Does the following code accurately solve this problem?\n\n"
 - ${ code }
-- model: watsonx/meta-llama/llama-3-70b-instruct
+- model: meta-llama/llama-3-70b-instruct
+  platform: bam
   parameters:
     stop_sequences: ["def"]
     include_stop_sequence: false

@@ -11,7 +11,8 @@ text:
       message: ">>> "
       def: query
       contribute: [context]
-    - model: watsonx/ibm/granite-13b-chat-v2
+    - model: ibm/granite-13b-chat-v2
+      platform: bam
     - "\n\n"
   until: ${ query == 'quit'}
   as: text

@@ -6,14 +6,14 @@ text:
   call: react
   args:
     question: ${ question }
-    model: watsonx/ibm/granite-20b-code-instruct
+    model: ibm/granite-20b-code-instruct
 
 - "\n\n----- Verifying answer... -----\n\n"
 - def: verified
   call: react
   args:
     question: ${ question }
-    model: watsonx/ibm/granite-34b-code-instruct
+    model: ibm/granite-34b-code-instruct
 - "\n"
 - if: ${ proposed.split('Act:') | last == verified.split('Act:') | last }
   then:

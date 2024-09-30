@@ -1,7 +1,7 @@
 description: math problem
 text:
 
-- model: watsonx/meta-llama/llama-3-70b-instruct
+- model: meta-llama/llama-3-70b-instruct
   def: PDL
   input:
     text:

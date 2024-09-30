@@ -14,7 +14,8 @@ text:
     result = ''.join(contents)
   def: QUERY
   contribute: []
-- model: watsonx/ibm/granite-20b-code-instruct
+- model: ibm/granite-20b-code-instruct
+  platform: bam
   parameters:
     decoding_method: greedy
   input:
