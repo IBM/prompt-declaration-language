@@ -7,11 +7,11 @@ document:
   - def: filtered_tools
     call: filter_tools_by_name
     args:
-      tools: "{{ default_tools }}"
-      tool_names: "{{ available_tools }}"
+      tools: "${ default_tools }"
+      tool_names: "${ available_tools }"
   - call: rewoo
     args:
       task: "When did the Battle of White Plains take place?"
       model: "watsonx/ibm/granite-34b-code-instruct"
-      tools: "{{ filtered_tools }}"
+      tools: "${ filtered_tools }"
       show_plans: true

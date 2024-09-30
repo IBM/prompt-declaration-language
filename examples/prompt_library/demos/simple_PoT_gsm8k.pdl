@@ -6,10 +6,10 @@ document:
     args:
       question: Ketty saves 20000 dollars to the bank. After three years, the sum with compound interest rate is 1000 dollars more than the sum with simple interest rate. What is the interest rate of the bank?
       model: ibm/granite-34b-code-instruct
-  - "\nAnswer: {{ ANSWER }}"
+  - "\nAnswer: ${ ANSWER }"
   - def: ANSWER
     call: program_of_thought_backtick
     args:
       question: Ketty saves 20000 dollars to the bank. After three years, the sum with compound interest rate is 1000 dollars more than the sum with simple interest rate. What is the interest rate of the bank? Split your answer into two separate code blocks.
       model: ibm/granite-34b-code-instruct
-  - "\nAnswer: {{ ANSWER }}"
+  - "\nAnswer: ${ ANSWER }"
