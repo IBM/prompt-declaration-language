@@ -192,6 +192,20 @@ def main():
 
     args = parser.parse_args()
 
+    # This case must be before `if args.pdl is None:`
+    if args.schema:
+        schema, top_level_schema = models_json_schema(
+            [
+                (Program, "validation"),
+                (PdlBlock, "validation"),
+                (PdlBlocks, "validation"),
+            ],
+            title="PDL Schemas",
+        )
+        top_level_schema["anyOf"] = list(schema.values())
+        print(json.dumps(top_level_schema, indent=2))
+        return
+
     if args.pdl is None:
         parser.print_help()
         return
@@ -229,19 +243,6 @@ def main():
             print(
                 "An error occured while running docker. Is the docker daemon running?"
             )
-        return
-
-    if args.schema:
-        schema, top_level_schema = models_json_schema(
-            [
-                (Program, "validation"),
-                (PdlBlock, "validation"),
-                (PdlBlocks, "validation"),
-            ],
-            title="PDL Schemas",
-        )
-        top_level_schema["anyOf"] = list(schema.values())
-        print(json.dumps(top_level_schema, indent=2))
         return
 
     initial_scope = {}
