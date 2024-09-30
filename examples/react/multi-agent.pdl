@@ -1,0 +1,22 @@
+text:
+- include: ./react_fun.pdl
+- defs:
+    question: How many years ago was the discoverer of the Hudson River born?
+- def: proposed
+  call: react
+  args:
+    question: ${ question }
+    model: watsonx/ibm/granite-20b-code-instruct
+
+- "\n\n----- Verifying answer... -----\n\n"
+- def: verified
+  call: react
+  args:
+    question: ${ question }
+    model: watsonx/ibm/granite-34b-code-instruct
+- "\n"
+- if: ${ proposed.split('Act:') | last == verified.split('Act:') | last }
+  then:
+    Answer is correct!
+  else:
+    Answer is incorrect!
