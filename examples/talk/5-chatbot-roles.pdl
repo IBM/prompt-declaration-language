@@ -6,14 +6,11 @@ text:
   text: ${ SYSTEM_CONTENT_CHAT }
 - "Type `quit` to exit this chatbot.\n"
 - repeat:
-    text:
-    - read:
-      message: ">>> "
-      def: query
-      contribute: [context]
-    - model: watsonx/ibm/granite-13b-chat-v2
-    - "\n\n"
+  - read:
+    message: ">>> "
+    def: query
+  - model: watsonx/ibm/granite-13b-chat-v2
   until: ${ query == 'quit'}
-  as: text
+  join:
+    with: "\n\n"
 role: user
-

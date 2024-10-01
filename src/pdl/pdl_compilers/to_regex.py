@@ -322,12 +322,15 @@ def compile_block(
             scope = scope_union(then_scope, else_scope)
         case RepeatBlock():
             body, scope = compile_blocks(scope, block.repeat)
+            # XXX TODO: join char in text mode XXX
             regex = ReRepeatN(body, block.num_iterations)
         case ForBlock():
             body, scope = compile_blocks(scope, block.repeat)
+            # XXX TODO: join char in text mode XXX
             regex = ReStar(body)
         case RepeatUntilBlock():
             body, scope = compile_blocks(scope, block.repeat)
+            # XXX TODO: join char in text mode XXX
             regex = ReStar(body)
         case ReadBlock():
             regex = ReStar(ReAnyChar())

@@ -5,10 +5,9 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-text:
+lastOf:
 - model: watsonx/ibm/granite-34b-code-instruct
   def: EXPLANATION
-  contribute: []
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -22,7 +21,6 @@ text:
       ```
       ${ CODE.source_code }```
 - def: EVAL
-  contribute: []
   lan: python
   code:
     |

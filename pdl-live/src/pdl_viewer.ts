@@ -1,5 +1,5 @@
 import {stringify} from 'yaml';
-import {PdlBlocks, PdlBlock, IterationType} from './pdl_ast';
+import {PdlBlocks, PdlBlock} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
@@ -33,13 +33,13 @@ export function show_program(blocks: PdlBlocks) {
   return show_lastOf(blocks);
 }
 
-export function show_blocks(iteration_type: IterationType, blocks: PdlBlocks) {
-  return match(iteration_type)
-    .with('text', _ => show_text(blocks))
-    .with('lastOf', _ => show_lastOf(blocks))
-    .with('array', _ => show_array(blocks))
-    .exhaustive();
-}
+// export function show_blocks(iteration_type: IterationType, blocks: PdlBlocks) {
+//   return match(iteration_type)
+//     .with('text', _ => show_text(blocks))
+//     .with('lastOf', _ => show_lastOf(blocks))
+//     .with('array', _ => show_array(blocks))
+//     .exhaustive();
+// }
 
 export function show_text(blocks: PdlBlocks) {
   const doc_fragment = document.createDocumentFragment();
@@ -300,7 +300,7 @@ export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
   if (trace.length > 0) {
     const iteration = document.createElement('div');
     iteration.classList.add('pdl_block', 'pdl_lastOf');
-    const child = show_blocks('lastOf', trace.slice(-1)[0]); // TODO:
+    const child = show_lastOf(trace.slice(-1)[0]); // TODO:
     iteration.appendChild(child);
     doc_fragment.appendChild(iteration);
   }

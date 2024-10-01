@@ -16,7 +16,6 @@ text:
         text:
         - ${ question }
         - ${ answer }
-      as: text
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
   parameters:
     decoding_method: greedy

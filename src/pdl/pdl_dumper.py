@@ -158,7 +158,7 @@ def block_to_dict(
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
-            d["as"] = block.iteration_type
+            d["join"] = block.join.model_dump()
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -166,7 +166,7 @@ def block_to_dict(
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
-            d["as"] = block.iteration_type
+            d["join"] = block.join.model_dump()
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -174,7 +174,7 @@ def block_to_dict(
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
-            d["as"] = block.iteration_type
+            d["join"] = block.join.model_dump()
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
