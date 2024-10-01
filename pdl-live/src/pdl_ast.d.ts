@@ -1323,6 +1323,15 @@ export type Repeat =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type Join = JoinText | JoinArray | JoinLastOf;
+export type As = "text";
+export type With = string;
+export type As1 = "array";
+export type As2 = "lastOf";
 export type Trace1 =
   | (
       | number
@@ -1496,6 +1505,11 @@ export type Repeat1 =
       | ErrorBlock
       | EmptyBlock
     )[];
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type Join1 = JoinText | JoinArray | JoinLastOf;
 export type Trace2 =
   | (
       | number
@@ -1674,6 +1688,11 @@ export type Repeat2 =
  *
  */
 export type NumIterations = number;
+/**
+ * Define how to combine the result of each iteration.
+ *
+ */
+export type Join2 = JoinText | JoinArray | JoinLastOf;
 export type Trace3 =
   | (
       | number
@@ -3562,7 +3581,7 @@ export interface RepeatBlock {
   kind?: Kind11;
   repeat: Repeat2;
   num_iterations: NumIterations;
-  join?: JoinConfig2;
+  join?: Join2;
   trace?: Trace3;
 }
 /**
@@ -3642,7 +3661,7 @@ export interface RepeatUntilBlock {
   kind?: Kind10;
   repeat: Repeat1;
   until: Until;
-  join?: JoinConfig1;
+  join?: Join1;
   trace?: Trace2;
 }
 /**
@@ -3722,7 +3741,7 @@ export interface ForBlock {
   kind?: Kind9;
   for: For;
   repeat: Repeat;
-  join?: JoinConfig;
+  join?: Join;
   trace?: Trace1;
 }
 /**
@@ -4504,11 +4523,17 @@ export interface Table {
 export interface For {
   [k: string]: unknown;
 }
-/**
- * Define how to combine the result of each iteration.
- *
- */
-export interface JoinConfig {
+export interface JoinText {
+  as?: As;
+  with?: With;
+  [k: string]: unknown;
+}
+export interface JoinArray {
+  as?: As1;
+  [k: string]: unknown;
+}
+export interface JoinLastOf {
+  as?: As2;
   [k: string]: unknown;
 }
 /**
@@ -4516,20 +4541,6 @@ export interface JoinConfig {
  *
  */
 export interface Until {
-  [k: string]: unknown;
-}
-/**
- * Define how to combine the result of each iteration.
- *
- */
-export interface JoinConfig1 {
-  [k: string]: unknown;
-}
-/**
- * Define how to combine the result of each iteration.
- *
- */
-export interface JoinConfig2 {
   [k: string]: unknown;
 }
 /**
