@@ -78,6 +78,8 @@ you can use the `--sandbox` flag which runs the interpreter in a docker containe
 and all code is executed locally. To use the `--sandbox` flag, you need to have a docker daemon running, such as 
 [Rancher Desktop](https://rancherdesktop.io).
 
+Note that the `--sandbox` flag is currently not available to BAM users.
+
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
 useful for debugging.
 
@@ -118,10 +120,11 @@ In PDL, we can write some YAML to create a prompt and call an LLM:
 description: Hello world
 text:
 - Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   parameters:
     decoding_method: greedy
-    stop:
+    stop_sequences:
     - '!'
     include_stop_sequence: true
 ```
@@ -210,7 +213,8 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   input:
       - |
         Here is some info about the location of the function in the repo.
@@ -267,7 +271,8 @@ defs:
     read: ./ground_truth.txt
 text:
 - "\n${ CODE.source_code }\n"
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
@@ -339,7 +344,8 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   def: EXPLANATION
   contribute: []
   input:
