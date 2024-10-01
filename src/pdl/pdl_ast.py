@@ -368,7 +368,9 @@ class IterationType(StrEnum):
 
 
 class JoinConfig(BaseModel):
-    pass
+    """Configure how loop iterations should be combined."""
+
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
 
 
 class JoinText(JoinConfig):

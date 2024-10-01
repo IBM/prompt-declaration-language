@@ -7272,10 +7272,12 @@
       "type": "object"
     },
     "JoinArray": {
+      "additionalProperties": false,
       "properties": {
         "as": {
           "const": "array",
           "default": "array",
+          "description": "Return the result of each iteration as an array.\n    ",
           "enum": [
             "array"
           ],
@@ -7287,10 +7289,12 @@
       "type": "object"
     },
     "JoinLastOf": {
+      "additionalProperties": false,
       "properties": {
         "as": {
           "const": "lastOf",
           "default": "lastOf",
+          "description": "Return the result of the last iteration.\n    ",
           "enum": [
             "lastOf"
           ],
@@ -7302,10 +7306,12 @@
       "type": "object"
     },
     "JoinText": {
+      "additionalProperties": false,
       "properties": {
         "as": {
           "const": "text",
           "default": "text",
+          "description": "String concatenation of the result of each iteration.\n    ",
           "enum": [
             "text"
           ],
@@ -7314,6 +7320,7 @@
         },
         "with": {
           "default": "",
+          "description": "String used to concatenate each iteration of the loop.\n    ",
           "title": "With",
           "type": "string"
         }
