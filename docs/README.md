@@ -34,12 +34,12 @@ The interpreter has been tested with Python version **3.12**.
 To install the requirements for `pdl`, execute the command:
 
 ```
-pip3 install .
+pip3 install prompt-declaration-language
 ```
 
 To install the dependencies for development of PDL and execute all the example, execute the command:
 ```
-pip3 install '.[all]'
+pip3 install 'prompt-declaration-language[all]'
 ```
 
 
@@ -54,7 +54,7 @@ For more information, see [documentation](https://docs.litellm.ai/docs/providers
 To run the interpreter:
 
 ```
-pdl-local <path/to/example.yaml>
+pdl <path/to/example.yaml>
 ```
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
@@ -67,30 +67,30 @@ useful for debugging.
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-pdl-local --log <my-logfile> <my-example>
+pdl --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-pdl-local --data <JSON-or-YAML-data> <my-example>
+pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-pdl-local --data-file <JSON-or-YAML-file> <my-example>
+pdl --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl-local --trace <file.json> <my-example> 
+pdl --trace <file.json> <my-example> 
 ```
 
 For more information:
 ```
-pdl-local --help
+pdl --help
 ```
 
 ## Overview
@@ -114,7 +114,7 @@ The `description` field is a description for the program. Field `text` contains 
 When we execute this program using the PDL interpreter:
 
 ```
-pdl-local examples/hello/hello.pdl
+pdl examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -130,7 +130,7 @@ A PDL program computes 2 data structures. The first is a JSON corresponding to t
 The PDL interpreter can also stream the background conversation instead of the result:
 
 ```
-pdl-local --stream background examples/hello/hello.pdl
+pdl --stream background examples/hello/hello.pdl
 ```
 
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
@@ -401,8 +401,3 @@ For a complete list of issues see [here](https://github.com/IBM/prompt-declarati
 ## Contributing to the Project
 
 See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib)
-
-
-
-
-

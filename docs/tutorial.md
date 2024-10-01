@@ -21,7 +21,7 @@ This program has a `description` field, which contains a title. The `description
 To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-pdl-local examples/tutorial/simple_program.pdl
+pdl examples/tutorial/simple_program.pdl
 ```
 
 This results in the following output:
