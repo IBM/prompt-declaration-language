@@ -1,5 +1,5 @@
 import {stringify} from 'yaml';
-import {PdlBlocks, PdlBlock} from './pdl_ast';
+import {PdlBlocks, PdlBlock, Join} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
@@ -285,6 +285,14 @@ export function show_defs(defs: {[k: string]: PdlBlocks}): DocumentFragment {
   }
   return doc_fragment;
 }
+
+// export function show_loop_trace(trace: PdlBlocks[], join_config: Join): DocumentFragment {
+//   return match(join_config)
+//     .with({as: 'text'}, _ => show_text(trace))
+//     .with({as: 'array'}, _ => show_array(trace))
+//     .with({as: 'lastOf'}, _ => show_lastOf(trace))
+//     .exhaustive();
+// }
 
 export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();

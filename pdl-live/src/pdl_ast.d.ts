@@ -1328,9 +1328,25 @@ export type Repeat =
  *
  */
 export type Join = JoinText | JoinArray | JoinLastOf;
+/**
+ * String concatenation of the result of each iteration.
+ *
+ */
 export type As = "text";
+/**
+ * String used to concatenate each iteration of the loop.
+ *
+ */
 export type With = string;
+/**
+ * Return the result of each iteration as an array.
+ *
+ */
 export type As1 = "array";
+/**
+ * Return the result of the last iteration.
+ *
+ */
 export type As2 = "lastOf";
 export type Trace1 =
   | (
@@ -4526,15 +4542,12 @@ export interface For {
 export interface JoinText {
   as?: As;
   with?: With;
-  [k: string]: unknown;
 }
 export interface JoinArray {
   as?: As1;
-  [k: string]: unknown;
 }
 export interface JoinLastOf {
   as?: As2;
-  [k: string]: unknown;
 }
 /**
  * Condition of the loop.
