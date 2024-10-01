@@ -1,7 +1,9 @@
 ---
 name: Publish prompt-declaration-language to PyPI and TestPyPI
 
-on: push
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   build:
