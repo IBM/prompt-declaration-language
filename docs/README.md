@@ -27,7 +27,7 @@ See below for installation notes, followed by an [overview](#overview) of the la
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python version **3.11 and 3.12**.
+The interpreter has been tested with Python versions **3.11** and **3.12**, on macOS and Linux. For Windows, please use WSL.
 
 To install the requirements for `pdl`, execute the command:
 
