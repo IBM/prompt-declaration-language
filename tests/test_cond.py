@@ -326,6 +326,7 @@ repeat_until_text_with_data = {
                 }
             ],
             "until": "${ I == 5 }",
+            "join": {"with": "\n"},
         },
     ],
 }

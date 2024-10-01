@@ -4773,12 +4773,23 @@
           "title": "Repeat"
         },
         "join": {
-          "$ref": "#/$defs/JoinConfig",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JoinText"
+            },
+            {
+              "$ref": "#/$defs/JoinArray"
+            },
+            {
+              "$ref": "#/$defs/JoinLastOf"
+            }
+          ],
           "default": {
             "as": "text",
             "with": ""
           },
-          "description": "Define how to combine the result of each iteration.\n    "
+          "description": "Define how to combine the result of each iteration.\n    ",
+          "title": "Join"
         },
         "trace": {
           "anyOf": [
@@ -7260,9 +7271,54 @@
       "title": "IncludeBlock",
       "type": "object"
     },
-    "JoinConfig": {
-      "properties": {},
-      "title": "JoinConfig",
+    "JoinArray": {
+      "properties": {
+        "as": {
+          "const": "array",
+          "default": "array",
+          "enum": [
+            "array"
+          ],
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "title": "JoinArray",
+      "type": "object"
+    },
+    "JoinLastOf": {
+      "properties": {
+        "as": {
+          "const": "lastOf",
+          "default": "lastOf",
+          "enum": [
+            "lastOf"
+          ],
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "title": "JoinLastOf",
+      "type": "object"
+    },
+    "JoinText": {
+      "properties": {
+        "as": {
+          "const": "text",
+          "default": "text",
+          "enum": [
+            "text"
+          ],
+          "title": "As",
+          "type": "string"
+        },
+        "with": {
+          "default": "",
+          "title": "With",
+          "type": "string"
+        }
+      },
+      "title": "JoinText",
       "type": "object"
     },
     "LastOfBlock": {
@@ -12115,12 +12171,23 @@
           "type": "integer"
         },
         "join": {
-          "$ref": "#/$defs/JoinConfig",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JoinText"
+            },
+            {
+              "$ref": "#/$defs/JoinArray"
+            },
+            {
+              "$ref": "#/$defs/JoinLastOf"
+            }
+          ],
           "default": {
             "as": "text",
             "with": ""
           },
-          "description": "Define how to combine the result of each iteration.\n    "
+          "description": "Define how to combine the result of each iteration.\n    ",
+          "title": "Join"
         },
         "trace": {
           "anyOf": [
@@ -12871,12 +12938,23 @@
           "title": "Until"
         },
         "join": {
-          "$ref": "#/$defs/JoinConfig",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JoinText"
+            },
+            {
+              "$ref": "#/$defs/JoinArray"
+            },
+            {
+              "$ref": "#/$defs/JoinLastOf"
+            }
+          ],
           "default": {
             "as": "text",
             "with": ""
           },
-          "description": "Define how to combine the result of each iteration.\n    "
+          "description": "Define how to combine the result of each iteration.\n    ",
+          "title": "Join"
         },
         "trace": {
           "anyOf": [
