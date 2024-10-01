@@ -273,7 +273,7 @@ text:
           
           result, _, _, _ = process_prog(state, empty_scope, data)
   until: ${ query == 'quit' }
-  as: text
+
 
   
 
