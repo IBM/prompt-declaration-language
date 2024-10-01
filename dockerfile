@@ -1,16 +1,12 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM --platform=linux/arm64/v8 python:3.11-slim
 
-# Set the working directory in the container
 WORKDIR /pdl
 
-# Copy the current directory contents into the container at /app
+RUN apt-get update && apt-get install -y git
+
 COPY . /pdl
 
-# Install any needed dependencies specified in requirements.txt
-RUN pip install .
-RUN pip install '.[all]'
+RUN pip install prompt-declaration-language
+RUN pip install prompt-declaration-language[examples]
 
-
-# Run app.py when the container launches
 ENTRYPOINT ["pdl"]
