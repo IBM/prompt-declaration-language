@@ -10,6 +10,7 @@ import yaml
 from pydantic.json_schema import models_json_schema
 
 from . import pdl_interpreter
+from ._version import version
 from .pdl_ast import (
     LocationType,
     PdlBlock,
@@ -148,49 +149,58 @@ def main():
     parser.add_argument(
         "--sandbox",
         action=argparse.BooleanOptionalAction,
-        help="run the interpreter in a container. A docker daemon must be running.",
+        help="run the interpreter in a container, a docker daemon must be running",
     )
-    parser.add_argument(
-        "--schema",
-        action=argparse.BooleanOptionalAction,
-        help="generate PDL Json Schema",
-    )
-    parser.add_argument(
-        "-l",
-        "--log",
-        help="log file",
-    )
-
     parser.add_argument(
         "-f",
         "--data-file",
         dest="data_file",
-        help="initial scope data file",
+        help="file containing initial values to add to the scope",
     )
-
     parser.add_argument(
         "-d",
         "--data",
-        help="scope data",
+        help="initial values to add to the scope",
     )
-
     parser.add_argument(
         "--stream",
         choices=["result", "background", "none"],
         default="result",
-        help="stream the result or the background messages on the standard output",
+        help="stream the result, the background messages, or nothing on the standard output",
     )
-
     parser.add_argument(
         "-t",
         "--trace",
         nargs="?",
         const="*_trace.json",
-        help="output trace for live document",
+        help="output trace for live document and optionally specify the file name",
     )
+    parser.add_argument(
+        "-l",
+        "--log",
+        help="specify a name for the log file",
+    )
+    parser.add_argument(
+        "--schema",
+        action="store_true",
+        help="generate PDL Json Schema and exit",
+        default=False,
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="print the version number and exit",
+        default=False,
+    )
+
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
+
+    # This case must be before `if args.pdl is None:`
+    if args.version:
+        print(f"PDL {version}")
+        return
 
     # This case must be before `if args.pdl is None:`
     if args.schema:
