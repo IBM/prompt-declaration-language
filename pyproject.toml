@@ -51,7 +51,7 @@ docs = [
   "mkdocs-material~=9.0",
   "pymdown-extensions~=10.0"
 ]
-all = [ "pdl[dev,examples,docs]" ]
+all = [ "prompt-declaration-language[dev,examples,docs]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"
