@@ -3,6 +3,8 @@ name: Publish prompt-declaration-language to PyPI and TestPyPI
 
 on:
   push:
+    branches:
+      - "main"
   workflow_dispatch:
 
 jobs:
