@@ -15,6 +15,6 @@ text:
       platform: bam
     - "\n\n"
   until: ${ query == 'quit'}
-  as: text
+  join:
+    with: "\n\n"
 role: user
-

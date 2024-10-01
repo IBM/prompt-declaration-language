@@ -1327,7 +1327,11 @@ export type Repeat =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType = "lastOf" | "array" | "text";
+export type Join = JoinText | JoinArray | JoinLastOf;
+export type As = "text";
+export type With = string;
+export type As1 = "array";
+export type As2 = "lastOf";
 export type Trace1 =
   | (
       | number
@@ -1505,7 +1509,7 @@ export type Repeat1 =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType1 = "lastOf" | "array" | "text";
+export type Join1 = JoinText | JoinArray | JoinLastOf;
 export type Trace2 =
   | (
       | number
@@ -1688,7 +1692,7 @@ export type NumIterations = number;
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType2 = "lastOf" | "array" | "text";
+export type Join2 = JoinText | JoinArray | JoinLastOf;
 export type Trace3 =
   | (
       | number
@@ -3577,7 +3581,7 @@ export interface RepeatBlock {
   kind?: Kind11;
   repeat: Repeat2;
   num_iterations: NumIterations;
-  as?: IterationType2;
+  join?: Join2;
   trace?: Trace3;
 }
 /**
@@ -3657,7 +3661,7 @@ export interface RepeatUntilBlock {
   kind?: Kind10;
   repeat: Repeat1;
   until: Until;
-  as?: IterationType1;
+  join?: Join1;
   trace?: Trace2;
 }
 /**
@@ -3737,7 +3741,7 @@ export interface ForBlock {
   kind?: Kind9;
   for: For;
   repeat: Repeat;
-  as?: IterationType;
+  join?: Join;
   trace?: Trace1;
 }
 /**
@@ -4517,6 +4521,19 @@ export interface Table {
  *
  */
 export interface For {
+  [k: string]: unknown;
+}
+export interface JoinText {
+  as?: As;
+  with?: With;
+  [k: string]: unknown;
+}
+export interface JoinArray {
+  as?: As1;
+  [k: string]: unknown;
+}
+export interface JoinLastOf {
+  as?: As2;
   [k: string]: unknown;
 }
 /**

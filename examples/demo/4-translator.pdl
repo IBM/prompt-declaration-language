@@ -19,4 +19,3 @@ text:
         - model: ibm/granite-13b-chat-v2
           platform: bam
   until: ${ language == 'stop' }
-  as: text

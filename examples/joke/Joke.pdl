@@ -29,4 +29,3 @@ text:
         include_stop_sequence: true
     - "\n"
   num_iterations: 2
-  as: text

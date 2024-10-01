@@ -16,7 +16,6 @@ for_data = {
                 "i": [1, 2, 3, 4],
             },
             "repeat": ["${ i }\n"],
-            "as": "text",
         }
     ],
 }
@@ -35,7 +34,6 @@ for_data1 = {
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"]},
             "repeat": ["${ i }: ${ name }\n"],
-            "as": "text",
         }
     ],
 }
@@ -55,7 +53,6 @@ for_data2 = {
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
             "repeat": ["${ i }: ${ name }: ${ id }\n"],
-            "as": "text",
         }
     ],
 }
@@ -75,6 +72,7 @@ for_data3 = {
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
             "repeat": ["${ i }: ${ name }: ${ id }\n"],
+            "join": {"as": "array"},
         }
     ],
 }
@@ -94,6 +92,7 @@ for_data4 = {
             "def": "x",
             "for": {"i": [1, 2, 3, 4]},
             "repeat": "${ i + 1 }",
+            "join": {"as": "array"},
         }
     ],
 }
@@ -114,7 +113,6 @@ for_as_text_data4 = {
             "def": "x",
             "for": {"i": [1, 2, 3, 4]},
             "repeat": "${ i + 1 }",
-            "as": "text",
         }
     ],
 }
@@ -136,20 +134,7 @@ for_data5 = {
             "text": {
                 "for": {"i": [1, 2, 3, 4]},
                 "repeat": "${ i }",
-            },
-        }
-    ],
-}
-
-
-for_data5 = {
-    "description": "For block def",
-    "text": [
-        {
-            "def": "x",
-            "text": {
-                "for": {"i": [1, 2, 3, 4]},
-                "repeat": "${ i }",
+                "join": {"as": "array"},
             },
         }
     ],

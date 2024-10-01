@@ -25,7 +25,6 @@ def repeat_data(n):
             ]
         },
         "num_iterations": n,
-        "as": "text",
     }
 
 
@@ -38,7 +37,6 @@ def nested_repeat_data(n):
             {
                 "repeat": ["This sentence repeats!\n"],
                 "num_iterations": n,
-                "as": "text",
             },
         ],
     }
@@ -115,6 +113,7 @@ repeat_data_error = {
         {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
     ],
     "num_iterations": 3,
+    "join": {"as": "lastOf"},
 }
 
 

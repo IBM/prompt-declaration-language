@@ -3,10 +3,10 @@
 This page documents the PDL members that likely to be used to run PDL programs from Python.
 
 ## Program
-::: pdl.pdl_ast
+::: src.pdl.pdl_ast
 
 ## Interpreter
-::: pdl.pdl
+::: src.pdl.pdl
 
 <!-- 
 ::: pdl.pdl_interpreter

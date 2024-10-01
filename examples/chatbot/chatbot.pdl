@@ -18,7 +18,6 @@ text:
           message: "Why not?\n"
           contribute: []
   until: ${ eval == 'yes'}
-  as: text
 role: user
 
 

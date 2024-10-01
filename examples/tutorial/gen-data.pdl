@@ -18,7 +18,6 @@ text:
           - |
             ${ question }
             ${ answer }
-        as: text
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
         and set them appropriately. Write the age in letters.

@@ -51,7 +51,7 @@ docs = [
   "mkdocs-material~=9.0",
   "pymdown-extensions~=10.0"
 ]
-all = [ "pdl[dev,examples,docs]" ]
+all = [ "prompt-declaration-language[dev,examples,docs]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"
@@ -64,6 +64,7 @@ Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 pdl = "pdl.pdl:main"
 
 [tool.setuptools_scm]
+version_file = "src/pdl/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["src"]

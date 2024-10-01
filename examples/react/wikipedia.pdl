@@ -50,5 +50,4 @@ text:
             except wikipedia.WikipediaException as e:
               result = str(e)
   until: ${ action.name != "Search" }
-  as: text
-- "\n"
+

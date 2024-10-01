@@ -18,5 +18,4 @@ text:
       parameters:
         decoding_method: sample
         max_new_tokens: 512
-  as: text
 role: user

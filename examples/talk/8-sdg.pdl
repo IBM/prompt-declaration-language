@@ -82,6 +82,8 @@ defs:
           icl_question: ${icl_question}
           icl_answer: ${icl_answer}
           question: ${question}
+      join:
+        as: array
 
   gen_questions_freeform:
     function:
@@ -100,6 +102,8 @@ defs:
               task_description: ${task_description}
               icl_question: ${example.question}
               icl_answer: ${example.answer}
+          join:
+            as: array
     - lan: python
       code: | # flatten list_of_lists into simple list
           result = [q for qs in ${list_of_lists} for q in qs]
@@ -184,6 +188,8 @@ defs:
           - data:
               question: ${question}
               keep: ${filter_output}
+          join:
+            as: array
         filtered:
           lan: python
           code: | # keep only if "keep" column is non-zero
@@ -278,6 +284,8 @@ defs:
             call: gen_answers_inner
             args:
               question: ${question}
+          join:
+            as: array
     - lan: python
       spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
@@ -363,6 +371,8 @@ defs:
           - data:
               qa_pair: ${qa_pair}
               rating: ${filter_output}
+          join:
+            as: array
         filtered:
           lan: python
           spec: [{question: str, answer: str}]
