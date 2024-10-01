@@ -2,9 +2,9 @@
 name: Publish prompt-declaration-language to PyPI and TestPyPI
 
 on:
-  push:
-    branches:
-      - "main"
+  # push:
+  #   branches:
+  #     - "main"
   release:
     types:
       - released
