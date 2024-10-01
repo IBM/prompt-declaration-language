@@ -244,7 +244,7 @@ def main():
                     watsonx_project_id,
                     "--rm",
                     "-it",
-                    "pdl",
+                    "quay.io/project_pdl/pdl",
                     *args,
                 ],
                 check=True,
