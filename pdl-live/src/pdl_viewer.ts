@@ -41,12 +41,23 @@ export function show_program(blocks: PdlBlocks) {
 //     .exhaustive();
 // }
 
-export function show_text(blocks: PdlBlocks) {
+export function show_text(
+  blocks: PdlBlocks[] | PdlBlocks,
+  join_str: string | undefined
+) {
   const doc_fragment = document.createDocumentFragment();
+  const join_child = document.createElement('div');
+  join_child.innerHTML = join_str ?? '';
   match(blocks)
     .with(P.array(P._), data => {
+      let first = true;
       for (const doc of data) {
-        const child = show_block(doc);
+        if (first) {
+          first = false;
+        } else {
+          doc_fragment.appendChild(join_child);
+        }
+        const child = show_program(doc);
         doc_fragment.appendChild(child);
       }
     })
@@ -57,17 +68,19 @@ export function show_text(blocks: PdlBlocks) {
   return doc_fragment;
 }
 
-export function show_lastOf(blocks: PdlBlocks) {
+export function show_lastOf(blocks: PdlBlocks[] | PdlBlock) {
   const doc_fragment = document.createDocumentFragment();
   match(blocks)
     .with(P.array(P._), data => {
       if (data.length > 0) {
         for (const doc of data.slice(0, -1)) {
-          const child = show_block(doc);
+          const child = document.createElement('div');
           child.classList.add('pdl_show_result_false');
+          const child_body = show_program(doc);
+          child.appendChild(child_body);
           doc_fragment.appendChild(child);
         }
-        const child = show_block(data[data.length - 1]);
+        const child = show_program(data[data.length - 1]);
         doc_fragment.appendChild(child);
       }
     })
@@ -78,21 +91,24 @@ export function show_lastOf(blocks: PdlBlocks) {
   return doc_fragment;
 }
 
-export function show_array(array: PdlBlocks) {
+export function show_array(array: PdlBlocks[] | PdlBlock) {
   const doc_fragment = document.createDocumentFragment();
   const open_bracket = document.createElement('pre');
   open_bracket.innerHTML = '[';
-  const comma = document.createElement('pre');
-  comma.innerHTML = ',';
+  const comma = () => {
+    const comma = document.createElement('pre');
+    comma.innerHTML = ',';
+    return comma;
+  };
   const close_bracket = document.createElement('pre');
   close_bracket.innerHTML = ']';
   doc_fragment.appendChild(open_bracket);
   match(array)
     .with(P.array(P._), data => {
       for (const doc of data) {
-        const child = show_lastOf(doc);
+        const child = show_program(doc);
         doc_fragment.appendChild(child);
-        doc_fragment.appendChild(comma);
+        doc_fragment.appendChild(comma());
       }
     })
     .otherwise(block => {
@@ -116,7 +132,7 @@ export function show_object(object: {[key: string]: PdlBlocks}) {
     const key_column = document.createElement('pre');
     key_column.innerHTML = key + ':';
     doc_fragment.appendChild(key_column);
-    const child = show_lastOf(object[key]);
+    const child = show_program(object[key]);
     doc_fragment.appendChild(child);
     doc_fragment.appendChild(comma);
   });
@@ -170,9 +186,9 @@ export function show_block(data: PdlBlock) {
       } else {
         let if_child: DocumentFragment;
         if (data.if_result) {
-          if_child = show_lastOf(data?.then ?? '');
+          if_child = show_program(data?.then ?? '');
         } else {
-          if_child = show_lastOf(data?.else ?? '');
+          if_child = show_program(data?.else ?? '');
         }
         body.appendChild(if_child);
       }
@@ -213,7 +229,7 @@ export function show_block(data: PdlBlock) {
     })
     .with({kind: 'text'}, data => {
       body.classList.add('pdl_text');
-      const doc_child = show_text(data.text);
+      const doc_child = show_text(data.text, undefined);
       body.appendChild(doc_child);
     })
     .with({kind: 'lastOf'}, data => {
@@ -241,22 +257,31 @@ export function show_block(data: PdlBlock) {
       const role = document.createElement('pre');
       role.innerHTML = htmlize(data.role + ': ');
       body.appendChild(role);
-      const doc_child = show_lastOf(data.content);
+      const doc_child = show_program(data.content);
       body.appendChild(doc_child);
     })
     .with({kind: 'repeat'}, data => {
       body.classList.add('pdl_repeat');
-      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(
+        data?.trace ?? [data.repeat],
+        data.join
+      );
       body.appendChild(loop_body);
     })
     .with({kind: 'repeat_until'}, data => {
       body.classList.add('pdl_repeat_until');
-      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(
+        data?.trace ?? [data.repeat],
+        data.join
+      );
       body.appendChild(loop_body);
     })
     .with({kind: 'for'}, data => {
       body.classList.add('pdl_for');
-      const loop_body = show_loop_trace(data?.trace ?? [data.repeat]);
+      const loop_body = show_loop_trace(
+        data?.trace ?? [data.repeat],
+        data.join
+      );
       body.appendChild(loop_body);
     })
     .with({kind: 'empty'}, () => {
@@ -281,26 +306,32 @@ export function show_defs(defs: {[k: string]: PdlBlocks}): DocumentFragment {
     doc_fragment.appendChild(div);
     div.classList.add('pdl_show_result_false');
     add_def(div, x);
-    div.appendChild(show_lastOf(defs[x]));
+    div.appendChild(show_program(defs[x]));
   }
   return doc_fragment;
 }
 
-// export function show_loop_trace(trace: PdlBlocks[], join_config: Join): DocumentFragment {
-//   return match(join_config)
-//     .with({as: 'text'}, _ => show_text(trace))
-//     .with({as: 'array'}, _ => show_array(trace))
-//     .with({as: 'lastOf'}, _ => show_lastOf(trace))
-//     .exhaustive();
-// }
+export function show_loop_trace(
+  trace: PdlBlocks[],
+  join_config: Join | undefined
+): DocumentFragment {
+  return match(join_config)
+    .with(P.nullish, _ => show_text(trace, undefined))
+    .with({as: P.union('text', P.nullish)}, cfg => show_text(trace, cfg?.with))
+    .with({as: 'array'}, _ => show_array(trace))
+    .with({as: 'lastOf'}, _ => show_lastOf(trace))
+    .exhaustive();
+}
 
-export function show_loop_trace(trace: PdlBlocks[]): DocumentFragment {
+export function show_loop_trace_incremental(
+  trace: PdlBlocks[]
+): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();
   if (trace.length > 1) {
     const dot_dot_dot = document.createElement('div');
     dot_dot_dot.innerHTML = '···';
     dot_dot_dot.addEventListener('click', e => {
-      dot_dot_dot.replaceWith(show_loop_trace(trace.slice(0, -1)));
+      dot_dot_dot.replaceWith(show_loop_trace_incremental(trace.slice(0, -1)));
       if (e.stopPropagation) e.stopPropagation();
     });
     doc_fragment.appendChild(dot_dot_dot);

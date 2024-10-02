@@ -7276,7 +7276,6 @@
       "properties": {
         "as": {
           "const": "array",
-          "default": "array",
           "description": "Return the result of each iteration as an array.\n    ",
           "enum": [
             "array"
@@ -7285,6 +7284,9 @@
           "type": "string"
         }
       },
+      "required": [
+        "as"
+      ],
       "title": "JoinArray",
       "type": "object"
     },
@@ -7293,7 +7295,6 @@
       "properties": {
         "as": {
           "const": "lastOf",
-          "default": "lastOf",
           "description": "Return the result of the last iteration.\n    ",
           "enum": [
             "lastOf"
@@ -7302,6 +7303,9 @@
           "type": "string"
         }
       },
+      "required": [
+        "as"
+      ],
       "title": "JoinLastOf",
       "type": "object"
     },

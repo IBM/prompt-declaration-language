@@ -4544,10 +4544,10 @@ export interface JoinText {
   with?: With;
 }
 export interface JoinArray {
-  as?: As1;
+  as: As1;
 }
 export interface JoinLastOf {
-  as?: As2;
+  as: As2;
 }
 /**
  * Condition of the loop.

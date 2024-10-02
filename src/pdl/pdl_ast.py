@@ -386,17 +386,13 @@ class JoinText(JoinConfig):
 
 
 class JoinArray(JoinConfig):
-    iteration_type: Literal[IterationType.ARRAY] = Field(
-        alias="as", default=IterationType.ARRAY
-    )
+    iteration_type: Literal[IterationType.ARRAY] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinLastOf(JoinConfig):
-    iteration_type: Literal[IterationType.LASTOF] = Field(
-        alias="as", default=IterationType.LASTOF
-    )
+    iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
