@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -22,6 +23,8 @@ from .pdl_ast import (
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
+
+logger = logging.getLogger(__name__)
 
 
 class InterpreterConfig(TypedDict, total=False):
@@ -62,6 +65,7 @@ def exec_program(
     Returns:
         Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
     """
+    logging.basicConfig(filename="log.txt", encoding="utf-8", format="", filemode="w")
     config = config or {}
     state = InterpreterState(**config)
     scope = scope or {}

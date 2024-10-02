@@ -4,10 +4,9 @@ hello = {
     "text": [
         "Hello,",
         {
-            "model": "watsonx/ibm/granite-20b-code-instruct",
+            "model": "watsonx/ibm/granite-34b-code-instruct",
             "parameters": {"stop": ["!"], "include_stop_sequence": True},
         },
-        "\n",
     ]
 }
 
