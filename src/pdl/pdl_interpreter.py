@@ -127,7 +127,7 @@ class InterpreterState(BaseModel):
     batch: int = 1
     # batch=0: streaming
     # batch=1: call to generate with `input`
-    role: RoleType = None
+    role: RoleType = "user"
     cwd: Path = Path.cwd()
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
