@@ -1,0 +1,118 @@
+description: Function definition for react
+defs:
+  react_inner:
+    function:
+      examples: [str]
+      question: str
+      model: str
+    return:
+      text:
+      - for:
+          ex: ${ examples }
+        repeat:
+          "${ ex }\n"
+      - "\n"
+      - ${ question }
+      - "\n"
+      - def: prev_action
+        contribute: []
+        data: none
+      - def: exit
+        contribute: []
+        data: False
+      - repeat:
+          text:
+          - def: thought
+            model: ${ model }
+            parameters:
+              stop: 
+              - "Act:"
+              include_stop_sequence: true
+          - def: action
+            model: ${ model }
+            parameters:
+              stop: 
+              - "\n"
+            parser: json
+            spec: {name: str, arguments: obj}
+          - if: ${ action != prev_action}
+            then: 
+            - def: observation
+              if: ${ action.name == "Search" }
+              then:
+                text:
+                - "Obs: "
+                - lan: python
+                  code: |
+                    import warnings, wikipedia
+                    warnings.simplefilter("ignore")
+                    try:
+                      result = wikipedia.summary("${ action.arguments.topic }")
+                    except wikipedia.WikipediaException as e:
+                      result = str(e)
+              else:
+                - if: ${ action.name == "Calc" }
+                  then:
+                    text:
+                    - "Obs: "
+                    - lan: python
+                      code: result = ${ action.arguments.expr }
+            else:
+              def: exit
+              contribute: []
+              data: True
+          - def: prev_action
+            contribute: []
+            data: ${ action }
+        until: ${ action.name == "Finish" or exit }
+  
+  react:
+    function:
+      question: str
+      model: str
+    return:
+      - defs: 
+          examples:
+            array:
+                - text:
+                    |
+                    What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+                    Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+                    Act: {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
+                    Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
+                    Tho: It does not mention the eastern sector. So I need to look up eastern sector.
+                    Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+                    Act: {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
+
+                - text: 
+                    |
+                    What profession does Nicholas Ray and Elia Kazan have in common?
+                    Tho: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+                    Act: {"name": "Search", "arguments": {"topic": "Nicholas Ray"}}
+                    Obs: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+                    Tho: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+                    Act: {"name": "Search", "arguments": {"topic": "Elia Kazan"}}
+                    Obs: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+                    Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+                    Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
+                
+                - text:
+                    |
+                    What is 18 + 12 x 3?
+                    Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+                    Obs: 54
+                    Act: {"name": "Finish", "arguments": {"topic": "54"}}
+              
+                - text:
+                    |
+                    A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+                    Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+                    Obs: 2.869047619047619
+                    Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+      - call: react_inner
+        args:
+          context: []
+          examples: ${ examples }
+          question: ${ question }
+          model: ${ model }
+

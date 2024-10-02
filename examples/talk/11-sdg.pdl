@@ -1,4 +1,4 @@
-description: Real-world synthetic Data Generation (SDG) pipeline
+description: Real-world Synthetic Data Generation (SDG) pipeline
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
   teacher_model: watsonx/mistralai/mixtral-8x7b-instruct-v01
