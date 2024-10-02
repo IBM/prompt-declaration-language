@@ -68,3 +68,6 @@ version_file = "src/pdl/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+pdl = ["pdl-schema.json"]

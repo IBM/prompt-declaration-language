@@ -26,9 +26,12 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
     try:
         prog = Program.model_validate(prog_yaml)
     except ValidationError as exc:
-        with open("pdl-schema.json", "r", encoding="utf-8") as schema_file:
-            schema = json.load(schema_file)
+        pdl_schema_file = Path(__file__).parent / "pdl-schema.json"
+        with open(pdl_schema_file, "r", encoding="utf-8") as schema_fp:
+            schema = json.load(schema_fp)
         defs = schema["$defs"]
         errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
+        if errors == []:
+            errors = ["The file do not respect the schema."]
         raise PDLParseError(errors) from exc
     return prog, loc
