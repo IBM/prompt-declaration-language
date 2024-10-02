@@ -1,7 +1,9 @@
 import json
+from pathlib import Path
 
 from pydantic import ValidationError
 
+import pdl.pdl
 from pdl.pdl_ast import Program, empty_block_location
 from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 from pdl.pdl_schema_error_analyzer import analyze_errors
@@ -13,7 +15,8 @@ def error(raw_data, assertion):
         data = Program.model_validate(raw_data)
         _, _, _, _ = process_prog(state, empty_scope, data)
     except ValidationError:
-        with open("pdl-schema.json", "r", encoding="utf-8") as schemafile:
+        pdl_schema_file = Path(pdl.pdl.__file__).parent / "pdl-schema.json"
+        with open(pdl_schema_file, "r", encoding="utf-8") as schemafile:
             schema = json.load(schemafile)
             defs = schema["$defs"]
             errors = analyze_errors(
