@@ -283,7 +283,7 @@ text:
   EVALUATION:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
-  lan: python
+  lang: python
   code: |
     import textdistance
     expl = """
@@ -353,7 +353,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance

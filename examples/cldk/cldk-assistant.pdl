@@ -5,7 +5,7 @@ text:
   message: "Please enter the path to your Java project:\n"
   contribute: []
 - "***Analyzing...\n"
-- lan: python
+- lang: python
   def: analysis
   contribute: []
   code: |
@@ -42,7 +42,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               classes = PDL_SESSION.cldk_state.get_classes().keys()
@@ -53,7 +53,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
@@ -64,7 +64,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
@@ -76,7 +76,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
@@ -87,7 +87,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
@@ -98,7 +98,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -109,7 +109,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -122,7 +122,7 @@ text:
           Answer:
           ```
           text:
-          - lan: python
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -140,7 +140,7 @@ text:
         stop_sequence: ["Question"]
         include_stop_sequence: false
     - "\n\n***Executing the above PDL code:\n\n"
-    - lan: python
+    - lang: python
       contribute: []
       code: | 
         from pdl import pdl_ast, pdl_interpreter

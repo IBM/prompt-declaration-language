@@ -116,7 +116,7 @@ def block_to_dict(
                 else:
                     d["parameters"] = block.parameters
         case CodeBlock():
-            d["lan"] = block.lan
+            d["lang"] = block.lang
             d["code"] = blocks_to_dict(block.code, json_compatible)
         case GetBlock():
             d["get"] = block.get

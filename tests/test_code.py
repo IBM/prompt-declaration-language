@@ -6,7 +6,7 @@ python_data = {
     "text": [
         "Hello, ",
         {
-            "lan": "python",
+            "lang": "python",
             "code": {
                 "text": ["import random\n", "import string\n", "result = 'Tracy'"]
             },
@@ -30,7 +30,7 @@ def show_result_data(show):
             {
                 "def": "QUERY",
                 "text": [
-                    {"lan": "python", "code": ["result = 'How can I help you?: '"]}
+                    {"lang": "python", "code": ["result = 'How can I help you?: '"]}
                 ],
                 "contribute": show,
             }
