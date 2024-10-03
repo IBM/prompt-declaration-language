@@ -5,7 +5,7 @@ text:
   message: "Please enter the path to your Java project:\n"
   contribute: []
 - "***Analyzing...\n"
-- langg: python
+- lang: python
   def: analysis
   contribute: []
   code: |
