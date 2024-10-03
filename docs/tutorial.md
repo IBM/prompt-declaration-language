@@ -349,7 +349,7 @@ See for example: ([file](https://github.com/IBM/prompt-declaration-language//blo
 description: Hello world showing call to python code
 text:
 - "Hello, "
-- lan: python
+- lang: python
   code: 
     |
     import random
@@ -390,7 +390,7 @@ text:
     include_stop_sequence: false
   def: LOCATION
   contribute: []
-- lan: python
+- lang: python
   code: |
     import requests
     response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
@@ -438,7 +438,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance
@@ -552,7 +552,7 @@ text:
                 include_stop_sequence: false
             - '= '
             - def: RESULT
-              lan: python
+              lang: python
               code: result = ${ EXPR }
             - ' >>'
       until: ${ "The answer is" in REASON_OR_CALC }

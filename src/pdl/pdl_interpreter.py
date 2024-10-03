@@ -1211,7 +1211,7 @@ def step_call_code(
         loc,
     )
     append_log(state, "Code Input", code_s)
-    match block.lan:
+    match block.lang:
         case "python":
             try:
                 result = call_python(code_s, scope)

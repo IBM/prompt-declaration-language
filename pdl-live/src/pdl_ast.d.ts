@@ -2163,7 +2163,7 @@ export type Kind15 = "code";
  * Programming language of the code.
  *
  */
-export type Lan = "python";
+export type Lang = "python";
 /**
  * Code to execute.
  *
@@ -3282,7 +3282,7 @@ export interface CodeBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind15;
-  lan: Lan;
+  lang: Lang;
   code: Code;
 }
 /**

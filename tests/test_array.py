@@ -33,13 +33,13 @@ repeat_until_data = {
     "lastOf": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": "result = 0"}],
+            "text": [{"lang": "python", "code": "result = 0"}],
         },
         {
             "repeat": [
                 {
                     "def": "I",
-                    "lan": "python",
+                    "lang": "python",
                     "code": ["result = ${ I } + 1"],
                 }
             ],

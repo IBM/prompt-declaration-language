@@ -69,7 +69,7 @@ cond_data = {
                                     "= ",
                                     {
                                         "def": "RESULT",
-                                        "lan": "python",
+                                        "lang": "python",
                                         "code": {
                                             "text": ["result = ", {"get": "EXPR"}]
                                         },
@@ -142,7 +142,7 @@ def cond_data1(show, name):
                 "def": "NAME",
                 "text": [
                     {
-                        "lan": "python",
+                        "lang": "python",
                         "code": {
                             "text": [
                                 "import random\n",
@@ -184,7 +184,7 @@ repeat_until_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -193,7 +193,7 @@ repeat_until_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": "result = ${ I } + 1",
                         },
                         "\n",
@@ -226,7 +226,7 @@ repeat_until_array_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -235,7 +235,7 @@ repeat_until_array_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": "result = ${ I } + 1",
                         },
                         "\n",
@@ -261,7 +261,7 @@ repeat_until_text_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -270,7 +270,7 @@ repeat_until_text_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": ["result = ${ I } + 1"],
                         },
                         "\n",
@@ -310,7 +310,7 @@ repeat_until_text_with_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -319,7 +319,7 @@ repeat_until_text_with_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": ["result = ${ I } + 1"],
                         },
                     ]
@@ -353,7 +353,7 @@ repeat_until_str_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -363,7 +363,7 @@ repeat_until_str_data = {
                         "def": "I",
                         "text": [
                             {
-                                "lan": "python",
+                                "lang": "python",
                                 "code": ["result = ${ I } + 1"],
                             }
                         ],

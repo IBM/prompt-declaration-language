@@ -42,7 +42,7 @@ defs:
               then:
                 text:
                 - "Obs: "
-                - lan: python
+                - lang: python
                   code: |
                     import warnings, wikipedia
                     warnings.simplefilter("ignore")
@@ -55,7 +55,7 @@ defs:
                   then:
                     text:
                     - "Obs: "
-                    - lan: python
+                    - lang: python
                       code: result = ${ action.arguments.expr }
             else:
               def: exit
