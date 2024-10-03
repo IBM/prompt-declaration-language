@@ -10,4 +10,4 @@ text:
 - "\n"
 - model: ibm/granite-20b-multilingual
   input:
-      - "Translate the word '${ name | trim }' to French\n"
+      - "Translate the word ${ name | trim } to French\n"

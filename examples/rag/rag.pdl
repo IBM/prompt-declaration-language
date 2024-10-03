@@ -1,6 +1,6 @@
 description: Retrieval-augmented generation for NL-to-Code generation task.
 text:
-- lan: python
+- lang: python
   code: | # initialize PDL_SESSION.vec_db and PDL_SESSION.embed() function
     import datasets, numpy, os, requests
     genai_key, genai_api = os.environ["WATSONX_KEY"], os.environ["WATSONX_API"]
@@ -27,7 +27,7 @@ text:
     given character from the string.
   contribute: []
 - def: RETRIEVED
-  lan: python
+  lang: python
   spec: {prompt: [str], code: [str]}
   code: |
     key = PDL_SESSION.embed("${ TEST_PROMPT }")

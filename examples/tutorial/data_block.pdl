@@ -22,7 +22,7 @@ lastOf:
       ```
       ${ CODE.source_code }```
 - def: EVAL
-  lan: python
+  lang: python
   code:
     |
     import textdistance

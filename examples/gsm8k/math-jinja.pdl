@@ -16,7 +16,7 @@ text:
       description: my answer
       text:
       - Let's call the number of people on the first ship x.
-      - lan: python
+      - lang: python
         def: equation
         code: 
         - |
@@ -25,7 +25,7 @@ text:
           result = x + 2*x + 4*x
       - "The equation is ${ equation } = 847.\n"
       - "Solving for x, we get "
-      - lan: python
+      - lang: python
         def: RESULT
         code:
         - |
@@ -33,7 +33,7 @@ text:
           x = symbols('x')
           result = solve(${ equation } - 847, x)[0]
       - "\nThe answer is ${RESULT}."
-      - lan: python
+      - lang: python
         def: FINAL
         code:
         - |
@@ -57,7 +57,7 @@ text:
       - "\ntennis balls. The answer is\n"
       - def: RESULT
         data: ${ tennis_balls + bought_balls }
-      - lan: python
+      - lang: python
         def: FINAL
         code:
         - |
@@ -72,7 +72,7 @@ text:
   parameters:
     stop_sequences: ["Question"]
     include_stop_sequence: false
-- lan: python
+- lang: python
   code: | 
     from pdl import pdl_ast, pdl_interpreter
     from pdl.pdl_ast import Program

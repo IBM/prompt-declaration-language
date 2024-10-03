@@ -61,7 +61,7 @@ var_shared_scope_data = {
         },
         {
             "def": "I",
-            "lan": "python",
+            "lang": "python",
             "code": "result = NAME[::-1] + '!\\n'",
             "contribute": [],
         },
@@ -88,7 +88,7 @@ var_shared_scope_mutate_data = {
         },
         {
             "def": "I",
-            "lan": "python",
+            "lang": "python",
             "code": {"text": ["NAME = NAME[::-1]\n", "result = NAME"]},
             "contribute": [],
         },
@@ -115,7 +115,7 @@ code_var_data = {
     "text": [
         {
             "def": "I",
-            "lan": "python",
+            "lang": "python",
             "code": ["result = 0"],
         },
     ],
@@ -126,7 +126,7 @@ def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
     text, _, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"context": [{"role": None, "content": text}], "I": 0}
+    assert scope == {"context": [{"role": "user", "content": text}], "I": 0}
     assert text == "0"
 
 

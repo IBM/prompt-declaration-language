@@ -21,6 +21,6 @@ text:
 - if: ${ action.name == "Calc" }
   then:
   - "Obs: "
-  - lan: python
+  - lang: python
     code: result = ${ action.arguments.expr }
 - "\n"

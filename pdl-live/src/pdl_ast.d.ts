@@ -1328,9 +1328,25 @@ export type Repeat =
  *
  */
 export type Join = JoinText | JoinArray | JoinLastOf;
+/**
+ * String concatenation of the result of each iteration.
+ *
+ */
 export type As = "text";
+/**
+ * String used to concatenate each iteration of the loop.
+ *
+ */
 export type With = string;
+/**
+ * Return the result of each iteration as an array.
+ *
+ */
 export type As1 = "array";
+/**
+ * Return the result of the last iteration.
+ *
+ */
 export type As2 = "lastOf";
 export type Trace1 =
   | (
@@ -2147,7 +2163,7 @@ export type Kind15 = "code";
  * Programming language of the code.
  *
  */
-export type Lan = "python";
+export type Lang = "python" | "command";
 /**
  * Code to execute.
  *
@@ -3266,7 +3282,7 @@ export interface CodeBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind15;
-  lan: Lan;
+  lang: Lang;
   code: Code;
 }
 /**
@@ -4526,15 +4542,12 @@ export interface For {
 export interface JoinText {
   as?: As;
   with?: With;
-  [k: string]: unknown;
 }
 export interface JoinArray {
-  as?: As1;
-  [k: string]: unknown;
+  as: As1;
 }
 export interface JoinLastOf {
-  as?: As2;
-  [k: string]: unknown;
+  as: As2;
 }
 /**
  * Condition of the loop.

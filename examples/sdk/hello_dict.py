@@ -8,7 +8,6 @@ hello = {
             "platform": "bam",
             "parameters": {"stop_sequences": ["!"], "include_stop_sequence": True},
         },
-        "\n",
     ]
 }
 

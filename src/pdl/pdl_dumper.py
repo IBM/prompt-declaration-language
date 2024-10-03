@@ -116,7 +116,7 @@ def block_to_dict(
                 else:
                     d["parameters"] = block.parameters
         case CodeBlock():
-            d["lan"] = block.lan
+            d["lang"] = block.lang
             d["code"] = blocks_to_dict(block.code, json_compatible)
         case GetBlock():
             d["get"] = block.get
@@ -158,7 +158,7 @@ def block_to_dict(
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
-            d["join"] = block.join.model_dump()
+            d["join"] = block.join.model_dump(by_alias=True)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -166,7 +166,7 @@ def block_to_dict(
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
-            d["join"] = block.join.model_dump()
+            d["join"] = block.join.model_dump(by_alias=True)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -174,7 +174,7 @@ def block_to_dict(
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
-            d["join"] = block.join.model_dump()
+            d["join"] = block.join.model_dump(by_alias=True)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace

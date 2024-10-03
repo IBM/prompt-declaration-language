@@ -349,7 +349,7 @@ See for example: ([file](https://github.com/IBM/prompt-declaration-language//blo
 description: Hello world showing call to python code
 text:
 - "Hello, "
-- lan: python
+- lang: python
   code: 
     |
     import random
@@ -390,7 +390,7 @@ text:
     include_stop_sequence: false
   def: LOCATION
   contribute: []
-- lan: python
+- lang: python
   code: |
     import requests
     response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
@@ -438,7 +438,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance
@@ -552,7 +552,7 @@ text:
                 include_stop_sequence: false
             - '= '
             - def: RESULT
-              lan: python
+              lang: python
               code: result = ${ EXPR }
             - ' >>'
       until: ${ "The answer is" in REASON_OR_CALC }
@@ -734,7 +734,7 @@ See examples of PDL being called programmatically in Python
 
 ##  Debugging PDL Programs
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language//blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language//blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window. You may also need to install the VSCode extension: `YAML Language Support by Red Hat`.
+We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language//blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language//blob/main/src/pdl/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window. You may also need to install the VSCode extension: `YAML Language Support by Red Hat`.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 

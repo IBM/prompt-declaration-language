@@ -278,7 +278,7 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: Literal["python"]
+    lang: Literal["python", "command"]
     """Programming language of the code.
     """
     code: "BlocksType"
@@ -368,7 +368,9 @@ class IterationType(StrEnum):
 
 
 class JoinConfig(BaseModel):
-    pass
+    """Configure how loop iterations should be combined."""
+
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
 
 
 class JoinText(JoinConfig):
@@ -384,17 +386,13 @@ class JoinText(JoinConfig):
 
 
 class JoinArray(JoinConfig):
-    iteration_type: Literal[IterationType.ARRAY] = Field(
-        alias="as", default=IterationType.ARRAY
-    )
+    iteration_type: Literal[IterationType.ARRAY] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinLastOf(JoinConfig):
-    iteration_type: Literal[IterationType.LASTOF] = Field(
-        alias="as", default=IterationType.LASTOF
-    )
+    iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 

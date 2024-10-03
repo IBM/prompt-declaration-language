@@ -1,5 +1,6 @@
 import pytest
 
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
@@ -147,3 +148,35 @@ def test_for_data5():
     result, _, scope, _ = process_prog(state, empty_scope, data)
     assert result == "[1, 2, 3, 4]"
     assert scope["x"] == "[1, 2, 3, 4]"
+
+
+def test_for_nested_array():
+    prog_str = """
+for:
+    i: [1,2,3]
+repeat:
+    for:
+        j: [1,2]
+    repeat: "${i}${j}"
+    join:
+        as: array
+join:
+    as: array
+"""
+    result = exec_str(prog_str)
+    assert result == [["11", "12"], ["21", "22"], ["31", "32"]]
+
+
+def test_for_nested_text():
+    prog_str = r"""
+for:
+    i: [1,2,3]
+repeat:
+    for:
+        j: [1,2]
+    repeat: "${i}${j}"
+join:
+    with: "\n"
+"""
+    result = exec_str(prog_str)
+    assert result == "\n".join(["1112", "2122", "3132"])

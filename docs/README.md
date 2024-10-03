@@ -20,7 +20,7 @@ PDL provides the following features:
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
+The PDL interpreter takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
@@ -57,7 +57,7 @@ pdl <path/to/example.pdl>
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
 
-We highly recommend using VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using the following `./vscode/settings.json` file:
+We highly recommend using VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using the following `./vscode/settings.json` file:
 
 ```
 {
@@ -283,7 +283,7 @@ text:
   EVALUATION:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
-  lan: python
+  lang: python
   code: |
     import textdistance
     expl = """
@@ -353,7 +353,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance

@@ -73,7 +73,7 @@ def test_get_parser():
 
 
 code_parser = {
-    "lan": "python",
+    "lang": "python",
     "parser": "json",
     "code": {
         "text": [
@@ -93,7 +93,7 @@ def test_code_parser():
 
 
 code_parser1 = {
-    "lan": "python",
+    "lang": "python",
     "code": "r = {'a':'b', 'c':'d'}\nresult=str(r)",
 }
 

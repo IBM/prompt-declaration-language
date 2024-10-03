@@ -24,7 +24,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance

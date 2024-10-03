@@ -6,4 +6,4 @@ text:
     stop_sequences:
     - '!'
     include_stop_sequence: true
-- "\n"
+

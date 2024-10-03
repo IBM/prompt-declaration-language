@@ -24,16 +24,14 @@ defs:
           text:
           - def: thought
             model: ${ model }
-            platform: bam
             parameters:
-              stop_sequences: 
+              stop: 
               - "Act:"
               include_stop_sequence: true
           - def: action
             model: ${ model }
-            platform: bam
             parameters:
-              stop_sequences: 
+              stop: 
               - "\n"
             parser: json
             spec: {name: str, arguments: obj}
@@ -117,5 +115,4 @@ defs:
           examples: ${ examples }
           question: ${ question }
           model: ${ model }
-
 

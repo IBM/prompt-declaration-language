@@ -1,5 +1,8 @@
 import json
+import logging
 import re
+import shlex
+import subprocess
 import sys
 import types
 
@@ -78,6 +81,8 @@ from .pdl_scheduler import (
 from .pdl_schema_validator import type_check_args, type_check_spec
 from .pdl_utils import messages_concat, messages_to_str, stringify
 
+logger = logging.getLogger(__name__)
+
 
 class PDLRuntimeError(PDLException):
     def __init__(
@@ -123,11 +128,10 @@ empty_scope: ScopeType = {"context": []}
 class InterpreterState(BaseModel):
     yield_result: bool = False
     yield_background: bool = False
-    log: list[str] = []
     batch: int = 1
     # batch=0: streaming
     # batch=1: call to generate with `input`
-    role: RoleType = None
+    role: RoleType = "user"
     cwd: Path = Path.cwd()
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
@@ -158,6 +162,7 @@ def generate(
     """
     if log_file is None:
         log_file = "log.txt"
+    logging.basicConfig(filename=log_file, encoding="utf-8", format="", filemode="w")
     try:
         prog, loc = parse_file(pdl_file)
         if state is None:
@@ -184,11 +189,6 @@ def generate(
         print(message, file=sys.stderr)
         if trace_file and exc.trace is not None:
             write_trace(trace_file, exc.trace)
-    finally:
-        if state is not None:
-            with open(log_file, "w", encoding="utf-8") as log_fp:
-                for line in state.log:
-                    log_fp.write(line)
 
 
 def write_trace(
@@ -288,7 +288,7 @@ def step_block(
             yield YieldBackgroundMessage(background)
         if state.yield_result:
             yield YieldResultMessage(result)
-        append_log(state, "Document", background)
+        append_log(state, "Context", background)
     else:
         result, background, scope, trace = yield from step_advanced_block(
             state, scope, block, loc
@@ -1213,11 +1213,21 @@ def step_call_code(
         loc,
     )
     append_log(state, "Code Input", code_s)
-    match block.lan:
+    match block.lang:
         case "python":
             try:
                 result = call_python(code_s, scope)
                 background = [{"role": state.role, "content": str(result)}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
+        case "command":
+            try:
+                result = call_command(code_s)
+                background = [{"role": state.role, "content": result}]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1244,6 +1254,17 @@ def call_python(code: str, scope: dict) -> Any:
     exec(code, my_namespace.__dict__)
     result = my_namespace.result
     return result
+
+
+def call_command(code: str) -> str:
+    args = shlex.split(code)
+    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    if p.stderr != "":
+        print(p.stderr, file=sys.stderr)
+    if p.returncode != 0:
+        raise ValueError(f"command exited with non zero code: {p.returncode}")
+    output = p.stdout
+    return output
 
 
 def step_call(
@@ -1446,5 +1467,5 @@ def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
 
 
 def append_log(state: InterpreterState, title, somestring):
-    state.log.append("**********  " + title + "  **********\n")
-    state.log.append(str(somestring) + "\n")
+    logger.warning("**********  %s  **********", title)
+    logger.warning(str(somestring))
