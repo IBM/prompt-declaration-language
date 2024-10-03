@@ -2555,10 +2555,10 @@
           "type": "string"
         },
         "lang": {
-          "const": "python",
           "description": "Programming language of the code.\n    ",
           "enum": [
-            "python"
+            "python",
+            "command"
           ],
           "title": "Lang",
           "type": "string"
