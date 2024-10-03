@@ -57,3 +57,17 @@ def test_contribute_false():
     data = Program.model_validate(show_result_data([]))
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == ""
+
+
+command_data = [
+    {"def": "world", "lang": "command", "code": "echo -n World", "contribute": []},
+    "Hello ${ world }!",
+]
+
+
+def test_command():
+    state = InterpreterState()
+    data = Program.model_validate(command_data)
+    document, _, scope, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello World!"
+    assert scope["world"] == "World"
