@@ -103,7 +103,7 @@ defs:
               icl_answer: ${example.answer}
           join:
             as: array
-    - lan: python
+    - lang: python
       code: | # flatten list_of_lists into simple list
           result = [q for qs in ${list_of_lists} for q in qs]
 
@@ -189,7 +189,7 @@ defs:
           join:
             as: array
         filtered:
-          lan: python
+          lang: python
           code: | # keep only if "keep" column is non-zero
               result = [p["question"] for p in ${list_of_pairs} if p["keep"]]
     - ${filtered}
@@ -256,7 +256,7 @@ defs:
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
         parsed_answer:
-          lan: python
+          lang: python
           code: | # parse model output
             result = """ ${teacher_output} """.strip()
             if "[Response]" in result:
@@ -283,7 +283,7 @@ defs:
               question: ${question}
           join:
             as: array
-    - lan: python
+    - lang: python
       spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
           result = [r for r in ${all_results} if len(r["answer"]) > 0]
@@ -370,7 +370,7 @@ defs:
           join:
             as: array
         filtered:
-          lan: python
+          lang: python
           spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]

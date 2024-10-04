@@ -1,6 +1,8 @@
 import json
 import logging
 import re
+import shlex
+import subprocess
 import sys
 import types
 
@@ -1211,11 +1213,21 @@ def step_call_code(
         loc,
     )
     append_log(state, "Code Input", code_s)
-    match block.lan:
+    match block.lang:
         case "python":
             try:
                 result = call_python(code_s, scope)
                 background = [{"role": state.role, "content": str(result)}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
+        case "command":
+            try:
+                result = call_command(code_s)
+                background = [{"role": state.role, "content": result}]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1242,6 +1254,17 @@ def call_python(code: str, scope: dict) -> Any:
     exec(code, my_namespace.__dict__)
     result = my_namespace.result
     return result
+
+
+def call_command(code: str) -> str:
+    args = shlex.split(code)
+    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    if p.stderr != "":
+        print(p.stderr, file=sys.stderr)
+    if p.returncode != 0:
+        raise ValueError(f"command exited with non zero code: {p.returncode}")
+    output = p.stdout
+    return output
 
 
 def step_call(

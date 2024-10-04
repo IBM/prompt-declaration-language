@@ -1,6 +1,6 @@
 description: Hello world showing call out to python code
 text:
-- lan: python
+- lang: python
   spec: int
   code: |
     import string

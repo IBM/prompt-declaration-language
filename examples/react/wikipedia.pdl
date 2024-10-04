@@ -39,7 +39,7 @@ text:
       then:
         text:
         - "Obs: "
-        - lan: python
+        - lang: python
           code: |
             import warnings, wikipedia
             warnings.simplefilter("ignore")

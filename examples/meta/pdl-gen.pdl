@@ -1,6 +1,6 @@
 description: Teaching PDL
 text:
-- lan: python
+- lang: python
   code:
   - |
     print("Enter/Paste your content. Ctrl-D to save it.")
@@ -46,7 +46,7 @@ text:
       ```
       description: Example of PDL code block
       text:
-      - lan: python
+      - lang: python
         code:
         - |
           contents = []
@@ -180,7 +180,7 @@ text:
       ```
       description: Example of PDL code block
       text:
-      - lan: python
+      - lang: python
         code:
         - |
           contents = []
@@ -200,7 +200,7 @@ text:
       ```
       description: Example of PDL code block
       text:
-      - lan: python
+      - lang: python
         code:
         - |
           contents = []
@@ -302,7 +302,7 @@ text:
       ```
       description: Using a weather API and LLM to make a small weather app
       text:
-      - lan: python
+      - lang: python
         code:
         - |
           result = input("How can I help you?: ")
