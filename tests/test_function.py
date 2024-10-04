@@ -53,7 +53,7 @@ def test_function_params():
 hello_stutter = {
     "description": "Repeat the context",
     "text": [
-        {"def": "stutter", "function": None, "return": "${ context[0].content }"},
+        {"def": "stutter", "function": None, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
         {"call": "stutter"},
     ],
@@ -70,9 +70,12 @@ def test_function_implicit_context():
 hello_bye = {
     "description": "Repeat the context",
     "text": [
-        {"def": "stutter", "function": {}, "return": "${ context[0].content }"},
+        {"def": "stutter", "function": {}, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
-        {"call": "stutter", "args": {"context": [{"role": None, "content": "Bye!"}]}},
+        {
+            "call": "stutter",
+            "args": {"pdl_context": [{"role": None, "content": "Bye!"}]},
+        },
     ],
 }
 
