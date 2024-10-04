@@ -2,7 +2,7 @@ description: Earth circumference question
 text:
 - 'What is the circumference of the earth? I believe the best person to answer this question is '
 - def: EXPERT
-  model: ibm/granite-34b-code-instruct
+  model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   parameters:
     stop_sequences:
@@ -11,5 +11,5 @@ text:
 - '. Indeed, '
 - get: EXPERT
 - ' addressed this question: '
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam

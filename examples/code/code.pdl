@@ -5,7 +5,7 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input:
       - |

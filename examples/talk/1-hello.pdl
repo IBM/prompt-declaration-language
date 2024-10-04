@@ -1,7 +1,7 @@
 description: Model call
 text: 
 - Hello,
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   parameters:
     stop_sequences: ["!"]

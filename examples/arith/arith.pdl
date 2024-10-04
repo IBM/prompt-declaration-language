@@ -6,7 +6,7 @@ text:
     text:
     - "\nQuestion: "
     - def: QUESTION
-      model: ibm/granite-34b-code-instruct
+      model: ibm/granite-8b-instruct-preview-4k
       platform: bam
       parameters:
         stop_sequences:
@@ -17,7 +17,7 @@ text:
     - repeat:
         text:
         - def: REASON_OR_CALC
-          model: ibm/granite-34b-code-instruct
+          model: ibm/granite-8b-instruct-preview-4k
           platform: bam
           parameters:
             stop_sequences:
@@ -28,7 +28,7 @@ text:
           then:
             text:
             - def: EXPR
-              model: ibm/granite-34b-code-instruct
+              model: ibm/granite-8b-instruct-preview-4k
               platform: bam
               parameters:
                 stop_sequences:

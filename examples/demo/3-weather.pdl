@@ -4,7 +4,7 @@ text:
   def: QUERY
   message: "Ask a query: "
   contribute: []
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: |
       Question: What is the weather in London?
@@ -19,6 +19,7 @@ text:
     - Question
     - What
     - '!'
+    - "\n"
     include_stop_sequence: false
   def: LOCATION
   contribute: []
@@ -31,7 +32,7 @@ text:
   parser: json
   contribute: []
 
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: |
       Explain the weather from the following JSON:
