@@ -1051,7 +1051,9 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(state, "Model Input",  messages_to_str(concrete_block.model, model_input))
+            append_log(
+                state, "Model Input", messages_to_str(concrete_block.model, model_input)
+            )
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)

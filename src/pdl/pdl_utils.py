@@ -33,25 +33,19 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
 
 
 def messages_to_str(model_id: str, messages: Messages) -> str:
-    if  "granite-3b" not in model_id and "granite-8b" not in model_id:
-        return "".join(
-        [
-            (
-                msg["content"]
-                
-            )
-            for msg in messages
-        ]
+    if "granite-3b" not in model_id and "granite-8b" not in model_id:
+        return "".join([(msg["content"]) for msg in messages])
+    return (
+        "".join(
+            [
+                (
+                    msg["content"]
+                    if msg["role"] is None
+                    # else f"<|{msg['role']}|>{msg['content']}"
+                    else f"<|start_of_role|>{msg['role']}<|end_of_role|>{msg['content']}<|end_of_text|>\n"
+                )
+                for msg in messages
+            ]
+        )
+        + "<|start_of_role|>assistant<|end_of_role|>"
     )
-    return "".join(
-        [
-            (
-                msg["content"]
-                if msg["role"] is None
-                #else f"<|{msg['role']}|>{msg['content']}"
-                else f"<|start_of_role|>{msg['role']}<|end_of_role|>{msg['content']}<|end_of_text|>\n"
-            )
-            for msg in messages
-        ]
-    ) + "<|start_of_role|>assistant<|end_of_role|>"
-
