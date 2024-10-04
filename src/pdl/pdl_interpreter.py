@@ -1051,7 +1051,9 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(state, "Model Input", model_input)
+            append_log(
+                state, "Model Input", messages_to_str(concrete_block.model, model_input)
+            )
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -1093,7 +1095,7 @@ def generate_client_response_streaming(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg_stream: Generator[Message, Any, None]
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg_stream = BamModel.generate_text_stream(
@@ -1148,7 +1150,7 @@ def generate_client_response_single(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg: Message
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg = BamModel.generate_text(
@@ -1178,7 +1180,7 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg = yield ModelCallMessage(
