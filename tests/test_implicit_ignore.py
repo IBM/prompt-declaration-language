@@ -4,8 +4,9 @@ from pdl.pdl import exec_str
 def do_test(capsys, test):
     result = exec_str(test["prog"])
     captured = capsys.readouterr()
+    warnings = [line.strip() for line in captured.err.split("\n")]
     assert result == test["result"]
-    assert captured.err == test["warnings"]
+    assert warnings == test["warnings"]
 
 
 def test_strings(capsys):
@@ -16,10 +17,12 @@ def test_strings(capsys):
 - Bye
 """,
         "result": "Bye",
-        "warnings": """Warning: the result of block `Hello` is not used.
-         You might want to use a `text` block or explicitly ignore the result with `contribute: [context]`.
-Warning: the result of block `How are you?` is not used.
-""",
+        "warnings": [
+            "Warning: the result of block `Hello` is not used.",
+            "You might want to use a `text` block or explicitly ignore the result with `contribute: [context]`.",
+            "Warning: the result of block `How are you?` is not used.",
+            "",
+        ],
     }
     do_test(capsys, test)
 
@@ -33,7 +36,7 @@ text:
 - Bye
 """,
         "result": "HelloHow are you?Bye",
-        "warnings": "",
+        "warnings": [""],
     }
     do_test(capsys, test)
 
@@ -48,6 +51,6 @@ def test_no_warning2(capsys):
 - Bye
 """,
         "result": "Bye",
-        "warnings": "",
+        "warnings": [""],
     }
     do_test(capsys, test)
