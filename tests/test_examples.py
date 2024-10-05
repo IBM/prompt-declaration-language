@@ -1,9 +1,6 @@
 import pathlib
 
-import pydantic
-import yaml
-
-from pdl.pdl_ast import Program
+from pdl.pdl_parser import PDLParseError, parse_file
 
 EXPECTED_INVALID = [
     pathlib.Path("tests") / "data" / "line" / "hello.pdl",
@@ -17,17 +14,20 @@ EXPECTED_INVALID = [
 ]
 
 
-def test_valid_programs() -> None:
+def test_valid_programs(capsys) -> None:
     actual_invalid: set[str] = set()
+    with_warnings: set[str] = set()
     for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        with open(yaml_file_name, "r", encoding="utf-8") as pdl_file:
-            try:
-                data = yaml.safe_load(pdl_file)
-                _ = Program.model_validate(data)
-            except pydantic.ValidationError:
-                actual_invalid |= {str(yaml_file_name)}
+        try:
+            _ = parse_file(yaml_file_name)
+            captured = capsys.readouterr()
+            if len(captured.err) > 0:
+                with_warnings |= {str(yaml_file_name)}
+        except PDLParseError:
+            actual_invalid |= {str(yaml_file_name)}
     expected_invalid = set(str(p) for p in EXPECTED_INVALID)
     unexpected_invalid = sorted(list(actual_invalid - expected_invalid))
     assert len(unexpected_invalid) == 0, unexpected_invalid
     unexpected_valid = sorted(list(expected_invalid - actual_invalid))
     assert len(unexpected_valid) == 0, unexpected_valid
+    assert len(with_warnings) == 0
