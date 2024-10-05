@@ -37,14 +37,16 @@ class UnusedConfig:
 
     def with_implicit_ignore(self, b):
         return UnusedConfig(implicit_ignore=b)
-    
-DISPLAY_UNUSED_HINT = True
+
+
+_DISPLAY_UNUSED_HINT = True
+
 
 def unused_warning(block: BlockType):
-    global DISPLAY_UNUSED_HINT
+    global _DISPLAY_UNUSED_HINT  # pylint: disable= global-statement
     print(f"Warning: the result of block `{block}` is not used.", file=sys.stderr)
-    if DISPLAY_UNUSED_HINT:
-        DISPLAY_UNUSED_HINT = False
+    if _DISPLAY_UNUSED_HINT:
+        _DISPLAY_UNUSED_HINT = False
         print(
             "         You might want to use a `text` block or explicitly ignore the result with `contribute: [context]`.",
             file=sys.stderr,
