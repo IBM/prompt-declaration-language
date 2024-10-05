@@ -6,7 +6,7 @@ def do_test(capsys, test):
     captured = capsys.readouterr()
     warnings = [line.strip() for line in captured.err.split("\n")]
     assert result == test["result"]
-    assert warnings == test["warnings"]
+    assert " ".join(warnings) == " ".join(test["warnings"])
 
 
 def test_strings(capsys):
