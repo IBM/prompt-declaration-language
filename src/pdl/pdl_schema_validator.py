@@ -16,12 +16,12 @@ def type_check_args(args: dict[str, Any], params: dict[str, Any], loc) -> list[s
         args_copy = {}
     if params_copy is None:
         params_copy = {}
-    # if "context" not in args_copy:
-    #     args_copy["context"] = "context"
-    # if "context" not in params_copy:
-    if "context" in args_copy:
-        # params_copy["context"] = [{"role": "str?", "content": "str"}]
-        params_copy["context"] = ["obj"]
+    # if "pdl_context" not in args_copy:
+    #     args_copy["pdl_context"] = "pdl_context"
+    # if "pdl_context" not in params_copy:
+    if "pdl_context" in args_copy:
+        # params_copy["pdl_context"] = [{"role": "str?", "content": "str"}]
+        params_copy["pdl_context"] = ["obj"]
     schema = get_json_schema(params_copy)
     if schema is None:
         return ["Error obtaining a valid schema from function parameters definition"]

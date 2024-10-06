@@ -122,7 +122,7 @@ class PDLRuntimeStepBlocksError(PDLException):
         self.message = message
 
 
-empty_scope: ScopeType = {"context": []}
+empty_scope: ScopeType = {"pdl_context": []}
 
 
 class InterpreterState(BaseModel):
@@ -288,12 +288,12 @@ def step_block(
             yield YieldBackgroundMessage(background)
         if state.yield_result:
             yield YieldResultMessage(result)
-        append_log(state, "Context", background)
+        append_log(state, "pdl_context", background)
     else:
         result, background, scope, trace = yield from step_advanced_block(
             state, scope, block, loc
         )
-    scope = scope | {"context": background}
+    scope = scope | {"pdl_context": background}
     return result, background, scope, trace
 
 
@@ -516,7 +516,7 @@ def step_block_body(
             results = []
             background = []
             iterations_trace: list[BlocksType] = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
@@ -536,7 +536,7 @@ def step_block_body(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     (
                         iteration_result,
@@ -569,7 +569,7 @@ def step_block_body(
             results = []
             background = []
             iter_trace: list[BlocksType] = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             items, block = process_expr_of(block, "fors", scope, loc, "for")
             lengths = []
             for idx, lst in items.items():
@@ -613,7 +613,7 @@ def step_block_body(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
@@ -649,7 +649,7 @@ def step_block_body(
             stop = False
             background = []
             iterations_trace = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
@@ -669,7 +669,7 @@ def step_block_body(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     (
                         iteration_result,
@@ -806,10 +806,12 @@ def step_blocks(
         new_loc = None
         background = []
         trace = []
-        context_init = scope["context"]
+        pdl_context_init = scope["pdl_context"]
         try:
             for i, block in enumerate(blocks):
-                scope = scope | {"context": messages_concat(context_init, background)}
+                scope = scope | {
+                    "pdl_context": messages_concat(pdl_context_init, background)
+                }
                 new_loc = append(loc, "[" + str(i) + "]")
                 if iteration_type == IterationType.LASTOF and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
@@ -1029,7 +1031,7 @@ def step_call_model(
         else:
             model_input = model_input_result
     else:
-        model_input = scope["context"]
+        model_input = scope["pdl_context"]
         input_trace = None
     concrete_block = concrete_block.model_copy(
         update={
@@ -1294,7 +1296,7 @@ def step_call(
             trace=block.model_copy(),
         )
     f_body = closure.returns
-    f_scope = closure.scope | {"context": scope["context"]} | args
+    f_scope = closure.scope | {"pdl_context": scope["pdl_context"]} | args
     fun_loc = LocationType(
         file=closure.location.file,
         path=closure.location.path + ["return"],
