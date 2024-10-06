@@ -1,0 +1,164 @@
+description: math problem
+text:
+
+- model: meta-llama/llama-3-70b-instruct
+  platform: bam
+  def: PDL
+  input:
+    text:
+    - |
+      Question: A deep-sea monster rises from the waters once every hundred years to feast on a ship and sate its hunger. 
+      Over three hundred years, it has consumed 847 people. Ships have been built larger over time, 
+      so each new ship has twice as many people as the last ship. How many people were on the ship the 
+      monster ate in the first hundred years?
+
+      Answer:
+      ```
+      description: my answer
+      text:
+      - Let's call the number of people on the first ship x.
+      - lang: python
+        def: equation
+        code: 
+        - |
+          from sympy import *
+          x = symbols('x')
+          result = x + 2*x + 4*x
+      - "The equation is ${ '${' } equation ${ '}' } = 847.\n"
+      - "Solving for x, we get "
+      - lang: python
+        def: RESULT
+        code:
+        - |
+          from sympy import *
+          x = symbols('x')
+          result = solve(${ '${' } equation ${ '}' } - 847, x)[0]
+      - "\nThe answer is ${ '${' } RESULT ${ '}' }."
+      - lang: python
+        def: FINAL
+        code:
+        - |
+          result = ${ '${' } RESULT ${ '}' }
+      - "\n#### "
+      - ${ '${' } FINAL ${ '}' }"
+      ```
+      Question: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. 
+      Each can has 3 tennis balls. How many tennis balls does he have now?
+
+      Answer: 
+      ```
+      description: my answer
+      text:
+      - Roger started with 5 tennis balls
+      - lang: python
+        def: tennis_balls
+        code: 
+        - |
+          result = 5
+      - "\n2 cans of 3 tennis balls each is\n"
+      - lang: python
+        def: bought_balls
+        code: 
+        - |
+          result = 2 * 3
+      - "\ntennis balls. The answer is\n"
+      - lang: python
+        def: RESULT
+        code:
+        - |
+          result = ${ '${' } tennis_balls ${ '}' } + ${ '${' } bought_balls ${ '}' }
+      - lang: python
+        def: FINAL
+        code:
+        - |
+          result = ${ '${' } RESULT ${ '}' }
+      - "\n#### "
+      - "${ '${' } FINAL ${ '}' }"
+      ```
+
+      Question: Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. 
+      Her parents decided to give her $15 for that purpose, 
+      and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?
+
+      Answer:
+      ```
+      description: my answer
+      text:
+      - Betty needs $100 for the wallet.
+      - lang: python
+        def: cost
+        code: 
+        - |
+          result = 100
+      - "Betty already has:\n"
+      - lang: python
+        def: betty_already_has
+        code: 
+        - |
+          result = ${ '${' } cost ${ '}' } / 2
+      - "\nHalf of the money she needs is\n"
+      - lang: python
+        def: half_cost
+        code: 
+        - |
+          result = ${ '${' } cost ${ '}' } / 2
+      - "\nBetty's parents gave her:\n"
+      - lang: python
+        def: money_from_parents
+        code:
+        - |
+          result = 15
+      - "\nBetty's grandparents gave her:\n"
+      - lang: python
+        def: money_from_grandparents
+        code: 
+        - |
+          result = ${ '${' } money_from_parents ${ '}' } * 2
+      - "\nSo Betty has:\n"
+      - lang: python
+        def: money_betty_has
+        code: 
+        - |
+          result = ${ '${' }  betty_already_has ${ '}' }  + ${ '${' }  money_from_parents ${ '}' }  + ${ '${' }  money_from_grandparents ${ '}' } 
+      - "\nTo buy the wallet, Betty needs\n"
+      - lang: python
+        def: money_needed
+        code: 
+        - |
+          result = ${ '${' } cost ${ '}' } - ${ '${' } money_betty_has ${ '}' }
+      - "\nThe answer is ${ '${' } money_needed ${ '}' }."
+      - lang: python
+        def: FINAL
+        code:
+        - |
+          result = ${ '${' } money_needed ${ '}' }
+      - "\n#### "
+      - "${ '${' } FINAL ${ '}' }"
+      ```
+    
+
+    - "Question: ${ question }"
+    - If numbers are very large, do not modify them.
+    - Please pay attention when using the sympy library to import and use it correctly.
+    - The answer final line should be ${ '${' } FINAL ${ '}' }.
+  
+  parameters:
+    stop_sequences: ["Question"]
+    include_stop_sequence: false
+- lang: python
+  code: | 
+    from pdl import pdl_ast, pdl_interpreter
+    from pdl.pdl_ast import Program
+    from pdl.pdl_interpreter import process_prog
+    from pdl.pdl_interpreter import InterpreterState
+    from pdl.pdl_interpreter import empty_scope
+    import re
+    import yaml
+    s = """'${ PDL }'"""
+    pdl = s.split("```")[1]
+    obj = yaml.safe_load(pdl)
+    state = InterpreterState()
+    data = Program.model_validate(obj)
+    
+    result, _, _, _ = process_prog(state, empty_scope, data)
+  def: RESULT

@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: watsonx/mistralai/mixtral-8x7b-instruct-v01
+  teacher_model: mistralai/mixtral-8x7b-instruct-v01
   teacher_template:
     function:
       sys_prompt: str
@@ -65,9 +65,10 @@ defs:
               ${prompt_data.generation}
         teacher_output:
           model: ${teacher_model}
+          platform: bam
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
+            stop_sequences: ["${teacher_stop_token}"]
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
@@ -155,8 +156,9 @@ defs:
         teacher_output:
           model: ${teacher_model}
           input: ${teacher_input}
+          platform: bam
           parameters:
-            stop: ["${teacher_stop_token}"]
+            stop_sequences: ["${teacher_stop_token}"]
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
@@ -250,8 +252,9 @@ defs:
         teacher_output:
           model: ${teacher_model}
           input: ${teacher_input}
+          platform: bam
           parameters:
-            stop: ${ [teacher_stop_token] + prompt_data.additional_stop_tokens }
+            stop_sequences: ${ [teacher_stop_token] + prompt_data.additional_stop_tokens }
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
         parsed_answer:
@@ -337,8 +340,9 @@ defs:
         teacher_output:
           model: ${teacher_model}
           input: ${teacher_input}
+          platform: bam
           parameters:
-            stop: ["${teacher_stop_token}"]
+            stop_sequences: ["${teacher_stop_token}"]
             include_stop_sequence: false
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
@@ -404,4 +408,3 @@ text:
 - call: filter_question_answer_pair
   args:
     qa_pairs: ${qa_pairs}
-- "\n"

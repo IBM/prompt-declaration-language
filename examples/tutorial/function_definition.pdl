@@ -6,9 +6,10 @@ text:
     language: str
   return:
   - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-  - model: watsonx/ibm/granite-20b-multilingual
+  - model: ibm/granite-20b-multilingual
+    platform: bam
     parameters:
-      stop: ["\n"]
+      stop_sequences: ["\n"]
 - call: translate
   args:
     sentence: I love Paris!

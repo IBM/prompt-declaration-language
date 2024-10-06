@@ -2,10 +2,15 @@ description: chatbot
 text:
 - read:
   message: "What is your query?\n"
+<<<<<<< HEAD
   contribute: [context]
+=======
+  contribute: []
+>>>>>>> 808f1a1 (merge)
 - repeat:
     text:
-    - model: watsonx/ibm/granite-13b-chat-v2
+    - model: ibm/granite-13b-chat-v2
+      platform: bam
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
@@ -15,6 +20,7 @@ text:
         text:
         - read:
           message: "Why not?\n"
+          contribute: []
   until: ${ eval == 'yes'}
 
 

@@ -4,7 +4,8 @@ text:
   def: QUERY
   message: "Ask a query: "
   contribute: []
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   input: |
       Question: What is the weather in London?
       London
@@ -14,7 +15,7 @@ text:
       Lagos
       Question: ${ QUERY }
   parameters:
-    stop:
+    stop_sequences:
     - Question
     - What
     - '!'
@@ -30,7 +31,8 @@ text:
   parser: json
   contribute: []
 
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   input: |
       Explain the weather from the following JSON:
       ${ WEATHER }

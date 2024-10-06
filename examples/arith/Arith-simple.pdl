@@ -1,0 +1,37 @@
+description: Math Problems
+text:
+- read: ./example1.txt
+- read: ./example2.txt
+- "\n"
+- |
+  Question: Noah charges $10 for a large box and $5 for a small box.
+  Last month he sold four large boxes and two small boxes.
+  If he sold half as much this month, how much is his sales for this month?
+- repeat:
+    text:
+    - def: REASON_OR_CALC
+      model: ibm/granite-20b-code-instruct
+      platform: bam
+      parameters:
+        stop_sequences:
+        - '<<'
+        include_stop_sequence: true
+    - if: ${ REASON_OR_CALC.endswith("<<") }
+      then:
+        text:
+        - def: EXPR
+          model: ibm/granite-20b-code-instruct
+          platform: bam
+          parameters:
+            stop_sequences:
+            - '='
+            - "\n"
+            - "Question"
+            include_stop_sequence: false
+        - '= '
+        - def: RESULT
+          lang: python
+          code: result = ${ EXPR }
+        - ' >>'
+  until: ${ "The answer is" in REASON_OR_CALC }
+- "\n"

@@ -1,12 +1,14 @@
 description: Model chaining
 text: 
 - Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   parameters:
-    stop: ["!"]
+    stop_sequences: ["!"]
     include_stop_sequence: true
 - "\nTranslate this to French\n"
-- model: watsonx/ibm/granite-20b-multilingual
+- model: ibm/granite-20b-multilingual
+  platform: bam
   parameters:
-    stop: ["!"]
+    stop_sequences: ["!"]
     include_stop_sequence: true

@@ -7,7 +7,8 @@ defs:
     read: ./ground_truth.txt
 text:
 - "\n${ CODE.source_code }\n"
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.

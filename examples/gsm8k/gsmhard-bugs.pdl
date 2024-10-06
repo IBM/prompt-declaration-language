@@ -1,0 +1,11 @@
+description: GSM Hard Bug Finder
+text: 
+- ${ question }
+- "\n"
+- "Does the following code accurately solve this problem?\n\n"
+- ${ code }
+- model: meta-llama/llama-3-70b-instruct
+  platform: bam
+  parameters:
+    stop_sequences: ["def"]
+    include_stop_sequence: false

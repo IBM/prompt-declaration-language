@@ -1,0 +1,40 @@
+description: Odd one out
+text:
+- "Pick the odd word out: skirt, dress, pen, jacket.\n"
+- "skirt is clothing, dress is clothing, pen is an object, jacket is clothing.\n"
+- "So the odd one is pen.\n\n"
+- "Pick the odd word out: Spain, France, German, England, Singapore.\n"
+- "Spain is a country, France is a country, German is a language, ...\n"
+- "So the odd one is German.\n\n"
+- repeat:
+    text:
+    - 'Pick the odd word out: '
+    - def: OPTIONS
+      model: ibm/granite-20b-code-instruct
+      platform: bam
+      parameters:
+        decoding_method: greedy
+        stop_sequences:
+        - .
+        include_stop_sequence: false
+    - "\nNow the reasoning:\n"
+    - model: ibm/granite-20b-code-instruct
+      platform: bam
+      parameters:
+        decoding_method: greedy
+        stop_sequences:
+        - Pick the odd word
+        - "\n"
+        - So the odd one
+        - .
+        include_stop_sequence: false
+    - "\nNow the result:\n"
+    - model: ibm/granite-20b-code-instruct
+      platform: bam
+      parameters:
+        decoding_method: greedy
+        stop_sequences:
+        - Pick the odd word
+        include_stop_sequence: false
+    - "\n\n"
+  num_iterations: 2

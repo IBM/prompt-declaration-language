@@ -1,0 +1,9 @@
+description: Hello world with iteration
+text:
+- Hello, world!
+- "\n"
+- repeat:
+    "This is your first PDL program\n"
+
+  as: text
+  num_iterations: 3
