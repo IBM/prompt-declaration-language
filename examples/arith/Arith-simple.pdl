@@ -14,9 +14,9 @@ text:
       platform: bam
       parameters:
         stop_sequences:
-        - '<<'
+        - '{'
         include_stop_sequence: true
-    - if: ${ REASON_OR_CALC.endswith("<<") }
+    - if: ${ REASON_OR_CALC.endswith("{") }
       then:
         text:
         - def: EXPR
@@ -32,6 +32,6 @@ text:
         - def: RESULT
           lang: python
           code: result = ${ EXPR }
-        - ' >>'
+        - '}'
   until: ${ "The answer is" in REASON_OR_CALC }
 - "\n"
