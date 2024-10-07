@@ -11,9 +11,7 @@ text:
   code: |
     import random
     result = random.randint(1, 20)
-- "\nNow computing fib("
-- get: N
-- ")\n"
+- "\nNow computing fib(${ N })\n"
 - def: EXTRACTED
   lang: python
   code: |
@@ -23,10 +21,9 @@ text:
   lang: python
   code: |
     ${ EXTRACTED }
-    result = fib(${ N })
+    result = fibonacci(${ N })
   contribute: []
-- 'The result is: '
-- get: RESULT
+- 'The result is: ${ RESULT }'
 - "\n\nExplain what the above code does and what the result means\n\n"
 - model: ibm/granite-8b-instruct-preview-4k
   platform: bam

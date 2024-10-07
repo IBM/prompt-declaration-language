@@ -1,6 +1,6 @@
 description: Hello world with model input
 text:
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: "Hello,"
   parameters:

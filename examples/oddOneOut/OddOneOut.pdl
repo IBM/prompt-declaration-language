@@ -1,24 +1,26 @@
 description: Odd one out
 text:
-- "Pick the odd word out: skirt, dress, pen, jacket.\n"
-- "skirt is clothing, dress is clothing, pen is an object, jacket is clothing.\n"
-- "So the odd one is pen.\n\n"
-- "Pick the odd word out: Spain, France, German, England, Singapore.\n"
-- "Spain is a country, France is a country, German is a language, ...\n"
-- "So the odd one is German.\n\n"
+- "Question: Pick the odd word out:\n"
+- "skirt, dress, pen, jacket.\n"
+- "Reasoning: skirt is clothing, dress is clothing, pen is an object, jacket is clothing.\n"
+- "Answer: So the odd one is pen.\n\n"
+- "Question: Pick the odd word out:\n"
+- "Spain, France, German, England, Singapore.\n"
+- "Reasoning: Spain is a country, France is a country, German is a language, ...\n"
+- "Answer: So the odd one is German.\n\n"
 - repeat:
     text:
-    - 'Pick the odd word out: '
+    - "Question: Pick the odd word out:\n"
     - def: OPTIONS
-      model: ibm/granite-20b-code-instruct
+      model: ibm/granite-3b-instruct-preview
       platform: bam
       parameters:
         decoding_method: greedy
         stop_sequences:
         - .
         include_stop_sequence: false
-    - "\nNow the reasoning:\n"
-    - model: ibm/granite-20b-code-instruct
+    - "\nReasoning:\n"
+    - model: ibm/granite-3b-instruct-preview
       platform: bam
       parameters:
         decoding_method: greedy
@@ -28,8 +30,8 @@ text:
         - So the odd one
         - .
         include_stop_sequence: false
-    - "\nNow the result:\n"
-    - model: ibm/granite-20b-code-instruct
+    - "\nResult:\n"
+    - model: ibm/granite-3b-instruct-preview
       platform: bam
       parameters:
         decoding_method: greedy

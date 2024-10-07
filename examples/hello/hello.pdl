@@ -1,7 +1,7 @@
 description: Hello world
 text:
-- Hello,
-- model: ibm/granite-34b-code-instruct
+- "Hello\n"
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   parameters:
     decoding_method: greedy

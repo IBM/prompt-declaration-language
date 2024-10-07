@@ -18,18 +18,20 @@ text:
   Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
   Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
 
-  When was the discoverer of the Hudson River born?
+  
+
+  Find the year when the discoverer of the Hudson River was born?
 - repeat:
     text:
     - def: thought
-      model: ibm/granite-34b-code-instruct
+      model: ibm/granite-8b-instruct-preview-4k
       platform: bam
       parameters:
         stop_sequences: 
         - "Act:"
         include_stop_sequence: true
     - def: action
-      model: ibm/granite-34b-code-instruct
+      model: ibm/granite-8b-instruct-preview-4k
       platform: bam
       parameters:
         stop_sequences: 

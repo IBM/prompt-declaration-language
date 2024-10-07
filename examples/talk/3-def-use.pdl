@@ -1,7 +1,7 @@
 description: Variable def and use, model input
 text: 
-- Hello,
-- model: ibm/granite-34b-code-instruct
+- "Hello,\n"
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   def: name
   parameters:
@@ -9,5 +9,9 @@ text:
     include_stop_sequence: false
 - "\n"
 - model: ibm/granite-20b-multilingual
+  platform: bam
   input:
       - "Translate the word ${ name | trim } to French\n"
+  parameters:
+    stop_sequences: 
+    - "\n"

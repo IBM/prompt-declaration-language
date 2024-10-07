@@ -1,9 +1,14 @@
-description: Calculator tool use using Granite models via watsonx.ai.
+description: tool use
 text:
 - |-
   What is 18 + 12 x 3?
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
   Obs: 54
+
+  What is 9 + 12?
+  Act: {"name": "Calc", "arguments": {"expr": "9 + 12"}}
+  Obs: 23
+  
 
   A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
   Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
@@ -23,4 +28,3 @@ text:
   - "Obs: "
   - lang: python
     code: result = ${ action.arguments.expr }
-- "\n"

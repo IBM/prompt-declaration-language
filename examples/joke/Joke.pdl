@@ -10,7 +10,7 @@ text:
     text:
     - 'Q: '
     - def: JOKE
-      model: ibm/granite-20b-code-instruct
+      model: ibm/granite-8b-instruct-preview-4k
       platform: bam
       parameters:
         decoding_method: sample
@@ -19,7 +19,7 @@ text:
         - "\n"
         include_stop_sequence: false
     - "\nA: "
-    - model: ibm/granite-20b-code-instruct
+    - model: ibm/granite-8b-instruct-preview-4k
       platform: bam
       parameters:
         decoding_method: sample

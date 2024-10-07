@@ -4,21 +4,23 @@ text:
   def: QUERY
   message: "Ask a query: "
   contribute: []
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: |
+      Extract the location from the question.
       Question: What is the weather in London?
-      London
+      Answer: London
       Question: What's the weather in Paris?
-      Paris
+      Answer: Paris
       Question: Tell me the weather in Lagos?
-      Lagos
+      Answer: Lagos
       Question: ${ QUERY }
   parameters:
     stop_sequences:
     - Question
     - What
     - '!'
+    - "\n"
     include_stop_sequence: false
   def: LOCATION
   contribute: []
@@ -31,10 +33,9 @@ text:
   parser: json
   contribute: []
 
-- model: ibm/granite-34b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: |
       Explain the weather from the following JSON:
       ${ WEATHER }
-
   

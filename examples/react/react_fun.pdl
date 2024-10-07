@@ -52,6 +52,7 @@ defs:
                       result = wikipedia.summary("${ action.arguments.topic }")
                     except wikipedia.WikipediaException as e:
                       result = str(e)
+                - "\n"
               else:
                 - if: ${ action.name == "Calc" }
                   then:
@@ -59,6 +60,7 @@ defs:
                     - "Obs: "
                     - lang: python
                       code: result = ${ action.arguments.expr }
+                    - "\n"
             else:
               def: exit
               contribute: []

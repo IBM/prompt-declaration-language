@@ -3,7 +3,7 @@ text:
 - 'A list of things not to forget when '
 - "traveling:\n"
 - repeat:
-  - model: ibm/granite-20b-code-instruct
+  - model: ibm/granite-8b-instruct-preview-4k
     platform: bam
     parameters:
       decoding_method: greedy
@@ -12,7 +12,7 @@ text:
   num_iterations: 2
 - 'The most important of these is '
 - def: ITEM
-  model: ibm/granite-20b-code-instruct
+  model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   parameters:
     decoding_method: greedy

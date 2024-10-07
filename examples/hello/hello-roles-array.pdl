@@ -7,7 +7,7 @@ text:
   - role: user
     content: Write a Python function that implement merge sort.
   contribute: []
-- model: ibm/granite-8b-code-instruct
+- model: ibm/granite-8b-instruct-preview-4k
   platform: bam
   input: ${ prompt }
 

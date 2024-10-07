@@ -4,6 +4,6 @@ text:
   - call: react
     args:
       question: How many years ago was the discoverer of the Hudson River born?
-      model: ibm/granite-34b-code-instruct
+      model: ibm/granite-8b-instruct-preview-4k
 
 

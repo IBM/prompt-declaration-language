@@ -5,6 +5,11 @@ text:
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
   Obs: 54
 
+  What is 9 + 12?
+  Act: {"name": "Calc", "arguments": {"expr": "9 + 12"}}
+  Obs: 23
+  
+
   A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
   Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
   Obs: 2.869047619047619
