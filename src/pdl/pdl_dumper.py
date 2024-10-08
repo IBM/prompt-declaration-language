@@ -138,7 +138,7 @@ def block_to_dict(
                     for k, b in block.object.items()
                 }
             else:
-                d["object"] = [blocks_to_dict(b, json_compatible) for b in block.object]
+                d["object"] = blocks_to_dict(block.object, json_compatible)
         case MessageBlock():
             d["content"] = blocks_to_dict(block.content, json_compatible)
         case ReadBlock():
