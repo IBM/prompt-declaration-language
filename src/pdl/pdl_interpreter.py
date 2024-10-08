@@ -446,14 +446,24 @@ def step_block_body(
         case ObjectBlock():
             iteration_state = state.with_yield_result(False)
             if isinstance(block.object, dict):
+                background = []
+                values = []
+                values_trace = []
                 try:
-                    values, background, scope, values_trace = yield from step_blocks(
-                        IterationType.ARRAY,
-                        iteration_state,
-                        scope,
-                        list(block.object.values()),
-                        append(loc, "object"),
-                    )
+                    obj_loc = append(loc, "object")
+                    for k, value_blocks in block.object.items():
+                        value, value_background, scope, value_trace = (
+                            yield from step_blocks(
+                                IterationType.LASTOF,
+                                iteration_state,
+                                scope,
+                                value_blocks,
+                                append(obj_loc, k),
+                            )
+                        )
+                        background = messages_concat(background, value_background)
+                        values.append(value)
+                        values_trace.append(value_trace)
                 except PDLRuntimeStepBlocksError as exc:
                     obj = dict(zip(block.object.keys(), exc.blocks))
                     trace = block.model_copy(update={"object": obj})
@@ -462,25 +472,21 @@ def step_block_body(
                         loc=exc.loc or loc,
                         trace=trace,
                     ) from exc
-                assert isinstance(values, list)
-                assert isinstance(values_trace, list)
                 result = dict(zip(block.object.keys(), values))
                 object_trace = dict(zip(block.object.keys(), values_trace))
                 trace = block.model_copy(update={"object": object_trace})
-            elif isinstance(block.object, list):
+            else:
                 results, background, scope, trace = yield from step_blocks_of(
                     block,
                     "object",
                     IterationType.ARRAY,
-                    state,
+                    iteration_state,
                     scope,
                     loc,
                 )
                 result = {}
                 for d in results:
                     result = result | d
-            else:
-                assert False
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
         case MessageBlock():

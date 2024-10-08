@@ -508,6 +508,30 @@ export type Trace =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
+  | (
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -581,11 +605,6 @@ export type Fallback3 =
  */
 export type Role3 = string | null;
 export type Kind3 = "read";
-/**
- * Name of the file to read. If `None`, read the standard input.
- *
- */
-export type Read = string | null;
 /**
  * Message to prompt the user to enter a value.
  *
@@ -813,7 +832,31 @@ export type Object =
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
-        | EmptyBlock;
+        | EmptyBlock
+        | (
+            | number
+            | string
+            | FunctionBlock
+            | CallBlock
+            | LitellmModelBlock
+            | BamModelBlock
+            | CodeBlock
+            | GetBlock
+            | DataBlock
+            | IfBlock
+            | RepeatBlock
+            | RepeatUntilBlock
+            | ForBlock
+            | TextBlock
+            | LastOfBlock
+            | ArrayBlock
+            | ObjectBlock
+            | MessageBlock
+            | ReadBlock
+            | IncludeBlock
+            | ErrorBlock
+            | EmptyBlock
+          )[];
     }
   | (
       | number
@@ -2287,7 +2330,6 @@ export type Fallback16 =
  */
 export type Role16 = string | null;
 export type Kind16 = "model";
-export type Model = string;
 export type Input =
   | number
   | string
@@ -2490,7 +2532,6 @@ export type Fallback17 =
  */
 export type Role17 = string | null;
 export type Kind17 = "model";
-export type Model1 = string;
 export type Input1 =
   | number
   | string
@@ -2689,11 +2730,6 @@ export type Fallback18 =
  */
 export type Role18 = string | null;
 export type Kind18 = "call";
-/**
- * Function to call.
- *
- */
-export type Call = string;
 export type Trace6 =
   | number
   | string
@@ -3119,7 +3155,7 @@ export interface LitellmModelBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind17;
-  model: Model1;
+  model: unknown;
   input?: Input1;
   trace?: Trace5;
   platform?: Platform1;
@@ -3197,7 +3233,7 @@ export interface BamModelBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind16;
-  model: Model;
+  model: unknown;
   input?: Input;
   trace?: Trace4;
   platform: Platform;
@@ -4220,7 +4256,7 @@ export interface ReadBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind3;
-  read: Read;
+  read: unknown;
   message?: Message;
   multiline?: Multiline;
 }
@@ -4679,6 +4715,13 @@ export interface LitellmParameters {
   mock_response?: MockResponse;
   custom_llm_provider?: CustomLlmProvider;
   max_retries?: MaxRetries;
+  [k: string]: unknown;
+}
+/**
+ * Function to call.
+ *
+ */
+export interface Call {
   [k: string]: unknown;
 }
 /**
