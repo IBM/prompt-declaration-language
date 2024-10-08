@@ -615,37 +615,65 @@ def set_default_model_params(
 
 
 def set_default_granite_model_parameters(
+    model_id: str,
     parameters: Optional[dict[str, Any]],
 ) -> dict[str, str]:
-    if parameters is None:
-        parameters = {}
-    if "decoding_method" not in parameters:
-        parameters["decoding_method"] = (
-            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-        )
-    if "max_tokens" in parameters and parameters["max_tokens"] is None:
-        parameters["max_tokens"] = (
-            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "min_new_tokens" not in parameters:
-        parameters["min_new_tokens"] = (
-            MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "repetition_penalty" not in parameters:
-        parameters["repetition_penalty"] = (
-            REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
-        )
-    if parameters["decoding_method"] == "sample":
-        if "temperature" not in parameters:
-            parameters["temperature"] = (
-                TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
+        if parameters is None:
+            parameters = {}
+        if "decoding_method" not in parameters:
+            parameters["decoding_method"] = (
+                DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
             )
-        if "top_k" not in parameters:
-            parameters["top_k"] = (
-                TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "max_tokens" in parameters and parameters["max_tokens"] is None:
+            parameters["max_tokens"] = (
+                MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
             )
-        if "top_p" not in parameters:
-            parameters["top_p"] = (
-                TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "min_new_tokens" not in parameters:
+            parameters["min_new_tokens"] = (
+                MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
             )
+        if "repetition_penalty" not in parameters:
+            parameters["repetition_penalty"] = (
+                REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+            )
+        if parameters["decoding_method"] == "sample":
+            if "temperature" not in parameters:
+                parameters["temperature"] = (
+                    TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+            if "top_k" not in parameters:
+                parameters["top_k"] = (
+                    TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+            if "top_p" not in parameters:
+                parameters["top_p"] = (
+                    TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+        if "granite-3b" in model_id or "granite-8b" in model_id:
+            if "roles" not in parameters:
+                parameters["roles"] = {
+                    "system": {
+                        "pre_message": "<|start_of_role|>system<|end_of_role|>", 
+                        "post_message": "<|end_of_text|>"
+                    },
+                    "user": { 
+                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                        "post_message": "<|end_of_text|>"
+                    }, 
+                    "assistant": {
+                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                        "post_message": "<|end_of_text|>"
+                    },
+                    "available_tools": {
+                        "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                        "post_message": "<|end_of_text|>"
+                    },
+                    "tool_response": {
+                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>"
+                    }
+                }
+
+  
     return parameters

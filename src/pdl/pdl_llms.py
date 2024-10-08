@@ -144,8 +144,7 @@ class LitellmModel:
         messages: list[Message],
         parameters: dict[str, Any],
     ) -> Message:
-        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(parameters)
+        parameters = set_default_granite_model_parameters(model_id, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = completion(
@@ -162,8 +161,7 @@ class LitellmModel:
         messages: list[Message],
         parameters: dict[str, Any],
     ) -> Generator[Message, Any, None]:
-        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(parameters)
+        parameters = set_default_granite_model_parameters(model_id, parameters)
         response = completion(
             model=model_id,
             messages=messages,
