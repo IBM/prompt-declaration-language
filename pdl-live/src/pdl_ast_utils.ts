@@ -57,7 +57,7 @@ export function map_block_children(
         object = block.object.map(f);
       } else {
         object = Object.fromEntries(
-          Object.entries(block.object).map(([k, v]) => [k, f(v)])
+          Object.entries(block.object).map(([k, v]) => [k, map_blocks(f, v)])
         );
       }
       return {...block, object: object};
@@ -154,7 +154,7 @@ export function iter_block_children(
       if (block.object instanceof Array) {
         iter_blocks(f, block.object);
       } else {
-        Object.entries(block.object).forEach(([_, v]) => f(v));
+        Object.entries(block.object).forEach(([_, v]) => iter_blocks(f, v));
       }
       return {...block, object: object};
     })
