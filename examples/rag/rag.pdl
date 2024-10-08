@@ -43,6 +43,7 @@ text:
 
     Q: ${ TEST_PROMPT }
     A: ```
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: ibm/granite-34b-code-instruct
+  platform: bam
   parameters:
     stop_sequences: ["```"]
