@@ -615,8 +615,9 @@ def set_default_model_params(
 
 
 def set_default_granite_model_parameters(
+    model_id: str,
     parameters: Optional[dict[str, Any]],
-) -> dict[str, str]:
+) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
     if "decoding_method" not in parameters:
@@ -648,4 +649,29 @@ def set_default_granite_model_parameters(
             parameters["top_p"] = (
                 TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
             )
+    if "granite-3b" in model_id or "granite-8b" in model_id:
+        if "roles" not in parameters:
+            parameters["roles"] = {
+                "system": {
+                    "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "user": {
+                    "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "assistant": {
+                    "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "available_tools": {
+                    "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "tool_response": {
+                    "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+            }
+
     return parameters
