@@ -1,5 +1,5 @@
 import json
-from typing import Any, Sequence, TypeAlias
+from typing import Any, TypeAlias
 
 import yaml
 
@@ -35,6 +35,7 @@ from .pdl_ast import (
     RepeatUntilBlock,
     TextBlock,
 )
+from .pdl_ast_utils import is_block_list
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
 
@@ -235,7 +236,7 @@ def blocks_to_dict(
     result: (
         int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
     )
-    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+    if is_block_list(blocks):
         result = [block_to_dict(block, json_compatible) for block in blocks]
     else:
         result = block_to_dict(blocks, json_compatible)

@@ -3155,6 +3155,12 @@
           "type": "string"
         },
         "data": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Value defined.",
           "title": "Data"
         },
@@ -6428,6 +6434,12 @@
           "type": "string"
         },
         "if": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Condition.\n    ",
           "title": "If"
         },
@@ -9033,6 +9045,31 @@
         }
       },
       "title": "LitellmParameters",
+      "type": "object"
+    },
+    "LocalizedExpression": {
+      "additionalProperties": false,
+      "description": "Expression with location information\n    ",
+      "properties": {
+        "expr": {
+          "title": "Expr"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "expr"
+      ],
+      "title": "LocalizedExpression",
       "type": "object"
     },
     "LocationType": {
@@ -12945,6 +12982,12 @@
           "title": "Repeat"
         },
         "until": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Condition of the loop.\n    ",
           "title": "Until"
         },

@@ -28,6 +28,10 @@ from .pdl_ast import (
 )
 
 
+def is_block_list(blocks: BlocksType) -> bool:
+    return not isinstance(blocks, str) and isinstance(blocks, Sequence)
+
+
 def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> None:
     if not isinstance(block, Block):
         return
@@ -35,8 +39,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         iter_blocks(f, blocks)
     match block:
         case FunctionBlock():
-            if block.returns is not None:
-                iter_blocks(f, block.returns)
+            iter_blocks(f, block.returns)
         case CallBlock():
             if block.trace is not None:
                 iter_blocks(f, block.trace)
@@ -105,7 +108,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
 
 
 def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:
-    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+    if is_block_list(blocks):
         for block in blocks:
             f(block)
     else:
