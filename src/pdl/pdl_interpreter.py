@@ -8,7 +8,7 @@ import types
 
 # from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Optional, TypeVar
+from typing import Any, Generator, Optional, Sequence, TypeVar
 
 import litellm
 import yaml
@@ -65,7 +65,6 @@ from .pdl_ast import (
     TextBlock,
     empty_block_location,
 )
-from .pdl_ast_utils import is_block_list
 from .pdl_dumper import blocks_to_dict
 from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
@@ -806,7 +805,8 @@ def step_blocks(
     background: Messages
     trace: BlocksType
     results = []
-    if is_block_list(blocks):
+    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )

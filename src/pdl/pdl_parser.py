@@ -1,26 +1,13 @@
 import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import strictyaml
 import yaml
 from pydantic import ValidationError
 
-from .pdl_ast import (
-    Block,
-    BlocksType,
-    CallBlock,
-    DataBlock,
-    FunctionBlock,
-    LastOfBlock,
-    LocationType,
-    ModelBlock,
-    PDLException,
-    Program,
-    YamlSource,
-)
-from .pdl_ast_utils import is_block_list
-from .pdl_location_utils import append, get_line_map
+from .pdl_ast import LocationType, PDLException, Program, YamlSource
+from .pdl_location_utils import get_line_map
 from .pdl_schema_error_analyzer import analyze_errors
 
 

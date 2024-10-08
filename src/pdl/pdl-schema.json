@@ -1009,7 +1009,10 @@
             {
               "type": "string"
             },
-            {}
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
           ],
           "title": "Model"
         },
@@ -1964,6 +1967,12 @@
           "type": "string"
         },
         "call": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Function to call.\n    ",
           "title": "Call"
         },
@@ -4627,6 +4636,14 @@
           "type": "string"
         },
         "for": {
+          "additionalProperties": {
+            "anyOf": [
+              {},
+              {
+                "$ref": "#/$defs/LocalizedExpression"
+              }
+            ]
+          },
           "description": "Arrays to iterate over.\n    ",
           "title": "For",
           "type": "object"
@@ -8467,7 +8484,10 @@
             {
               "type": "string"
             },
-            {}
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
           ],
           "title": "Model"
         },
@@ -9134,7 +9154,7 @@
     },
     "LocalizedExpression": {
       "additionalProperties": false,
-      "description": "Expression with location information\n    ",
+      "description": "Expression with location information",
       "properties": {
         "expr": {
           "title": "Expr"
@@ -11714,6 +11734,9 @@
         "read": {
           "anyOf": [
             {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            },
             {
               "type": "null"
             }
