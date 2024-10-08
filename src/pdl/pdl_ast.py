@@ -144,7 +144,7 @@ class CallBlock(Block):
     """Calling a function."""
 
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
-    call: str
+    call: ExpressionType
     """Function to call.
     """
     args: dict[str, Any] = {}
@@ -253,7 +253,7 @@ class ModelPlatform(StrEnum):
 
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: str
+    model: str | ExpressionType
     input: Optional["BlocksType"] = None
     trace: Optional["BlockType"] = None
 
@@ -331,7 +331,7 @@ class ObjectBlock(Block):
     """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
-    object: dict[str, "BlockType"] | list["BlockType"]
+    object: dict[str, "BlocksType"] | list["BlockType"]
 
 
 class MessageBlock(Block):
@@ -404,7 +404,7 @@ class ForBlock(Block):
     """Iteration over arrays."""
 
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
-    fors: dict[str, Any] = Field(alias="for")
+    fors: dict[str, ExpressionType] = Field(alias="for")
     """Arrays to iterate over.
     """
     repeat: "BlocksType"
@@ -455,7 +455,7 @@ class ReadBlock(Block):
     """Read from a file or standard input."""
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: str | None
+    read: ExpressionType | None
     """Name of the file to read. If `None`, read the standard input.
     """
     message: Optional[str] = None
@@ -474,7 +474,7 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    trace: Optional["BlocksType"] = None
 
 
 class ErrorBlock(Block):

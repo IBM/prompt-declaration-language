@@ -1005,8 +1005,13 @@
           "type": "string"
         },
         "model": {
-          "title": "Model",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {}
+          ],
+          "title": "Model"
         },
         "input": {
           "anyOf": [
@@ -1960,8 +1965,7 @@
         },
         "call": {
           "description": "Function to call.\n    ",
-          "title": "Call",
-          "type": "string"
+          "title": "Call"
         },
         "args": {
           "default": {},
@@ -7258,6 +7262,82 @@
               "$ref": "#/$defs/EmptyBlock"
             },
             {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LastOfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ObjectBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MessageBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
               "type": "null"
             }
           ],
@@ -8371,8 +8451,13 @@
           "type": "string"
         },
         "model": {
-          "title": "Model",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {}
+          ],
+          "title": "Model"
         },
         "input": {
           "anyOf": [
@@ -10415,6 +10500,82 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "$ref": "#/$defs/FunctionBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/CallBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LitellmModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/BamModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/CodeBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/GetBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/DataBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/IfBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/RepeatBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/RepeatUntilBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ForBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/TextBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LastOfBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ObjectBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/MessageBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ReadBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/IncludeBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ErrorBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/EmptyBlock"
+                        }
+                      ]
+                    },
+                    "type": "array"
                   }
                 ]
               },
@@ -11515,9 +11676,7 @@
         },
         "read": {
           "anyOf": [
-            {
-              "type": "string"
-            },
+            {},
             {
               "type": "null"
             }
