@@ -14,9 +14,10 @@
 
 - lang: python
   def: parsed_output
+  spec: {thought: str, code_line: str}
   code: |
-    import repair
-    result = repair.parse_output(raw_output)
+    import repair_main
+    result = repair_main.parse_output(raw_output).model_dump()
 
 - spec: {before: str, after: str}
   object:

@@ -40,7 +40,7 @@ def main():
     )
     print("---- before call to PDL ----")
     pdl_output = PDLResult(
-        **pdl.pdl.exec_file("./repair.pdl", scope=pdl_scope.model_dump())
+        **pdl.pdl.exec_file("./repair_prompt.pdl", scope=pdl_scope.model_dump())
     )
     print("---- after return from PDL ----")
     print(pdl_output)
