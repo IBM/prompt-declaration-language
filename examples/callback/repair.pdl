@@ -1,0 +1,18 @@
+- |
+  Given the following code:
+  ```python
+  ${code_line}
+  ```
+  and the following error:
+  ${error_msg}
+  Please repair the code!
+
+- def: raw_output
+  model: watsonx/ibm/granite-34b-code-instruct
+  parameters:
+    stop: ["\n\n"]
+
+- lang: python
+  code: |
+    import repair
+    result = repair.parse_output(raw_output)
