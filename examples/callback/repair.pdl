@@ -13,6 +13,12 @@
     stop: ["\n\n"]
 
 - lang: python
+  def: parsed_output
   code: |
     import repair
     result = repair.parse_output(raw_output)
+
+- spec: {before: str, after: str}
+  object:
+    before: ${code_line}
+    after: ${parsed_output.code_line}

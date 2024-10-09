@@ -15,6 +15,11 @@ class ParsedOutput(pydantic.BaseModel):
     code_line: str | None
 
 
+class PDLResult(pydantic.BaseModel):
+    before: str
+    after: str | None
+
+
 def parse_output(raw_output: str) -> ParsedOutput:
     print("---- during callback from PDL ----")
     match_start = re.search(r"```python\s", raw_output)
@@ -34,9 +39,11 @@ def main():
         error_msg="SyntaxError: closing parenthesis ']' does not match opening '('",
     )
     print("---- before call to PDL ----")
-    pdl_output = pdl.pdl.exec_file("./repair.pdl", scope=pdl_scope.model_dump())
+    pdl_output = PDLResult(
+        **pdl.pdl.exec_file("./repair.pdl", scope=pdl_scope.model_dump())
+    )
     print("---- after return from PDL ----")
-    print(pdl_output.model_dump())
+    print(pdl_output)
 
 
 if __name__ == "__main__":
