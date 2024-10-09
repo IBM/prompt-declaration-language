@@ -44,6 +44,8 @@ class InterpreterConfig(TypedDict, total=False):
     role: RoleType
     """Default role.
     """
+    cwd: str
+    """Path considered as the current working directory for file reading."""
 
 
 def exec_program(
@@ -144,6 +146,10 @@ def exec_file(
         Return the final result.
     """
     program, loc = parse_file(prog)
+    if config is None:
+        config = InterpreterConfig()
+    if config.get("cwd") is None:
+        config["cwd"] = str(Path(prog).parent)
     result = exec_program(program, config, scope, loc, output)
     return result
 
