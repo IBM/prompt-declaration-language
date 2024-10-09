@@ -1351,7 +1351,7 @@ def process_input(
                 loc=loc,
                 trace=ErrorBlock(msg=msg, location=loc, program=block),
                 fallback="",
-            )
+            ) from exc
     else:
         message = ""
         if block.message is not None:

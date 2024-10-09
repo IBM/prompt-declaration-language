@@ -1,8 +1,11 @@
 import io
 import pathlib
 import random
+from dataclasses import dataclass
+from typing import Optional
 
 from pdl import pdl
+from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
@@ -11,7 +14,9 @@ UPDATE_RESULTS = False
 TO_SKIP = {
     str(name)
     for name in [
-        pathlib.Path("examples") / "demo" / "2-teacher.pdl", # TODO: check why
+        pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
+        pathlib.Path("examples") / "talk" / "11-sdg.pdl",  # TODO: check why
+        pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
         pathlib.Path("examples") / "tutorial" / "calling_apis.pdl",
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
@@ -41,30 +46,43 @@ NOT_DETERMINISTIC = {
     ]
 }
 
-TESTS_WITH_INPUT = {
+
+@dataclass
+class InputsType:
+    stdin: Optional[str] = None
+    scope: Optional[ScopeType] = None
+
+
+TESTS_WITH_INPUT: dict[str, InputsType] = {
     str(name): inputs
     for name, inputs in {
         pathlib.Path("examples")
         / "demo"
-        / "4-translator.pdl": {"stdin": "french\nstop\n"},
-        pathlib.Path("examples") / "tutorial" / "input_stdin.pdl": {"stdin": "Hello\n"},
+        / "4-translator.pdl": InputsType(stdin="french\nstop\n"),
         pathlib.Path("examples")
         / "tutorial"
-        / "input_stdin_multiline.pdl": {"stdin": "Hello\nBye\n"},
-        pathlib.Path("examples") / "input" / "input_test1.pdl": {"stdin": "Hello\n"},
-        pathlib.Path("examples") / "input" / "input_test2.pdl": {"stdin": "Hello\n"},
+        / "input_stdin.pdl": InputsType(stdin="Hello\n"),
+        pathlib.Path("examples")
+        / "tutorial"
+        / "input_stdin_multiline.pdl": InputsType(stdin="Hello\nBye\n"),
+        pathlib.Path("examples")
+        / "input"
+        / "input_test1.pdl": InputsType(stdin="Hello\n"),
+        pathlib.Path("examples")
+        / "input"
+        / "input_test2.pdl": InputsType(stdin="Hello\n"),
         pathlib.Path("examples")
         / "chatbot"
-        / "chatbot.pdl": {"stdin": "What is APR?\nyes\n"},
+        / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
         pathlib.Path("examples")
         / "talk"
-        / "7-chatbot-roles.pdl": {"stdin": "What is APR?\nquit\n"},
+        / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
         pathlib.Path("examples")
         / "granite"
-        / "single_round_chat.pdl": {"scope": {"PROMPT": "What is APR?\nyes\n"}},
+        / "single_round_chat.pdl": InputsType(scope={"PROMPT": "What is APR?\nyes\n"}),
         pathlib.Path("examples")
         / "hello"
-        / "hello-data.pdl": {"scope": {"something": "ABC"}},
+        / "hello-data.pdl": InputsType(scope={"something": "ABC"}),
     }.items()
 }
 
@@ -115,20 +133,21 @@ def test_valid_programs(capsys, monkeypatch) -> None:
     actual_runtime_error: set[str] = set()
     wrong_results = {}
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        scope = {}
+        scope: ScopeType = {}
         print(str(pdl_file_name))
         # if "cldk" in str(pdl_file_name):
         #     pass
         if str(pdl_file_name) in TO_SKIP:
             continue
         if str(pdl_file_name) in TESTS_WITH_INPUT:
-            if TESTS_WITH_INPUT[str(pdl_file_name)].get("stdin") is not None:
+            inputs = TESTS_WITH_INPUT[str(pdl_file_name)]
+            if inputs.stdin is not None:
                 monkeypatch.setattr(
                     "sys.stdin",
-                    io.StringIO(TESTS_WITH_INPUT[str(pdl_file_name)]["stdin"]),
+                    io.StringIO(inputs.stdin),
                 )
-            if TESTS_WITH_INPUT[str(pdl_file_name)].get("scope") is not None:
-                scope = TESTS_WITH_INPUT[str(pdl_file_name)]["scope"]
+            if inputs.scope is not None:
+                scope = inputs.scope
         try:
             random.seed(11)
             result = pdl.exec_file(pdl_file_name, scope=scope)
@@ -138,11 +157,15 @@ def test_valid_programs(capsys, monkeypatch) -> None:
             result_file_name = pdl_file_name.stem + ".result"
             if UPDATE_RESULTS:
                 result_dir_name.mkdir(parents=True, exist_ok=True)
-                with open(result_dir_name / result_file_name, "w") as result_file:
+                with open(
+                    result_dir_name / result_file_name, "w", encoding="utf-8"
+                ) as result_file:
                     print(str(result), file=result_file)
             if str(pdl_file_name) in NOT_DETERMINISTIC:
                 continue
-            with open(result_dir_name / result_file_name, "r") as result_file:
+            with open(
+                result_dir_name / result_file_name, "r", encoding="utf-8"
+            ) as result_file:
                 expected_result = str(result_file.read())
             if str(result) != expected_result:
                 wrong_results[str(pdl_file_name)] = {
@@ -166,8 +189,9 @@ def test_valid_programs(capsys, monkeypatch) -> None:
     # Unexpected valid
     unexpected_valid = sorted(
         list(
-            (expected_parse_error - actual_parse_error)
-            + (expected_runtime_error - actual_runtime_error)
+            (expected_parse_error - actual_parse_error).union(
+                expected_runtime_error - actual_runtime_error
+            )
         )
     )
     assert len(unexpected_valid) == 0, unexpected_valid

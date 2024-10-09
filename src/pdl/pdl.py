@@ -44,7 +44,7 @@ class InterpreterConfig(TypedDict, total=False):
     role: RoleType
     """Default role.
     """
-    cwd: str
+    cwd: Path
     """Path considered as the current working directory for file reading."""
 
 
@@ -129,7 +129,7 @@ def exec_str(
 
 
 def exec_file(
-    prog: str,
+    prog: str | Path,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     output: Literal["result", "all"] = "result",
@@ -149,7 +149,7 @@ def exec_file(
     if config is None:
         config = InterpreterConfig()
     if config.get("cwd") is None:
-        config["cwd"] = str(Path(prog).parent)
+        config["cwd"] = Path(prog).parent
     result = exec_program(program, config, scope, loc, output)
     return result
 
@@ -290,18 +290,21 @@ def main():
     else:
         batch = 1
 
-    config = InterpreterConfig(
-        yield_result=stream_result, yield_background=stream_background, batch=batch
-    )
     pdl_file = Path(args.pdl)
     if args.trace == "*_trace.json":
         trace_file = str(pdl_file.with_suffix("")) + "_trace.json"
     else:
         trace_file = args.trace
+    config = InterpreterConfig(
+        yield_result=stream_result,
+        yield_background=stream_background,
+        batch=batch,
+        cwd=pdl_file.parent,
+    )
     pdl_interpreter.generate(
         pdl_file,
         args.log,
-        InterpreterState(**config, cwd=pdl_file.parent),
+        InterpreterState(**config),
         initial_scope,
         trace_file,
     )
