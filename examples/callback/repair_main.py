@@ -1,23 +1,11 @@
 import re
-
-import pydantic
+from typing import TypedDict, cast
 
 import pdl.pdl
 
-
-class PDLScope(pydantic.BaseModel):
-    code_line: str
-    error_msg: str
-
-
-class ParsedOutput(pydantic.BaseModel):
-    thought: str
-    code_line: str | None
-
-
-class PDLResult(pydantic.BaseModel):
-    before: str
-    after: str | None
+PDLScope = TypedDict("PDLScope", {"code_line": str, "error_msg": str})
+ParsedOutput = TypedDict("ParsedOutput", {"thought": str, "code_line": str | None})
+PDLResult = TypedDict("PDLResult", {"before": str, "after": str | None})
 
 
 def parse_output(raw_output: str) -> ParsedOutput:
@@ -33,18 +21,14 @@ def parse_output(raw_output: str) -> ParsedOutput:
     return ParsedOutput(thought=thought, code_line=rest[: match_end.start()])
 
 
-def main():
-    pdl_scope = PDLScope(
+if __name__ == "__main__":
+    pdl_input = PDLScope(
         code_line="print('Hello, world!']",
         error_msg="SyntaxError: closing parenthesis ']' does not match opening '('",
     )
     print("---- before call to PDL ----")
-    pdl_output = PDLResult(
-        **pdl.pdl.exec_file("./repair_prompt.pdl", scope=pdl_scope.model_dump())
+    pdl_output = pdl.pdl.exec_file(
+        "./repair_prompt.pdl", scope=cast(pdl.pdl.ScopeType, pdl_input)
     )
     print("---- after return from PDL ----")
     print(pdl_output)
-
-
-if __name__ == "__main__":
-    main()

@@ -17,7 +17,7 @@
   spec: {thought: str, code_line: str}
   code: |
     import repair_main
-    result = repair_main.parse_output(raw_output).model_dump()
+    result = repair_main.parse_output(raw_output)
 
 - spec: {before: str, after: str}
   object:
