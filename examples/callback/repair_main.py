@@ -27,7 +27,7 @@ if __name__ == "__main__":
         error_msg="SyntaxError: closing parenthesis ']' does not match opening '('",
     )
     print("---- before call to PDL ----")
-    pdl_output = pdl.pdl.exec_file(
+    pdl_output: PDLResult = pdl.pdl.exec_file(
         "./repair_prompt.pdl", scope=cast(pdl.pdl.ScopeType, pdl_input)
     )
     print("---- after return from PDL ----")
