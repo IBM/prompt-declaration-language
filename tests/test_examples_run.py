@@ -41,7 +41,9 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "react" / "multi-agent.pdl",
         pathlib.Path("examples") / "talk" / "11-sdg.pdl",
         pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
+        pathlib.Path("examples") / "talk" / "8-tools.pdl",
         pathlib.Path("examples") / "teacher" / "teacher.pdl",
+        pathlib.Path("examples") / "tools" / "calc.pdl",
         pathlib.Path("examples") / "tutorial" / "include.pdl",
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
     ]
