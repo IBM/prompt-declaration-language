@@ -17,7 +17,7 @@ text:
   Out of 1400 participants, 400 passed the test. What percentage is that?
   Act: 
 - def: action
-  model: ibm/granite-8b-code-instruct
+  model: ibm/granite-34b-code-instruct
   platform: bam
   parameters:
     stop_sequences: ["\n"]

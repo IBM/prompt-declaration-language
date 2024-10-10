@@ -10,7 +10,7 @@ text:
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
-      contribute: []
+      contribute: [context]
     - if: ${ eval == 'no' }
       then:
         text:

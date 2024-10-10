@@ -35,7 +35,7 @@ text:
     - "\n***Generating PDL code for your query:\n"
     - if: ${ query != 'quit'}
       then: 
-      - model: ibm/granite-20b-code-instruct
+      - model: ibm/granite-34b-code-instruct
         platform: bam
         def: PDL
         input: 
@@ -117,7 +117,7 @@ text:
                 method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                 result = method
             - "\n\nGenerate a summary of method Foo\n\n"
-            - model: meta-llama/llama-3-1-70b-instruct
+            - model: ibm/granite-34b-code-instruct
               platform: bam
             ```
 
@@ -131,7 +131,7 @@ text:
                 method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                 result = method
             - "\n\nGenerate a different comment for method Foo(string)\n\n"
-            - model: meta-llama/llama-3-1-70b-instruct
+            - model: ibm/granite-34b-code-instruct
               platform: bam
             ```
 
