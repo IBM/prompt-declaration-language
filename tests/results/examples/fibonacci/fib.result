@@ -1,0 +1,43 @@
+
+```python
+def fib(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+```
+
+The above code is a recursive implementation of the Fibonacci sequence.
+However, it is not very efficient since it recalculates the same values multiple times.
+To improve the performance, we can use dynamic programming to store the previously calculated values and reuse them.
+
+Here's an optimized version of the Fibonacci function using dynamic programming:
+
+```python
+def fib_dp(n):
+    fib_values = [0, 1]
+    for i in range(2, n+1):
+        fib_values.append(fib_values[i-1] + fib_values[i-2])
+    return fib_values[n]
+```
+Find a random number between 1 and 20
+15
+Now computing fib(15)
+
+def fib(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+The result is: 610
+
+Explain what the above code does and what the result means
+
+
+The code calculates the nth Fibonacci number using dynamic programming. It initializes a list `fib_values` with the first two Fibonacci numbers [0, 1]. Then, it iterates from 2 to n and calculates each Fibonacci number by adding the previous two numbers in the list. Finally, it returns the nth Fibonacci number from the list.
+
+In this case, the result is 610, which means that the 15th Fibonacci number is 610.
