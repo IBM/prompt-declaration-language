@@ -113,7 +113,7 @@ defs:
                     Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
       - call: react_inner
         args:
-          context: []
+          pdl_context: []
           examples: ${ examples }
           question: ${ question }
           model: ${ model }
