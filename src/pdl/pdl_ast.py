@@ -674,6 +674,8 @@ def set_default_granite_model_parameters(
                 },
             }
         if "final_prompt_value" not in parameters:
-            parameters["final_prompt_value"] = "<|start_of_role|>assistant<|end_of_role|>"
+            parameters["final_prompt_value"] = (
+                "<|start_of_role|>assistant<|end_of_role|>"
+            )
 
     return parameters
