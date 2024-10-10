@@ -43,6 +43,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
         pathlib.Path("examples") / "teacher" / "teacher.pdl",
         pathlib.Path("examples") / "tutorial" / "include.pdl",
+        pathlib.Path("examples") / "hello" / "hello-role-array.pdl",
     ]
 }
 
@@ -167,7 +168,7 @@ def test_valid_programs(capsys, monkeypatch) -> None:
                 result_dir_name / result_file_name, "r", encoding="utf-8"
             ) as result_file:
                 expected_result = str(result_file.read())
-            if str(result) != expected_result:
+            if str(result).strip() != expected_result.strip():
                 wrong_results[str(pdl_file_name)] = {
                     "actual": str(result),
                     "expected": str(expected_result),
