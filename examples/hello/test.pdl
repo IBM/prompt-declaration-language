@@ -1,7 +1,0 @@
-description: Hello world with model chaining
-text:
-- model: "foo"
-  parameters:
-    foo:
-      data: ${ translateText(sentence2) }
-      raw: true

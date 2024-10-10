@@ -1338,9 +1338,21 @@ def process_input(
     read, block = process_expr_of(block, "read", scope, loc)
     if read is not None:
         file = state.cwd / read
-        with open(file, encoding="utf-8") as f:
-            s = f.read()
-            append_log(state, "Input from File: " + str(file), s)
+        try:
+            with open(file, encoding="utf-8") as f:
+                s = f.read()
+                append_log(state, "Input from File: " + str(file), s)
+        except Exception as exc:
+            if isinstance(exc, FileNotFoundError):
+                msg = f"file {str(file)} not found"
+            else:
+                msg = f"Fail to open file {str(file)}"
+            raise PDLRuntimeError(
+                message=msg,
+                loc=loc,
+                trace=ErrorBlock(msg=msg, location=loc, program=block),
+                fallback="",
+            ) from exc
     else:
         message = ""
         if block.message is not None:

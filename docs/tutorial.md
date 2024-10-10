@@ -734,11 +734,15 @@ See examples of PDL being called programmatically in Python
 
 ##  Debugging PDL Programs
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language//blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language//blob/main/src/pdl/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window. You may also need to install the VSCode extension: `YAML Language Support by Red Hat`.
+We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json)).
+This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
 To change the log filename, you can pass it to the interpreter as follows:
+```
+pdl --log <my-example.log> <my-example>
+```
 
 
 ## Live Document Visualizer
@@ -747,7 +751,7 @@ PDL has a Live Document visualizer to help in program understanding given an exe
 To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
 
 ```
-pdl --trace <file.json> <my-example>
+pdl --trace <my-example_trace.json> <my-example>
 ```
 
 This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
