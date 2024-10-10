@@ -38,7 +38,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
         pathlib.Path("examples") / "granite" / "single_round_chat.pdl",
         pathlib.Path("examples") / "joke" / "Joke.pdl",
-        # pathlib.Path("examples") / "react" / "multi-agent.pdl",
+        pathlib.Path("examples") / "react" / "multi-agent.pdl",
         pathlib.Path("examples") / "talk" / "11-sdg.pdl",
         pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
         pathlib.Path("examples") / "teacher" / "teacher.pdl",
