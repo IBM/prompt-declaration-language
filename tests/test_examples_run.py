@@ -43,7 +43,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
         pathlib.Path("examples") / "teacher" / "teacher.pdl",
         pathlib.Path("examples") / "tutorial" / "include.pdl",
-        pathlib.Path("examples") / "hello" / "hello-role-array.pdl",
+        pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
     ]
 }
 
