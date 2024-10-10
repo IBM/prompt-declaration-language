@@ -673,5 +673,7 @@ def set_default_granite_model_parameters(
                     "post_message": "<|end_of_text|>",
                 },
             }
+        if "final_prompt_value" not in parameters:
+            parameters["final_prompt_value"] = "<|start_of_role|>assistant<|end_of_role|>"
 
     return parameters
