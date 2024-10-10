@@ -2,7 +2,7 @@ description: chatbot
 text:
 - read:
   message: "What is your query?\n"
-  contribute: []
+  contribute: [context]
 - repeat:
     text:
     - model: ibm/granite-13b-chat-v2
@@ -10,7 +10,7 @@ text:
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
-      contribute: []
+      contribute: [context]
     - if: ${ eval == 'no' }
       then:
         text:

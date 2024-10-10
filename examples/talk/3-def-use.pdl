@@ -9,5 +9,6 @@ text:
     include_stop_sequence: false
 - "\n"
 - model: ibm/granite-20b-multilingual
+  platform: bam
   input:
       - "Translate the word ${ name | trim } to French\n"
