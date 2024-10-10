@@ -135,9 +135,6 @@ def test_valid_programs(capsys, monkeypatch) -> None:
     wrong_results = {}
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
         scope: ScopeType = {}
-        print(str(pdl_file_name))
-        # if "cldk" in str(pdl_file_name):
-        #     pass
         if str(pdl_file_name) in TO_SKIP:
             continue
         if str(pdl_file_name) in TESTS_WITH_INPUT:
