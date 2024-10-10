@@ -236,6 +236,7 @@ def blocks_to_dict(
         int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
     )
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         result = [block_to_dict(block, json_compatible) for block in blocks]
     else:
         result = block_to_dict(blocks, json_compatible)

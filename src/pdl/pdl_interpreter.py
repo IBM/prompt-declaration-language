@@ -806,6 +806,7 @@ def step_blocks(
     trace: BlocksType
     results = []
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )

@@ -4,6 +4,7 @@
 from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
+import strictyaml
 from genai.schema import (
     DecodingMethod,
     ModerationParameters,
@@ -13,17 +14,6 @@ from genai.schema import (
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
-
-ExpressionType: TypeAlias = Any
-# (
-#     str
-#     | int
-#     | float
-#     | bool
-#     | None
-#     | list["ExpressionType"]
-#     | dict[str, "ExpressionType"]
-# )
 
 
 class Message(TypedDict):
@@ -63,7 +53,30 @@ class LocationType(BaseModel):
     table: dict[str, int]
 
 
+YamlSource: TypeAlias = strictyaml.YAML
+
 empty_block_location = LocationType(file="", path=[], table={})
+
+
+class LocalizedExpression(BaseModel):
+    """Expression with location information"""
+
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    expr: Any
+    location: Optional[LocationType] = None
+    _pdl_yaml_src: Optional[YamlSource] = None
+
+
+ExpressionType: TypeAlias = Any | LocalizedExpression
+# (
+#     str
+#     | int
+#     | float
+#     | bool
+#     | None
+#     | list["ExpressionType"]
+#     | dict[str, "ExpressionType"]
+# )
 
 
 class Parser(BaseModel):
@@ -124,6 +137,7 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
+    _pdl_yaml_src: Optional[YamlSource] = None
 
 
 class FunctionBlock(Block):
