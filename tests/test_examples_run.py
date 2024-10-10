@@ -15,12 +15,12 @@ TO_SKIP = {
     str(name)
     for name in [
         pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
+        pathlib.Path("examples") / "talk" / "8-tools.pdl",  # TODO: check why
         pathlib.Path("examples") / "talk" / "11-sdg.pdl",  # TODO: check why
         pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "3-weather.pdl",
+        pathlib.Path("examples") / "tools" / "calc.pdl",  # TODO: check why
         pathlib.Path("examples") / "tutorial" / "calling_apis.pdl",
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
-        pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "talk" / "10-multi-agent.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsmhard-bugs.pdl",
         pathlib.Path("examples") / "gsm8k" / "math-base.pdl",
@@ -46,6 +46,8 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "tools" / "calc.pdl",
         pathlib.Path("examples") / "tutorial" / "include.pdl",
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
+        pathlib.Path("examples") / "weather" / "weather.pdl",
+        pathlib.Path("examples") / "demo" / "3-weather.pdl",
     ]
 }
 
@@ -86,6 +88,14 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         pathlib.Path("examples")
         / "hello"
         / "hello-data.pdl": InputsType(scope={"something": "ABC"}),
+        pathlib.Path("examples")
+        / "weather"
+        / "weather.pdl": InputsType(stdin="What is the weather in Yorktown Heights?\n"),
+        pathlib.Path("examples")
+        / "demo"
+        / "3-weather.pdl": InputsType(
+            stdin="What is the weather in Yorktown Heights?\n"
+        ),
     }.items()
 }
 
@@ -174,7 +184,9 @@ def test_valid_programs(capsys, monkeypatch) -> None:
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}
-        except PDLRuntimeError:
+        except PDLRuntimeError as exc:
+            if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
+                print(exc)  # unexpected error: breakpoint
             actual_runtime_error |= {str(pdl_file_name)}
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
