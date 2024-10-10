@@ -1,0 +1,25 @@
+- |
+  Given the following code:
+  ```python
+  ${code_line}
+  ```
+  and the following error:
+  ${error_msg}
+  Please repair the code!
+
+- def: raw_output
+  model: watsonx/ibm/granite-34b-code-instruct
+  parameters:
+    stop: ["\n\n"]
+
+- lang: python
+  def: parsed_output
+  spec: {thought: str, code_line: str}
+  code: |
+    import repair_main
+    result = repair_main.parse_output(raw_output)
+
+- spec: {before: str, after: str}
+  object:
+    before: ${code_line}
+    after: ${parsed_output.code_line}
