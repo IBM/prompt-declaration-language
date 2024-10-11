@@ -49,8 +49,8 @@ def set_location(
     pdl: Any,
     loc: YamlSource,
 ):
-    if hasattr(pdl, "_pdl_yaml_src"):
-        pdl._pdl_yaml_src = loc
+    if hasattr(pdl, "pdl_yaml_src"):
+        pdl.pdl_yaml_src = loc
     if isinstance(loc.data, dict):
         for x, v in loc.items():
             if hasattr(pdl, x.data):

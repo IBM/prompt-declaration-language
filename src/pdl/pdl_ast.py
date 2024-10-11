@@ -64,7 +64,7 @@ class LocalizedExpression(BaseModel):
     model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
     expr: Any
     location: Optional[LocationType] = None
-    _pdl_yaml_src: Optional[YamlSource] = None
+    pdl_yaml_src: Optional[YamlSource] = None
 
 
 ExpressionType: TypeAlias = Any | LocalizedExpression
@@ -137,7 +137,7 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
-    _pdl_yaml_src: Optional[YamlSource] = None
+    pdl_yaml_src: Optional[YamlSource] = None
 
 
 class FunctionBlock(Block):
@@ -275,7 +275,7 @@ class ModelBlock(Block):
 class BamModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.BAM]
     prompt_id: Optional[str] = None
-    parameters: Optional[BamTextGenerationParameters | dict] = None
+    parameters: Optional[BamTextGenerationParameters | ExpressionType] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
@@ -285,7 +285,7 @@ class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters | dict] = None
+    parameters: Optional[LitellmParameters | ExpressionType] = None
 
 
 class CodeBlock(Block):
