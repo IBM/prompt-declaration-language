@@ -46,7 +46,7 @@ text:
 ```
 
 In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `Hello,`, and we call a model (`watsonx/ibm/granite-34b-code-instruct`) with this as input prompt. Notice the Watsonx model id on LiteLLM.
-The model is passed some parameters including the `decoding_method` and `stop`, which corresponds to the `stop_sequences` parameter in Watsonx. The stop sequences are to be included in the output. Since the `input` field is not specified in the model call, the entire document up that point is passed to the model as input context. 
+The model is passed some parameters including the `decoding_method` and `stop`, which corresponds to the `stop_sequences` parameter in Watsonx. The stop sequences are to be included in the output. Since the `input` field is not specified in the model call, the entire document up that point is passed to the model as input context.
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
 
@@ -64,7 +64,7 @@ description: Hello world calling a model
 text:
 - "Hello,"
 - model: watsonx/ibm/granite-20b-multilingual
-  input: 
+  input:
     Translate the word 'world' to French
 ```
 
@@ -95,7 +95,7 @@ The user can override these defaults by explicitly including them in the model c
 
 ##  Variable Definition and Use
 
-Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document. 
+Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document.
 
 Consider the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/variable_def_use.pdl)):
 
@@ -127,7 +127,7 @@ In PDL, we can declaratively chain models together as in the following example (
 
 ```yaml
 description: Model chaining
-text: 
+text:
 - Hello,
 - model: watsonx/ibm/granite-34b-code-instruct
   parameters:
@@ -189,7 +189,7 @@ The translation of 'I love Paris!' to French is 'J'aime Paris!'.
 The translation of 'I love Madrid!' to Spanish is 'Me encanta Madrid!'.
 ```
 
-A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current background context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the granite model. 
+A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current background context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the granite model.
 
 ##  Grouping Variable Definitions in Defs
 
@@ -264,7 +264,7 @@ Here are its possible values:
 - `[result]`: contribute to the final result but not the background context
 
 - `[context]`: contribute to the background context but not the final result
-  
+
 - `[result, context]`: contribute to both, which is also the default setting.
 
 ##  Input from File or Stdin
@@ -301,7 +301,7 @@ text:
   multiline: true
 ```
 
-Finally, the following example shows reading content in JSON format. 
+Finally, the following example shows reading content in JSON format.
 
 Consider the JSON content in this [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/input.json):
 ```json
@@ -310,7 +310,7 @@ Consider the JSON content in this [file](https://github.com/IBM/prompt-declarati
     "address": {
         "number": 87,
         "street": "Smith Road",
-        "town": "Armonk", 
+        "town": "Armonk",
         "state": "NY",
         "zip": 10504
     }
@@ -350,7 +350,7 @@ description: Hello world showing call to python code
 text:
 - "Hello, "
 - lang: python
-  code: 
+  code:
     |
     import random
     import string
@@ -393,7 +393,7 @@ text:
 - lang: python
   code: |
     import requests
-    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
+    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }')
     result = response.content
   def: WEATHER
   parser: json
@@ -427,7 +427,7 @@ text:
   input:
      |
       Here is some info about the location of the function in the repo.
-      repo: 
+      repo:
       ${ CODE.repo_info.repo }
       path: ${ CODE.repo_info.path }
       Function_name: ${ CODE.repo_info.function_name }
@@ -449,7 +449,7 @@ text:
     ${ TRUTH }
     """
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- data: 
+- data:
     input: ${ CODE }
     output: ${ EXPLANATION }
     metric: ${ EVAL }
@@ -564,9 +564,9 @@ The first two blocks read math problem examples and include them in the document
 
 In the body of the `repeat` block, the program first asks granite to generate a question and add it to the document. Next we print `Answer: Let's think step by step.\n`. The following block is a repeat-until: the text in `repeat` is repeated until the condition in the `until` field becomes true. Here the condition states that we stop the iteration when variable `REASON_OR_CALC` contains `<<`. That variable is defined in the first block of the repeat-until -- we prompt a granite model and stop at the character `<<`.
 
-The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block. 
+The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block.
 
-When we execute this program, we obtain 3 math problems like the ones in the [examples](https://github.com/IBM/prompt-declaration-language//blob/main/examples/arith/). 
+When we execute this program, we obtain 3 math problems like the ones in the [examples](https://github.com/IBM/prompt-declaration-language//blob/main/examples/arith/).
 
 Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together (which is the case of top-level programs in general), then we need the keyword `text` to precede a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastOf` block.
 
@@ -581,7 +581,7 @@ The following [example](https://github.com/IBM/prompt-declaration-language//blob
 description: for loop
 for:
   i: [1, 2, 3, 4]
-repeat: 
+repeat:
   ${ i }
 ```
 
@@ -595,7 +595,7 @@ To output a number of each line, we can specify which string to use to join the 
 description: for loop
 for:
   i: [1, 2, 3, 4]
-repeat: 
+repeat:
   ${ i }
 join:
   with: "\n"
@@ -614,7 +614,7 @@ To creates an array as a result of iteration, we would write:
 description: for loop
 for:
   i: [1, 2, 3, 4]
-repeat: 
+repeat:
   - ${ i }
 join:
   as: array
@@ -671,15 +671,15 @@ text:
     spec: {name: str, age: int}
     input:
       text:
-      - for: 
+      - for:
           question: ${ data.questions }
           answer: ${ data.answers }
         repeat:
           - |
             ${ question }
             ${ answer }
-      - > 
-        Question: Create a JSON object with fields 'name' and 'age' 
+      - >
+        Question: Create a JSON object with fields 'name' and 'age'
         and set them appropriately. Write the age in letters.
     parser: yaml
     parameters:
@@ -689,7 +689,7 @@ text:
 ```
 
 Upon reading the data we use a parser to parse it into a YAML. The `spec` field indicates the expected type for the
-data, which is an object with 2 fields: `questions` and `answers` that are a list of string and a list of objects, 
+data, which is an object with 2 fields: `questions` and `answers` that are a list of string and a list of objects,
 respectively. When the interpreter is executed, it checks this type dynamically and throws errors if necessary.
 
 Similarly, the output of the model call is parsed as YAML, and the `spec` indicates that we expect an object with
@@ -754,8 +754,8 @@ To produce an execution trace consumable by the Live Document, you can run the i
 pdl --trace <my-example_trace.json> <my-example>
 ```
 
-This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
-in the right pane. 
+This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part
+in the right pane.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
@@ -774,13 +774,13 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line,
     plus another line at the end.
-    
-    
+
+
   - "End."
 ```
 
@@ -806,13 +806,13 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line,
     plus another line at the end.
-    
-    
+
+
   - "End."
 ```
 
@@ -834,13 +834,13 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line,
     plus another line at the end.
-    
-    
+
+
   - "End."
 ```
 
@@ -863,13 +863,13 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line,
     plus another line at the end.
-    
-    
+
+
   - "End."
 ```
 
@@ -895,13 +895,13 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line,
     plus another line at the end.
-    
-    
+
+
   - "\n\n\n\n"
   - "End."
 ```
@@ -931,7 +931,7 @@ text:
     Several lines of text,
     with some "quotes" of various 'types',
     and also a blank line:
-    
+
     and some text with
         extra indentation
     on the next line.
@@ -957,7 +957,7 @@ PDL:
 ```
 text: 'Several lines of text,
   containing ''single quotes''. Escapes (like \n) don''t do anything.
-  
+
   Newlines can be added by leaving a blank line.
     Leading whitespace on lines is ignored.'
 ```
@@ -978,7 +978,7 @@ text: "Several lines of text,
   containing \"double quotes\". Escapes (like \\n) work.\nIn addition,
   newlines can be esc\
   aped to prevent them from being converted to a space.
-  
+
   Newlines can also be added by leaving a blank line.
     Leading whitespace on lines is ignored."
 ```
@@ -999,7 +999,7 @@ PDL:
 text: Several lines of text,
   with some "quotes" of various 'types'.
   Escapes (like \n) don't do anything.
-  
+
   Newlines can be added by leaving a blank line.
     Additional leading whitespace is ignored.
 ```
@@ -1011,7 +1011,35 @@ Several lines of text, with some "quotes" of various 'types'. Escapes (like \n) 
 Newlines can be added by leaving a blank line. Additional leading whitespace is ignored.
 ```
 
+## Using Ollama models
 
+1. Install Ollama e.g., `brew install --cask ollama`
+2. Run a model e.g., `ollama run granite-code:34b-instruct-q5_K_M`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
+3. An OpenAI style server is running locally at [http://localhost:11434/](http://localhost:11434/), see [the Ollama blog](https://ollama.com/blog/openai-compatibility) for more details.
+
+
+Example:
+
+```
+text:
+- Hello,
+- model: ollama_chat/granite-code:34b-instruct-q5_K_M
+  parameters:
+    stop:
+    - '!'
+    decoding_method: greedy
+```
+
+
+Alternatively, one could also use Ollama's OpenAI-style endpoint using the `openai/` prefix instead of `ollama_chat/`. In this case, set the `OPENAI_API_BASE`, `OPENAI_API_KEY`, and `OPENAI_ORGANIZATION` (if necessary) environment variables. If you were using the official OpenAI API, you would only have to set the api key and possibly the organization. For local use e.g., using Ollama, this could look like so:
+
+```bash
+export OPENAI_API_BASE=http://localhost:11434/v1
+export OPENAI_API_KEY=ollama # required, but unused
+export OPENAI_ORGANIZATION=ollama # not required
+
+pdl <...>
+```
 
 
 
