@@ -208,7 +208,7 @@ defs:
       tools: { list: obj }
       tool_names: { list: str }
     return:
-      data: ${ tools|selectattr('name', 'in', tool_names)|list }
+      data: ${ tools|selectattr('display_name', 'in', tool_names)|list }
 
   list_tools:
     function:
