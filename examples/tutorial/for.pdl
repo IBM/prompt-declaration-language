@@ -1,6 +1,5 @@
 description: for loop
-document:
-- for:
-    i: [1, 2, 3, 4]
-  repeat: 
-    - "{{ i }}"
+for:
+  i: [1, 2, 3, 4]
+repeat: 
+  ${ i }

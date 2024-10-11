@@ -1,12 +1,16 @@
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
+from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
+    InterpreterState,
+    empty_scope,
+    process_prog,
+)
 
 defs_data = {
     "description": "Hello world with variable use",
     "defs": {
         "HELLO": "Hello,",
         "NAME": {
-            "document": [
+            "text": [
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "input": {"get": "HELLO"},
@@ -19,7 +23,7 @@ defs_data = {
             ]
         },
     },
-    "document": [
+    "text": [
         {"get": "HELLO"},
         {"get": "NAME"},
         "!\n",
@@ -30,8 +34,8 @@ defs_data = {
 def test_defs():
     state = InterpreterState()
     data = Program.model_validate(defs_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello, World!\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello, World!\n"
 
 
 defs_chain_data = {
@@ -39,17 +43,17 @@ defs_chain_data = {
     "defs": {
         "X": {"data": "a"},
         "Y": {"data": "b"},
-        "Z": {"document": [{"get": "X"}, {"get": "Y"}, "c"]},
+        "Z": {"text": [{"get": "X"}, {"get": "Y"}, "c"]},
     },
-    "document": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
+    "text": [{"get": "X"}, {"get": "Y"}, {"get": "Z"}],
 }
 
 
 def test_defs_chain():
     state = InterpreterState()
     data = Program.model_validate(defs_chain_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "ababc"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "ababc"
 
 
 defs_only = {"description": "defs only", "defs": {"var": "hello"}}
@@ -58,5 +62,5 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 def test_defs_only():
     state = InterpreterState()
     data = Program.model_validate(defs_only)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == ""
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == ""

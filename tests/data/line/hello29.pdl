@@ -1,15 +1,15 @@
 description: Hello world showing call out to python code with condition
-document:
+text:
 - 'Hello! '
-- lan: python
+- lang: python
   code: |
     result = True
   def: QUESTION
   contribute: []
 - data:
-    x: "{{ QUESTION1 }}"
-    y: "{{ QUESTION2 }}"
+    x: ${ QUESTION1 }
+    y: ${ QUESTION2 }
     z: 
-      a: "{{ QUESTION3 }}"
+      a: ${ QUESTION3 }
       b: 
-        c: "{{ QUESTION4 }}"
+        c: ${ QUESTION4 }

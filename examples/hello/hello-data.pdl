@@ -1,10 +1,10 @@
 # Call with pdl --data '"something": "ABC"'
 description: Hello world with data
-document:
+text:
 - def: stutter
   function: 
   return:
-    - "{{ something }}"
+    - ${ something }
 - "Hello World!\n"
 - call: stutter
 - "\n"

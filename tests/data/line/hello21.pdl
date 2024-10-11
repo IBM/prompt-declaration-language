@@ -1,4 +1,4 @@
 description: Hello world showing call out to python code with condition
-document:
-- if: '{{ QUESTION }}'
+text:
+- if: '${ QUESTION }'
   then: How are you?

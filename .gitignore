@@ -153,3 +153,6 @@ pdl-live/package-lock.json
 
 # Built docs
 _site
+
+# Generated version
+src/pdl/_version.py

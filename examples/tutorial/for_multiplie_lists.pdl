@@ -1,0 +1,11 @@
+description: for loop
+defs:
+  numbers:
+    data: [1, 2, 3, 4]
+  names:
+    data: ["Bob", "Carol", "David", "Ernest"]
+for:
+  number: ${ numbers }
+  name: ${ names }
+repeat:
+  "${ name }'s number is ${ number }\n"

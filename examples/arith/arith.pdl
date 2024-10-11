@@ -1,9 +1,9 @@
 description: Math Problems
-document:
+text:
 - read: example1.txt
 - read: example2.txt
 - repeat:
-    document:
+    text:
     - "\nQuestion: "
     - def: QUESTION
       model: watsonx/ibm/granite-34b-code-instruct
@@ -14,7 +14,7 @@ document:
         include_stop_sequence: true
     - "\nAnswer: Let's think step by step.\n"
     - repeat:
-        document:
+        text:
         - def: REASON_OR_CALC
           model: watsonx/ibm/granite-34b-code-instruct
           parameters:
@@ -22,9 +22,9 @@ document:
             - '<<'
             - "Question"
             include_stop_sequence: true
-        - if: '{{ REASON_OR_CALC.endswith("<<") }}'
+        - if: ${ REASON_OR_CALC.endswith("<<") }
           then:
-            document:
+            text:
             - def: EXPR
               model: watsonx/ibm/granite-34b-code-instruct
               parameters:
@@ -35,11 +35,9 @@ document:
                 include_stop_sequence: false
             - '= '
             - def: RESULT
-              lan: python
-              code: result = {{ EXPR }}
+              lang: python
+              code: result = ${ EXPR }
             - ' >>'
-      until: '{{ "The answer is" in REASON_OR_CALC }}'
-      as: document
+      until: ${ "The answer is" in REASON_OR_CALC }
     - "\n\n"
-  as: document
   num_iterations: 3

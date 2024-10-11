@@ -37,19 +37,15 @@ export function map_block_children(
       const code = map_blocks(f, block.code);
       return {...block, code: code};
     })
-    .with({kind: 'api'}, block => {
-      const input = map_blocks(f, block.input);
-      return {...block, input: input};
-    })
     .with({kind: 'get'}, block => block)
     .with({kind: 'data'}, block => block)
-    .with({kind: 'document'}, block => {
-      const document = map_blocks(f, block.document);
-      return {...block, document: document};
+    .with({kind: 'text'}, block => {
+      const text = map_blocks(f, block.text);
+      return {...block, text: text};
     })
-    .with({kind: 'sequence'}, block => {
-      const sequence = map_blocks(f, block.sequence);
-      return {...block, sequence: sequence};
+    .with({kind: 'lastOf'}, block => {
+      const lastOf = map_blocks(f, block.lastOf);
+      return {...block, lastOf: lastOf};
     })
     .with({kind: 'array'}, block => {
       const array = map_blocks(f, block.array);
@@ -61,7 +57,7 @@ export function map_block_children(
         object = block.object.map(f);
       } else {
         object = Object.fromEntries(
-          Object.entries(block.object).map(([k, v]) => [k, f(v)])
+          Object.entries(block.object).map(([k, v]) => [k, map_blocks(f, v)])
         );
       }
       return {...block, object: object};
@@ -142,16 +138,13 @@ export function iter_block_children(
     .with({kind: 'code'}, block => {
       iter_blocks(f, block.code);
     })
-    .with({kind: 'api'}, block => {
-      iter_blocks(f, block.input);
-    })
     .with({kind: 'get'}, () => {})
     .with({kind: 'data'}, () => {})
-    .with({kind: 'document'}, block => {
-      iter_blocks(f, block.document);
+    .with({kind: 'text'}, block => {
+      iter_blocks(f, block.text);
     })
-    .with({kind: 'sequence'}, block => {
-      iter_blocks(f, block.sequence);
+    .with({kind: 'lastOf'}, block => {
+      iter_blocks(f, block.lastOf);
     })
     .with({kind: 'array'}, block => {
       iter_blocks(f, block.array);
@@ -161,7 +154,7 @@ export function iter_block_children(
       if (block.object instanceof Array) {
         iter_blocks(f, block.object);
       } else {
-        Object.entries(block.object).forEach(([_, v]) => f(v));
+        Object.entries(block.object).forEach(([_, v]) => iter_blocks(f, v));
       }
       return {...block, object: object};
     })

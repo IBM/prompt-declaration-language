@@ -1,8 +1,8 @@
 description: Hello world!
 defs:
   file: ./data.txt
-document:
-- read: "{{ file }}"
+text:
+- read: ${ file }
   def: HELLO
   contribute: []
 - get: HELLO

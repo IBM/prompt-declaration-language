@@ -1,5 +1,9 @@
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
+from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
+    InterpreterState,
+    empty_scope,
+    process_prog,
+)
 
 hello_def = {
     "def": "hello",
@@ -8,31 +12,31 @@ hello_def = {
     "return": "Hello world!",
 }
 
-hello_call = {"description": "Call hello", "document": [hello_def, {"call": "hello"}]}
+hello_call = {"description": "Call hello", "text": [hello_def, {"call": "hello"}]}
 
 
 def test_function_def():
     state = InterpreterState()
-    data = Program.model_validate({"document": [hello_def]})
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == ""
+    data = Program.model_validate({"text": [hello_def]})
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == ""
 
 
 def test_function_call():
     state = InterpreterState()
     data = Program.model_validate(hello_call)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello world!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello world!"
 
 
 hello_params = {
     "description": "Call hello",
-    "document": [
+    "text": [
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "str"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "hello", "args": {"name": "World"}},
     ],
@@ -42,14 +46,14 @@ hello_params = {
 def test_function_params():
     state = InterpreterState()
     data = Program.model_validate(hello_params)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello World!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello World!"
 
 
 hello_stutter = {
     "description": "Repeat the context",
-    "document": [
-        {"def": "stutter", "function": None, "return": "{{ context[0].content }}"},
+    "text": [
+        {"def": "stutter", "function": None, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
         {"call": "stutter"},
     ],
@@ -59,16 +63,19 @@ hello_stutter = {
 def test_function_implicit_context():
     state = InterpreterState()
     data = Program.model_validate(hello_stutter)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello World!\nHello World!\n"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello World!\nHello World!\n"
 
 
 hello_bye = {
     "description": "Repeat the context",
-    "document": [
-        {"def": "stutter", "function": {}, "return": "{{ context[0].content }}"},
+    "text": [
+        {"def": "stutter", "function": {}, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
-        {"call": "stutter", "args": {"context": [{"role": None, "content": "Bye!"}]}},
+        {
+            "call": "stutter",
+            "args": {"pdl_context": [{"role": None, "content": "Bye!"}]},
+        },
     ],
 }
 
@@ -76,21 +83,21 @@ hello_bye = {
 def test_function_explicit_context():
     state = InterpreterState()
     data = Program.model_validate(hello_bye)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello World!\nBye!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello World!\nBye!"
 
 
 hello_call_template = {
     "description": "Call hello template",
-    "document": [
+    "text": [
         {"defs": {"alias": "hello"}},
         {
             "description": "Define hello",
             "def": "hello",
             "function": {"name": "str"},
-            "return": {"document": ["Hello ", {"get": "name"}, "!"]},
+            "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "{{ alias }}", "args": {"name": "World"}},
+        {"call": "${ alias }", "args": {"name": "World"}},
     ],
 }
 
@@ -98,5 +105,5 @@ hello_call_template = {
 def test_call_template():
     state = InterpreterState()
     data = Program.model_validate(hello_call_template)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "Hello World!"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "Hello World!"

@@ -1,7 +1,7 @@
 description: Hello world showing call out to python code
-document:
+text:
 - 'Hello, '
-- lan: python
+- lang: python
   code: |
     import random
     import string

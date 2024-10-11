@@ -7,7 +7,7 @@ object:
   a: 1
   b: hello
   c:
-    document:
+    text:
       - bye
       - "!"
 """

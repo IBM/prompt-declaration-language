@@ -1,9 +1,9 @@
 description: GSM Hard Bug Finder
-document: 
-- "{{ question }}"
+text: 
+- ${ question }
 - "\n"
 - "Does the following code accurately solve this problem?\n\n"
-- "{{ code }}"
+- ${ code }
 - model: watsonx/meta-llama/llama-3-70b-instruct
   parameters:
     stop_sequences: ["def"]
