@@ -1021,9 +1021,8 @@ Newlines can be added by leaving a blank line. Additional leading whitespace is 
 Example:
 
 ```
-document:
-- role: user
-  document: Hello,
+text:
+- Hello,
 - model: ollama_chat/granite-code:34b-instruct-q5_K_M
   parameters:
     stop:
