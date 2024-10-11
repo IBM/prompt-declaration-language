@@ -4,6 +4,8 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
+from pytest import CaptureFixture, MonkeyPatch
+
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import PDLRuntimeError
@@ -143,7 +145,7 @@ EXPECTED_RUNTIME_ERROR = [
 ]
 
 
-def test_valid_programs(capsys, monkeypatch) -> None:
+def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
     actual_parse_error: set[str] = set()
     actual_runtime_error: set[str] = set()
     wrong_results = {}

@@ -1,3 +1,5 @@
+from pytest import CaptureFixture
+
 from pdl.pdl_interpreter import generate
 
 
@@ -21,7 +23,7 @@ line = {
 }
 
 
-def test_line(capsys):
+def test_line(capsys: CaptureFixture[str]):
     do_test(line, capsys)
 
 
@@ -35,7 +37,7 @@ line1 = {
 }
 
 
-def test_line1(capsys):
+def test_line1(capsys: CaptureFixture[str]):
     do_test(line1, capsys)
 
 
@@ -49,7 +51,7 @@ line3 = {
 }
 
 
-def test_line3(capsys):
+def test_line3(capsys: CaptureFixture[str]):
     do_test(line3, capsys)
 
 
@@ -63,7 +65,7 @@ line4 = {
 }
 
 
-def test_line4(capsys):
+def test_line4(capsys: CaptureFixture[str]):
     do_test(line4, capsys)
 
 
@@ -77,7 +79,7 @@ line7 = {
 }
 
 
-def test_line7(capsys):
+def test_line7(capsys: CaptureFixture[str]):
     do_test(line7, capsys)
 
 
@@ -91,7 +93,7 @@ line8 = {
 }
 
 
-def test_line8(capsys):
+def test_line8(capsys: CaptureFixture[str]):
     do_test(line8, capsys)
 
 
@@ -105,7 +107,7 @@ line9 = {
 }
 
 
-def test_line9(capsys):
+def test_line9(capsys: CaptureFixture[str]):
     do_test(line9, capsys)
 
 
@@ -118,7 +120,7 @@ line10 = {
 }
 
 
-def test_line10(capsys):
+def test_line10(capsys: CaptureFixture[str]):
     do_test(line10, capsys)
 
 
@@ -131,7 +133,7 @@ line11 = {
 }
 
 
-def test_line11(capsys):
+def test_line11(capsys: CaptureFixture[str]):
     do_test(line11, capsys)
 
 
@@ -145,7 +147,7 @@ line12 = {
 }
 
 
-def test_line12(capsys):
+def test_line12(capsys: CaptureFixture[str]):
     do_test(line12, capsys)
 
 
@@ -159,7 +161,7 @@ line13 = {
 }
 
 
-def test_line13(capsys):
+def test_line13(capsys: CaptureFixture[str]):
     do_test(line13, capsys)
 
 
@@ -173,7 +175,7 @@ line14 = {
 }
 
 
-def test_line14(capsys):
+def test_line14(capsys: CaptureFixture[str]):
     do_test(line14, capsys)
 
 
@@ -186,7 +188,7 @@ line15 = {
 }
 
 
-def test_line15(capsys):
+def test_line15(capsys: CaptureFixture[str]):
     do_test(line15, capsys)
 
 
@@ -200,7 +202,7 @@ line16 = {
 }
 
 
-def test_line16(capsys):
+def test_line16(capsys: CaptureFixture[str]):
     do_test(line16, capsys)
 
 
@@ -214,7 +216,7 @@ line17 = {
 }
 
 
-def test_line17(capsys):
+def test_line17(capsys: CaptureFixture[str]):
     do_test(line17, capsys)
 
 
@@ -227,7 +229,7 @@ line18 = {
 }
 
 
-def test_line18(capsys):
+def test_line18(capsys: CaptureFixture[str]):
     do_test(line18, capsys)
 
 
@@ -242,7 +244,7 @@ line19 = {
 }
 
 
-def test_line19(capsys):
+def test_line19(capsys: CaptureFixture[str]):
     do_test(line19, capsys)
 
 
@@ -255,7 +257,7 @@ line20 = {
 }
 
 
-def test_line20(capsys):
+def test_line20(capsys: CaptureFixture[str]):
     do_test(line20, capsys)
 
 
@@ -268,7 +270,7 @@ line21 = {
 }
 
 
-def test_line21(capsys):
+def test_line21(capsys: CaptureFixture[str]):
     do_test(line21, capsys)
 
 
@@ -281,7 +283,7 @@ line22 = {
 }
 
 
-def test_line22(capsys):
+def test_line22(capsys: CaptureFixture[str]):
     do_test(line22, capsys)
 
 
@@ -294,7 +296,7 @@ line23 = {
 }
 
 
-def test_line23(capsys):
+def test_line23(capsys: CaptureFixture[str]):
     do_test(line23, capsys)
 
 
@@ -307,7 +309,7 @@ line24 = {
 }
 
 
-def test_line24(capsys):
+def test_line24(capsys: CaptureFixture[str]):
     do_test(line24, capsys)
 
 
@@ -335,7 +337,7 @@ line26 = {
 }
 
 
-def test_line26(capsys):
+def test_line26(capsys: CaptureFixture[str]):
     do_test(line26, capsys)
 
 
@@ -348,7 +350,7 @@ line27 = {
 }
 
 
-def test_line27(capsys):
+def test_line27(capsys: CaptureFixture[str]):
     do_test(line27, capsys)
 
 
@@ -361,7 +363,7 @@ line28 = {
 }
 
 
-def test_line28(capsys):
+def test_line28(capsys: CaptureFixture[str]):
     do_test(line28, capsys)
 
 
@@ -374,7 +376,7 @@ line29 = {
 }
 
 
-def test_line29(capsys):
+def test_line29(capsys: CaptureFixture[str]):
     do_test(line29, capsys)
 
 
@@ -387,7 +389,7 @@ line30 = {
 }
 
 
-def test_line30(capsys):
+def test_line30(capsys: CaptureFixture[str]):
     do_test(line30, capsys)
 
 
@@ -402,5 +404,5 @@ line31 = {
 }
 
 
-def test_line31(capsys):
+def test_line31(capsys: CaptureFixture[str]):
     do_test(line31, capsys)
