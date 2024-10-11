@@ -508,6 +508,30 @@ export type Trace =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
+  | (
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | BamModelBlock
+      | CodeBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | RepeatBlock
+      | RepeatUntilBlock
+      | ForBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ErrorBlock
+      | EmptyBlock
+    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -581,11 +605,6 @@ export type Fallback3 =
  */
 export type Role3 = string | null;
 export type Kind3 = "read";
-/**
- * Name of the file to read. If `None`, read the standard input.
- *
- */
-export type Read = string | null;
 /**
  * Message to prompt the user to enter a value.
  *
@@ -813,7 +832,31 @@ export type Object =
         | ReadBlock
         | IncludeBlock
         | ErrorBlock
-        | EmptyBlock;
+        | EmptyBlock
+        | (
+            | number
+            | string
+            | FunctionBlock
+            | CallBlock
+            | LitellmModelBlock
+            | BamModelBlock
+            | CodeBlock
+            | GetBlock
+            | DataBlock
+            | IfBlock
+            | RepeatBlock
+            | RepeatUntilBlock
+            | ForBlock
+            | TextBlock
+            | LastOfBlock
+            | ArrayBlock
+            | ObjectBlock
+            | MessageBlock
+            | ReadBlock
+            | IncludeBlock
+            | ErrorBlock
+            | EmptyBlock
+          )[];
     }
   | (
       | number
@@ -1327,7 +1370,27 @@ export type Repeat =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType = "lastOf" | "array" | "text";
+export type Join = JoinText | JoinArray | JoinLastOf;
+/**
+ * String concatenation of the result of each iteration.
+ *
+ */
+export type As = "text";
+/**
+ * String used to concatenate each iteration of the loop.
+ *
+ */
+export type With = string;
+/**
+ * Return the result of each iteration as an array.
+ *
+ */
+export type As1 = "array";
+/**
+ * Return the result of the last iteration.
+ *
+ */
+export type As2 = "lastOf";
 export type Trace1 =
   | (
       | number
@@ -1505,7 +1568,7 @@ export type Repeat1 =
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType1 = "lastOf" | "array" | "text";
+export type Join1 = JoinText | JoinArray | JoinLastOf;
 export type Trace2 =
   | (
       | number
@@ -1688,7 +1751,7 @@ export type NumIterations = number;
  * Define how to combine the result of each iteration.
  *
  */
-export type IterationType2 = "lastOf" | "array" | "text";
+export type Join2 = JoinText | JoinArray | JoinLastOf;
 export type Trace3 =
   | (
       | number
@@ -2143,7 +2206,7 @@ export type Kind15 = "code";
  * Programming language of the code.
  *
  */
-export type Lan = "python";
+export type Lang = "python" | "command";
 /**
  * Code to execute.
  *
@@ -2267,7 +2330,6 @@ export type Fallback16 =
  */
 export type Role16 = string | null;
 export type Kind16 = "model";
-export type Model = string;
 export type Input =
   | number
   | string
@@ -2470,7 +2532,6 @@ export type Fallback17 =
  */
 export type Role17 = string | null;
 export type Kind17 = "model";
-export type Model1 = string;
 export type Input1 =
   | number
   | string
@@ -2669,11 +2730,6 @@ export type Fallback18 =
  */
 export type Role18 = string | null;
 export type Kind18 = "call";
-/**
- * Function to call.
- *
- */
-export type Call = string;
 export type Trace6 =
   | number
   | string
@@ -3099,7 +3155,7 @@ export interface LitellmModelBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind17;
-  model: Model1;
+  model: unknown;
   input?: Input1;
   trace?: Trace5;
   platform?: Platform1;
@@ -3177,7 +3233,7 @@ export interface BamModelBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind16;
-  model: Model;
+  model: unknown;
   input?: Input;
   trace?: Trace4;
   platform: Platform;
@@ -3262,7 +3318,7 @@ export interface CodeBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind15;
-  lan: Lan;
+  lang: Lang;
   code: Code;
 }
 /**
@@ -3577,7 +3633,7 @@ export interface RepeatBlock {
   kind?: Kind11;
   repeat: Repeat2;
   num_iterations: NumIterations;
-  as?: IterationType2;
+  join?: Join2;
   trace?: Trace3;
 }
 /**
@@ -3657,7 +3713,7 @@ export interface RepeatUntilBlock {
   kind?: Kind10;
   repeat: Repeat1;
   until: Until;
-  as?: IterationType1;
+  join?: Join1;
   trace?: Trace2;
 }
 /**
@@ -3737,7 +3793,7 @@ export interface ForBlock {
   kind?: Kind9;
   for: For;
   repeat: Repeat;
-  as?: IterationType;
+  join?: Join;
   trace?: Trace1;
 }
 /**
@@ -4200,7 +4256,7 @@ export interface ReadBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind3;
-  read: Read;
+  read: unknown;
   message?: Message;
   multiline?: Multiline;
 }
@@ -4519,6 +4575,16 @@ export interface Table {
 export interface For {
   [k: string]: unknown;
 }
+export interface JoinText {
+  as?: As;
+  with?: With;
+}
+export interface JoinArray {
+  as: As1;
+}
+export interface JoinLastOf {
+  as: As2;
+}
 /**
  * Condition of the loop.
  *
@@ -4649,6 +4715,13 @@ export interface LitellmParameters {
   mock_response?: MockResponse;
   custom_llm_provider?: CustomLlmProvider;
   max_retries?: MaxRetries;
+  [k: string]: unknown;
+}
+/**
+ * Function to call.
+ *
+ */
+export interface Call {
   [k: string]: unknown;
 }
 /**

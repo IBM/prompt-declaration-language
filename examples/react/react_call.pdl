@@ -5,5 +5,3 @@ text:
     args:
       question: How many years ago was the discoverer of the Hudson River born?
       model: watsonx/ibm/granite-34b-code-instruct
-
-

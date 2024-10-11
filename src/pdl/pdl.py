@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -10,6 +11,7 @@ import yaml
 from pydantic.json_schema import models_json_schema
 
 from . import pdl_interpreter
+from ._version import version
 from .pdl_ast import (
     LocationType,
     PdlBlock,
@@ -21,6 +23,8 @@ from .pdl_ast import (
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
+
+logger = logging.getLogger(__name__)
 
 
 class InterpreterConfig(TypedDict, total=False):
@@ -40,6 +44,8 @@ class InterpreterConfig(TypedDict, total=False):
     role: RoleType
     """Default role.
     """
+    cwd: Path
+    """Path considered as the current working directory for file reading."""
 
 
 def exec_program(
@@ -61,6 +67,7 @@ def exec_program(
     Returns:
         Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
     """
+    logging.basicConfig(filename="log.txt", encoding="utf-8", format="", filemode="w")
     config = config or {}
     state = InterpreterState(**config)
     scope = scope or {}
@@ -122,7 +129,7 @@ def exec_str(
 
 
 def exec_file(
-    prog: str,
+    prog: str | Path,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType] = None,
     output: Literal["result", "all"] = "result",
@@ -139,6 +146,10 @@ def exec_file(
         Return the final result.
     """
     program, loc = parse_file(prog)
+    if config is None:
+        config = InterpreterConfig()
+    if config.get("cwd") is None:
+        config["cwd"] = Path(prog).parent
     result = exec_program(program, config, scope, loc, output)
     return result
 
@@ -148,49 +159,72 @@ def main():
     parser.add_argument(
         "--sandbox",
         action=argparse.BooleanOptionalAction,
-        help="run the interpreter in a container. A docker daemon must be running.",
+        help="run the interpreter in a container, a docker daemon must be running",
     )
-    parser.add_argument(
-        "--schema",
-        action=argparse.BooleanOptionalAction,
-        help="generate PDL Json Schema",
-    )
-    parser.add_argument(
-        "-l",
-        "--log",
-        help="log file",
-    )
-
     parser.add_argument(
         "-f",
         "--data-file",
         dest="data_file",
-        help="initial scope data file",
+        help="file containing initial values to add to the scope",
     )
-
     parser.add_argument(
         "-d",
         "--data",
-        help="scope data",
+        help="initial values to add to the scope",
     )
-
     parser.add_argument(
         "--stream",
         choices=["result", "background", "none"],
         default="result",
-        help="stream the result or the background messages on the standard output",
+        help="stream the result, the background messages, or nothing on the standard output",
     )
-
     parser.add_argument(
         "-t",
         "--trace",
         nargs="?",
         const="*_trace.json",
-        help="output trace for live document",
+        help="output trace for live document and optionally specify the file name",
     )
+    parser.add_argument(
+        "-l",
+        "--log",
+        help="specify a name for the log file",
+    )
+    parser.add_argument(
+        "--schema",
+        action="store_true",
+        help="generate PDL Json Schema and exit",
+        default=False,
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="print the version number and exit",
+        default=False,
+    )
+
     parser.add_argument("pdl", nargs="?", help="pdl file", type=str)
 
     args = parser.parse_args()
+
+    # This case must be before `if args.pdl is None:`
+    if args.version:
+        print(f"PDL {version}")
+        return
+
+    # This case must be before `if args.pdl is None:`
+    if args.schema:
+        schema, top_level_schema = models_json_schema(
+            [
+                (Program, "validation"),
+                (PdlBlock, "validation"),
+                (PdlBlocks, "validation"),
+            ],
+            title="PDL Schemas",
+        )
+        top_level_schema["anyOf"] = list(schema.values())
+        print(json.dumps(top_level_schema, indent=2))
+        return
 
     if args.pdl is None:
         parser.print_help()
@@ -220,7 +254,7 @@ def main():
                     watsonx_project_id,
                     "--rm",
                     "-it",
-                    "pdl",
+                    "quay.io/project_pdl/pdl",
                     *args,
                 ],
                 check=True,
@@ -229,19 +263,6 @@ def main():
             print(
                 "An error occured while running docker. Is the docker daemon running?"
             )
-        return
-
-    if args.schema:
-        schema, top_level_schema = models_json_schema(
-            [
-                (Program, "validation"),
-                (PdlBlock, "validation"),
-                (PdlBlocks, "validation"),
-            ],
-            title="PDL Schemas",
-        )
-        top_level_schema["anyOf"] = list(schema.values())
-        print(json.dumps(top_level_schema, indent=2))
         return
 
     initial_scope = {}
@@ -269,18 +290,21 @@ def main():
     else:
         batch = 1
 
-    config = InterpreterConfig(
-        yield_result=stream_result, yield_background=stream_background, batch=batch
-    )
     pdl_file = Path(args.pdl)
     if args.trace == "*_trace.json":
         trace_file = str(pdl_file.with_suffix("")) + "_trace.json"
     else:
         trace_file = args.trace
+    config = InterpreterConfig(
+        yield_result=stream_result,
+        yield_background=stream_background,
+        batch=batch,
+        cwd=pdl_file.parent,
+    )
     pdl_interpreter.generate(
         pdl_file,
         args.log,
-        InterpreterState(**config, cwd=pdl_file.parent),
+        InterpreterState(**config),
         initial_scope,
         trace_file,
     )

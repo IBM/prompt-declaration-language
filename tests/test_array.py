@@ -17,6 +17,7 @@ for_data = {
         "i": [1, 2, 3, 4],
     },
     "repeat": "${ i }",
+    "join": {"as": "array"},
 }
 
 
@@ -32,18 +33,18 @@ repeat_until_data = {
     "lastOf": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": "result = 0"}],
+            "text": [{"lang": "python", "code": "result = 0"}],
         },
         {
             "repeat": [
                 {
                     "def": "I",
-                    "lan": "python",
+                    "lang": "python",
                     "code": ["result = ${ I } + 1"],
                 }
             ],
             "until": "${ I == 5 }",
-            "as": "array",
+            "join": {"as": "array"},
         },
     ],
 }

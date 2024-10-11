@@ -31,7 +31,7 @@ class PDLMagics(Magics):
         line = line.strip()
         args = parse_argstring(self.pdl, line)
         if args.reset_context:
-            scope = local_ns | {"context": []}
+            scope = local_ns | {"pdl_context": []}
         else:
             scope = local_ns
         try:

@@ -1,5 +1,8 @@
 import json
+import logging
 import re
+import shlex
+import subprocess
 import sys
 import types
 
@@ -78,6 +81,8 @@ from .pdl_scheduler import (
 from .pdl_schema_validator import type_check_args, type_check_spec
 from .pdl_utils import messages_concat, messages_to_str, stringify
 
+logger = logging.getLogger(__name__)
+
 
 class PDLRuntimeError(PDLException):
     def __init__(
@@ -117,17 +122,16 @@ class PDLRuntimeStepBlocksError(PDLException):
         self.message = message
 
 
-empty_scope: ScopeType = {"context": []}
+empty_scope: ScopeType = {"pdl_context": []}
 
 
 class InterpreterState(BaseModel):
     yield_result: bool = False
     yield_background: bool = False
-    log: list[str] = []
     batch: int = 1
     # batch=0: streaming
     # batch=1: call to generate with `input`
-    role: RoleType = None
+    role: RoleType = "user"
     cwd: Path = Path.cwd()
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
@@ -158,6 +162,7 @@ def generate(
     """
     if log_file is None:
         log_file = "log.txt"
+    logging.basicConfig(filename=log_file, encoding="utf-8", format="", filemode="w")
     try:
         prog, loc = parse_file(pdl_file)
         if state is None:
@@ -184,11 +189,6 @@ def generate(
         print(message, file=sys.stderr)
         if trace_file and exc.trace is not None:
             write_trace(trace_file, exc.trace)
-    finally:
-        if state is not None:
-            with open(log_file, "w", encoding="utf-8") as log_fp:
-                for line in state.log:
-                    log_fp.write(line)
 
 
 def write_trace(
@@ -288,12 +288,12 @@ def step_block(
             yield YieldBackgroundMessage(background)
         if state.yield_result:
             yield YieldResultMessage(result)
-        append_log(state, "Document", background)
+        append_log(state, "pdl_context", background)
     else:
         result, background, scope, trace = yield from step_advanced_block(
             state, scope, block, loc
         )
-    scope = scope | {"context": background}
+    scope = scope | {"pdl_context": background}
     return result, background, scope, trace
 
 
@@ -446,14 +446,24 @@ def step_block_body(
         case ObjectBlock():
             iteration_state = state.with_yield_result(False)
             if isinstance(block.object, dict):
+                background = []
+                values = []
+                values_trace = []
                 try:
-                    values, background, scope, values_trace = yield from step_blocks(
-                        IterationType.ARRAY,
-                        iteration_state,
-                        scope,
-                        list(block.object.values()),
-                        append(loc, "object"),
-                    )
+                    obj_loc = append(loc, "object")
+                    for k, value_blocks in block.object.items():
+                        value, value_background, scope, value_trace = (
+                            yield from step_blocks(
+                                IterationType.LASTOF,
+                                iteration_state,
+                                scope,
+                                value_blocks,
+                                append(obj_loc, k),
+                            )
+                        )
+                        background = messages_concat(background, value_background)
+                        values.append(value)
+                        values_trace.append(value_trace)
                 except PDLRuntimeStepBlocksError as exc:
                     obj = dict(zip(block.object.keys(), exc.blocks))
                     trace = block.model_copy(update={"object": obj})
@@ -462,25 +472,21 @@ def step_block_body(
                         loc=exc.loc or loc,
                         trace=trace,
                     ) from exc
-                assert isinstance(values, list)
-                assert isinstance(values_trace, list)
                 result = dict(zip(block.object.keys(), values))
                 object_trace = dict(zip(block.object.keys(), values_trace))
                 trace = block.model_copy(update={"object": object_trace})
-            elif isinstance(block.object, list):
+            else:
                 results, background, scope, trace = yield from step_blocks_of(
                     block,
                     "object",
                     IterationType.ARRAY,
-                    state,
+                    iteration_state,
                     scope,
                     loc,
                 )
                 result = {}
                 for d in results:
                     result = result | d
-            else:
-                assert False
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
         case MessageBlock():
@@ -516,15 +522,27 @@ def step_block_body(
             results = []
             background = []
             iterations_trace: list[BlocksType] = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 for _ in range(n):
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     (
                         iteration_result,
@@ -549,7 +567,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
@@ -557,7 +575,7 @@ def step_block_body(
             results = []
             background = []
             iter_trace: list[BlocksType] = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             items, block = process_expr_of(block, "fors", scope, loc, "for")
             lengths = []
             for idx, lst in items.items():
@@ -583,13 +601,25 @@ def step_block_body(
                     fallback=[],
                 )
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 for i in range(lengths[0]):
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     for k in items.keys():
                         scope = scope | {k: items[k][i]}
@@ -616,7 +646,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iter_trace})
@@ -625,15 +655,27 @@ def step_block_body(
             stop = False
             background = []
             iterations_trace = []
-            context_init = scope_init["context"]
+            pdl_context_init = scope_init["pdl_context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.iteration_type == IterationType.TEXT
+                state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
             try:
+                first = True
                 while not stop:
+                    if first:
+                        first = False
+                    elif block.join.iteration_type == IterationType.TEXT:
+                        join_string = block.join.join_string
+                        results.append(join_string)
+                        if iteration_state.yield_result:
+                            yield YieldResultMessage(join_string)
+                        if iteration_state.yield_background:
+                            yield YieldBackgroundMessage(
+                                [{"role": block.role, "content": join_string}]
+                            )
                     scope = scope | {
-                        "context": messages_concat(context_init, background)
+                        "pdl_context": messages_concat(pdl_context_init, background)
                     }
                     (
                         iteration_result,
@@ -659,7 +701,7 @@ def step_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.iteration_type, results)
+            result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
             trace = block.model_copy(update={"trace": iterations_trace})
@@ -770,10 +812,12 @@ def step_blocks(
         new_loc = None
         background = []
         trace = []
-        context_init = scope["context"]
+        pdl_context_init = scope["pdl_context"]
         try:
             for i, block in enumerate(blocks):
-                scope = scope | {"context": messages_concat(context_init, background)}
+                scope = scope | {
+                    "pdl_context": messages_concat(pdl_context_init, background)
+                }
                 new_loc = append(loc, "[" + str(i) + "]")
                 if iteration_type == IterationType.LASTOF and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
@@ -993,7 +1037,7 @@ def step_call_model(
         else:
             model_input = model_input_result
     else:
-        model_input = scope["context"]
+        model_input = scope["pdl_context"]
         input_trace = None
     concrete_block = concrete_block.model_copy(
         update={
@@ -1015,7 +1059,9 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(state, "Model Input", model_input)
+            append_log(
+                state, "Model Input", messages_to_str(concrete_block.model, model_input)
+            )
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -1057,7 +1103,7 @@ def generate_client_response_streaming(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg_stream: Generator[Message, Any, None]
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg_stream = BamModel.generate_text_stream(
@@ -1112,7 +1158,7 @@ def generate_client_response_single(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg: Message
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg = BamModel.generate_text(
@@ -1142,7 +1188,7 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
-    model_input_str = messages_to_str(model_input)
+    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
             msg = yield ModelCallMessage(
@@ -1177,11 +1223,21 @@ def step_call_code(
         loc,
     )
     append_log(state, "Code Input", code_s)
-    match block.lan:
+    match block.lang:
         case "python":
             try:
                 result = call_python(code_s, scope)
                 background = [{"role": state.role, "content": str(result)}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
+        case "command":
+            try:
+                result = call_command(code_s)
+                background = [{"role": state.role, "content": result}]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1210,6 +1266,17 @@ def call_python(code: str, scope: dict) -> Any:
     return result
 
 
+def call_command(code: str) -> str:
+    args = shlex.split(code)
+    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    if p.stderr != "":
+        print(p.stderr, file=sys.stderr)
+    if p.returncode != 0:
+        raise ValueError(f"command exited with non zero code: {p.returncode}")
+    output = p.stdout
+    return output
+
+
 def step_call(
     state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
 ) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock]]:
@@ -1235,7 +1302,7 @@ def step_call(
             trace=block.model_copy(),
         )
     f_body = closure.returns
-    f_scope = closure.scope | {"context": scope["context"]} | args
+    f_scope = closure.scope | {"pdl_context": scope["pdl_context"]} | args
     fun_loc = LocationType(
         file=closure.location.file,
         path=closure.location.path + ["return"],
@@ -1270,9 +1337,21 @@ def process_input(
     read, block = process_expr_of(block, "read", scope, loc)
     if read is not None:
         file = state.cwd / read
-        with open(file, encoding="utf-8") as f:
-            s = f.read()
-            append_log(state, "Input from File: " + str(file), s)
+        try:
+            with open(file, encoding="utf-8") as f:
+                s = f.read()
+                append_log(state, "Input from File: " + str(file), s)
+        except Exception as exc:
+            if isinstance(exc, FileNotFoundError):
+                msg = f"file {str(file)} not found"
+            else:
+                msg = f"Fail to open file {str(file)}"
+            raise PDLRuntimeError(
+                message=msg,
+                loc=loc,
+                trace=ErrorBlock(msg=msg, location=loc, program=block),
+                fallback="",
+            ) from exc
     else:
         message = ""
         if block.message is not None:
@@ -1410,5 +1489,5 @@ def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
 
 
 def append_log(state: InterpreterState, title, somestring):
-    state.log.append("**********  " + title + "  **********\n")
-    state.log.append(str(somestring) + "\n")
+    logger.warning("**********  %s  **********", title)
+    logger.warning(str(somestring))

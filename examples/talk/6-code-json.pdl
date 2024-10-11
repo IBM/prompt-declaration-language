@@ -1,0 +1,40 @@
+description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
+  TRUTH:
+    read: ./ground_truth.txt
+text:
+- model: watsonx/ibm/granite-34b-code-instruct
+  def: EXPLANATION
+  contribute: []
+  input:
+     |
+      Here is some info about the location of the function in the repo.
+      repo: 
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
+
+
+      Explain the following code:
+      ```
+      ${ CODE.source_code }```
+- def: EVAL
+  contribute: []
+  lang: python
+  code:
+    |
+    import textdistance
+    expl = """
+    ${ EXPLANATION }
+    """
+    truth = """
+    ${ TRUTH }
+    """
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- data: 
+    input: ${ CODE }
+    output: ${ EXPLANATION }
+    metric: ${ EVAL }

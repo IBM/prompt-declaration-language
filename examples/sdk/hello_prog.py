@@ -6,12 +6,11 @@ hello = Program(
         text=[
             "Hello,",
             LitellmModelBlock(
-                model="watsonx/ibm/granite-20b-code-instruct",
+                model="watsonx/ibm/granite-34b-code-instruct",
                 parameters=LitellmParameters(
                     stop=["!"], include_stop_sequence=True  # pyright: ignore
                 ),
             ),
-            "\n",
         ]
     )
 )

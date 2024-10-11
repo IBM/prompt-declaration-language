@@ -39,7 +39,7 @@ text:
       then:
         text:
         - "Obs: "
-        - lan: python
+        - lang: python
           code: |
             import warnings, wikipedia
             warnings.simplefilter("ignore")
@@ -48,5 +48,4 @@ text:
             except wikipedia.WikipediaException as e:
               result = str(e)
   until: ${ action.name != "Search" }
-  as: text
-- "\n"
+

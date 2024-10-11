@@ -7,42 +7,40 @@ hide:
 
 LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. 
 
-PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML or JSON), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...). Moreover, PDL programs themselves are structured data (YAML) as opposed to traditional code, so they make good targets for LLM generation as well.
-
+PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...).
 
 PDL provides the following features:
 - Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's Watsonx](https://www.ibm.com/watsonx)
-- Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call (unlike many prompt programming languages)
+- Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call
 - Control structures: variable definitions and use, conditionals, loops, functions
-- Ability to read from files, including JSON data
-- Ability to call out to code. At the moment only Python is supported, but this could be any other programming language in principle
-- Ability to call out to REST APIs with Python code
+- Ability to read from files and stdin, including JSON data
+- Ability to call out to code and call REST APIs (Python)
 - Type checking input and output of model calls
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter (`pdl/pdl.py`) takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
+The PDL interpreter takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
 See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python version **3.12**.
+The interpreter has been tested with Python versions **3.11** and **3.12**, on macOS and Linux. For Windows, please use WSL.
 
 To install the requirements for `pdl`, execute the command:
 
 ```
-pip3 install .
+pip install prompt-declaration-language
 ```
 
 To install the dependencies for development of PDL and execute all the example, execute the command:
 ```
-pip3 install '.[all]'
+pip install 'prompt-declaration-language[dev]'
+pip install 'prompt-declaration-language[examples]'
+pip install 'prompt-declaration-language[docs]'
 ```
-
-
 
 In order to run the examples that use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
 - `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance
@@ -54,12 +52,29 @@ For more information, see [documentation](https://docs.litellm.ai/docs/providers
 To run the interpreter:
 
 ```
-pdl-local <path/to/example.yaml>
+pdl <path/to/example.pdl>
 ```
 
 The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
 
-We highly recommend using VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language/blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages.
+We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion.
+The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json)).  You can set up your own VSCode PDL projects similarly using the following `.vscode/settings.json` file:
+
+```
+{
+    "yaml.schemas": {
+        "https://ibm.github.io/prompt-declaration-language/dist/pdl-schema.json": "*.pdl"
+    },
+    "files.associations": {
+        "*.pdl": "yaml",
+    }
+}
+```
+
+The interpreter executes Python code specified in PDL code blocks. To sandbox the interpreter for safe execution,
+you can use the `--sandbox` flag which runs the interpreter in a docker container. Without this flag, the interpreter
+and all code is executed locally. To use the `--sandbox` flag, you need to have a docker daemon running, such as 
+[Rancher Desktop](https://rancherdesktop.io).
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
 useful for debugging.
@@ -67,30 +82,30 @@ useful for debugging.
 To change the log filename, you can pass it to the interpreter as follows:
 
 ```
-pdl-local --log <my-logfile> <my-example>
+pdl --log <my-logfile> <my-example>
 ```
 
 We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
-pdl-local --data <JSON-or-YAML-data> <my-example>
+pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
 This can also be done by passing a JSON or YAML file:
 
 ```
-pdl-local --data-file <JSON-or-YAML-file> <my-example>
+pdl --data-file <JSON-or-YAML-file> <my-example>
 ```
 
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl-local --trace <file.json> <my-example> 
+pdl --trace <file.json> <my-example> 
 ```
 
 For more information:
 ```
-pdl-local --help
+pdl --help
 ```
 
 ## Overview
@@ -114,7 +129,7 @@ The `description` field is a description for the program. Field `text` contains 
 When we execute this program using the PDL interpreter:
 
 ```
-pdl-local examples/hello/hello.pdl
+pdl examples/hello/hello.pdl
 ```
 
 we obtain the following document:
@@ -130,7 +145,7 @@ A PDL program computes 2 data structures. The first is a JSON corresponding to t
 The PDL interpreter can also stream the background conversation instead of the result:
 
 ```
-pdl-local --stream background examples/hello/hello.pdl
+pdl --stream background examples/hello/hello.pdl
 ```
 
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
@@ -238,7 +253,7 @@ The function `deserializeOffsetMap` takes a string as input and returns a map. I
 The `@SuppressWarnings("unchecked")` annotation is used to suppress the warning that the type of the parsed map is not checked. This is because the Jackson library is used to parse the input string into a map, but the specific type of the map is not known at compile time. Therefore, the warning is suppressed to avoid potential issues.
 ```
 
-Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/ground_truth.txt). See [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-eval.yaml):
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/ground_truth.txt). See [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-eval.pdl):
 
 ```yaml
 description: Code explanation example
@@ -269,7 +284,7 @@ text:
   EVALUATION:
   The similarity (Levenshtein) between this answer and the ground truth is:
 - def: EVAL
-  lan: python
+  lang: python
   code: |
     import textdistance
     expl = """
@@ -339,7 +354,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance
@@ -373,7 +388,7 @@ PDL has a Live Document visualizer to help in program understanding given an exe
 To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument:
 
 ```
-pdl <my-example> --trace
+pdl --trace <file.json> <my-example> 
 ```
 
 This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
@@ -384,7 +399,7 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 
 ## Additional Notes
 
-When using Granite models on Watsonx, we use the following defaults for model parameters:
+When using Granite models on Watsonx, we use the following defaults for model parameters (except `granite-20b-code-instruct-r1.1`):
   - `decoding_method`: `greedy`
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
@@ -401,8 +416,3 @@ For a complete list of issues see [here](https://github.com/IBM/prompt-declarati
 ## Contributing to the Project
 
 See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib)
-
-
-
-
-

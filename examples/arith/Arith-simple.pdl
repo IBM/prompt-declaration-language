@@ -36,9 +36,8 @@ text:
                 post_message: ""
         - '= '
         - def: RESULT
-          lan: python
+          lang: python
           code: result = ${ EXPR }
         - ' >>'
-  as: text
   until: ${ "The answer is" in REASON_OR_CALC }
 - "\n"

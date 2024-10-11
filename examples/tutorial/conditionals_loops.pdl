@@ -35,11 +35,9 @@ text:
                 include_stop_sequence: false
             - '= '
             - def: RESULT
-              lan: python
+              lang: python
               code: result = ${ EXPR }
             - ' >>'
       until: ${ "The answer is" in REASON_OR_CALC }
-      as: text
     - "\n\n"
-  as: text
   num_iterations: 3

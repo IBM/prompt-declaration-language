@@ -6,7 +6,7 @@ text:
   
 - "\nFind a random number between 1 and 20\n"
 - def: N
-  lan: python
+  lang: python
   code: |
     import random
     result = random.randint(1, 20)
@@ -14,12 +14,12 @@ text:
 - get: N
 - ")\n"
 - def: EXTRACTED
-  lan: python
+  lang: python
   code: |
     s = """'${ CODE } '"""
     result = s.split("```")[1].replace("python", "")
 - def: RESULT
-  lan: python
+  lang: python
   code: |
     ${ EXTRACTED }
     result = fib(${ N })

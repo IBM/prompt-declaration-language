@@ -6,7 +6,7 @@ python_data = {
     "text": [
         "Hello, ",
         {
-            "lan": "python",
+            "lang": "python",
             "code": {
                 "text": ["import random\n", "import string\n", "result = 'Tracy'"]
             },
@@ -30,7 +30,7 @@ def show_result_data(show):
             {
                 "def": "QUERY",
                 "text": [
-                    {"lan": "python", "code": ["result = 'How can I help you?: '"]}
+                    {"lang": "python", "code": ["result = 'How can I help you?: '"]}
                 ],
                 "contribute": show,
             }
@@ -49,7 +49,7 @@ def test_contribute_context():
     state = InterpreterState()
     data = Program.model_validate(show_result_data(["context"]))
     _, background, _, _ = process_prog(state, empty_scope, data)
-    assert background == [{"role": None, "content": "How can I help you?: "}]
+    assert background == [{"role": "user", "content": "How can I help you?: "}]
 
 
 def test_contribute_false():
@@ -57,3 +57,17 @@ def test_contribute_false():
     data = Program.model_validate(show_result_data([]))
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == ""
+
+
+command_data = [
+    {"def": "world", "lang": "command", "code": "echo -n World", "contribute": []},
+    "Hello ${ world }!",
+]
+
+
+def test_command():
+    state = InterpreterState()
+    data = Program.model_validate(command_data)
+    document, _, scope, _ = process_prog(state, empty_scope, data)
+    assert document == "Hello World!"
+    assert scope["world"] == "World"

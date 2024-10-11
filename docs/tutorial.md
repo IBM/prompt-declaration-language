@@ -21,7 +21,7 @@ This program has a `description` field, which contains a title. The `description
 To render the program into an actual document, we have a PDL interpreter that can be invoked as follows:
 
 ```
-pdl-local examples/tutorial/simple_program.pdl
+pdl examples/tutorial/simple_program.pdl
 ```
 
 This results in the following output:
@@ -349,7 +349,7 @@ See for example: ([file](https://github.com/IBM/prompt-declaration-language//blo
 description: Hello world showing call to python code
 text:
 - "Hello, "
-- lan: python
+- lang: python
   code: 
     |
     import random
@@ -390,7 +390,7 @@ text:
     include_stop_sequence: false
   def: LOCATION
   contribute: []
-- lan: python
+- lang: python
   code: |
     import requests
     response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
@@ -438,7 +438,7 @@ text:
       ${ CODE.source_code }```
 - def: EVAL
   contribute: []
-  lan: python
+  lang: python
   code:
     |
     import textdistance
@@ -480,7 +480,6 @@ text:
       parameters:
         decoding_method: sample
         max_new_tokens: 512
-  as: text
 role: user
 ```
 
@@ -553,17 +552,15 @@ text:
                 include_stop_sequence: false
             - '= '
             - def: RESULT
-              lan: python
+              lang: python
               code: result = ${ EXPR }
             - ' >>'
       until: ${ "The answer is" in REASON_OR_CALC }
-      as: text
     - "\n\n"
-  as: text
   num_iterations: 3
 ```
 
-The first two blocks read math problem examples and include them in the document. These will be our few-shot examples. The next block is a repetion as indicated by the fields: `repeat` and the accompanying `num_iterations`. The field `repeat` can contain any document (string or block or list of strings and blocks), the `num_iterations` indicates how many times to repeat.
+The first two blocks read math problem examples and include them in the document. These will be our few-shot examples. The next block is a repetition as indicated by the fields: `repeat` and the accompanying `num_iterations`. The field `repeat` can contain any document (string or block or list of strings and blocks), the `num_iterations` indicates how many times to repeat.
 
 In the body of the `repeat` block, the program first asks granite to generate a question and add it to the document. Next we print `Answer: Let's think step by step.\n`. The following block is a repeat-until: the text in `repeat` is repeated until the condition in the `until` field becomes true. Here the condition states that we stop the iteration when variable `REASON_OR_CALC` contains `<<`. That variable is defined in the first block of the repeat-until -- we prompt a granite model and stop at the character `<<`.
 
@@ -578,44 +575,56 @@ Similarly, the `read` block has an annotation `as: text`. This means that the re
 ## For Loops
 
 PDL also offers `for` loops over lists.
-The following [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/for.pdl) creates a list as a result of iteration.
+The following [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/for.pdl) stringifies and outputs each number.
 
 ```
 description: for loop
-text:
-- for:
-    i: [1, 2, 3, 4]
-  repeat: 
-    ${ i }
+for:
+  i: [1, 2, 3, 4]
+repeat: 
+  ${ i }
 ```
 
-This program outputs the following list:
+This program outputs:
 ```
-[1, 2, 3, 4]
+1234
 ```
 
-To stringify and output each number on a line, we would write:
+To output a number of each line, we can specify which string to use to join the results.
 ```
 description: for loop
-text:
-- for:
-    i: [1, 2, 3, 4]
-  repeat: 
-    text:
-    - ${ i }
-    - "\n"
-  as: text
+for:
+  i: [1, 2, 3, 4]
+repeat: 
+  ${ i }
+join:
+  with: "\n"
 ```
-
-which outputs:
 
 ```
 1
 2
 3
 4
-
 ```
+
+
+To creates an array as a result of iteration, we would write:
+```
+description: for loop
+for:
+  i: [1, 2, 3, 4]
+repeat: 
+  - ${ i }
+join:
+  as: array
+```
+
+which outputs the following list:
+```
+[1, 2, 3, 4]
+```
+
 
 
 The `for` loop constructs also allows iterating over 2 or more lists of the same length simultaneously:
@@ -623,21 +632,15 @@ The `for` loop constructs also allows iterating over 2 or more lists of the same
 ```
 description: for loop
 defs:
-  numbers: {
+  numbers:
     data: [1, 2, 3, 4]
-  }
-  names: {
+  names:
     data: ["Bob", "Carol", "David", "Ernest"]
-  }
-
-text:
-- for:
-    number: ${ numbers }
-    name: ${ names }
-  repeat:
-    text:
-      "${ name }'s number is ${ number }\n"
-  as: text
+for:
+  number: ${ numbers }
+  name: ${ names }
+repeat:
+  "${ name }'s number is ${ number }\n"
 ```
 
 This results in the following output:
@@ -675,7 +678,6 @@ text:
           - |
             ${ question }
             ${ answer }
-        as: text
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
         and set them appropriately. Write the age in letters.
@@ -732,11 +734,15 @@ See examples of PDL being called programmatically in Python
 
 ##  Debugging PDL Programs
 
-We highly recommend to use VSCode to edit PDL YAML files. This project has been configured so that every YAML file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language//blob/main/.vscode/settings.json) and [schema](https://github.com/IBM/prompt-declaration-language//blob/main/pdl-schema.json)). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. You can set up your own VSCode PDL projects similarly using this settings and schema files. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window. You may also need to install the VSCode extension: `YAML Language Support by Red Hat`.
+We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json)).
+This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion. The PDL interpreter also provides similar error messages. To make sure that the schema is associated with your PDL files, be sure that `PDL Schemas` appear at the bottom right of your VSCode window, or on top of the editor window.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected.
 
 To change the log filename, you can pass it to the interpreter as follows:
+```
+pdl --log <my-example.log> <my-example>
+```
 
 
 ## Live Document Visualizer
@@ -745,7 +751,7 @@ PDL has a Live Document visualizer to help in program understanding given an exe
 To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument and set the value to either `json` or `yaml`:
 
 ```
-pdl --trace <file.json> <my-example>
+pdl --trace <my-example_trace.json> <my-example>
 ```
 
 This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 

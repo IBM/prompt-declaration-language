@@ -69,7 +69,7 @@ cond_data = {
                                     "= ",
                                     {
                                         "def": "RESULT",
-                                        "lan": "python",
+                                        "lang": "python",
                                         "code": {
                                             "text": ["result = ", {"get": "EXPR"}]
                                         },
@@ -142,7 +142,7 @@ def cond_data1(show, name):
                 "def": "NAME",
                 "text": [
                     {
-                        "lan": "python",
+                        "lang": "python",
                         "code": {
                             "text": [
                                 "import random\n",
@@ -184,7 +184,7 @@ repeat_until_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -193,7 +193,7 @@ repeat_until_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": "result = ${ I } + 1",
                         },
                         "\n",
@@ -201,6 +201,7 @@ repeat_until_data = {
                 }
             ],
             "until": "${ I == 5 }",
+            "join": {"as": "lastOf"},
         },
     ],
 }
@@ -225,7 +226,7 @@ repeat_until_array_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -234,7 +235,7 @@ repeat_until_array_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": "result = ${ I } + 1",
                         },
                         "\n",
@@ -242,7 +243,7 @@ repeat_until_array_data = {
                 }
             ],
             "until": "${ I == 5 }",
-            "as": "array",
+            "join": {"as": "array"},
         },
     ],
 }
@@ -260,7 +261,7 @@ repeat_until_text_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -269,7 +270,7 @@ repeat_until_text_data = {
                     "text": [
                         {
                             "def": "I",
-                            "lan": "python",
+                            "lang": "python",
                             "code": ["result = ${ I } + 1"],
                         },
                         "\n",
@@ -277,7 +278,6 @@ repeat_until_text_data = {
                 }
             ],
             "until": "${ I == 5 }",
-            "as": "text",
         },
     ],
 }
@@ -305,12 +305,55 @@ def test_repeat_until_text():
     )
 
 
+repeat_until_text_with_data = {
+    "description": "Hello world showing call out to python code with condition",
+    "text": [
+        {
+            "def": "I",
+            "text": [{"lang": "python", "code": ["result = 0"]}],
+        },
+        "\n",
+        {
+            "repeat": [
+                {
+                    "text": [
+                        {
+                            "def": "I",
+                            "lang": "python",
+                            "code": ["result = ${ I } + 1"],
+                        },
+                    ]
+                }
+            ],
+            "until": "${ I == 5 }",
+            "join": {"with": "\n"},
+        },
+    ],
+}
+
+
+def test_repeat_until_text_with():
+    state = InterpreterState()
+    data = Program.model_validate(repeat_until_text_with_data)
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "\n".join(
+        [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+        ]
+    )
+
+
 repeat_until_str_data = {
     "description": "Hello world showing call out to python code with condition",
     "text": [
         {
             "def": "I",
-            "text": [{"lan": "python", "code": ["result = 0"]}],
+            "text": [{"lang": "python", "code": ["result = 0"]}],
         },
         "\n",
         {
@@ -320,7 +363,7 @@ repeat_until_str_data = {
                         "def": "I",
                         "text": [
                             {
-                                "lan": "python",
+                                "lang": "python",
                                 "code": ["result = ${ I } + 1"],
                             }
                         ],
@@ -329,7 +372,6 @@ repeat_until_str_data = {
                 ],
             },
             "until": '${ I in "5" }',
-            "as": "text",
         },
     ],
 }

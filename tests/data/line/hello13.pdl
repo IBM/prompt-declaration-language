@@ -1,15 +1,14 @@
 description: Hello world showing call out to python code with condition
 text:
 - def: I
-  lan: python
+  lang: python
   code: result = 0
 - "\n"
 - repeat:
     text:
     - def: I
-      lan: python
+      lang: python
       code: result = ${ I } + 1
       spec: str
     - "\n"
   until: '${ I == 5 }'
-  as: text

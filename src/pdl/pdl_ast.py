@@ -144,7 +144,7 @@ class CallBlock(Block):
     """Calling a function."""
 
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
-    call: str
+    call: ExpressionType
     """Function to call.
     """
     args: dict[str, Any] = {}
@@ -253,7 +253,7 @@ class ModelPlatform(StrEnum):
 
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: str
+    model: str | ExpressionType
     input: Optional["BlocksType"] = None
     trace: Optional["BlockType"] = None
 
@@ -278,7 +278,7 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lan: Literal["python"]
+    lang: Literal["python", "command"]
     """Programming language of the code.
     """
     code: "BlocksType"
@@ -331,7 +331,7 @@ class ObjectBlock(Block):
     """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
-    object: dict[str, "BlockType"] | list["BlockType"]
+    object: dict[str, "BlocksType"] | list["BlockType"]
 
 
 class MessageBlock(Block):
@@ -367,17 +367,50 @@ class IterationType(StrEnum):
     TEXT = "text"
 
 
+class JoinConfig(BaseModel):
+    """Configure how loop iterations should be combined."""
+
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+
+
+class JoinText(JoinConfig):
+    iteration_type: Literal[IterationType.TEXT] = Field(
+        alias="as", default=IterationType.TEXT
+    )
+    """String concatenation of the result of each iteration.
+    """
+
+    join_string: str = Field(alias="with", default="")
+    """String used to concatenate each iteration of the loop.
+    """
+
+
+class JoinArray(JoinConfig):
+    iteration_type: Literal[IterationType.ARRAY] = Field(alias="as")
+    """Return the result of each iteration as an array.
+    """
+
+
+class JoinLastOf(JoinConfig):
+    iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
+    """Return the result of the last iteration.
+    """
+
+
+JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
+
+
 class ForBlock(Block):
     """Iteration over arrays."""
 
     kind: Literal[BlockKind.FOR] = BlockKind.FOR
-    fors: dict[str, Any] = Field(alias="for")
+    fors: dict[str, ExpressionType] = Field(alias="for")
     """Arrays to iterate over.
     """
     repeat: "BlocksType"
     """Body of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.ARRAY)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -394,7 +427,7 @@ class RepeatBlock(Block):
     num_iterations: int
     """Number of iterations to perform.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -411,7 +444,7 @@ class RepeatUntilBlock(Block):
     until: ExpressionType
     """Condition of the loop.
     """
-    iteration_type: IterationType = Field(alias="as", default=IterationType.LASTOF)
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -422,7 +455,7 @@ class ReadBlock(Block):
     """Read from a file or standard input."""
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: str | None
+    read: ExpressionType | None
     """Name of the file to read. If `None`, read the standard input.
     """
     message: Optional[str] = None
@@ -441,7 +474,7 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    trace: Optional["BlocksType"] = None
 
 
 class ErrorBlock(Block):
@@ -582,8 +615,9 @@ def set_default_model_params(
 
 
 def set_default_granite_model_parameters(
+    model_id: str,
     parameters: Optional[dict[str, Any]],
-) -> dict[str, str]:
+) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
     if "decoding_method" not in parameters:
@@ -615,4 +649,33 @@ def set_default_granite_model_parameters(
             parameters["top_p"] = (
                 TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
             )
+    if "granite-3b" in model_id or "granite-8b" in model_id:
+        if "roles" not in parameters:
+            parameters["roles"] = {
+                "system": {
+                    "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "user": {
+                    "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "assistant": {
+                    "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "available_tools": {
+                    "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+                "tool_response": {
+                    "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                    "post_message": "<|end_of_text|>",
+                },
+            }
+        if "final_prompt_value" not in parameters:
+            parameters["final_prompt_value"] = (
+                "<|start_of_role|>assistant<|end_of_role|>"
+            )
+
     return parameters

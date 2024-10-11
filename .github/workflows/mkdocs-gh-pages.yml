@@ -43,13 +43,15 @@ jobs:
         run: npm install
       - name: Generate pdl_ast.d.ts
         working-directory: ./pdl-live
-        run: npx json2ts ../pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
+        run: npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
       - name: Build viewer
         working-directory: ./pdl-live
         run: npm run build
       - name: Copy viewer
         working-directory: ./pdl-live
         run: cp ./dist/bundle.js ../docs/dist/bundle.js
+      - name: Copy schema
+        run: cp ./src/pdl/pdl-schema.json ./docs/dist/pdl-schema.json
       # Docs
       - name: Setup Pages
         uses: actions/configure-pages@v5
