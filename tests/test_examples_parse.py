@@ -1,9 +1,5 @@
 import pathlib
 
-import pydantic
-import yaml
-
-from pdl.pdl_ast import Program
 from pdl.pdl_parser import PDLParseError, parse_file
 
 EXPECTED_INVALID = [
