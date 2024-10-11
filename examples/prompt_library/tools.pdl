@@ -16,7 +16,7 @@ defs:
     return:
       - defs:
           result:
-            lan: python
+            lang: python
             code: |
               import warnings, wikipedia
               warnings.simplefilter("ignore")
@@ -36,7 +36,7 @@ defs:
     return:
       - defs:
           result:
-            lan: python
+            lang: python
             code: |
               import warnings, wikipedia
               warnings.simplefilter("ignore")
@@ -68,7 +68,7 @@ defs:
     function:
       subject: str
     return:
-      lan: python
+      lang: python
       code: |
         from sympy.parsing.sympy_parser import parse_expr
         result = None
@@ -87,7 +87,7 @@ defs:
     function:
       subject: str
     return:
-      lan: python
+      lang: python
       code: |
         import requests
         response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }')
@@ -232,7 +232,7 @@ defs:
           display_names: ${ tools|map(attribute='display_name')|list }
           pdl_functions: ${ tools|map(attribute='pdl_function')|list }
           name_map:
-            lan: python
+            lang: python
             code: |
               result = dict(zip(display_names, pdl_functions, strict=True))
       - data:

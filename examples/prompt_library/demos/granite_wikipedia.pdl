@@ -36,7 +36,7 @@ text:
     if: '${ action.name == "Search" }'
     then:
     - "\nObs: [Document]\n"
-    - lan: python
+    - lang: python
       code: |
         import warnings, wikipedia
         warnings.simplefilter("ignore")
