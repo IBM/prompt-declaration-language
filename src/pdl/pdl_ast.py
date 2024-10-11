@@ -61,7 +61,9 @@ empty_block_location = LocationType(file="", path=[], table={})
 class LocalizedExpression(BaseModel):
     """Expression with location information"""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, arbitrary_types_allowed=True
+    )
     expr: Any
     location: Optional[LocationType] = None
     pdl_yaml_src: Optional[YamlSource] = None
@@ -106,7 +108,11 @@ class ContributeTarget(StrEnum):
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
 
     description: Optional[str] = None
     """Documentation associated to the block.

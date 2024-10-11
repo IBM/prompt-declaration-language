@@ -41,7 +41,7 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
 
 
 def set_program_location(prog: Program, pdl_str: str, file_name: str = ""):
-    loc = strictyaml.dirty_load(pdl_str)
+    loc = strictyaml.dirty_load(pdl_str, allow_flow_style=True)
     set_location(prog.root, loc)
 
 
