@@ -6,7 +6,7 @@ defs:
       question: str
       reasoning: str
       answer: str
-    return: |+
+    return: |-
       Question: ${ question }
       Answer: Let's think step by step. ${ reasoning }
       The answer is ${ answer }
@@ -45,7 +45,8 @@ defs:
             question: ${ example.question }
             reasoning: ${ example.reasoning }
             answer: ${ example.answer }
-      as: text
+      join:
+        with: "\n\n"
 
   chain_of_thought:
     function:
