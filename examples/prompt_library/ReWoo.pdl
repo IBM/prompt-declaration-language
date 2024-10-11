@@ -118,7 +118,7 @@ defs:
                   ACTION: ${ plan[2] }
                   SUBJECT: ${ plan[3] }
                   SUBJECT_REPLACED:
-                    lan: python
+                    lang: python
                     code: |-
                       for k,v in output.items():
                         if k in SUBJECT:
@@ -133,7 +133,7 @@ defs:
                     else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') }"
                   tool_output: ${ raw_tool_output }
               - def: output
-                lan: python
+                lang: python
                 code: |
                   output[ID] = str(tool_output)
                   result = output
