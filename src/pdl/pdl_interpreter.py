@@ -918,9 +918,9 @@ EXPR_START_STRING = "${"
 EXPR_END_STRING = "}"
 
 
-def process_expr(
+def process_expr(  # pylint: disable=too-many-return-statements
     scope: ScopeType, expr: Any, loc: LocationType
-) -> Any:  # pylint: disable=too-many-return-statements
+) -> Any:
     result: Any
     if isinstance(expr, LocalizedExpression):
         return process_expr(scope, expr.expr, loc)
