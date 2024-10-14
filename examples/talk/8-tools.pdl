@@ -15,14 +15,20 @@ text:
   Obs: 2.869047619047619
 
   Out of 1400 participants, 400 passed the test. What percentage is that?
-  Act: 
-- def: action
-  model: ibm/granite-8b-code-instruct
-  platform: bam
+- "\n"
+- def: rawAction
+  model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
   parameters:
-    stop_sequences: ["\n"]
+    stop_sequences: "\n"
+- def: action
+  lang: python
   parser: json
-  spec: {name: str, arguments: {expr: str}}
+  spec: {name: str, arguments: obj}
+  contribute: [context]
+  code:
+    |
+    result = '${ rawAction }'.replace("Act: ", "")
+- "\n"
 - if: ${ action.name == "Calc" }
   then:
   - "Obs: "

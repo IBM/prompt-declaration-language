@@ -42,8 +42,5 @@ text:
 - |-
 
     Q: ${ TEST_PROMPT }
-    A: ```
-- model: ibm/granite-20b-code-instruct-v2
-  platform: bam
-  parameters:
-    stop_sequences: ["```"]
+    A: 
+- model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746

@@ -18,31 +18,57 @@ text:
   Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
   Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
 
-  
+  What is 18 + 12 x 3?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+  Obs: 54
+  Act: {"name": "Finish", "arguments": {"topic": "54"}}
 
-  Find the year when the discoverer of the Hudson River was born?
+  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+  Obs: 2.869047619047619
+  Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+  What is 18 + 12 x 3?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+  Obs: 54
+  Act: {"name": "Finish", "arguments": {"topic": "54"}}
+
+  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+  Obs: 2.869047619047619
+  Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+
+  when was the discoverer of the Hudson River born? 
 - repeat:
     text:
     - def: thought
-      model: ibm/granite-8b-instruct-preview-4k
-      platform: bam
+      model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        stop_sequences: 
-        - "Act:"
-        include_stop_sequence: true
+        stop_sequences: "Act:"
+        temperature: 0
+    - def: rawAction
+      model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
+      parameters:
+        stop_sequences: "\n"
+        temperature: 0
     - def: action
-      model: ibm/granite-8b-instruct-preview-4k
-      platform: bam
-      parameters:
-        stop_sequences: 
-        - "\n"
+      lang: python
       parser: json
-      spec: {name: str, arguments: {topic: str}}
+      spec: {name: str, arguments: obj}
+      contribute: [context]
+      code:
+        |
+        result = '${ rawAction }'.replace("Act: ", "")
     - def: observation
       if: ${ action.name == "Search" }
       then:
         text:
-        - "Obs: "
+        - "\nObs: "
         - lang: python
           code: |
             import warnings, wikipedia
@@ -51,5 +77,6 @@ text:
               result = wikipedia.summary("${ action.arguments.topic }")
             except wikipedia.WikipediaException as e:
               result = str(e)
+        - "\n"
   until: ${ action.name != "Search" }
 

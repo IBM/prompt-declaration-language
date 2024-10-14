@@ -24,26 +24,29 @@ defs:
           text:
           - def: thought
             model: ${ model }
-            platform: bam
             parameters:
-              stop_sequences: 
-              - "Act:"
-              include_stop_sequence: true
-          - def: action
+              stop_sequences: "Act:"
+              temperature: 0
+          - def: rawAction
             model: ${ model }
-            platform: bam
             parameters:
-              stop_sequences: 
-              - "\n"
+              stop_sequences: "\n"
+              temperature: 0
+          - def: action
+            lang: python
             parser: json
             spec: {name: str, arguments: obj}
-          - if: ${ action != prev_action}
+            contribute: [context]
+            code:
+              |
+              result = '${ rawAction }'.replace("Act: ", "")
+          - if: ${ action  != prev_action}
             then: 
             - def: observation
               if: ${ action.name == "Search" }
               then:
                 text:
-                - "Obs: "
+                - "\nObs: "
                 - lang: python
                   code: |
                     import warnings, wikipedia
@@ -57,7 +60,7 @@ defs:
                 - if: ${ action.name == "Calc" }
                   then:
                     text:
-                    - "Obs: "
+                    - "\nObs: "
                     - lang: python
                       code: result = ${ action.arguments.expr }
                     - "\n"

@@ -5,8 +5,7 @@ text:
   contribute: [context]
 - repeat:
     text:
-    - model: ibm/granite-13b-chat-v2
-      platform: bam
+    - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"

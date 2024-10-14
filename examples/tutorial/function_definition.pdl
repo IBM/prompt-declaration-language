@@ -6,10 +6,10 @@ text:
     language: str
   return:
   - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-  - model: ibm/granite-20b-multilingual
-    platform: bam
+  - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
     parameters:
-      stop_sequences: ["\n"]
+      stop_sequences: "\n"
+      temperature: 0
 - call: translate
   args:
     sentence: I love Paris!

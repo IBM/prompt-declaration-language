@@ -12,31 +12,16 @@ text:
     text:
     - "Question: Pick the odd word out:\n"
     - def: OPTIONS
-      model: ibm/granite-3b-instruct-preview
-      platform: bam
+      model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        decoding_method: greedy
-        stop_sequences:
-        - .
-        include_stop_sequence: false
+        stop_sequences: "."
     - "\nReasoning:\n"
-    - model: ibm/granite-3b-instruct-preview
-      platform: bam
+    - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        decoding_method: greedy
-        stop_sequences:
-        - Pick the odd word
-        - "\n"
-        - So the odd one
-        - .
-        include_stop_sequence: false
+        stop_sequences: "Pick the odd word,\n,So the odd one,."
     - "\nResult:\n"
-    - model: ibm/granite-3b-instruct-preview
-      platform: bam
+    - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        decoding_method: greedy
-        stop_sequences:
-        - Pick the odd word
-        include_stop_sequence: false
+        stop_sequences: "Pick the odd word"
     - "\n\n"
   num_iterations: 2

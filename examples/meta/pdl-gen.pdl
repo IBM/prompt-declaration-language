@@ -14,10 +14,7 @@ text:
     result = ''.join(contents)
   def: QUERY
   contribute: []
-- model: ibm/granite-8b-instruct-preview-4k
-  platform: bam
-  parameters:
-    decoding_method: greedy
+- model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
   input:
     text:
     - |-
@@ -106,9 +103,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: watsonx/ibm/granite-20b-code-instruct
-        parameters:
-          decoding_method: greedy
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       ```
 
       Question: Write a PDL script that makes a call to a model with stop sequence '!' and stop sequences included
@@ -117,12 +112,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: watsonx/ibm/granite-20b-code-instruct
-        parameters:
-          decoding_method: greedy
-          stop_sequences:
-          - '!'
-          include_stop_sequence: true
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       ```
 
 
@@ -132,9 +122,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
-        parameters:
-          decoding_method: greedy
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       ```
 
       Question: Write a PDL script that makes a call to a model with stop sequence '\n' and stop sequences not included
@@ -143,12 +131,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: watsonx/ibm/granite-20b-code-instruct
-        parameters:
-          decoding_method: greedy
-          stop_sequences:
-          - '\n'
-          include_stop_sequence: false
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       ```
 
       Question: Write a PDL script with a block that has an assignment to variable NAME
@@ -157,9 +140,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
-        parameters:
-          decoding_method: greedy
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         def: NAME
       ```
 
@@ -169,9 +150,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
-        parameters:
-          decoding_method: greedy
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         contribute: []
       ```
 
@@ -223,7 +202,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         parameters:
           decoding_method: greedy
         input:
@@ -242,7 +221,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "google/flan-t5-xl"
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         parameters:
           decoding_method: greedy
         input:
@@ -262,7 +241,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         parameters:
           decoding_method: greedy
         input:
@@ -284,7 +263,7 @@ text:
       ```
       description: PDL with model call
       text:
-      - model: "watsonx/google/flan-t5-xl"
+      - model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
         parameters:
           decoding_method: greedy
         input:

@@ -6,13 +6,13 @@ text:
   call: react
   args:
     question: ${ question }
-    model: ibm/granite-20b-code-instruct
+    model: replicate/ibm-granite/granite-20b-code-instruct-8k
 - "\n\n----- Verifying answer... -----\n\n"
 - def: verified
   call: react
   args:
     question: ${ question }
-    model: ibm/granite-8b-instruct-preview-4k
+    model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
 - "\n"
 - if: ${ proposed.split('Act:') | last == verified.split('Act:') | last }
   then:

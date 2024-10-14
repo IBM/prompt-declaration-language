@@ -4,29 +4,23 @@ text:
 - read: ./example2.txt
 - "\n"
 - |
-  Question: Noah charges $10 for a large box and $5 for a small box.
+  Question: Noah charges $25 for a large box and $11 for a small box.
   Last month he sold four large boxes and two small boxes.
-  If he sold half as much this month, how much is his sales for this month?
+  If he sold three times as much this month, how much is his sales for this month?
 - repeat:
     text:
     - def: REASON_OR_CALC
-      model: ibm/granite-8b-instruct-preview-4k
-      platform: bam
+      model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        stop_sequences:
-        - '{'
-        include_stop_sequence: true
+        stop_sequences: '{'
+        temperature: 0
     - if: ${ REASON_OR_CALC.endswith("{") }
       then:
         text:
         - def: EXPR
-          model: ibm/granite-8b-instruct-preview-4k
-          platform: bam
+          model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
           parameters:
-            stop_sequences:
-            - '='
-            - "\n"
-            - "Question"
+            stop_sequences: "=,\n,Question"
             include_stop_sequence: false
         - '= '
         - def: RESULT
