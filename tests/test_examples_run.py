@@ -29,6 +29,7 @@ TO_SKIP = {
         pathlib.Path("examples") / "gsm8k" / "math.pdl",
         pathlib.Path("examples") / "rag" / "rag.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
+        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
     ]
 }
 
