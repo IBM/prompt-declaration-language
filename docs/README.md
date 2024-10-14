@@ -22,7 +22,14 @@ PDL provides the following features:
 
 The PDL interpreter takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
 
-See below for installation notes, followed by an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+See below for a quick reference, followed by [installation notes](#Interpreter installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+
+
+## Quick Reference
+
+<img src="https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
+
+(See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).]
 
 
 ## Interpreter Installation
