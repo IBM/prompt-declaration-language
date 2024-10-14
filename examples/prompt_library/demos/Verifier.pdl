@@ -3,8 +3,9 @@ defs:
   available_tools:
     data: ["Search"]
 text:
-  - include: examples/prompt_library/ReAct.pdl
-  - include: examples/granite/granite_defs.pdl
+  - include: ../tools.pdl
+  - include: ../ReAct.pdl
+  - include: ../../granite/granite_defs.pdl
   - def: filtered_tools
     call: filter_tools_by_name
     args:
@@ -16,17 +17,19 @@ text:
   - def: GRANITE_RESULT
     call: react
     args:
-      context: ${ granite_models.granite_7b_lab.system_prompt }
-      question: ${ QUESTION }
-      model: "ibm/granite-7b-lab"
+      pdl_context:
+        - role: system
+          content: ${ granite_models.granite_7b_lab.system_prompt }
+      task: ${ QUESTION }
+      model: "watsonx/ibm/granite-7b-lab"
       tools: ${ filtered_tools }
       trajectories: []
   - "\n\n-------- Verifying answer --------\n\n"
   - def: LLAMA_RESULT
     call: react
     args:
-      context: ""
-      question: |-
+      pdl_context: []
+      task: |-
         Is this the right answer to this question?
         "${ QUESTION }"
         Proposed answer: ${ GRANITE_RESULT.answer }

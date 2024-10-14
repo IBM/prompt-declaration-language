@@ -23,12 +23,12 @@ text:
   - def: thought
     model: ibm/granite-34b-code-instruct
     parameters:
-      stop_sequences: ["Act:"]
+      stop: ["Act:"]
       include_stop_sequence: true
   - def: action
     model: ibm/granite-34b-code-instruct
     parameters:
-      stop_sequences: ["\n", "<|endoftext|>"]
+      stop: ["\n", "<|endoftext|>"]
       include_stop_sequence: false
     parser: json
     spec: {name: str, arguments: {topic: str}}

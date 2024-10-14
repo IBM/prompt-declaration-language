@@ -59,7 +59,7 @@ defs:
     return:
       model: ${ default_model }
       parameters:
-        stop_sequences:
+        stop:
           - "<|endoftext|>"
         include_stop_sequence: false
         decoding_method: greedy
@@ -219,6 +219,8 @@ defs:
             for:
               tool: ${ tools }
             repeat: "${ tool.display_name }[<${ tool.parameters|join('>, <', attribute='name') }>]"
+            join:
+              as: array
           typed_signatures:
             for:
               tool: ${ tools }
@@ -229,6 +231,8 @@ defs:
                       param: ${ tool.parameters }
                     repeat: "${ param.name}${ (': ' ~ param.type) if param.type else '' }"
               - "${ tool.display_name }(${ params|join(', ') })"
+            join:
+              as: array
           display_names: ${ tools|map(attribute='display_name')|list }
           pdl_functions: ${ tools|map(attribute='pdl_function')|list }
           name_map:

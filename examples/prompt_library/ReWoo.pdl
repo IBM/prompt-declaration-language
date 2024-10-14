@@ -91,7 +91,7 @@ defs:
           mode: findall
         parameters:
           decoding_method: greedy
-          stop_sequences:
+          stop:
             - "<|endoftext|>"
             - "\n\n"
             - "Task:"
@@ -153,7 +153,7 @@ defs:
         model: ${ model }
         parameters:
           decoding_method: greedy
-          stop_sequences:
+          stop:
             - "<|endoftext|>"
           include_stop_sequence: false
         input:

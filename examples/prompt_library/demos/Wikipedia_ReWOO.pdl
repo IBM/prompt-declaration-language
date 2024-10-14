@@ -3,6 +3,7 @@ defs:
   available_tools:
     data: ["Search"]
 text:
+  - include: ../tools.pdl
   - include: ../ReWOO.pdl
   - def: filtered_tools
     call: filter_tools_by_name
@@ -15,3 +16,4 @@ text:
       model: "watsonx/ibm/granite-34b-code-instruct"
       tools: ${ filtered_tools }
       show_plans: true
+      trajectories: []

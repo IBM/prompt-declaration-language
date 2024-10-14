@@ -73,6 +73,8 @@ defs:
           desc: ${ TOOL_INFO.descriptions }
         repeat: |
           ${ name }: ${ desc }
+        join:
+          with: "\n"
       - "\n"
       - call: demonstrate_tools
         args:
@@ -100,7 +102,7 @@ defs:
                   decoding_method: sample
                   repetition_penalty: 1.1
                   temperature: ${ temperature }
-                  stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                  stop: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
             until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action_raw
@@ -112,7 +114,7 @@ defs:
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: ${ temperature }
-              stop_sequences: ["[", "\n"]
+              stop: ["[", "\n"]
               include_stop_sequence: false
           - defs:
               ACTION: ${ action_raw|trim }
@@ -126,7 +128,7 @@ defs:
               decoding_method: sample
               repetition_penalty: 1.1
               temperature: ${ temperature }
-              stop_sequences: ["]", "\n"]
+              stop: ["]", "\n"]
               include_stop_sequence: false
           - "]"
           - if: ${ ACTION != 'Finish' }
@@ -147,7 +149,7 @@ defs:
                       repetition_penalty: 1.1
                       decoding_method: sample
                       temperature: ${ temperature }
-                      stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                      stop: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
         until: ${ ACTION == 'Finish' or iterations>20 }
@@ -197,7 +199,7 @@ defs:
                 parameters:
                   decoding_method: ${ decoding_method }
                   temperature: ${ temperature }
-                  stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                  stop: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
             until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action
@@ -207,7 +209,7 @@ defs:
             parameters:
               decoding_method: ${ decoding_method }
               temperature: ${ temperature }
-              stop_sequences: ["\n", "<|endoftext|>"]
+              stop: ["\n", "<|endoftext|>"]
               include_stop_sequence: false
           - if: ${ action.name != 'Finish' }
             then:
@@ -221,7 +223,7 @@ defs:
                     parameters:
                       decoding_method: ${ decoding_method }
                       temperature: ${ temperature }
-                      stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                      stop: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
                 else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') } and Finish[<answer>]."
         until: ${ action.name == 'Finish' or iterations>20 }

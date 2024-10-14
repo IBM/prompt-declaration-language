@@ -26,7 +26,7 @@ defs:
       - model: ${ model }
         parameters:
           decoding_method: "greedy"
-          stop_sequences:
+          stop:
             - "The answer is"
           include_stop_sequence: false
       - "The answer is ${ answer }"
@@ -64,6 +64,6 @@ defs:
       - model: ${ model }
         parameters:
           decoding_method: greedy
-          stop_sequences:
+          stop:
             - "<|endoftext|>"
           include_stop_sequence: false
