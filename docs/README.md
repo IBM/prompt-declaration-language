@@ -27,7 +27,7 @@ See below for a quick reference, followed by [installation notes](#Interpreter i
 
 ## Quick Reference
 
-<img src="https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
+<img src="https://ibm.github.io/prompt-declaration-language/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
 
 (See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).]
 
