@@ -1,0 +1,10 @@
+What is 18 + 12 x 3?
+Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+Obs: 54
+
+A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+Obs: 2.869047619047619
+
+Out of 1400 participants, 400 passed the test. What percentage is that?
+Act: {"name": "Calc", "arguments": {"expr": "400 / 1400 * 100"}}28.57142857142857

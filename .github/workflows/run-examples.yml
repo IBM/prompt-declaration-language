@@ -1,0 +1,47 @@
+---
+name: Run examples
+
+on:
+  schedule:
+    - cron:  '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Exeution tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        # This path is specific to Ubuntu
+        path: ${{ env.pythonLocation }}
+        # Look to see if there is a cache hit for the setup file
+        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-new3
+          ${{ runner.os }}-new3
+    - name: Install dependencies
+      run: pip install --upgrade --upgrade-strategy eager .[all]
+    - name: pip list packages
+      run: pip list
+    - name: show pip dependencies
+      run: |
+        pip install pipdeptree
+        pipdeptree -fl
+    - name: run tests
+      env:
+        WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
+        WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
+        WATSONX_URL: ${{ secrets.WATSONX_URL }}
+      run: py.test -v --capture=tee-sys tests/test_examples_run.py

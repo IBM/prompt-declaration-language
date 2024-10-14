@@ -1,9 +1,7 @@
 description: Hello world with iteration
-document:
+text:
 - Hello, world!
 - "\n"
 - repeat:
-    document:
       "This is your first PDL program\n"
-  as: document
   num_iterations: 3

@@ -2,39 +2,40 @@ description: Demo of ReAct template
 defs:
   available_tools:
     data: ["Search"]
-document:
+text:
+  - include: ../tools.pdl
   - include: ../ReAct.pdl
   - include: ../../granite/granite_defs.pdl
   - def: filtered_tools
     call: filter_tools_by_name
-    contribute: []
     args:
-      tools: "{{ default_tools }}"
-      tool_names: "{{ available_tools }}"
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
   - def: QUESTION
-    contribute: []
-    read: 
+    read:
     message: "Please enter a question: "
   - def: GRANITE_RESULT
     call: react
     args:
-      context: "{{ granite_models.granite_7b_lab.system_prompt }}"
-      question: "{{ QUESTION }}"
-      model: "ibm/granite-7b-lab"
-      tools: "{{ filtered_tools }}"
+      pdl_context:
+        - role: system
+          content: ${ granite_models.granite_7b_lab.system_prompt }
+      task: ${ QUESTION }
+      model: "watsonx/ibm/granite-7b-lab"
+      tools: ${ filtered_tools }
       trajectories: []
   - "\n\n-------- Verifying answer --------\n\n"
   - def: LLAMA_RESULT
     call: react
     args:
-      context: ""
-      question: |-
+      pdl_context: []
+      task: |-
         Is this the right answer to this question?
-        "{{ QUESTION }}"
-        Proposed answer: {{ GRANITE_RESULT.answer }}
+        "${ QUESTION }"
+        Proposed answer: ${ GRANITE_RESULT.answer }
 
         Please answer as True or False.
-      model: "ibm-meta/llama-2-70b-chat-q"
-      tools: "{{ filtered_tools }}"
+      model: "watsonx/ibm/granite-34b-code-instruct"
+      tools: ${ filtered_tools }
       trajectories: []
-  - "\n\nThe answer '{{ GRANITE_RESULT.answer }}' has been verified as '{{LLAMA_RESULT.answer}}'."
+  - "\n\nThe answer '${ GRANITE_RESULT.answer }' has been verified as '${LLAMA_RESULT.answer}'."

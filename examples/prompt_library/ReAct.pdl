@@ -6,43 +6,57 @@ defs:
       trajectory: { list: obj }
     return:
       - for:
-          trajectory: "{{ trajectory }}"
+          trajectory: ${ trajectory }
         repeat:
           - defs:
-              type: "{{ trajectory.keys()|first }}"
-          - if: "{{ type == 'question'}}"
+              type: ${ trajectory.keys()|first }
+          - if: ${ type == 'question'}
             then: |
-              Question: {{ trajectory[type]|trim }}
-          - if: "{{ type == 'thought'}}"
+              Question: ${ trajectory[type]|trim }
+          - if: ${ type == 'task'}
             then: |
-              Tho: {{ trajectory[type]|trim }}
-          - if: "{{ type == 'action'}}"
+              Task: ${ trajectory[type]|trim }
+          - if: ${ type == 'thought'}
             then: |
-              Act: {{ trajectory[type]|trim }}
-          - if: "{{ type == 'observation'}}"
+              Tho: ${ trajectory[type]|trim }
+          - if: ${ type == 'action'}
             then: |
-              Obs: {{ trajectory[type]|trim }}
-          - if: "{{ type not in ['question', 'thought', 'action', 'observation'] }}"
-            then: "{{ type }}: {{ trajectory[type]|trim }}"
+              Act: ${ trajectory[type]|trim }
+          - if: ${ type == 'observation'}
+            then: |
+              Obs: ${ trajectory[type]|trim }
+          - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+            then: "${ type }: ${ trajectory[type]|trim }"
       - "\n"
+
+  finish_action:
+    data:
+      display_name: Finish
+      pdl_function:
+      description: Respond with the Answer
+      parameters:
+        - name: answer
+          type: string
+          description: The answer
+      examples: []
 
   demonstrate_tools:
     function:
       tools: { list: obj }
     return:
       for:
-        tool: "{{ tools }}"
+        tool: ${ tools }
       repeat:
         for:
-          example: "{{ tool.examples }}"
+          example: ${ tool.examples }
         repeat:
           call: react_block
           args:
-            trajectory: "{{ example }}"
+            trajectory: ${ example }
 
   react:
     function:
-      question: str
+      task: str
       model: str
       tools: { list: obj }
       trajectories: { list: list }
@@ -51,79 +65,100 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "{{ tools }}"
+              tools: ${ tools.append(finish_action) or tools }
       - "Available tools:\n"
       - for:
-          name: "{{ TOOL_INFO.names }}"
-          sig: "{{ TOOL_INFO.signatures }}"
-          desc: "{{ TOOL_INFO.descriptions }}"
+          name: ${ TOOL_INFO.display_names }
+          sig: ${ TOOL_INFO.signatures }
+          desc: ${ TOOL_INFO.descriptions }
         repeat: |
-          {{ name }}: {{ desc }}
-      - "Finish: Respond with the Answer\n"
+          ${ name }: ${ desc }
+        join:
+          with: "\n"
       - "\n"
       - call: demonstrate_tools
         args:
-          tools: "{{ tools }}"
+          tools: ${ tools }
       - for:
-          traj: "{{ trajectories }}"
+          traj: ${ trajectories }
         repeat:
           call: react_block
           args:
-            trajectory: "{{ traj }}"
-      - "Question: {{ question }}\nTho:"
+            trajectory: ${ traj }
+      - "${ task }\nTho:"
       - defs:
           temperature: 0.7
+          iterations: 0
         repeat:
           - repeat:
+              - defs:
+                  iterations: ${ iterations+1 }
               - def: THOUGHT
-                model: "{{ model }}"
+                model: ${ model }
                 parameters:
+                  time_limit: 60000
+                  random_seed: 42
+                  truncate_input_tokens: 8191
                   decoding_method: sample
-                  temperature: "{{ temperature }}"
-                  stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                  repetition_penalty: 1.1
+                  temperature: ${ temperature }
+                  stop: ["\n", "Act:", "Obs:", "Tho:"]
                   include_stop_sequence: true
-            until: "{{ THOUGHT.endswith('Act:') }}"
+            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action_raw
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
+              time_limit: 60000
+              random_seed: 42
+              truncate_input_tokens: 8191
               decoding_method: sample
-              temperature: "{{ temperature }}"
-              stop_sequences: ["[", "\n"]
+              repetition_penalty: 1.1
+              temperature: ${ temperature }
+              stop: ["[", "\n"]
               include_stop_sequence: false
           - defs:
-              ACTION: "{{ action_raw|trim }}"
+              ACTION: ${ action_raw|trim }
           - "["
           - def: SUBJECT
-            model: "{{ model }}"
+            model: ${ model }
             parameters:
+              time_limit: 60000
+              random_seed: 42
+              truncate_input_tokens: 8191
               decoding_method: sample
-              temperature: "{{ temperature }}"
-              stop_sequences: ["]", "\n"]
+              repetition_penalty: 1.1
+              temperature: ${ temperature }
+              stop: ["]", "\n"]
               include_stop_sequence: false
           - "]"
-          - if: "{{ ACTION != 'Finish' }}"
+          - if: ${ ACTION != 'Finish' }
             then:
               - "\nObs: "
-              - if: "{{ ACTION in TOOL_INFO.names }}"
+              - if: ${ ACTION in TOOL_INFO.display_names }
                 then:
-                  - call: "{{ ACTION }}"
+                  - call: ${ TOOL_INFO.name_map[ACTION] }
                     args:
-                      subject: "{{ SUBJECT }}"
-                  - model: "{{ model }}"
+                      subject: ${ SUBJECT }
+                  - "\nTho:"
+                  - model: ${ model }
+                    fallback: "Error calling model"
                     parameters:
+                      time_limit: 60000
+                      random_seed: 42
+                      truncate_input_tokens: 8191
+                      repetition_penalty: 1.1
                       decoding_method: sample
-                      temperature: "{{ temperature }}"
-                      stop_sequences: ["\n", "Act:", "Obs:", "Tho:"]
+                      temperature: ${ temperature }
+                      stop: ["\n", "Act:", "Obs:", "Tho:"]
                       include_stop_sequence: false
-                else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-        until: "{{ ACTION == 'Finish' }}"
-      - "\n\nJSON Output: "
+                else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
+        until: ${ ACTION == 'Finish' or iterations>20 }
       - data:
-          answer: "{{ SUBJECT|trim }}"
+          answer: ${ SUBJECT|trim }
 
   react_json:
     function:
-      question: str
+      task: str
       model: str
       tools: { list: obj }
       trajectories: { list: list }
@@ -132,64 +167,65 @@ defs:
           TOOL_INFO:
             call: list_tools
             args:
-              tools: "{{ tools }}"
-      - "Available tools:\n"
+              tools: ${ tools.append(finish_action) or tools }
+      - "Available tools:\n" # The preprompt!
       - for:
-          name: "{{ TOOL_INFO.names }}"
-          sig: "{{ TOOL_INFO.signatures }}"
-          desc: "{{ TOOL_INFO.descriptions }}"
+          name: ${ TOOL_INFO.display_names }
+          sig: ${ TOOL_INFO.signatures }
+          desc: ${ TOOL_INFO.descriptions }
         repeat: |
-          {{ name }}: {{ desc }}
-      - "Finish: Respond with the Answer\n"
+          ${ name }: ${ desc }
       - "\n"
       - call: demonstrate_tools
         args:
-          tools: "{{ tools }}"
+          tools: ${ tools }
       - for:
-          traj: "{{ trajectories }}"
+          traj: ${ trajectories }
         repeat:
           call: react_block
           args:
-            trajectory: "{{ traj }}"
-      - "Question: {{ question }}\nTho:"
+            trajectory: ${ traj }
+      - "${ task }\nTho:"
       - defs:
           temperature: 0.05
-          decoding_method: "greedy"
+          decoding_method: greedy
+          iterations: 0
         repeat:
           - repeat:
+              - defs:
+                  iterations: ${ iterations+1 }
               - def: THOUGHT
-                model: "{{ model }}"
+                model: ${ model }
                 parameters:
-                  DECODING_METHOD: "{{ decoding_method }}"
-                  TEMPERATURE: "{{ temperature }}"
-                  STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]
-                  INCLUDE_STOP_SEQUENCE: true
-            until: "{{ THOUGHT.endswith('Act:') }}"
+                  decoding_method: ${ decoding_method }
+                  temperature: ${ temperature }
+                  stop: ["\n", "Act:", "Obs:", "Tho:"]
+                  include_stop_sequence: true
+            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
           - def: action
-            model: "{{ model }}"
+            model: ${ model }
             parser: json
             spec: {name: str, arguments: obj}
             parameters:
-              DECODING_METHOD: "{{ decoding_method }}"
-              TEMPERATURE: "{{ temperature }}"
-              STOP_SEQUENCES: ["\n", "<|endoftext|>"]
-              INCLUDE_STOP_SEQUENCE: false
-          - if: "{{ action.name != 'Finish' }}"
+              decoding_method: ${ decoding_method }
+              temperature: ${ temperature }
+              stop: ["\n", "<|endoftext|>"]
+              include_stop_sequence: false
+          - if: ${ action.name != 'Finish' }
             then:
               - "\nObs: "
-              - if: "{{ action.name in TOOL_INFO.names }}"
+              - if: ${ action.name in TOOL_INFO.display_names }
                 then:
-                  - call: "{{ action.name }}"
+                  - call: ${ TOOL_INFO.name_map[action.name] }
                     args:
-                      arguments: "{{ action.arguments }}"
-                  - model: "{{ model }}"
+                      arguments: ${ action.arguments }
+                  - model: ${ model }
                     parameters:
-                      DECODING_METHOD: "{{ decoding_method }}"
-                      TEMPERATURE: "{{ temperature }}"
-                      STOP_SEQUENCES: ["\n", "Act:", "Obs:", "Tho:"]
-                      INCLUDE_STOP_SEQUENCE: false
-                else: "Invalid action. Valid actions are {{ TOOL_INFO.signatures|join(', ') }} and Finish[<answer>]."
-        until: "{{ action.name == 'Finish' }}"
-      - "\n\nJSON Output: "
+                      decoding_method: ${ decoding_method }
+                      temperature: ${ temperature }
+                      stop: ["\n", "Act:", "Obs:", "Tho:"]
+                      include_stop_sequence: false
+                else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') } and Finish[<answer>]."
+        until: ${ action.name == 'Finish' or iterations>20 }
       - data:
-          answer: "{{ action.arguments }}"
+          answer: ${ action.arguments }

@@ -1,5 +1,5 @@
 description: Math Problems
-document:
+text:
 - read: ./example1.txt
 - read: ./example2.txt
 - "\n"
@@ -8,7 +8,7 @@ document:
   Last month he sold four large boxes and two small boxes.
   If he sold half as much this month, how much is his sales for this month?
 - repeat:
-    document:
+    text:
     - def: REASON_OR_CALC
       model: watsonx/ibm/granite-20b-code-instruct
       parameters:
@@ -19,9 +19,9 @@ document:
           user:
             pre_message: ""
             post_message: ""
-    - if: '{{ REASON_OR_CALC.endswith("<<") }}'
+    - if: ${ REASON_OR_CALC.endswith("<<") }
       then:
-        document:
+        text:
         - def: EXPR
           model: watsonx/ibm/granite-20b-code-instruct
           parameters:
@@ -36,9 +36,8 @@ document:
                 post_message: ""
         - '= '
         - def: RESULT
-          lan: python
-          code: result = {{ EXPR }}
+          lang: python
+          code: result = ${ EXPR }
         - ' >>'
-  as: document
-  until: '{{ "The answer is" in REASON_OR_CALC }}'
+  until: ${ "The answer is" in REASON_OR_CALC }
 - "\n"

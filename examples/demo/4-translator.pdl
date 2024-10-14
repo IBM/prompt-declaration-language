@@ -1,5 +1,5 @@
 description: PDL program
-document:
+text:
 - What is APR?
 - model: watsonx/ibm/granite-13b-chat-v2
   parameters:
@@ -7,14 +7,13 @@ document:
     stop: ["."]
     include_stop_sequence: true
 - repeat:
-    document:
+    text:
     - read:
       message: "\nLanguage please: "
       def: language
-    - if: "{{ language != 'stop' }}"
+    - if: ${ language != 'stop' }
       then:
-        document:
-        - "\n\nTranslate the above to {{ language }}"
+        text:
+        - "\n\nTranslate the above to ${ language }"
         - model: watsonx/ibm/granite-13b-chat-v2
-  until: "{{ language == 'stop' }}"
-  as: document
+  until: ${ language == 'stop' }

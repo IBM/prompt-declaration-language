@@ -1,0 +1,12 @@
+description: Variable def and use, model input
+text: 
+- Hello,
+- model: watsonx/ibm/granite-34b-code-instruct
+  def: name
+  parameters:
+    stop: ["!"]
+    include_stop_sequence: false
+- "\n"
+- model: watsonx/ibm/granite-20b-multilingual
+  input:
+      - "Translate the word ${ name | trim } to French\n"

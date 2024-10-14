@@ -1,5 +1,5 @@
 description: Calculator tool use using Granite models via watsonx.ai.
-document:
+text:
 - |-
   What is 18 + 12 x 3?
   Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
@@ -17,9 +17,9 @@ document:
     STOP_SEQUENCES: ["\n"]
   parser: json
   spec: {name: str, arguments: {expr: str}}
-- if: '{{ action.name == "Calc" }}'
+- if: ${ action.name == "Calc" }
   then:
   - "Obs: "
-  - lan: python
-    code: result = {{ action.arguments.expr }}
+  - lang: python
+    code: result = ${ action.arguments.expr }
 - "\n"

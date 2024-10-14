@@ -1,5 +1,5 @@
 description: Joke example
-document:
+text:
 - |
   A list of good dad jokes. A indicates the punchline
   Q: How does a penguin build its house?
@@ -7,7 +7,7 @@ document:
   Q: Which knight invented King Arthur''s Round Table?
   A: Sir Cumference. END
 - repeat:
-    document:
+    text:
     - 'Q: '
     - def: JOKE
       model: watsonx/ibm/granite-20b-code-instruct
@@ -27,4 +27,3 @@ document:
         include_stop_sequence: true
     - "\n"
   num_iterations: 2
-  as: document

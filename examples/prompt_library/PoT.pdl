@@ -1,4 +1,4 @@
-description: Program of Thoughts pattern Chen (2022), TMLR 
+description: Program of Thoughts pattern Chen (2022), TMLR
 defs:
   program_of_thought:
     function:
@@ -90,20 +90,18 @@ defs:
       total_hours = total_minutes / 60
       result = 5 - total_hours
 
-      Question: {{ question }}
+      Question: ${ question }
       # Python code, return ans
 
     - def: PROGRAM
-      model: "{{ model }}"
+      model: ${ model }
       parameters:
-        stop_sequences: ["\nAnswer: "]
+        stop: ["\nAnswer: "]
         include_stop_sequence: false
     - def: ANSWER
-      lan: python
-      contribute: []
-      code: "{{ PROGRAM }}"
+      lang: python
+      code: ${ PROGRAM }
     - get: ANSWER
-      contribute: []
 
   program_of_thought_backtick:
     function:
@@ -213,19 +211,17 @@ defs:
       result = 5 - total_hours
       ```
 
-      Question: {{ question }}
+      Question: ${ question }
       # Python code, return ans
     - def: PROGRAM
-      model: "{{ model }}"
+      model: ${ model }
       parser:
         regex: '```.*\n((?:.|\n|$)*?)$\n\s*```' # extracts code from backtick blocks
         mode: findall
       parameters:
-        stop_sequences: ["\nAnswer: "]
+        stop: ["\nAnswer: "]
         include_stop_sequence: false
     - def: ANSWER
-      lan: python
-      contribute: []
-      code: "{{ PROGRAM|join('\n') }}"
+      lang: python
+      code: ${ PROGRAM|join('\n') }
     - get: ANSWER
-      contribute: []

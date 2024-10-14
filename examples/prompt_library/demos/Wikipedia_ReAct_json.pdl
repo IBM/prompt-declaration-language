@@ -1,0 +1,18 @@
+description: Demo of ReAct template
+defs:
+  available_tools:
+    data: ["Search"]
+text:
+  - include: ../tools.pdl
+  - include: ../ReAct.pdl
+  - def: filtered_tools
+    call: filter_tools_by_name
+    args:
+      tools: ${ default_tools }
+      tool_names: ${ available_tools }
+  - call: react_json
+    args:
+     task: "When did the Battle of White Plains take place?"
+     model: "watsonx/ibm/granite-34b-code-instruct"
+     tools: ${ filtered_tools }
+     trajectories: []

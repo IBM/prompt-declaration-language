@@ -1,11 +1,11 @@
 description: CodeLLM-Devkit Assistant
-document: 
+text: 
 - read:
   def: project
   message: "Please enter the path to your Java project:\n"
   contribute: []
 - "***Analyzing...\n"
-- lan: python
+- lang: python
   def: analysis
   contribute: []
   code: |
@@ -17,7 +17,7 @@ document:
     # Initialize the Codellm-DevKit object with the project directory, language, and backend.
     cldk = CLDK("java")
     cldk_state = cldk.analysis(
-        project_path="{{ project }}",   # Change this to the path of the project you want to analyze.
+        project_path="${ project }",   # Change this to the path of the project you want to analyze.
         # language="java",  # The language of the project.
         # backend="codeanalyzer",  # The backend to use for the analysis.
         # analysis_db="/tmp",  # A temporary directory to store the analysis results.
@@ -32,7 +32,7 @@ document:
     message: "\n\nHow can I help you [Type 'quit' to quit]?\n"
     contribute: []
   - "\n***Generating PDL code for your query:\n"
-  - if: "{{ query != 'quit'}}"
+  - if: ${ query != 'quit'}
     then: 
     - model: watsonx/ibm/granite-20b-code-instruct
       def: PDL
@@ -41,8 +41,8 @@ document:
           Question: What are all the classes?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               classes = PDL_SESSION.cldk_state.get_classes().keys()
@@ -52,8 +52,8 @@ document:
           Question: What are all the constructors of class org.ibm.App?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
@@ -63,8 +63,8 @@ document:
           Question: What are all the fields of class org.ibm.App?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
@@ -75,8 +75,8 @@ document:
           Question: What are all the methods of class org.ibm.App?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
@@ -86,8 +86,8 @@ document:
           Question: Show me the call graph of class "org.ibm.App"
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
@@ -97,8 +97,8 @@ document:
           Question: What is the code of method Foo(string) of class org.ibm.App?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -108,8 +108,8 @@ document:
           Question: Generate a summary for method Foo(string) of class org.ibm.App
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -121,8 +121,8 @@ document:
           Question: Generate a different comment for method Foo(string) in class org.ibm.App?
           Answer:
           ```
-          document:
-          - lan: python
+          text:
+          - lang: python
             code: 
             - |
               method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
@@ -133,14 +133,14 @@ document:
 
           If the query contains something about a field be sure to call a model.
           
-          Question: {{ query }}
+          Question: ${ query }
 
 
       parameters:
         stop_sequence: ["Question"]
         include_stop_sequence: false
     - "\n\n***Executing the above PDL code:\n\n"
-    - lan: python
+    - lang: python
       contribute: []
       code: | 
         from pdl import pdl_ast, pdl_interpreter
@@ -150,7 +150,7 @@ document:
         from pdl.pdl_interpreter import empty_scope
         import re
         import yaml
-        s = """'{{ PDL }}'"""
+        s = """'${ PDL }'"""
         print(s)
         pdl = s.split("```")[1]
         obj = yaml.safe_load(pdl)
@@ -158,7 +158,7 @@ document:
         data = Program.model_validate(obj)
         
         result, _, _, _ = process_prog(state, empty_scope, data)
-  until: "{{ query == 'quit' }}"
+  until: ${ query == 'quit' }
 
   
 

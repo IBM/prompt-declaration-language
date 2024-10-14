@@ -1,5 +1,5 @@
 description: Hello world to call into a model
-document:
+text:
 - read: hello16_data.json
   parser: json
   def: data
@@ -8,15 +8,14 @@ document:
 - model: watsonx/ibm/granite-34b-code-instruct
   def: model_output
   input: 
-    document:
+    text:
     - for: 
-        question: "{{ questions2 }}"
-        answer: "{{ data.answers }}"
+        question: "Hello"
+        answer: ${ data.answers }
       repeat:
-        document:
-        - "{{ question }}"
-        - "{{ answer }}"
-      as: document
+        text:
+        - ${ question }
+        - ${ answer }
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
   parameters:
     decoding_method: greedy

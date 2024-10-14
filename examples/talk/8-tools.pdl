@@ -1,0 +1,24 @@
+description: tool use
+text:
+- |-
+  What is 18 + 12 x 3?
+  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+  Obs: 54
+
+  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+  Obs: 2.869047619047619
+
+  Out of 1400 participants, 400 passed the test. What percentage is that?
+  Act: 
+- def: action
+  model: watsonx/ibm/granite-8b-code-instruct
+  parameters:
+    stop: ["\n"]
+  parser: json
+  spec: {name: str, arguments: {expr: str}}
+- if: ${ action.name == "Calc" }
+  then:
+  - "Obs: "
+  - lang: python
+    code: result = ${ action.arguments.expr }

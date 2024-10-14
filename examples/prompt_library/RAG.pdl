@@ -5,8 +5,7 @@ defs:
     function:
       corpus: {list: str}
     return:
-    - lan: python
-      contribute: []
+    - lang: python
       code: |
         from rank_bm25 import BM25Okapi
         PDL_SESSION.corpus = corpus
@@ -20,7 +19,7 @@ defs:
       num_examples: int
     spec: {list: str}
     return:
-    - lan: python
+    - lang: python
       code: |
         from rank_bm25 import BM25Okapi
         tokenized_query = query.split(" ")

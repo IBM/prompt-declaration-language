@@ -1,15 +1,18 @@
+import pytest
+
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import (
     InterpreterState,
-    contains_error,
+    PDLRuntimeError,
     empty_scope,
     process_prog,
 )
 
 arith_data = {
     "description": "Test arith",
-    "defs": {"X": "{{ 1 + 1 }}"},
-    "document": "{{ X }}",
+    "defs": {"X": "${ 1 + 1 }"},
+    "text": "${ X }",
 }
 
 
@@ -23,7 +26,7 @@ def test_arith():
 
 var_data = {
     "defs": {"X": {"data": 1}, "Y": {"data": 2}},
-    "document": "{{ X + Y }}",
+    "text": "${ X + Y }",
 }
 
 
@@ -35,7 +38,7 @@ def test_var():
 
 
 true_data = {
-    "document": "{{ 1 < 2 }}",
+    "text": "${ 1 < 2 }",
 }
 
 
@@ -47,7 +50,7 @@ def test_true():
 
 
 false_data = {
-    "document": "{{ 1 >= 2 }}",
+    "text": "${ 1 >= 2 }",
 }
 
 
@@ -58,28 +61,27 @@ def test_false():
     assert result == "false"
 
 
-undefined_var_data = {"document": "Hello {{ X }}"}
+undefined_var_data = {"text": "Hello ${ X }"}
 
 
 def test_undefined_var():
     state = InterpreterState()
     data = Program.model_validate(undefined_var_data)
-    document, _, _, trace = process_prog(state, empty_scope, data)
-    assert contains_error(trace)
-    assert document == "Hello {{ X }}"
+    with pytest.raises(PDLRuntimeError):
+        process_prog(state, empty_scope, data)
 
 
-autoescape_data = {"document": "<|system|>"}
+autoescape_data = {"text": "<|system|>"}
 
 
 def test_autoescape():
     state = InterpreterState()
     data = Program.model_validate(autoescape_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == "<|system|>"
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == "<|system|>"
 
 
-var_data1 = {"defs": {"X": "something"}, "document": "{{ X }}"}
+var_data1 = {"defs": {"X": "something"}, "text": "${ X }"}
 
 
 def test_var1():
@@ -91,7 +93,7 @@ def test_var1():
 
 var_data2 = {
     "defs": {"X": "something", "Y": "something else"},
-    "document": "{{ [X, Y] }}",
+    "text": "${ [X, Y] }",
 }
 
 
@@ -104,7 +106,7 @@ def test_var2():
     assert scope["Y"] == "something else"
 
 
-list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "{{ X }}"}, "document": "{{ X }}"}
+list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "${ X }"}, "text": "${ X }"}
 
 
 def test_list():
@@ -116,18 +118,18 @@ def test_list():
     assert scope["Y"] == [1, 2, 3]
 
 
-disable_jinja_block_data = {"document": '{% for x in ["hello", "bye"]%} X {% endfor %}'}
+disable_jinja_block_data = {"text": '{% for x in ["hello", "bye"]%} X {% endfor %}'}
 
 
 def test_disable_jinja_block():
     state = InterpreterState()
     data = Program.model_validate(disable_jinja_block_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == '{% for x in ["hello", "bye"]%} X {% endfor %}'
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == '{% for x in ["hello", "bye"]%} X {% endfor %}'
 
 
 jinja_block_data = {
-    "document": '{%%%%%PDL%%%%%%%%%% for x in ["hello", "bye"]%%%%%PDL%%%%%%%%%%}'
+    "text": '{%%%%%PDL%%%%%%%%%% for x in ["hello", "bye"]%%%%%PDL%%%%%%%%%%}'
     + " X "
     + "{%%%%%PDL%%%%%%%%%% endfor %%%%%PDL%%%%%%%%%%}"
 }
@@ -136,5 +138,41 @@ jinja_block_data = {
 def test_jinja_block():
     state = InterpreterState()
     data = Program.model_validate(jinja_block_data)
-    document, _, _, _ = process_prog(state, empty_scope, data)
-    assert document == " X  X "
+    text, _, _, _ = process_prog(state, empty_scope, data)
+    assert text == " X  X "
+
+
+def test_expr_detection1():
+    prog = """
+lastOf: '${ 1 }'
+spec: int
+"""
+    result = exec_str(prog)
+    assert result == 1
+
+
+def test_expr_detection2():
+    prog = """
+lastOf: '${ { "a": 1 }["a"] }'
+spec: int
+"""
+    result = exec_str(prog)
+    assert result == 1
+
+
+def test_expr_detection3():
+    prog = """
+lastOf: '${ 1 } ${ 2 }'
+spec: str
+"""
+    result = exec_str(prog)
+    assert result == "1 2"
+
+
+def test_expr_detection4():
+    prog = """
+lastOf: '${ 1 } { 2 }'
+spec: str
+"""
+    result = exec_str(prog)
+    assert result == "1 { 2 }"

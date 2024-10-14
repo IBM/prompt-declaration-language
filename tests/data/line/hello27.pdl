@@ -1,0 +1,32 @@
+description: Hello world to call into a model
+text:
+- read: hello16_data.json
+  parser: json
+  def: data
+  contribute: []
+  spec: { "questions": ["str"], "answers": ["obj"] }
+- model: watsonx/ibm/granite-34b-code-instruct
+  def: model_output
+  input: 
+    text:
+    - for: 
+        question: ${ [ ] }
+        answer: ${ data.answers }
+      repeat:
+        text:
+        - ${ question }
+        - ${ answer }
+    - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
+  parameters:
+    decoding_method: greedy
+    stop:
+    - '}'
+    include_stop_sequence: true
+    mock_response:
+      |
+        Here is the code:
+        ```json
+        {
+          "bob": "20",
+          "carol": "30"
+        }

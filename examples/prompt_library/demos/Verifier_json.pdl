@@ -1,38 +1,37 @@
-document:
+text:
 - include: ../tools.pdl
 - include: ../ReAct.pdl
 - include: ../../granite/granite_defs.pdl
 - def: filtered_tools
   call: filter_tools_by_name
-  contribute: []
   args:
-    tools: "{{ default_tools }}"
+    tools: ${ default_tools }
     tool_names: ["Search"]
 - def: QUESTION
-  read: 
+  read:
   message: "Please enter a question: "
 - def: PROPOSED
   call: react_json
   args:
-    context:
-    - role: system
-      content: "{{ granite_models.granite_7b_lab.system_prompt }}"
-    question: "{{ QUESTION }}"
-    model: ibm/granite-7b-lab
-    tools: "{{ filtered_tools }}"
+    pdl_context:
+      - role: system
+        content: ${ granite_models.granite_7b_lab.system_prompt }
+    task: ${ QUESTION }
+    model: "watsonx/ibm/granite-7b-lab"
+    tools: ${ filtered_tools }
     trajectories: []
 - "\n\n----- Verifying answer... -----\n\n"
 - def: VERIFIED
   call: react_json
   args:
-    context: [{"role": "system", "content": ""}]
-    question: |-
+    pdl_context: []
+    task: |-
       Is this the right answer to this question?
-      "{{ QUESTION }}"
-      Proposed answer: {{ PROPOSED.answer.topic }}
+      "${ QUESTION }"
+      Proposed answer: ${ PROPOSED.answer.topic }
 
       Please answer as True or False.
-    model: ibm/granite-34b-code-instruct
-    tools: "{{ filtered_tools }}"
+    model: ${ granite_models.granite_20b_code_instruct_v2.id }
+    tools: ${ filtered_tools }
     trajectories: []
-- "\n\nThe answer '{{ PROPOSED.answer.topic }}' has been verified as '{{VERIFIED.answer.topic}}'.\n"
+- "\n\nThe answer '${ PROPOSED.answer.topic }' has been verified as '${VERIFIED.answer.topic}'.\n"
