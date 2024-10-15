@@ -318,7 +318,20 @@ def step_advanced_block(
         result, background, scope, trace = yield from step_block_body(
             state, scope, block, loc
         )
-    except PDLRuntimeError as exc:
+        trace = trace.model_copy(update={"result": result})
+        if block.parser is not None:
+            result = parse_result(block.parser, result)
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(
+                    message,
+                    loc=loc,
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
+    except Exception as exc:
         if block.fallback is None:
             raise exc from exc
         (
@@ -334,29 +347,19 @@ def step_advanced_block(
             scope,
             loc=loc,
         )
-    trace = trace.model_copy(update={"result": result})
-    if block.parser is not None:
-        try:
-            result = parse_result(block.parser, result)
-        except PDLRuntimeParserError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, program=trace, fallback=result),
-            ) from exc
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(  # pylint: disable=raise-missing-from
+                    message,
+                    loc=append(loc, "fallback"),
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
-    if block.spec is not None and not isinstance(block, FunctionBlock):
-        errors = type_check_spec(result, block.spec, block.location)
-        if len(errors) > 0:
-            message = "Type errors during spec checking:\n" + "\n".join(errors)
-            raise PDLRuntimeError(
-                message,
-                loc=loc,
-                trace=ErrorBlock(msg=message, program=trace),
-                fallback=result,
-            )
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
