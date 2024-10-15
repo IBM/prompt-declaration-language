@@ -2,6 +2,7 @@ description: Math Problems
 text:
 - read: ./example1.txt
 - read: ./example2.txt
+- read: ./example3.txt
 - "\n"
 - |
   Question: Noah charges $25 for a large box and $11 for a small box.
@@ -12,20 +13,14 @@ text:
     - def: REASON_OR_CALC
       model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
       parameters:
-        stop_sequences: '{'
+        stop_sequences: '='
         temperature: 0
-    - if: ${ REASON_OR_CALC.endswith("{") }
-      then:
-        text:
-        - def: EXPR
-          model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
-          parameters:
-            stop_sequences: "=,\n,Question"
-            include_stop_sequence: false
-        - '= '
-        - def: RESULT
-          lang: python
-          code: result = ${ EXPR }
-        - '}'
+    - def: EXPR
+      model: replicate/ibm-granite/granite-8b-instruct-preview-4k-r240917a:ffcea6d0e64d9959d9f6b82a426680f2604b047a5ec18d4c386c26e56a71d746
+      parameters:
+        stop_sequences: "=,\n,Question"
+        temperature: 0
+    - def: RESULT
+      lang: python
+      code: result = ${ EXPR }
   until: ${ "The answer is" in REASON_OR_CALC }
-- "\n"
