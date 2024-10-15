@@ -59,7 +59,7 @@ def test_parse_regex_error():
     prog_str = """
 text: "Hello"
 parser:
-    regex: "(e" 
+    regex: "(e"
 fallback: "Exception caught"
 """
     result = exec_str(prog_str)
