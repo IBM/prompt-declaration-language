@@ -1036,7 +1036,7 @@ def step_call_model(
             loc,
         )
         if isinstance(model_input_result, str):
-            model_input = [{"role": None, "content": model_input_result}]
+            model_input = [{"role": state.role, "content": model_input_result}]
         else:
             model_input = model_input_result
     else:
