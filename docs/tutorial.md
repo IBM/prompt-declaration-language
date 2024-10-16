@@ -329,10 +329,9 @@ Notice that block types that require lists (`repeat`, `for`, `if-then-else`) hav
 on this see [this section](#conditionals-and-loops).
 
 The PDL interpreter will raise a warning for a list item inside a `lastOf` block that is not capturing the result in a variable definition meaning that the result is being implicitly ignored.
-If this is intended because it's a code block with side effects for example, 
-the warning can be turned off by including `contribute: []` for that block. On the other hand, if this
-was a mistake, then capture the result of the block using a variable definition by adding `def`, or capture it in the context using `contribute: [context]`. 
-You could also turn the list into a text by surrounding it with a `text` block so that no result is lost.
+If this is intended because the block is contributing to the context or doing a side effect for example, the warning can be turned off by including `contribute: [context]` or `contribute: []`. 
+On the other hand, if this was a mistake, then capture the result of the block using a variable definition by adding `def`.
+You could also turn the list into a text or an array by surrounding it with a `text` or `array` block so that no result is lost.
 
 ##  Input from File or Stdin
 
