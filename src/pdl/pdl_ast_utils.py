@@ -39,8 +39,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         iter_blocks(f, blocks)
     match block:
         case FunctionBlock():
-            if block.returns is not None:
-                iter_blocks(f, block.returns)
+            iter_blocks(f, block.returns)
         case CallBlock():
             if block.trace is not None:
                 iter_blocks(f, block.trace)
@@ -112,6 +111,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
 
 def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         for block in blocks:
             f(block)
     else:
@@ -216,7 +216,7 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
 
 def map_blocks(f: MappedFunctions, blocks: BlocksType) -> BlocksType:
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        # is a list of blocks
+        # Is a list of blocks
         blocks = [f.f_block(block) for block in blocks]
     else:
         blocks = f.f_block(blocks)

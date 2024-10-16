@@ -4,6 +4,7 @@
 from enum import StrEnum
 from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
 
+import strictyaml
 from genai.schema import (
     DecodingMethod,
     ModerationParameters,
@@ -13,17 +14,6 @@ from genai.schema import (
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 ScopeType: TypeAlias = dict[str, Any]
-
-ExpressionType: TypeAlias = Any
-# (
-#     str
-#     | int
-#     | float
-#     | bool
-#     | None
-#     | list["ExpressionType"]
-#     | dict[str, "ExpressionType"]
-# )
 
 
 class Message(TypedDict):
@@ -63,7 +53,32 @@ class LocationType(BaseModel):
     table: dict[str, int]
 
 
+YamlSource: TypeAlias = strictyaml.YAML
+
 empty_block_location = LocationType(file="", path=[], table={})
+
+
+class LocalizedExpression(BaseModel):
+    """Expression with location information"""
+
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, arbitrary_types_allowed=True
+    )
+    expr: Any
+    location: Optional[LocationType] = None
+    pdl_yaml_src: Optional[YamlSource] = None
+
+
+ExpressionType: TypeAlias = Any | LocalizedExpression
+# (
+#     str
+#     | int
+#     | float
+#     | bool
+#     | None
+#     | list["ExpressionType"]
+#     | dict[str, "ExpressionType"]
+# )
 
 
 class Parser(BaseModel):
@@ -93,7 +108,11 @@ class ContributeTarget(StrEnum):
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
 
     description: Optional[str] = None
     """Documentation associated to the block.
@@ -124,6 +143,7 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
+    pdl_yaml_src: Optional[YamlSource] = None
 
 
 class FunctionBlock(Block):
@@ -261,7 +281,7 @@ class ModelBlock(Block):
 class BamModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.BAM]
     prompt_id: Optional[str] = None
-    parameters: Optional[BamTextGenerationParameters | dict] = None
+    parameters: Optional[BamTextGenerationParameters | ExpressionType] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
@@ -271,7 +291,7 @@ class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters | dict] = None
+    parameters: Optional[LitellmParameters | ExpressionType] = None
 
 
 class CodeBlock(Block):

@@ -46,6 +46,7 @@ from .pdl_ast import (
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
+    LocalizedExpression,
     LocationType,
     Message,
     MessageBlock,
@@ -809,6 +810,7 @@ def step_blocks(
     trace: BlocksType
     results = []
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )
@@ -919,8 +921,12 @@ EXPR_START_STRING = "${"
 EXPR_END_STRING = "}"
 
 
-def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
+def process_expr(  # pylint: disable=too-many-return-statements
+    scope: ScopeType, expr: Any, loc: LocationType
+) -> Any:
     result: Any
+    if isinstance(expr, LocalizedExpression):
+        return process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
         try:
             if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
@@ -1003,7 +1009,7 @@ def step_call_model(
     ],
 ]:
     # evaluate model name
-    _, concrete_block = process_expr_of(block, "model", scope, loc)
+    model, concrete_block = process_expr_of(block, "model", scope, loc)
     # evaluate model params
     match concrete_block:
         case BamModelBlock():
@@ -1062,9 +1068,7 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(
-                state, "Model Input", messages_to_str(concrete_block.model, model_input)
-            )
+            append_log(state, "Model Input", messages_to_str(model, model_input))
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -1106,6 +1110,8 @@ def generate_client_response_streaming(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     msg_stream: Generator[Message, Any, None]
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert isinstance(block.parameters, dict)  # block is a "concrete block"
     model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
@@ -1160,6 +1166,8 @@ def generate_client_response_single(
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert isinstance(block.parameters, dict)  # block is a "concrete block"
     msg: Message
     model_input_str = messages_to_str(block.model, model_input)
     match block:
@@ -1191,6 +1199,8 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert isinstance(block.parameters, dict)  # block is a "concrete block"
     model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
