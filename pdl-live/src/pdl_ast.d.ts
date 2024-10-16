@@ -10,6 +10,7 @@ export type PDLSchemas = Program | PdlBlock | PdlBlocks;
  * Prompt Declaration Language program (PDL)
  */
 export type Program =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -33,6 +34,7 @@ export type Program =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -55,7 +57,9 @@ export type Program =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Documentation associated to the block.
  *
@@ -176,6 +180,7 @@ export type Spec20 = {
   [k: string]: unknown;
 } | null;
 export type Pdl =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -199,6 +204,7 @@ export type Pdl =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -221,7 +227,9 @@ export type Pdl =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 export type Description21 = string | null;
 export type Spec21 = {
   [k: string]: unknown;
@@ -233,6 +241,7 @@ export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
  *
  */
 export type Fallback =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -256,6 +265,7 @@ export type Fallback =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -278,6 +288,7 @@ export type Fallback =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -307,6 +318,7 @@ export type Parser1 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback1 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -330,6 +342,7 @@ export type Fallback1 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -352,6 +365,7 @@ export type Fallback1 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -362,6 +376,7 @@ export type Role1 = string | null;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -385,6 +400,7 @@ export type Program1 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -407,7 +423,9 @@ export type Program1 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -427,6 +445,7 @@ export type Parser2 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback2 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -450,6 +469,7 @@ export type Fallback2 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -472,6 +492,7 @@ export type Fallback2 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -486,6 +507,7 @@ export type Kind2 = "include";
  */
 export type Include = string;
 export type Trace =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -509,6 +531,7 @@ export type Trace =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -531,6 +554,7 @@ export type Trace =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -552,6 +576,7 @@ export type Parser3 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback3 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -575,6 +600,7 @@ export type Fallback3 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -597,6 +623,7 @@ export type Fallback3 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -634,6 +661,7 @@ export type Parser4 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback4 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -657,6 +685,7 @@ export type Fallback4 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -679,6 +708,7 @@ export type Fallback4 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -690,6 +720,7 @@ export type Kind4 = "message";
  * Content of the message.
  */
 export type Content =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -713,6 +744,7 @@ export type Content =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -735,7 +767,9 @@ export type Content =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -755,6 +789,7 @@ export type Parser5 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback5 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -778,6 +813,7 @@ export type Fallback5 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -800,6 +836,7 @@ export type Fallback5 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -811,6 +848,7 @@ export type Kind5 = "object";
 export type Object =
   | {
       [k: string]:
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -834,6 +872,7 @@ export type Object =
         | ErrorBlock
         | EmptyBlock
         | (
+            | boolean
             | number
             | string
             | FunctionBlock
@@ -856,9 +895,12 @@ export type Object =
             | IncludeBlock
             | ErrorBlock
             | EmptyBlock
-          )[];
+            | null
+          )[]
+        | null;
     }
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -881,6 +923,7 @@ export type Object =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[];
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -901,6 +944,7 @@ export type Parser6 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback6 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -924,6 +968,7 @@ export type Fallback6 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -946,6 +991,7 @@ export type Fallback6 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -955,6 +1001,7 @@ export type Fallback6 =
 export type Role6 = string | null;
 export type Kind6 = "array";
 export type Array =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -978,6 +1025,7 @@ export type Array =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1000,7 +1048,9 @@ export type Array =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1020,6 +1070,7 @@ export type Parser7 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback7 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1043,6 +1094,7 @@ export type Fallback7 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1065,6 +1117,7 @@ export type Fallback7 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1074,6 +1127,7 @@ export type Fallback7 =
 export type Role7 = string | null;
 export type Kind7 = "lastOf";
 export type Lastof =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1097,6 +1151,7 @@ export type Lastof =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1119,7 +1174,9 @@ export type Lastof =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1139,6 +1196,7 @@ export type Parser8 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback8 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1162,6 +1220,7 @@ export type Fallback8 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1184,6 +1243,7 @@ export type Fallback8 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1197,6 +1257,7 @@ export type Kind8 = "text";
  *
  */
 export type Text =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1220,6 +1281,7 @@ export type Text =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1242,7 +1304,9 @@ export type Text =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1262,6 +1326,7 @@ export type Parser9 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | nu
  *
  */
 export type Fallback9 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1285,6 +1350,7 @@ export type Fallback9 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1307,6 +1373,7 @@ export type Fallback9 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1320,6 +1387,7 @@ export type Kind9 = "for";
  *
  */
 export type Repeat =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1343,6 +1411,7 @@ export type Repeat =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1365,7 +1434,9 @@ export type Repeat =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Define how to combine the result of each iteration.
  *
@@ -1393,6 +1464,7 @@ export type As1 = "array";
 export type As2 = "lastOf";
 export type Trace1 =
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1416,6 +1488,7 @@ export type Trace1 =
       | ErrorBlock
       | EmptyBlock
       | (
+          | boolean
           | number
           | string
           | FunctionBlock
@@ -1438,7 +1511,9 @@ export type Trace1 =
           | IncludeBlock
           | ErrorBlock
           | EmptyBlock
+          | null
         )[]
+      | null
     )[]
   | null;
 /**
@@ -1460,6 +1535,7 @@ export type Parser10 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback10 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1483,6 +1559,7 @@ export type Fallback10 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1505,6 +1582,7 @@ export type Fallback10 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1518,6 +1596,7 @@ export type Kind10 = "repeat_until";
  *
  */
 export type Repeat1 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1541,6 +1620,7 @@ export type Repeat1 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1563,7 +1643,9 @@ export type Repeat1 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Define how to combine the result of each iteration.
  *
@@ -1571,6 +1653,7 @@ export type Repeat1 =
 export type Join1 = JoinText | JoinArray | JoinLastOf;
 export type Trace2 =
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1594,6 +1677,7 @@ export type Trace2 =
       | ErrorBlock
       | EmptyBlock
       | (
+          | boolean
           | number
           | string
           | FunctionBlock
@@ -1616,7 +1700,9 @@ export type Trace2 =
           | IncludeBlock
           | ErrorBlock
           | EmptyBlock
+          | null
         )[]
+      | null
     )[]
   | null;
 /**
@@ -1638,6 +1724,7 @@ export type Parser11 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback11 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1661,6 +1748,7 @@ export type Fallback11 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1683,6 +1771,7 @@ export type Fallback11 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1696,6 +1785,7 @@ export type Kind11 = "repeat";
  *
  */
 export type Repeat2 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1719,6 +1809,7 @@ export type Repeat2 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1741,7 +1832,9 @@ export type Repeat2 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Number of iterations to perform.
  *
@@ -1754,6 +1847,7 @@ export type NumIterations = number;
 export type Join2 = JoinText | JoinArray | JoinLastOf;
 export type Trace3 =
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1777,6 +1871,7 @@ export type Trace3 =
       | ErrorBlock
       | EmptyBlock
       | (
+          | boolean
           | number
           | string
           | FunctionBlock
@@ -1799,7 +1894,9 @@ export type Trace3 =
           | IncludeBlock
           | ErrorBlock
           | EmptyBlock
+          | null
         )[]
+      | null
     )[]
   | null;
 /**
@@ -1821,6 +1918,7 @@ export type Parser12 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback12 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1844,6 +1942,7 @@ export type Fallback12 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1866,6 +1965,7 @@ export type Fallback12 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -1879,6 +1979,7 @@ export type Kind12 = "if";
  *
  */
 export type Then =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1902,6 +2003,7 @@ export type Then =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1924,12 +2026,15 @@ export type Then =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Branch to execute if the condition is false.
  *
  */
 export type Else =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -1953,6 +2058,7 @@ export type Else =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -1975,6 +2081,7 @@ export type Else =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 export type IfResult = boolean | null;
@@ -1997,6 +2104,7 @@ export type Parser13 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback13 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2020,6 +2128,7 @@ export type Fallback13 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2042,6 +2151,7 @@ export type Fallback13 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2073,6 +2183,7 @@ export type Parser14 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback14 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2096,6 +2207,7 @@ export type Fallback14 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2118,6 +2230,7 @@ export type Fallback14 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2149,6 +2262,7 @@ export type Parser15 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback15 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2172,6 +2286,7 @@ export type Fallback15 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2194,6 +2309,7 @@ export type Fallback15 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2212,6 +2328,7 @@ export type Lang = "python" | "command";
  *
  */
 export type Code =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2235,6 +2352,7 @@ export type Code =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2257,7 +2375,9 @@ export type Code =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2277,6 +2397,7 @@ export type Parser16 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback16 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2300,6 +2421,7 @@ export type Fallback16 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2322,6 +2444,7 @@ export type Fallback16 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2331,6 +2454,7 @@ export type Fallback16 =
 export type Role16 = string | null;
 export type Kind16 = "model";
 export type Input =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2354,6 +2478,7 @@ export type Input =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2376,9 +2501,11 @@ export type Input =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 export type Trace4 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2479,6 +2606,7 @@ export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback17 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2502,6 +2630,7 @@ export type Fallback17 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2524,6 +2653,7 @@ export type Fallback17 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2533,6 +2663,7 @@ export type Fallback17 =
 export type Role17 = string | null;
 export type Kind17 = "model";
 export type Input1 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2556,6 +2687,7 @@ export type Input1 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2578,9 +2710,11 @@ export type Input1 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 export type Trace5 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2677,6 +2811,7 @@ export type Parser18 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback18 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2700,6 +2835,7 @@ export type Fallback18 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2722,6 +2858,7 @@ export type Fallback18 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2731,6 +2868,7 @@ export type Fallback18 =
 export type Role18 = string | null;
 export type Kind18 = "call";
 export type Trace6 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2754,6 +2892,7 @@ export type Trace6 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2776,6 +2915,7 @@ export type Trace6 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2797,6 +2937,7 @@ export type Parser19 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | n
  *
  */
 export type Fallback19 =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2820,6 +2961,7 @@ export type Fallback19 =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2842,6 +2984,7 @@ export type Fallback19 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
+      | null
     )[]
   | null;
 /**
@@ -2862,6 +3005,7 @@ export type Function = {
  *
  */
 export type Return =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2885,6 +3029,7 @@ export type Return =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2907,11 +3052,14 @@ export type Return =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 export type Scope = {
   [k: string]: unknown;
 } | null;
 export type PdlBlock =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2933,8 +3081,10 @@ export type PdlBlock =
   | ReadBlock
   | IncludeBlock
   | ErrorBlock
-  | EmptyBlock;
+  | EmptyBlock
+  | null;
 export type PdlBlocks =
+  | boolean
   | number
   | string
   | FunctionBlock
@@ -2958,6 +3108,7 @@ export type PdlBlocks =
   | ErrorBlock
   | EmptyBlock
   | (
+      | boolean
       | number
       | string
       | FunctionBlock
@@ -2980,7 +3131,9 @@ export type PdlBlocks =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-    )[];
+      | null
+    )[]
+  | null;
 
 /**
  * Function declaration.
@@ -3014,6 +3167,7 @@ export interface Spec {
  */
 export interface Defs {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3037,6 +3191,7 @@ export interface Defs {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3059,7 +3214,9 @@ export interface Defs {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Calling a function.
@@ -3093,6 +3250,7 @@ export interface Spec1 {
  */
 export interface Defs1 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3116,6 +3274,7 @@ export interface Defs1 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3138,7 +3297,9 @@ export interface Defs1 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
@@ -3174,6 +3335,7 @@ export interface Spec2 {
  */
 export interface Defs2 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3197,6 +3359,7 @@ export interface Defs2 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3219,7 +3382,9 @@ export interface Defs2 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 export interface BamModelBlock {
   description?: Description3;
@@ -3256,6 +3421,7 @@ export interface Spec3 {
  */
 export interface Defs3 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3279,6 +3445,7 @@ export interface Defs3 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3301,7 +3468,9 @@ export interface Defs3 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Execute a piece of code.
@@ -3334,6 +3503,7 @@ export interface Spec4 {
  */
 export interface Defs4 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3357,6 +3527,7 @@ export interface Defs4 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3379,7 +3550,9 @@ export interface Defs4 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Get the value of a variable.
@@ -3411,6 +3584,7 @@ export interface Spec5 {
  */
 export interface Defs5 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3434,6 +3608,7 @@ export interface Defs5 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3456,7 +3631,9 @@ export interface Defs5 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Arbitrary JSON value.
@@ -3489,6 +3666,7 @@ export interface Spec6 {
  */
 export interface Defs6 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3512,6 +3690,7 @@ export interface Defs6 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3534,7 +3713,9 @@ export interface Defs6 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Conditional control structure.
@@ -3569,6 +3750,7 @@ export interface Spec7 {
  */
 export interface Defs7 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3592,6 +3774,7 @@ export interface Defs7 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3614,7 +3797,9 @@ export interface Defs7 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Repeat the execution of a block for a fixed number of iterations.
@@ -3649,6 +3834,7 @@ export interface Spec8 {
  */
 export interface Defs8 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3672,6 +3858,7 @@ export interface Defs8 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3694,7 +3881,9 @@ export interface Defs8 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Repeat the execution of a block until a condition is satisfied.
@@ -3729,6 +3918,7 @@ export interface Spec9 {
  */
 export interface Defs9 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3752,6 +3942,7 @@ export interface Defs9 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3774,7 +3965,9 @@ export interface Defs9 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Iteration over arrays.
@@ -3809,6 +4002,7 @@ export interface Spec10 {
  */
 export interface Defs10 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3832,6 +4026,7 @@ export interface Defs10 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3854,7 +4049,9 @@ export interface Defs10 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
@@ -3886,6 +4083,7 @@ export interface Spec11 {
  */
 export interface Defs11 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3909,6 +4107,7 @@ export interface Defs11 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -3931,7 +4130,9 @@ export interface Defs11 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Return the value of the last block if the list of blocks.
@@ -3963,6 +4164,7 @@ export interface Spec12 {
  */
 export interface Defs12 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -3986,6 +4188,7 @@ export interface Defs12 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4008,7 +4211,9 @@ export interface Defs12 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Return the array of values computed by each block of the list of blocks.
@@ -4040,6 +4245,7 @@ export interface Spec13 {
  */
 export interface Defs13 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4063,6 +4269,7 @@ export interface Defs13 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4085,7 +4292,9 @@ export interface Defs13 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
@@ -4117,6 +4326,7 @@ export interface Spec14 {
  */
 export interface Defs14 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4140,6 +4350,7 @@ export interface Defs14 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4162,7 +4373,9 @@ export interface Defs14 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Create a message.
@@ -4194,6 +4407,7 @@ export interface Spec15 {
  */
 export interface Defs15 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4217,6 +4431,7 @@ export interface Defs15 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4239,7 +4454,9 @@ export interface Defs15 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Read from a file or standard input.
@@ -4273,6 +4490,7 @@ export interface Spec16 {
  */
 export interface Defs16 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4296,6 +4514,7 @@ export interface Defs16 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4318,7 +4537,9 @@ export interface Defs16 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Include a PDL file.
@@ -4351,6 +4572,7 @@ export interface Spec17 {
  */
 export interface Defs17 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4374,6 +4596,7 @@ export interface Defs17 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4396,7 +4619,9 @@ export interface Defs17 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 export interface ErrorBlock {
   description?: Description18;
@@ -4426,6 +4651,7 @@ export interface Spec18 {
  */
 export interface Defs18 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4449,6 +4675,7 @@ export interface Defs18 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4471,7 +4698,9 @@ export interface Defs18 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 /**
  * Block without an action. It can contain definitions.
@@ -4502,6 +4731,7 @@ export interface Spec19 {
  */
 export interface Defs19 {
   [k: string]:
+    | boolean
     | number
     | string
     | FunctionBlock
@@ -4525,6 +4755,7 @@ export interface Defs19 {
     | ErrorBlock
     | EmptyBlock
     | (
+        | boolean
         | number
         | string
         | FunctionBlock
@@ -4547,7 +4778,9 @@ export interface Defs19 {
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-      )[];
+        | null
+      )[]
+    | null;
 }
 export interface PdlParser {
   description?: Description20;
