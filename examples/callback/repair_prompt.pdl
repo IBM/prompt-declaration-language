@@ -1,11 +1,12 @@
-- |
-  Given the following code:
-  ```python
-  ${code_line}
-  ```
-  and the following error:
-  ${error_msg}
-  Please repair the code!
+- text: |
+    Given the following code:
+    ```python
+    ${code_line}
+    ```
+    and the following error:
+    ${error_msg}
+    Please repair the code!
+  contribute: [context]
 
 - def: raw_output
   model: watsonx/ibm/granite-34b-code-instruct
