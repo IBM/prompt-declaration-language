@@ -103,7 +103,9 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         ),
         pathlib.Path("examples")
         / "tutorial"
-        / "conditionals_loops.pdl": InputsType(stdin="What is APR?\nno\nSay it as a poem\nyes\n"),
+        / "conditionals_loops.pdl": InputsType(
+            stdin="What is APR?\nno\nSay it as a poem\nyes\n"
+        ),
     }.items()
 }
 
