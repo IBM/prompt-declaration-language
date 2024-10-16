@@ -328,9 +328,11 @@ Each list item can contain any PDL block (strings are shown here), and the resul
 Notice that block types that require lists (`repeat`, `for`, `if-then-else`) have the `lastOf` semantics by default. For more detailed discussion
 on this see [this section](#conditionals-and-loops).
 
-The PDL interpreter will raise a warning for a list item inside a `lastOf` block that is not capturing the result in a variable definition, or contributing
-the result, meaning that the result is being ignored.
-If this is intended, the warning can be turned off by including `contribute: []` or `contribute: [context]` for that block.
+The PDL interpreter will raise a warning for a list item inside a `lastOf` block that is not capturing the result in a variable definition meaning that the result is being implicitly ignored.
+If this is intended because it's a code block with side effects for example, 
+the warning can be turned off by including `contribute: []` for that block. On the other hand, if this
+was a mistake, then capture the result of the block using a variable definition by adding `def`, or capture it in the context using `contribute: [context]`. 
+You could also turn the list into a text by surrounding it with a `text` block so that no result is lost.
 
 ##  Input from File or Stdin
 
