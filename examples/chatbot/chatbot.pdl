@@ -2,6 +2,7 @@ description: chatbot
 text:
 - read:
   message: "What is your query?\n"
+  contribute: [context]
 - repeat:
     text:
     - model: watsonx/ibm/granite-13b-chat-v2
@@ -15,7 +16,7 @@ text:
         - read:
           message: "Why not?\n"
   until: ${ eval == 'yes'}
-role: user
+
 
 
 
