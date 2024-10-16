@@ -160,4 +160,4 @@ def test_none():
     lastOf: null
     """
     result = exec_str(prog)
-    assert result == None
+    assert result is None
