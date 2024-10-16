@@ -1,5 +1,7 @@
 import pathlib
 
+from pytest import CaptureFixture
+
 from pdl.pdl_parser import PDLParseError, parse_file
 
 EXPECTED_INVALID = [
@@ -14,7 +16,7 @@ EXPECTED_INVALID = [
 ]
 
 
-def test_valid_programs(capsys) -> None:
+def test_valid_programs(capsys: CaptureFixture[str]) -> None:
     actual_invalid: set[str] = set()
     with_warnings: set[str] = set()
     for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
