@@ -1,7 +1,7 @@
 description: Math Problems
 text:
-- read: ../arith/example1.txt
-- read: ../arith/example2.txt
+- read: ./example1.txt
+- read: ./example2.txt
 - repeat:
     text:
     - "\nQuestion: "

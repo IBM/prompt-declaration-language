@@ -57,7 +57,7 @@ To run the interpreter:
 pdl <path/to/example.pdl>
 ```
 
-The folder `examples` contains many examples of PDL programs. Several of these examples have been adapted from the LMQL [paper](https://arxiv.org/abs/2212.06094) by Beurer-Kellner et al. The examples cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
+The folder `examples` contains many examples of PDL programs. They cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
 
 We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion.
 The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json)).  You can set up your own VSCode PDL projects similarly using the following `.vscode/settings.json` file:
