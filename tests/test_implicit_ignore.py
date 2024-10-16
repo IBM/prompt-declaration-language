@@ -5,7 +5,7 @@ def do_test(capsys, test):
     result = exec_str(test["prog"])
     captured = capsys.readouterr()
     warnings = {line.strip() for line in captured.err.split("\n")} - {
-        "You might want to use a `text` block or explicitly ignore the result with `contribute: [context]`."
+        "You might want to use a `text` block around the list or explicitly ignore the result with `contribute: [context]`."
     }
     assert result == test["result"]
     assert set(warnings) == set(test["warnings"])

@@ -48,7 +48,7 @@ def unused_warning(block: BlockType):
     if _DISPLAY_UNUSED_HINT:
         _DISPLAY_UNUSED_HINT = False
         print(
-            "         You might want to use a `text` block or explicitly ignore the result with `contribute: [context]`.",
+            "         You might want to use a `text` block around the list or explicitly ignore the result with `contribute: [context]`.",
             file=sys.stderr,
         )
 
