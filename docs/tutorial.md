@@ -31,6 +31,7 @@ Hello, world!
 ```
 
 
+
 ##  Calling an LLM
 
 ```yaml
@@ -194,6 +195,8 @@ The translation of 'I love Madrid!' to Spanish is 'Me encanta Madrid!'.
 
 A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current background context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the granite model.
 
+Notice that the arguments of function calls are expressions and cannot be arbitrary PDL blocks.
+
 ##  Grouping Variable Definitions in Defs
 
 In PDL, the above program can be written more neatly by grouping certain variable definitions into a `defs` section, as follows ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/grouping_definitions.pdl)):
@@ -269,6 +272,62 @@ Here are its possible values:
 - `[context]`: contribute to the background context but not the final result
 
 - `[result, context]`: contribute to both, which is also the default setting.
+
+## Specifying Data
+
+In PDL, the user specifies step by step the shape of data they wish to generate. A `text` block takes a list of blocks, stringifies the result of each block, 
+and concatenates them.
+
+An `array` takes a list of blocks and creates an array of the results of each block:
+
+```yaml
+array:
+  - apple
+  - orange
+  - banana
+```
+
+This results in the following output:
+```
+["apple", "orange", "banana"]
+```
+
+Each list item can contain any PDL block (strings are shown here), and the overall result is presented as an array.
+
+An `object` constructs an object:
+
+```
+object:
+  name: Bob
+  job: mananger
+```
+
+This results in the following output:
+```
+{"name": "Bob", "job": "mananger"}
+```
+
+Each value in the object can be any PDL block, and the result is presented as an object.
+
+A `lastOf` is a sequence, where each block in the sequence is executed and the overall result is that of the last block.
+
+```
+lastOf:
+  - 1
+  - 2
+  - 3
+```
+
+This results in the following output:
+```
+3
+```
+
+Each list item can contain any PDL block (strings are shown here), and the result of the whole list is that of the last block.
+
+Notice that block types that require lists (`repeat`, `for`, `if-then-else`) have the `lastOf` semantics by default. For more detailed discussion
+on this see [this section](#conditionals-and-loops).
+
 
 ##  Input from File or Stdin
 
@@ -458,6 +517,9 @@ text:
     metric: ${ EVAL }
 ```
 
+Notice that in the `data` block the values are interpreted as Jinja2 expressions. If values need to be PDL programs to be interpreted, then you need to use
+the `object` block instead (see [this section](#specifying-data)).
+
 In the example above, the expressions inside the `data` block are interpreted. In some cases, it may be useful not to interpret the values in a `data` block.
 The `raw` field can be used to turn off the interpreter inside a `data` block. For example, consider the ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/data_block_raw.pdl)):
 
@@ -516,9 +578,7 @@ The `include` block means that the PDL code at that file is executed and its out
 
 ##  Conditionals and Loops
 
-PDL supports conditionals and loops as illustrated in the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/conditionals_loops.pdl)).
-
-This example is a chatbot
+PDL supports conditionals and loops as illustrated in the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/conditionals_loops.pdl)), which implements a chatbot.
 
 
 ```yaml
@@ -526,6 +586,7 @@ description: chatbot
 text:
 - read:
   message: "What is your query?\n"
+  contribute: [context]
 - repeat:
     text:
     - model: watsonx/ibm/granite-13b-chat-v2
@@ -539,20 +600,27 @@ text:
         - read:
           message: "Why not?\n"
   until: ${ eval == 'yes'}
-role: user
 ```
 
-The first two blocks read math problem examples and include them in the document. These will be our few-shot examples. The next block is a repetition as indicated by the fields: `repeat` and the accompanying `num_iterations`. The field `repeat` can contain any document (string or block or list of strings and blocks), the `num_iterations` indicates how many times to repeat.
+The first block prompts the user for a query, and this is contributed to the background context. The next
+block is a `repeat-until`, which repeats the contained `text` block until the condition in the `until` becomes
+true. The field `repeat` can contain a string, or a block, or a list. If it contains a list, then the list is 
+interpreted to be a `lastOf` block. This means that all the blocks in the list are executed and the result of the body is that of the last block. 
 
-In the body of the `repeat` block, the program first asks granite to generate a question and add it to the document. Next we print `Answer: Let's think step by step.\n`. The following block is a repeat-until: the text in `repeat` is repeated until the condition in the `until` field becomes true. Here the condition states that we stop the iteration when variable `REASON_OR_CALC` contains `<<`. That variable is defined in the first block of the repeat-until -- we prompt a granite model and stop at the character `<<`.
+The example also shows the use of an `if-then-else` block. The `if` field contains a condition, the `then` field
+can also contain either a string, or a block, or a list (and similarly for `else`). If it contains a list, 
+the list is interpreted to be a `lastOf` block. So again the blocks in the list are executed and the result is that
+of the last block.
 
-The next block is an if-then-else. We check if `REASON_OR_CALC` ends with `<<` and if so we prepare for the python call to perform the arithmetic calculation. First, we have the granite model generate an `EXPR` variable, which we then use inside the `code` of the following Python block.
-
-When we execute this program, we obtain 3 math problems like the ones in the [examples](https://github.com/IBM/prompt-declaration-language//blob/main/examples/arith/).
+The chatbot keeps looping by making a call to a model, asking the user if the generated text is a good answer, 
+and asking `why not?` if the answer (stored in variable `eval`) is `no`. The loop ends when `eval` becomes `yes`.
 
 Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together (which is the case of top-level programs in general), then we need the keyword `text` to precede a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastOf` block.
 
-Similarly, the `read` block has an annotation `as: text`. This means that the result of each iteration is stringified and collated to the overall result of the `repeat` block which is of type string in this case.
+Another form of iteration in PDL is `repeat` followed by `num_iterations`, which repeats the body `num_iterations` times.
+
+The way that the result of each iteration is collated with other iterations can be customized in PDL using
+the `join` feature (see the following section).
 
 ## For Loops
 
@@ -607,6 +675,31 @@ which outputs the following list:
 [1, 2, 3, 4]
 ```
 
+To retain only the result of the last iteration of the loop, we would write:
+```
+description: for loop
+for:
+  i: [1, 2, 3, 4]
+repeat:
+  - ${ i }
+join:
+  as: lastOf
+```
+
+which outputs:
+```
+4
+```
+
+When `join` is not specified, the collation defaults to
+```
+join:
+  as: text
+  with: ""
+```
+
+meaning that result of each iteration is stringified and concatenated with that of other iterations. When using `with`,
+`as: text` can be elided.
 
 
 The `for` loop constructs also allows iterating over 2 or more lists of the same length simultaneously:
@@ -632,6 +725,61 @@ Bob's number is 1
 Carol's number is 2
 David's number is 3
 Ernest's number is 4
+```
+
+## Roles and Chat Templates
+
+Consider again the chatbot example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/conditionals_loops.pdl)). By default blocks have role `user`, except for model call blocks, which have role `assistant`.
+If we write roles explicitly for the chatbot, we obtain:
+
+
+```yaml
+description: chatbot
+text:
+- read:
+  message: "What is your query?\n"
+  contribute: [context]
+- repeat:
+    text:
+    - model: watsonx/ibm/granite-13b-chat-v2
+      role: assistant
+    - read:
+      def: eval
+      message: "\nIs this a good answer[yes/no]?\n"
+      contribute: []
+    - if: ${ eval == 'no' }
+      then:
+        text:
+        - read:
+          message: "Why not?\n"
+  until: ${ eval == 'yes'}
+role: user
+```
+
+In PDL, any block can be adorned with a `role` field indicating the role for that block. These are high-level annotations
+that help to make programs more portable accross different models. PDL takes care of applying appropriate chat templates.
+
+The prompt that is actually submitted to the first model call (with query `What is APR?`) is the following:
+```
+<|start_of_role|>user<|end_of_role|>What is APR?<|end_of_text|>
+<|start_of_role|>assistant<|end_of_role|>
+```
+
+To change the template that is applied, you can specify it as a parameter of the model call:
+
+```yaml
+model: watsonx/ibm/granite-13b-chat-v2
+parameters:
+  roles:
+    system:
+       pre_message: <insert text here>
+       post_message: <insert text here>
+    user:
+       pre_message: <insert text here>
+       post_message: <insert text here>
+    assistant:
+       pre_message: <insert text here>
+       post_message: <insert text here>
 ```
 
 ## Type Checking

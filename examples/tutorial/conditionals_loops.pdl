@@ -16,4 +16,3 @@ text:
         - read:
           message: "Why not?\n"
   until: ${ eval == 'yes'}
-role: user
