@@ -1,0 +1,13 @@
+
+Write a PDL program that contains some Python code to prompt the user for a query.
+
+Answer:
+```
+description: Using a weather API and LLM to make a small weather app
+text:
+- lang: python
+  code:
+  - |
+    result = input("How can I help you?: ")
+  def: QUERY
+```

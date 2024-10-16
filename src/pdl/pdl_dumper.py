@@ -63,15 +63,16 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
+DumpedBlockType: TypeAlias = None | bool | int | float | str | dict[str, Any]
+
+
 def program_to_dict(
     prog: pdl_ast.Program, json_compatible: bool = False
-) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
+) -> DumpedBlockType | list[DumpedBlockType]:
     return blocks_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(
-    block: pdl_ast.BlockType, json_compatible: bool
-) -> int | float | str | dict[str, Any]:
+def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
@@ -137,7 +138,7 @@ def block_to_dict(
                     for k, b in block.object.items()
                 }
             else:
-                d["object"] = [blocks_to_dict(b, json_compatible) for b in block.object]
+                d["object"] = blocks_to_dict(block.object, json_compatible)
         case MessageBlock():
             d["content"] = blocks_to_dict(block.content, json_compatible)
         case ReadBlock():
@@ -231,10 +232,8 @@ def as_json(value: Any) -> JsonType:
 
 def blocks_to_dict(
     blocks: BlocksType, json_compatible: bool
-) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
-    result: (
-        int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
-    )
+) -> DumpedBlockType | list[DumpedBlockType]:
+    result: DumpedBlockType | list[DumpedBlockType]
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         result = [block_to_dict(block, json_compatible) for block in blocks]
     else:

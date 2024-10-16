@@ -13,7 +13,7 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm~=1.47",
+  "litellm~=1.49",
   "termcolor~=2.0",
   "ipython~=8.0"
 ]
@@ -34,7 +34,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-  "pre-commit~=3.0",
+  "pre-commit>=3,<5",
   "pytest~=8.0",
   "pydantic~=2.9"
 ]

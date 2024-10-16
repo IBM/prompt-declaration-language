@@ -26,6 +26,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -98,6 +101,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -165,10 +171,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -228,6 +240,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -301,6 +316,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -368,6 +386,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -427,6 +448,9 @@
         "array": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -499,6 +523,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -566,10 +593,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Array"
@@ -605,6 +638,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -678,6 +714,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -745,10 +784,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -809,6 +854,9 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -881,6 +929,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -948,6 +999,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1005,11 +1059,19 @@
           "type": "string"
         },
         "model": {
-          "title": "Model",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {}
+          ],
+          "title": "Model"
         },
         "input": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -1083,6 +1145,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -1150,6 +1215,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1164,6 +1232,9 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -1560,6 +1631,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -1632,6 +1706,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -1699,10 +1776,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -1762,6 +1845,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -1835,6 +1921,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -1902,6 +1991,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1960,8 +2052,7 @@
         },
         "call": {
           "description": "Function to call.\n    ",
-          "title": "Call",
-          "type": "string"
+          "title": "Call"
         },
         "args": {
           "default": {},
@@ -1971,6 +2062,9 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -2044,6 +2138,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2111,6 +2208,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -2155,6 +2255,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -2228,6 +2331,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -2295,10 +2401,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -2358,6 +2470,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -2431,6 +2546,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2498,6 +2616,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -2566,6 +2687,9 @@
         "code": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -2638,6 +2762,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2705,10 +2832,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Code to execute.\n    ",
@@ -2755,6 +2888,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -2828,6 +2964,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -2895,10 +3034,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -2958,6 +3103,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3031,6 +3179,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3098,6 +3249,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -3205,6 +3359,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -3277,6 +3434,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -3344,10 +3504,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -3407,6 +3573,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3480,6 +3649,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3547,6 +3719,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -3632,6 +3807,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -3704,6 +3882,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -3771,10 +3952,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -3834,6 +4021,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3907,6 +4097,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3974,6 +4167,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -4037,6 +4233,9 @@
         "program": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -4109,6 +4308,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4176,10 +4378,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Program"
@@ -4217,6 +4425,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -4290,6 +4501,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -4357,10 +4571,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -4420,6 +4640,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -4493,6 +4716,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4560,6 +4786,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -4624,6 +4853,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -4696,6 +4928,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4763,10 +4998,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -4796,6 +5037,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -4869,6 +5113,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -4936,10 +5183,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -4985,6 +5238,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -5058,6 +5314,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -5125,10 +5384,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -5188,6 +5453,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -5261,6 +5529,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5328,6 +5599,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -5399,6 +5673,9 @@
         "return": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -5471,6 +5748,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5538,10 +5818,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the function\n    ",
@@ -5592,6 +5878,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -5665,6 +5954,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -5732,10 +6024,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -5795,6 +6093,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -5868,6 +6169,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5935,6 +6239,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6029,6 +6336,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -6101,6 +6411,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -6168,10 +6481,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -6231,6 +6550,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -6304,6 +6626,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6371,6 +6696,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6434,6 +6762,9 @@
         "then": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -6506,6 +6837,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6573,10 +6907,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Branch to exectute if the condition is true.\n    ",
@@ -6585,6 +6925,9 @@
         "else": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -6657,6 +7000,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6724,6 +7070,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6782,6 +7131,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -6855,6 +7207,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -6922,10 +7277,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -6985,6 +7346,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -7058,6 +7422,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7125,6 +7492,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -7189,6 +7559,9 @@
         "trace": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -7256,6 +7629,88 @@
             },
             {
               "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/BamModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatUntilBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ForBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LastOfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ObjectBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MessageBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
             },
             {
               "type": "null"
@@ -7358,6 +7813,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -7430,6 +7888,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -7497,10 +7958,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -7561,6 +8028,9 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -7633,6 +8103,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7700,6 +8173,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -7759,6 +8235,9 @@
         "lastOf": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -7831,6 +8310,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7898,10 +8380,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Lastof"
@@ -7972,6 +8460,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -8044,6 +8535,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -8111,10 +8605,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -8175,6 +8675,9 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -8247,6 +8750,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -8314,6 +8820,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -8371,11 +8880,19 @@
           "type": "string"
         },
         "model": {
-          "title": "Model",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {}
+          ],
+          "title": "Model"
         },
         "input": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -8449,6 +8966,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -8516,6 +9036,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -8530,6 +9053,9 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -9091,6 +9617,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -9163,6 +9692,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -9230,10 +9762,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -9294,6 +9832,9 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -9366,6 +9907,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -9433,6 +9977,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -9491,6 +10038,9 @@
         "content": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -9563,6 +10113,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -9630,10 +10183,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Content of the message.",
@@ -9944,6 +10503,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -10016,6 +10578,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -10083,10 +10648,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -10146,6 +10717,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -10219,6 +10793,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -10286,6 +10863,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10348,6 +10928,9 @@
               "additionalProperties": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -10415,6 +10998,91 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "$ref": "#/$defs/FunctionBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/CallBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LitellmModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/BamModelBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/CodeBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/GetBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/DataBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/IfBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/RepeatBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/RepeatUntilBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ForBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/TextBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/LastOfBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ArrayBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ObjectBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/MessageBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ReadBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/IncludeBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/ErrorBlock"
+                        },
+                        {
+                          "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10424,6 +11092,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -10491,6 +11162,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10508,6 +11182,9 @@
     },
     "PdlBlock": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -10576,12 +11253,18 @@
         },
         {
           "$ref": "#/$defs/EmptyBlock"
+        },
+        {
+          "type": "null"
         }
       ],
       "title": "PdlBlock"
     },
     "PdlBlocks": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -10655,6 +11338,9 @@
           "items": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -10722,10 +11408,16 @@
               },
               {
                 "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
               }
             ]
           },
           "type": "array"
+        },
+        {
+          "type": "null"
         }
       ],
       "title": "PdlBlocks"
@@ -10759,6 +11451,9 @@
         },
         "pdl": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -10832,6 +11527,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -10899,10 +11597,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Pdl"
@@ -10916,6 +11620,9 @@
     },
     "Program": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -10989,6 +11696,9 @@
           "items": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -11056,10 +11766,16 @@
               },
               {
                 "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
               }
             ]
           },
           "type": "array"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Prompt Declaration Language program (PDL)",
@@ -11114,6 +11830,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -11187,6 +11906,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -11254,10 +11976,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -11317,6 +12045,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -11390,6 +12121,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -11457,6 +12191,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -11515,9 +12252,7 @@
         },
         "read": {
           "anyOf": [
-            {
-              "type": "string"
-            },
+            {},
             {
               "type": "null"
             }
@@ -11627,6 +12362,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -11699,6 +12437,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -11766,10 +12507,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -11829,6 +12576,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -11902,6 +12652,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -11969,6 +12722,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -12028,6 +12784,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -12100,6 +12859,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12167,10 +12929,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -12205,6 +12973,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -12278,6 +13049,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -12345,10 +13119,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -12394,6 +13174,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -12467,6 +13250,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -12534,10 +13320,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -12597,6 +13389,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -12670,6 +13465,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12737,6 +13535,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -12796,6 +13597,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -12868,6 +13672,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12935,10 +13742,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -12972,6 +13785,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -13045,6 +13861,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -13112,10 +13931,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -13161,6 +13986,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -13234,6 +14062,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -13301,10 +14132,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -13365,6 +14202,9 @@
         "fallback": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -13437,6 +14277,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -13504,6 +14347,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -13563,6 +14409,9 @@
         "text": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -13635,6 +14484,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -13702,10 +14554,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the text.\n    ",

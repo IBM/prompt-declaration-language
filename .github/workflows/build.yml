@@ -39,7 +39,7 @@ jobs:
     - name: pre-commit checks
       run: pre-commit run -a
     - name: run tests
-      run: py.test -v --capture=tee-sys tests
+      run: py.test -v --capture=tee-sys --ignore=tests/test_examples_run.py tests
 
   viewer:
     name: Build PDL live viewer

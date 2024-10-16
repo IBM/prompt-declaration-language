@@ -318,7 +318,20 @@ def step_advanced_block(
         result, background, scope, trace = yield from step_block_body(
             state, scope, block, loc
         )
-    except PDLRuntimeError as exc:
+        trace = trace.model_copy(update={"result": result})
+        if block.parser is not None:
+            result = parse_result(block.parser, result)
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(
+                    message,
+                    loc=loc,
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
+    except Exception as exc:
         if block.fallback is None:
             raise exc from exc
         (
@@ -334,29 +347,19 @@ def step_advanced_block(
             scope,
             loc=loc,
         )
-    trace = trace.model_copy(update={"result": result})
-    if block.parser is not None:
-        try:
-            result = parse_result(block.parser, result)
-        except PDLRuntimeParserError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, program=trace, fallback=result),
-            ) from exc
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(  # pylint: disable=raise-missing-from
+                    message,
+                    loc=append(loc, "fallback"),
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
-    if block.spec is not None and not isinstance(block, FunctionBlock):
-        errors = type_check_spec(result, block.spec, block.location)
-        if len(errors) > 0:
-            message = "Type errors during spec checking:\n" + "\n".join(errors)
-            raise PDLRuntimeError(
-                message,
-                loc=loc,
-                trace=ErrorBlock(msg=message, program=trace),
-                fallback=result,
-            )
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
@@ -446,14 +449,24 @@ def step_block_body(
         case ObjectBlock():
             iteration_state = state.with_yield_result(False)
             if isinstance(block.object, dict):
+                background = []
+                values = []
+                values_trace = []
                 try:
-                    values, background, scope, values_trace = yield from step_blocks(
-                        IterationType.ARRAY,
-                        iteration_state,
-                        scope,
-                        list(block.object.values()),
-                        append(loc, "object"),
-                    )
+                    obj_loc = append(loc, "object")
+                    for k, value_blocks in block.object.items():
+                        value, value_background, scope, value_trace = (
+                            yield from step_blocks(
+                                IterationType.LASTOF,
+                                iteration_state,
+                                scope,
+                                value_blocks,
+                                append(obj_loc, k),
+                            )
+                        )
+                        background = messages_concat(background, value_background)
+                        values.append(value)
+                        values_trace.append(value_trace)
                 except PDLRuntimeStepBlocksError as exc:
                     obj = dict(zip(block.object.keys(), exc.blocks))
                     trace = block.model_copy(update={"object": obj})
@@ -462,25 +475,21 @@ def step_block_body(
                         loc=exc.loc or loc,
                         trace=trace,
                     ) from exc
-                assert isinstance(values, list)
-                assert isinstance(values_trace, list)
                 result = dict(zip(block.object.keys(), values))
                 object_trace = dict(zip(block.object.keys(), values_trace))
                 trace = block.model_copy(update={"object": object_trace})
-            elif isinstance(block.object, list):
+            else:
                 results, background, scope, trace = yield from step_blocks_of(
                     block,
                     "object",
                     IterationType.ARRAY,
-                    state,
+                    iteration_state,
                     scope,
                     loc,
                 )
                 result = {}
                 for d in results:
                     result = result | d
-            else:
-                assert False
             if state.yield_result and not iteration_state.yield_result:
                 yield YieldResultMessage(result)
         case MessageBlock():
@@ -1027,7 +1036,7 @@ def step_call_model(
             loc,
         )
         if isinstance(model_input_result, str):
-            model_input = [{"role": None, "content": model_input_result}]
+            model_input = [{"role": state.role, "content": model_input_result}]
         else:
             model_input = model_input_result
     else:
@@ -1331,9 +1340,21 @@ def process_input(
     read, block = process_expr_of(block, "read", scope, loc)
     if read is not None:
         file = state.cwd / read
-        with open(file, encoding="utf-8") as f:
-            s = f.read()
-            append_log(state, "Input from File: " + str(file), s)
+        try:
+            with open(file, encoding="utf-8") as f:
+                s = f.read()
+                append_log(state, "Input from File: " + str(file), s)
+        except Exception as exc:
+            if isinstance(exc, FileNotFoundError):
+                msg = f"file {str(file)} not found"
+            else:
+                msg = f"Fail to open file {str(file)}"
+            raise PDLRuntimeError(
+                message=msg,
+                loc=loc,
+                trace=ErrorBlock(msg=msg, location=loc, program=block),
+                fallback="",
+            ) from exc
     else:
         message = ""
         if block.message is not None:

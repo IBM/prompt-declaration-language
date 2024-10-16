@@ -141,7 +141,12 @@ export function show_object(object: {[key: string]: PdlBlocks}) {
 }
 
 export function show_block(data: PdlBlock) {
-  if (typeof data === 'number' || typeof data === 'string') {
+  if (
+    data === null ||
+    typeof data === 'boolean' ||
+    typeof data === 'number' ||
+    typeof data === 'string'
+  ) {
     return show_output(data);
   }
   const div = document.createElement('div');
@@ -388,7 +393,12 @@ export function blocks_code_cleanup(data: PdlBlocks): PdlBlocks {
 }
 
 export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
-  if (typeof data === 'number' || typeof data === 'string') {
+  if (
+    data === null ||
+    typeof data === 'boolean' ||
+    typeof data === 'number' ||
+    typeof data === 'string'
+  ) {
     return data;
   }
   // remove result
