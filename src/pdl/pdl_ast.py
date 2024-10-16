@@ -513,7 +513,7 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType: TypeAlias = int | float | str | AdvancedBlockType
+BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
 """All kinds of blocks.
 """
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
