@@ -4,11 +4,11 @@ from pdl.pdl_ast import LitellmModelBlock, LitellmParameters, Program, TextBlock
 hello = Program(
     TextBlock(
         text=[
-            "Hello,",
+            "Hello\n",
             LitellmModelBlock(
-                model="watsonx/ibm/granite-34b-code-instruct",
+                model="replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e",
                 parameters=LitellmParameters(
-                    stop=["!"], include_stop_sequence=True  # pyright: ignore
+                    stop_sequences="!"   # pyright: ignore
                 ),
             ),
         ]

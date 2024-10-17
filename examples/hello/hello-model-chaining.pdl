@@ -1,15 +1,12 @@
 description: Hello world showing model chaining
 text:
-- Hello,
+- "Hello\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
   parameters:
     decoding_method: greedy
     stop_sequences: '!'
-  def: NAME
-- |-
-  !
-  Who is${ NAME }?
-- "\n"
+  def: GEN
+- "\nDid you say ${ GEN }?\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
   parameters:
     decoding_method: greedy

@@ -1,11 +1,11 @@
 description: Hello world with variable use
 text:
-- Hello,
+- "Hello\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
   parameters:
     decoding_method: greedy
     stop_sequences: '!'
-  def: NAME
+  def: GEN
 - |
 
-  Who is${ NAME }?
+  You said ${ GEN }.

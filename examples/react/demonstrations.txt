@@ -1,4 +1,4 @@
-|
+
 What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
 Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
 Act: {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
@@ -18,13 +18,16 @@ Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. 
 Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
 
 What is 18 + 12 x 3?
+Tho: I need to call a calculator.
 Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
 Obs: 54
 Act: {"name": "Finish", "arguments": {"topic": "54"}}
 
 A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+Tho: I need to call a calculator.
 Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
 Obs: 2.869047619047619
-Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}"
+Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
 
 
