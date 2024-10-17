@@ -91,6 +91,7 @@ defs:
                     Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
                     Act: {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
 
+
                 - text: 
                     |
                     What profession does Nicholas Ray and Elia Kazan have in common?
@@ -103,19 +104,25 @@ defs:
                     Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
                     Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
                 
+
                 - text:
                     |
                     What is 18 + 12 x 3?
+                    Tho: I need to call a calculator.
                     Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
                     Obs: 54
                     Act: {"name": "Finish", "arguments": {"topic": "54"}}
               
+
                 - text:
                     |
                     A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+                    Tho: I need to call a calculator.
                     Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
                     Obs: 2.869047619047619
                     Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+
       - call: react_inner
         args:
           pdl_context: []

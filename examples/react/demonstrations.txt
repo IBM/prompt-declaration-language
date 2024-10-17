@@ -1,4 +1,5 @@
-"What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+|
+What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
 Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
 Act: {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
 Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
@@ -25,3 +26,5 @@ A total of 252 qualifying matches were played, and 723 goals were scored. What w
 Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
 Obs: 2.869047619047619
 Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}"
+
+

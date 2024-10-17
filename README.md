@@ -44,8 +44,12 @@ pip install 'prompt-declaration-language[examples]'
 pip install 'prompt-declaration-language[docs]'
 ```
 
-In order to run the examples that use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a watsonx account (a free plan is available) and set up the following environment variables:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance
+In order to run the examples that use foundation models hosted on [Replicate](https://replicate.com/) via LiteLLM, you need to create a free account
+on Replicate, get an API key and store it in the environment variable:
+- `REPLICATE_API_TOKEN`
+
+In order to run the examples that use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
@@ -77,8 +81,6 @@ The interpreter executes Python code specified in PDL code blocks. To sandbox th
 you can use the `--sandbox` flag which runs the interpreter in a docker container. Without this flag, the interpreter
 and all code is executed locally. To use the `--sandbox` flag, you need to have a docker daemon running, such as 
 [Rancher Desktop](https://rancherdesktop.io).
-
-Note that the `--sandbox` flag is currently not available to BAM users.
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
 useful for debugging.
