@@ -53,6 +53,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
         pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
+        pathlib.Path("examples") / "tutorial" / "conditionals_loops.pdl",
     ]
 }
 
@@ -103,7 +104,9 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         ),
         pathlib.Path("examples")
         / "tutorial"
-        / "conditionals_loops.pdl": InputsType(stdin="What is APR?\nno\nSay it as a poem\nyes\n"),
+        / "conditionals_loops.pdl": InputsType(
+            stdin="What is APR?\nno\nSay it as a poem\nyes\n"
+        ),
     }.items()
 }
 
