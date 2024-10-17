@@ -4,4 +4,3 @@ text:
 - model: watsonx/ibm/granite-20b-multilingual
   input: 
     Translate the word 'world' to French
-  
