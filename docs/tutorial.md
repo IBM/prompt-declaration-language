@@ -11,9 +11,7 @@ All the examples in this tutorial can be found in `examples/tutorial`.
 The simplest PDL program is one that generates a small text ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/simple_program.pdl)):
 
 ```yaml
-description: Hello world!
-text:
-    Hello, world!
+--8<-- "./examples/tutorial/simple_program.pdl"
 ```
 
 This program has a `description` field, which contains a title. The `description` field is optional. It also has a `text` field, which can be either a string, a *block*, or a list of strings and blocks. A block is a recipe for how to obtain data (e.g., model call, code call, etc...). In this case, there are no calls to an LLM or other tools, and `text` consists of a simple string.
