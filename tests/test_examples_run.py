@@ -54,6 +54,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
         pathlib.Path("examples") / "tutorial" / "conditionals_loops.pdl",
+        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",
     ]
 }
 
