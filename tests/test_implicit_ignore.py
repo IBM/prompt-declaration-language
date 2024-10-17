@@ -55,3 +55,26 @@ def test_no_warning2(capsys):
         "warnings": [""],
     }
     do_test(capsys, test)
+
+
+def test_function(capsys):
+    test = {
+        "prog": """
+defs:
+  f:
+    function:
+    return:
+    - Hello
+    - How are you?
+    - Bye
+call: f
+args: {}
+""",
+        "result": "Bye",
+        "warnings": [
+            "Warning: the result of block `Hello` is not used.",
+            "Warning: the result of block `How are you?` is not used.",
+            "",
+        ],
+    }
+    do_test(capsys, test)
