@@ -90,22 +90,12 @@ The user can override these defaults by explicitly including them in the model c
 
 ##  Variable Definition and Use
 
-Any block can have a variable definition using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document.
+Any block can define a variable using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document.
 
 Consider the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/variable_def_use.pdl)):
 
 ```yaml
-description: Hello world with variable def and use
-text:
-- Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
-  def: GEN
-  parameters:
-    decoding_method: greedy
-    stop:
-    - '!'
-    include_stop_sequence: true
-- "\nGEN is equal to: ${ GEN }"
+--8<-- "./examples/tutorial/variable_def_use.pdl"
 ```
 
 Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `${ }` for accessing the value of a variable.
