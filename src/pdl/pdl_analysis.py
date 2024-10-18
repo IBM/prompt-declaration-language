@@ -105,11 +105,19 @@ def unused_advanced_block(state: UnusedConfig, block: AdvancedBlockType) -> None
             | ModelBlock()
             | CallBlock()
             | CodeBlock()
-            | EmptyBlock()
             | ReadBlock()
         ):
             if state.implicit_ignore:
                 unused_warning(block)
+            iter_block_children(
+                (
+                    lambda blocks: unused_blocks(
+                        state.with_implicit_ignore(False), blocks
+                    )
+                ),
+                block,
+            )
+        case EmptyBlock():
             iter_block_children(
                 (
                     lambda blocks: unused_blocks(

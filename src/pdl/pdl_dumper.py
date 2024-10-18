@@ -21,6 +21,10 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    JoinArray,
+    JoinLastOf,
+    JoinText,
+    JoinType,
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
@@ -76,7 +80,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
-    d["kind"] = block.kind
+    d["kind"] = str(block.kind)
     if block.description is not None:
         d["description"] = block.description
     if block.spec is not None:
@@ -87,7 +91,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         }
     match block:
         case BamModelBlock():
-            d["platform"] = block.platform
+            d["platform"] = str(block.platform)
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input, json_compatible)
@@ -105,7 +109,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
             if block.constraints is not None:
                 d["constraints"] = block.constraints
         case LitellmModelBlock():
-            d["platform"] = block.platform
+            d["platform"] = str(block.platform)
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input, json_compatible)
@@ -159,7 +163,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -167,7 +171,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -175,7 +179,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -214,6 +218,16 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     #     d["location"] = location_to_dict(block.location)
     if block.fallback is not None:
         d["fallback"] = blocks_to_dict(block.fallback, json_compatible)
+    return d
+
+
+def join_to_dict(join: JoinType) -> dict[str, Any]:
+    d = {}
+    match join:
+        case JoinText():
+            d["with"] = join.join_string
+        case JoinArray() | JoinLastOf():
+            d["as"] = str(join.iteration_type)
     return d
 
 
