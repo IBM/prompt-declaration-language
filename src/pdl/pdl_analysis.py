@@ -2,8 +2,6 @@ import sys
 from dataclasses import dataclass
 from typing import Sequence
 
-from .pdl_dumper import blocks_to_dict, dump_yaml
-
 from .pdl_ast import (
     AdvancedBlockType,
     ArrayBlock,
@@ -32,6 +30,7 @@ from .pdl_ast import (
     TextBlock,
 )
 from .pdl_ast_utils import iter_block_children
+from .pdl_dumper import blocks_to_dict, dump_yaml
 
 
 @dataclass
@@ -47,7 +46,10 @@ _DISPLAY_UNUSED_HINT = True
 
 def unused_warning(block: BlockType):
     global _DISPLAY_UNUSED_HINT  # pylint: disable= global-statement
-    print(f"Warning: the result of block `{dump_yaml(blocks_to_dict(block, json_compatible=True))}` is not used.", file=sys.stderr)
+    print(
+        f"Warning: the result of block `{dump_yaml(blocks_to_dict(block, json_compatible=True))}` is not used.",
+        file=sys.stderr,
+    )
     if _DISPLAY_UNUSED_HINT:
         _DISPLAY_UNUSED_HINT = False
         print(
