@@ -620,7 +620,7 @@ def set_default_granite_model_parameters(
 ) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
-    
+
     if "decoding_method" not in parameters:
         parameters["decoding_method"] = (
             DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
@@ -650,10 +650,10 @@ def set_default_granite_model_parameters(
             parameters["top_p"] = (
                 TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
             )
-    if "granite-3.0" in model_id: 
+    if "granite-3.0" in model_id:
         if "temperature" not in parameters or parameters["temperature"] is None:
-            parameters["temperature"] = (0) # setting to decoding greedy
-        
+            parameters["temperature"] = 0  # setting to decoding greedy
+
         if "roles" not in parameters:
             parameters["roles"] = {
                 "system": {

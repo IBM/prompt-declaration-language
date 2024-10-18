@@ -7,9 +7,7 @@ hello = Program(
             "Hello\n",
             LitellmModelBlock(
                 model="replicate/ibm-granite/granite-3.0-8b-instruct",
-                parameters=LitellmParameters(
-                    stop_sequences="!"   # pyright: ignore
-                ),
+                parameters=LitellmParameters(stop_sequences="!"),  # pyright: ignore
             ),
         ]
     )
