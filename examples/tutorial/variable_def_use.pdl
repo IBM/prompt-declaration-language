@@ -1,10 +1,8 @@
 description: Hello world with variable def and use
 text:
-- Hello,
+- "Hello\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
   def: GEN
   parameters:
-    decoding_method: greedy
     stop_sequences: '!'
-    include_stop_sequence: true
 - "\nGEN is equal to: ${ GEN }"
