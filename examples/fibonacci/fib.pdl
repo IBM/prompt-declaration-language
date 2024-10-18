@@ -1,7 +1,7 @@
 description: Fibonacci
 text:
 - def: CODE
-  model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+  model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: "Write a Python function to compute the Fibonacci sequence. Do not include a doc string.\n\n"
   parameters:
     temperature: 0
@@ -26,5 +26,5 @@ text:
   contribute: []
 - 'The result is: ${ RESULT }'
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   

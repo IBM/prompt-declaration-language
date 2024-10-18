@@ -232,7 +232,7 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
@@ -297,7 +297,7 @@ defs:
     read: ./ground_truth.txt
 text:
 - "\n${ CODE.source_code }\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
@@ -378,7 +378,7 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   def: EXPLANATION
   contribute: []
   input:

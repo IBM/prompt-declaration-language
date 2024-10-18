@@ -1,12 +1,12 @@
 description: Variable def and use, model input
 text: 
 - "Hello\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   def: name
   parameters:
     stop_sequences: "!"
 - "\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct:8d8fb55950fb8eb2817fc078b7b05a0bd3ecc612d6332d8009fb0c007839192e
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input:
       - "Translate the word ${ name | trim } to French\n"
   parameters:
