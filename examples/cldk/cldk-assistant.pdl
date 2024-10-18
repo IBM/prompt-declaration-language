@@ -140,7 +140,7 @@ text:
 
             parameters:
               stop_sequences: "Question"
-              include_stop_sequence: false
+              temperature: 0
           - "\n\n***Executing the above PDL code:\n\n"
           - lang: python
             contribute: [result]

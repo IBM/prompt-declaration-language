@@ -436,7 +436,7 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 ## Additional Notes
 
 When using Granite models, we use the following defaults for model parameters (except `granite-20b-code-instruct-r1.1`):
-  - `decoding_method`: `greedy`
+  - `decoding_method`: `greedy`, (`temperature`: 0)
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
   - `repetition_penalty`: 1.05

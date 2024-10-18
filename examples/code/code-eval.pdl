@@ -20,6 +20,8 @@ text:
       Explain the following code:
       ```
       ${ CODE.source_code }```
+  parameters:
+    temperature: 0
 - |
 
 
