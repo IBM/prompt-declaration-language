@@ -1,0 +1,10 @@
+description: Hello world calling a model
+text:
+- "Hello, "
+- model: watsonx/ibm/granite-20b-multilingual
+  input:
+    array:
+    - role: system
+      content: You are a helpful assistant that is fluent in French.
+    - role: user
+      content: Translate the word 'world' to French

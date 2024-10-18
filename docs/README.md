@@ -10,7 +10,7 @@ LLMs will continue to change the way we build software systems. They are not onl
 PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...).
 
 PDL provides the following features:
-- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's Watsonx](https://www.ibm.com/watsonx)
+- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx)
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files and stdin, including JSON data
@@ -29,7 +29,7 @@ See below for a quick reference, followed by [installation notes](#interpreter_i
 
 <img src="https://ibm.github.io/prompt-declaration-language/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
 
-(See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).]
+(See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).)
 
 
 ## Interpreter Installation
@@ -49,8 +49,8 @@ pip install 'prompt-declaration-language[examples]'
 pip install 'prompt-declaration-language[docs]'
 ```
 
-In order to run the examples that use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance
+In order to run the examples that use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a watsonx account (a free plan is available) and set up the following environment variables:
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
@@ -236,7 +236,7 @@ assign the result to variable `CODE`.
 
 Next we define a `text`, where the first block is simply a string and writes out the source code. This is done by accessing the variable `CODE`. The syntax `${ var }` means accessing the value of a variable in the scope. Since `CODE` contains YAML data, we can also access fields such as `CODE.source_code`.
 
-The second block calls a granite model on WatsonX via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire text produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
+The second block calls a granite model on watsonx via LiteLLM. Here we explicitly provide an `input` field which means that we do not pass the entire text produced so far to the model, but only what is specified in this field. In this case, we specify our template by using the variable `CODE` as shown above.
 
 When we execute this program with the PDL interpreter, we obtain the following text:
 
@@ -406,7 +406,7 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 
 ## Additional Notes
 
-When using Granite models on Watsonx, we use the following defaults for model parameters (except `granite-20b-code-instruct-r1.1`):
+When using Granite models on watsonx, we use the following defaults for model parameters (except `granite-20b-code-instruct-r1.1`):
   - `decoding_method`: `greedy`
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
@@ -422,4 +422,4 @@ For a complete list of issues see [here](https://github.com/IBM/prompt-declarati
 
 ## Contributing to the Project
 
-See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib)
+See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib).
