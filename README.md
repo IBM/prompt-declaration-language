@@ -2,7 +2,7 @@
 
 LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snipets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. 
 
-PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape and contents of such documents in a declarative way (in YAML), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...).
+PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape of data in such documents in a declarative way (in YAML), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...).
 
 PDL provides the following features:
 - Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx)
@@ -26,6 +26,7 @@ See below for a quick reference, followed by [installation notes](#interpreter_i
 
 (See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).)
 
+Pro Tip: When writing loops and conditionals with `repeat`, `for`, and `if-then-else`, start the body of the loop or conditional (`then`/`else`) with `text` in order to see the results of every block in the body. See for example this [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/conditionals_loops.pdl).
 
 ## Interpreter Installation
 
@@ -48,7 +49,7 @@ on Replicate, get an API key and store it in the environment variable:
 - `REPLICATE_API_TOKEN`
 
 In order to use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance. The region can be found by clicking in the upper right corner of the Watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
