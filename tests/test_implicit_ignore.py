@@ -11,7 +11,6 @@ def do_test(capsys, test):
     assert set(warnings) == set(test["warnings"])
 
 
-
 def test_strings(capsys):
     test = {
         "prog": """
