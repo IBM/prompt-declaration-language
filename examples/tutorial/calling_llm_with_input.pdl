@@ -1,6 +1,6 @@
 description: Hello world calling a model
 text:
-- "Hello, "
-- model: watsonx/ibm/granite-20b-multilingual
+- "Hello\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: 
-    Translate the word 'world' to French
+    Translate the word 'Hello' to French

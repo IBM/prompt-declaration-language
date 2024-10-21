@@ -234,6 +234,8 @@ def main():
         watsonx_apikey = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
         watsonx_url = "WATSONX_URL=" + os.environ["WATSONX_URL"]
         watsonx_project_id = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
+        replicate_api_token = "REPLICATE_API_TOKEN=" + os.environ["REPLICATE_API_TOKEN"]
+
         local_dir = os.getcwd() + ":/local"
         try:
             args = sys.argv[1:]
@@ -252,6 +254,8 @@ def main():
                     watsonx_url,
                     "-e",
                     watsonx_project_id,
+                    "-e",
+                    replicate_api_token,
                     "--rm",
                     "-it",
                     "quay.io/project_pdl/pdl",

@@ -14,11 +14,11 @@ text:
     from cldk import CLDK
     from cldk.models.java.models import *
 
-    # Initialize the Codellm-DevKit object with the project directory, language, and backend.
+    # Initialize the Codellm-DevKit object with the project directory, langguage, and backend.
     cldk = CLDK("java")
     cldk_state = cldk.analysis(
         project_path="${ project }",   # Change this to the path of the project you want to analyze.
-        # language="java",  # The language of the project.
+        # langguage="java",  # The langguage of the project.
         # backend="codeanalyzer",  # The backend to use for the analysis.
         # analysis_db="/tmp",  # A temporary directory to store the analysis results.
         # sdg=True, # Generate the System Dependence Graph (SDG) for the project.
@@ -27,141 +27,132 @@ text:
     result = cldk_state
 - " done!"
 - repeat:
-  - read:
-    def: query
-    message: "\n\nHow can I help you [Type 'quit' to quit]?\n"
-    contribute: []
-  - "\n***Generating PDL code for your query:\n"
-  - if: ${ query != 'quit'}
-    then: 
-    - model: watsonx/ibm/granite-20b-code-instruct
-      def: PDL
-      input: 
-        - |
-          Question: What are all the classes?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              classes = PDL_SESSION.cldk_state.get_classes().keys()
-              result = ", ".join(classes)
-          ```
-
-          Question: What are all the constructors of class org.ibm.App?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
-              result = ", ".join(constructors)
-          ```
-
-          Question: What are all the fields of class org.ibm.App?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
-              names = sum([f.variables for f in fields], [])
-              result = ", ".join(names)
-          ```
-
-          Question: What are all the methods of class org.ibm.App?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
-              result = ", ".join(methods)
-          ```
-
-          Question: Show me the call graph of class "org.ibm.App"
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
-              result = graph
-          ```
-
-          Question: What is the code of method Foo(string) of class org.ibm.App?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
-              result = method.code
-          ```
-
-          Question: Generate a summary for method Foo(string) of class org.ibm.App
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
-              result = method
-          - "\n\nGenerate a summary of method Foo\n\n"
-          - model: watsonx/meta-llama/llama-3-1-70b-instruct
-          ```
-
-          Question: Generate a different comment for method Foo(string) in class org.ibm.App?
-          Answer:
-          ```
-          text:
-          - lang: python
-            code: 
-            - |
-              method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
-              result = method
-          - "\n\nGenerate a different comment for method Foo(string)\n\n"
-          - model: watsonx/meta-llama/llama-3-1-70b-instruct
-          ```
-
-          If the query contains something about a field be sure to call a model.
-          
-          Question: ${ query }
-
-
-      parameters:
-        stop_sequence: ["Question"]
-        include_stop_sequence: false
-    - "\n\n***Executing the above PDL code:\n\n"
-    - lang: python
+    text:
+    - read:
+      def: query
+      message: "\n\nHow can I help you [Type 'quit' to quit]?\n"
       contribute: []
-      code: | 
-        from pdl import pdl_ast, pdl_interpreter
-        from pdl.pdl_ast import Program
-        from pdl.pdl_interpreter import process_prog
-        from pdl.pdl_interpreter import InterpreterState
-        from pdl.pdl_interpreter import empty_scope
-        import re
-        import yaml
-        s = """'${ PDL }'"""
-        print(s)
-        pdl = s.split("```")[1]
-        obj = yaml.safe_load(pdl)
-        state = InterpreterState()
-        data = Program.model_validate(obj)
-        
-        result, _, _, _ = process_prog(state, empty_scope, data)
+    - "\n***Generating PDL code for your query:\n"
+    - if: ${ query != 'quit'}
+      then: 
+        text:
+          - model: replicate/ibm-granite/granite-3.0-8b-instruct
+            def: PDL
+            input: 
+              - |
+                Question: What are all the classes?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    classes = PDL_SESSION.cldk_state.get_classes().keys()
+                    result = ", ".join(classes)
+                ```
+
+                Question: What are all the constructors of class org.ibm.App?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
+                    result = ", ".join(constructors)
+                ```
+
+                Question: What are all the fields of class org.ibm.App?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
+                    names = sum([f.variables for f in fields], [])
+                    result = ", ".join(names)
+                ```
+
+                Question: What are all the methods of class org.ibm.App?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
+                    result = ", ".join(methods)
+                ```
+
+                Question: Show me the call graph of class "org.ibm.App"
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
+                    result = graph
+                ```
+
+                Question: What is the code of method Foo(string) of class org.ibm.App?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
+                    result = method.code
+                ```
+
+                Question: Generate a summary for method Foo(string) of class org.ibm.App
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
+                    result = method
+                - "\n\nGenerate a summary of method Foo\n\n"
+                - model: replicate/ibm-granite/granite-3.0-8b-instruct
+                ```
+
+                Question: Generate a different comment for method Foo(string) in class org.ibm.App?
+                Answer:
+                ```
+                text:
+                - lang: python
+                  code: 
+                  - |
+                    method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
+                    result = method
+                - "\n\nGenerate a different comment for method Foo(string)\n\n"
+                - model: replicate/ibm-granite/granite-3.0-8b-instruct
+                ```
+
+                If the query contains something about a field be sure to call a model.
+                
+                Question: ${ query }
+
+
+            parameters:
+              stop_sequences: "Question"
+              temperature: 0
+          - "\n\n***Executing the above PDL code:\n\n"
+          - lang: python
+            contribute: [result]
+            code: | 
+              from pdl.pdl import exec_str
+              s = """${ PDL }"""
+              pdl = s.split("```")[1]
+              result = exec_str(pdl)
+              
   until: ${ query == 'quit' }
+
 
   
 
    
-
-

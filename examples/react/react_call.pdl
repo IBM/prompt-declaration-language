@@ -3,5 +3,7 @@ text:
   - include: ./react_fun.pdl
   - call: react
     args:
-      question: How many years ago was the discoverer of the Hudson River born?
-      model: watsonx/ibm/granite-34b-code-instruct
+      question: How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2024.
+      model: replicate/ibm-granite/granite-3.0-8b-instruct
+
+

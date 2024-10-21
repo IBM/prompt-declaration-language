@@ -2,12 +2,10 @@ from pdl.pdl import exec_str
 
 HELLO = """
 text:
-- Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- "Hello\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
-    stop:
-    - '!'
-    include_stop_sequence: true
+    stop_sequences: '!'
 """
 
 

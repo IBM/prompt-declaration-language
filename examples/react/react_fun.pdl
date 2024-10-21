@@ -25,23 +25,28 @@ defs:
           - def: thought
             model: ${ model }
             parameters:
-              stop: 
-              - "Act:"
-              include_stop_sequence: true
-          - def: action
+              stop_sequences: "Act:"
+              temperature: 0
+          - def: rawAction
             model: ${ model }
             parameters:
-              stop: 
-              - "\n"
+              stop_sequences: "\n"
+              temperature: 0
+          - def: action
+            lang: python
             parser: json
             spec: {name: str, arguments: obj}
-          - if: ${ action != prev_action}
+            contribute: [context]
+            code:
+              |
+              result = '${ rawAction }'.replace("Act: ", "")
+          - if: ${ action  != prev_action}
             then: 
             - def: observation
               if: ${ action.name == "Search" }
               then:
                 text:
-                - "Obs: "
+                - "\nObs: "
                 - lang: python
                   code: |
                     import warnings, wikipedia
@@ -50,13 +55,15 @@ defs:
                       result = wikipedia.summary("${ action.arguments.topic }")
                     except wikipedia.WikipediaException as e:
                       result = str(e)
+                - "\n"
               else:
                 - if: ${ action.name == "Calc" }
                   then:
                     text:
-                    - "Obs: "
+                    - "\nObs: "
                     - lang: python
                       code: result = ${ action.arguments.expr }
+                    - "\n"
             else:
               def: exit
               contribute: []
@@ -84,6 +91,7 @@ defs:
                     Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
                     Act: {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
 
+
                 - text: 
                     |
                     What profession does Nicholas Ray and Elia Kazan have in common?
@@ -96,23 +104,30 @@ defs:
                     Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
                     Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
                 
+
                 - text:
                     |
                     What is 18 + 12 x 3?
+                    Tho: I need to call a calculator.
                     Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
                     Obs: 54
                     Act: {"name": "Finish", "arguments": {"topic": "54"}}
               
+
                 - text:
                     |
                     A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+                    Tho: I need to call a calculator.
                     Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
                     Obs: 2.869047619047619
                     Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+
       - call: react_inner
         args:
           pdl_context: []
           examples: ${ examples }
           question: ${ question }
           model: ${ model }
+
 

@@ -1,3 +1,4 @@
+# Expected not to type check
 description: Creating JSON Data
 defs:
   data:
@@ -5,7 +6,7 @@ defs:
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 text:
-  - model: watsonx/ibm/granite-20b-code-instruct
+  - model: replicate/ibm-granite/granite-3.0-8b-instruct
     def: model_output
     spec: {name: str, age: int}
     input:
@@ -22,7 +23,7 @@ text:
         and set them appropriately. Write the age in letters.
     parser: yaml
     parameters:
-      stop:
-      - '}'
-      include_stop_sequence: true
+      stop_sequences: "\n"
+      temperature: 0
+
  

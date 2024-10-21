@@ -1,4 +1,3 @@
-description: react agentic flow
 text:
 - |
   What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
@@ -19,27 +18,57 @@ text:
   Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
   Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
 
-  When was the discoverer of the Hudson River born?
+  What is 18 + 12 x 3?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+  Obs: 54
+  Act: {"name": "Finish", "arguments": {"topic": "54"}}
+
+  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+  Obs: 2.869047619047619
+  Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+  What is 18 + 12 x 3?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
+  Obs: 54
+  Act: {"name": "Finish", "arguments": {"topic": "54"}}
+
+  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
+  Tho: I need to call a calculator.
+  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
+  Obs: 2.869047619047619
+  Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
+
+
+  when was the discoverer of the Hudson River born? 
 - repeat:
     text:
     - def: thought
-      model: watsonx/ibm/granite-34b-code-instruct
+      model: replicate/ibm-granite/granite-3.0-8b-instruct
       parameters:
-        stop:
-        - "Act:"
-        include_stop_sequence: true
+        stop_sequences: "Act:"
+        temperature: 0
+    - def: rawAction
+      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      parameters:
+        stop_sequences: "\n"
+        temperature: 0
     - def: action
-      model: watsonx/ibm/granite-34b-code-instruct
-      parameters:
-        stop:
-        - "\n"
+      lang: python
       parser: json
-      spec: {name: str, arguments: {topic: str}}
+      spec: {name: str, arguments: obj}
+      contribute: [context]
+      code:
+        |
+        result = '${ rawAction }'.replace("Act: ", "")
     - def: observation
-      if: '${ action.name == "Search" }'
+      if: ${ action.name == "Search" }
       then:
         text:
-        - "Obs: "
+        - "\nObs: "
         - lang: python
           code: |
             import warnings, wikipedia
@@ -48,5 +77,6 @@ text:
               result = wikipedia.summary("${ action.arguments.topic }")
             except wikipedia.WikipediaException as e:
               result = str(e)
-  until: '${ action.name != "Search" }'
+        - "\n"
+  until: ${ action.name != "Search" }
 

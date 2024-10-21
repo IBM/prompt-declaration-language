@@ -5,7 +5,7 @@ text:
   contribute: [context]
 - repeat:
     text:
-    - model: watsonx/ibm/granite-13b-chat-v2
+    - model: replicate/ibm-granite/granite-3.0-8b-instruct
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"

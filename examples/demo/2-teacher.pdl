@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: watsonx/mistralai/mixtral-8x7b-instruct-v01
+  teacher_model: replicate/ibm-granite/granite-3.0-8b-instruct
   teacher_template:
     function:
       sys_prompt: str
@@ -67,8 +67,8 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            temperature: 0
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
@@ -156,9 +156,9 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
@@ -251,9 +251,9 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ${ [teacher_stop_token] + prompt_data.additional_stop_tokens }
-            include_stop_sequence: false
+            stop_sequences: ${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
         parsed_answer:
           lang: python
           code: | # parse model output
@@ -338,9 +338,9 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'

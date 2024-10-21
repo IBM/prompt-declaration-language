@@ -6,9 +6,10 @@ text:
     language: str
   return:
   - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-  - model: watsonx/ibm/granite-20b-multilingual
+  - model: replicate/ibm-granite/granite-3.0-8b-instruct
     parameters:
-      stop: ["\n"]
+      stop_sequences: "\n"
+      temperature: 0
 - call: translate
   args:
     sentence: I love Paris!
