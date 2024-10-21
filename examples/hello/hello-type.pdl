@@ -1,3 +1,4 @@
+# Expected not to type check
 description: Hello world with type specification
 text:
 - def: GEN
