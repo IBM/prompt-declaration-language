@@ -1,8 +1,10 @@
 description: Fibonacci
 text:
 - def: CODE
-  model: watsonx/ibm/granite-20b-code-instruct
-  input: "Write a Python function to compute the Fibonacci sequence\n\n"
+  model: replicate/ibm-granite/granite-3.0-8b-instruct
+  input: "Write a Python function to compute the Fibonacci sequence. Do not include a doc string.\n\n"
+  parameters:
+    temperature: 0
   
 - "\nFind a random number between 1 and 20\n"
 - def: N
@@ -10,9 +12,7 @@ text:
   code: |
     import random
     result = random.randint(1, 20)
-- "\nNow computing fib("
-- get: N
-- ")\n"
+- "\nNow computing fibonacci(${ N })\n"
 - def: EXTRACTED
   lang: python
   code: |
@@ -22,9 +22,9 @@ text:
   lang: python
   code: |
     ${ EXTRACTED }
-    result = fib(${ N })
+    result = fibonacci(${ N })
   contribute: []
-- 'The result is: '
-- get: RESULT
+- 'The result is: ${ RESULT }'
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: watsonx/ibm/granite-20b-code-instruct
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
+  

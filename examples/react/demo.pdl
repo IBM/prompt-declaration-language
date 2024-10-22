@@ -30,20 +30,8 @@ text:
   Obs: 2.869047619047619
   Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
 
-  What is 18 + 12 x 3?
-  Tho: I need to call a calculator.
-  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
-  Obs: 54
-  Act: {"name": "Finish", "arguments": {"topic": "54"}}
 
-  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
-  Tho: I need to call a calculator.
-  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
-  Obs: 2.869047619047619
-  Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
-
-
-  when was the discoverer of the Hudson River born? 
+  How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2024.
 - repeat:
     text:
     - def: thought
@@ -78,5 +66,13 @@ text:
             except wikipedia.WikipediaException as e:
               result = str(e)
         - "\n"
+      else:
+        - if: ${ action.name == "Calc" }
+          then:
+            text:
+            - "\nObs: "
+            - lang: python
+              code: result = ${ action.arguments.expr }
+            - "\n"
   until: ${ action.name != "Search" }
 

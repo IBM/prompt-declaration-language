@@ -1,12 +1,9 @@
 description: Hello world with parser using regex
 text:
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: "Hello,"
   parameters:
-    decoding_method: greedy
-    stop:
-    - '!'
-    include_stop_sequence: false
+    stop_sequences: '!'
   spec: {"name": str}
   parser:
     spec:

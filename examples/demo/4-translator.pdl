@@ -1,11 +1,7 @@
 description: PDL program
 text:
-- What is APR?
-- model: watsonx/ibm/granite-13b-chat-v2
-  parameters:
-    max_new_tokens: 128
-    stop: ["."]
-    include_stop_sequence: true
+- "What is APR?\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
 - repeat:
     text:
     - read:
@@ -14,6 +10,6 @@ text:
     - if: ${ language != 'stop' }
       then:
         text:
-        - "\n\nTranslate the above to ${ language }"
-        - model: watsonx/ibm/granite-13b-chat-v2
+        - "\n\nTranslate the above to ${ language }\n"
+        - model: replicate/ibm-granite/granite-3.0-8b-instruct
   until: ${ language == 'stop' }

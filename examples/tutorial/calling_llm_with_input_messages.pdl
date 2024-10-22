@@ -1,0 +1,10 @@
+description: Hello world calling a model
+text:
+- "Hello\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
+  input:
+    array:
+    - role: system
+      content: You are a helpful assistant that is fluent in French.
+    - role: user
+      content: Translate the word 'Hello' to French

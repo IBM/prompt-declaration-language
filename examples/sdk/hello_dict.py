@@ -2,10 +2,10 @@ from pdl.pdl import exec_dict
 
 hello = {
     "text": [
-        "Hello,",
+        "Hello\n",
         {
-            "model": "watsonx/ibm/granite-34b-code-instruct",
-            "parameters": {"stop": ["!"], "include_stop_sequence": True},
+            "model": "replicate/ibm-granite/granite-3.0-8b-instruct",
+            "parameters": {"stop_sequences": "!"},
         },
     ]
 }

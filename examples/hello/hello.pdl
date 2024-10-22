@@ -1,9 +1,4 @@
 description: Hello world
 text:
-- Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
-  parameters:
-    decoding_method: greedy
-    stop:
-    - '!'
-    include_stop_sequence: true
+- "Hello\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
