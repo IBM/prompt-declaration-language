@@ -453,3 +453,16 @@ For a complete list of issues see [here](https://github.com/IBM/prompt-declarati
 ## Contributing to the Project
 
 See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib).
+
+## Citation
+
+Here is an [arXiv paper](http://arxiv.org/abs/2410.19135) about PDL:
+
+```bibtex
+@Misc{vaziri_et_al_2024,
+  author = "Vaziri, Mandana and Mandel, Louis and Spiess, Claudio and Hirzel, Martin",
+  title = "{PDL}: A Declarative Prompt Programming Language",
+  year = 2024,
+  month = oct,
+  url = "http://arxiv.org/abs/2410.19135" }
+```
