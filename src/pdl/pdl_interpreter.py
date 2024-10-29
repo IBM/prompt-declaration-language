@@ -1088,7 +1088,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     raw_result = None
     match state.batch:
         case 0:
@@ -1111,7 +1111,7 @@ def generate_client_response_streaming(
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
-    msg_stream: Generator[Message, Any, None]
+    msg_stream: Generator[Message, Any, Any]
     model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
@@ -1150,7 +1150,7 @@ def generate_client_response_streaming(
     if block.modelResponse is not None:
         raw_result = wrapped_gen.value
     if complete_msg is None:
-        return Message(role=state.role, content="")
+        return Message(role=state.role, content=""), raw_result
     return complete_msg, raw_result
 
 
@@ -1169,7 +1169,7 @@ def generate_client_response_single(
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg: Message
     model_input_str = messages_to_str(block.model, model_input)
     match block:

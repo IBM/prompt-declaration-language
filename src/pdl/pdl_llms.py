@@ -51,7 +51,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> tuple[Message, list[Any]]:
+    ) -> tuple[Message, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         text = ""
@@ -79,7 +79,7 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[Message, Any, list[Any]]:
+    ) -> Generator[Message, Any, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         responses = []
@@ -149,7 +149,7 @@ class LitellmModel:
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> Message:
+    ) -> tuple[Message, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             parameters = set_default_granite_model_parameters(model_id, parameters)
         if parameters.get("mock_response") is not None:
@@ -167,7 +167,7 @@ class LitellmModel:
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> Generator[Message, Any, list[Any]]:
+    ) -> Generator[Message, Any, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             parameters = set_default_granite_model_parameters(model_id, parameters)
         response = completion(
