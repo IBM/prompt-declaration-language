@@ -104,6 +104,8 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
                 d["data"] = block.data
             if block.constraints is not None:
                 d["constraints"] = block.constraints
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
         case LitellmModelBlock():
             d["platform"] = block.platform
             d["model"] = block.model
@@ -116,6 +118,8 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
                     )
                 else:
                     d["parameters"] = block.parameters
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = blocks_to_dict(block.code, json_compatible)

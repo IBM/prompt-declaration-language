@@ -256,6 +256,7 @@ class ModelBlock(Block):
     model: str | ExpressionType
     input: Optional["BlocksType"] = None
     trace: Optional["BlockType"] = None
+    modelResponse: Optional[str] = None
 
 
 class BamModelBlock(ModelBlock):

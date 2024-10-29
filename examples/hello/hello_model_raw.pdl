@@ -1,0 +1,17 @@
+description: Hello world
+text:
+- text: "Hello\n"
+  contribute: [context]
+- model: ibm/granite-8b-code-instruct
+  platform: bam
+  def: output
+  modelResponse: raw_output
+  parameters:
+    decoding_method: greedy
+    stop_sequences: ["!"]
+    include_stop_sequence: true
+    return_options: 
+      generated_tokens: True  
+      token_logprobs: True  
+  contribute: []
+- ${ raw_output }

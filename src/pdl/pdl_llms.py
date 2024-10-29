@@ -1,6 +1,7 @@
 from typing import Any, Generator, Optional
 
 import litellm
+import json
 from dotenv import load_dotenv
 from genai.client import Client as BamClient
 from genai.credentials import Credentials as BamCredentials
@@ -76,9 +77,10 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[Message, Any, None]:
+    ) -> Generator[Message, Any, list[Any]]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
+        responses = []
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -87,6 +89,7 @@ class BamModel:
             moderations=moderations,
             data=data,
         ):
+            responses.append(json.loads(response.model_dump_json()))
             if response.results is None:
                 # append_log(
                 #     state,
@@ -97,7 +100,7 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     yield {"role": None, "content": result.generated_text}
-
+        return responses
     # @staticmethod
     # def generate_text_lazy(  # pylint: disable=too-many-arguments
     #     model_id: str,
