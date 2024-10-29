@@ -2529,6 +2529,7 @@ export type Trace4 =
   | ErrorBlock
   | EmptyBlock
   | null;
+export type Modelresponse = string | null;
 export type Platform = "bam";
 export type PromptId = string | null;
 export type Parameters =
@@ -2738,6 +2739,7 @@ export type Trace5 =
   | ErrorBlock
   | EmptyBlock
   | null;
+export type Modelresponse1 = string | null;
 export type Platform1 = "litellm";
 export type Parameters1 =
   | LitellmParameters
@@ -3319,6 +3321,7 @@ export interface LitellmModelBlock {
   model: unknown;
   input?: Input1;
   trace?: Trace5;
+  modelResponse?: Modelresponse1;
   platform?: Platform1;
   parameters?: Parameters1;
 }
@@ -3401,6 +3404,7 @@ export interface BamModelBlock {
   model: unknown;
   input?: Input;
   trace?: Trace4;
+  modelResponse?: Modelresponse;
   platform: Platform;
   prompt_id?: PromptId;
   parameters?: Parameters;
