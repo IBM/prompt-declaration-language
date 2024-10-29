@@ -1,3 +1,4 @@
+import json
 from typing import Any, Generator, Optional
 
 import litellm
@@ -50,10 +51,11 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Message:
+    ) -> tuple[Message, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         text = ""
+        responses = []
         for response in client.text.generation.create(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -63,10 +65,11 @@ class BamModel:
             data=data,
         ):
             # XXX TODO: moderation
+            responses.append(response)
             for result in response.results:
                 if result.generated_text:
                     text += result.generated_text
-        return {"role": None, "content": text}
+        return {"role": None, "content": text}, responses
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -76,9 +79,10 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[Message, Any, None]:
+    ) -> Generator[Message, Any, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
+        responses = []
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -87,6 +91,7 @@ class BamModel:
             moderations=moderations,
             data=data,
         ):
+            responses.append(json.loads(response.model_dump_json()))
             if response.results is None:
                 # append_log(
                 #     state,
@@ -97,6 +102,7 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     yield {"role": None, "content": result.generated_text}
+        return responses
 
     # @staticmethod
     # def generate_text_lazy(  # pylint: disable=too-many-arguments
@@ -143,7 +149,7 @@ class LitellmModel:
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> Message:
+    ) -> tuple[Message, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             parameters = set_default_granite_model_parameters(model_id, parameters)
         if parameters.get("mock_response") is not None:
@@ -154,14 +160,17 @@ class LitellmModel:
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
             assert False, "TODO"  # XXX TODO XXX
-        return {"role": msg.role, "content": msg.content}
+        return {
+            "role": msg.role,
+            "content": msg.content,
+        }, response.json()  # pyright: ignore
 
     @staticmethod
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
-    ) -> Generator[Message, Any, None]:
+    ) -> Generator[Message, Any, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             parameters = set_default_granite_model_parameters(model_id, parameters)
         response = completion(
@@ -170,8 +179,11 @@ class LitellmModel:
             stream=True,
             **parameters,
         )
+        result = []
         for chunk in response:
+            result.append(chunk.json())  # pyright: ignore
             msg = chunk.choices[0].delta  # pyright: ignore
             if msg.content is None:
                 break
             yield {"role": msg.role, "content": msg.content}
+        return result

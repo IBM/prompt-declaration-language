@@ -71,6 +71,7 @@ from .pdl_location_utils import append, get_loc_string
 from .pdl_parser import PDLParseError, parse_file
 from .pdl_scheduler import (
     CodeYieldResultMessage,
+    GeneratorWrapper,
     ModelCallMessage,
     ModelYieldResultMessage,
     YieldBackgroundMessage,
@@ -1058,7 +1059,9 @@ def step_call_model(
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
-        msg = yield from generate_client_response(state, concrete_block, model_input)
+        msg, raw_result = yield from generate_client_response(
+            state, concrete_block, model_input
+        )
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
@@ -1069,6 +1072,8 @@ def step_call_model(
         result = msg["content"]
         append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
+        if block.modelResponse is not None:
+            scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
     except Exception as exc:
         message = f"Error during model call: {repr(exc)}"
@@ -1083,29 +1088,30 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+    raw_result = None
     match state.batch:
         case 0:
-            model_output = yield from generate_client_response_streaming(
+            model_output, raw_result = yield from generate_client_response_streaming(
                 state, block, model_input
             )
         case 1:
-            model_output = yield from generate_client_response_single(
+            model_output, raw_result = yield from generate_client_response_single(
                 state, block, model_input
             )
         case _:
             model_output = yield from generate_client_response_batching(
                 state, block, model_input
             )
-    return model_output
+    return model_output, raw_result
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
-    msg_stream: Generator[Message, Any, None]
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+    msg_stream: Generator[Message, Any, Any]
     model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
@@ -1127,7 +1133,8 @@ def generate_client_response_streaming(
             assert False
     complete_msg: Optional[Message] = None
     role = None
-    for chunk in msg_stream:
+    wrapped_gen = GeneratorWrapper(msg_stream)
+    for chunk in wrapped_gen:
         if state.yield_result:
             yield ModelYieldResultMessage(chunk["content"])
         if state.yield_background:
@@ -1139,9 +1146,12 @@ def generate_client_response_streaming(
             chunk_role = chunk["role"]
             if chunk_role is None or chunk_role == role:
                 complete_msg["content"] += chunk["content"]
+    raw_result = None
+    if block.modelResponse is not None:
+        raw_result = wrapped_gen.value
     if complete_msg is None:
-        return Message(role=state.role, content="")
-    return complete_msg
+        return Message(role=state.role, content=""), raw_result
+    return complete_msg, raw_result
 
 
 def litellm_parameters_to_dict(
@@ -1159,12 +1169,12 @@ def generate_client_response_single(
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg: Message
     model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
-            msg = BamModel.generate_text(
+            msg, raw_result = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
                 model_input=model_input_str,
@@ -1173,7 +1183,7 @@ def generate_client_response_single(
                 data=block.data,
             )
         case LitellmModelBlock():
-            msg = LitellmModel.generate_text(
+            msg, raw_result = LitellmModel.generate_text(
                 model_id=block.model,
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(block.parameters),
@@ -1182,7 +1192,7 @@ def generate_client_response_single(
         yield YieldResultMessage(msg["content"])
     if state.yield_background:
         yield YieldBackgroundMessage([msg])
-    return msg
+    return msg, raw_result
 
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments

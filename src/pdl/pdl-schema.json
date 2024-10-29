@@ -1311,6 +1311,18 @@
           "default": null,
           "title": "Trace"
         },
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelresponse"
+        },
         "platform": {
           "const": "bam",
           "enum": [
@@ -9131,6 +9143,18 @@
           ],
           "default": null,
           "title": "Trace"
+        },
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelresponse"
         },
         "platform": {
           "const": "litellm",
