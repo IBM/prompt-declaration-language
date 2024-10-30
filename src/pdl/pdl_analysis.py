@@ -98,11 +98,9 @@ def unused_advanced_block(state: UnusedConfig, block: AdvancedBlockType) -> None
         case ArrayBlock() | LastOfBlock() | ObjectBlock() | TextBlock():
             if state.implicit_ignore:
                 unused_warning(block)
-            state_without_implicit_lastOf = state.with_implicit_lastOf(
-                False
-            )  # pylint: disable=invalid-name
+            state = state.with_implicit_lastOf(False)
             iter_block_children(
-                (lambda blocks: used_blocks(state_without_implicit_lastOf, blocks)),
+                (lambda blocks: used_blocks(state, blocks)),
                 block,
             )
         # Leaf blocks
