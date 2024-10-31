@@ -169,7 +169,7 @@ line14 = {
     "file": "tests/data/line/hello14.pdl",
     "errors": [
         "",
-        "tests/data/line/hello14.pdl:24 - Type errors in result of function call to translate:",
+        "tests/data/line/hello14.pdl:25 - Type errors in result of function call to translate:",
         "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
@@ -183,7 +183,7 @@ line15 = {
     "file": "tests/data/line/hello15.pdl",
     "errors": [
         "",
-        "tests/data/line/hello15.pdl:6 - Error during the evaluation of ${ boolean }: 'boolean' is undefined",
+        "tests/data/line/hello15.pdl:7 - Error during the evaluation of ${ boolean }: 'boolean' is undefined",
     ],
 }
 
@@ -304,7 +304,7 @@ line24 = {
     "file": "tests/data/line/hello24.pdl",
     "errors": [
         "",
-        "tests/data/line/hello24.pdl:24 - Error during the evaluation of Hello,${ GEN1 }: 'GEN1' is undefined",
+        "tests/data/line/hello24.pdl:25 - Error during the evaluation of Hello,${ GEN1 }: 'GEN1' is undefined",
     ],
 }
 
