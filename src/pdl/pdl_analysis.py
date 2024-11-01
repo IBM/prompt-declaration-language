@@ -63,8 +63,11 @@ def unused_warning(block: BlockType):
 
 
 def unused_program(prog: Program) -> None:
-    state = UnusedConfig(implicit_ignore=False, implicit_lastOf=True)
-    unused_blocks(state, prog.root)
+    try:
+        state = UnusedConfig(implicit_ignore=False, implicit_lastOf=True)
+        unused_blocks(state, prog.root)
+    except Exception as exc:
+        print(f"Unexpected error in implicit ignored analysis: {exc}")
 
 
 def unused_blocks(state: UnusedConfig, blocks: BlocksType) -> None:
