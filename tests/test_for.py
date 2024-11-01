@@ -16,7 +16,7 @@ for_data = {
             "for": {
                 "i": [1, 2, 3, 4],
             },
-            "repeat": ["${ i }\n"],
+            "repeat": "${ i }\n",
         }
     ],
 }
@@ -34,7 +34,7 @@ for_data1 = {
     "text": [
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"]},
-            "repeat": ["${ i }: ${ name }\n"],
+            "repeat": "${ i }: ${ name }\n",
         }
     ],
 }
@@ -53,7 +53,7 @@ for_data2 = {
     "text": [
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
-            "repeat": ["${ i }: ${ name }: ${ id }\n"],
+            "repeat": "${ i }: ${ name }: ${ id }\n",
         }
     ],
 }
@@ -72,7 +72,7 @@ for_data3 = {
     "text": [
         {
             "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
-            "repeat": ["${ i }: ${ name }: ${ id }\n"],
+            "repeat": "${ i }: ${ name }: ${ id }\n",
             "join": {"as": "array"},
         }
     ],

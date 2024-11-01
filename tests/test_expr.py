@@ -144,7 +144,8 @@ def test_jinja_block():
 
 def test_expr_detection1():
     prog = """
-lastOf: '${ 1 }'
+lastOf:
+- '${ 1 }'
 spec: int
 """
     result = exec_str(prog)
@@ -153,7 +154,8 @@ spec: int
 
 def test_expr_detection2():
     prog = """
-lastOf: '${ { "a": 1 }["a"] }'
+lastOf:
+- '${ { "a": 1 }["a"] }'
 spec: int
 """
     result = exec_str(prog)
@@ -162,7 +164,8 @@ spec: int
 
 def test_expr_detection3():
     prog = """
-lastOf: '${ 1 } ${ 2 }'
+lastOf:
+- '${ 1 } ${ 2 }'
 spec: str
 """
     result = exec_str(prog)
@@ -171,7 +174,8 @@ spec: str
 
 def test_expr_detection4():
     prog = """
-lastOf: '${ 1 } { 2 }'
+lastOf:
+- '${ 1 } { 2 }'
 spec: str
 """
     result = exec_str(prog)

@@ -116,7 +116,7 @@ code_var_data = {
         {
             "def": "I",
             "lang": "python",
-            "code": ["result = 0"],
+            "code": "result = 0",
         },
     ],
 }

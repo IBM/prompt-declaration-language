@@ -33,16 +33,14 @@ repeat_until_data = {
     "lastOf": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": "result = 0"}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         {
-            "repeat": [
-                {
-                    "def": "I",
-                    "lang": "python",
-                    "code": ["result = ${ I } + 1"],
-                }
-            ],
+            "repeat": {
+                "def": "I",
+                "lang": "python",
+                "code": "result = ${ I } + 1",
+            },
             "until": "${ I == 5 }",
             "join": {"as": "array"},
         },
