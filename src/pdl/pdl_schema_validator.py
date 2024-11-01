@@ -22,14 +22,14 @@ def type_check_args(args: dict[str, Any], params: dict[str, Any], loc) -> list[s
     if "pdl_context" in args_copy:
         # params_copy["pdl_context"] = [{"role": "str?", "content": "str"}]
         params_copy["pdl_context"] = ["obj"]
-    schema = get_json_schema(params_copy)
+    schema = get_json_schema(params_copy, False)
     if schema is None:
         return ["Error obtaining a valid schema from function parameters definition"]
     return type_check(args_copy, schema, loc)
 
 
 def type_check_spec(result: Any, spec: str | dict[str, Any] | list, loc) -> list[str]:
-    schema = pdltype_to_jsonschema(spec)
+    schema = pdltype_to_jsonschema(spec, False)
     if schema is None:
         return ["Error obtaining a valid schema from spec"]
     return type_check(result, schema, loc)
