@@ -14,6 +14,7 @@ text:
     language: str
   spec: int
   return:
+    lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:

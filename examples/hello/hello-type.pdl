@@ -9,7 +9,8 @@ text:
     language: str
   spec: int
   return:
-    - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
+    lastOf:
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: replicate/ibm-granite/granite-3.0-8b-instruct
       parameters:
         stop_sequences: "\n"

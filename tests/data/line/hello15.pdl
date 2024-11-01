@@ -3,6 +3,7 @@ text:
 - def: stutter
   function: 
   return:
+    lastOf:
     - get: boolean
     - ${ something }
 - "Hello World!\n"
