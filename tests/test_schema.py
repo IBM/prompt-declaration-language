@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic.json_schema import models_json_schema
 
 import pdl.pdl
-from pdl.pdl_ast import PdlBlock, PdlBlocks, Program
+from pdl.pdl_ast import PdlBlock, Program
 
 
 def test_saved_schema():
@@ -12,7 +12,6 @@ def test_saved_schema():
         [
             (Program, "validation"),
             (PdlBlock, "validation"),
-            (PdlBlocks, "validation"),
         ],
         title="PDL Schemas",
     )

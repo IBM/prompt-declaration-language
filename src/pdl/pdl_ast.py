@@ -73,7 +73,7 @@ class Parser(BaseModel):
 
 
 class PdlParser(Parser):
-    pdl: "BlocksType"
+    pdl: "BlockType"
 
 
 class RegexParser(Parser):
@@ -101,7 +101,7 @@ class Block(BaseModel):
     spec: Any = None
     """Type specification of the result of the block.
     """
-    defs: dict[str, "BlocksType"] = {}
+    defs: dict[str, "BlockType"] = {}
     """Set of definitions executed before the execution of the block.
     """
     assign: Optional[str] = Field(default=None, alias="def")
@@ -115,7 +115,7 @@ class Block(BaseModel):
     """
     parser: Optional[ParserType] = None
     """Parser to use to construct a value out of a string result."""
-    fallback: Optional["BlocksType"] = None
+    fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
     """
     role: RoleType = None
@@ -133,7 +133,7 @@ class FunctionBlock(Block):
     function: Optional[dict[str, Any]]
     """Functions parameters with their types.
     """
-    returns: "BlocksType" = Field(..., alias="return")
+    returns: "BlockType" = Field(..., alias="return")
     """Body of the function
     """
     # Field for internal use
@@ -151,7 +151,7 @@ class CallBlock(Block):
     """Arguments of the function with their values.
     """
     # Field for internal use
-    trace: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class BamTextGenerationParameters(TextGenerationParameters):
@@ -254,7 +254,7 @@ class ModelPlatform(StrEnum):
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str | ExpressionType
-    input: Optional["BlocksType"] = None
+    input: Optional["BlockType"] = None
     trace: Optional["BlockType"] = None
     modelResponse: Optional[str] = None
 
@@ -282,7 +282,7 @@ class CodeBlock(Block):
     lang: Literal["python", "command"]
     """Programming language of the code.
     """
-    code: "BlocksType"
+    code: "BlockType"
     """Code to execute.
     """
 
@@ -309,7 +309,7 @@ class TextBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
     kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
-    text: "BlocksType"
+    text: "BlockOrBlocksType"
     """Body of the text.
     """
 
@@ -318,21 +318,21 @@ class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
     kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
-    lastOf: "BlocksType"
+    lastOf: list["BlockType"]
 
 
 class ArrayBlock(Block):
     """Return the array of values computed by each block of the list of blocks."""
 
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
-    array: "BlocksType"
+    array: list["BlockType"]
 
 
 class ObjectBlock(Block):
     """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
-    object: dict[str, "BlocksType"] | list["BlockType"]
+    object: dict[str, "BlockType"] | list["BlockType"]
 
 
 class MessageBlock(Block):
@@ -341,7 +341,7 @@ class MessageBlock(Block):
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     role: RoleType  # pyright: ignore
     """Role of associated to the message."""  # pyright: ignore
-    content: "BlocksType"
+    content: "BlockType"
     """Content of the message."""
 
 
@@ -352,10 +352,10 @@ class IfBlock(Block):
     condition: ExpressionType = Field(alias="if")
     """Condition.
     """
-    then: "BlocksType"
+    then: "BlockType"
     """Branch to exectute if the condition is true.
     """
-    elses: Optional["BlocksType"] = Field(default=None, alias="else")
+    elses: Optional["BlockType"] = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
     # Field for internal use
@@ -408,21 +408,21 @@ class ForBlock(Block):
     fors: dict[str, ExpressionType] = Field(alias="for")
     """Arrays to iterate over.
     """
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class RepeatBlock(Block):
     """Repeat the execution of a block for a fixed number of iterations."""
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     num_iterations: int
@@ -432,14 +432,14 @@ class RepeatBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class RepeatUntilBlock(Block):
     """Repeat the execution of a block until a condition is satisfied."""
 
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     until: ExpressionType
@@ -449,7 +449,7 @@ class RepeatUntilBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class ReadBlock(Block):
@@ -475,13 +475,13 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
-    program: "BlocksType"
+    program: "BlockType"
 
 
 class EmptyBlock(Block):
@@ -517,8 +517,8 @@ AdvancedBlockType: TypeAlias = (
 BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
 """All kinds of blocks.
 """
-BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
-"""List of blocks.
+BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
+"""Block or list of blocks.
 """
 
 
@@ -527,7 +527,7 @@ class Program(RootModel):
     Prompt Declaration Language program (PDL)
     """
 
-    root: BlocksType
+    root: BlockType
     """Entry point to parse a PDL program using Pydantic.
     """
 
@@ -535,11 +535,6 @@ class Program(RootModel):
 class PdlBlock(RootModel):
     # This class is used to introduce that a type in the generate JsonSchema
     root: BlockType
-
-
-class PdlBlocks(RootModel):
-    # This class is used to introduce that a type in the generate JsonSchema
-    root: BlocksType
 
 
 class PDLException(Exception):

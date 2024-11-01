@@ -4,7 +4,6 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .pdl_analysis import unused_program
 from .pdl_ast import LocationType, PDLException, Program
 from .pdl_location_utils import get_line_map
 from .pdl_schema_error_analyzer import analyze_errors
@@ -26,7 +25,6 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
     loc = LocationType(path=[], file=file_name, table=line_table)
     try:
         prog = Program.model_validate(prog_yaml)
-        unused_program(prog)
     except ValidationError as exc:
         pdl_schema_file = Path(__file__).parent / "pdl-schema.json"
         with open(pdl_schema_file, "r", encoding="utf-8") as schema_fp:
