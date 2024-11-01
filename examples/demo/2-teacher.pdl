@@ -46,7 +46,7 @@ defs:
       icl_answer: str
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         prompt_data:
           call: question_template_freeform
           spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
@@ -73,7 +73,7 @@ defs:
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
-    - for:
+      for:
         question: ${teacher_output}
       repeat:
         data:
@@ -89,7 +89,7 @@ defs:
       seed_examples: [{question: str, answer: str}]
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         list_of_lists:
           for:
             example: ${seed_examples}
@@ -102,7 +102,7 @@ defs:
               icl_answer: ${example.answer}
           join:
             as: array
-    - lang: python
+      lang: python
       code: | # flatten list_of_lists into simple list
           result = [q for qs in ${list_of_lists} for q in qs]
 
@@ -137,7 +137,7 @@ defs:
       question: str
     spec: float
     return:
-    - defs:
+      defs:
         prompt_data:
           call: filter_questions_template
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
@@ -164,7 +164,8 @@ defs:
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - ${ teacher_output.rating | float }
+      lastOf:
+      - ${ teacher_output.rating | float }
 
   filter_questions:
     function:
@@ -172,17 +173,18 @@ defs:
       questions: [{icl_question: str, icl_answer: str, question: str}]
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         list_of_pairs:
           for:
             question: ${questions}
           repeat:
-          - def: filter_output
-            call: filter_questions_inner
-            args:
-              task_description: ${task_description}
-              question: ${question.question}
-          - data:
+            defs:
+              filter_output:
+                call: filter_questions_inner
+                args:
+                  task_description: ${task_description}
+                  question: ${question.question}
+            data:
               question: ${question}
               keep: ${filter_output}
           join:
@@ -191,7 +193,7 @@ defs:
           lang: python
           code: | # keep only if "keep" column is non-zero
               result = [p["question"] for p in ${ list_of_pairs } if p["keep"]]
-    - ${filtered}
+      data: ${filtered}
 
 
   answer_template:
@@ -230,7 +232,7 @@ defs:
       question: {icl_question: str, icl_answer: str, question: str}
     spec: {question: str, answer: str}
     return:
-    - defs:
+      defs:
         prompt_data:
           call: answer_template
           spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
@@ -262,7 +264,7 @@ defs:
               result = result[result.find("[Response]") + len("[Response]"):]
             if "[Question]" in result:
               result = result[:result.find("[Question]")]
-    - data:
+      data:
         question: ${question.question}
         answer: ${parsed_answer}
 
@@ -271,7 +273,7 @@ defs:
       questions: [{icl_question: str, icl_answer: str, question: str}]
     spec: [{question: str, answer: str}]
     return:
-    - defs:
+      defs:
         all_results:
           spec: [{question: str, answer: str}]
           for:
@@ -282,7 +284,7 @@ defs:
               question: ${question}
           join:
             as: array
-    - lang: python
+      lang: python
       spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
           result = [r for r in ${all_results} if len(r["answer"]) > 0]
@@ -319,7 +321,7 @@ defs:
       answer: str
     spec: float
     return:
-    - defs:
+      defs:
         prompt_data:
           call: filter_qa_template
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
@@ -345,25 +347,26 @@ defs:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
+      data: ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
 
   filter_question_answer_pair:
     function:
       qa_pairs: [{question: str, answer: str}]
     spec: [{question: str, answer: str}]
     return:
-    - defs:
+      defs:
         ratings:
           for:
             qa_pair: ${qa_pairs}
           repeat:
-          - def: filter_output
-            call: filter_question_answer_pair_inner
-            spec: float
-            args:
-              question: ${qa_pair.question}
-              answer: ${qa_pair.answer}
-          - data:
+            defs:
+              filter_output:
+                call: filter_question_answer_pair_inner
+                spec: float
+                args:
+                  question: ${qa_pair.question}
+                  answer: ${qa_pair.answer}
+            data:
               qa_pair: ${qa_pair}
               rating: ${filter_output}
           join:
@@ -373,7 +376,8 @@ defs:
           spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]
-    - ${filtered}
+      lastOf:
+      - ${filtered}
 
 
 text:
