@@ -1150,6 +1150,7 @@ def generate_client_response_streaming(
             msg_stream = LitellmModel.generate_text_stream(
                 model_id=block.model,
                 messages=model_input,
+                spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
         case _:
@@ -1209,6 +1210,7 @@ def generate_client_response_single(
             msg, raw_result = LitellmModel.generate_text(
                 model_id=block.model,
                 messages=model_input,
+                spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
     if state.yield_result:

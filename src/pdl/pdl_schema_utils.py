@@ -30,7 +30,7 @@ _PDLTYPE_TO_JSONSCHEMA_NAME = {
 
 
 def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
-    pdl_type: str | dict[str, Any] | list
+    pdl_type: str | dict[str, Any] | list, additional_properties: bool
 ) -> dict[str, Any]:
     match pdl_type:
         case {"enum": choices}:
@@ -46,7 +46,10 @@ def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
         case {"int": dict() as details}:
             return {"type": "integer", **details}
         case {"list": str() as type_name}:
-            return {"type": "array", "items": pdltype_to_jsonschema(type_name)}
+            return {
+                "type": "array",
+                "items": pdltype_to_jsonschema(type_name, additional_properties),
+            }
         case {"list": dict() as details}:
             ikws = ["enum", *_PDLTYPE_TO_JSONSCHEMA_NAME.keys()]
             items_details = {k: v for k, v in details.items() if k in ikws}
@@ -55,7 +58,7 @@ def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
             other_details = {k: v for k, v in details.items() if k not in ikws}
             return {
                 "type": "array",
-                "items": pdltype_to_jsonschema(items_details),
+                "items": pdltype_to_jsonschema(items_details, additional_properties),
                 **other_details,
             }
         case list() as type_list:
@@ -63,35 +66,42 @@ def pdltype_to_jsonschema(  # pylint: disable=too-many-return-statements
                 raise ValueError(f"invalid PDL type {pdl_type}")
             return {
                 "type": "array",
-                "items": pdltype_to_jsonschema(type_list[0]),
+                "items": pdltype_to_jsonschema(type_list[0], additional_properties),
             }
         case {"obj": dict() as pdl_props}:
-            return get_json_schema_object(pdl_props)
+            return get_json_schema_object(pdl_props, additional_properties)
         case dict() as pdl_props:
-            return get_json_schema_object(pdl_props)
+            return get_json_schema_object(pdl_props, additional_properties)
     raise ValueError(f"invalid PDL type {pdl_type}")
 
 
-def get_json_schema_object(pdl_props: dict) -> dict[str, Any]:
+def get_json_schema_object(pdl_props: dict, additional_properties) -> dict[str, Any]:
     props = {}
     required = []
     for name, prop_type in pdl_props.items():
         if isinstance(prop_type, dict) and "optional" in prop_type:
-            props[name] = pdltype_to_jsonschema(prop_type["optional"])
+            props[name] = pdltype_to_jsonschema(
+                prop_type["optional"], additional_properties
+            )
         else:
-            props[name] = pdltype_to_jsonschema(prop_type)
+            props[name] = pdltype_to_jsonschema(prop_type, additional_properties)
             required.append(name)
-    return {
-        "type": "object",
-        "properties": props,
-        "required": required,
-        "additionalProperties": False,
-    }
+    if additional_properties is False:
+        return {
+            "type": "object",
+            "properties": props,
+            "required": required,
+            "additionalProperties": False,
+        }
+
+    return {"type": "object", "properties": props, "required": required}
 
 
-def get_json_schema(params: dict[str, Any]) -> Optional[dict[str, Any]]:
+def get_json_schema(
+    params: dict[str, Any], additional_properties
+) -> Optional[dict[str, Any]]:
     try:
-        result = pdltype_to_jsonschema({"obj": params})
+        result = pdltype_to_jsonschema({"obj": params}, additional_properties)
         return result
     except ValueError as e:
         warnings.warn(e.args[0])

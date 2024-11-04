@@ -145,7 +145,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
 def test_pdltype_to_jsonschema():
     for t in _PDLTYPE_TO_JSONSCHEMA_TESTS:
         pdl_type = yaml.safe_load(t["pdl_type"])
-        json_schema = pdltype_to_jsonschema(pdl_type)
+        json_schema = pdltype_to_jsonschema(pdl_type, False)
         assert json_schema == t["json_schema"]
 
 

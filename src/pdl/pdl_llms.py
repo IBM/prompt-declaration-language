@@ -148,10 +148,13 @@ class LitellmModel:
     def generate_text(
         model_id: str,
         messages: list[Message],
+        spec: Any,
         parameters: dict[str, Any],
     ) -> tuple[Message, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(model_id, parameters)
+            parameters = set_default_granite_model_parameters(
+                model_id, spec, parameters
+            )
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = completion(
@@ -169,10 +172,13 @@ class LitellmModel:
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
+        spec: Any,
         parameters: dict[str, Any],
     ) -> Generator[Message, Any, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(model_id, parameters)
+            parameters = set_default_granite_model_parameters(
+                model_id, spec, parameters
+            )
         response = completion(
             model=model_id,
             messages=messages,
