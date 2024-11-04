@@ -1,12 +1,12 @@
-- text: |
-    Given the following code:
-    ```python
-    ${code_line}
-    ```
-    and the following error:
-    ${error_msg}
-    Please repair the code!
-  contribute: [context]
+lastOf:
+- |
+  Given the following code:
+  ```python
+  ${code_line}
+  ```
+  and the following error:
+  ${error_msg}
+  Please repair the code!
 
 - def: raw_output
   model: replicate/ibm-granite/granite-3.0-8b-instruct
