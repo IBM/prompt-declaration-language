@@ -164,8 +164,7 @@ defs:
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-      lastOf:
-      - ${ teacher_output.rating | float }
+      data: ${ teacher_output.rating | float }
 
   filter_questions:
     function:
@@ -376,8 +375,7 @@ defs:
           spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]
-      lastOf:
-      - ${filtered}
+      data: ${filtered}
 
 
 text:
