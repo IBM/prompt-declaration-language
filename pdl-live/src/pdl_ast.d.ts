@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type PDLSchemas = Program | PdlBlock | PdlBlocks;
+export type PDLSchemas = Program | PdlBlock;
 /**
  * Prompt Declaration Language program (PDL)
  */
@@ -33,32 +33,6 @@ export type Program =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Documentation associated to the block.
@@ -203,32 +177,6 @@ export type Pdl =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 export type Description21 = string | null;
 export type Spec21 = {
@@ -264,32 +212,6 @@ export type Fallback =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -341,32 +263,6 @@ export type Fallback1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -399,32 +295,6 @@ export type Program1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -468,32 +338,6 @@ export type Fallback2 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -530,32 +374,6 @@ export type Trace =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -599,32 +417,6 @@ export type Fallback3 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -684,32 +476,6 @@ export type Fallback4 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role of associated to the message.
@@ -743,32 +509,6 @@ export type Content =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -812,32 +552,6 @@ export type Fallback5 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -871,32 +585,6 @@ export type Object =
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-        | (
-            | boolean
-            | number
-            | string
-            | FunctionBlock
-            | CallBlock
-            | LitellmModelBlock
-            | BamModelBlock
-            | CodeBlock
-            | GetBlock
-            | DataBlock
-            | IfBlock
-            | RepeatBlock
-            | RepeatUntilBlock
-            | ForBlock
-            | TextBlock
-            | LastOfBlock
-            | ArrayBlock
-            | ObjectBlock
-            | MessageBlock
-            | ReadBlock
-            | IncludeBlock
-            | ErrorBlock
-            | EmptyBlock
-            | null
-          )[]
         | null;
     }
   | (
@@ -967,32 +655,6 @@ export type Fallback6 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1000,7 +662,7 @@ export type Fallback6 =
  */
 export type Role6 = string | null;
 export type Kind6 = "array";
-export type Array =
+export type Array = (
   | boolean
   | number
   | string
@@ -1024,33 +686,8 @@ export type Array =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
-  | null;
+  | null
+)[];
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1093,32 +730,6 @@ export type Fallback7 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1126,7 +737,7 @@ export type Fallback7 =
  */
 export type Role7 = string | null;
 export type Kind7 = "lastOf";
-export type Lastof =
+export type Lastof = (
   | boolean
   | number
   | string
@@ -1150,33 +761,8 @@ export type Lastof =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
-  | null;
+  | null
+)[];
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1219,32 +805,6 @@ export type Fallback8 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1349,32 +909,6 @@ export type Fallback9 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1410,32 +944,6 @@ export type Repeat =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Define how to combine the result of each iteration.
@@ -1487,32 +995,6 @@ export type Trace1 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-      | (
-          | boolean
-          | number
-          | string
-          | FunctionBlock
-          | CallBlock
-          | LitellmModelBlock
-          | BamModelBlock
-          | CodeBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | TextBlock
-          | LastOfBlock
-          | ArrayBlock
-          | ObjectBlock
-          | MessageBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-          | null
-        )[]
       | null
     )[]
   | null;
@@ -1558,32 +1040,6 @@ export type Fallback10 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1619,32 +1075,6 @@ export type Repeat1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Define how to combine the result of each iteration.
@@ -1676,32 +1106,6 @@ export type Trace2 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-      | (
-          | boolean
-          | number
-          | string
-          | FunctionBlock
-          | CallBlock
-          | LitellmModelBlock
-          | BamModelBlock
-          | CodeBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | TextBlock
-          | LastOfBlock
-          | ArrayBlock
-          | ObjectBlock
-          | MessageBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-          | null
-        )[]
       | null
     )[]
   | null;
@@ -1747,32 +1151,6 @@ export type Fallback11 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -1808,32 +1186,6 @@ export type Repeat2 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Number of iterations to perform.
@@ -1870,32 +1222,6 @@ export type Trace3 =
       | IncludeBlock
       | ErrorBlock
       | EmptyBlock
-      | (
-          | boolean
-          | number
-          | string
-          | FunctionBlock
-          | CallBlock
-          | LitellmModelBlock
-          | BamModelBlock
-          | CodeBlock
-          | GetBlock
-          | DataBlock
-          | IfBlock
-          | RepeatBlock
-          | RepeatUntilBlock
-          | ForBlock
-          | TextBlock
-          | LastOfBlock
-          | ArrayBlock
-          | ObjectBlock
-          | MessageBlock
-          | ReadBlock
-          | IncludeBlock
-          | ErrorBlock
-          | EmptyBlock
-          | null
-        )[]
       | null
     )[]
   | null;
@@ -1941,32 +1267,6 @@ export type Fallback12 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2002,32 +1302,6 @@ export type Then =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Branch to execute if the condition is false.
@@ -2057,32 +1331,6 @@ export type Else =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 export type IfResult = boolean | null;
 /**
@@ -2127,32 +1375,6 @@ export type Fallback13 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2206,32 +1428,6 @@ export type Fallback14 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2285,32 +1481,6 @@ export type Fallback15 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2351,32 +1521,6 @@ export type Code =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -2420,32 +1564,6 @@ export type Fallback16 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2477,32 +1595,6 @@ export type Input =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 export type Trace4 =
   | boolean
@@ -2630,32 +1722,6 @@ export type Fallback17 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2687,32 +1753,6 @@ export type Input1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 export type Trace5 =
   | boolean
@@ -2836,32 +1876,6 @@ export type Fallback18 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -2893,32 +1907,6 @@ export type Trace6 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -2962,32 +1950,6 @@ export type Fallback19 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 /**
  * Role associated to the block and sub-blocks.
@@ -3030,32 +1992,6 @@ export type Return =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 export type Scope = {
   [k: string]: unknown;
@@ -3084,57 +2020,6 @@ export type PdlBlock =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type PdlBlocks =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | BamModelBlock
-      | CodeBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | RepeatBlock
-      | RepeatUntilBlock
-      | ForBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null;
 
 /**
@@ -3192,32 +2077,6 @@ export interface Defs {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3275,32 +2134,6 @@ export interface Defs1 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3361,32 +2194,6 @@ export interface Defs2 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 export interface BamModelBlock {
@@ -3448,32 +2255,6 @@ export interface Defs3 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3530,32 +2311,6 @@ export interface Defs4 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3611,32 +2366,6 @@ export interface Defs5 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3693,32 +2422,6 @@ export interface Defs6 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3777,32 +2480,6 @@ export interface Defs7 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3861,32 +2538,6 @@ export interface Defs8 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -3945,32 +2596,6 @@ export interface Defs9 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4029,32 +2654,6 @@ export interface Defs10 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4110,32 +2709,6 @@ export interface Defs11 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4191,32 +2764,6 @@ export interface Defs12 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4272,32 +2819,6 @@ export interface Defs13 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4353,32 +2874,6 @@ export interface Defs14 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4434,32 +2929,6 @@ export interface Defs15 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4517,32 +2986,6 @@ export interface Defs16 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4599,32 +3042,6 @@ export interface Defs17 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 export interface ErrorBlock {
@@ -4678,32 +3095,6 @@ export interface Defs18 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 /**
@@ -4758,32 +3149,6 @@ export interface Defs19 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | (
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | BamModelBlock
-        | CodeBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | RepeatBlock
-        | RepeatUntilBlock
-        | ForBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-      )[]
     | null;
 }
 export interface PdlParser {
