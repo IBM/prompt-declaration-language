@@ -1112,9 +1112,9 @@ def generate_client_response_streaming(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg_stream: Generator[Message, Any, Any]
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
+            model_input_str = messages_to_str(block.model, model_input)
             msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1172,9 +1172,9 @@ def generate_client_response_single(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg: Message
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
+            model_input_str = messages_to_str(block.model, model_input)
             msg, raw_result = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1203,9 +1203,9 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
+            model_input_str = messages_to_str(block.model, model_input)
             msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
