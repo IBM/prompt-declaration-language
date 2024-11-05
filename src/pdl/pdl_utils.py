@@ -39,7 +39,7 @@ def messages_to_str(model_id: str, messages: Messages) -> str:
         "".join(
             [
                 (
-                    msg["content"]
+                    str(msg["content"])
                     if msg["role"] is None
                     # else f"<|{msg['role']}|>{msg['content']}"
                     else f"<|start_of_role|>{msg['role']}<|end_of_role|>{msg['content']}<|end_of_text|>\n"
