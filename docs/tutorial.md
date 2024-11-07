@@ -668,6 +668,7 @@ text:
     decoding_method: greedy
 ```
 
+If you want to use an external Ollama instance, the env variable `OLLAMA_API_BASE` should be defined, by default is `http://localhost:11434`.
 
 Alternatively, one could also use Ollama's OpenAI-style endpoint using the `openai/` prefix instead of `ollama_chat/`. In this case, set the `OPENAI_API_BASE`, `OPENAI_API_KEY`, and `OPENAI_ORGANIZATION` (if necessary) environment variables. If you were using the official OpenAI API, you would only have to set the api key and possibly the organization. For local use e.g., using Ollama, this could look like so:
 
