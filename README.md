@@ -6,7 +6,13 @@ PDL is a declarative language designed for developers to create reliable, compos
 
 ### Basic LLM Call
 
-you can create a yaml file:
+Minimum installation.
+
+```bash
+pip install prompt-declaration-language
+```
+
+you can create a PDL file (YAML format):
 
 ```yaml
 description: Simple LLM interaction
