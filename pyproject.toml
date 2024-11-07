@@ -41,7 +41,6 @@ dev = [
 examples = [
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "faiss-cpu~=1.0",
   "datasets>2,<4",
   "sympy~=1.0"
 ]
