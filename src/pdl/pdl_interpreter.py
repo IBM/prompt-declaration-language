@@ -2,7 +2,7 @@ import json
 import logging
 import re
 import shlex
-import subprocess
+import subprocess  # nosec
 import sys
 import types
 
@@ -926,7 +926,9 @@ def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
         try:
             if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
                 # `expr` might be a single expression and should not be stringify
-                env = Environment(
+                env = Environment(  # nosec B701
+                    # [B701:jinja2_autoescape_false] By default, jinja2 sets autoescape to False. Consider using autoescape=True or use the select_autoescape function to mitigate XSS vulnerabilities.
+                    # This is safe because autoescape is not needed since we do not generate HTML
                     block_start_string="{%%%%%PDL%%%%%%%%%%",
                     block_end_string="%%%%%PDL%%%%%%%%%%}",
                     variable_start_string=EXPR_START_STRING,
@@ -1276,14 +1278,20 @@ __PDL_SESSION = types.SimpleNamespace()
 
 def call_python(code: str, scope: dict) -> Any:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
-    exec(code, my_namespace.__dict__)
+    exec(code, my_namespace.__dict__)  # nosec B102
+    # [B102:exec_used] Use of exec detected.
+    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
     result = my_namespace.result
     return result
 
 
 def call_command(code: str) -> str:
     args = shlex.split(code)
-    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    p = subprocess.run(
+        args, capture_output=True, text=True, check=False, shell=False
+    )  # nosec B603
+    # [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
     if p.stderr != "":
         print(p.stderr, file=sys.stderr)
     if p.returncode != 0:
