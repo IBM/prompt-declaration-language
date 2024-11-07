@@ -16,7 +16,7 @@ To report vulnerabilities privately, you can contact the authors by email (see [
 
 ## Suggesting a change
 
-To suggest a change to this repository, [submit a pull request](https://github.com/IBM/prompt-declaration-language/pulls) with the complete set of changes that you want to suggest. Before creating a PR, make sure that your changes pass all of the tests.
+To suggest a change to this repository, [submit a pull request](https://github.com/IBM/prompt-declaration-language/pulls) with the complete set of changes that you want to suggest. Before creating a PR, make sure that your changes pass all of the tests and add tests for new features.
 
 The test suite can be executed with the following command in the top-level folder:
 ```
