@@ -18,9 +18,8 @@ var_data = {
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
-                        "include_stop_sequence": False,
+                        "temperature": 0,
+                        "stop": ["!"],
                         "mock_response": " World",
                     },
                 }
@@ -51,9 +50,8 @@ var_shared_scope_data = {
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
-                        "include_stop_sequence": False,
+                        "temperature": 0,
+                        "stop": ["!"],
                         "mock_response": " World",
                     },
                 }
