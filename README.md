@@ -145,7 +145,7 @@ description: chatbot
 text:
 - read:
   def: user_input
-  message: "hi? [/bye ti exit]\n"
+  message: "hi? [/bye to exit]\n"
   contribute: [context]
 - repeat:
     text:
