@@ -6,11 +6,10 @@ model_data = {
     "text": [
         "Hello,",
         {
-            "model": "watsonx/ibm/granite-34b-code-instruct",
+            "model": "watsonx/meta-llama/llama-3-8b-instruct",
             "parameters": {
-                "decoding_method": "greedy",
-                "stop_sequences": ["!"],
-                "include_stop_sequence": False,
+                "temperature": 0,
+                "stop": ["!"],
                 "mock_response": " World",
             },
         },
@@ -34,9 +33,9 @@ model_chain_data = {
             "def": "SOMEONE",
             "text": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx/meta-llama/llama-3-8b-instruct",
                     "parameters": {
-                        "decoding_method": "greedy",
+                        "temperature": 0,
                         "stop": ["!"],
                         "include_stop_sequence": False,
                         "mock_response": " World",
@@ -54,8 +53,8 @@ model_chain_data = {
                 {
                     "model": "watsonx/google/flan-t5-xl",
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["."],
+                        "temperature": 0,
+                        "stop": ["."],
                         "include_stop_sequence": True,
                         "roles": {"user": {"pre_message": "", "post_message": ""}},
                         "mock_response": 'World is a fictional character in the popular science fiction television series "The X-Files',
@@ -85,7 +84,7 @@ multi_shot_data = {
             "def": "LOCATION",
             "text": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx/meta-llama/llama-3-8b-instruct",
                     "input": {
                         "text": [
                             "Question: What is the weather in London?\n",
@@ -98,8 +97,8 @@ multi_shot_data = {
                         ]
                     },
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["Question"],
+                        "temperature": 0,
+                        "stop": ["Question"],
                         "include_stop_sequence": False,
                         "mock_response": "Armonk",
                     },
@@ -122,9 +121,9 @@ model_data_missing_parameters = {
     "text": [
         "Hello,\n",
         {
-            "model": "watsonx/ibm/granite-34b-code-instruct",
+            "model": "watsonx/meta-llama/llama-3-8b-instruct",
             "parameters": {
-                "stop_sequences": ["."],
+                "stop": ["."],
                 "mock_response": '\nI have a question about the use of the word "in" in the sentence: "The cake was baked in the oven.',
             },
         },
@@ -144,12 +143,12 @@ def test_data_missing_parameters():
 
 model_parameter = {
     "description": "Hello world with a variable",
-    "defs": {"model": "watsonx/ibm/granite-34b-code-instruct"},
+    "defs": {"model": "watsonx/meta-llama/llama-3-8b-instruct"},
     "text": [
         "Hello,",
         {
             "model": "${ model }",
-            "parameters": {"stop_sequences": ["!"], "mock_response": " World!"},
+            "parameters": {"stop": ["!"], "mock_response": " World!"},
         },
     ],
 }
@@ -164,12 +163,12 @@ def test_model_parameter():
 
 model_parameter1 = {
     "description": "Hello world with a variable",
-    "defs": {"model": "granite-34b-code-instruct"},
+    "defs": {"model": "watsonx/meta-llama/llama-3-8b-instruct"},
     "text": [
         "Hello,",
         {
             "model": "watsonx/ibm/${ model }",
-            "parameters": {"stop_sequences": ["!"], "mock_response": " World!"},
+            "parameters": {"stop": ["!"], "mock_response": " World!"},
         },
     ],
 }
@@ -187,7 +186,7 @@ litellm_mock = {
     "text": [
         "Hello,",
         {
-            "model": "watsonx/ibm/granite-34b-code-instruct-v2",
+            "model": "watsonx/meta-llama/llama-3-8b-instruct",
             "platform": "litellm",
             "parameters": {"stop": ["!"], "mock_response": " World!"},
         },

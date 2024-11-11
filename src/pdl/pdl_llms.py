@@ -162,7 +162,10 @@ class LitellmModel:
         )
         msg = response.choices[0].message  # pyright: ignore
         if msg.content is None:
-            assert False, "TODO"  # XXX TODO XXX
+            return {
+                "role": msg.role,
+                "content": "",
+            }, response.json()  # pyright: ignore
         return {
             "role": msg.role,
             "content": msg.content,
@@ -190,6 +193,6 @@ class LitellmModel:
             result.append(chunk.json())  # pyright: ignore
             msg = chunk.choices[0].delta  # pyright: ignore
             if msg.content is None:
-                break
+                continue
             yield {"role": msg.role, "content": msg.content}
         return result
