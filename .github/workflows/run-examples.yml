@@ -45,7 +45,10 @@ jobs:
         WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
         WATSONX_URL: ${{ secrets.WATSONX_URL }}
         REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-      run: pdl examples/code/code-eval.pdl > /tmp/local.result && diff tests/results/examples/code/code-eval.result /tmp/local.result && echo "XXX $?"
+      run: |
+         pdl examples/code/code.pdl > /tmp/local.result && diff tests/results/examples/code/code.result /tmp/local.result && echo "code: $?"
+         pdl examples/code/code-eval.pdl > /tmp/local.result && diff tests/results/examples/code/code-eval.result /tmp/local.result && echo "code-eval: $?"
+         pdl examples/code/code-json.pdl > /tmp/local.result && diff tests/results/examples/code/code-json.result /tmp/local.result && echo "code-json: $?"
     - name: run tests
       env:
         WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
