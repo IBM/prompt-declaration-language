@@ -171,10 +171,10 @@ pdl --stream background examples/hello/hello.pdl
 See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
 
 
-Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
+Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a YAML file as input
 containing the source code and some information regarding the repository where it came from.
 
-For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.yaml):
+For example, given the data in this YAML [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.yaml):
 ```yaml
 source_code: 
   |
