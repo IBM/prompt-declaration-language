@@ -2691,7 +2691,8 @@
           "description": "Programming language of the code.\n    ",
           "enum": [
             "python",
-            "command"
+            "command",
+            "jinja"
           ],
           "title": "Lang",
           "type": "string"

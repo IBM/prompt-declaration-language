@@ -2322,7 +2322,7 @@ export type Kind15 = "code";
  * Programming language of the code.
  *
  */
-export type Lang = "python" | "command";
+export type Lang = "python" | "command" | "jinja";
 /**
  * Code to execute.
  *
