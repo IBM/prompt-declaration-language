@@ -31,7 +31,10 @@ ExpressionType: TypeAlias = Any
 class Message(TypedDict):
     role: Optional[str]
     content: str
-
+    tool_call_id: Optional[str]
+    name: Optional[str]
+    tool_calls: Optional[list[Any]]
+    function_call: Optional[Any]
 
 Messages: TypeAlias = list[Message]
 
@@ -92,6 +95,11 @@ class ContributeTarget(StrEnum):
     CONTEXT = "context"
 
 
+class ContributeValue(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: Any
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -109,7 +117,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget] = [
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue ]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]

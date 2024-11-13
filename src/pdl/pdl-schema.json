@@ -209,7 +209,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -822,7 +832,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -1826,7 +1846,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -2451,7 +2481,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -2876,6 +2916,19 @@
       "title": "ContributeTarget",
       "type": "string"
     },
+    "ContributeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ContributeValue",
+      "type": "object"
+    },
     "DataBlock": {
       "additionalProperties": false,
       "description": "Arbitrary JSON value.",
@@ -3085,7 +3138,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -3555,7 +3618,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -4003,7 +4076,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -4622,7 +4705,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -5435,7 +5528,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -6075,7 +6178,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -6532,7 +6645,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -7328,7 +7451,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -8009,7 +8142,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -8656,7 +8799,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -9825,7 +9978,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -10711,7 +10874,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -12039,7 +12212,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -12570,7 +12753,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -13383,7 +13576,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -14195,7 +14398,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
