@@ -1261,8 +1261,18 @@ def step_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
+        case "jinja":
+            try:
+                result = call_jinja(code_s, scope)
+                background = [{"role": state.role, "content": result}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
         case _:
-            message = f"Unsupported language: {block.lan}"
+            message = f"Unsupported language: {block.lang}"
             raise PDLRuntimeError(
                 message,
                 loc=loc,
@@ -1298,6 +1308,14 @@ def call_command(code: str) -> str:
         raise ValueError(f"command exited with non zero code: {p.returncode}")
     output = p.stdout
     return output
+
+
+def call_jinja(code: str, scope: dict) -> Any:
+    template = Template(
+        code,
+    )
+    result = template.render(scope)
+    return result
 
 
 def step_call(

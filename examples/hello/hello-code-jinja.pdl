@@ -1,0 +1,6 @@
+description: Hello world showing call out to shell command
+defs:
+  world: "World"
+lang: jinja
+code: |
+  Hello {{ world }}!
