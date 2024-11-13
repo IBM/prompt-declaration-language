@@ -1,0 +1,4 @@
+description: Hello world showing call out to shell command
+lang: command
+code: |
+  echo "Hello World!"

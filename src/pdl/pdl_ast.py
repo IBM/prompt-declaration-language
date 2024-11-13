@@ -281,7 +281,7 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lang: Literal["python", "command"]
+    lang: Literal["python", "command", "jinja"]
     """Programming language of the code.
     """
     code: "BlocksType"
