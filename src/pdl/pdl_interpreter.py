@@ -381,7 +381,7 @@ def step_advanced_block(
         background = []
     contribute_value, trace = process_contribute(trace, scope, loc)
     if contribute_value is not None:
-        background = [contribute_value]
+        background = contribute_value
 
     return result, background, scope, trace
 

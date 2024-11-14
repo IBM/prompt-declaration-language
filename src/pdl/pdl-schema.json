@@ -2920,7 +2920,9 @@
       "additionalProperties": false,
       "properties": {
         "value": {
-          "title": "Value"
+          "items": {},
+          "title": "Value",
+          "type": "array"
         }
       },
       "required": [

@@ -90,7 +90,7 @@ class ContributeTarget(StrEnum):
 
 class ContributeValue(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    value: Any
+    value: list[Any]
 
 
 class Block(BaseModel):
