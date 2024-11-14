@@ -163,8 +163,7 @@ class LitellmModel:
         msg = response.choices[0].message  # pyright: ignore
         if msg.role is None:
             msg.role = "assistant"
-        return msg.json(), response.json()
-        
+        return msg.json(), response.json()  # pyright: ignore
 
     @staticmethod
     def generate_text_stream(

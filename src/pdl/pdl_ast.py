@@ -2,7 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -28,14 +28,7 @@ ExpressionType: TypeAlias = Any
 # )
 
 
-class Message(TypedDict):
-    role: Optional[str]
-    content: str
-    tool_call_id: Optional[str]
-    name: Optional[str]
-    tool_calls: Optional[list[Any]]
-    function_call: Optional[Any]
-
+Message: TypeAlias = dict[str, Any]
 Messages: TypeAlias = list[Message]
 
 
@@ -117,7 +110,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue ]] = [
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]

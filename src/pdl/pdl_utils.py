@@ -1,6 +1,6 @@
 import json
 
-from .pdl_ast import FunctionBlock, Messages, Message, ContributeTarget, ContributeValue
+from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
 
 
 def stringify(result):
@@ -15,28 +15,32 @@ def stringify(result):
             s = str(result)
     return s
 
-def replace_contribute_value(contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue ]], value: ContributeValue):
+
+def replace_contribute_value(
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]],
+    value: ContributeValue,
+):
     ret = []
     for item in contribute:
-        if isinstance(item, dict) and isinstance(item[ContributeTarget.CONTEXT], ContributeValue):
+        if isinstance(item, dict) and isinstance(
+            item[ContributeTarget.CONTEXT], ContributeValue
+        ):
             item = value
         ret.append(item)
     return ret
 
-def get_contribute_value(contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue ]] | None):
+
+def get_contribute_value(
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] | None
+):
     if contribute is None:
         return None
     for item in contribute:
-        if isinstance(item, dict) and isinstance(item[ContributeTarget.CONTEXT], ContributeValue):
+        if isinstance(item, dict) and isinstance(
+            item[ContributeTarget.CONTEXT], ContributeValue
+        ):
             return item[ContributeTarget.CONTEXT].value
     return None
-
-
-def messages_map(role: str | None, content: str, contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue ]] | None) -> Messages:
-    value = get_contribute_value(contribute)
-    if value is None:
-        return [{"role": role, "content": content }]
-    return value
 
 
 def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
@@ -46,7 +50,9 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
         return messages1
     left = messages1[-1]
     right = messages2[0]
-    if left["role"] == right["role"] and simple_message(left) and simple_message(right): # test that there are no other keys
+    if (
+        left["role"] == right["role"] and simple_message(left) and simple_message(right)
+    ):  # test that there are no other keys
         return (
             messages1[:-1]
             + [{"role": left["role"], "content": left["content"] + right["content"]}]
@@ -63,4 +69,3 @@ def simple_message(message: Message) -> bool:
     if message.keys() == {"role", "content"} and message["content"] is not None:
         return True
     return False
-

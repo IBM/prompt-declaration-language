@@ -34,7 +34,6 @@ from .pdl_ast import (
     CallBlock,
     CodeBlock,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
@@ -81,7 +80,13 @@ from .pdl_scheduler import (
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
-from .pdl_utils import messages_concat, messages_to_str, stringify, messages_map, get_contribute_value, replace_contribute_value
+from .pdl_utils import (
+    get_contribute_value,
+    messages_concat,
+    messages_to_str,
+    replace_contribute_value,
+    stringify,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -377,7 +382,7 @@ def step_advanced_block(
     contribute_value, trace = process_contribute(trace, scope, loc)
     if contribute_value is not None:
         background = [contribute_value]
-   
+
     return result, background, scope, trace
 
 
@@ -888,7 +893,9 @@ BlockTypeTVarProcessExprOf = TypeVar(
 )
 
 
-def process_contribute(block: BlockTypeTVarProcessExprOf, scope: ScopeType,  loc: LocationType) -> tuple[ContributeValue | None, BlockTypeTVarProcessExprOf]:
+def process_contribute(
+    block: BlockTypeTVarProcessExprOf, scope: ScopeType, loc: LocationType
+) -> tuple[Any, BlockTypeTVarProcessExprOf]:
     value = get_contribute_value(block.contribute)
     loc = append(loc, "contribute")
     try:
@@ -1096,9 +1103,7 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(
-                state, "Model Input", messages_to_str(model_input)
-            )
+            append_log(state, "Model Input", messages_to_str(model_input))
         background: Messages = [msg]
         result = "" if msg["content"] is None else msg["content"]
         append_log(state, "Model Output", result)
@@ -1145,7 +1150,7 @@ def generate_client_response_streaming(
     msg_stream: Generator[Message, Any, Any]
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1168,7 +1173,9 @@ def generate_client_response_streaming(
     wrapped_gen = GeneratorWrapper(msg_stream)
     for chunk in wrapped_gen:
         if state.yield_result:
-            yield ModelYieldResultMessage("" if chunk["content"] is None else chunk["content"])
+            yield ModelYieldResultMessage(
+                "" if chunk["content"] is None else chunk["content"]
+            )
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
@@ -1176,7 +1183,11 @@ def generate_client_response_streaming(
             role = complete_msg["role"]
         else:
             chunk_role = chunk["role"]
-            if chunk_role is None or chunk_role == role and chunk["content"] is not None:
+            if (
+                chunk_role is None
+                or chunk_role == role
+                and chunk["content"] is not None
+            ):
                 complete_msg["content"] += chunk["content"]
     raw_result = None
     if block.modelResponse is not None:
@@ -1205,7 +1216,7 @@ def generate_client_response_single(
     msg: Message
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg, raw_result = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1236,7 +1247,7 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
 ) -> Generator[YieldMessage, Any, Message]:
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
