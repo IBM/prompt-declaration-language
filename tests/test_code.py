@@ -149,3 +149,31 @@ code: |
 """
     result = exec_str(prog_str)
     assert result == "Hello World!"
+
+
+def test_pdl3():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == "<built-in function print>"
+
+
+def test_pdl4():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${ "${" }x ${ "}" }
+"""
+    result = exec_str(prog_str)
+    assert result == print  # pylint: disable=comparison-with-callable
