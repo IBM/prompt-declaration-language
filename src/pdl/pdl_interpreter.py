@@ -80,7 +80,13 @@ from .pdl_scheduler import (
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
-from .pdl_utils import messages_concat, messages_to_str, stringify
+from .pdl_utils import (
+    get_contribute_value,
+    messages_concat,
+    messages_to_str,
+    replace_contribute_value,
+    stringify,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -298,6 +304,14 @@ def step_block(
     return result, background, scope, trace
 
 
+def context_in_contribute(block: AdvancedBlockType) -> bool:
+    if ContributeTarget.CONTEXT in block.contribute:
+        return True
+    if get_contribute_value(block.contribute) is not None:
+        return True
+    return False
+
+
 def step_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
@@ -313,7 +327,7 @@ def step_advanced_block(
         state.yield_result and ContributeTarget.RESULT in block.contribute
     )
     state = state.with_yield_background(
-        state.yield_background and ContributeTarget.CONTEXT in block.contribute
+        state.yield_background and context_in_contribute(block)
     )
     try:
         result, background, scope, trace = yield from step_block_body(
@@ -365,6 +379,10 @@ def step_advanced_block(
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
         background = []
+    contribute_value, trace = process_contribute(trace, scope, loc)
+    if contribute_value is not None:
+        background = contribute_value
+
     return result, background, scope, trace
 
 
@@ -875,6 +893,24 @@ BlockTypeTVarProcessExprOf = TypeVar(
 )
 
 
+def process_contribute(
+    block: BlockTypeTVarProcessExprOf, scope: ScopeType, loc: LocationType
+) -> tuple[Any, BlockTypeTVarProcessExprOf]:
+    value = get_contribute_value(block.contribute)
+    loc = append(loc, "contribute")
+    try:
+        result = process_expr(scope, value, loc)
+    except PDLRuntimeExpressionError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+        ) from exc
+    replace = replace_contribute_value(block.contribute, result)
+    trace = block.model_copy(update={"contribute": replace})
+    return result, trace
+
+
 def process_expr_of(
     block: BlockTypeTVarProcessExprOf,
     field: str,
@@ -1067,11 +1103,9 @@ def step_call_model(
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(
-                state, "Model Input", messages_to_str(concrete_block.model, model_input)
-            )
+            append_log(state, "Model Input", messages_to_str(model_input))
         background: Messages = [msg]
-        result = msg["content"]
+        result = "" if msg["content"] is None else msg["content"]
         append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
         if block.modelResponse is not None:
@@ -1116,7 +1150,7 @@ def generate_client_response_streaming(
     msg_stream: Generator[Message, Any, Any]
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1139,7 +1173,9 @@ def generate_client_response_streaming(
     wrapped_gen = GeneratorWrapper(msg_stream)
     for chunk in wrapped_gen:
         if state.yield_result:
-            yield ModelYieldResultMessage(chunk["content"])
+            yield ModelYieldResultMessage(
+                "" if chunk["content"] is None else chunk["content"]
+            )
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
@@ -1147,7 +1183,11 @@ def generate_client_response_streaming(
             role = complete_msg["role"]
         else:
             chunk_role = chunk["role"]
-            if chunk_role is None or chunk_role == role:
+            if (
+                chunk_role is None
+                or chunk_role == role
+                and chunk["content"] is not None
+            ):
                 complete_msg["content"] += chunk["content"]
     raw_result = None
     if block.modelResponse is not None:
@@ -1176,7 +1216,7 @@ def generate_client_response_single(
     msg: Message
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg, raw_result = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1193,7 +1233,7 @@ def generate_client_response_single(
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
     if state.yield_result:
-        yield YieldResultMessage(msg["content"])
+        yield YieldResultMessage("" if msg["content"] is None else msg["content"])
     if state.yield_background:
         yield YieldBackgroundMessage([msg])
     return msg, raw_result
@@ -1207,7 +1247,7 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
 ) -> Generator[YieldMessage, Any, Message]:
     match block:
         case BamModelBlock():
-            model_input_str = messages_to_str(block.model, model_input)
+            model_input_str = messages_to_str(model_input)
             msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,

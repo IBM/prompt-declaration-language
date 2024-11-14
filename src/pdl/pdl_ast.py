@@ -2,7 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -28,11 +28,7 @@ ExpressionType: TypeAlias = Any
 # )
 
 
-class Message(TypedDict):
-    role: Optional[str]
-    content: str
-
-
+Message: TypeAlias = dict[str, Any]
 Messages: TypeAlias = list[Message]
 
 
@@ -92,6 +88,11 @@ class ContributeTarget(StrEnum):
     CONTEXT = "context"
 
 
+class ContributeValue(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: list[Any]
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -109,7 +110,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget] = [
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]

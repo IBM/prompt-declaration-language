@@ -161,15 +161,9 @@ class LitellmModel:
             model=model_id, messages=messages, stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore
-        if msg.content is None:
-            return {
-                "role": msg.role,
-                "content": "",
-            }, response.json()  # pyright: ignore
-        return {
-            "role": msg.role,
-            "content": msg.content,
-        }, response.json()  # pyright: ignore
+        if msg.role is None:
+            msg.role = "assistant"
+        return msg.json(), response.json()  # pyright: ignore
 
     @staticmethod
     def generate_text_stream(
@@ -192,7 +186,7 @@ class LitellmModel:
         for chunk in response:
             result.append(chunk.json())  # pyright: ignore
             msg = chunk.choices[0].delta  # pyright: ignore
-            if msg.content is None:
-                continue
-            yield {"role": msg.role, "content": msg.content}
+            if msg.role is None:
+                msg.role = "assistant"
+            yield msg.model_dump()
         return result
