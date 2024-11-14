@@ -2692,7 +2692,8 @@
           "enum": [
             "python",
             "command",
-            "jinja"
+            "jinja",
+            "pdl"
           ],
           "title": "Lang",
           "type": "string"

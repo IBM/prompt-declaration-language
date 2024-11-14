@@ -1,4 +1,4 @@
-description: Hello world showing call out to shell command
+description: Hello world showing call out to Jinja
 defs:
   world: "World"
 lang: jinja
