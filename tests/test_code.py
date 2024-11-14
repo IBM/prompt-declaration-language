@@ -123,3 +123,57 @@ code: |
     bad
     good"""
     )
+
+
+def test_pdl1():
+    prog_str = """
+lang: pdl
+code: |
+  description: Hello world
+  text:
+  - "Hello World!"
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_pdl2():
+    prog_str = """
+defs:
+  w: World
+lang: pdl
+code: |
+  description: Hello world
+  text:
+  - "Hello ${w}!"
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_pdl3():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == "<built-in function print>"
+
+
+def test_pdl4():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${ "${" }x ${ "}" }
+"""
+    result = exec_str(prog_str)
+    assert result == print  # pylint: disable=comparison-with-callable

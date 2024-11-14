@@ -68,7 +68,7 @@ from .pdl_ast import (
 from .pdl_dumper import blocks_to_dict
 from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_file
+from .pdl_parser import PDLParseError, parse_file, parse_str
 from .pdl_scheduler import (
     CodeYieldResultMessage,
     GeneratorWrapper,
@@ -1271,6 +1271,16 @@ def step_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
+        case "pdl":
+            try:
+                result = call_pdl(code_s, scope)
+                background = [{"role": state.role, "content": result}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
         case _:
             message = f"Unsupported language: {block.lang}"
             raise PDLRuntimeError(
@@ -1315,6 +1325,13 @@ def call_jinja(code: str, scope: dict) -> Any:
         code,
     )
     result = template.render(scope)
+    return result
+
+
+def call_pdl(code: str, scope: dict) -> Any:
+    program, loc = parse_str(code)
+    state = InterpreterState()
+    result, _, _, _ = process_prog(state, scope, program, loc)
     return result
 
 
