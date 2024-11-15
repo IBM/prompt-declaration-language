@@ -1,4 +1,4 @@
-
+# Expected not to type check
 description: Hello world showing call out to python code
 text:
 - lang: python

@@ -21,6 +21,10 @@ from .pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    JoinArray,
+    JoinLastOf,
+    JoinText,
+    JoinType,
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
@@ -63,19 +67,20 @@ def dumps_json(data, **kwargs):
     return json.dumps(data, **kwargs)
 
 
+DumpedBlockType: TypeAlias = None | bool | int | float | str | dict[str, Any]
+
+
 def program_to_dict(
     prog: pdl_ast.Program, json_compatible: bool = False
-) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
+) -> DumpedBlockType | list[DumpedBlockType]:
     return blocks_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(
-    block: pdl_ast.BlockType, json_compatible: bool
-) -> int | float | str | dict[str, Any]:
+def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
-    d["kind"] = block.kind
+    d["kind"] = str(block.kind)
     if block.description is not None:
         d["description"] = block.description
     if block.spec is not None:
@@ -86,7 +91,7 @@ def block_to_dict(
         }
     match block:
         case BamModelBlock():
-            d["platform"] = block.platform
+            d["platform"] = str(block.platform)
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input, json_compatible)
@@ -103,8 +108,10 @@ def block_to_dict(
                 d["data"] = block.data
             if block.constraints is not None:
                 d["constraints"] = block.constraints
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
         case LitellmModelBlock():
-            d["platform"] = block.platform
+            d["platform"] = str(block.platform)
             d["model"] = block.model
             if block.input is not None:
                 d["input"] = blocks_to_dict(block.input, json_compatible)
@@ -115,6 +122,8 @@ def block_to_dict(
                     )
                 else:
                     d["parameters"] = block.parameters
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = blocks_to_dict(block.code, json_compatible)
@@ -158,7 +167,7 @@ def block_to_dict(
         case RepeatBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -166,7 +175,7 @@ def block_to_dict(
         case RepeatUntilBlock():
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -174,7 +183,7 @@ def block_to_dict(
         case ForBlock():
             d["for"] = block.fors
             d["repeat"] = blocks_to_dict(block.repeat, json_compatible)
-            d["join"] = block.join.model_dump(by_alias=True)
+            d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [
                     blocks_to_dict(blocks, json_compatible) for blocks in block.trace
@@ -216,6 +225,16 @@ def block_to_dict(
     return d
 
 
+def join_to_dict(join: JoinType) -> dict[str, Any]:
+    d = {}
+    match join:
+        case JoinText():
+            d["with"] = join.join_string
+        case JoinArray() | JoinLastOf():
+            d["as"] = str(join.iteration_type)
+    return d
+
+
 JsonType: TypeAlias = None | bool | int | float | str | dict[str, "JsonType"]
 
 
@@ -231,10 +250,8 @@ def as_json(value: Any) -> JsonType:
 
 def blocks_to_dict(
     blocks: BlocksType, json_compatible: bool
-) -> int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]:
-    result: (
-        int | float | str | dict[str, Any] | list[int | float | str | dict[str, Any]]
-    )
+) -> DumpedBlockType | list[DumpedBlockType]:
+    result: DumpedBlockType | list[DumpedBlockType]
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
         result = [block_to_dict(block, json_compatible) for block in blocks]

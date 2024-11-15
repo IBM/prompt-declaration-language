@@ -4,4 +4,6 @@ text:
 - read:
   message: "Please provide an input: "
   def: STDIN
-- get: STDIN
+  contribute: []
+- ${ STDIN }
+

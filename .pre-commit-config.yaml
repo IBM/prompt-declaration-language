@@ -5,7 +5,7 @@ default_language_version:
 repos:
   # check some basic stuff
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       # Check for files that would conflict in case-insensitive filesystems
       - id: check-case-conflict
@@ -45,6 +45,12 @@ repos:
             "-sn", # Don't display the score
             "--rcfile=pylintrc"
           ]
+  # run the bandit security linter
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+      - id: bandit
+        args: [-c, bandit.yaml]
   # Type check the Python code with MyPy
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: 'v1.11.2'

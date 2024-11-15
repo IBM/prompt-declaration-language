@@ -2,7 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
+from typing import Any, Literal, Optional, TypeAlias, Union
 
 import strictyaml
 from genai.schema import (
@@ -13,14 +13,12 @@ from genai.schema import (
 )
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
+from .pdl_schema_utils import pdltype_to_jsonschema
+
 ScopeType: TypeAlias = dict[str, Any]
 
 
-class Message(TypedDict):
-    role: Optional[str]
-    content: str
-
-
+Message: TypeAlias = dict[str, Any]
 Messages: TypeAlias = list[Message]
 
 
@@ -105,6 +103,11 @@ class ContributeTarget(StrEnum):
     CONTEXT = "context"
 
 
+class ContributeValue(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: list[Any]
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -126,7 +129,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget] = [
+    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -276,6 +279,7 @@ class ModelBlock(Block):
     model: str | ExpressionType
     input: Optional["BlocksType"] = None
     trace: Optional["BlockType"] = None
+    modelResponse: Optional[str] = None
 
 
 class BamModelBlock(ModelBlock):
@@ -298,7 +302,7 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lang: Literal["python", "command"]
+    lang: Literal["python", "command", "jinja", "pdl"]
     """Programming language of the code.
     """
     code: "BlocksType"
@@ -533,7 +537,7 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType: TypeAlias = int | float | str | AdvancedBlockType
+BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
 """All kinds of blocks.
 """
 BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
@@ -636,40 +640,49 @@ def set_default_model_params(
 
 def set_default_granite_model_parameters(
     model_id: str,
+    spec: Any,
     parameters: Optional[dict[str, Any]],
 ) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
-    if "decoding_method" not in parameters:
-        parameters["decoding_method"] = (
-            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-        )
-    if "max_tokens" in parameters and parameters["max_tokens"] is None:
-        parameters["max_tokens"] = (
-            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "min_new_tokens" not in parameters:
-        parameters["min_new_tokens"] = (
-            MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "repetition_penalty" not in parameters:
-        parameters["repetition_penalty"] = (
-            REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
-        )
-    if parameters["decoding_method"] == "sample":
-        if "temperature" not in parameters:
-            parameters["temperature"] = (
-                TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
-            )
-        if "top_k" not in parameters:
-            parameters["top_k"] = (
-                TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
-            )
-        if "top_p" not in parameters:
-            parameters["top_p"] = (
-                TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
-            )
-    if "granite-3b" in model_id or "granite-8b" in model_id:
+
+    if spec is not None:
+        schema = pdltype_to_jsonschema(spec, True)
+        parameters["guided_decoding_backend"] = "lm-format-enforcer"
+        parameters["guided_json"] = schema
+
+    # if "decoding_method" not in parameters:
+    #    parameters["decoding_method"] = (
+    #        DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+    #    )
+    # if "max_tokens" in parameters and parameters["max_tokens"] is None:
+    #    parameters["max_tokens"] = (
+    #        MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    #    )
+    # if "min_new_tokens" not in parameters:
+    #    parameters["min_new_tokens"] = (
+    #        MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+    #    )
+    # if "repetition_penalty" not in parameters:
+    #    parameters["repetition_penalty"] = (
+    #        REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+    #    )
+    # if parameters["decoding_method"] == "sample":
+    #    if "temperature" not in parameters:
+    #        parameters["temperature"] = (
+    #            TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    #        )
+    #    if "top_k" not in parameters:
+    #        parameters["top_k"] = (
+    #            TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    #        )
+    #    if "top_p" not in parameters:
+    #        parameters["top_p"] = (
+    #            TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+    #        )
+    if "granite-3.0" in model_id:
+        if "temperature" not in parameters or parameters["temperature"] is None:
+            parameters["temperature"] = 0  # setting to decoding greedy
         if "roles" not in parameters:
             parameters["roles"] = {
                 "system": {

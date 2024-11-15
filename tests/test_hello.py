@@ -131,3 +131,33 @@ def test_program_as_list():
     """
     result = exec_str(prog)
     assert result == "Bye"
+
+
+def test_bool():
+    prog = """
+    defs:
+      tt: true
+      ff: false
+    if: ${tt}
+    then: false
+    else: true
+    """
+    result = exec_str(prog)
+    assert isinstance(result, bool)
+    assert not result
+
+
+def test_null():
+    prog = """
+    text:
+    """
+    result = exec_str(prog)
+    assert result == "null"
+
+
+def test_none():
+    prog = """
+    lastOf: null
+    """
+    result = exec_str(prog)
+    assert result is None

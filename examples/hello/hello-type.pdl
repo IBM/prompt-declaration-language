@@ -1,32 +1,26 @@
+# Expected not to type check
 description: Hello world with type specification
 text:
-- Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
-  def: GEN
-  parameters:
-    stop:
-    - '!'
-    include_stop_sequence: true
+- def: GEN
+  text: "What is the meaning of life"
 - def: translate
   function:
     sentence: str
     language: str
   spec: int
   return:
-    - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
-    - model: watsonx/ibm/granite-20b-multilingual
+    lastOf:
+    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
+    - model: replicate/ibm-granite/granite-3.0-8b-instruct
       parameters:
-        stop:
-        - "\n"
-        include_stop_sequence: true
-
+        stop_sequences: "\n"
 - call: translate
   spec: str
   args:
-    sentence: Hello,${ GEN }
+    sentence: ${ GEN }
     language: French
 - call: translate
   args:
-    sentence: Bye,${ GEN }
+    sentence: ${ GEN }
     language: Spanish
 

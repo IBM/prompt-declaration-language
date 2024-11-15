@@ -12,7 +12,7 @@ wget https://github.com/apache/commons-cli/archive/refs/tags/rel/commons-cli-1.7
 
 To run the CLDK assistant:
 ```
-pdl examples/cldk/cldk-assistant.pdl
+pdl cldk-assistant.pdl
 ```
 
 Enter the path to the above Java project when prompted. Then you can make queries such as "what are all the classes?".

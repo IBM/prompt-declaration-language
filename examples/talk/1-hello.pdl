@@ -1,8 +1,8 @@
 description: Model call
 text: 
-- Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- "Hello\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
-    stop: ["!"]
+    stop_sequences: "!"
     include_stop_sequence: true
 

@@ -5,7 +5,7 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
@@ -18,3 +18,5 @@ text:
         Explain the following code:
         ```
         ${ CODE.source_code }```
+  parameters:
+    temperature: 0

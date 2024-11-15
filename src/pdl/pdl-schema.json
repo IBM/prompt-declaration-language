@@ -26,6 +26,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -98,6 +101,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -165,10 +171,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -197,7 +209,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -228,6 +250,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -301,6 +326,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -368,6 +396,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -427,6 +458,9 @@
         "array": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -499,6 +533,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -566,10 +603,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Array"
@@ -605,6 +648,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -678,6 +724,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -745,10 +794,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -777,7 +832,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -808,6 +873,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -881,6 +949,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -948,6 +1019,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1019,6 +1093,9 @@
         "input": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -1091,6 +1168,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -1158,6 +1238,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1172,6 +1255,9 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -1247,6 +1333,18 @@
           ],
           "default": null,
           "title": "Trace"
+        },
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelresponse"
         },
         "platform": {
           "const": "bam",
@@ -1568,6 +1666,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -1640,6 +1741,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -1707,10 +1811,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -1739,7 +1849,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -1770,6 +1890,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -1843,6 +1966,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -1910,6 +2036,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -1985,6 +2114,9 @@
         "trace": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -2057,6 +2189,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2124,6 +2259,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -2168,6 +2306,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -2241,6 +2382,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -2308,10 +2452,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -2340,7 +2490,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -2371,6 +2531,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -2444,6 +2607,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2511,6 +2677,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -2571,13 +2740,18 @@
           "description": "Programming language of the code.\n    ",
           "enum": [
             "python",
-            "command"
+            "command",
+            "jinja",
+            "pdl"
           ],
           "title": "Lang",
           "type": "string"
         },
         "code": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -2651,6 +2825,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -2718,10 +2895,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Code to execute.\n    ",
@@ -2742,6 +2925,21 @@
       ],
       "title": "ContributeTarget",
       "type": "string"
+    },
+    "ContributeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "items": {},
+          "title": "Value",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ContributeValue",
+      "type": "object"
     },
     "DataBlock": {
       "additionalProperties": false,
@@ -2768,6 +2966,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -2841,6 +3042,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -2908,10 +3112,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -2940,7 +3150,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -2971,6 +3191,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3044,6 +3267,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3111,6 +3337,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -3224,6 +3453,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -3296,6 +3528,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -3363,10 +3598,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -3395,7 +3636,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -3426,6 +3677,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3499,6 +3753,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3566,6 +3823,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -3651,6 +3911,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -3723,6 +3986,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -3790,10 +4056,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -3822,7 +4094,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -3853,6 +4135,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -3926,6 +4211,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -3993,6 +4281,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -4056,6 +4347,9 @@
         "program": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -4128,6 +4422,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4195,10 +4492,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Program"
@@ -4236,6 +4539,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -4309,6 +4615,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -4376,10 +4685,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -4408,7 +4723,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -4439,6 +4764,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -4512,6 +4840,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4579,6 +4910,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -4651,6 +4985,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -4723,6 +5060,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -4790,10 +5130,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -4823,6 +5169,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -4896,6 +5245,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -4963,10 +5315,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -5012,6 +5370,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -5085,6 +5446,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -5152,10 +5516,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -5184,7 +5554,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -5215,6 +5595,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -5288,6 +5671,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5355,6 +5741,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -5426,6 +5815,9 @@
         "return": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -5498,6 +5890,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5565,10 +5960,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the function\n    ",
@@ -5619,6 +6020,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -5692,6 +6096,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -5759,10 +6166,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -5791,7 +6204,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -5822,6 +6245,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -5895,6 +6321,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -5962,6 +6391,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6056,6 +6488,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -6128,6 +6563,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -6195,10 +6633,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -6227,7 +6671,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -6258,6 +6712,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -6331,6 +6788,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6398,6 +6858,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6467,6 +6930,9 @@
         "then": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -6539,6 +7005,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6606,10 +7075,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Branch to exectute if the condition is true.\n    ",
@@ -6618,6 +7093,9 @@
         "else": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -6690,6 +7168,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -6757,6 +7238,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -6815,6 +7299,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -6888,6 +7375,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -6955,10 +7445,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -6987,7 +7483,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -7018,6 +7524,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -7091,6 +7600,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7158,6 +7670,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -7222,6 +7737,9 @@
         "trace": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -7294,6 +7812,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7361,6 +7882,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -7467,6 +7991,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -7539,6 +8066,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -7606,10 +8136,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -7638,7 +8174,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -7669,6 +8215,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -7742,6 +8291,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -7809,6 +8361,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -7868,6 +8423,9 @@
         "lastOf": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -7940,6 +8498,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -8007,10 +8568,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Lastof"
@@ -8081,6 +8648,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -8153,6 +8723,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -8220,10 +8793,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -8252,7 +8831,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -8283,6 +8872,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -8356,6 +8948,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -8423,6 +9018,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -8494,6 +9092,9 @@
         "input": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -8566,6 +9167,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -8633,6 +9237,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -8647,6 +9254,9 @@
         },
         "trace": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -8722,6 +9332,18 @@
           ],
           "default": null,
           "title": "Trace"
+        },
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelresponse"
         },
         "platform": {
           "const": "litellm",
@@ -9233,6 +9855,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -9305,6 +9930,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -9372,10 +10000,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -9404,7 +10038,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -9435,6 +10079,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -9508,6 +10155,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -9575,6 +10225,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -9633,6 +10286,9 @@
         "content": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -9705,6 +10361,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -9772,10 +10431,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Content of the message.",
@@ -10086,6 +10751,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -10158,6 +10826,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -10225,10 +10896,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -10257,7 +10934,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -10288,6 +10975,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -10361,6 +11051,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -10428,6 +11121,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10489,6 +11185,9 @@
             {
               "additionalProperties": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -10562,6 +11261,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -10629,10 +11331,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10641,6 +11349,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -10709,6 +11420,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -10726,6 +11440,9 @@
     },
     "PdlBlock": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -10794,12 +11511,18 @@
         },
         {
           "$ref": "#/$defs/EmptyBlock"
+        },
+        {
+          "type": "null"
         }
       ],
       "title": "PdlBlock"
     },
     "PdlBlocks": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -10873,6 +11596,9 @@
           "items": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -10940,10 +11666,16 @@
               },
               {
                 "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
               }
             ]
           },
           "type": "array"
+        },
+        {
+          "type": "null"
         }
       ],
       "title": "PdlBlocks"
@@ -10977,6 +11709,9 @@
         },
         "pdl": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -11050,6 +11785,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -11117,10 +11855,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "title": "Pdl"
@@ -11134,6 +11878,9 @@
     },
     "Program": {
       "anyOf": [
+        {
+          "type": "boolean"
+        },
         {
           "type": "integer"
         },
@@ -11207,6 +11954,9 @@
           "items": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -11274,10 +12024,16 @@
               },
               {
                 "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
               }
             ]
           },
           "type": "array"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Prompt Declaration Language program (PDL)",
@@ -11332,6 +12088,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -11405,6 +12164,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -11472,10 +12234,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -11504,7 +12272,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -11535,6 +12313,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -11608,6 +12389,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -11675,6 +12459,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -11846,6 +12633,9 @@
           "additionalProperties": {
             "anyOf": [
               {
+                "type": "boolean"
+              },
+              {
                 "type": "integer"
               },
               {
@@ -11918,6 +12708,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -11985,10 +12778,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -12017,7 +12816,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -12048,6 +12857,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -12121,6 +12933,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12188,6 +13003,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -12247,6 +13065,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -12319,6 +13140,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12386,10 +13210,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -12424,6 +13254,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -12497,6 +13330,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -12564,10 +13400,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -12613,6 +13455,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -12686,6 +13531,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -12753,10 +13601,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -12785,7 +13639,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -12816,6 +13680,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -12889,6 +13756,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -12956,6 +13826,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -13015,6 +13888,9 @@
         "repeat": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -13087,6 +13963,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -13154,10 +14033,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the loop.\n    ",
@@ -13197,6 +14082,9 @@
             {
               "items": {
                 "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
                   {
                     "type": "integer"
                   },
@@ -13270,6 +14158,9 @@
                     "items": {
                       "anyOf": [
                         {
+                          "type": "boolean"
+                        },
+                        {
                           "type": "integer"
                         },
                         {
@@ -13337,10 +14228,16 @@
                         },
                         {
                           "$ref": "#/$defs/EmptyBlock"
+                        },
+                        {
+                          "type": "null"
                         }
                       ]
                     },
                     "type": "array"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -13386,6 +14283,9 @@
         "defs": {
           "additionalProperties": {
             "anyOf": [
+              {
+                "type": "boolean"
+              },
               {
                 "type": "integer"
               },
@@ -13459,6 +14359,9 @@
                 "items": {
                   "anyOf": [
                     {
+                      "type": "boolean"
+                    },
+                    {
                       "type": "integer"
                     },
                     {
@@ -13526,10 +14429,16 @@
                     },
                     {
                       "$ref": "#/$defs/EmptyBlock"
+                    },
+                    {
+                      "type": "null"
                     }
                   ]
                 },
                 "type": "array"
+              },
+              {
+                "type": "null"
               }
             ]
           },
@@ -13558,7 +14467,17 @@
           ],
           "description": "Indicate if the block contributes to the result and background context.\n    ",
           "items": {
-            "$ref": "#/$defs/ContributeTarget"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
           },
           "title": "Contribute",
           "type": "array"
@@ -13589,6 +14508,9 @@
         },
         "fallback": {
           "anyOf": [
+            {
+              "type": "boolean"
+            },
             {
               "type": "integer"
             },
@@ -13662,6 +14584,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -13729,6 +14654,9 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -13788,6 +14716,9 @@
         "text": {
           "anyOf": [
             {
+              "type": "boolean"
+            },
+            {
               "type": "integer"
             },
             {
@@ -13860,6 +14791,9 @@
               "items": {
                 "anyOf": [
                   {
+                    "type": "boolean"
+                  },
+                  {
                     "type": "integer"
                   },
                   {
@@ -13927,10 +14861,16 @@
                   },
                   {
                     "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
               "type": "array"
+            },
+            {
+              "type": "null"
             }
           ],
           "description": "Body of the text.\n    ",

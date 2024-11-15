@@ -2,7 +2,7 @@ import json
 import logging
 import re
 import shlex
-import subprocess
+import subprocess  # nosec
 import sys
 import types
 
@@ -69,9 +69,10 @@ from .pdl_ast import (
 from .pdl_dumper import blocks_to_dict
 from .pdl_llms import BamModel, LitellmModel
 from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_file
+from .pdl_parser import PDLParseError, parse_file, parse_str
 from .pdl_scheduler import (
     CodeYieldResultMessage,
+    GeneratorWrapper,
     ModelCallMessage,
     ModelYieldResultMessage,
     YieldBackgroundMessage,
@@ -80,7 +81,13 @@ from .pdl_scheduler import (
     schedule,
 )
 from .pdl_schema_validator import type_check_args, type_check_spec
-from .pdl_utils import messages_concat, messages_to_str, stringify
+from .pdl_utils import (
+    get_contribute_value,
+    messages_concat,
+    messages_to_str,
+    replace_contribute_value,
+    stringify,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -298,6 +305,14 @@ def step_block(
     return result, background, scope, trace
 
 
+def context_in_contribute(block: AdvancedBlockType) -> bool:
+    if ContributeTarget.CONTEXT in block.contribute:
+        return True
+    if get_contribute_value(block.contribute) is not None:
+        return True
+    return False
+
+
 def step_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
@@ -313,13 +328,26 @@ def step_advanced_block(
         state.yield_result and ContributeTarget.RESULT in block.contribute
     )
     state = state.with_yield_background(
-        state.yield_background and ContributeTarget.CONTEXT in block.contribute
+        state.yield_background and context_in_contribute(block)
     )
     try:
         result, background, scope, trace = yield from step_block_body(
             state, scope, block, loc
         )
-    except PDLRuntimeError as exc:
+        trace = trace.model_copy(update={"result": result})
+        if block.parser is not None:
+            result = parse_result(block.parser, result)
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(
+                    message,
+                    loc=loc,
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
+    except Exception as exc:
         if block.fallback is None:
             raise exc from exc
         (
@@ -335,33 +363,27 @@ def step_advanced_block(
             scope,
             loc=loc,
         )
-    trace = trace.model_copy(update={"result": result})
-    if block.parser is not None:
-        try:
-            result = parse_result(block.parser, result)
-        except PDLRuntimeParserError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, program=trace, fallback=result),
-            ) from exc
+        if block.spec is not None and not isinstance(block, FunctionBlock):
+            errors = type_check_spec(result, block.spec, block.location)
+            if len(errors) > 0:
+                message = "Type errors during spec checking:\n" + "\n".join(errors)
+                raise PDLRuntimeError(  # pylint: disable=raise-missing-from
+                    message,
+                    loc=append(loc, "fallback"),
+                    trace=ErrorBlock(msg=message, program=trace),
+                    fallback=result,
+                )
     if block.assign is not None:
         var = block.assign
         scope = scope | {var: result}
-    if block.spec is not None and not isinstance(block, FunctionBlock):
-        errors = type_check_spec(result, block.spec, block.location)
-        if len(errors) > 0:
-            message = "Type errors during spec checking:\n" + "\n".join(errors)
-            raise PDLRuntimeError(
-                message,
-                loc=loc,
-                trace=ErrorBlock(msg=message, program=trace),
-                fallback=result,
-            )
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
         background = []
+    contribute_value, trace = process_contribute(trace, scope, loc)
+    if contribute_value is not None:
+        background = contribute_value
+
     return result, background, scope, trace
 
 
@@ -873,6 +895,24 @@ BlockTypeTVarProcessExprOf = TypeVar(
 )
 
 
+def process_contribute(
+    block: BlockTypeTVarProcessExprOf, scope: ScopeType, loc: LocationType
+) -> tuple[Any, BlockTypeTVarProcessExprOf]:
+    value = get_contribute_value(block.contribute)
+    loc = append(loc, "contribute")
+    try:
+        result = process_expr(scope, value, loc)
+    except PDLRuntimeExpressionError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+        ) from exc
+    replace = replace_contribute_value(block.contribute, result)
+    trace = block.model_copy(update={"contribute": replace})
+    return result, trace
+
+
 def process_expr_of(
     block: BlockTypeTVarProcessExprOf,
     field: str,
@@ -928,7 +968,9 @@ def process_expr(  # pylint: disable=too-many-return-statements
         try:
             if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
                 # `expr` might be a single expression and should not be stringify
-                env = Environment(
+                env = Environment(  # nosec B701
+                    # [B701:jinja2_autoescape_false] By default, jinja2 sets autoescape to False. Consider using autoescape=True or use the select_autoescape function to mitigate XSS vulnerabilities.
+                    # This is safe because autoescape is not needed since we do not generate HTML
                     block_start_string="{%%%%%PDL%%%%%%%%%%",
                     block_end_string="%%%%%PDL%%%%%%%%%%}",
                     variable_start_string=EXPR_START_STRING,
@@ -1039,7 +1081,7 @@ def step_call_model(
             loc,
         )
         if isinstance(model_input_result, str):
-            model_input = [{"role": None, "content": model_input_result}]
+            model_input = [{"role": state.role, "content": model_input_result}]
         else:
             model_input = model_input_result
     else:
@@ -1061,15 +1103,19 @@ def step_call_model(
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
-        msg = yield from generate_client_response(state, concrete_block, model_input)
+        msg, raw_result = yield from generate_client_response(
+            state, concrete_block, model_input
+        )
         if "input" in litellm_params:
             append_log(state, "Model Input", litellm_params["input"])
         else:
-            append_log(state, "Model Input", messages_to_str(model, model_input))
+            append_log(state, "Model Input", messages_to_str(model_input))
         background: Messages = [msg]
-        result = msg["content"]
+        result = "" if msg["content"] is None else msg["content"]
         append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
+        if block.modelResponse is not None:
+            scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
     except Exception as exc:
         message = f"Error during model call: {repr(exc)}"
@@ -1084,34 +1130,35 @@ def generate_client_response(  # pylint: disable=too-many-arguments
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+    raw_result = None
     match state.batch:
         case 0:
-            model_output = yield from generate_client_response_streaming(
+            model_output, raw_result = yield from generate_client_response_streaming(
                 state, block, model_input
             )
         case 1:
-            model_output = yield from generate_client_response_single(
+            model_output, raw_result = yield from generate_client_response_single(
                 state, block, model_input
             )
         case _:
             model_output = yield from generate_client_response_batching(
                 state, block, model_input
             )
-    return model_output
+    return model_output, raw_result
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
-    msg_stream: Generator[Message, Any, None]
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+    msg_stream: Generator[Message, Any, Any]
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert isinstance(block.parameters, dict)  # block is a "concrete block"
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
+            model_input_str = messages_to_str(model_input)
             msg_stream = BamModel.generate_text_stream(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1124,15 +1171,19 @@ def generate_client_response_streaming(
             msg_stream = LitellmModel.generate_text_stream(
                 model_id=block.model,
                 messages=model_input,
+                spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
         case _:
             assert False
     complete_msg: Optional[Message] = None
     role = None
-    for chunk in msg_stream:
+    wrapped_gen = GeneratorWrapper(msg_stream)
+    for chunk in wrapped_gen:
         if state.yield_result:
-            yield ModelYieldResultMessage(chunk["content"])
+            yield ModelYieldResultMessage(
+                "" if chunk["content"] is None else chunk["content"]
+            )
         if state.yield_background:
             yield YieldBackgroundMessage([chunk])
         if complete_msg is None:
@@ -1140,11 +1191,18 @@ def generate_client_response_streaming(
             role = complete_msg["role"]
         else:
             chunk_role = chunk["role"]
-            if chunk_role is None or chunk_role == role:
+            if (
+                chunk_role is None
+                or chunk_role == role
+                and chunk["content"] is not None
+            ):
                 complete_msg["content"] += chunk["content"]
+    raw_result = None
+    if block.modelResponse is not None:
+        raw_result = wrapped_gen.value
     if complete_msg is None:
-        return Message(role=state.role, content="")
-    return complete_msg
+        return Message(role=state.role, content=""), raw_result
+    return complete_msg, raw_result
 
 
 def litellm_parameters_to_dict(
@@ -1162,14 +1220,14 @@ def generate_client_response_single(
     state: InterpreterState,
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert isinstance(block.parameters, dict)  # block is a "concrete block"
     msg: Message
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
-            msg = BamModel.generate_text(
+            model_input_str = messages_to_str(model_input)
+            msg, raw_result = BamModel.generate_text(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
                 model_input=model_input_str,
@@ -1178,16 +1236,17 @@ def generate_client_response_single(
                 data=block.data,
             )
         case LitellmModelBlock():
-            msg = LitellmModel.generate_text(
+            msg, raw_result = LitellmModel.generate_text(
                 model_id=block.model,
                 messages=model_input,
+                spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
     if state.yield_result:
-        yield YieldResultMessage(msg["content"])
+        yield YieldResultMessage("" if msg["content"] is None else msg["content"])
     if state.yield_background:
         yield YieldBackgroundMessage([msg])
-    return msg
+    return msg, raw_result
 
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
@@ -1198,9 +1257,9 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
 ) -> Generator[YieldMessage, Any, Message]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert isinstance(block.parameters, dict)  # block is a "concrete block"
-    model_input_str = messages_to_str(block.model, model_input)
     match block:
         case BamModelBlock():
+            model_input_str = messages_to_str(model_input)
             msg = yield ModelCallMessage(
                 model_id=block.model,
                 prompt_id=block.prompt_id,
@@ -1254,8 +1313,28 @@ def step_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
+        case "jinja":
+            try:
+                result = call_jinja(code_s, scope)
+                background = [{"role": state.role, "content": result}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
+        case "pdl":
+            try:
+                result = call_pdl(code_s, scope)
+                background = [{"role": state.role, "content": result}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
         case _:
-            message = f"Unsupported language: {block.lan}"
+            message = f"Unsupported language: {block.lang}"
             raise PDLRuntimeError(
                 message,
                 loc=loc,
@@ -1271,20 +1350,41 @@ __PDL_SESSION = types.SimpleNamespace()
 
 def call_python(code: str, scope: dict) -> Any:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
-    exec(code, my_namespace.__dict__)
+    exec(code, my_namespace.__dict__)  # nosec B102
+    # [B102:exec_used] Use of exec detected.
+    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
     result = my_namespace.result
     return result
 
 
 def call_command(code: str) -> str:
     args = shlex.split(code)
-    p = subprocess.run(args, capture_output=True, text=True, check=False)
+    p = subprocess.run(
+        args, capture_output=True, text=True, check=False, shell=False
+    )  # nosec B603
+    # [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
     if p.stderr != "":
         print(p.stderr, file=sys.stderr)
     if p.returncode != 0:
         raise ValueError(f"command exited with non zero code: {p.returncode}")
     output = p.stdout
     return output
+
+
+def call_jinja(code: str, scope: dict) -> Any:
+    template = Template(
+        code,
+    )
+    result = template.render(scope)
+    return result
+
+
+def call_pdl(code: str, scope: dict) -> Any:
+    program, loc = parse_str(code)
+    state = InterpreterState()
+    result, _, _, _ = process_prog(state, scope, program, loc)
+    return result
 
 
 def step_call(

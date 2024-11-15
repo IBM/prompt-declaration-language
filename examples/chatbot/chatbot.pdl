@@ -2,20 +2,21 @@ description: chatbot
 text:
 - read:
   message: "What is your query?\n"
+  contribute: [context]
 - repeat:
     text:
-    - model: watsonx/ibm/granite-13b-chat-v2
+    - model: replicate/ibm-granite/granite-3.0-8b-instruct
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
-      contribute: []
+      contribute: [context]
     - if: ${ eval == 'no' }
       then:
         text:
         - read:
           message: "Why not?\n"
+          contribute: []
   until: ${ eval == 'yes'}
-role: user
 
 
 

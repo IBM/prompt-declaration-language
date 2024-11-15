@@ -4,6 +4,8 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
+from pytest import CaptureFixture, MonkeyPatch
+
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import PDLRuntimeError
@@ -16,7 +18,7 @@ TO_SKIP = {
     for name in [
         pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
         pathlib.Path("examples") / "talk" / "8-tools.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "11-sdg.pdl",  # TODO: check why
+        pathlib.Path("examples") / "talk" / "10-sdg.pdl",  # TODO: check why
         pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
         pathlib.Path("examples") / "tools" / "calc.pdl",  # TODO: check why
         pathlib.Path("examples") / "tutorial" / "calling_apis.pdl",
@@ -29,6 +31,7 @@ TO_SKIP = {
         pathlib.Path("examples") / "gsm8k" / "math.pdl",
         pathlib.Path("examples") / "rag" / "rag.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
+        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
     ]
 }
 
@@ -40,8 +43,9 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "joke" / "Joke.pdl",
         pathlib.Path("examples") / "react" / "multi-agent.pdl",
         pathlib.Path("examples") / "react" / "wikipedia.pdl",
-        pathlib.Path("examples") / "talk" / "11-sdg.pdl",
+        pathlib.Path("examples") / "talk" / "10-sdg.pdl",
         pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
+        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",
         pathlib.Path("examples") / "talk" / "8-tools.pdl",
         pathlib.Path("examples") / "talk" / "9-react.pdl",
         pathlib.Path("examples") / "teacher" / "teacher.pdl",
@@ -50,6 +54,9 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
         pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
+        pathlib.Path("examples") / "tutorial" / "conditionals_loops.pdl",
+        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",
+        pathlib.Path("examples") / "fibonacci" / "fib.pdl",
     ]
 }
 
@@ -98,6 +105,11 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "3-weather.pdl": InputsType(
             stdin="What is the weather in Yorktown Heights?\n"
         ),
+        pathlib.Path("examples")
+        / "tutorial"
+        / "conditionals_loops.pdl": InputsType(
+            stdin="What is APR?\nno\nSay it as a poem\nyes\n"
+        ),
     }.items()
 }
 
@@ -119,6 +131,7 @@ EXPECTED_RUNTIME_ERROR = [
     pathlib.Path("examples") / "hello" / "hello-type-code.pdl",
     pathlib.Path("examples") / "hello" / "hello-type-list.pdl",
     pathlib.Path("examples") / "hello" / "hello-type.pdl",
+    pathlib.Path("examples") / "hello" / "hello-parser-json.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello12.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello13.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello14.pdl",
@@ -143,7 +156,7 @@ EXPECTED_RUNTIME_ERROR = [
 ]
 
 
-def test_valid_programs(capsys, monkeypatch) -> None:
+def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
     actual_parse_error: set[str] = set()
     actual_runtime_error: set[str] = set()
     wrong_results = {}
