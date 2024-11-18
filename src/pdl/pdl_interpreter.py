@@ -1155,7 +1155,9 @@ def generate_client_response_streaming(
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg_stream: Generator[Message, Any, Any]
     assert isinstance(block.model, str)  # block is a "concrete block"
-    assert isinstance(block.parameters, dict)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     match block:
         case BamModelBlock():
             model_input_str = messages_to_str(model_input)
@@ -1222,7 +1224,9 @@ def generate_client_response_single(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
-    assert isinstance(block.parameters, dict)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     msg: Message
     match block:
         case BamModelBlock():
@@ -1256,7 +1260,9 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
     assert isinstance(block.model, str)  # block is a "concrete block"
-    assert isinstance(block.parameters, dict)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     match block:
         case BamModelBlock():
             model_input_str = messages_to_str(model_input)
