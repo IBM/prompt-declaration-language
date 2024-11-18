@@ -438,6 +438,28 @@ in the right pane.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
+## Best Practices
+
+1. **Template Organization**:
+   - Keep templates modular and reusable
+   - Use variables for dynamic content
+   - Document template purpose and requirements
+
+2. **Error Handling**:
+   - Validate model inputs/outputs
+   - Include fallback logic
+   - Log intermediate results
+
+3. **Performance**:
+   - Cache frequent LLM calls
+   - Use appropriate temperature settings
+   - Implement retry logic for API calls
+
+4. **Security**:
+   - Enabling sandbox mode for untrusted code
+   - Validate all inputs
+   - Follow API key best practices
+
 
 ## Additional Notes
 
