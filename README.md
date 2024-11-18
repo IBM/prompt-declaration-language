@@ -11,8 +11,10 @@ Minimum installation.
 ```bash
 pip install prompt-declaration-language
 ```
+See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+instructions on how to install an Ollama model locally.
 
-you can create a PDL file (YAML format):
+You can create a PDL file (YAML format):
 
 ```yaml
 description: Simple LLM interaction
@@ -159,40 +161,19 @@ text:
 
 ## Debugging Tools
 
-### Trace Generation
-```bash
-pdl --trace <file.json> <my-example.pdl> 
-```
-
 ### Log Inspection
 ```bash
 pdl --log <my-logfile> <my-example.pdl>
 ```
 
-### Live Document Visualization
+### Trace Generation and Live Document Visualization
+
+```bash
+pdl --trace <file.json> <my-example.pdl> 
+```
+
 Upload trace files to the [Live Document Viewer](https://ibm.github.io/prompt-declaration-language/viewer/) for visual debugging.
 
-## Best Practices
-
-1. **Template Organization**:
-   - Keep templates modular and reusable
-   - Use variables for dynamic content
-   - Document template purpose and requirements
-
-2. **Error Handling**:
-   - Validate model inputs/outputs
-   - Include fallback logic
-   - Log intermediate results
-
-3. **Performance**:
-   - Cache frequent LLM calls
-   - Use appropriate temperature settings
-   - Implement retry logic for API calls
-
-4. **Security**:
-   - Enabling sandbox mode for untrusted code
-   - Validate all inputs
-   - Follow API key best practices
 
 ## Contributing
 
