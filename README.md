@@ -1,5 +1,17 @@
 # PDL (Prompt Declaration Language)
 
+[![tests](https://github.com/IBM/prompt-declaration-language/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/IBM/prompt-declaration-language/actions?query=workflow%3Abuild+branch%3Amain)
+[![night tests](https://github.com/IBM/prompt-declaration-language/actions/workflows/run-examples.yml/badge.svg?branch=main)](https://github.com/IBM/prompt-declaration-language/actions?query=workflow%3Arun-examples+branch%3Amain)
+[![documentation](https://github.com/IBM/prompt-declaration-language/actions/workflows/mkdocs-gh-pages.yml/badge.svg?branch=main)](https://github.com/IBM/prompt-declaration-language/actions?query=workflow%3Amkdocs-gh-pages+branch%3Amain)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/prompt-declaration-language?color=success)](https://pypi.python.org/pypi/prompt-declaration-language/)
+<!-- [![quay publish](https://github.com/IBM/prompt-declaration-language/actions/workflows/publish-quay.yaml/badge.svg?branch=main)](https://github.com/IBM/prompt-declaration-language/actions?query=workflow%3Apublish-quay+branch%3Amain) -->
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/9672/badge)](https://bestpractices.coreinfrastructure.org/projects/9672)
+
 ## Overview
 
 PDL is a declarative language designed for developers to create reliable, composable LLM prompts and integrate them into software systems. It provides a structured way to specify prompt templates, enforce validation, and compose LLM calls with traditional rule-based systems.
