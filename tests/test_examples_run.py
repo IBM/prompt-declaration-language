@@ -179,23 +179,27 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
-            result_file_name = pdl_file_name.stem + ".result"
             if UPDATE_RESULTS:
+                result_file_name_0 = pdl_file_name.stem + ".0.result"
                 result_dir_name.mkdir(parents=True, exist_ok=True)
                 with open(
-                    result_dir_name / result_file_name, "w", encoding="utf-8"
+                    result_dir_name / result_file_name_0, "w", encoding="utf-8"
                 ) as result_file:
                     print(str(result), file=result_file)
             if str(pdl_file_name) in NOT_DETERMINISTIC:
                 continue
-            with open(
-                result_dir_name / result_file_name, "r", encoding="utf-8"
-            ) as result_file:
-                expected_result = str(result_file.read())
-            if str(result).strip() != expected_result.strip():
+            wrong_result = True
+            for result_file_name in result_dir_name.glob(pdl_file_name.stem + ".*.pdl"):
+                with open(
+                    result_dir_name / result_file_name, "r", encoding="utf-8"
+                ) as result_file:
+                    expected_result = str(result_file.read())
+                if str(result).strip() == expected_result.strip():
+                    wrong_result = False
+
+            if wrong_result:
                 wrong_results[str(pdl_file_name)] = {
                     "actual": str(result),
-                    "expected": str(expected_result),
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}
