@@ -11,7 +11,7 @@ from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
-UPDATE_RESULTS = True
+UPDATE_RESULTS = False
 
 TO_SKIP = {
     str(name)
@@ -174,7 +174,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                     wrong_result = False
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + ".5.result"
+                    result_file_name_0 = pdl_file_name.stem + ".6.result"
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
@@ -192,13 +192,17 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
     unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
-    assert len(unexpected_parse_error) == 0, f"Unexpected parse error: {unexpected_parse_error}"
+    assert (
+        len(unexpected_parse_error) == 0
+    ), f"Unexpected parse error: {unexpected_parse_error}"
     # Runtime errors
     expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
     unexpected_runtime_error = sorted(
         list(actual_runtime_error - expected_runtime_error)
     )
-    assert len(unexpected_runtime_error) == 0, f"Unexpected runtime error: {unexpected_runtime_error}"
+    assert (
+        len(unexpected_runtime_error) == 0
+    ), f"Unexpected runtime error: {unexpected_runtime_error}"
     # Unexpected valid
     unexpected_valid = sorted(
         list(
