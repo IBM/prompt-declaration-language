@@ -192,13 +192,13 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
     unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
-    assert len(unexpected_parse_error) == 0, unexpected_parse_error
+    assert len(unexpected_parse_error) == 0, f"Unexpected parse error: {unexpected_parse_error}"
     # Runtime errors
     expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
     unexpected_runtime_error = sorted(
         list(actual_runtime_error - expected_runtime_error)
     )
-    assert len(unexpected_runtime_error) == 0, unexpected_runtime_error
+    assert len(unexpected_runtime_error) == 0, f"Unexpected runtime error: {unexpected_runtime_error}"
     # Unexpected valid
     unexpected_valid = sorted(
         list(
@@ -207,6 +207,6 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             )
         )
     )
-    assert len(unexpected_valid) == 0, unexpected_valid
+    assert len(unexpected_valid) == 0, f"Unexpected valid: {unexpected_valid}"
     # Unexpected results
-    assert len(wrong_results) == 0, wrong_results
+    assert len(wrong_results) == 0, f"Wrong results: {wrong_results}"
