@@ -11,7 +11,7 @@ from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
-UPDATE_RESULTS = False
+UPDATE_RESULTS = True
 
 TO_SKIP = {
     str(name)
@@ -174,16 +174,15 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                     wrong_result = False
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + ".1.result"
+                    result_file_name_0 = pdl_file_name.stem + ".5.result"
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
                     ) as result_file:
                         print(str(result), file=result_file)
-                else:
-                    wrong_results[str(pdl_file_name)] = {
-                        "actual": str(result),
-                    }
+                wrong_results[str(pdl_file_name)] = {
+                    "actual": str(result),
+                }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}
         except PDLRuntimeError as exc:
