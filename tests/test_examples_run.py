@@ -165,14 +165,16 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             if str(pdl_file_name) in NOT_DETERMINISTIC:
                 continue
             wrong_result = True
-            for result_file_name in result_dir_name.glob(pdl_file_name.stem + ".*.result"):
+            for result_file_name in result_dir_name.glob(
+                pdl_file_name.stem + ".*.result"
+            ):
                 with open(result_file_name, "r", encoding="utf-8") as result_file:
                     expected_result = str(result_file.read())
                 if str(result).strip() == expected_result.strip():
                     wrong_result = False
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + f".1.result"
+                    result_file_name_0 = pdl_file_name.stem + ".1.result"
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
