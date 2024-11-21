@@ -110,7 +110,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] = [
+    contribute: list[ContributeTarget | dict[str, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
