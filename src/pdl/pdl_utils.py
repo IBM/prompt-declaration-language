@@ -1,4 +1,5 @@
 import json
+from typing import Sequence
 
 from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
 
@@ -17,7 +18,7 @@ def stringify(result):
 
 
 def replace_contribute_value(
-    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]],
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
     value: ContributeValue,
 ):
     ret = []
@@ -31,7 +32,7 @@ def replace_contribute_value(
 
 
 def get_contribute_value(
-    contribute: list[ContributeTarget | dict[ContributeTarget, ContributeValue]] | None
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None
 ):
     if contribute is None:
         return None

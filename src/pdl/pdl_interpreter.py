@@ -305,7 +305,7 @@ def step_block(
 
 
 def context_in_contribute(block: AdvancedBlockType) -> bool:
-    if ContributeTarget.CONTEXT in block.contribute:
+    if ContributeTarget.CONTEXT.value in block.contribute:
         return True
     if get_contribute_value(block.contribute) is not None:
         return True
