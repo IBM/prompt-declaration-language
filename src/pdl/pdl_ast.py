@@ -2,7 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, Union
+from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -110,7 +110,7 @@ class Block(BaseModel):
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget | dict[str, ContributeValue]] = [
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
