@@ -449,9 +449,6 @@
         "kind": {
           "const": "array",
           "default": "array",
-          "enum": [
-            "array"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -1072,9 +1069,6 @@
         "kind": {
           "const": "model",
           "default": "model",
-          "enum": [
-            "model"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -1348,9 +1342,6 @@
         },
         "platform": {
           "const": "bam",
-          "enum": [
-            "bam"
-          ],
           "title": "Platform",
           "type": "string"
         },
@@ -2089,9 +2080,6 @@
         "kind": {
           "const": "call",
           "default": "call",
-          "enum": [
-            "call"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -2730,9 +2718,6 @@
         "kind": {
           "const": "code",
           "default": "code",
-          "enum": [
-            "code"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -3390,9 +3375,6 @@
         "kind": {
           "const": "data",
           "default": "data",
-          "enum": [
-            "data"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -3876,9 +3858,6 @@
         "kind": {
           "const": "empty",
           "default": "empty",
-          "enum": [
-            "empty"
-          ],
           "title": "Kind",
           "type": "string"
         }
@@ -4334,9 +4313,6 @@
         "kind": {
           "const": "error",
           "default": "error",
-          "enum": [
-            "error"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -4963,9 +4939,6 @@
         "kind": {
           "const": "for",
           "default": "for",
-          "enum": [
-            "for"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -5794,9 +5767,6 @@
         "kind": {
           "const": "function",
           "default": "function",
-          "enum": [
-            "function"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -6444,9 +6414,6 @@
         "kind": {
           "const": "get",
           "default": "get",
-          "enum": [
-            "get"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -6911,9 +6878,6 @@
         "kind": {
           "const": "if",
           "default": "if",
-          "enum": [
-            "if"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -7723,9 +7687,6 @@
         "kind": {
           "const": "include",
           "default": "include",
-          "enum": [
-            "include"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -7910,9 +7871,6 @@
         "as": {
           "const": "array",
           "description": "Return the result of each iteration as an array.\n    ",
-          "enum": [
-            "array"
-          ],
           "title": "As",
           "type": "string"
         }
@@ -7929,9 +7887,6 @@
         "as": {
           "const": "lastOf",
           "description": "Return the result of the last iteration.\n    ",
-          "enum": [
-            "lastOf"
-          ],
           "title": "As",
           "type": "string"
         }
@@ -7949,9 +7904,6 @@
           "const": "text",
           "default": "text",
           "description": "String concatenation of the result of each iteration.\n    ",
-          "enum": [
-            "text"
-          ],
           "title": "As",
           "type": "string"
         },
@@ -8414,9 +8366,6 @@
         "kind": {
           "const": "lastOf",
           "default": "lastOf",
-          "enum": [
-            "lastOf"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -9071,9 +9020,6 @@
         "kind": {
           "const": "model",
           "default": "model",
-          "enum": [
-            "model"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -9348,9 +9294,6 @@
         "platform": {
           "const": "litellm",
           "default": "litellm",
-          "enum": [
-            "litellm"
-          ],
           "title": "Platform",
           "type": "string"
         },
@@ -10277,9 +10220,6 @@
         "kind": {
           "const": "message",
           "default": "message",
-          "enum": [
-            "message"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -11174,9 +11114,6 @@
         "kind": {
           "const": "object",
           "default": "object",
-          "enum": [
-            "object"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -12512,9 +12449,6 @@
         "kind": {
           "const": "read",
           "default": "read",
-          "enum": [
-            "read"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -13056,9 +12990,6 @@
         "kind": {
           "const": "repeat",
           "default": "repeat",
-          "enum": [
-            "repeat"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -13879,9 +13810,6 @@
         "kind": {
           "const": "repeat_until",
           "default": "repeat_until",
-          "enum": [
-            "repeat_until"
-          ],
           "title": "Kind",
           "type": "string"
         },
@@ -14707,9 +14635,6 @@
         "kind": {
           "const": "text",
           "default": "text",
-          "enum": [
-            "text"
-          ],
           "title": "Kind",
           "type": "string"
         },
