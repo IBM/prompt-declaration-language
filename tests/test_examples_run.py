@@ -46,6 +46,7 @@ NOT_DETERMINISTIC = {
         pathlib.Path("examples") / "code" / "code.pdl",
         pathlib.Path("examples") / "code" / "code-eval.pdl",
         pathlib.Path("examples") / "code" / "code-json.pdl",
+        pathlib.Path("examples") / "talk" / "5-code-eval.pdl",
         pathlib.Path("examples") / "talk" / "6-code-json.pdl",
         pathlib.Path("examples") / "talk" / "9-react.pdl",
         pathlib.Path("examples") / "tutorial" / "include.pdl",
