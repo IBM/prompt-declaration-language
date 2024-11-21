@@ -40,6 +40,9 @@ NOT_DETERMINISTIC = {
     for name in [
         pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
+        pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
+        pathlib.Path("examples") / "react" / "demo.pdl",
+        pathlib.Path("examples") / "code" / "code-eval.pdl",
     ]
 }
 
@@ -174,7 +177,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                     wrong_result = False
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + ".6.result"
+                    result_file_name_0 = pdl_file_name.stem + ".12.result"
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
