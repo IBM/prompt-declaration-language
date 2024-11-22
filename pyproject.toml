@@ -16,7 +16,6 @@ dependencies = [
   "litellm~=1.49",
   "termcolor~=2.0",
   "ipython~=8.0",
-  "strictyaml~=1.7.3"
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },

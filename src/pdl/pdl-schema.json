@@ -1362,8 +1362,9 @@
             {
               "$ref": "#/$defs/BamTextGenerationParameters"
             },
+            {},
             {
-              "type": "object"
+              "$ref": "#/$defs/LocalizedExpression"
             },
             {
               "type": "null"
@@ -9302,8 +9303,9 @@
             {
               "$ref": "#/$defs/LitellmParameters"
             },
+            {},
             {
-              "type": "object"
+              "$ref": "#/$defs/LocalizedExpression"
             },
             {
               "type": "null"

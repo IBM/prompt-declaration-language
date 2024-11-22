@@ -1,13 +1,11 @@
 import json
 from pathlib import Path
-from typing import Any
 
-import strictyaml
 import yaml
 from pydantic import ValidationError
 
 from .pdl_analysis import unused_program
-from .pdl_ast import LocationType, PDLException, Program, YamlSource
+from .pdl_ast import LocationType, PDLException, Program
 from .pdl_location_utils import get_line_map
 from .pdl_schema_error_analyzer import analyze_errors
 
@@ -28,7 +26,7 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
     loc = LocationType(path=[], file=file_name, table=line_table)
     try:
         prog = Program.model_validate(prog_yaml)
-        set_program_location(prog, pdl_str)
+        # set_program_location(prog, pdl_str)
         unused_program(prog)
     except ValidationError as exc:
         pdl_schema_file = Path(__file__).parent / "pdl-schema.json"
@@ -42,24 +40,24 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
     return prog, loc
 
 
-def set_program_location(prog: Program, pdl_str: str, file_name: str = ""):
-    loc = strictyaml.dirty_load(pdl_str, allow_flow_style=True)
-    set_location(prog.root, loc)
+# def set_program_location(prog: Program, pdl_str: str, file_name: str = ""):
+#     loc = strictyaml.dirty_load(pdl_str, allow_flow_style=True)
+#     set_location(prog.root, loc)
 
 
-def set_location(
-    pdl: Any,
-    loc: YamlSource,
-):
-    if hasattr(pdl, "pdl_yaml_src"):
-        pdl.pdl_yaml_src = loc
-    if isinstance(loc.data, dict):
-        for x, v in loc.items():
-            if hasattr(pdl, x.data):
-                set_location(getattr(pdl, x.data), v)
-    elif isinstance(pdl, list) and isinstance(loc.data, list):
-        for data_i, loc_i in zip(pdl, loc):
-            set_location(data_i, loc_i)
+# def set_location(
+#     pdl: Any,
+#     loc: YamlSource,
+# ):
+#     if hasattr(pdl, "pdl_yaml_src"):
+#         pdl.pdl_yaml_src = loc
+#     if isinstance(loc.data, dict):
+#         for x, v in loc.items():
+#             if hasattr(pdl, x.data):
+#                 set_location(getattr(pdl, x.data), v)
+#     elif isinstance(pdl, list) and isinstance(loc.data, list):
+#         for data_i, loc_i in zip(pdl, loc):
+#             set_location(data_i, loc_i)
 
 
 # def set_program_location(prog: Program, pdl_str: str, file_name: str = ""):

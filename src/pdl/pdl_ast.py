@@ -4,7 +4,6 @@
 from enum import StrEnum
 from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
 
-import strictyaml
 from genai.schema import (
     DecodingMethod,
     ModerationParameters,
@@ -51,8 +50,6 @@ class LocationType(BaseModel):
     table: dict[str, int]
 
 
-YamlSource: TypeAlias = strictyaml.YAML
-
 empty_block_location = LocationType(file="", path=[], table={})
 
 
@@ -64,7 +61,6 @@ class LocalizedExpression(BaseModel):
     )
     expr: Any
     location: Optional[LocationType] = None
-    pdl_yaml_src: Optional[YamlSource] = None
 
 
 ExpressionType: TypeAlias = Any | LocalizedExpression
@@ -146,7 +142,6 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
-    pdl_yaml_src: Optional[YamlSource] = None
 
 
 class FunctionBlock(Block):

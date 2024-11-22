@@ -1048,7 +1048,7 @@ def step_call_model(
     ],
 ]:
     # evaluate model name
-    model, concrete_block = process_expr_of(block, "model", scope, loc)
+    _, concrete_block = process_expr_of(block, "model", scope, loc)
     # evaluate model params
     match concrete_block:
         case BamModelBlock():
