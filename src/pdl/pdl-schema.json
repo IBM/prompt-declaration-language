@@ -670,7 +670,10 @@
             {
               "type": "string"
             },
-            {}
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
           ],
           "title": "Model"
         },
@@ -870,8 +873,9 @@
             {
               "$ref": "#/$defs/BamTextGenerationParameters"
             },
+            {},
             {
-              "type": "object"
+              "$ref": "#/$defs/LocalizedExpression"
             },
             {
               "type": "null"
@@ -1428,6 +1432,12 @@
           "type": "string"
         },
         "call": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Function to call.\n    ",
           "title": "Call"
         },
@@ -2225,6 +2235,12 @@
           "type": "string"
         },
         "data": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Value defined.",
           "title": "Data"
         },
@@ -3209,6 +3225,14 @@
           "type": "string"
         },
         "for": {
+          "additionalProperties": {
+            "anyOf": [
+              {},
+              {
+                "$ref": "#/$defs/LocalizedExpression"
+              }
+            ]
+          },
           "description": "Arrays to iterate over.\n    ",
           "title": "For",
           "type": "object"
@@ -4402,6 +4426,12 @@
           "type": "string"
         },
         "if": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Condition.\n    ",
           "title": "If"
         },
@@ -5725,7 +5755,10 @@
             {
               "type": "string"
             },
-            {}
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
           ],
           "title": "Model"
         },
@@ -5914,8 +5947,9 @@
             {
               "$ref": "#/$defs/LitellmParameters"
             },
+            {},
             {
-              "type": "object"
+              "$ref": "#/$defs/LocalizedExpression"
             },
             {
               "type": "null"
@@ -6327,6 +6361,31 @@
         }
       },
       "title": "LitellmParameters",
+      "type": "object"
+    },
+    "LocalizedExpression": {
+      "additionalProperties": false,
+      "description": "Expression with location information",
+      "properties": {
+        "expr": {
+          "title": "Expr"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "expr"
+      ],
+      "title": "LocalizedExpression",
       "type": "object"
     },
     "LocationType": {
@@ -8061,6 +8120,9 @@
           "anyOf": [
             {},
             {
+              "$ref": "#/$defs/LocalizedExpression"
+            },
+            {
               "type": "null"
             }
           ],
@@ -9005,6 +9067,12 @@
           "title": "Repeat"
         },
         "until": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
           "description": "Condition of the loop.\n    ",
           "title": "Until"
         },

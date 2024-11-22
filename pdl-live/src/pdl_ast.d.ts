@@ -2094,7 +2094,7 @@ export interface CallBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind18;
-  call: Call;
+  call: unknown;
   args?: Args;
   trace?: Trace6;
 }
@@ -2383,7 +2383,7 @@ export interface DataBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind13;
-  data: Data;
+  data: unknown;
   raw?: Raw;
 }
 /**
@@ -2439,7 +2439,7 @@ export interface IfBlock {
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind12;
-  if: If;
+  if: unknown;
   then: Then;
   else?: Else;
   if_result?: IfResult;
@@ -2556,7 +2556,7 @@ export interface RepeatUntilBlock {
   location?: LocationType | null;
   kind?: Kind10;
   repeat: Repeat1;
-  until: Until;
+  until: unknown;
   join?: Join1;
   trace?: Trace2;
 }
@@ -3187,26 +3187,6 @@ export interface JoinArray {
 export interface JoinLastOf {
   as: As2;
 }
-/**
- * Condition of the loop.
- *
- */
-export interface Until {
-  [k: string]: unknown;
-}
-/**
- * Condition.
- *
- */
-export interface If {
-  [k: string]: unknown;
-}
-/**
- * Value defined.
- */
-export interface Data {
-  [k: string]: unknown;
-}
 export interface BamTextGenerationParameters {
   beam_width?: BeamWidth;
   decoding_method?: DecodingMethod | null;
@@ -3317,13 +3297,6 @@ export interface LitellmParameters {
   mock_response?: MockResponse;
   custom_llm_provider?: CustomLlmProvider;
   max_retries?: MaxRetries;
-  [k: string]: unknown;
-}
-/**
- * Function to call.
- *
- */
-export interface Call {
   [k: string]: unknown;
 }
 /**

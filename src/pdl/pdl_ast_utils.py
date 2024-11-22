@@ -38,8 +38,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         f(blocks)
     match block:
         case FunctionBlock():
-            if block.returns is not None:
-                f(block.returns)
+            f(block.returns)
         case CallBlock():
             if block.trace is not None:
                 f(block.trace)
