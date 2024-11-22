@@ -140,11 +140,17 @@ export type Description19 = string | null;
  */
 export type Def = string | null;
 export type ContributeTarget = "result" | "context";
+export type Value = unknown[];
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute = ContributeTarget[];
+export type Contribute = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -230,7 +236,12 @@ export type Def1 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute1 = ContributeTarget[];
+export type Contribute1 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -305,7 +316,12 @@ export type Def2 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute2 = ContributeTarget[];
+export type Contribute2 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -384,7 +400,12 @@ export type Def3 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute3 = ContributeTarget[];
+export type Contribute3 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -443,7 +464,12 @@ export type Def4 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute4 = ContributeTarget[];
+export type Contribute4 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -519,7 +545,12 @@ export type Def5 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute5 = ContributeTarget[];
+export type Contribute5 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -622,7 +653,12 @@ export type Def6 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute6 = ContributeTarget[];
+export type Contribute6 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -697,7 +733,12 @@ export type Def7 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute7 = ContributeTarget[];
+export type Contribute7 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -772,7 +813,12 @@ export type Def8 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute8 = ContributeTarget[];
+export type Contribute8 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -876,7 +922,12 @@ export type Def9 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute9 = ContributeTarget[];
+export type Contribute9 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1007,7 +1058,12 @@ export type Def10 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute10 = ContributeTarget[];
+export type Contribute10 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1118,7 +1174,12 @@ export type Def11 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute11 = ContributeTarget[];
+export type Contribute11 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1234,7 +1295,12 @@ export type Def12 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute12 = ContributeTarget[];
+export type Contribute12 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1342,7 +1408,12 @@ export type Def13 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute13 = ContributeTarget[];
+export type Contribute13 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1395,7 +1466,12 @@ export type Def14 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute14 = ContributeTarget[];
+export type Contribute14 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1448,7 +1524,12 @@ export type Def15 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute15 = ContributeTarget[];
+export type Contribute15 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1531,7 +1612,12 @@ export type Def16 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute16 = ContributeTarget[];
+export type Contribute16 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1624,42 +1710,6 @@ export type Trace4 =
 export type Modelresponse = string | null;
 export type Platform = "bam";
 export type PromptId = string | null;
-export type Parameters =
-  | BamTextGenerationParameters
-  | {
-      [k: string]: unknown;
-    }
-  | null;
-export type BeamWidth = number | null;
-export type DecodingMethod = "greedy" | "sample";
-export type IncludeStopSequence = boolean | null;
-export type DecayFactor = number | null;
-export type StartIndex = number | null;
-export type MaxNewTokens = number | null;
-export type MinNewTokens = number | null;
-export type RandomSeed = number | null;
-export type RepetitionPenalty = number | null;
-export type GeneratedTokens = boolean | null;
-export type InputParameters = boolean | null;
-export type InputText = boolean | null;
-export type InputTokens = boolean | null;
-export type TokenLogprobs = boolean | null;
-export type TokenRanks = boolean | null;
-export type TopNTokens = number | null;
-export type StopSequences =
-  | [string]
-  | [string, string]
-  | [string, string, string]
-  | [string, string, string, string]
-  | [string, string, string, string, string]
-  | [string, string, string, string, string, string]
-  | null;
-export type Temperature = number | null;
-export type TimeLimit = number | null;
-export type TopK = number | null;
-export type TopPNucleusSampling = number | null;
-export type TruncateInputTokens = number | null;
-export type TypicalP = number | null;
 export type Enabled = boolean | null;
 export type SendTokens = boolean | null;
 export type Threshold = number | null;
@@ -1689,7 +1739,12 @@ export type Def17 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute17 = ContributeTarget[];
+export type Contribute17 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1781,59 +1836,6 @@ export type Trace5 =
   | null;
 export type Modelresponse1 = string | null;
 export type Platform1 = "litellm";
-export type Parameters1 =
-  | LitellmParameters
-  | {
-      [k: string]: unknown;
-    }
-  | null;
-export type Timeout = number | string | null;
-export type Temperature1 = number | string | null;
-export type TopP = number | string | null;
-export type N = number | string | null;
-export type Stop = string | string[] | null;
-export type MaxTokens = number | string | null;
-export type PresencePenalty = number | string | null;
-export type FrequencyPenalty = number | string | null;
-export type LogitBias =
-  | {
-      [k: string]: unknown;
-    }
-  | string
-  | null;
-export type User = string | null;
-export type ResponseFormat =
-  | {
-      [k: string]: unknown;
-    }
-  | string
-  | null;
-export type Seed = number | string | null;
-export type Tools = unknown[] | string | null;
-export type ToolChoice =
-  | string
-  | {
-      [k: string]: unknown;
-    }
-  | null;
-export type Logprobs = boolean | string | null;
-export type TopLogprobs = number | string | null;
-export type ParallelToolCalls = boolean | string | null;
-export type ExtraHeaders =
-  | {
-      [k: string]: unknown;
-    }
-  | string
-  | null;
-export type Functions = unknown[] | string | null;
-export type FunctionCall = string | null;
-export type BaseUrl = string | null;
-export type ApiVersion = string | null;
-export type ApiKey = string | null;
-export type ModelList = unknown[] | string | null;
-export type MockResponse = string | null;
-export type CustomLlmProvider = string | null;
-export type MaxRetries = number | string | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1843,7 +1845,12 @@ export type Def18 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute18 = ContributeTarget[];
+export type Contribute18 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -1917,7 +1924,12 @@ export type Def19 = string | null;
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute19 = ContributeTarget[];
+export type Contribute19 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
 /**
  * Parser to use to construct a value out of a string result.
  */
@@ -2156,7 +2168,7 @@ export interface LitellmModelBlock {
   trace?: Trace5;
   modelResponse?: Modelresponse1;
   platform?: Platform1;
-  parameters?: Parameters1;
+  parameters?: unknown;
 }
 /**
  * Type specification of the result of the block.
@@ -2214,7 +2226,7 @@ export interface BamModelBlock {
   modelResponse?: Modelresponse;
   platform: Platform;
   prompt_id?: PromptId;
-  parameters?: Parameters;
+  parameters?: unknown;
   moderations?: ModerationParameters | null;
   data?: PromptTemplateData | null;
   constraints?: Constraints;
@@ -3151,6 +3163,9 @@ export interface Defs19 {
     | EmptyBlock
     | null;
 }
+export interface ContributeValue {
+  value: Value;
+}
 export interface PdlParser {
   description?: Description20;
   spec?: Spec20;
@@ -3186,39 +3201,6 @@ export interface JoinArray {
 }
 export interface JoinLastOf {
   as: As2;
-}
-export interface BamTextGenerationParameters {
-  beam_width?: BeamWidth;
-  decoding_method?: DecodingMethod | null;
-  include_stop_sequence?: IncludeStopSequence;
-  length_penalty?: LengthPenalty | null;
-  max_new_tokens?: MaxNewTokens;
-  min_new_tokens?: MinNewTokens;
-  random_seed?: RandomSeed;
-  repetition_penalty?: RepetitionPenalty;
-  return_options?: TextGenerationReturnOptions | null;
-  stop_sequences?: StopSequences;
-  temperature?: Temperature;
-  time_limit?: TimeLimit;
-  top_k?: TopK;
-  top_p?: TopPNucleusSampling;
-  truncate_input_tokens?: TruncateInputTokens;
-  typical_p?: TypicalP;
-}
-export interface LengthPenalty {
-  decay_factor?: DecayFactor;
-  start_index?: StartIndex;
-  [k: string]: unknown;
-}
-export interface TextGenerationReturnOptions {
-  generated_tokens?: GeneratedTokens;
-  input_parameters?: InputParameters;
-  input_text?: InputText;
-  input_tokens?: InputTokens;
-  token_logprobs?: TokenLogprobs;
-  token_ranks?: TokenRanks;
-  top_n_tokens?: TopNTokens;
-  [k: string]: unknown;
 }
 export interface ModerationParameters {
   hap?: ModerationHAP | null;
@@ -3264,39 +3246,6 @@ export interface PromptTemplateData {
   [k: string]: unknown;
 }
 export interface Constraints {
-  [k: string]: unknown;
-}
-/**
- * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
- */
-export interface LitellmParameters {
-  timeout?: Timeout;
-  temperature?: Temperature1;
-  top_p?: TopP;
-  n?: N;
-  stop?: Stop;
-  max_tokens?: MaxTokens;
-  presence_penalty?: PresencePenalty;
-  frequency_penalty?: FrequencyPenalty;
-  logit_bias?: LogitBias;
-  user?: User;
-  response_format?: ResponseFormat;
-  seed?: Seed;
-  tools?: Tools;
-  tool_choice?: ToolChoice;
-  logprobs?: Logprobs;
-  top_logprobs?: TopLogprobs;
-  parallel_tool_calls?: ParallelToolCalls;
-  extra_headers?: ExtraHeaders;
-  functions?: Functions;
-  function_call?: FunctionCall;
-  base_url?: BaseUrl;
-  api_version?: ApiVersion;
-  api_key?: ApiKey;
-  model_list?: ModelList;
-  mock_response?: MockResponse;
-  custom_llm_provider?: CustomLlmProvider;
-  max_retries?: MaxRetries;
   [k: string]: unknown;
 }
 /**
