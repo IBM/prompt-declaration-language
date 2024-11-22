@@ -46,6 +46,7 @@ from .pdl_ast import (
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
+    LocalizedExpression,
     LocationType,
     Message,
     MessageBlock,
@@ -828,6 +829,7 @@ def step_blocks(
     trace: BlocksType
     results = []
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # Is a list of blocks
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )
@@ -956,8 +958,12 @@ EXPR_START_STRING = "${"
 EXPR_END_STRING = "}"
 
 
-def process_expr(scope: ScopeType, expr: Any, loc: LocationType) -> Any:
+def process_expr(  # pylint: disable=too-many-return-statements
+    scope: ScopeType, expr: Any, loc: LocationType
+) -> Any:
     result: Any
+    if isinstance(expr, LocalizedExpression):
+        return process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
         try:
             if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
@@ -1148,6 +1154,10 @@ def generate_client_response_streaming(
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg_stream: Generator[Message, Any, Any]
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     match block:
         case BamModelBlock():
             model_input_str = messages_to_str(model_input)
@@ -1213,6 +1223,10 @@ def generate_client_response_single(
     block: BamModelBlock | LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     msg: Message
     match block:
         case BamModelBlock():
@@ -1245,6 +1259,10 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
     match block:
         case BamModelBlock():
             model_input_str = messages_to_str(model_input)

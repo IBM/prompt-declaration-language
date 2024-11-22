@@ -19,6 +19,7 @@ from ..pdl_ast import (
     IncludeBlock,
     LitellmModelBlock,
     LitellmParameters,
+    LocalizedExpression,
     ModelBlock,
     ReadBlock,
     RepeatBlock,
@@ -273,10 +274,14 @@ def compile_block(
                             "include_stop_sequence", False
                         )
                     else:
-                        stop_sequences = block.parameters.stop_sequences or []
+                        if isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.expr
+                        else:
+                            parameters = block.parameters
+                        stop_sequences = parameters.stop_sequences or []
                         include_stop_sequence = (
-                            block.parameters.include_stop_sequence is None
-                            or block.parameters.include_stop_sequence
+                            parameters.include_stop_sequence is None
+                            or parameters.include_stop_sequence
                         )
                 case LitellmModelBlock():
                     if block.parameters is None:
@@ -285,6 +290,8 @@ def compile_block(
                     else:
                         if isinstance(block.parameters, LitellmParameters):
                             parameters = block.parameters.model_dump()
+                        elif isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.expr
                         else:
                             parameters = block.parameters
                         stop_sequences = parameters.get("stop", [])
