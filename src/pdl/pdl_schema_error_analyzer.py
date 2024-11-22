@@ -134,6 +134,8 @@ def analyze_errors(defs, schema, data, loc: LocationType) -> list[str]:  # noqa:
             the_type = convert_to_json_type(type(data))
             the_type_exists = False
             for item in schema["anyOf"]:
+                if item == {}:
+                    the_type_exists = True                    
                 if "type" in item and item["type"] == the_type:
                     the_type_exists = True
                 if "enum" in item and data in item["enum"]:
