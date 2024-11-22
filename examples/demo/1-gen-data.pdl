@@ -14,10 +14,9 @@ text:
       - for: 
           question: ${ data.questions }
           answer: ${ data.answers }
-        repeat:
-          - |
-            ${ question }
-            ${ answer }
+        repeat: |
+          ${ question }
+          ${ answer }
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
         and set them appropriately. Write the age in letters.

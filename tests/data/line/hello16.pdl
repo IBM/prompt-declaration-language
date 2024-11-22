@@ -14,9 +14,9 @@ text:
         question: ${ data.questions }
         answer: ${ data.answers }
       repeat:
-        - |
-          ${ question }
-          ${ answer }
+        |
+        ${ question }
+        ${ answer }
     - 'Question: Write a JSON object with 2 fields "bob" and "carol" set to "20" and "30" respectively.'
   parser: yaml
   parameters:

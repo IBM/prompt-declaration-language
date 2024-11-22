@@ -13,8 +13,7 @@ text:
       - for: 
           question: ${ data.questions }
           answer: ${ data.answers }
-        repeat:
-          - |
+        repeat: |
             ${ question }
             ${ answer }
       - > 

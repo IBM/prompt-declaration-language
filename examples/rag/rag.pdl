@@ -34,8 +34,7 @@ text:
 - for:
     prompt: ${ RETRIEVED.prompt }
     code: ${ RETRIEVED.code }
-  repeat:
-  - |
+  repeat: |
 
     Q: ${ prompt }
     A: ```${ code }```

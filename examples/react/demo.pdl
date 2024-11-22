@@ -67,12 +67,12 @@ text:
               result = str(e)
         - "\n"
       else:
-        - if: ${ action.name == "Calc" }
-          then:
-            text:
-            - "\nObs: "
-            - lang: python
-              code: result = ${ action.arguments.expr }
-            - "\n"
+        if: ${ action.name == "Calc" }
+        then:
+          text:
+          - "\nObs: "
+          - lang: python
+            code: result = ${ action.arguments.expr }
+          - "\n"
   until: ${ action.name != "Search" }
 

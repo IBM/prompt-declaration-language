@@ -7,8 +7,7 @@ text:
     stop_sequences: "!"
 - "\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
-  input:
-      - "Translate the word ${ name | trim } to French\n"
+  input: "Translate the word ${ name | trim } to French\n"
   parameters:
     stop_sequences: "\n"
     temperature: 0

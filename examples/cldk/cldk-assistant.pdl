@@ -38,15 +38,13 @@ text:
         text:
           - model: replicate/ibm-granite/granite-3.0-8b-instruct
             def: PDL
-            input: 
-              - |
+            input: |
                 Question: What are all the classes?
                 Answer:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code:|
                     classes = PDL_SESSION.cldk_state.get_classes().keys()
                     result = ", ".join(classes)
                 ```
@@ -56,8 +54,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     constructors = PDL_SESSION.cldk_state.get_constructors("org.ibm.App")
                     result = ", ".join(constructors)
                 ```
@@ -67,8 +64,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     fields = PDL_SESSION.cldk_state.get_fields("org.ibm.App")
                     names = sum([f.variables for f in fields], [])
                     result = ", ".join(names)
@@ -79,8 +75,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     methods = PDL_SESSION.cldk_state.get_methods_in_class("org.ibm.App")
                     result = ", ".join(methods)
                 ```
@@ -90,8 +85,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
                     result = graph
                 ```
@@ -101,8 +95,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method.code
                 ```
@@ -112,8 +105,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a summary of method Foo\n\n"
@@ -125,8 +117,7 @@ text:
                 ```
                 text:
                 - lang: python
-                  code: 
-                  - |
+                  code: |
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a different comment for method Foo(string)\n\n"
@@ -151,8 +142,3 @@ text:
               result = exec_str(pdl)
               
   until: ${ query == 'quit' }
-
-
-  
-
-   

@@ -13,7 +13,6 @@ from ._version import version
 from .pdl_ast import (
     LocationType,
     PdlBlock,
-    PdlBlocks,
     Program,
     RoleType,
     ScopeType,
@@ -217,7 +216,6 @@ def main():
             [
                 (Program, "validation"),
                 (PdlBlock, "validation"),
-                (PdlBlocks, "validation"),
             ],
             title="PDL Schemas",
         )

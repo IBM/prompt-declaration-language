@@ -42,7 +42,7 @@ defs:
               result = '${ rawAction }'.replace("Act: ", "")
           - if: ${ action  != prev_action}
             then: 
-            - def: observation
+              def: observation
               if: ${ action.name == "Search" }
               then:
                 text:
@@ -57,7 +57,7 @@ defs:
                       result = str(e)
                 - "\n"
               else:
-                - if: ${ action.name == "Calc" }
+                  if: ${ action.name == "Calc" }
                   then:
                     text:
                     - "\nObs: "
@@ -78,7 +78,7 @@ defs:
       question: str
       model: str
     return:
-      - defs: 
+        defs: 
           examples:
             array:
                 - text:
@@ -123,7 +123,7 @@ defs:
                     Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
 
 
-      - call: react_inner
+        call: react_inner
         args:
           pdl_context: []
           examples: ${ examples }

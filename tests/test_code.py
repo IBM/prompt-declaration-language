@@ -30,9 +30,7 @@ def show_result_data(show):
         "text": [
             {
                 "def": "QUERY",
-                "text": [
-                    {"lang": "python", "code": ["result = 'How can I help you?: '"]}
-                ],
+                "text": {"lang": "python", "code": "result = 'How can I help you?: '"},
                 "contribute": show,
             }
         ],
@@ -60,10 +58,12 @@ def test_contribute_false():
     assert text == ""
 
 
-command_data = [
-    {"def": "world", "lang": "command", "code": "echo -n World", "contribute": []},
-    "Hello ${ world }!",
-]
+command_data = {
+    "lastOf": [
+        {"def": "world", "lang": "command", "code": "echo -n World", "contribute": []},
+        "Hello ${ world }!",
+    ]
+}
 
 
 def test_command():
