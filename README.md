@@ -16,6 +16,8 @@
 
 PDL is a declarative language designed for developers to create reliable, composable LLM prompts and integrate them into software systems. It provides a structured way to specify prompt templates, enforce validation, and compose LLM calls with traditional rule-based systems.
 
+<img src="docs/assets/animated_chatbot.gif" width=750px alt="Animated GIF of PDL chatbot."/>
+
 ### Basic LLM Call
 
 Minimum installation.
