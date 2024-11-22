@@ -1,3 +1,4 @@
+from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
 
@@ -71,3 +72,108 @@ def test_command():
     document, _, scope, _ = process_prog(state, empty_scope, data)
     assert document == "Hello World!"
     assert scope["world"] == "World"
+
+
+def test_jinja1():
+    prog_str = """
+defs:
+  world: "World"
+lang: jinja
+code: |
+  Hello {{ world }}!
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_jinja2():
+    prog_str = """
+defs:
+  world: "World"
+lang: jinja
+code: |
+  Hello ${ world }!
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_jinja3():
+    prog_str = """
+defs:
+  scores:
+    array:
+    - 10
+    - 90
+    - 50
+    - 60
+    - 100
+lang: jinja
+code: |
+    {% for score in scores %}
+        {% if score > 80 %}good{% else %}bad{% endif %}{% endfor %}
+"""
+    result = exec_str(prog_str)
+    assert (
+        result
+        == """
+    bad
+    good
+    bad
+    bad
+    good"""
+    )
+
+
+def test_pdl1():
+    prog_str = """
+lang: pdl
+code: |
+  description: Hello world
+  text:
+  - "Hello World!"
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_pdl2():
+    prog_str = """
+defs:
+  w: World
+lang: pdl
+code: |
+  description: Hello world
+  text:
+  - "Hello ${w}!"
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
+def test_pdl3():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == "<built-in function print>"
+
+
+def test_pdl4():
+    prog_str = """
+defs:
+  x:
+    code: "result = print"
+    lang: python
+lang: pdl
+code: |
+  data: ${ "${" }x ${ "}" }
+"""
+    result = exec_str(prog_str)
+    assert result == print  # pylint: disable=comparison-with-callable

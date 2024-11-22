@@ -1,0 +1,9 @@
+---
+# This is the configuration file for the bandit python static analysis tool
+exclude_dirs:
+  - build
+# We are less worried about tests, as they are not a part of the library meant to be used by users
+# with untrusted inputs.
+  - test
+skips:
+  - B101 # allow the use of assert

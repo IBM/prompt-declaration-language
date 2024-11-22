@@ -305,7 +305,7 @@ Bob lives at the following address:
 
 ##  Calling code
 
-The following script shows how to execute python code ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_code.pdl)). The python code is executed locally (or in a containerized way if using `pdl --sandbox`).  In principle, PDL is agnostic of any specific programming language, but we currently only support Python. Variables defined in PDL are copied into the global scope of the Python code, so those variables can be used directly in the code. However, mutating variables in Python has no effect on the variables in the PDL program. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block. A variable `def` on the code block will then be set to this result.
+The following script shows how to execute python code ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_code.pdl)). The python code is executed locally (or in a containerized way if using `pdl --sandbox`).  In principle, PDL is agnostic of any specific programming language, but we currently only support Python, Jinja, and shell commands. Variables defined in PDL are copied into the global scope of the Python code, so those variables can be used directly in the code. However, mutating variables in Python has no effect on the variables in the PDL program. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block. A variable `def` on the code block will then be set to this result.
 
 In order to define variables that are carried over to the next Python code block, a special variable `PDL_SESSION` can be used, and
 variables assigned to it as fields.
@@ -668,6 +668,7 @@ text:
     decoding_method: greedy
 ```
 
+If you want to use an external Ollama instance, the env variable `OLLAMA_API_BASE` should be defined, by default is `http://localhost:11434`.
 
 Alternatively, one could also use Ollama's OpenAI-style endpoint using the `openai/` prefix instead of `ollama_chat/`. In this case, set the `OPENAI_API_BASE`, `OPENAI_API_KEY`, and `OPENAI_ORGANIZATION` (if necessary) environment variables. If you were using the official OpenAI API, you would only have to set the api key and possibly the organization. For local use e.g., using Ollama, this could look like so:
 

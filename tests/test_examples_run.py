@@ -38,25 +38,19 @@ TO_SKIP = {
 NOT_DETERMINISTIC = {
     str(name)
     for name in [
-        pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
-        pathlib.Path("examples") / "granite" / "single_round_chat.pdl",
-        pathlib.Path("examples") / "joke" / "Joke.pdl",
-        pathlib.Path("examples") / "react" / "multi-agent.pdl",
-        pathlib.Path("examples") / "react" / "wikipedia.pdl",
-        pathlib.Path("examples") / "talk" / "10-sdg.pdl",
-        pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",
-        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",
-        pathlib.Path("examples") / "talk" / "8-tools.pdl",
-        pathlib.Path("examples") / "talk" / "9-react.pdl",
-        pathlib.Path("examples") / "teacher" / "teacher.pdl",
-        pathlib.Path("examples") / "tools" / "calc.pdl",
-        pathlib.Path("examples") / "tutorial" / "include.pdl",
-        pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",
         pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "demo" / "3-weather.pdl",
-        pathlib.Path("examples") / "tutorial" / "conditionals_loops.pdl",
-        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",
-        pathlib.Path("examples") / "fibonacci" / "fib.pdl",
+        pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
+        pathlib.Path("examples") / "react" / "demo.pdl",
+        pathlib.Path("examples") / "react" / "wikipedia.pdl",
+        pathlib.Path("examples") / "code" / "code.pdl",
+        pathlib.Path("examples") / "code" / "code-eval.pdl",
+        pathlib.Path("examples") / "code" / "code-json.pdl",
+        pathlib.Path("examples") / "talk" / "5-code-eval.pdl",
+        pathlib.Path("examples") / "talk" / "6-code-json.pdl",
+        pathlib.Path("examples") / "talk" / "9-react.pdl",
+        pathlib.Path("examples") / "tutorial" / "include.pdl",
+        pathlib.Path("examples") / "tutorial" / "data_block.pdl",
     ]
 }
 
@@ -179,23 +173,26 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
-            result_file_name = pdl_file_name.stem + ".result"
-            if UPDATE_RESULTS:
-                result_dir_name.mkdir(parents=True, exist_ok=True)
-                with open(
-                    result_dir_name / result_file_name, "w", encoding="utf-8"
-                ) as result_file:
-                    print(str(result), file=result_file)
             if str(pdl_file_name) in NOT_DETERMINISTIC:
                 continue
-            with open(
-                result_dir_name / result_file_name, "r", encoding="utf-8"
-            ) as result_file:
-                expected_result = str(result_file.read())
-            if str(result).strip() != expected_result.strip():
+            wrong_result = True
+            for result_file_name in result_dir_name.glob(
+                pdl_file_name.stem + ".*.result"
+            ):
+                with open(result_file_name, "r", encoding="utf-8") as result_file:
+                    expected_result = str(result_file.read())
+                if str(result).strip() == expected_result.strip():
+                    wrong_result = False
+            if wrong_result:
+                if UPDATE_RESULTS:
+                    result_file_name_0 = pdl_file_name.stem + ".12.result"
+                    result_dir_name.mkdir(parents=True, exist_ok=True)
+                    with open(
+                        result_dir_name / result_file_name_0, "w", encoding="utf-8"
+                    ) as result_file:
+                        print(str(result), file=result_file)
                 wrong_results[str(pdl_file_name)] = {
                     "actual": str(result),
-                    "expected": str(expected_result),
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}
@@ -206,13 +203,17 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
     unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
-    assert len(unexpected_parse_error) == 0, unexpected_parse_error
+    assert (
+        len(unexpected_parse_error) == 0
+    ), f"Unexpected parse error: {unexpected_parse_error}"
     # Runtime errors
     expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
     unexpected_runtime_error = sorted(
         list(actual_runtime_error - expected_runtime_error)
     )
-    assert len(unexpected_runtime_error) == 0, unexpected_runtime_error
+    assert (
+        len(unexpected_runtime_error) == 0
+    ), f"Unexpected runtime error: {unexpected_runtime_error}"
     # Unexpected valid
     unexpected_valid = sorted(
         list(
@@ -221,6 +222,6 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             )
         )
     )
-    assert len(unexpected_valid) == 0, unexpected_valid
+    assert len(unexpected_valid) == 0, f"Unexpected valid: {unexpected_valid}"
     # Unexpected results
-    assert len(wrong_results) == 0, wrong_results
+    assert len(wrong_results) == 0, f"Wrong results: {wrong_results}"

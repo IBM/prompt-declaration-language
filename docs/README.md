@@ -35,7 +35,7 @@ Pro Tip: When writing loops and conditionals with `repeat`, `for`, and `if-then-
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python versions **3.11** and **3.12**, on macOS and Linux. For Windows, please use WSL.
+The interpreter has been tested with Python versions **3.11**, **3.12**, and **3.13**, on macOS and Linux. For Windows, please use WSL.
 
 To install the requirements for `pdl`, execute the command:
 
@@ -437,6 +437,28 @@ This produces an additional file named `my-example_trace.json` that can be uploa
 in the right pane. 
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
+
+## Best Practices
+
+1. **Template Organization**:
+   - Keep templates modular and reusable
+   - Use variables for dynamic content
+   - Document template purpose and requirements
+
+2. **Error Handling**:
+   - Validate model inputs/outputs
+   - Include fallback logic
+   - Log intermediate results
+
+3. **Performance**:
+   - Cache frequent LLM calls
+   - Use appropriate temperature settings
+   - Implement retry logic for API calls
+
+4. **Security**:
+   - Enabling sandbox mode for untrusted code
+   - Validate all inputs
+   - Follow API key best practices
 
 
 ## Additional Notes

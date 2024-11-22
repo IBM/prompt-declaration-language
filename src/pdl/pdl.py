@@ -1,8 +1,6 @@
 import argparse
 import json
 import logging
-import os
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
@@ -22,6 +20,7 @@ from .pdl_ast import (
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
+from .pdl_runner import exec_docker
 
 logger = logging.getLogger(__name__)
 
@@ -229,43 +228,10 @@ def main():
         return
 
     if args.sandbox:
-        watsonx_apikey = "WATSONX_APIKEY=" + os.environ["WATSONX_APIKEY"]
-        watsonx_url = "WATSONX_URL=" + os.environ["WATSONX_URL"]
-        watsonx_project_id = "WATSONX_PROJECT_ID=" + os.environ["WATSONX_PROJECT_ID"]
-        replicate_api_token = "REPLICATE_API_TOKEN=" + os.environ["REPLICATE_API_TOKEN"]
-
-        local_dir = os.getcwd() + ":/local"
-        try:
-            args = sys.argv[1:]
-            args.remove("--sandbox")
-            subprocess.run(
-                [
-                    "docker",
-                    "run",
-                    "-v",
-                    local_dir,
-                    "-w",
-                    "/local",
-                    "-e",
-                    watsonx_apikey,
-                    "-e",
-                    watsonx_url,
-                    "-e",
-                    watsonx_project_id,
-                    "-e",
-                    replicate_api_token,
-                    "--rm",
-                    "-it",
-                    "quay.io/project_pdl/pdl",
-                    *args,
-                ],
-                check=True,
-            )
-        except Exception:
-            print(
-                "An error occured while running docker. Is the docker daemon running?"
-            )
-        return
+        args = sys.argv[1:]
+        args.remove("--sandbox")
+        exec_docker(*args)
+        assert False  # unreachable: exec_docker terminate the execution
 
     initial_scope = {}
     if args.data_file is not None:

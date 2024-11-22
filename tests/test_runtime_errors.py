@@ -64,6 +64,9 @@ parser:
     assert (
         str(exc.value.message)
         == "Fail to parse with regex (: error('missing ), unterminated subpattern at position 0')"
+    ) or (
+        str(exc.value.message)
+        == "Fail to parse with regex (: PatternError('missing ), unterminated subpattern at position 0')"
     )
 
 

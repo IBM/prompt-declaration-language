@@ -1,6 +1,7 @@
 import json
+from typing import Sequence
 
-from .pdl_ast import FunctionBlock, Messages
+from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
 
 
 def stringify(result):
@@ -16,6 +17,33 @@ def stringify(result):
     return s
 
 
+def replace_contribute_value(
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+    value: ContributeValue,
+):
+    ret = []
+    for item in contribute:
+        if isinstance(item, dict) and isinstance(
+            item[ContributeTarget.CONTEXT], ContributeValue
+        ):
+            item = value
+        ret.append(item)
+    return ret
+
+
+def get_contribute_value(
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None
+):
+    if contribute is None:
+        return None
+    for item in contribute:
+        if isinstance(item, dict) and isinstance(
+            item[ContributeTarget.CONTEXT], ContributeValue
+        ):
+            return item[ContributeTarget.CONTEXT].value
+    return None
+
+
 def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
     if len(messages1) == 0:
         return messages2
@@ -23,7 +51,9 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
         return messages1
     left = messages1[-1]
     right = messages2[0]
-    if left["role"] == right["role"]:
+    if (
+        left["role"] == right["role"] and simple_message(left) and simple_message(right)
+    ):  # test that there are no other keys
         return (
             messages1[:-1]
             + [{"role": left["role"], "content": left["content"] + right["content"]}]
@@ -32,20 +62,11 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
     return messages1 + messages2
 
 
-def messages_to_str(model_id: str, messages: Messages) -> str:
-    if "granite-3b" not in model_id and "granite-8b" not in model_id:
-        return "".join([(msg["content"]) for msg in messages])
-    return (
-        "".join(
-            [
-                (
-                    msg["content"]
-                    if msg["role"] is None
-                    # else f"<|{msg['role']}|>{msg['content']}"
-                    else f"<|start_of_role|>{msg['role']}<|end_of_role|>{msg['content']}<|end_of_text|>\n"
-                )
-                for msg in messages
-            ]
-        )
-        + "<|start_of_role|>assistant<|end_of_role|>"
-    )
+def messages_to_str(messages: Messages) -> str:
+    return "\n".join([str(msg) for msg in messages])
+
+
+def simple_message(message: Message) -> bool:
+    if message.keys() == {"role", "content"} and message["content"] is not None:
+        return True
+    return False

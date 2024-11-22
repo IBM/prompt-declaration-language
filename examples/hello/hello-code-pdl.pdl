@@ -1,0 +1,8 @@
+description: Hello world showing call out to PDL
+lang: pdl
+code: |
+  description: Hello world
+  text:
+  - "Hello\n"
+  - model: replicate/ibm-granite/granite-3.0-8b-instruct
+  
