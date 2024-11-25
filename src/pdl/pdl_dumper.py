@@ -12,6 +12,7 @@ from .pdl_ast import (
     CallBlock,
     CodeBlock,
     ContributeTarget,
+    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
@@ -82,6 +83,8 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     d["kind"] = str(block.kind)
     if block.description is not None:
         d["description"] = block.description
+    if block.role is not None:
+        d["role"] = block.role
     if block.spec is not None:
         d["spec"] = block.spec
     if block.defs is not None:
@@ -205,7 +208,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if block.assign is not None:
         d["def"] = block.assign
     if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
-        d["contribute"] = block.contribute
+        d["contribute"] = contribute_to_list(block.contribute)
     if block.result is not None:
         if isinstance(block.result, FunctionBlock):
             d["result"] = ""
@@ -264,6 +267,18 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
 
 def location_to_dict(location: LocationType) -> dict[str, Any]:
     return {"path": location.path, "file": location.file, "table": location.table}
+
+
+def contribute_to_list(
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]]
+) -> list[str | dict[str, Any]]:
+    acc: list[str | dict[str, Any]] = []
+    for contrib in contribute:
+        if isinstance(contrib, str):
+            acc.append(str(contrib))
+        elif isinstance(contrib, dict):
+            acc.append({str(k): v.model_dump() for k, v in contrib.items()})
+    return acc
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:
