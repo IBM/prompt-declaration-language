@@ -1,21 +1,24 @@
 import pathlib
 
+from pdl.pdl_ast import BlockType, IncludeBlock
 from pdl.pdl_ast_utils import iter_block_children
 from pdl.pdl_dumper import dump_yaml, program_to_dict
 from pdl.pdl_parser import PDLParseError, parse_file, parse_str
-from pdl.pdl_ast import BlockType, IncludeBlock
+
 
 def has_include(block: BlockType) -> bool:
     if isinstance(block, IncludeBlock):
         return True
-    else:
-        b = False
-        def f(x):
-            nonlocal b
-            if has_include(x):
-                b = True
-        iter_block_children(f,block)
-        return b
+    b = False
+
+    def f(x):
+        nonlocal b
+        if has_include(x):
+            b = True
+
+    iter_block_children(f, block)
+    return b
+
 
 def test_ast_iterators() -> None:
     for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
@@ -28,8 +31,6 @@ def test_ast_iterators() -> None:
             ast2, _ = parse_str(s)
             json1 = ast1.model_dump_json()
             json2 = ast2.model_dump_json()
-            if str(yaml_file_name) == "examples/talk/7-chatbot-roles.pdl":
-                pass
             assert json1 == json2, yaml_file_name
         except PDLParseError:
             pass
