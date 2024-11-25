@@ -328,7 +328,7 @@ PDL programs can contain calls to REST APIs with Python code. Consider a simple 
 --8<-- "./examples/tutorial/calling_apis.pdl"
 ```
 
-In this program, we first prompt the user to enter a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python. Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
+In this program, we first define a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python (mocked in this example). Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
 
 
 ##  Data Block
