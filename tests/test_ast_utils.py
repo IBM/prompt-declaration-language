@@ -7,9 +7,10 @@ from pdl.pdl_parser import PDLParseError, parse_file
 class Counter:
     def __init__(self):
         self.cpt = 0
-        
+
     def incr(self, *args):
         self.cpt += 1
+
 
 class IterCounter:
     def __init__(self):
@@ -24,13 +25,16 @@ class MapCounter:
     def __init__(self):
         self.cpt = 0
 
-    def count(map_self, ast):
+    def count(map_self, ast):  # pylint: disable=no-self-argument
         map_self.cpt += 1
+
         class C(MappedFunctions):
-            def f_block(c_self, block):
+            def f_block(_, block):  # pylint: disable=no-self-argument
                 return map_self.count(block)
+
         _ = map_block_children(C(), ast)
         return ast
+
 
 def test_ast_iterators() -> None:
     for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
