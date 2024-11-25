@@ -126,13 +126,9 @@ class MappedFunctions:
 
 def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
     if not isinstance(block, Block):
-        return f.f_block(block)
+        return block
     defs = {x: f.f_block(b) for x, b in block.defs.items()}
-    if block.fallback is not None:
-        fallback = f.f_block(block.fallback)
-    else:
-        fallback = None
-    block = block.model_copy(update={"defs": defs, "fallback": fallback})
+    block = block.model_copy(update={"defs": defs})
     match block:
         case FunctionBlock():
             block.returns = f.f_block(block.returns)
@@ -211,4 +207,6 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             pass
         case PdlParser():
             block.parser.pdl = f.f_block(block.parser.pdl)
+    if block.fallback is not None:
+        block.fallback = f.f_block(block.fallback)
     return block
