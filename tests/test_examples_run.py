@@ -8,6 +8,7 @@ from pytest import CaptureFixture, MonkeyPatch
 
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
+from pdl.pdl_dumper import block_to_dict
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
@@ -169,7 +170,9 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 scope = inputs.scope
         try:
             random.seed(11)
-            result = pdl.exec_file(pdl_file_name, scope=scope)
+            output = pdl.exec_file(pdl_file_name, scope=scope, output="all")
+            result = output["result"]
+            block_to_dict(output["trace"], json_compatible=True)
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
