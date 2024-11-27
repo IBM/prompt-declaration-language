@@ -14,6 +14,7 @@ from .pdl_ast import (
     Message,
     set_default_granite_model_parameters,
     set_default_model_params,
+    set_structured_decoding_parameters,
 )
 
 # Load environment variables
@@ -155,6 +156,7 @@ class LitellmModel:
             parameters = set_default_granite_model_parameters(
                 model_id, spec, parameters
             )
+        parameters = set_structured_decoding_parameters(spec, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = completion(
@@ -176,6 +178,7 @@ class LitellmModel:
             parameters = set_default_granite_model_parameters(
                 model_id, spec, parameters
             )
+        parameters = set_structured_decoding_parameters(spec, parameters)
         response = completion(
             model=model_id,
             messages=messages,
