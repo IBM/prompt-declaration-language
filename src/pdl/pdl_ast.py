@@ -627,19 +627,25 @@ def set_default_model_params(
             )
     return params
 
+
 def set_structured_decoding_parameters(
     spec: Any,
-    parameters: Optional[dict[str, Any]],   
+    parameters: Optional[dict[str, Any]],
 ) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
-    
-    if spec is not None and parameters["response_format"] is None and "guided_decoding_backend" not in parameters :
+
+    if (
+        spec is not None
+        and parameters["response_format"] is None
+        and "guided_decoding_backend" not in parameters
+    ):
         schema = pdltype_to_jsonschema(spec, True)
         parameters["guided_decoding_backend"] = "lm-format-enforcer"
         parameters["guided_json"] = schema
-        #parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
+        # parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
     return parameters
+
 
 def set_default_granite_model_parameters(
     model_id: str,
@@ -652,12 +658,12 @@ def set_default_granite_model_parameters(
     if "watsonx" in model_id:
         if "decoding_method" not in parameters:
             parameters["decoding_method"] = (
-            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-        )
+                DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
+            )
         if "max_tokens" in parameters and parameters["max_tokens"] is None:
             parameters["max_tokens"] = (
-            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
+                MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
+            )
         if "min_new_tokens" not in parameters:
             parameters["min_new_tokens"] = (
                 MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init

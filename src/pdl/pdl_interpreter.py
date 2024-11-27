@@ -1128,9 +1128,9 @@ def step_call_model(
         msg, raw_result = yield from generate_client_response(
             state, concrete_block, model_input
         )
-        #if "input" in litellm_params:
+        # if "input" in litellm_params:
         append_log(state, "Model Input", litellm_params)
-        #else:
+        # else:
         #    append_log(state, "Model Input", messages_to_str(model_input))
         background: Messages = [msg]
         result = "" if msg["content"] is None else msg["content"]
