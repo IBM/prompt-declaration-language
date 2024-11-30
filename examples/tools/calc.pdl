@@ -1,37 +1,34 @@
 description: tool use
+defs:
+  tools:
+    data:
+    - type: function
+      function: 
+        name: calc
+        description: Calculator function
+        parameters:
+          type: object
+          properties:
+            expr: 
+              type: string
+              description: Arithmetic expression to calculate
+          required:
+          - expr
 text:
-- |-
-  What is 18 + 12 x 3?
-  Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
-  Obs: 54
-
-  What is 9 + 12?
-  Act: {"name": "Calc", "arguments": {"expr": "9 + 12"}}
-  Obs: 23
-  
-
-  A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
-  Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
-  Obs: 2.869047619047619
-
-  Out of 1400 participants, 400 passed the test. What percentage is that?
-- "\n"
-- def: rawAction
-  model: replicate/ibm-granite/granite-3.0-8b-instruct
-  parameters:
-    stop_sequences: "\n"
-- def: action
-  lang: python
-  parser: json
-  spec: {name: str, arguments: obj}
+- role: system
+  text: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
   contribute: [context]
-  code:
-    |
-    result = '${ rawAction }'.replace("Act: ", "")
+- role: available_tools
+  text: ${ tools }
+  contribute: [context]
+- "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
+- def: actions
+  model: replicate/ibm-granite/granite-3.0-8b-instruct
+  parser: json
+  spec: [{ name: str, arguments: { expr: str }}]  
 - "\n"
-- if: ${ action.name == "Calc" }
+- if: ${ actions[0].name == "calc" }
   then:
     text:
-    - "Obs: "
     - lang: python
-      code: result = ${ action.arguments.expr }
+      code: result = ${ actions[0].arguments.expr }
