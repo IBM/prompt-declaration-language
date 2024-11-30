@@ -7,6 +7,33 @@ defs:
       model: str
     return:
       text:
+      - defs:
+          tools:
+            data:
+            - type: function
+              function: 
+                name: Calc
+                description: Calculator function
+                parameters:
+                  type: object
+                  properties:
+                    expr: 
+                      type: string
+                      description: Arithmetic expression to calculate
+                  required:
+                  - expr
+            - type: function
+              function: 
+                name: Search
+                description: Wikipedia search
+                parameters:
+                  type: object
+                  properties:
+                    topic: 
+                      type: string
+                      description: Topic to search
+                  required:
+                  - topic
       - for:
           ex: ${ examples }
         repeat:
@@ -14,6 +41,12 @@ defs:
       - "\n"
       - ${ question }
       - "\n"
+      - role: system
+        text: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+        contribute: [context]
+      - role: available_tools
+        text: ${ tools }
+        contribute: [context]
       - def: prev_action
         contribute: []
         data: none
@@ -26,24 +59,16 @@ defs:
             model: ${ model }
             parameters:
               stop_sequences: "Act:"
-              temperature: 0
-          - def: rawAction
+          - "Act:\n"
+          - def: action
             model: ${ model }
             parameters:
               stop_sequences: "\n"
-              temperature: 0
-          - def: action
-            lang: python
             parser: json
-            spec: {name: str, arguments: obj}
-            contribute: [context]
-            code:
-              |
-              result = '${ rawAction }'.replace("Act: ", "")
-          - if: ${ action  != prev_action}
+          - if: ${ action != prev_action}
             then: 
               def: observation
-              if: ${ action.name == "Search" }
+              if: ${ action[0].name == "Search" }
               then:
                 text:
                 - "\nObs: "
@@ -52,17 +77,17 @@ defs:
                     import warnings, wikipedia
                     warnings.simplefilter("ignore")
                     try:
-                      result = wikipedia.summary("${ action.arguments.topic }")
+                      result = wikipedia.summary("${ action[0].arguments.topic }")
                     except wikipedia.WikipediaException as e:
                       result = str(e)
                 - "\n"
               else:
-                  if: ${ action.name == "Calc" }
+                  if: ${ action[0].name == "Calc" }
                   then:
                     text:
                     - "\nObs: "
                     - lang: python
-                      code: result = ${ action.arguments.expr }
+                      code: result = ${ action[0].arguments.expr }
                     - "\n"
             else:
               def: exit
@@ -71,7 +96,7 @@ defs:
           - def: prev_action
             contribute: []
             data: ${ action }
-        until: ${ action.name == "Finish" or exit }
+        until: ${ action[0].name == "Finish" or exit }
   
   react:
     function:
@@ -81,47 +106,20 @@ defs:
         defs: 
           examples:
             array:
-                - text:
-                    |
-                    What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
-                    Tho: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
-                    Act: {"name": "Search", "arguments": {"topic": "Colorado orogeny"}}
-                    Obs: The Colorado orogeny was an episode of mountain building (an orogeny) ...
-                    Tho: It does not mention the eastern sector. So I need to look up eastern sector.
-                    Tho: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
-                    Act: {"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}
-
-
                 - text: 
                     |
                     What profession does Nicholas Ray and Elia Kazan have in common?
                     Tho: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
-                    Act: {"name": "Search", "arguments": {"topic": "Nicholas Ray"}}
+                    Act: 
+                    [{"name": "Search", "arguments": {"topic": "Nicholas Ray"}}]
                     Obs: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
                     Tho: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
-                    Act: {"name": "Search", "arguments": {"topic": "Elia Kazan"}}
+                    Act: 
+                    [{"name": "Search", "arguments": {"topic": "Elia Kazan"}}]
                     Obs: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
                     Tho: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-                    Act: {"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}
-                
-
-                - text:
-                    |
-                    What is 18 + 12 x 3?
-                    Tho: I need to call a calculator.
-                    Act: {"name": "Calc", "arguments": {"expr": "18 + 12 * 3"}}
-                    Obs: 54
-                    Act: {"name": "Finish", "arguments": {"topic": "54"}}
-              
-
-                - text:
-                    |
-                    A total of 252 qualifying matches were played, and 723 goals were scored. What was the average number of goals per match?
-                    Tho: I need to call a calculator.
-                    Act: {"name": "Calc", "arguments": {"expr": "723 / 252"}}
-                    Obs: 2.869047619047619
-                    Act: {"name": "Finish", "arguments": {"topic": "2.869047619047619"}}
-
+                    Act: 
+                    [{"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}]
 
         call: react_inner
         args:
