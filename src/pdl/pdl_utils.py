@@ -1,5 +1,5 @@
 import json
-from typing import Sequence
+from typing import Any, Sequence
 
 from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
 
@@ -70,3 +70,16 @@ def simple_message(message: Message) -> bool:
     if message.keys() == {"role", "content"} and message["content"] is not None:
         return True
     return False
+
+
+def remove_none_values_from_message(message: Any) -> dict[str, Any]:
+    ret = {}
+    for key, value in message.items():
+        if key == "content":
+            ret[key] = value
+        if value is not None:
+            if isinstance(value, dict):
+                ret[key] = remove_none_values_from_message(value)
+            else:
+                ret[key] = value
+    return ret

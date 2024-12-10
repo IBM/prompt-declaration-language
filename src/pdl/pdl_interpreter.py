@@ -1125,6 +1125,7 @@ def step_call_model(
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
+
         msg, raw_result = yield from generate_client_response(
             state, concrete_block, model_input
         )
