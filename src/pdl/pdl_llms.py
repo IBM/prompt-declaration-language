@@ -17,6 +17,8 @@ from .pdl_ast import (
     set_structured_decoding_parameters,
 )
 
+from .pdl_utils import remove_none_values_from_message
+
 # Load environment variables
 load_dotenv()
 
@@ -165,7 +167,7 @@ class LitellmModel:
         msg = response.choices[0].message  # pyright: ignore
         if msg.role is None:
             msg.role = "assistant"
-        return msg.json(), response.json()  # pyright: ignore
+        return remove_none_values_from_message(msg.json()), response.json()  # pyright: ignore
 
     @staticmethod
     def generate_text_stream(
@@ -191,5 +193,5 @@ class LitellmModel:
             msg = chunk.choices[0].delta  # pyright: ignore
             if msg.role is None:
                 msg.role = "assistant"
-            yield msg.model_dump()
+            yield remove_none_values_from_message(msg.model_dump())
         return result
