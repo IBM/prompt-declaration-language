@@ -1,5 +1,5 @@
 import json
-from typing import Sequence, Any
+from typing import Any, Sequence
 
 from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
 
