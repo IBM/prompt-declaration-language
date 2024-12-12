@@ -115,7 +115,7 @@ def schedule(
                             text = stringify(result)
                         else:
                             text = colored(stringify(result), msg.color)
-                        print(text, end="")
+                        print(text, end="", flush=True)
                         todo_next.append((i, gen, None))
                     case YieldBackgroundMessage(background=background):
                         if len(background) > 0 and background[0]["role"] == _LAST_ROLE:
@@ -127,7 +127,7 @@ def schedule(
                         s += "\n".join(
                             [f"{msg['role']}: {msg['content']}" for msg in background]
                         )
-                        print(s, end="")
+                        print(s, end="", flush=True)
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
                         text_msg = BamModel.generate_text(
