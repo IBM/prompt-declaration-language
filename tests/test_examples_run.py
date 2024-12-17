@@ -93,14 +93,6 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "hello"
         / "hello-data.pdl": InputsType(scope={"something": "ABC"}),
         pathlib.Path("examples")
-        / "weather"
-        / "weather.pdl": InputsType(stdin="What is the weather in Yorktown Heights?\n"),
-        pathlib.Path("examples")
-        / "demo"
-        / "3-weather.pdl": InputsType(
-            stdin="What is the weather in Yorktown Heights?\n"
-        ),
-        pathlib.Path("examples")
         / "tutorial"
         / "conditionals_loops.pdl": InputsType(
             stdin="What is APR?\nno\nSay it as a poem\nyes\n"
