@@ -1442,10 +1442,18 @@
           "title": "Call"
         },
         "args": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            },
+            {
+              "type": "object"
+            }
+          ],
           "default": {},
           "description": "Arguments of the function with their values.\n    ",
-          "title": "Args",
-          "type": "object"
+          "title": "Args"
         },
         "trace": {
           "anyOf": [

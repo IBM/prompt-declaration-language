@@ -1,3 +1,4 @@
+from pdl.pdl import exec_file
 from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
 from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
     InterpreterState,
@@ -107,3 +108,11 @@ def test_call_template():
     data = Program.model_validate(hello_call_template)
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == "Hello World!"
+
+
+def test_call_expression_args():
+    result = exec_file("tests/data/call_expression_args.pdl")
+    assert (
+        result
+        == "FN::get_current_stock:: 'Simple call!'\n{'product_name': 'from_object'}\nFN::get_current_stock:: 'from_object'\n"
+    )

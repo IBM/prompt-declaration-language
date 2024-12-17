@@ -11,7 +11,7 @@ lastOf:
 - def: raw_output
   model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
-    stop_sequences: "\n\n"
+    #stop_sequences: "\n\n"
     temperature: 0
 
 - lang: python

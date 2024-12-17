@@ -165,7 +165,7 @@ class CallBlock(Block):
     call: ExpressionType
     """Function to call.
     """
-    args: dict[str, Any] = {}
+    args: ExpressionType | dict[str, Any] = {}
     """Arguments of the function with their values.
     """
     # Field for internal use

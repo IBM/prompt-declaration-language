@@ -1,0 +1,4 @@
+FN::get_current_stock:: 'Simple call!'
+{'product_name': 'from_object'}
+FN::get_current_stock:: 'from_object'
+
