@@ -14,7 +14,7 @@ text:
     from cldk import CLDK
     from cldk.models.java.models import *
 
-    # Initialize the Codellm-DevKit object with the project directory, langguage, and backend.
+    # Initialize the Codellm-DevKit object with the project directory, language, and backend.
     cldk = CLDK("java")
     cldk_state = cldk.analysis(
         project_path="${ project }",   # Change this to the path of the project you want to analyze.

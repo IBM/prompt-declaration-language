@@ -119,7 +119,7 @@ In PDL, we can declaratively chain models together as in the following example (
 --8<-- "./examples/tutorial/model_chaining.pdl"
 ```
 
-In this program, the first call is to a granite model to complete the sentence `Hello, world!`. The following block in the document prints out the sentence: `Translate this to French`. The final line of the program takes the entire document produced so far and passes it as input to the granite multilingual model. Notice that the input passed to this model is the document up to that point, represented as a conversation. This makes it easy to chain models together and continue building on previous interactions.
+In this program, the first call is to a Granite model to complete the sentence `Hello, world!`. The following block in the document prints out the sentence: `Translate this to French`. The final line of the program takes the entire document produced so far and passes it as input to the Granite multilingual model. Notice that the input passed to this model is the document up to that point, represented as a conversation. This makes it easy to chain models together and continue building on previous interactions.
 
 When we execute this program, we obtain:
 
@@ -151,7 +151,7 @@ The translation of 'I love Paris!' to French is 'J'aime Paris!'.
 The translation of 'I love Madrid!' to Spanish is 'Me encanta Madrid!'.
 ```
 
-A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current background context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the granite model.
+A function only contributes to the output document when it is called. So the definition itself results in `""`. When we call a function, we implicitly pass the current background context, and this is used as input to model calls inside the function body. In the above example, since the `input` field is omitted, the entire document produced at that point is passed as input to the Granite model.
 
 To reset the context when calling a function, we can pass the special argument: `pdl_context: []`.
 
@@ -223,12 +223,12 @@ An `object` constructs an object:
 ```
 object:
   name: Bob
-  job: mananger
+  job: manager
 ```
 
 This results in the following output:
 ```
-{"name": "Bob", "job": "mananger"}
+{"name": "Bob", "job": "manager"}
 ```
 
 Each value in the object can be any PDL block, and the result is presented as an object.
@@ -328,7 +328,7 @@ PDL programs can contain calls to REST APIs with Python code. Consider a simple 
 --8<-- "./examples/tutorial/calling_apis.pdl"
 ```
 
-In this program, we first define a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python (mocked in this example). Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
+In this program, we first define a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a Granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python (mocked in this example). Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
 
 
 ##  Data Block
@@ -538,7 +538,7 @@ role: user
 ```
 
 In PDL, any block can be adorned with a `role` field indicating the role for that block. These are high-level annotations
-that help to make programs more portable accross different models. If the role of a block is not specified (except for model blocks that have `assistant` role),
+that help to make programs more portable across different models. If the role of a block is not specified (except for model blocks that have `assistant` role),
 then the role is inherited from the surrounding block. So in the above example, we only need to specify `role: user` at the top level (this is the default, so it doesn't
 need to be specified explicitly).
 
@@ -607,7 +607,7 @@ the examples below:
 - `{list: {int: {minimum: 0}}}`: a list of integers satisfying the indicated constraints
 - `[{int: {minimum: 0}}]`: same as above
 - `{list: {minItems: 1, int: {}}}`, a list satisfying the indicated constraints
-- `{obj: {latitude: float, longitude: float}}`: an ibject with fields `latitude` and `longitude`
+- `{obj: {latitude: float, longitude: float}}`: an object with fields `latitude` and `longitude`
 - `{latitude: float, longitude: float}`: same as above
 - `{obj: {question: str, answer: str, context: {optional: str}}}`: an object with an optional field
 - `{question: str, answer: str, context: {optional: str}}`: same as above
@@ -931,13 +931,3 @@ Output:
 Several lines of text, with some "quotes" of various 'types'. Escapes (like \n) don't do anything.
 Newlines can be added by leaving a blank line. Additional leading whitespace is ignored.
 ```
-
-
-
-
-
-
-
-
-
-
