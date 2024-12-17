@@ -98,7 +98,7 @@ export WATSONX_APIKEY="your-api-key"
 export WATSONX_PROJECT_ID="your-project-id"
 ```
 
-If you use Replicate:
+If you use [Replicate](https://replicate.com/):
 ```bash
 export REPLICATE_API_TOKEN="your-token"
 ```
@@ -123,7 +123,7 @@ VSCode setup for syntax highlighting and validation:
 
 ### Variable Definition & Template Usage
 
-In this example we use external content imput.yaml and watonsx as a LLM provider. 
+In this example we use external content _data.yaml_ and watsonx as an LLM provider.
 
 ```yaml
 description: Template with variables

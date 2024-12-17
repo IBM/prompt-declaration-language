@@ -53,8 +53,8 @@ In order to run these examples, you need to create a free account
 on Replicate, get an API key and store it in the environment variable:
 - `REPLICATE_API_TOKEN`
 
-In order to use foundation models hosted on [Watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance. The region can be found by clicking in the upper right corner of the Watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
+In order to use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
@@ -133,7 +133,7 @@ text:
     temperature: 0
 ```
 
-The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the text to be produced. In this example, the text starts with the string `"Hello\n"` followed by a block that calls out to a model. In this case, it is model with id `replicate/ibm-granite/granite-20b-code-instruct-8k` on Replicate, via LiteLLM, with the indicated parameters: the stop sequence is `!`, and temperature set to `0`. Stop sequences are provided with a comman separated list of strings. The input to the model call is everything that has been produced so far in the program (here `"Hello\n"`).
+The `description` field is a description for the program. Field `text` contains a list of either strings or *block*s which together form the text to be produced. In this example, the text starts with the string `"Hello\n"` followed by a block that calls out to a model. In this case, it is model with id `replicate/ibm-granite/granite-20b-code-instruct-8k` on Replicate, via LiteLLM, with the indicated parameters: the stop sequence is `!`, and temperature set to `0`. Stop sequences are provided with a comma separated list of strings. The input to the model call is everything that has been produced so far in the program (here `"Hello\n"`).
 
 When we execute this program using the PDL interpreter:
 
