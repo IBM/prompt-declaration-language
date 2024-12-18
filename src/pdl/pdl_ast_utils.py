@@ -134,10 +134,7 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.returns = f.f_block(block.returns)
         case CallBlock():
             block.call = f.f_expr(block.call)
-            if isinstance(block.args, dict):
-                block.args = {x: f.f_expr(e) for x, e in block.args.items()}
-            else:
-                block.args = f.f_expr(block.args)
+            block.args = f.f_expr(block.args)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
         case BamModelBlock() | LitellmModelBlock():
