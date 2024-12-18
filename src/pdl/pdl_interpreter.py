@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Generator, Optional, Sequence, TypeVar
 
 import litellm
+import httpx
 import yaml
 from jinja2 import (
     Environment,
@@ -1140,8 +1141,15 @@ def step_call_model(
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
+    except httpx.RequestError as exc:
+        message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+        raise PDLRuntimeError(
+            message,
+            loc=loc,
+            trace=ErrorBlock(msg=message, location=loc, program=concrete_block),
+        ) from exc
     except Exception as exc:
-        message = f"Error during model call: {repr(exc)}"
+        message = f"Error during '{block.model}' model call: {repr(exc)}"
         raise PDLRuntimeError(
             message,
             loc=loc,
