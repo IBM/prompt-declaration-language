@@ -10,8 +10,8 @@ import types
 from pathlib import Path
 from typing import Any, Generator, Optional, Sequence, TypeVar
 
-import litellm
 import httpx
+import litellm
 import yaml
 from jinja2 import (
     Environment,
