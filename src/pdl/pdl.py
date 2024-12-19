@@ -157,7 +157,7 @@ def main():
     parser.add_argument(
         "--sandbox",
         action=argparse.BooleanOptionalAction,
-        help="run the interpreter in a container, a docker daemon must be running",
+        help="run the interpreter in a container, a Docker-compatible daemon must be running",
     )
     parser.add_argument(
         "-f",
@@ -191,7 +191,7 @@ def main():
     parser.add_argument(
         "--schema",
         action="store_true",
-        help="generate PDL Json Schema and exit",
+        help="generate PDL JSON Schema and exit",
         default=False,
     )
     parser.add_argument(

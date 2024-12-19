@@ -18,7 +18,7 @@ text:
     cldk = CLDK("java")
     cldk_state = cldk.analysis(
         project_path="${ project }",   # Change this to the path of the project you want to analyze.
-        # langguage="java",  # The langguage of the project.
+        # language="java",  # The language of the project.
         # backend="codeanalyzer",  # The backend to use for the analysis.
         # analysis_db="/tmp",  # A temporary directory to store the analysis results.
         # sdg=True, # Generate the System Dependence Graph (SDG) for the project.

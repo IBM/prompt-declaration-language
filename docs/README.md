@@ -53,8 +53,8 @@ In order to run these examples, you need to create a free account
 on Replicate, get an API key and store it in the environment variable:
 - `REPLICATE_API_TOKEN`
 
-In order to use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a WatsonX account (a free plan is available) and set up the following environment variables:
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your WatsonX instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
+In order to use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a watsonx account (a free plan is available) and set up the following environment variables:
+- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
@@ -83,8 +83,8 @@ The PDL repository has been configured so that every `*.pdl` file is associated 
 ```
 
 The interpreter executes Python code specified in PDL code blocks. To sandbox the interpreter for safe execution,
-you can use the `--sandbox` flag which runs the interpreter in a docker container. Without this flag, the interpreter
-and all code is executed locally. To use the `--sandbox` flag, you need to have a docker daemon running, such as 
+you can use the `--sandbox` flag which runs the interpreter in a Docker-compatible container. Without this flag, the interpreter
+and all code is executed locally. To use the `--sandbox` flag, you need to have a Docker daemon running, such as 
 [Rancher Desktop](https://rancherdesktop.io).
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
@@ -150,7 +150,7 @@ Hello
 
 where the second `Hello` was produced by Granite. In general, PDL provides blocks for calling models, Python code, and makes it easy to compose them together with control structures (sequencing, conditions, loops).
 
-A similar example on WatsonX would look as follows:
+A similar example on watsonx would look as follows:
 
 ```yaml
 description: Hello world
@@ -163,7 +163,7 @@ text:
     - '!'
 ```
 
-Notice the syntactic differences. Model ids on WatsonX start with `watsonx`. The `decoding_method` can be set to `greedy`, rather than setting the temperature to `0`. Also, `stop_sequences` are indicated with the keyword `stop` instead as a list of strings.
+Notice the syntactic differences. Model ids on watsonx start with `watsonx`. The `decoding_method` can be set to `greedy`, rather than setting the temperature to `0`. Also, `stop_sequences` are indicated with the keyword `stop` instead as a list of strings.
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
 
