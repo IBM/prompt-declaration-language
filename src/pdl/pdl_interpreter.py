@@ -1429,7 +1429,7 @@ def step_call(
     result = None
     background: Messages = []
     args, block = process_expr_of(block, "args", scope, loc)
-    closure, block = process_expr_of(block, "call", scope, loc)
+    closure, _ = process_expr_of(block, "call", scope, loc)
     args_loc = append(loc, "args")
     type_errors = type_check_args(args, closure.function, args_loc)
     if len(type_errors) > 0:
