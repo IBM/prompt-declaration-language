@@ -91,7 +91,7 @@ pip install 'prompt-declaration-language[examples]'
 
 You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
 
-If you use WatsonX:
+If you use watsonx:
 ```bash
 export WATSONX_URL="https://{region}.ml.cloud.ibm.com"
 export WATSONX_APIKEY="your-api-key"
