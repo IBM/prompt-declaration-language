@@ -143,7 +143,7 @@ def test_missing_var():
 
 missing_call = {
     "description": "simple python",
-    "text": [{"call": "somevar"}],
+    "text": [{"call": "${ somevar }"}],
 }
 
 

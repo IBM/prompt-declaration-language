@@ -12,7 +12,7 @@ defs:
         parameters:
           stop_sequences: "\n"
 text:
-- call: translate
+- call: ${ translate }
   contribute: []
   def: FRENCH
   args:
