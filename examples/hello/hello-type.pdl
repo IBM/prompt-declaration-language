@@ -14,12 +14,12 @@ text:
     - model: replicate/ibm-granite/granite-3.0-8b-instruct
       parameters:
         stop_sequences: "\n"
-- call: translate
+- call: ${ translate }
   spec: str
   args:
     sentence: ${ GEN }
     language: French
-- call: translate
+- call: ${ translate }
   args:
     sentence: ${ GEN }
     language: Spanish

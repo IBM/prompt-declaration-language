@@ -11,12 +11,12 @@ text:
       parameters:
         stop_sequences: "\n"
         temperature: 0
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Paris!
     language: French
 - "\n"
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Madrid!
     language: Spanish

@@ -4,6 +4,6 @@ text:
   function:
     name: str
   return: Hello ${ name }!
-- call: hello
+- call: ${ hello }
   args:
     name: World

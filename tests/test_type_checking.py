@@ -161,7 +161,7 @@ function_call = {
                 "text": ["Hello ", {"get": "name"}, "!"],
             },
         },
-        {"call": "hello"},
+        {"call": "${ hello }"},
     ],
 }
 
@@ -182,7 +182,7 @@ function_call1 = {
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": "Bob"}},
+        {"call": "${ hello }", "args": {"name": "Bob"}},
     ],
 }
 
@@ -203,7 +203,7 @@ function_call2 = {
             "function": {"name": "int"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": 42}},
+        {"call": "${ hello }", "args": {"name": 42}},
     ],
 }
 
@@ -224,7 +224,7 @@ function_call3 = {
             "function": {"name": "list"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": ["Bob", "Carrol"]}},
+        {"call": "${ hello }", "args": {"name": ["Bob", "Carrol"]}},
     ],
 }
 
@@ -245,7 +245,7 @@ function_call4 = {
             "function": {"name": "obj"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": {"bob": "caroll"}}},
+        {"call": "${ hello }", "args": {"name": {"bob": "caroll"}}},
     ],
 }
 
@@ -266,7 +266,7 @@ function_call5 = {
             "function": {"name": "bool"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": True}},
+        {"call": "${ hello }", "args": {"name": True}},
     ],
 }
 
@@ -287,7 +287,7 @@ function_call6 = {
             "function": {"name": "float"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6}},
+        {"call": "${ hello }", "args": {"name": 6.6}},
     ],
 }
 
@@ -308,7 +308,7 @@ function_call7 = {
             "function": {"name": "float"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6}},
+        {"call": "${ hello }", "args": {"name": 6.6}},
     ],
 }
 
@@ -329,7 +329,7 @@ function_call8 = {
             "function": {"name": "floats"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6}},
+        {"call": "${ hello }", "args": {"name": 6.6}},
     ],
 }
 
@@ -350,7 +350,7 @@ function_call9 = {
             "function": {"name": "float", "address": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+        {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
     ],
 }
 
@@ -371,7 +371,10 @@ function_call10 = {
             "function": {"name": "float", "address": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street", "extra": "stuff"}},
+        {
+            "call": "${ hello }",
+            "args": {"name": 6.6, "address": "street", "extra": "stuff"},
+        },
     ],
 }
 
@@ -392,7 +395,10 @@ function_call11 = {
             "function": {},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street", "extra": "stuff"}},
+        {
+            "call": "${ hello }",
+            "args": {"name": 6.6, "address": "street", "extra": "stuff"},
+        },
     ],
 }
 
@@ -413,7 +419,7 @@ function_call12 = {
             "function": {"name": "float", "address": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {}},
+        {"call": "${ hello }", "args": {}},
     ],
 }
 
@@ -434,7 +440,7 @@ function_call13 = {
             "function": {"name": "float", "address": "str", "extra": "int"},
             "return": {"text": ["Hello ", "!"]},
         },
-        {"call": "hello", "args": {"name": "Bob", "extra": 2}},
+        {"call": "${ hello }", "args": {"name": "Bob", "extra": 2}},
     ],
 }
 
@@ -455,7 +461,7 @@ function_call14 = {
             "function": {},
             "return": {"text": ["Hello ", "${ something }", "!"]},
         },
-        {"call": "hello", "args": {}},
+        {"call": "${ hello }", "args": {}},
     ],
 }
 
@@ -477,7 +483,7 @@ function_call15 = {
             "spec": "str",
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+        {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
     ],
 }
 
@@ -499,7 +505,7 @@ function_call16 = {
             "spec": "int",
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+        {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
     ],
 }
 
@@ -521,7 +527,7 @@ function_call17 = {
             "spec": {"list": "int"},
             "return": {"data": [1, 2, 3]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+        {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
     ],
 }
 
@@ -543,7 +549,7 @@ function_call18 = {
             "spec": {"list": "int"},
             "return": {"data": [1, 2, "foo"]},
         },
-        {"call": "hello", "args": {"name": 6.6, "address": "street"}},
+        {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
     ],
 }
 

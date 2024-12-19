@@ -1429,20 +1429,12 @@ def step_call(
     result = None
     background: Messages = []
     args, block = process_expr_of(block, "args", scope, loc)
-    closure_expr, block = process_expr_of(block, "call", scope, loc)
-    try:
-        closure = get_var(closure_expr, scope, append(loc, "call"))
-    except PDLRuntimeExpressionError as exc:
-        raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or loc,
-            trace=ErrorBlock(msg=exc.message, location=loc, program=block),
-        ) from exc
+    closure, block = process_expr_of(block, "call", scope, loc)
     args_loc = append(loc, "args")
     type_errors = type_check_args(args, closure.function, args_loc)
     if len(type_errors) > 0:
         raise PDLRuntimeError(
-            f"Type errors during function call to {closure_expr}:\n"
+            f"Type errors during function call to {block.call}:\n"
             + "\n".join(type_errors),
             loc=args_loc,
             trace=block.model_copy(),
@@ -1469,7 +1461,7 @@ def step_call(
         errors = type_check_spec(result, closure.spec, fun_loc)
         if len(errors) > 0:
             raise PDLRuntimeError(
-                f"Type errors in result of function call to {closure_expr}:\n"
+                f"Type errors in result of function call to {block.call}:\n"
                 + "\n".join(errors),
                 loc=loc,
                 trace=trace,

@@ -144,7 +144,7 @@ Suppose we want to define a translation function that takes a string and calls a
 
 In this program, the first block defines a function `translate` that takes as parameters `sentence` and `language`, both of which are of type string. The body of the function is defined by its `return` field. In this case, we formulate a translation prompt using the parameters and send it to a Granite multilingual model.
 
-The last two blocks are calls to this function, as indicated by `call: translate`. This block specifies the arguments to be passed. When we execute this program, we obtain:
+The last two blocks are calls to this function, as indicated by `call: ${ translate }`. This block specifies the arguments to be passed. When we execute this program, we obtain:
 
 ```
 The translation of 'I love Paris!' to French is 'J'aime Paris!'.

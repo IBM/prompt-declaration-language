@@ -19,7 +19,7 @@ text:
     - model: watsonx/ibm/granite-34b-code-instruct
       parameters:
         mock_response: " World!"
-- call: translate
+- call: ${ translate }
   spec: str
   args:
     sentence: Hello,${ GEN1 }

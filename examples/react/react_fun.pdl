@@ -121,7 +121,7 @@ defs:
                     Act: 
                     [{"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}]
 
-        call: react_inner
+        call: ${ react_inner }
         args:
           pdl_context: []
           examples: ${ examples }

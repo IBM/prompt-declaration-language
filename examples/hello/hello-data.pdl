@@ -6,7 +6,7 @@ text:
   return:
     ${ something }
 - "Hello World!\n"
-- call: stutter
+- call: ${ stutter }
 - "\n"
 
 

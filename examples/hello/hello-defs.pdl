@@ -7,7 +7,7 @@ defs:
   bye:
     "Good bye"
 text:
-- call: hello
+- call: ${ hello }
   args:
     name: World
 - "\n"

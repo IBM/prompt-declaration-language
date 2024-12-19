@@ -99,7 +99,7 @@ text:
 
 def test_call_undefined():
     prog_str = """
-call: "f"
+call: "${ f }"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
@@ -128,7 +128,7 @@ defs:
       function:
         x: int
       return: Hello
-call: "f"
+call: ${ f }
 args:
     x: ${ (x }
 """
