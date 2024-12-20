@@ -91,14 +91,15 @@ def test_function_explicit_context():
 hello_call_template = {
     "description": "Call hello template",
     "text": [
-        {"defs": {"alias": "${ hello }"}},
+        {"defs": {"alias": {"data": {}}}},
         {
             "description": "Define hello",
-            "def": "hello",
+            "def": "f",
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "${ alias }", "args": {"name": "World"}},
+        {"lang": "python", "code": "result = alias['hello'] = f"},
+        {"call": '${ alias["hello"] }', "args": {"name": "World"}},
     ],
 }
 
