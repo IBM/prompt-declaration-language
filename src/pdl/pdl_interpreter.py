@@ -1433,7 +1433,7 @@ def step_call(
     if not isinstance(closure, FunctionBlock):
         msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
         if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):
-            msg += " You might want to call `${ " + block.call + " }`."
+            msg += " You might want to call `${ " + str(block.call) + " }`."
         raise PDLRuntimeError(
             msg,
             loc=append(loc, "call"),
@@ -1449,12 +1449,17 @@ def step_call(
             trace=block.model_copy(),
         )
     f_body = closure.returns
-    f_scope = closure.scope | {"pdl_context": scope["pdl_context"]} | args
-    fun_loc = LocationType(
-        file=closure.location.file,
-        path=closure.location.path + ["return"],
-        table=loc.table,
+    f_scope = (
+        (closure.scope or {}) | {"pdl_context": scope["pdl_context"]} | (args or {})
     )
+    if closure.location is not None:
+        fun_loc = LocationType(
+            file=closure.location.file,
+            path=closure.location.path + ["return"],
+            table=loc.table,
+        )
+    else:
+        fun_loc = empty_block_location
     try:
         result, background, _, f_trace = yield from step_block(
             state, f_scope, f_body, fun_loc
