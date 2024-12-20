@@ -1433,12 +1433,12 @@ def step_call(
     if not isinstance(closure, FunctionBlock):
         msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
         if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):
-            msg += " You might want to call `${ "+ block.call + " }`."
+            msg += " You might want to call `${ " + block.call + " }`."
         raise PDLRuntimeError(
             msg,
             loc=append(loc, "call"),
             trace=block.model_copy(),
-        )        
+        )
     args_loc = append(loc, "args")
     type_errors = type_check_args(args, closure.function, args_loc)
     if len(type_errors) > 0:
