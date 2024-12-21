@@ -11,12 +11,12 @@ defs:
         parameters:
           stop_sequences: "\n"
 text:
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Paris!
     language: French
 - "\n"
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Madrid!
     language: Spanish

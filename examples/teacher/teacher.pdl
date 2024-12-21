@@ -48,14 +48,14 @@ defs:
     return:
       defs:
         prompt_data:
-          call: question_template_freeform
+          call: ${question_template_freeform}
           spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
           args:
             num_samples: ${num_samples}
             task_description: ${task_description}
             icl_question: ${icl_question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -94,7 +94,7 @@ defs:
           for:
             example: ${seed_examples}
           repeat:
-            call: gen_questions_freeform_inner
+            call: ${gen_questions_freeform_inner}
             args:
               num_samples: 2
               task_description: ${task_description}
@@ -139,13 +139,13 @@ defs:
     return:
       defs:
         prompt_data:
-          call: filter_questions_template
+          call: ${filter_questions_template}
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             task_description: ${task_description}
             question: ${question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -179,7 +179,7 @@ defs:
           repeat:
             defs:
               filter_output:
-                call: filter_questions_inner
+                call: ${filter_questions_inner}
                 args:
                   task_description: ${task_description}
                   question: ${question.question}
@@ -233,14 +233,14 @@ defs:
     return:
       defs:
         prompt_data:
-          call: answer_template
+          call: ${answer_template}
           spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
           args:
             icl_question: ${question.icl_question}
             icl_response: ${question.icl_answer}
             question: ${question.question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -278,7 +278,7 @@ defs:
           for:
             question: ${ questions }
           repeat:
-            call: gen_answers_inner
+            call: ${gen_answers_inner}
             args:
               question: ${question}
           join:
@@ -322,13 +322,13 @@ defs:
     return:
       defs:
         prompt_data:
-          call: filter_qa_template
+          call: ${filter_qa_template}
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             question: ${question}
             answer: ${answer}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -360,7 +360,7 @@ defs:
           repeat:
             defs:
               filter_output:
-                call: filter_question_answer_pair_inner
+                call: ${filter_question_answer_pair_inner}
                 spec: float
                 args:
                   question: ${qa_pair.question}
@@ -385,25 +385,25 @@ text:
   parser: yaml
 - "\n\n----- Generating questions -----\n\n"
 - def: generated_questions
-  call: gen_questions_freeform
+  call: ${gen_questions_freeform}
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: ${seed_examples.task_description}
     seed_examples: ${seed_examples.seed_examples}
 - "\n\n----- Filtering questions -----\n\n"
 - def: filtered_questions
-  call: filter_questions
+  call: ${filter_questions}
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: ${seed_examples.task_description}
     questions: ${generated_questions}
 - "\n\n----- Generating answers -----\n\n"
 - def: qa_pairs
-  call: gen_answers
+  call: ${gen_answers}
   args:
     questions: ${filtered_questions} 
 - "\n\n----- Filtering QA pairs -----\n\n"
-- call: filter_question_answer_pair
+- call: ${filter_question_answer_pair}
   args:
     qa_pairs: ${qa_pairs}
 

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from jsonschema import ValidationError, validate
 
@@ -7,15 +7,19 @@ from .pdl_schema_error_analyzer import analyze_errors
 from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
 
 
-def type_check_args(args: dict[str, Any], params: dict[str, Any], loc) -> list[str]:
+def type_check_args(
+    args: Optional[dict[str, Any]], params: Optional[dict[str, Any]], loc
+) -> list[str]:
     if (args == {} or args is None) and (params is None or params == {}):
         return []
-    args_copy = args.copy()
-    params_copy = params.copy()
-    if args_copy is None:
+    if args is None:
         args_copy = {}
-    if params_copy is None:
+    else:
+        args_copy = args.copy()
+    if params is None:
         params_copy = {}
+    else:
+        params_copy = params.copy()
     # if "pdl_context" not in args_copy:
     #     args_copy["pdl_context"] = "pdl_context"
     # if "pdl_context" not in params_copy:

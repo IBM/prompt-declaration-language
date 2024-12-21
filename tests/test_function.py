@@ -13,7 +13,7 @@ hello_def = {
     "return": "Hello world!",
 }
 
-hello_call = {"description": "Call hello", "text": [hello_def, {"call": "hello"}]}
+hello_call = {"description": "Call hello", "text": [hello_def, {"call": "${ hello }"}]}
 
 
 def test_function_def():
@@ -39,7 +39,7 @@ hello_params = {
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": "World"}},
+        {"call": "${ hello }", "args": {"name": "World"}},
     ],
 }
 
@@ -56,7 +56,7 @@ hello_stutter = {
     "text": [
         {"def": "stutter", "function": None, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
-        {"call": "stutter"},
+        {"call": "${ stutter }"},
     ],
 }
 
@@ -74,7 +74,7 @@ hello_bye = {
         {"def": "stutter", "function": {}, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
         {
-            "call": "stutter",
+            "call": "${ stutter }",
             "args": {"pdl_context": [{"role": None, "content": "Bye!"}]},
         },
     ],
@@ -91,14 +91,15 @@ def test_function_explicit_context():
 hello_call_template = {
     "description": "Call hello template",
     "text": [
-        {"defs": {"alias": "hello"}},
+        {"defs": {"alias": {"data": {}}}},
         {
             "description": "Define hello",
-            "def": "hello",
+            "def": "f",
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "${ alias }", "args": {"name": "World"}},
+        {"lang": "python", "code": "result = alias['hello'] = f"},
+        {"call": '${ alias["hello"] }', "args": {"name": "World"}},
     ],
 }
 

@@ -1429,31 +1429,37 @@ def step_call(
     result = None
     background: Messages = []
     args, block = process_expr_of(block, "args", scope, loc)
-    closure_expr, block = process_expr_of(block, "call", scope, loc)
-    try:
-        closure = get_var(closure_expr, scope, append(loc, "call"))
-    except PDLRuntimeExpressionError as exc:
+    closure, _ = process_expr_of(block, "call", scope, loc)
+    if not isinstance(closure, FunctionBlock):
+        msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
+        if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):
+            msg += " You might want to call `${ " + str(block.call) + " }`."
         raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or loc,
-            trace=ErrorBlock(msg=exc.message, location=loc, program=block),
-        ) from exc
+            msg,
+            loc=append(loc, "call"),
+            trace=block.model_copy(),
+        )
     args_loc = append(loc, "args")
     type_errors = type_check_args(args, closure.function, args_loc)
     if len(type_errors) > 0:
         raise PDLRuntimeError(
-            f"Type errors during function call to {closure_expr}:\n"
+            f"Type errors during function call to {block.call}:\n"
             + "\n".join(type_errors),
             loc=args_loc,
             trace=block.model_copy(),
         )
     f_body = closure.returns
-    f_scope = closure.scope | {"pdl_context": scope["pdl_context"]} | args
-    fun_loc = LocationType(
-        file=closure.location.file,
-        path=closure.location.path + ["return"],
-        table=loc.table,
+    f_scope = (
+        (closure.scope or {}) | {"pdl_context": scope["pdl_context"]} | (args or {})
     )
+    if closure.location is not None:
+        fun_loc = LocationType(
+            file=closure.location.file,
+            path=closure.location.path + ["return"],
+            table=loc.table,
+        )
+    else:
+        fun_loc = empty_block_location
     try:
         result, background, _, f_trace = yield from step_block(
             state, f_scope, f_body, fun_loc
@@ -1469,7 +1475,7 @@ def step_call(
         errors = type_check_spec(result, closure.spec, fun_loc)
         if len(errors) > 0:
             raise PDLRuntimeError(
-                f"Type errors in result of function call to {closure_expr}:\n"
+                f"Type errors in result of function call to {block.call}:\n"
                 + "\n".join(errors),
                 loc=loc,
                 trace=trace,
