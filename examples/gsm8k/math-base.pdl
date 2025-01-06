@@ -1,0 +1,60 @@
+description: gsm8k
+text:
+- read: ../../../grade-school-math/grade_school_math/data/test.jsonl
+  contribute: []
+  parser: jsonl
+  def: mathdata
+- lang: python
+  contribute: []
+  code:
+    |
+    PDL_SESSION.total = 0
+    PDL_SESSION.matches = 0
+    result = None
+- for:
+    problem: ${ mathdata }
+  repeat:
+    text:
+    - model: openai/granite-3.0-8b-instruct-schemas
+      def: solution
+      input: ${ problem.question }
+      parameters:
+        api_key: EMPTY
+        api_base: http://aims-01.sl.res.ibm.com:39003/v1/
+        temperature: 0
+        top_p: 1 
+    - def: evaluation
+      lang: python
+      code:
+        |
+        import re
+        PDL_SESSION.total += 1
+        def extract_math_answer(res: str) -> float:
+          try:
+              return float(res.split("####")[-1].strip().replace("$", "").replace(",", ""))
+          except Exception:
+              for r in reversed(res.split()):
+                  try:
+                      ret = r.replace("$", "")
+                      if ret.endswith("."):
+                          ret = ret[:-1]
+                      return float(ret)
+                  except Exception:
+                      continue
+              return 0.0
+        answer = extract_math_answer(problem["answer"])
+        #if answer == float(re.findall(r'\d+', sol[0]["arguments"]["expr"])[0]):
+        if answer == extract_math_answer(solution):
+          print("Match!")
+          PDL_SESSION.matches += 1
+        else:
+          print("No Match")
+          print("Looking for: " + str(answer))
+        result = (
+              "Percentage passing: "
+              + str(PDL_SESSION.matches / PDL_SESSION.total)
+              + " ("
+              + str(PDL_SESSION.total)
+              + " completed)"
+        )
+    - "\n***************\n"
