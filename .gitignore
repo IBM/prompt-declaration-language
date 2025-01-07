@@ -156,3 +156,9 @@ _site
 
 # Generated version
 src/pdl/_version.py
+
+# Emacs temps
+*~
+
+# Mac
+.DS_Store

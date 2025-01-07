@@ -1,0 +1,20 @@
+{
+  "kind": "text",
+  "description": "Simple LLM interaction",
+  "defs": {},
+  "text": [
+    "write a hello world example\n",
+    {
+      "kind": "model",
+      "defs": {},
+      "platform": "litellm",
+      "model": "ollama/granite-code:8b",
+      "parameters": {
+        "temperature": 0.0,
+        "stop_sequences": "!"
+      },
+      "result": "```python\nprint(\"hello world\")\n```\n"
+    }
+  ],
+  "result": "write a hello world example\n```python\nprint(\"hello world\")\n```\n"
+}
