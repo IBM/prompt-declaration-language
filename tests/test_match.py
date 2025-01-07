@@ -1,6 +1,5 @@
-import pytest
-
 from pdl.pdl import exec_str
+
 
 def test_match0():
     prog_str = """
@@ -13,6 +12,7 @@ with:
 """
     result = exec_str(prog_str)
     assert result == 42
+
 
 def test_match1():
     prog_str = """
@@ -53,6 +53,7 @@ with:
 """
     result = exec_str(prog_str)
     assert result == 42
+
 
 def test_match_if1():
     prog_str = """
@@ -159,6 +160,7 @@ with:
 """
     result = exec_str(prog_str)
     assert result == 4012
+
 
 def test_match_null1():
     prog_str = """
