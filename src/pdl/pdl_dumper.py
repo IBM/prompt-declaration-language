@@ -29,6 +29,7 @@ from .pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocationType,
+    MatchBlock,
     MessageBlock,
     ObjectBlock,
     ParserType,
@@ -170,6 +171,16 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
                 d["else"] = block_to_dict(block.elses, json_compatible)
             if block.if_result is not None:
                 d["if_result"] = block.if_result
+        case MatchBlock():
+            d["match"] = block.match_
+            d["with"] = [
+                {
+                    "case": match_case.case,
+                    "if": match_case.if_,
+                    "return": block_to_dict(match_case.return_, json_compatible),
+                }
+                for match_case in block.with_
+            ]
         case RepeatBlock():
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations

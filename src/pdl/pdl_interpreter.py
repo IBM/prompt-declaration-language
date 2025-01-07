@@ -48,6 +48,7 @@ from .pdl_ast import (
     LitellmParameters,
     LocalizedExpression,
     LocationType,
+    MatchBlock,
     Message,
     MessageBlock,
     Messages,
@@ -537,6 +538,63 @@ def step_block_body(
                     "if_result": b,
                 }
             )
+        case MatchBlock():
+            match_, block = process_expr_of(block, "match_", scope, loc, "match")
+            cases = []
+            matched = False
+            result = ""
+            background = []
+            for i, match_case in enumerate(block.with_):
+                if matched:
+                    cases.append(match_case)
+                    continue
+                loc_i = append(loc, "[" + str(i) + "]")
+                if "case" in match_case.model_fields_set and match_ != match_case.case:
+                    cases.append(match_case)
+                    continue
+                b = True
+                if "if_" in match_case.model_fields_set:
+                    loc_if = append(loc_i, "if")
+                    try:
+                        b = process_expr(scope, match_case.if_, loc_if)
+                    except PDLRuntimeExpressionError as exc:
+                        cases.append(match_case)
+                        block.with_ = cases
+                        raise PDLRuntimeError(
+                            exc.message,
+                            loc=exc.loc or loc_if,
+                            trace=ErrorBlock(
+                                msg=exc.message, location=loc, program=block
+                            ),
+                        ) from exc
+                if not b:
+                    cases.append(match_case)
+                    continue
+                matched = True
+                try:
+                    result, background, scope, return_trace = yield from step_block(
+                        state,
+                        scope,
+                        match_case.return_,
+                        append(loc_i, "return"),
+                    )
+                except PDLRuntimeError as exc:
+                    match_case_trace = match_case.model_copy(
+                        update={"return_": exc.trace}
+                    )
+                    cases.append(match_case_trace)
+                    block.with_ = cases
+                    raise PDLRuntimeError(
+                        exc.message,
+                        loc=exc.loc or loc,
+                        trace=block,
+                    ) from exc
+                match_case_trace = block.model_copy(update={"return_": return_trace})
+                cases.append(match_case_trace)
+            if not matched:
+                append_log(state, "Match", "no match!")
+            block.with_ = cases
+            trace = block
         case RepeatBlock(num_iterations=n):
             results = []
             background = []
