@@ -6979,10 +6979,12 @@
               "type": "null"
             }
           ],
-          "default": null,
           "title": "Return"
         }
       },
+      "required": [
+        "return"
+      ],
       "title": "MatchCase",
       "type": "object"
     },

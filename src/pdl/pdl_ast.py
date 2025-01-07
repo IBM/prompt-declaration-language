@@ -393,7 +393,7 @@ class MatchCase(BaseModel):
     if_: Optional[ExpressionType] = Field(default=None, alias="if")
     """Boolean condition to satisfy.
     """
-    return_: "BlockType" = Field(default=None, alias="return")
+    return_: "BlockType" = Field(alias="return")
     """Branch to execute if the condition is satisfied.
     """
 
