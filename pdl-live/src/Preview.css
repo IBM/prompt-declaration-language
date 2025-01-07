@@ -1,0 +1,18 @@
+.pdl-preview {
+  &[data-limit-height="true"] {
+    max-height: 350px;
+    overflow: auto;
+  }
+  pre {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-family: "Red Hat Mono" !important;
+    font-size: 1em !important;
+
+    &,
+    code {
+      background: transparent !important;
+    }
+  }
+}
