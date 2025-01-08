@@ -10,7 +10,7 @@ defs:
   wrap_document:
     data: true
 
-  Search:
+  Search_old:
     function:
       subject: str
     return:
@@ -30,7 +30,7 @@ defs:
         then: "[Document]\n${ result|trim }\n[End]"
         else: ${ result|trim }
 
-  Search_json:
+  Search:
     function:
       arguments: obj
     return:
@@ -44,6 +44,8 @@ defs:
               def main(topic: str, *args, **kwargs) -> str:
                 try:
                   return wikipedia.summary(topic)
+                except wikipedia.DisambiguationError as d:
+                  return f"\"{topic}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
                 except wikipedia.WikipediaException as e:
                   return str(e)
 
@@ -51,6 +53,30 @@ defs:
       - if: ${ wrap_document }
         then: "[Document]\n${ result|trim }\n[End]"
         else: ${ result }
+
+  Calculator:
+    function:
+      arguments: obj
+    return:
+      lang: python
+      code: |
+        from sympy.parsing.sympy_parser import parse_expr
+        result = None
+
+        def main(expr: str, *args, **kwargs) -> str:
+          try:
+            exp = "${ arguments.expr|replace(",", "")|replace("$","")|replace("^","**")|replace("%","*0.01") }"
+
+            result = float(parse_expr(exp).evalf())
+            result = round(result, 2)
+            if result.is_integer():
+              result = int(result)
+          except Exception as e:
+              result = f"There was an error calculating: {e}. Please try again."
+
+          return result
+
+        result = main(**arguments)
 
   default_model: "watsonx/ibm/granite-34b-code-instruct"
   LLM:
@@ -64,7 +90,7 @@ defs:
         include_stop_sequence: false
         decoding_method: greedy
 
-  Calculator:
+  Calculator_old:
     function:
       subject: str
     return:
@@ -119,11 +145,11 @@ defs:
             type: string
             description: The prompt
         examples:
-      - display_name: Calculator
+      - display_name: Calc
         pdl_function: Calculator
         description: Run a calculator
         parameters:
-          - name: query
+          - name: expr
             type: string
             description: The equation
         examples:

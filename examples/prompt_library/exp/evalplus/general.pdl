@@ -1,0 +1,384 @@
+description: EvalPlus simple
+defs:
+  # demonstrations:
+  #   data:
+  #   - answer: |-
+  #       def max_run_uppercase(test_str):
+  #         cnt = 0
+  #         res = 0
+  #         for idx in range(0, len(test_str)):
+  #           if test_str.isupper():
+  #             cnt += 1
+  #           else:
+  #             res = cnt
+  #             cnt = 0
+  #         if test_str.isupper():
+  #           res = cnt
+  #         return (res)
+  #     question: Write a function to find maximum run of uppercase characters in the given string.
+  #   - answer: "def remove_length(test_str, K):\n  temp = test_str.split()\n  res = \n  res = ' '.join(res)\n  return (res) "
+  #     question: Write a function to remove all the words with k length in the given string.
+  # model: watsonx/ibm/granite-34b-code-instruct
+  # prompt_pattern: react
+  # prompt: Write a python function to toggle bits of the number except the first and the last bit.
+  # demonstrations:
+  #   data:
+  #     - - task:
+  #           "Write a python function to add a minimum number such that the sum of array
+  #           becomes even.
+
+  #           assert min_Num([1,2,3,4,5,6,7,8,9],9) == 1"
+  #       - thought: I should run a solution on the test case before proposing a solution.
+  #       - action:
+  #           "def min_Num(arr,n):  \r\n    odd = 0\r\n    for i in range(n): \r\n \
+  #           \       if (arr % 2): \r\n            odd += 1 \r\n    if (odd % 2): \r\n\
+  #           \        return 1\r\n    return 2\nres = min_Num([1,2,3,4,5,6,7,8,9],9)\nassert\
+  #           \ res == 1, \"Expected 1 but got {}\".format(res)"
+  #       - observation: "[Executed Successfully with No Output]"
+  #       - thought: There is no more AssertionError. I can now submit the solution.
+  #       - solution:
+  #           "def min_Num(arr,n):  \r\n    odd = 0\r\n    for i in range(n): \r\n\
+  #           \        if (arr % 2): \r\n            odd += 1 \r\n    if (odd % 2): \r\n\
+  #           \        return 1\r\n    return 2"
+  #     - - task: 'Write a function to find the minimum number of elements that should be
+  #                removed such that amax-amin<=k.
+
+  #                assert removals([1, 3, 4, 9, 10,11, 12, 17, 20], 9, 4) == 5'
+  #       - thought: I should run a solution on the test case before proposing a solution.
+  #       - action: "def find_ind(key, i, n, \r\n\t\t\tk, arr):\r\n\tind = -1\r\n\tstart =\
+  #           \ i + 1\r\n\tend = n - 1;\r\n\twhile (start < end):\r\n\t\tmid = int(start +\r\
+  #           \n\t\t\t\t(end - start) / 2)\r\n\t\tif (arr - key <= k):\r\n\t\t\tind =\
+  #           \ mid\r\n\t\t\tstart = mid + 1\r\n\t\telse:\r\n\t\t\tend = mid\r\n\treturn ind\r\
+  #           \ndef removals(arr, n, k):\r\n\tans = n - 1\r\n\tarr.sort()\r\n\tfor i in range(0,\
+  #           \ n):\r\n\t\tj = find_ind(arr, i, \r\n\t\t\t\t\tn, k, arr)\r\n\t\tif (j !=\
+  #           \ -1):\r\n\t\t\tans = min(ans, n -\r\n\t\t\t\t\t\t(j - i + 1))\r\n\treturn ans\n\
+  #           res = removals([1, 3, 4, 9, 10,11, 12, 17, 20], 9, 4)\nassert res == 5, \"Expected\
+  #           \ 5 but got {}\".format(res)"
+  #       - observation: '[Executed Successfully with No Output]'
+  #       - thought: There is no more AssertionError. I can now submit the solution.
+  #       - solution: "def find_ind(key, i, n, \r\n\t\t\tk, arr):\r\n\tind = -1\r\n\tstart\
+  #           \ = i + 1\r\n\tend = n - 1;\r\n\twhile (start < end):\r\n\t\tmid = int(start\
+  #           \ +\r\n\t\t\t\t(end - start) / 2)\r\n\t\tif (arr - key <= k):\r\n\t\t\t\
+  #           ind = mid\r\n\t\t\tstart = mid + 1\r\n\t\telse:\r\n\t\t\tend = mid\r\n\treturn\
+  #           \ ind\r\ndef removals(arr, n, k):\r\n\tans = n - 1\r\n\tarr.sort()\r\n\tfor\
+  #           \ i in range(0, n):\r\n\t\tj = find_ind(arr, i, \r\n\t\t\t\t\tn, k, arr)\r\
+  #           \n\t\tif (j != -1):\r\n\t\t\tans = min(ans, n -\r\n\t\t\t\t\t\t(j - i + 1))\r\
+  #           \n\treturn ans"
+  #     - - task: 'Write a python function to count hexadecimal numbers for a given range.
+
+  #           assert count_Hexadecimal(10,15) == 6'
+  #       - thought: I should run a solution on the test case before proposing a solution.
+  #       - action: "def count_Hexadecimal(L,R) :  \r\n    count = 0;  \r\n    for i in range(L,R\
+  #           \ + 1) : \r\n        if (i >= 10 and i <= 15) : \r\n            count += 1;\
+  #           \  \r\n        elif (i > 15) : \r\n            k = i;  \r\n            while\
+  #           \ (k != 0) :  \r\n                if (k % 16 >= 10) : \r\n                 \
+  #           \   count += 1;  \r\n                k = k // 16;  \r\n    return count;  \n\
+  #           res = count_Hexadecimal(10,15)\nassert res == 6, \"Expected 6 but got {}\".format(res)"
+  #       - observation: '[Executed Successfully with No Output]'
+  #       - thought: There is no more AssertionError. I can now submit the solution.
+  #       - solution: "def count_Hexadecimal(L,R) :  \r\n    count = 0;  \r\n    for i in\
+  #           \ range(L,R + 1) : \r\n        if (i >= 10 and i <= 15) : \r\n            count\
+  #           \ += 1;  \r\n        elif (i > 15) : \r\n            k = i;  \r\n          \
+  #           \  while (k != 0) :  \r\n                if (k % 16 >= 10) : \r\n          \
+  #           \          count += 1;  \r\n                k = k // 16;  \r\n    return count;\
+  #           \  "
+
+  react_demos:
+    data:
+      - - task: |-
+            Write a function to find the similar elements from the given two tuple lists.
+            assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
+        - thought: |-
+            The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+                res = tuple(set(test_tup1) | set(test_tup2))
+                return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: |-
+            ---------------------------------------------------------------------------
+            AssertionError                            Traceback (most recent call last)
+            Cell In[4], line 5
+                  3     return res
+                  4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+
+            AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
+        - thought: |-
+            To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: "[Executed Successfully with No Output]"
+        - thought: There is no more AssertionError. I can now submit the solution.
+        - solution: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+text:
+  # CoT
+  - if: ${ prompt_pattern == 'cot' }
+    then:
+      - for:
+          example: ${ demonstrations }
+        repeat:
+          text: |+
+            Task: ${ example.question }
+            Solution:
+            ${ example.answer }
+
+      - |
+        Task: ${ prompt }
+        Solution:
+      - model: ${ model }
+        parameters:
+          stop:
+            - "<|endoftext|>"
+          max_tokens: 512
+          include_stop_sequence: false
+          final_prompt_value: ""
+          roles:
+            system:
+              pre_message: ""
+              post_message: ""
+            user:
+              pre_message: ""
+              post_message: ""
+            assistant:
+              pre_message: ""
+              post_message: ""
+        # parameters:
+        #   decoding_method: greedy
+        #   stop:
+        #     - <|endoftext|>
+        #   include_stop_sequence: false
+        #   max_tokens: 1024
+
+  # ReAct
+  - if: ${ prompt_pattern == 'react' }
+    then:
+      # see https://github.com/xingyaoww/mint-bench/blob/main/mint/tasks/in_context_examples/mbpp/with_tool.txt for prompt
+      - include: ../../ReAct.pdl
+      - for:
+          traj: ${ demonstrations }
+        repeat:
+          - call: react_code_block
+            args:
+              trajectory: ${ traj }
+          - "\n"
+      # - "\n"
+      - for:
+          traj: ${ react_demos }
+        repeat:
+          - call: react_code_block
+            args:
+              trajectory: ${ traj }
+          - "\n"
+      - |
+        Task:
+        ${ prompt|trim }
+
+        Assistant:
+        <thought>
+      - defs:
+          temperature: 0.7
+          decoding_method: "sample"
+          SOLUTION: ""
+          iterations: 0
+          max_iterations: 5
+      - repeat:
+          - repeat:
+              - defs:
+                  iterations: ${ iterations+1 }
+              - def: THOUGHT
+                model: ${ model }
+                parameters:
+                  truncate_input_tokens: 8191
+                  repetition_penalty: 1.05
+                  decoding_method: ${ decoding_method }
+                  temperature: ${ temperature }
+                  stop: ["</execute>", "</solution>", "<|endoftext|>"]
+                  include_stop_sequence: true
+                  max_tokens: 1024
+              - if: ${ THOUGHT is none }
+                then:
+                  - def: THOUGHT
+                    text: ""
+            until: ${ THOUGHT.endswith('</execute>') or THOUGHT.endswith('</solution>') or iterations>max_iterations }
+          - if: ${ THOUGHT.endswith('</execute>') }
+            then:
+              - "\n\nObservation ${ iterations}:\n"
+              - lang: ipython
+                contribute: []
+                def: observation
+                code: |
+                  ${ THOUGHT.split('<execute>')[-1].strip('</execute>') or THOUGHT }
+              - ${ (observation|trim|trim('\n')) if observation is not none else '[Executed Successfully with No Output]' }
+              - "\n\nAssistant ${ iterations}:\n<thought>"
+          - if: ${ THOUGHT.endswith('</solution>') }
+            then:
+              - defs:
+                  SOLUTION: ${ THOUGHT.split('<solution>')[-1].strip('</solution>') or THOUGHT }
+
+        until: ${ SOLUTION != '' or iterations>max_iterations }
+      - if: ${ iterations>max_iterations }
+        then: "[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>"
+      - "\nSolution:\n${ SOLUTION|trim }"
+      # - call: react_code_block
+      #   args:
+      #     trajectory: ${ demonstrations[0] }
+  - if: ${ false }
+    then:
+      - |
+        Task:
+        Write a function to find the similar elements from the given two tuple lists.
+        assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
+
+        Assistant:
+        <thought> The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution. </thought>
+        <execute>
+        def similar_elements(test_tup1, test_tup2):
+            res = tuple(set(test_tup1) | set(test_tup2))
+            return res
+        res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+        assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        </execute>
+
+        Observation:
+        ---------------------------------------------------------------------------
+        AssertionError                            Traceback (most recent call last)
+        Cell In[4], line 5
+              3     return res
+              4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+        ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+
+        AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
+
+        Assistant:
+        <thought> To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator. </thought>
+        <execute>
+        def similar_elements(test_tup1, test_tup2):
+            res = tuple(set(test_tup1) & set(test_tup2))
+            return res
+        res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+        assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        </execute>
+
+        Observation:
+        [Executed Successfully with No Output]
+
+        Assistant:
+        <thought> There is no more AssertionError. I can now submit the solution. </thought>
+        <solution>
+        def similar_elements(test_tup1, test_tup2):
+            res = tuple(set(test_tup1) & set(test_tup2))
+            return res
+        </solution>
+      - "\n"
+      - |
+        Task:
+        ${ prompt|trim }
+
+        Assistant:
+        <thought>
+      - defs:
+          temperature: 0.7
+          decoding_method: "sample"
+          SOLUTION: ""
+          iterations: 0
+          max_iterations: 5
+      - repeat:
+          - repeat:
+              - defs:
+                  iterations: ${ iterations+1 }
+              - def: THOUGHT
+                model: ${ model }
+                parameters:
+                  truncate_input_tokens: 8191
+                  repetition_penalty: 1.05
+                  decoding_method: ${ decoding_method }
+                  temperature: ${ temperature }
+                  stop: ["</execute>", "</solution>", "<|endoftext|>"]
+                  include_stop_sequence: true
+              - if: ${ THOUGHT is none }
+                then:
+                  - def: THOUGHT
+                    text: ""
+            until: ${ THOUGHT.endswith('</execute>') or THOUGHT.endswith('</solution>') or iterations>max_iterations }
+          - if: ${ THOUGHT.endswith('</execute>') }
+            then:
+              - "\n\nObservation ${ iterations}:\n"
+              - lang: ipython
+                # contribute: []
+                def: observation
+                code: |
+                  print("EXECUTING CODE!!")
+                  ${ THOUGHT.split('<execute>')[-1].strip('</execute>') or THOUGHT }
+                  print("EXECUTED CODE!!!")
+              - ${ (observation|trim|trim('\n')) if observation is not none else '' }
+              - "\n\nAssistant ${ iterations}:\n<thought>"
+          - if: ${ THOUGHT.endswith('</solution>') }
+            then:
+              - defs:
+                  SOLUTION: ${ THOUGHT.split('<solution>')[-1].strip('</solution>') or THOUGHT }
+
+        until: ${ SOLUTION != '' or iterations>max_iterations }
+      - if: ${ iterations>max_iterations }
+        then: "[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>"
+      - "\nSolution:\n${ SOLUTION|trim }"
+
+  # WITH FEEDBACK
+  # Task:
+  # Write a function to find the similar elements from the given two tuple lists.
+  # assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
+
+  # Assistant:
+  # <thought> The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution. </thought>
+  # <execute>
+  # def similar_elements(test_tup1, test_tup2):
+  #     res = tuple(set(test_tup1) | set(test_tup2))
+  #     return res
+  # res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+  # assert res == (4, 5), "Expected (4, 5) but got {}.format(res)
+  # </execute>
+
+  # Observation:
+  # ---------------------------------------------------------------------------
+  # AssertionError                            Traceback (most recent call last)
+  # Cell In[4], line 5
+  #       3     return res
+  #       4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+  # ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}.format(res)
+
+  # AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
+
+  # Expert feedback:
+  # This is BAD. You should not use the | operator which is the union operator.
+
+  # Assistant:
+  # <thought> To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator. </thought>
+  # <execute>
+  # def similar_elements(test_tup1, test_tup2):
+  #     res = tuple(set(test_tup1) & set(test_tup2))
+  #     return res
+  # res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+  # assert res == (4, 5), "Expected (4, 5) but got {}.format(res)
+  # </execute>
+
+  # Observation:
+  # [Executed Successfully with No Output]
+
+  # Expert feedback:
+  # This is GOOD. You are doing great! You can try to submit the solution now.
+
+  # Assistant:
+  # <thought> There is no more AssertionError. I can now submit the solution. </thought>
+  # <solution>
+  # def similar_elements(test_tup1, test_tup2):
+  #     res = tuple(set(test_tup1) & set(test_tup2))
+  #     return res
+  # </solution>

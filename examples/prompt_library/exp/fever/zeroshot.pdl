@@ -1,0 +1,12 @@
+description: Demo of CoT template
+defs:
+  question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+  model: "watsonx/ibm/granite-34b-code-instruct"
+text:
+  - include: ../../CoT.pdl
+  - "Answer the questions to the best of your abilities.\n\n"
+  - call: chain_of_thought
+    args:
+      examples: []
+      question: "${ question }"
+      model: "${ model }"

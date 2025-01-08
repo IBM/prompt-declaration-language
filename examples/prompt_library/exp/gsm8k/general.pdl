@@ -1,0 +1,234 @@
+description: Demo of template
+defs:
+  cot_demos:
+    data:
+      - question: |-
+          Noah charges $60 for a large painting and $30 for a small painting.
+          Last month he sold eight large paintings and four small paintings.
+          If he sold twice as much this month, how much is his sales for this month?
+        reasoning: |-
+          He sold 8 large paintings and 4 small paintings last month.
+          He sold twice as many this month.
+          8 large paintings x $60 = << 8*60= 480 >> 480
+          4 small paintings x $30 = << 4*30= 120 >> 120
+          So he sold << 480+120= 600 >> 600 paintings last month.
+          Therefore he sold << 600*2= 1200 >> this month.
+        answer: $1200
+      - question: |-
+          Noah charges $30 for a large vases and $10 for a small vases.
+          Last month he sold five large vases and three small vases.
+          If he sold three times as much this month, how much is his sales for this month?
+        reasoning: |-
+          He sold 5 large vases and 3 small vases last month.
+          He sold three times as many this month.
+          5 large vases x $30 = << 5*30= 150 >> 150
+          3 small vases x $10 = << 3*10= 30 >> 30
+          So he sold << 150+30= 180 >> 180 vases last month.
+          Therefore he sold << 180*3= 540 >> this month.
+        answer: $540
+  react_demos:
+    data:
+      - - question: Noah charges $60 for a large painting and $30 for a small painting.  Last month he sold eight large paintings and four small paintings.  If he sold twice as much this month, how much is his sales for this month?
+        - thought: He sold 8 large paintings and 4 small paintings last month.  He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+        - action: Calculator[8*60+4*30]
+        - observation: 600
+        - thought: He sold twice as many paintings this month, therefore I need to calculate 600*2.
+        - action: Calculator[600*2]
+        - observation: 1200
+        - thought: He sold $1200 this month.
+        - action: Finish[$1200]
+      - - question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+        - thought: I need to calculate the difference in age between Teresa and Morio.
+        - action: Calculator[71-59]
+        - observation: 12
+        - thought: I need to calculate how old Teresa is when their daughter is born.
+        - action: Calculator[38-12]
+        - observation: 26
+        - thought: Teresa was 26 when she gave birth to Michiko.
+        - action: Finish[26]
+      - - question: Mr. Roper cuts his lawn 15 days a month beginning in April and ending in September. From October to the end of March he cuts his lawn three times a month.  What is the average number of times that Mr. Roper cuts his yard per month?
+        - thought: For 6 months of the year he cuts his yard 15 days per month. I need to calculate how  many times he cuts his yard in this period.
+        - action: Calculator[6*15]
+        - observation: 90
+        - thought: For the remaining 6 months of the year, he cuts his yard three times a month so I need to calculate how many times he cuts his yard in that period.
+        - action: Calculator[6*13]
+        - observation: 18
+        - thought: He cuts his yard 90 times for part of the year and 18 times for the rest of the year, so I need to calculate the total.
+        - action: Calculator[90+18]
+        - observation: 108
+        - thought: There are 12 months in a year and he cuts his yard 108 times so I need  to calculate the monthly average.
+        - action: Calculator[108/12]
+        - observation: 9
+        - action: Finish[9]
+      - - question: Leila spent $40 which is 1/4 of her money on a sweater. She was then left with $20 after spending the rest of her money on buying pieces of jewelry. How much more did Leila spend on jewelry than on the sweater?
+        - thought: Since 1/4 of her money is $40, I need to calculate how much Leila originally had.
+        - action: Calculator[40*4]
+        - observation: 160
+        - thought: I need to calculate how much was left after buying a sweater.
+        - action: Calculator[160-40]
+        - observation: 120
+        - thought: $120 was left after buying a sweater. Since she is left with $20, I need to calculate  how much she spent on jewelry.
+        - action: Calculator[100-40]
+        - observation: 60
+        - thought: She spent $60 more for jewelry than on a sweater.
+        - action: Finish[60]
+  rewoo_demos:
+    data:
+      - - question: >-
+            Noah charges $60 for a large painting and $30 for a small painting.
+            Last month he sold eight large paintings and four small paintings.
+            If he sold twice as much this month, how much is his sales for this month?
+        - thought: >-
+            He sold 8 large paintings and 4 small paintings last month.
+            He sold twice as many this month. Calculate (8 large paintings x $60 + 4 small paintings x $30)
+        - action: Calculator[8*60+4*30]
+        - observation: 600
+        - thought: >-
+            He sold twice as many paintings this month. Calculate #E1*2
+        - action: Calculator[#E1*2]
+        - observation: 1200
+        # - thought: He sold $1200 this month.
+        # - action: Finish[$1200]
+      - - question: >-
+            Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko
+            was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+        - thought: Calculate the difference in age between Teresa and Morio.
+        - action: "Calculator[71-59]"
+        - observation: 12
+        - thought: Calculate how old Teresa is when their daughter is born.
+        - action: "Calculator[38-#E1]"
+        - observation: 26
+        # - thought: "Teresa was 26 when she gave birth to Michiko."
+        # - action: "Finish[26]"
+      - - question: >-
+            Mr. Roper cuts his lawn 15 days a month beginning in April and ending
+            in September. From October to the end of March he cuts his lawn three times a
+            month. What is the average number of times that Mr. Roper cuts his yard per month?
+        - thought: >-
+            For 6 months of the year he cuts his yard 15 days per month.
+            Calculate how many times he cuts his yard in this period.
+        - action: "Calculator[6*15]"
+        - observation: 90
+        - thought: >-
+            For the remaining 6 months of the year, he cuts his yard three times a month.
+            Calculate how many times he cuts his yard in that period.
+        - action: "Calculator[6*13]"
+        - observation: 18
+        - thought: >-
+            He cuts his yard #E1 times for part of the year and #E2 times for the rest of the
+            year, so I need to calculate the total.
+        - action: "Calculator[#E1+#E2]"
+        - observation: 108
+        - thought: >-
+            There are 12 months in a year and he cuts his yard #E3 times.
+            Calculate the monthly average.
+        - action: "Calculator[#E3/12]"
+        - observation: 9
+        # - action: "Finish[9]"
+      - - question: >-
+            Leila spent $40 which is 1/4 of her money on a sweater. She was then left
+            with $20 after spending the rest of her money on buying pieces of jewelry. How
+            much more did Leila spend on jewelry than on the sweater?
+        - thought: >-
+            1/4 of her money is $40. Calculate how much Leila originally had.
+        - action: "Calculator[40*4]"
+        - observation: 160
+        - thought: "Calculate how much was left after buying a sweater."
+        - action: "Calculator[#E1-40]"
+        - observation: 120
+        - thought: >-
+            #E2 was left after buying a sweater. She is left with $20.
+            Calculate how much she spent on jewelry.
+        - action: "Calculator[#E2-20-40]"
+        - observation: 60
+        # - thought: "She spent $60 more for jewelry than on a sweater."
+        # - action: "Finish[60]"
+
+  math_tools:
+    data:
+      # - display_name: Calculator
+      #   pdl_function: Calculator
+      #   description: Evaluates expressions using Python
+      #   parameters:
+      #     - name: expr
+      #       type: string
+      #       description: The mathematical expression to evaluate with a Python interpreter.
+      #   examples: []
+      - display_name: Calc
+        pdl_function: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expr
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+
+        # - name: Calculator
+        #   display_name: Calculator
+        #   pdl_function: Calculator
+        #   description: Evaluates expressions using Python
+        #   parameters:
+        #     - name: expression
+        #       type: string
+        #       description: The mathematical expression to evaluate with a Python interpreter.
+        #   examples: []
+  # optimized: ""
+  # demos:
+  #   for:
+  #     demonstration: "${ static }"
+  #   repeat:
+  #     data:
+  #       question: "${ demonstration.question }"
+  #       reasoning: "${ demonstration.reasoning|trim }"
+  #       answer: "${ demonstration.answer|string }"
+
+  # prompt_pattern: "cot" #| "react" | "rewoo"
+  # question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+  # model: "watsonx/ibm/granite-34b-code-instruct"
+text:
+  # - role: system
+  #   content: |-
+
+  #     Cutting Knowledge Date: December 2023
+  #     Today Date: 23 July 2024
+
+  #     You are a helpful assistant
+  # CoT
+  - if: "${ prompt_pattern == 'cot' }"
+    then:
+      - include: ../../CoT.pdl
+      - "Answer the questions to the best of your abilities.\n\n"
+      - call: chain_of_thought
+        args:
+          examples: "${ demonstrations }"
+          question: "${ question|trim }"
+          model: "${ model }"
+
+  # ReAct
+  - if: "${ prompt_pattern == 'react' }"
+    then:
+      - include: ../../tools.pdl
+      - include: ../../ReAct.pdl
+      - call: react
+        def: ANSWER
+        args:
+          task: "Question: ${ question|trim }"
+          model: "${ model }"
+          tools: "${ math_tools }"
+          trajectories: "${ demonstrations }"
+      - "\nThe answer is ${ ANSWER.answer|trim }"
+
+  # ReWOO
+  - if: "${ prompt_pattern == 'rewoo' }"
+    then:
+      - include: ../../tools.pdl
+      - include: ../../ReWoo.pdl
+      - call: rewoo
+        def: ANSWER
+        args:
+          task: "Task: ${ question }"
+          model: "${ model }"
+          tools: "${ math_tools }"
+          trajectories: "${ demonstrations }"
+          show_plans: false
+      - "\nThe answer is ${ ANSWER.answer|trim }"

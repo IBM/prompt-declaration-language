@@ -1,0 +1,123 @@
+description: Demo of ReAct template fever
+defs:
+  search_tools_react:
+    data:
+    - name: Search ReAct
+      display_name: Search
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+      - name: topic
+        type: string
+        description: The topic of interest
+      examples: []
+  search_tools_rewoo:
+    data:
+    - name: Search ReWOO
+      display_name: Search
+      pdl_function: Search
+      description: Search Wikipedia for a summary
+      parameters:
+      - name: topic
+        type: string
+        description: The topic of interest
+      examples: []
+  task: |-
+    Task: On June 2017, the following claim was made: ${ claim }
+    Q: Was this claim true or false?
+  model: watsonx/ibm/granite-34b-code-instruct
+  prompt_pattern: rewoo
+  demonstrations:
+    data:
+    - - task: |-
+          On June 2017, the following claim was made: Winter's Tale is a novella.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Winter's Tale (novel).
+      - action: '{"name": "Search", "arguments": {"topic": "Winter''s Tale (novel)"}}'
+      - observation: |-
+          [Document]
+          Winter's Tale is a 1983 magic realism novel by Mark Helprin. It takes place in a mythic New York City, markedly different from reality, and in an industrial Edwardian era near the turn of the 20th century. Akiva Goldsman wrote a screenplay based on the novel and directed a feature film from the script, which was released in 2014.
+          [End]
+      - observation: Winter 's Tale is a 1983 novel by Mark Helprin .
+    - - task: |-
+          On June 2017, the following claim was made: A Floppy disk is sealed in plastic.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Floppy disk.
+      - action: '{"name": "Search", "arguments": {"topic": "Floppy disk"}}'
+      - observation: |-
+          [Document]
+          A floppy disk or floppy diskette (casually referred to as a floppy, a diskette, or a disk) is a type of disk storage composed of a thin and flexible disk of a magnetic storage medium in a square or nearly square plastic enclosure lined with a fabric that removes dust particles from the spinning disk. The three most popular (and commercially available) floppy disks are the 8-inch, 5¼-inch, and 3½-inch floppy disks. Floppy disks store digital data which can be read and written when the disk is inserted into a floppy disk drive (FDD) connected to or inside a computer or other device.
+          The first floppy disks, invented and made by IBM in 1971, had a disk diameter of 8 inches (203.2 mm). Subsequently, the 5¼-inch (133.35 mm) and then the 3½-inch (88.9 mm) became a ubiquitous form of data storage and transfer into the first years of the 21st century. 3½-inch floppy disks can still be used with an external USB floppy disk drive. USB drives for 5¼-inch, 8-inch, and other-size floppy disks are rare to non-existent. Some individuals and organizations continue to use older equipment to read or transfer data from floppy disks.
+          Floppy disks were so common in late 20th-century culture that many electronic and software programs continue to use save icons that look like floppy disks well into the 21st century, as a form of skeuomorphic design. While floppy disk drives still have some limited uses, especially with legacy industrial computer equipment, they have been superseded by data storage methods with much greater data storage capacity and data transfer speed, such as USB flash drives, memory cards, optical discs, and storage available through local computer networks and cloud storage.
+          [End]
+      - observation: A floppy disk , also called a floppy , diskette or just disk , is a type of disk storage composed of a disk of thin and flexible magnetic storage medium , sealed in a rectangular plastic enclosure lined with fabric that removes dust particles .
+    - - task: |-
+          On June 2017, the following claim was made: English people are descended from the Romans, as a result of migration.
+          Q: Was this claim true or false?
+      - thought: Search for more information about English people.
+      - action: '{"name": "Search", "arguments": {"topic": "English people"}}'
+      - observation: |-
+          [Document]
+          The English people are an ethnic group and nation native to England, who speak the English language, a West Germanic language, and share a common ancestry, history, and culture. The English identity began with the Anglo-Saxons, when they were known as the Angelcynn, meaning race or tribe of the Angles. Their ethnonym is derived from the Angles, one of the Germanic peoples who invaded Britain around the 5th century AD.
+          The English largely descend from two main historical population groups: the West Germanic tribes, including the Angles, Saxons, and Jutes who settled in Southern Britain following the withdrawal of the Romans, and the partially Romanised Celtic Britons who already lived there. Collectively known as the Anglo-Saxons, they founded what was to become the Kingdom of England by the 10th century, in response to the invasion and extensive settlement of Danes and other Norsemen that began in the late 9th century. This was followed by the Norman Conquest and limited settlement of Normans in England in the late 11th century and a sizeable number of French Protestants who emigrated between the 16th and 18th centuries. Some definitions of English people include, while others exclude, people descended from later migration into England.
+          England is the largest and most populous country of the United Kingdom. The majority of people living in England are British citizens. In the Acts of Union 1707, the Kingdom of England and the Kingdom of Scotland merged to become the Kingdom of Great Britain. Over the years, English customs and identity have become fairly closely aligned with British customs and identity in general. The demonyms for men and women from England are Englishman and Englishwoman.
+          [End]
+      - observation: Historically , the English population is descended from several peoples -- the earlier Britons (or Brythons) and the Germanic tribes that settled in Britain following the withdrawal of the Romans , including Angles , Saxons , Jutes and Frisians .
+    - - task: |-
+          On June 2017, the following claim was made: James Jones missed the playoffs once in 2007-2008.
+          Q: Was this claim true or false?
+      - thought: Search for more information about James Jones (basketball player).
+      - action: '{"name": "Search", "arguments": {"topic": "James Jones (basketball player)"}}'
+      - observation: |-
+          [Document]
+          James Andrew Jones (born October 4, 1980) is an American professional basketball executive and former player. He is both the president of basketball operations and general manager for the Phoenix Suns. He played 14 seasons in the National Basketball Association (NBA).
+          Jones was a four-year letterman at American High School in Hialeah, Florida. He averaged 25 points per game as a senior, earning Class 6A Player of the Year and First-team All-State honors. He then played college basketball for the Miami Hurricanes of the University of Miami, where he was a three-year starter and finished his career averaging 11 points per game. Jones was named Third-team All-Big East his junior year and Second-team Verizon Academic All-American his senior year. He was inducted into the University of Miami Sports Hall of Fame in 2014.
+          Jones was drafted by the Indiana Pacers in the second round of the 2003 NBA draft. He went on to play for the Pacers, Phoenix Suns, Portland Trail Blazers, Miami Heat and Cleveland Cavaliers. He won three NBA championships, two with the Heat and one with the Cavaliers. He and teammate LeBron James reached the NBA Finals for seven consecutive years from 2011 to 2017. Jones was never on an NBA team with a losing record and only missed the playoffs once—with the Trail Blazers in 2007–08. He finished third in the NBA in three-point percentage during the 2007–08 season and won the Three-Point Contest in 2011. His nickname is "Champ".
+          In July 2017, Jones was named the director of player personnel for the Suns. He was promoted to general manager in April 2019. After the Suns reached the playoffs for the first time since 2010, Jones was named the 2020–21 NBA Executive of the Year. He was later promoted to president of basketball operations and general manager after the team won a franchise-record 64 regular season games during the 2021–22 season.
+          [End]
+      - observation: Jones has never been on an NBA team with a losing record and has only missed the playoffs once -- with the Trail Blazers in 2007 -- 08 .
+    - - task: |-
+          On June 2017, the following claim was made: Congressional Space Medal of Honor is the highest award given only to astronauts by NASA.
+          Q: Was this claim true or false?
+      - thought: Search for more information about Congressional Space Medal of Honor.
+      - action: '{"name": "Search", "arguments": {"topic": "Congressional Space Medal of Honor"}}'
+      - observation: |-
+          [Document]
+          The Congressional Space Medal of Honor was authorized by the United States Congress in 1969 to recognize "any astronaut who in the performance of his or her duties has distinguished himself or herself by exceptionally meritorious efforts and contributions to the welfare of the Nation and mankind". It's awarded by the President of the United States in Congress's name on recommendations from the Administrator of the National Aeronautics and Space Administration. The award is a separate decoration from the Medal of Honor, which is a military award for extreme bravery and gallantry in combat.
+          While the Congressional Space Medal of Honor is a civilian award of the United States government, it is authorized as a non-military decoration for display on U.S. military uniforms because it is awarded by a federal agency. In such cases, the Congressional Space Medal of Honor is worn as a ribbon "immediately preceding the Prisoner of War Medal". DoD policy specifically prohibits wear of any non-military awards for valor or service, but the Congressional Space Medal of Honor only recognizes meritorious achievement, so it does not fall under this prohibition.
+          To be awarded the Congressional Space Medal of Honor, an astronaut must perform feats of extraordinary accomplishment while participating in space flight under the authority of NASA. Typically, the Congressional Space Medal of Honor is awarded for scientific discoveries or actions of tremendous benefit to mankind. The decoration may also be awarded for extreme bravery during a space emergency or in preventing a major space disaster, or posthumously to those astronauts who die while performing a U.S. space mission. As of 2022, all 17 astronauts killed on US missions had been awarded the medal.
+          President George W. Bush awarded the most CSMOH with 16; 14 of them posthumous for crews of the two destroyed space shuttle flights, Challenger and Columbia. President Joe Biden awarded the CSMOH to Crew Dragon Demo-2 members Doug Hurley and Bob Behnken on January 31, 2023. The 16-year hiatus from April 2006 to January 2023 is the longest gap between awards.
+          [End]
+      - observation: To be awarded the Congressional Space Medal of Honor , an astronaut must perform feats of extraordinary accomplishment while participating in space flight under the authority of NASA .
+      - observation: The highest award given by NASA , it is awarded by the President of the United States in Congress 's name on recommendations from the Administrator of the National Aeronautics and Space Administration .
+text:
+- include: ../../tools.pdl
+- if: ${ prompt_pattern == 'cot' }
+  then:
+  - include: ../../CoT.pdl
+  - call: chain_of_thought_claim
+    args:
+      examples: ${ demonstrations }
+      question: ${ task }
+      model: ${ model }
+- if: ${ prompt_pattern == 'react' }
+  then:
+  - include: ../../ReAct.pdl
+  - def: ANSWER
+    call: react
+    args:
+      task: ${ task }
+      model: ${ model }
+      tools: ${ search_tools_react }
+      trajectories: ${ demonstrations }
+- if: ${ prompt_pattern == 'rewoo' }
+  then:
+  - include: ../../ReWoo.pdl
+  - def: ANSWER
+    call: rewoo
+    args:
+      task: ${ task }
+      model: ${ model }
+      tools: ${ search_tools_rewoo }
+      trajectories: ${ demonstrations }
+      show_plans: false
