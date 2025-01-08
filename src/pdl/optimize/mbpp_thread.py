@@ -1,4 +1,5 @@
 import ast
+from pprint import pprint
 from typing import Any
 
 from evalplus.evaluate import check_correctness
@@ -23,6 +24,7 @@ class MBPPTrialThread(PDLThread):
         scope["prompt_pattern"] = self.candidate["prompt_pattern"]
         match self.candidate["prompt_pattern"]:
             case "cot":
+                scope["prompt"] = self.example["prompt"]#.strip('"""').strip().strip('"""').strip()
                 scope["demonstrations"] = [
                     {
                         "question": q["prompt"],
@@ -31,6 +33,8 @@ class MBPPTrialThread(PDLThread):
                     for q in self.candidate["demonstrations"]
                 ]
             case "react":
+                scope["prompt"] = self.example["react_prompt"]
+                # pprint(self.candidate["demonstrations"])
                 scope["demonstrations"] = [
                     [
                         {key: value}
@@ -42,26 +46,19 @@ class MBPPTrialThread(PDLThread):
                     ]
                     for q in self.candidate["demonstrations"]
                 ]
-            case "rewoo":
-                scope["demonstrations"] = [
-                    [
-                        {key: value}
-                        for key, value in zip(
-                            q["rewoo_traj_keys"],
-                            q["rewoo_traj_values"],
-                            strict=True,
-                        )
-                    ]
-                    for q in self.candidate["demonstrations"]
-                ]
 
-        scope["prompt"] = self.example["prompt"]
         scope["task_id"] = self.example["task_id"]
 
         return scope
 
     def extract_answer(self, document: str) -> bool:
-        return document.split("Solution:\n")[-1]
+        solution = document.split("Solution:\n")[-1]
+        if "```" in solution:
+            solution = solution.replace("```python", "```")
+            solution = solution.split("```")[1]
+        solution = solution.strip()
+        # print("Solution IN THREAD:", solution)
+        return solution
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         if answer is None or not isinstance(answer, str):
@@ -107,25 +104,27 @@ class MBPPTrialThread(PDLThread):
             # return [inputs[len(details) - 1]]
 
         base_stat, base_details = result["base"]
-        get_failed_tests(
+        base_fail_tests = get_failed_tests(
             base_stat,
             base_details,
             self.example["base_input"],
             self.example["expected_output"].get("base"),
         )
-        # if len(base_fail_tests) > 0:
-        #     print(base_fail_tests)
+        if len(base_fail_tests) > 0:
+            pass #print(self.example["task_id"], base_fail_tests)
 
         plus_stat, plus_details = result["plus"]
-        get_failed_tests(
+        plus_fail_tests = get_failed_tests(
             plus_stat,
             plus_details,
             self.example["plus_input"],
             self.example["expected_output"].get("plus"),
         )
-        # if len(plus_fail_tests) > 0:
-        # print(self.example["task_id"], plus_fail_tests)
-        return result["base"][0] == "pass" and result["plus"][0] == "pass"
+        if len(plus_fail_tests) > 0:
+            pass #print(self.example["task_id"], plus_fail_tests)
+
+        return base_stat == "pass" and plus_stat == "pass"
+        #result["base"][0] == "pass" and result["plus"][0] == "pass"
         # if not passing_both:
         #     print(
         #         "FAIL",

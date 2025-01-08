@@ -1,14 +1,20 @@
+from contextlib import contextmanager
 import json
 import logging
+import multiprocess
 import re
 import shlex
+import signal
 import subprocess
 import sys
 import types
 
 # from itertools import batched
 from pathlib import Path
-from typing import Any, Generator, Optional, Sequence, TypeVar
+from typing import Any, Generator, Mapping, Optional, Sequence, TypeVar
+from warnings import filterwarnings
+from IPython.core.interactiveshell import InteractiveShell
+from IPython.utils import io
 
 import litellm
 import yaml
@@ -133,6 +139,7 @@ class InterpreterState(BaseModel):
     # batch=1: call to generate with `input`
     role: RoleType = "user"
     cwd: Path = Path.cwd()
+    pdl_total_tokens: int = 0
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -213,6 +220,7 @@ def process_prog(
     scope: ScopeType,
     prog: Program,
     loc: LocationType = empty_block_location,
+    timeout: int | None = None,
 ) -> tuple[Any, Messages, ScopeType, BlocksType]:
     """Execute a PDL program.
 
@@ -232,7 +240,7 @@ def process_prog(
     doc_generator = step_blocks(
         IterationType.LASTOF, state, scope, blocks=prog.root, loc=loc
     )
-    for result, document, final_scope, trace in schedule([doc_generator]):
+    for result, document, final_scope, trace in schedule([doc_generator], timeout=timeout):
         return result, document, final_scope, trace
     assert False
     # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
@@ -318,6 +326,7 @@ def step_advanced_block(
         result, background, scope, trace = yield from step_block_body(
             state, scope, block, loc
         )
+        pass
     except PDLRuntimeError as exc:
         if block.fallback is None:
             raise exc from exc
@@ -828,6 +837,7 @@ def step_blocks(
                     t,
                 ) = yield from step_block(iteration_state, scope, block, new_loc)
                 results.append(iteration_result)
+                pass # still in scope here
                 background = messages_concat(background, iteration_background)
                 trace.append(t)  # type: ignore
         except PDLRuntimeError as exc:
@@ -1056,12 +1066,19 @@ def step_call_model(
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
         msg = yield from generate_client_response(state, concrete_block, model_input)
+
+        if "pdl_total_tokens" in scope:
+            scope["pdl_total_tokens"] += state.pdl_total_tokens
+        else:
+            scope["pdl_total_tokens"] = state.pdl_total_tokens
+        tokens = f"**** Token count: {state.pdl_total_tokens:,}\n"
         if "input" in litellm_params:
-            append_log(state, "Model Input", litellm_params["input"])
+            append_log(state, "Model Input", tokens + litellm_params["input"])
         else:
             append_log(
-                state, "Model Input", messages_to_str(concrete_block.model, model_input)
+                state, "Model Input", tokens + messages_to_str(concrete_block.model, model_input)
             )
+
         background: Messages = [msg]
         result = msg["content"]
         append_log(state, "Model Output", result)
@@ -1174,6 +1191,7 @@ def generate_client_response_single(
                 model_id=block.model,
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(block.parameters),
+                state=state,
             )
     if state.yield_result:
         yield YieldResultMessage(msg["content"])
@@ -1227,6 +1245,16 @@ def step_call_code(
         case "python":
             try:
                 result = call_python(code_s, scope)
+                background = [{"role": state.role, "content": str(result)}]
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
+        case "ipython":
+            try:
+                result = call_ipython(code_s, scope)
                 background = [{"role": state.role, "content": str(result)}]
             except Exception as exc:
                 raise PDLRuntimeError(
@@ -1489,5 +1517,170 @@ def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
 
 
 def append_log(state: InterpreterState, title, somestring):
+    return
+    # pass
+    if title not in [
+        "Model Input",
+        "Model Output"
+        ]:
+        return
     logger.warning("**********  %s  **********", title)
     logger.warning(str(somestring))
+
+# litellm.set_verbose=True
+
+# class PythonREPL:
+#     """A tool for running python code in a REPL."""
+
+#     name = "PythonREPL"
+#     # This PythonREPL is not used by the environment; It is THE ENVIRONMENT.
+#     signature = "NOT_USED"
+#     description = "NOT_USED"
+
+#     def __init__(
+#         self,
+#         name_to_func_mapping: Mapping[str, callable],
+#         timeout: int = 30,
+#     ) -> None:
+#         super().__init__()
+#         self.user_ns = name_to_func_mapping
+#         self.timeout = timeout
+#         filterwarnings("ignore", "Attempting to work in a virtualenv")
+#         self.reset()
+
+#     def reset(self) -> None:
+#         # InteractiveShell.clear_instance()
+#         self.shell = InteractiveShell.instance(
+#             # NOTE: shallow copy is needed to avoid
+#             # shell modifying the original user_ns dict
+#             user_ns=dict(self.user_ns),
+#             colors="NoColor",
+#         )
+
+#         # disable certain function (for some rare weird cases where the tested model would try to set recursion limit and cause segfault)
+#         _ = self.__call__(
+#             "import sys; sys.setrecursionlimit = lambda *args, **kwargs: print('Setting recursion limit is disabled')",
+#         )
+
+#     @contextmanager
+#     def time_limit(self, seconds):
+#         def signal_handler(signum, frame):
+#             raise TimeoutError(f"Timed out after {seconds} seconds.")
+
+#         signal.signal(signal.SIGALRM, signal_handler)
+#         signal.alarm(seconds)
+#         try:
+#             yield
+#         finally:
+#             signal.alarm(0)  # Disable the alarm
+
+#     def __call__(self, query: str) -> str:
+#         """Use the tool and return observation."""
+#         # with self.time_limit(self.timeout):
+#         # NOTE: The timeout error will be caught by the InteractiveShell
+
+#         # Capture all output
+#         with io.capture_output() as captured:
+#             _ = self.shell.run_cell(query, store_history=False, silent=True)
+#         self.shell.cleanup()
+#         output = captured.stdout
+
+#         if output == "":
+#             output = "[Executed Successfully with No Output]"
+
+#         # replace potentially sensitive filepath
+#         # e.g., File /mint/mint/tools/python_tool.py:30, in PythonREPL.time_limit.<locals>.signal_handler(signum, frame)
+#         # with File <filepath>:30, in PythonREPL.time_limit.<locals>.signal_handler(signum, frame)
+#         # use re
+#         output = re.sub(
+#             # r"File (/mint/)mint/tools/python_tool.py:(\d+)",
+#             r"File .*Projects/pdl/repl.py:(\d+)",
+#             r"File <hidden_filepath>:\1",
+#             output,
+#         )
+#         if len(output) > 2000:
+#             output = output[:2000] + "...\n[Output Truncated]"
+
+#         return output
+
+
+# def call_ipython(code: str, scope: dict) -> Any:
+#     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
+#     shell = PythonREPL(
+#         name_to_func_mapping=my_namespace.__dict__,
+#         timeout=5,
+#     )
+#     return shell(code)
+
+class PythonREPL:
+    """A tool for running python code in a REPL using multiprocessing."""
+
+    name = "PythonREPL"
+    signature = "NOT_USED"
+    description = "NOT_USED"
+
+    def __init__(
+        self,
+        name_to_func_mapping: Mapping[str, callable],
+        timeout: int = 30,
+    ) -> None:
+        super().__init__()
+        self.user_ns = name_to_func_mapping
+        self.timeout = timeout
+        filterwarnings("ignore", "Attempting to work in a virtualenv")
+        self.reset()
+
+    def reset(self) -> None:
+        self.shell = InteractiveShell.instance(
+            user_ns=dict(self.user_ns),
+            colors="NoColor",
+        )
+        # Disable certain functions for safety
+        _ = self.__call__(
+            "import sys; sys.setrecursionlimit = lambda *args, **kwargs: print('Setting recursion limit is disabled')"
+        )
+
+    @staticmethod
+    def _run_code_in_process(code: str, namespace: dict, timeout: float) -> str:
+        """
+        Function to run the given code in a separate process.
+        """
+        def target(return_dict):
+            try:
+                shell = InteractiveShell.instance(user_ns=namespace, colors="NoColor")
+                with io.capture_output() as captured:
+                    _ = shell.run_cell(code, store_history=False, silent=True)
+                shell.cleanup()
+                output = captured.stdout or "[Executed Successfully with No Output]"
+                output = re.sub(r"File .*Projects/pdl/repl.py:(\d+)", r"File <hidden_filepath>:\1", output)
+                return_dict["output"] = output[:2000] + "...\n[Output Truncated]" if len(output) > 2000 else output
+            except Exception as e:
+                return_dict["output"] = f"Error: {str(e)}"
+
+        # Shared dictionary to store the output
+        manager = multiprocess.Manager()
+        return_dict = manager.dict()
+
+        process = multiprocess.Process(target=target, args=(return_dict,))
+        process.start()
+        process.join(timeout)
+
+        if process.is_alive():
+            process.terminate()
+            return "TimeoutError: Execution exceeded the time limit."
+
+        return return_dict.get("output", "Error: Unknown error occurred.")
+
+    def __call__(self, query: str) -> str:
+        """Use the tool and return observation by executing in a separate process."""
+        namespace = dict(self.user_ns)  # Shallow copy of the namespace
+        return self._run_code_in_process(query, namespace, self.timeout)
+
+
+def call_ipython(code: str, scope: dict) -> Any:
+    my_namespace = types.SimpleNamespace(**scope)
+    shell = PythonREPL(
+        name_to_func_mapping=my_namespace.__dict__,
+        timeout=5,
+    )
+    return shell(code)

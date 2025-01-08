@@ -1,3 +1,4 @@
+import itertools
 import json
 import string
 import sys
@@ -22,7 +23,21 @@ from pdl.optimize.util import (
     execute_threads,
 )
 from pdl.pdl_ast import DataBlock, Program
-from pdl.pdl_dumper import dump_program
+from pdl.pdl_dumper import dump_yaml
+
+# from pdl.pdl_dumper import dump_program
+
+
+def dump_program(program):
+    return dump_yaml(
+        program.model_dump(
+            mode="json",
+            exclude_defaults=True,
+            exclude_none=True,
+            by_alias=True,
+        )
+    )
+
 
 rng = default_rng()
 
@@ -34,6 +49,7 @@ class BudgetPolicy(Enum):
 
 
 class PDLOptimizer:
+    # pylint: disable=too-many-instance-attributes,too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
         pdl_path: Path,
@@ -78,12 +94,15 @@ class PDLOptimizer:
         self.budget_growth = config.budget_growth
         self.train_set_name = config.train_set_name
         self.test_set_name = config.test_set_name
+        self.validation_set_name = config.validation_set_name
         self.budget = config.budget
         self.shuffle_test = config.shuffle_test
 
         self.experiment_path = experiment_path
-        self.experiment_uuid = self.random_uuid()
+        self.experiment_uuid = config.experiment_prefix + self.random_uuid()
         self.experiment_log = {"iterations": []}
+        self.pbar = None
+        self.candidate_results = {}
 
         # Load
         self.dataset = dataset  # load_dataset(self.dataset_name, split=self.split)
@@ -116,18 +135,20 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (path.open(encoding="utf-8") as pdl,):
+        with (
+            path.open(encoding="utf-8") as pdl,
+        ):
             return Program.model_validate(yaml.safe_load(pdl))
 
-    def parse_signature(self):
-        inputs, _, outputs = self.signature.partition("->")
-        self._inputs = [i.strip() for i in inputs.split(",")]
-        self._outputs = [i.strip() for i in inputs.split(",")]
+    # def parse_signature(self):
+    #     inputs, _, outputs = self.signature.partition("->")
+    #     self._inputs = [i.strip() for i in inputs.split(",")]
+    #     self._outputs = [i.strip() for i in inputs.split(",")]
 
-    def verify_signature(self):
-        cols = [*self._inputs, *self._outputs]
-        assert all(c in self.dataset[self.train_set_name].column_names for c in cols)
-        assert all(c in self.dataset[self.test_set_name].column_names for c in cols)
+    # def verify_signature(self):
+    #     cols = [*self._inputs, *self._outputs]
+    #     assert all(c in self.dataset[self.train_set_name].column_names for c in cols)
+    #     assert all(c in self.dataset[self.test_set_name].column_names for c in cols)
 
     def sample_random_indices(self, dataset: list, size: int) -> list:
         return rng.choice(
@@ -148,17 +169,22 @@ class PDLOptimizer:
         candidates = []
         for _ in range(num_candidates):
             if demo_indices is None:
-                demo_indices = self.sample_random_indices(
+                demo_indices_used = self.sample_random_indices(
                     self.dataset[self.train_set_name],
                     size=self.num_demonstrations,
                 )
+            else:
+                demo_indices_used = demo_indices
+
             variable_instance = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
             }
             candidate = {
                 "uuid": self.random_uuid(),
-                f"{demo_name}_indices": demo_indices,
-                f"{demo_name}": self.dataset[self.train_set_name].select(demo_indices),
+                f"{demo_name}_indices": demo_indices_used,
+                f"{demo_name}": self.dataset[self.train_set_name].select(
+                    demo_indices_used
+                ),
             }
 
             candidate |= variable_instance
@@ -168,7 +194,7 @@ class PDLOptimizer:
 
     def save_pdl_program(self, pdl_program: Program) -> int:
         output_file = Path(self.pdl_path.parent, "optimized_" + self.pdl_path.name)
-        return output_file.write_text(dump_program(pdl_program))
+        return output_file.write_text(dump_program(pdl_program), encoding="utf-8")
 
     def save_experiment(self):
         if not self.experiment_path.exists():
@@ -197,6 +223,9 @@ class PDLOptimizer:
         exp_file = None
         max_candidates = self.max_candidates
         candidates = self.sample_candidates(max_candidates)  # sample
+        # for candidate in candidates:
+        #     console.log(f"Candidate indices: {candidate['demonstrations_indices']}")
+        # exit()
         scores = []
         num_candidates = min(len(candidates), max_candidates)
         test_set_size = len(self.dataset[self.test_set_name])
@@ -211,6 +240,7 @@ class PDLOptimizer:
         ending_test_set_size = self.ending_test_set_size
         num_iterations = ceil(log2(num_candidates))
 
+        test_set_multiplier = 0
         if self.budget_growth == "double":
             test_set_multiplier = 2
         elif self.budget_growth == "to_max":
@@ -367,6 +397,63 @@ class PDLOptimizer:
                 break
 
         self.pbar.close()
+        if len(scores) <= 0 or len(scores[0].results) <= 0:
+            raise ValueError("No results??")
+
+        # Ensure eval 1k
+        if (
+            self.experiment_log["iterations"][-1]["current_test_set_size"]
+            < ending_test_set_size
+        ) or (self.test_set_name != self.validation_set_name):
+            console.log(f"FINAL iteration! on {self.validation_set_name}")
+            if self.test_set_name != self.validation_set_name:
+                self.candidate_results = {}
+                console.log("Reset results cache...")
+
+            eval_set_indices = list(
+                range(
+                    0,
+                    min(
+                        ending_test_set_size,
+                        len(self.dataset[self.validation_set_name]),
+                    ),
+                )
+            )
+
+            self.pbar = tqdm(
+                total=len(eval_set_indices),
+                colour="blue",
+                smoothing=0.3,
+                options={"console": console},
+            )
+            winning_score = scores[0]
+            winning_candidate = candidates[0]
+            assert winning_score.candidate["uuid"] == winning_candidate["uuid"]
+            before_time = time.time()
+
+
+            # Step 1: Evaluate all candidates on the current test set
+            final_score: CandidateResult = self.evaluate(
+                winning_candidate,
+                self.dataset[self.validation_set_name].select(eval_set_indices),
+            )
+
+            self.pbar.close()
+
+            self.experiment_log["final_iteration"] = {
+                "ending_test_set_size": ending_test_set_size,
+                "eval_set_indices": eval_set_indices,
+                # "test_set_indices": test_set_indices[:ending_test_set_size],
+                "selected_candidates_uuid": winning_candidate["uuid"],
+                "candidate": final_score.to_dict(),
+                "timestamp_before": before_time,
+                "timestamp_after": time.time(),
+                "score": final_score.metric,
+            }
+
+            scores = [final_score]
+
+            exp_file = self.save_experiment()
 
         if len(scores) > 0 and len(scores[0].results) > 0:
             winner: CandidateResult = scores[0]
@@ -380,6 +467,7 @@ class PDLOptimizer:
             }
 
             self.experiment_log["winner_summary"] = winner_summary
+            exp_file = self.save_experiment()
 
             console.log("Winner:\n", yaml.dump(winner_summary))
             console.log(f"Score: {winner.metric:.2f}")
@@ -398,6 +486,7 @@ class PDLOptimizer:
             self.save_pdl_program(winner_result.pdl_program)
         else:
             console.log("Error, no results")
+            raise ValueError("No results?!")
 
     def evaluate(
         self,
@@ -420,20 +509,47 @@ class PDLOptimizer:
         console.log(table)
 
         p_passing = 0
+        pdl_file_parent = Path(self.pdl_path).parent
+        threads = []
+        # self.trial_thread(
+        #     pdl_program=self.pdl_program.model_copy(),
+        #     example=example,
+        #     candidate=candidate,
+        #     index=index,
+        #     return_logprobs=False,
+        #     timeout=self.timeout,
+        #     yield_output=self.yield_output,
+        #     config=self.config,
+        #     cwd=pdl_file_parent,
+        # )
+        # for index, example in enumerate(test_set)
+        # ]
 
-        threads = [
-            self.trial_thread(
-                pdl_program=self.pdl_program.model_copy(),
-                example=example,
-                candidate=candidate,
-                index=index,
-                return_logprobs=False,
-                timeout=self.timeout,
-                yield_output=self.yield_output,
-                config=self.config,
+        cached_results = []  # self.candidate_results.get(candidate["uuid"], {}).get()
+
+        for index, example in enumerate(test_set):
+            if (
+                candidate["uuid"] in self.candidate_results
+                and index in self.candidate_results[candidate["uuid"]]
+            ):  # len(self.candidate_results) < index:
+                cached_results.append(self.candidate_results[candidate["uuid"]][index])
+                # console.log(f"Cache hit! {index} {candidate['uuid']}")
+                self.pbar.update(1)
+                continue
+
+            threads.append(
+                self.trial_thread(
+                    pdl_program=self.pdl_program.model_copy(),
+                    example=example,
+                    candidate=candidate,
+                    index=index,
+                    return_logprobs=False,
+                    timeout=self.timeout,
+                    yield_output=self.yield_output,
+                    config=self.config,
+                    cwd=pdl_file_parent,
+                )
             )
-            for index, example in enumerate(test_set)
-        ]
 
         matches = 0
         exception_count = 0
@@ -443,9 +559,14 @@ class PDLOptimizer:
         input_logprobs = None
         start_time = time.time()
 
-        for index, result in enumerate(
-            execute_threads(self.parallelism, threads),
-        ):
+        index = -1
+
+        # chain = itertools.chain(
+        #     cached_results, execute_threads(self.parallelism, threads)
+        # )
+        for result in execute_threads(self.parallelism, threads):
+            cached_results.append(result)
+
             if isinstance(result, BaseException):
                 exceptions.append(result)
                 if isinstance(
@@ -459,7 +580,7 @@ class PDLOptimizer:
                     console.log(result)
             elif isinstance(result, TrialOutput):
                 answer = (
-                    round(result.answer, 2)
+                    round(float(result.answer), 2)
                     if isinstance(result.answer, float)
                     else result.answer
                 )
@@ -467,9 +588,38 @@ class PDLOptimizer:
                     f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
                 )
 
+                if candidate["uuid"] not in self.candidate_results:
+                    self.candidate_results[candidate["uuid"]] = {}
+
+                self.candidate_results[candidate["uuid"]][result.index] = result
+            self.pbar.update(1)
+
+        for index, result in enumerate(cached_results):
+            if isinstance(result, BaseException):
+                console.log("failed result passed")
+                # exceptions.append(result)
+                # if isinstance(
+                #     result,
+                #     TimeoutError,
+                # ):
+                #     timeout_count += 1
+                # else:
+                #     exception_count += 1
+                # console.log("Progressed on exception")
+                # console.log(result)
+            elif isinstance(result, TrialOutput):
+                answer = (
+                    round(float(result.answer), 2)
+                    if isinstance(result.answer, float)
+                    else result.answer
+                )
+                # console.log(
+                #     f"Answer: {answer} Ground truth: {result.groundtruth} Match: {result.correct}",
+                # )
+
                 results.append(result)
 
-                if result.exception:
+                if result.exception is not None:
                     exceptions.append(result.exception)
 
                 matches += int(result.correct)
@@ -478,7 +628,7 @@ class PDLOptimizer:
                     input_logprobs = result.input_logprobs
                 p_passing = matches / (index + 1)
 
-            self.pbar.update(1)
+            # self.pbar.update(1)
 
         end_time = time.time()
         runtime = end_time - start_time

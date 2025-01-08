@@ -1,12 +1,36 @@
 from typing import Any, Generator, Optional
 
 import litellm
+
+# litellm.register_prompt_template(
+#         model="watsonx/ibm/granite-34b-code-instruct",
+#         initial_prompt_value="",
+#         roles={
+#             "system": {
+#                 "pre_message": "",
+#                 "post_message": "",
+#             },
+#             "user": {
+#                 "pre_message": "",
+#                 "post_message": "",
+#             },
+#             "assistant": {
+#                 "pre_message": "",
+#                 "post_message": "",
+#             }
+#         },
+#         final_prompt_value="",
+# )
+
+# litellm.set_verbose = True
 from dotenv import load_dotenv
 from genai.client import Client as BamClient
 from genai.credentials import Credentials as BamCredentials
 from genai.schema import ModerationParameters as BamModerationParameters
 from genai.schema import PromptTemplateData as BamPromptTemplateData
 from litellm import completion
+
+# from pdl.pdl_interpreter import InterpreterState
 
 from .pdl_ast import (
     BamTextGenerationParameters,
@@ -143,6 +167,7 @@ class LitellmModel:
         model_id: str,
         messages: list[Message],
         parameters: dict[str, Any],
+        state: any,
     ) -> Message:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
             parameters = set_default_granite_model_parameters(model_id, parameters)
@@ -152,6 +177,7 @@ class LitellmModel:
             model=model_id, messages=messages, stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore
+        state.pdl_total_tokens += response.usage.total_tokens
         if msg.content is None:
             assert False, "TODO"  # XXX TODO XXX
         return {"role": msg.role, "content": msg.content}

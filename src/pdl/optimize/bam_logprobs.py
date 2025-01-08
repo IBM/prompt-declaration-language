@@ -4,7 +4,7 @@ from functools import cached_property
 import numpy as np
 from datasets import load_from_disk
 from genai.schema import DecodingMethod, TextGenerationReturnOptions
-from scipy.stats import entropy, gmean
+# from scipy.stats import entropy, gmean
 
 from pdl.pdl_ast import BamTextGenerationParameters, set_default_model_params
 from pdl.pdl_llms import BamModel
@@ -85,11 +85,11 @@ class ModelResponse:
 
     @cached_property
     def input_gmean(self) -> float:
-        return gmean(self.input_probs)
+        return 0#gmean(self.input_probs)
 
     @cached_property
     def input_entropy(self) -> float:
-        return entropy(self.input_probs)
+        return 0#entropy(self.input_probs)
 
     @cached_property
     def input_norm_min(self) -> float:
@@ -101,11 +101,11 @@ class ModelResponse:
 
     @cached_property
     def input_norm_gmean(self) -> float:
-        return gmean(self.norm_input_probs)
+        return 0#gmean(self.norm_input_probs)
 
     @cached_property
     def input_norm_entropy(self) -> float:
-        return entropy(self.norm_input_probs)
+        return 0#entropy(self.norm_input_probs)
 
 
 def get_seq_logprobs(

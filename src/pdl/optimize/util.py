@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -13,21 +14,21 @@ from rich.console import Console
 from pdl.optimize.bam_logprobs import ModelResponse, get_seq_logprobs
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.pdl_ast import Program, ScopeType
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    contains_error,
-    messages_to_str,
-    process_prog,
-)
+from pdl.pdl_interpreter import InterpreterState, PDLRuntimeError, messages_to_str, process_prog
+from pdl.pdl_location_utils import get_loc_string
+from pdl.pdl_parser import PDLParseError
+from pdl.pdl_utils import stringify
 
 console = Console()
 
-RETRY_COUNT = 3
+RETRY_COUNT = 0
 
 
+# pylint: disable=too-many-instance-attributes
 class PDLThread(Thread):
     """Evaluates a candidate (configuration, i.e. fewshots, style) against **one** test example."""
 
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
         pdl_program: Program,
@@ -38,6 +39,7 @@ class PDLThread(Thread):
         timeout: int,
         yield_output: bool,
         config: OptimizationConfig,
+        cwd: Path,
         answer_key: str = "answer",
     ):
         super().__init__()
@@ -51,6 +53,7 @@ class PDLThread(Thread):
         self.yield_output = yield_output
         self.answer_key = answer_key
         self.config = config
+        self.cwd = cwd
 
     def get_scope(self) -> ScopeType:
         raise NotImplementedError
@@ -76,33 +79,55 @@ class PDLThread(Thread):
         tries = 0
         start_time = time.time()
         end_time = None
+        total_tokens = -1
+        errored = False
         while retry:
             if tries > 1:
                 console.log("RETRYING! ", tries)
             try:
-                state = InterpreterState(yield_output=self.yield_output)
+                tries += 1
+                state = InterpreterState(
+                    yield_result=self.yield_output,
+                    yield_background=self.yield_output,
+                    cwd=self.cwd,
+                )
                 scope = self.get_scope()
 
                 # TODO: update on merge main, should probably use result
-                result, document, scope, trace = process_prog(
+                result, messages, scope, _ = process_prog(
                     state,
                     scope,
                     self.pdl_program,
-                    # TODO: timeout=self.timeout,
+                    timeout=self.timeout,
                 )
-                document = messages_to_str(document)
+
+
+                # if not state.yield_result:
+                #     if state.yield_background:
+                #         print("\n----------------")
+                #     if result is None:
+                #         # print()
+                #         pass
+                #     else:
+                #         print(stringify(result))
+                # else:
+                    # print()
+
+                # total_tokens = scope.get("pdl_total_tokens", -1)
+                # print("Total tokens: ", total_tokens)
+                document = result #messages_to_str("", messages)
                 # console.log("result", result)
                 self.scope = scope
                 end_time = time.time()
                 runtime = end_time - start_time
-                # console.log(f"Runtime took seconds: {runtime:.2f}")
+                console.log(f"Runtime took seconds: {runtime:.2f}")
 
-                tries += 1
+
 
                 # if DEBUG:
-                #     console.log("DEBUG:", document)
+                # console.log("DEBUG:", document)
 
-                errored = contains_error(trace)
+                errored = False  # contains_error(trace)
                 if errored:
                     console.log("PDL error occured.")
                     # console.log(document)
@@ -126,10 +151,38 @@ class PDLThread(Thread):
 
                 if tries >= RETRY_COUNT:
                     retry = False
+            except PDLParseError as exc:
+                console.print_exception(show_locals=False)
+                errored = True
+                exception = exc
+                print("\n".join(exc.message))#, file=sys.stderr)
+            except PDLRuntimeError as exc:
+                console.log("PDLRuntimeError!!")
+                console.log(exc)
+                # console.print_exception(show_locals=False)
+
+                errored = True
+                if exc.loc is None:
+                    message = exc.message
+                else:
+                    message = get_loc_string(exc.loc) + exc.message
+                console.log(message)#, file=sys.stderr)
+                retry = True # tries < RETRY_COUNT
+                if tries >= RETRY_COUNT:
+                    retry = False
+                console.log("Retrying: ", retry)
+                exception = exc
+            except TimeoutError as exc:
+                retry = True # tries < RETRY_COUNT
+                if tries >= RETRY_COUNT:
+                    retry = False
+                exception = exc
+                console.log("Timed out, retrying: ", retry)
             except Exception as e:
                 console.print_exception(show_locals=False)
                 # console.log("In thread: ", e)
-                # exception = e
+                exception = e
+                errored = True
                 return e
         if end_time is None:
             end_time = time.time()
@@ -155,22 +208,27 @@ class PDLThread(Thread):
             groundtruth=truth,
             runtime=runtime,
             example=self.example,
+            total_tokens=total_tokens,
+            index=self.index,
         )
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass
 class TrialOutput:
     pdl_program: Program
     correct: bool = False
     exception: BaseException | None = None
     input_logprobs: ModelResponse | None = None
-    scope: ScopeType = None
+    scope: ScopeType | None = None
     pdl_result: Any = None
     pdl_document: str = ""
     answer: str | None = None
     groundtruth: str | None = None
     runtime: int | None = None
     example: Any = None
+    total_tokens: int | None = None
+    index: int | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -180,6 +238,7 @@ class TrialOutput:
             "answer": self.answer,
             "groundtruth": self.groundtruth,
             "runtime": self.runtime,
+            "index": self.index
         }
 
 
@@ -205,8 +264,8 @@ class CandidateResult:
 
 
 class Models(StrEnum):
-    granite_34b_code_instruct = "ibm/granite-34b-code-instruct"
-    granite_20b_code_instruct_v2 = "ibm/granite-20b-code-instruct-v2"
+    GRANITE_34B_CODE_INSTRUCT = "ibm/granite-34b-code-instruct"
+    GRANITE_20B_CODE_INSTRUCT_V2 = "ibm/granite-20b-code-instruct-v2"
 
 
 def print_candidate(candidate: dict):

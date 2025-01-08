@@ -1,7 +1,7 @@
 # thanks https://stackoverflow.com/a/20159350
 import re
 
-_pattern = r"""(?x)       # enable verbose mode (which ignores whitespace and comments)
+NUMBER_PATTERN = r"""(?x)       # enable verbose mode (which ignores whitespace and comments)
     ^                     # start of the input
     [^\d+-\.]*            # prefixed junk
     (?P<number>           # capturing group for the whole number
@@ -37,7 +37,7 @@ _pattern = r"""(?x)       # enable verbose mode (which ignores whitespace and co
 
 
 def parse_number(text):
-    match = re.match(_pattern, text)
+    match = re.match(NUMBER_PATTERN, text)
     if match is None or not (
         match.group("integer_part") or match.group("decimal_part")
     ):  # failed to match
@@ -65,7 +65,7 @@ def extract_math_answer(result: str) -> float | int:
     if match:
         return parse_number(match[-1])
 
-    print("No match!", last_line)
+    # print("No match!", last_line)
 
     return old_extract(result)
 
