@@ -13,9 +13,9 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm~=1.49",
+  "litellm>=1.49,<1.51",
   "termcolor~=2.0",
-  "ipython~=8.0"
+  "ipython~=8.0",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -41,7 +41,6 @@ dev = [
 examples = [
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "faiss-cpu~=1.0",
   "datasets>2,<4",
   "sympy~=1.0"
 ]

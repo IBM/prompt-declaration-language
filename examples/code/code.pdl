@@ -5,16 +5,17 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: watsonx/ibm/granite-34b-code-instruct
-  input:
-      - |
-        Here is some info about the location of the function in the repo.
-        repo: 
-        ${ CODE.repo_info.repo }
-        path: ${ CODE.repo_info.path }
-        Function_name: ${ CODE.repo_info.function_name }
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
+  input: |
+    Here is some info about the location of the function in the repo.
+    repo: 
+    ${ CODE.repo_info.repo }
+    path: ${ CODE.repo_info.path }
+    Function_name: ${ CODE.repo_info.function_name }
 
-
-        Explain the following code:
-        ```
-        ${ CODE.source_code }```
+    
+    Explain the following code:
+    ```
+    ${ CODE.source_code }```
+  parameters:
+    temperature: 0

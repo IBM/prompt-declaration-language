@@ -155,7 +155,7 @@ def cond_data1(show, name):
                 "contribute": show,
             },
             {
-                "then": [", hello there!\n"],
+                "then": ", hello there!\n",
                 "if": '${ NAME.endswith("' + name + '") }',
                 "else": "",
             },
@@ -184,22 +184,20 @@ repeat_until_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": ["result = 0"]}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         "\n",
         {
-            "repeat": [
-                {
-                    "text": [
-                        {
-                            "def": "I",
-                            "lang": "python",
-                            "code": "result = ${ I } + 1",
-                        },
-                        "\n",
-                    ]
-                }
-            ],
+            "repeat": {
+                "text": [
+                    {
+                        "def": "I",
+                        "lang": "python",
+                        "code": "result = ${ I } + 1",
+                    },
+                    "\n",
+                ]
+            },
             "until": "${ I == 5 }",
             "join": {"as": "lastOf"},
         },
@@ -226,22 +224,20 @@ repeat_until_array_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": ["result = 0"]}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         "\n",
         {
-            "repeat": [
-                {
-                    "text": [
-                        {
-                            "def": "I",
-                            "lang": "python",
-                            "code": "result = ${ I } + 1",
-                        },
-                        "\n",
-                    ]
-                }
-            ],
+            "repeat": {
+                "text": [
+                    {
+                        "def": "I",
+                        "lang": "python",
+                        "code": "result = ${ I } + 1",
+                    },
+                    "\n",
+                ]
+            },
             "until": "${ I == 5 }",
             "join": {"as": "array"},
         },
@@ -261,22 +257,20 @@ repeat_until_text_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": ["result = 0"]}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         "\n",
         {
-            "repeat": [
-                {
-                    "text": [
-                        {
-                            "def": "I",
-                            "lang": "python",
-                            "code": ["result = ${ I } + 1"],
-                        },
-                        "\n",
-                    ]
-                }
-            ],
+            "repeat": {
+                "text": [
+                    {
+                        "def": "I",
+                        "lang": "python",
+                        "code": "result = ${ I } + 1",
+                    },
+                    "\n",
+                ]
+            },
             "until": "${ I == 5 }",
         },
     ],
@@ -310,21 +304,17 @@ repeat_until_text_with_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": ["result = 0"]}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         "\n",
         {
-            "repeat": [
-                {
-                    "text": [
-                        {
-                            "def": "I",
-                            "lang": "python",
-                            "code": ["result = ${ I } + 1"],
-                        },
-                    ]
-                }
-            ],
+            "repeat": {
+                "text": {
+                    "def": "I",
+                    "lang": "python",
+                    "code": "result = ${ I } + 1",
+                },
+            },
             "until": "${ I == 5 }",
             "join": {"with": "\n"},
         },
@@ -353,7 +343,7 @@ repeat_until_str_data = {
     "text": [
         {
             "def": "I",
-            "text": [{"lang": "python", "code": ["result = 0"]}],
+            "text": {"lang": "python", "code": "result = 0"},
         },
         "\n",
         {
@@ -361,12 +351,10 @@ repeat_until_str_data = {
                 "text": [
                     {
                         "def": "I",
-                        "text": [
-                            {
-                                "lang": "python",
-                                "code": ["result = ${ I } + 1"],
-                            }
-                        ],
+                        "text": {
+                            "lang": "python",
+                            "code": "result = ${ I } + 1",
+                        },
                     },
                     "\n",
                 ],

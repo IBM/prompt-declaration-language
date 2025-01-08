@@ -1,0 +1,20 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+This Java method, `deserializeOffsetMap`, is used to deserialize a JSON string into a `Map<String, String>`. Here's a breakdown of the code:
+
+1. The method takes a single parameter, `lastSourceOffset`, which is expected to be a JSON string.
+2. It first checks if `lastSourceOffset` is either `null` or an empty string. If true, it initializes an empty `HashMap` and assigns it to `offsetMap`.
+3. If `lastSourceOffset` is not `null` or empty, it uses the `JSON_MAPPER` object (presumably an instance of `ObjectMapper` from the Jackson library) to deserialize the JSON string into a `Map<String, String>`. The `readValue` method is used for this purpose, with `Map.class` as the second argument, which specifies the expected type of the deserialized object.
+4. Finally, the method returns the `offsetMap`, which now contains the deserialized data.
+
+The `@SuppressWarnings("unchecked")` annotation is used to suppress a potential unchecked warning that might occur due to the raw `Map` type used in the method signature.

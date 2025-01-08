@@ -1,12 +1,11 @@
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TypeAlias
+from typing import Sequence, TypeAlias
 
 from ..pdl_ast import (
     BamModelBlock,
     Block,
-    BlocksType,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -19,6 +18,7 @@ from ..pdl_ast import (
     IncludeBlock,
     LitellmModelBlock,
     LitellmParameters,
+    LocalizedExpression,
     ModelBlock,
     ReadBlock,
     RepeatBlock,
@@ -237,13 +237,14 @@ RegexType: TypeAlias = (
 )
 
 
-CompileScope: TypeAlias = dict[str, (RegexType | BlocksType)]
+CompileScope: TypeAlias = dict[str, (RegexType | BlockType)]
 
 
 def compile_blocks(
-    scope: CompileScope, blocks: BlocksType
+    scope: CompileScope, blocks: BlockType | list[BlockType]
 ) -> tuple[RegexType, CompileScope]:
-    if isinstance(blocks, list):
+    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
+        # is a list of blocks
         seq: list[RegexType] = []
         for b in blocks:
             r, scope = compile_block(scope, b)
@@ -273,10 +274,14 @@ def compile_block(
                             "include_stop_sequence", False
                         )
                     else:
-                        stop_sequences = block.parameters.stop_sequences or []
+                        if isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.expr
+                        else:
+                            parameters = block.parameters
+                        stop_sequences = parameters.stop_sequences or []
                         include_stop_sequence = (
-                            block.parameters.include_stop_sequence is None
-                            or block.parameters.include_stop_sequence
+                            parameters.include_stop_sequence is None
+                            or parameters.include_stop_sequence
                         )
                 case LitellmModelBlock():
                     if block.parameters is None:
@@ -285,6 +290,8 @@ def compile_block(
                     else:
                         if isinstance(block.parameters, LitellmParameters):
                             parameters = block.parameters.model_dump()
+                        elif isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.expr
                         else:
                             parameters = block.parameters
                         stop_sequences = parameters.get("stop", [])
@@ -312,24 +319,24 @@ def compile_block(
         case TextBlock():
             regex, scope = compile_blocks(scope, block.text)
         case IfBlock():
-            then_regex, then_scope = compile_blocks(scope, block.then)
+            then_regex, then_scope = compile_block(scope, block.then)
             else_regex, else_scope = (
-                compile_blocks(scope, block.elses)
+                compile_block(scope, block.elses)
                 if block.elses is not None
                 else (ReEmpty(), scope)
             )
             regex = ReOr([then_regex, else_regex])
             scope = scope_union(then_scope, else_scope)
         case RepeatBlock():
-            body, scope = compile_blocks(scope, block.repeat)
+            body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX
             regex = ReRepeatN(body, block.num_iterations)
         case ForBlock():
-            body, scope = compile_blocks(scope, block.repeat)
+            body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX
             regex = ReStar(body)
         case RepeatUntilBlock():
-            body, scope = compile_blocks(scope, block.repeat)
+            body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX
             regex = ReStar(body)
         case ReadBlock():

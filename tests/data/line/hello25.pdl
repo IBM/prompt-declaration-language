@@ -12,6 +12,7 @@ text:
     sentence: str
     language: str
   return:
+    lastOf:
     - "\nTranslate the sentence '${ sentence1 }' to ${ language }\n"
     - model: watsonx/ibm/granite-20b-multilingual
       parameters:
@@ -19,7 +20,7 @@ text:
         - "!"
         - "\n"
         include_stop_sequence: true
-- call: translate
+- call: ${ translate }
   spec: str
   args:
     sentence: Hello,${ GEN }

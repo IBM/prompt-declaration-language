@@ -64,6 +64,9 @@ parser:
     assert (
         str(exc.value.message)
         == "Fail to parse with regex (: error('missing ), unterminated subpattern at position 0')"
+    ) or (
+        str(exc.value.message)
+        == "Fail to parse with regex (: PatternError('missing ), unterminated subpattern at position 0')"
     )
 
 
@@ -96,7 +99,7 @@ text:
 
 def test_call_undefined():
     prog_str = """
-call: "f"
+call: "${ f }"
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
@@ -125,7 +128,7 @@ defs:
       function:
         x: int
       return: Hello
-call: "f"
+call: ${ f }
 args:
     x: ${ (x }
 """

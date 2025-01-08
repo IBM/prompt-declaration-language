@@ -1,3 +1,4 @@
+from pdl.pdl import exec_file
 from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
 from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
     InterpreterState,
@@ -12,7 +13,7 @@ hello_def = {
     "return": "Hello world!",
 }
 
-hello_call = {"description": "Call hello", "text": [hello_def, {"call": "hello"}]}
+hello_call = {"description": "Call hello", "text": [hello_def, {"call": "${ hello }"}]}
 
 
 def test_function_def():
@@ -38,7 +39,7 @@ hello_params = {
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "hello", "args": {"name": "World"}},
+        {"call": "${ hello }", "args": {"name": "World"}},
     ],
 }
 
@@ -55,7 +56,7 @@ hello_stutter = {
     "text": [
         {"def": "stutter", "function": None, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
-        {"call": "stutter"},
+        {"call": "${ stutter }"},
     ],
 }
 
@@ -73,7 +74,7 @@ hello_bye = {
         {"def": "stutter", "function": {}, "return": "${ pdl_context[0].content }"},
         "Hello World!\n",
         {
-            "call": "stutter",
+            "call": "${ stutter }",
             "args": {"pdl_context": [{"role": None, "content": "Bye!"}]},
         },
     ],
@@ -90,14 +91,15 @@ def test_function_explicit_context():
 hello_call_template = {
     "description": "Call hello template",
     "text": [
-        {"defs": {"alias": "hello"}},
+        {"defs": {"alias": {"data": {}}}},
         {
             "description": "Define hello",
-            "def": "hello",
+            "def": "f",
             "function": {"name": "str"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "${ alias }", "args": {"name": "World"}},
+        {"lang": "python", "code": "result = alias['hello'] = f"},
+        {"call": '${ alias["hello"] }', "args": {"name": "World"}},
     ],
 }
 
@@ -107,3 +109,11 @@ def test_call_template():
     data = Program.model_validate(hello_call_template)
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == "Hello World!"
+
+
+def test_call_expression_args():
+    result = exec_file("tests/data/call_expression_args.pdl")
+    assert (
+        result
+        == "FN::get_current_stock:: 'Simple call!'\n{'product_name': 'from_object'}\nFN::get_current_stock:: 'from_object'\n"
+    )

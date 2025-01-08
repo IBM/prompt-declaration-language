@@ -14,11 +14,12 @@ text:
     language: str
   spec: int
   return:
+    lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
     - model: watsonx/ibm/granite-34b-code-instruct
       parameters:
         mock_response: " World!"
-- call: translate
+- call: ${ translate }
   spec: str
   args:
     sentence: Hello,${ GEN1 }

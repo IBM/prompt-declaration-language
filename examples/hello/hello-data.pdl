@@ -1,12 +1,12 @@
-# Call with pdl --data '"something": "ABC"'
+# Call with pdl --data '"something": "ABC"' hello-data.pdl 
 description: Hello world with data
 text:
 - def: stutter
   function: 
   return:
-    - ${ something }
+    ${ something }
 - "Hello World!\n"
-- call: stutter
+- call: ${ stutter }
 - "\n"
 
 

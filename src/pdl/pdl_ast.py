@@ -2,7 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, TypeAlias, TypedDict, Union
+from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
 
 from genai.schema import (
     DecodingMethod,
@@ -12,25 +12,12 @@ from genai.schema import (
 )
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
+from .pdl_schema_utils import pdltype_to_jsonschema
+
 ScopeType: TypeAlias = dict[str, Any]
 
-ExpressionType: TypeAlias = Any
-# (
-#     str
-#     | int
-#     | float
-#     | bool
-#     | None
-#     | list["ExpressionType"]
-#     | dict[str, "ExpressionType"]
-# )
 
-
-class Message(TypedDict):
-    role: Optional[str]
-    content: str
-
-
+Message: TypeAlias = dict[str, Any]
 Messages: TypeAlias = list[Message]
 
 
@@ -66,6 +53,28 @@ class LocationType(BaseModel):
 empty_block_location = LocationType(file="", path=[], table={})
 
 
+class LocalizedExpression(BaseModel):
+    """Expression with location information"""
+
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, arbitrary_types_allowed=True
+    )
+    expr: Any
+    location: Optional[LocationType] = None
+
+
+ExpressionType: TypeAlias = Any | LocalizedExpression
+# (
+#     str
+#     | int
+#     | float
+#     | bool
+#     | None
+#     | list["ExpressionType"]
+#     | dict[str, "ExpressionType"]
+# )
+
+
 class Parser(BaseModel):
     model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
@@ -73,7 +82,7 @@ class Parser(BaseModel):
 
 
 class PdlParser(Parser):
-    pdl: "BlocksType"
+    pdl: "BlockType"
 
 
 class RegexParser(Parser):
@@ -90,10 +99,19 @@ class ContributeTarget(StrEnum):
     CONTEXT = "context"
 
 
+class ContributeValue(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    value: list[Any]
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
 
     description: Optional[str] = None
     """Documentation associated to the block.
@@ -101,13 +119,13 @@ class Block(BaseModel):
     spec: Any = None
     """Type specification of the result of the block.
     """
-    defs: dict[str, "BlocksType"] = {}
+    defs: dict[str, "BlockType"] = {}
     """Set of definitions executed before the execution of the block.
     """
     assign: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: list[ContributeTarget] = [
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -115,7 +133,7 @@ class Block(BaseModel):
     """
     parser: Optional[ParserType] = None
     """Parser to use to construct a value out of a string result."""
-    fallback: Optional["BlocksType"] = None
+    fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
     """
     role: RoleType = None
@@ -133,7 +151,7 @@ class FunctionBlock(Block):
     function: Optional[dict[str, Any]]
     """Functions parameters with their types.
     """
-    returns: "BlocksType" = Field(..., alias="return")
+    returns: "BlockType" = Field(..., alias="return")
     """Body of the function
     """
     # Field for internal use
@@ -147,11 +165,11 @@ class CallBlock(Block):
     call: ExpressionType
     """Function to call.
     """
-    args: dict[str, Any] = {}
+    args: ExpressionType = {}
     """Arguments of the function with their values.
     """
     # Field for internal use
-    trace: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class BamTextGenerationParameters(TextGenerationParameters):
@@ -254,14 +272,15 @@ class ModelPlatform(StrEnum):
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: str | ExpressionType
-    input: Optional["BlocksType"] = None
+    input: Optional["BlockType"] = None
     trace: Optional["BlockType"] = None
+    modelResponse: Optional[str] = None
 
 
 class BamModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.BAM]
     prompt_id: Optional[str] = None
-    parameters: Optional[BamTextGenerationParameters | dict] = None
+    parameters: Optional[BamTextGenerationParameters | ExpressionType] = None
     moderations: Optional[ModerationParameters] = None
     data: Optional[PromptTemplateData] = None
     constraints: Any = None  # TODO
@@ -271,17 +290,17 @@ class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters | dict] = None
+    parameters: Optional[LitellmParameters | ExpressionType] = None
 
 
 class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lang: Literal["python", "command", "ipython"]
+    lang: Literal["python", "command", "jinja", "pdl", "ipython"]
     """Programming language of the code.
     """
-    code: "BlocksType"
+    code: "BlockType"
     """Code to execute.
     """
 
@@ -308,7 +327,7 @@ class TextBlock(Block):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
     kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
-    text: "BlocksType"
+    text: "BlockOrBlocksType"
     """Body of the text.
     """
 
@@ -317,21 +336,21 @@ class LastOfBlock(Block):
     """Return the value of the last block if the list of blocks."""
 
     kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
-    lastOf: "BlocksType"
+    lastOf: list["BlockType"]
 
 
 class ArrayBlock(Block):
     """Return the array of values computed by each block of the list of blocks."""
 
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
-    array: "BlocksType"
+    array: list["BlockType"]
 
 
 class ObjectBlock(Block):
     """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
-    object: dict[str, "BlocksType"] | list["BlockType"]
+    object: dict[str, "BlockType"] | list["BlockType"]
 
 
 class MessageBlock(Block):
@@ -340,7 +359,7 @@ class MessageBlock(Block):
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     role: RoleType  # pyright: ignore
     """Role of associated to the message."""  # pyright: ignore
-    content: "BlocksType"
+    content: "BlockType"
     """Content of the message."""
 
 
@@ -351,10 +370,10 @@ class IfBlock(Block):
     condition: ExpressionType = Field(alias="if")
     """Condition.
     """
-    then: "BlocksType"
+    then: "BlockType"
     """Branch to exectute if the condition is true.
     """
-    elses: Optional["BlocksType"] = Field(default=None, alias="else")
+    elses: Optional["BlockType"] = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
     # Field for internal use
@@ -407,21 +426,21 @@ class ForBlock(Block):
     fors: dict[str, ExpressionType] = Field(alias="for")
     """Arrays to iterate over.
     """
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class RepeatBlock(Block):
     """Repeat the execution of a block for a fixed number of iterations."""
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     num_iterations: int
@@ -431,14 +450,14 @@ class RepeatBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class RepeatUntilBlock(Block):
     """Repeat the execution of a block until a condition is satisfied."""
 
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
-    repeat: "BlocksType"
+    repeat: "BlockType"
     """Body of the loop.
     """
     until: ExpressionType
@@ -448,7 +467,7 @@ class RepeatUntilBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlocksType"]] = None
+    trace: Optional[list["BlockType"]] = None
 
 
 class ReadBlock(Block):
@@ -474,13 +493,13 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlocksType"] = None
+    trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
-    program: "BlocksType"
+    program: "BlockType"
 
 
 class EmptyBlock(Block):
@@ -513,11 +532,11 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType: TypeAlias = int | float | str | AdvancedBlockType
+BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
 """All kinds of blocks.
 """
-BlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
-"""List of blocks.
+BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
+"""Block or list of blocks.
 """
 
 
@@ -526,7 +545,7 @@ class Program(RootModel):
     Prompt Declaration Language program (PDL)
     """
 
-    root: BlocksType
+    root: BlockType
     """Entry point to parse a PDL program using Pydantic.
     """
 
@@ -534,11 +553,6 @@ class Program(RootModel):
 class PdlBlock(RootModel):
     # This class is used to introduce that a type in the generate JsonSchema
     root: BlockType
-
-
-class PdlBlocks(RootModel):
-    # This class is used to introduce that a type in the generate JsonSchema
-    root: BlocksType
 
 
 class PDLException(Exception):
@@ -614,42 +628,66 @@ def set_default_model_params(
     return params
 
 
-def set_default_granite_model_parameters(
-    model_id: str,
+def set_structured_decoding_parameters(
+    spec: Any,
     parameters: Optional[dict[str, Any]],
 ) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
-    if "decoding_method" not in parameters:
-        parameters["decoding_method"] = (
-            DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-        )
-    if "max_tokens" in parameters and parameters["max_tokens"] is None:
-        parameters["max_tokens"] = (
-            MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "min_new_tokens" not in parameters:
-        parameters["min_new_tokens"] = (
-            MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-        )
-    if "repetition_penalty" not in parameters:
-        parameters["repetition_penalty"] = (
-            REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
-        )
-    if parameters["decoding_method"] == "sample":
-        if "temperature" not in parameters:
-            parameters["temperature"] = (
-                TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+
+    if (
+        spec is not None
+        and parameters["response_format"] is None
+        and "guided_decoding_backend" not in parameters
+    ):
+        schema = pdltype_to_jsonschema(spec, True)
+        parameters["guided_decoding_backend"] = "lm-format-enforcer"
+        parameters["guided_json"] = schema
+        # parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
+    return parameters
+
+
+def set_default_granite_model_parameters(
+    model_id: str,
+    spec: Any,
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, Any]:
+    if parameters is None:
+        parameters = {}
+
+    if "watsonx" in model_id:
+        if "decoding_method" not in parameters:
+            parameters["decoding_method"] = (
+                DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
             )
-        if "top_k" not in parameters:
-            parameters["top_k"] = (
-                TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "max_tokens" in parameters and parameters["max_tokens"] is None:
+            parameters["max_tokens"] = (
+                MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
             )
-        if "top_p" not in parameters:
-            parameters["top_p"] = (
-                TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+        if "min_new_tokens" not in parameters:
+            parameters["min_new_tokens"] = (
+                MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
             )
-    if "granite-3b" in model_id or "granite-8b" in model_id:
+        if "repetition_penalty" not in parameters:
+            parameters["repetition_penalty"] = (
+                REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
+            )
+        if parameters["decoding_method"] == "sample":
+            if "temperature" not in parameters:
+                parameters["temperature"] = (
+                    TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+            if "top_k" not in parameters:
+                parameters["top_k"] = (
+                    TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+            if "top_p" not in parameters:
+                parameters["top_p"] = (
+                    TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
+                )
+    if "replicate" in model_id and "granite-3.0" in model_id:
+        if "temperature" not in parameters or parameters["temperature"] is None:
+            parameters["temperature"] = 0  # setting to decoding greedy
         if "roles" not in parameters:
             parameters["roles"] = {
                 "system": {

@@ -1,3 +1,4 @@
+import json
 from typing import Any, Generator, Optional
 
 import litellm
@@ -37,7 +38,9 @@ from .pdl_ast import (
     Message,
     set_default_granite_model_parameters,
     set_default_model_params,
+    set_structured_decoding_parameters,
 )
+from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
 load_dotenv()
@@ -74,10 +77,11 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Message:
+    ) -> tuple[Message, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
         text = ""
+        responses = []
         for response in client.text.generation.create(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -87,10 +91,11 @@ class BamModel:
             data=data,
         ):
             # XXX TODO: moderation
+            responses.append(response)
             for result in response.results:
                 if result.generated_text:
                     text += result.generated_text
-        return {"role": None, "content": text}
+        return {"role": None, "content": text}, responses
 
     @staticmethod
     def generate_text_stream(  # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -100,9 +105,10 @@ class BamModel:
         parameters: Optional[dict | BamTextGenerationParameters],
         moderations: Optional[BamModerationParameters],
         data: Optional[BamPromptTemplateData],
-    ) -> Generator[Message, Any, None]:
+    ) -> Generator[Message, Any, Any]:
         client = BamModel.get_model()
         params = set_default_model_params(parameters)
+        responses = []
         for response in client.text.generation.create_stream(
             model_id=model_id,
             prompt_id=prompt_id,
@@ -111,6 +117,7 @@ class BamModel:
             moderations=moderations,
             data=data,
         ):
+            responses.append(json.loads(response.model_dump_json()))
             if response.results is None:
                 # append_log(
                 #     state,
@@ -121,6 +128,7 @@ class BamModel:
             for result in response.results:
                 if result.generated_text:
                     yield {"role": None, "content": result.generated_text}
+        return responses
 
     # @staticmethod
     # def generate_text_lazy(  # pylint: disable=too-many-arguments
@@ -166,38 +174,50 @@ class LitellmModel:
     def generate_text(
         model_id: str,
         messages: list[Message],
+        spec: Any,
         parameters: dict[str, Any],
-        state: any,
-    ) -> Message:
+    ) -> tuple[Message, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(model_id, parameters)
+            parameters = set_default_granite_model_parameters(
+                model_id, spec, parameters
+            )
+        parameters = set_structured_decoding_parameters(spec, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = completion(
             model=model_id, messages=messages, stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore
-        state.pdl_total_tokens += response.usage.total_tokens
-        if msg.content is None:
-            assert False, "TODO"  # XXX TODO XXX
-        return {"role": msg.role, "content": msg.content}
+        if msg.role is None:
+            msg.role = "assistant"
+        return (
+            remove_none_values_from_message(msg.json()),
+            response.json(),  # pyright: ignore
+        )
 
     @staticmethod
     def generate_text_stream(
         model_id: str,
         messages: list[Message],
+        spec: Any,
         parameters: dict[str, Any],
-    ) -> Generator[Message, Any, None]:
+    ) -> Generator[Message, Any, Any]:
         if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(model_id, parameters)
+            parameters = set_default_granite_model_parameters(
+                model_id, spec, parameters
+            )
+        parameters = set_structured_decoding_parameters(spec, parameters)
         response = completion(
             model=model_id,
             messages=messages,
             stream=True,
             **parameters,
         )
+        result = []
         for chunk in response:
+            result.append(chunk.json())  # pyright: ignore
             msg = chunk.choices[0].delta  # pyright: ignore
-            if msg.content is None:
-                break
-            yield {"role": msg.role, "content": msg.content}
+            if msg.role is None:
+                msg.role = "assistant"
+            yield remove_none_values_from_message(msg.model_dump())
+        return result

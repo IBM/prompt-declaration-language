@@ -1,3 +1,4 @@
+lastOf:
 - |
   Given the following code:
   ```python
@@ -8,9 +9,10 @@
   Please repair the code!
 
 - def: raw_output
-  model: watsonx/ibm/granite-34b-code-instruct
+  model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
-    stop: ["\n\n"]
+    #stop_sequences: "\n\n"
+    temperature: 0
 
 - lang: python
   def: parsed_output

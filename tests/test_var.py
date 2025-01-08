@@ -18,9 +18,8 @@ var_data = {
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
-                        "include_stop_sequence": False,
+                        "temperature": 0,
+                        "stop": ["!"],
                         "mock_response": " World",
                     },
                 }
@@ -51,9 +50,8 @@ var_shared_scope_data = {
                 {
                     "model": "watsonx/ibm/granite-34b-code-instruct",
                     "parameters": {
-                        "decoding_method": "greedy",
-                        "stop_sequences": ["!"],
-                        "include_stop_sequence": False,
+                        "temperature": 0,
+                        "stop": ["!"],
                         "mock_response": " World",
                     },
                 }
@@ -116,7 +114,7 @@ code_var_data = {
         {
             "def": "I",
             "lang": "python",
-            "code": ["result = 0"],
+            "code": "result = 0",
         },
     ],
 }
@@ -145,7 +143,7 @@ def test_missing_var():
 
 missing_call = {
     "description": "simple python",
-    "text": [{"call": "somevar"}],
+    "text": [{"call": "${ somevar }"}],
 }
 
 

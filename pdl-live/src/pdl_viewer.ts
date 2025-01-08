@@ -1,13 +1,13 @@
 import {stringify} from 'yaml';
-import {PdlBlocks, PdlBlock, Join} from './pdl_ast';
+import {PdlBlock, Join} from './pdl_ast';
 import {match, P} from 'ts-pattern';
 import {map_block_children} from './pdl_ast_utils';
 
-export function show_output(data: PdlBlocks) {
+export function show_output(data: PdlBlock) {
   const div = document.createElement('div');
   div.classList.add('pdl_block');
   match(data)
-    .with(P.union(P.string, P.number), output => {
+    .with(P.union(P.string, P.number, P.boolean, P.nullish), output => {
       div.innerHTML = htmlize(output);
     })
     .with({contribute: P.union([], ['context'])}, () => {
@@ -25,12 +25,8 @@ export function show_output(data: PdlBlocks) {
     .otherwise(() => {
       div.innerHTML = '☐';
     });
-  switch_div_on_click(div, show_program, data);
+  switch_div_on_click(div, show_block, data);
   return div;
-}
-
-export function show_program(blocks: PdlBlocks) {
-  return show_lastOf(blocks);
 }
 
 // export function show_blocks(iteration_type: IterationType, blocks: PdlBlocks) {
@@ -42,7 +38,7 @@ export function show_program(blocks: PdlBlocks) {
 // }
 
 export function show_text(
-  blocks: PdlBlocks[] | PdlBlocks,
+  blocks: PdlBlock[] | PdlBlock,
   join_str: string | undefined
 ) {
   const doc_fragment = document.createDocumentFragment();
@@ -51,13 +47,13 @@ export function show_text(
   match(blocks)
     .with(P.array(P._), data => {
       let first = true;
-      for (const doc of data) {
+      for (const block of data) {
         if (first) {
           first = false;
         } else {
           doc_fragment.appendChild(join_child);
         }
-        const child = show_program(doc);
+        const child = show_block(block);
         doc_fragment.appendChild(child);
       }
     })
@@ -68,30 +64,23 @@ export function show_text(
   return doc_fragment;
 }
 
-export function show_lastOf(blocks: PdlBlocks[] | PdlBlock) {
+export function show_lastOf(blocks: PdlBlock[]): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();
-  match(blocks)
-    .with(P.array(P._), data => {
-      if (data.length > 0) {
-        for (const doc of data.slice(0, -1)) {
-          const child = document.createElement('div');
-          child.classList.add('pdl_show_result_false');
-          const child_body = show_program(doc);
-          child.appendChild(child_body);
-          doc_fragment.appendChild(child);
-        }
-        const child = show_program(data[data.length - 1]);
-        doc_fragment.appendChild(child);
-      }
-    })
-    .otherwise(block => {
-      const child = show_block(block);
+  if (blocks.length > 0) {
+    for (const block of blocks.slice(0, -1)) {
+      const child = document.createElement('div');
+      child.classList.add('pdl_show_result_false');
+      const child_body = show_block(block);
+      child.appendChild(child_body);
       doc_fragment.appendChild(child);
-    });
+    }
+    const child = show_block(blocks[blocks.length - 1]);
+    doc_fragment.appendChild(child);
+  }
   return doc_fragment;
 }
 
-export function show_array(array: PdlBlocks[] | PdlBlock) {
+export function show_array(array: PdlBlock[]) {
   const doc_fragment = document.createDocumentFragment();
   const open_bracket = document.createElement('pre');
   open_bracket.innerHTML = '[';
@@ -103,23 +92,16 @@ export function show_array(array: PdlBlocks[] | PdlBlock) {
   const close_bracket = document.createElement('pre');
   close_bracket.innerHTML = ']';
   doc_fragment.appendChild(open_bracket);
-  match(array)
-    .with(P.array(P._), data => {
-      for (const doc of data) {
-        const child = show_program(doc);
-        doc_fragment.appendChild(child);
-        doc_fragment.appendChild(comma());
-      }
-    })
-    .otherwise(block => {
-      const child = show_block(block);
-      doc_fragment.appendChild(child);
-    });
+  for (const block of array) {
+    const child = show_block(block);
+    doc_fragment.appendChild(child);
+    doc_fragment.appendChild(comma());
+  }
   doc_fragment.appendChild(close_bracket);
   return doc_fragment;
 }
 
-export function show_object(object: {[key: string]: PdlBlocks}) {
+export function show_object(object: {[key: string]: PdlBlock}) {
   const doc_fragment = document.createDocumentFragment();
   const open_curly = document.createElement('pre');
   open_curly.innerHTML = '{';
@@ -132,7 +114,7 @@ export function show_object(object: {[key: string]: PdlBlocks}) {
     const key_column = document.createElement('pre');
     key_column.innerHTML = key + ':';
     doc_fragment.appendChild(key_column);
-    const child = show_program(object[key]);
+    const child = show_block(object[key]);
     doc_fragment.appendChild(child);
     doc_fragment.appendChild(comma);
   });
@@ -140,8 +122,13 @@ export function show_object(object: {[key: string]: PdlBlocks}) {
   return doc_fragment;
 }
 
-export function show_block(data: PdlBlock) {
-  if (typeof data === 'number' || typeof data === 'string') {
+export function show_block(data: PdlBlock): HTMLDivElement {
+  if (
+    data === null ||
+    typeof data === 'boolean' ||
+    typeof data === 'number' ||
+    typeof data === 'string'
+  ) {
     return show_output(data);
   }
   const div = document.createElement('div');
@@ -184,11 +171,11 @@ export function show_block(data: PdlBlock) {
       if (data.if_result === undefined) {
         body.appendChild(show_result_or_code(data));
       } else {
-        let if_child: DocumentFragment;
+        let if_child: HTMLDivElement;
         if (data.if_result) {
-          if_child = show_program(data?.then ?? '');
+          if_child = show_block(data?.then ?? '');
         } else {
-          if_child = show_program(data?.else ?? '');
+          if_child = show_block(data?.else ?? '');
         }
         body.appendChild(if_child);
       }
@@ -201,7 +188,7 @@ export function show_block(data: PdlBlock) {
     .with({kind: 'include'}, data => {
       body.classList.add('pdl_include');
       if (data.trace) {
-        body.appendChild(show_program(data.trace));
+        body.appendChild(show_block(data.trace));
       } else {
         body.appendChild(show_result_or_code(data));
       }
@@ -222,7 +209,7 @@ export function show_block(data: PdlBlock) {
         // const args = document.createElement('pre');
         // args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
         // body.appendChild(args);
-        body.appendChild(show_program(data.trace));
+        body.appendChild(show_block(data.trace));
       } else {
         body.appendChild(show_result_or_code(data));
       }
@@ -257,7 +244,7 @@ export function show_block(data: PdlBlock) {
       const role = document.createElement('pre');
       role.innerHTML = htmlize(data.role + ': ');
       body.appendChild(role);
-      const doc_child = show_program(data.content);
+      const doc_child = show_block(data.content);
       body.appendChild(doc_child);
     })
     .with({kind: 'repeat'}, data => {
@@ -299,20 +286,20 @@ export function show_block(data: PdlBlock) {
   return div;
 }
 
-export function show_defs(defs: {[k: string]: PdlBlocks}): DocumentFragment {
+export function show_defs(defs: {[k: string]: PdlBlock}): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();
   for (const x in defs) {
     const div = document.createElement('fieldset');
     doc_fragment.appendChild(div);
     div.classList.add('pdl_show_result_false');
     add_def(div, x);
-    div.appendChild(show_program(defs[x]));
+    div.appendChild(show_block(defs[x]));
   }
   return doc_fragment;
 }
 
 export function show_loop_trace(
-  trace: PdlBlocks[],
+  trace: PdlBlock[],
   join_config: Join | undefined
 ): DocumentFragment {
   return match(join_config)
@@ -324,7 +311,7 @@ export function show_loop_trace(
 }
 
 export function show_loop_trace_incremental(
-  trace: PdlBlocks[]
+  trace: PdlBlock[]
 ): DocumentFragment {
   const doc_fragment = document.createDocumentFragment();
   if (trace.length > 1) {
@@ -339,7 +326,7 @@ export function show_loop_trace_incremental(
   if (trace.length > 0) {
     const iteration = document.createElement('div');
     iteration.classList.add('pdl_block', 'pdl_lastOf');
-    const child = show_lastOf(trace.slice(-1)[0]); // TODO:
+    const child = show_block(trace.slice(-1)[0]); // TODO:
     iteration.appendChild(child);
     doc_fragment.appendChild(iteration);
   }
@@ -354,15 +341,15 @@ export function add_def(block_div: Element, name: string | null | undefined) {
   }
 }
 
-export function show_code(blocks: PdlBlocks) {
+export function show_code(block: PdlBlock) {
   const code = document.createElement('pre');
-  blocks = blocks_code_cleanup(blocks);
-  code.innerHTML = htmlize(stringify(blocks));
+  block = block_code_cleanup(block);
+  code.innerHTML = htmlize(stringify(block));
   return code;
 }
 
-export function update_code(blocks: PdlBlocks) {
-  const code = show_code(blocks);
+export function update_code(block: PdlBlock) {
+  const code = show_code(block);
   replace_div('code', code);
 }
 
@@ -380,15 +367,13 @@ export function show_value(s: unknown) {
   return div;
 }
 
-export function blocks_code_cleanup(data: PdlBlocks): PdlBlocks {
-  const new_data = match(data)
-    .with(P.array(P._), data => data.map(block_code_cleanup))
-    .otherwise(data => block_code_cleanup(data));
-  return new_data;
-}
-
 export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
-  if (typeof data === 'number' || typeof data === 'string') {
+  if (
+    data === null ||
+    typeof data === 'boolean' ||
+    typeof data === 'number' ||
+    typeof data === 'string'
+  ) {
     return data;
   }
   // remove result
@@ -443,8 +428,8 @@ export function htmlize(x: unknown): string {
 
 function switch_div_on_click(
   div: Element,
-  show: (data: PdlBlocks) => string | Node,
-  data: PdlBlocks
+  show: (data: PdlBlock) => string | Node,
+  data: PdlBlock
 ) {
   div.addEventListener('click', e => {
     div.replaceWith(show(data));

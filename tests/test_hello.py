@@ -35,7 +35,7 @@ def nested_repeat_data(n):
             "Hello, world!\n",
             "This is your first prompt descriptor!\n",
             {
-                "repeat": ["This sentence repeats!\n"],
+                "repeat": "This sentence repeats!\n",
                 "num_iterations": n,
             },
         ],
@@ -108,10 +108,12 @@ def test_repeat_nested3():
 
 repeat_data_error = {
     "description": "Hello world with variable use",
-    "repeat": [
-        "Hello,",
-        {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
-    ],
+    "repeat": {
+        "lastOf": [
+            "Hello,",
+            {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
+        ]
+    },
     "num_iterations": 3,
     "join": {"as": "lastOf"},
 }
@@ -126,8 +128,40 @@ def test_repeat_error():
 
 def test_program_as_list():
     prog = """
+    lastOf:
     - Hello
     - Bye
     """
     result = exec_str(prog)
     assert result == "Bye"
+
+
+def test_bool():
+    prog = """
+    defs:
+      tt: true
+      ff: false
+    if: ${tt}
+    then: false
+    else: true
+    """
+    result = exec_str(prog)
+    assert isinstance(result, bool)
+    assert not result
+
+
+def test_null():
+    prog = """
+    text:
+    """
+    result = exec_str(prog)
+    assert result == "null"
+
+
+def test_none():
+    prog = """
+    lastOf:
+    - null
+    """
+    result = exec_str(prog)
+    assert result is None

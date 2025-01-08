@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: watsonx/mistralai/mixtral-8x7b-instruct-v01
+  teacher_model: replicate/ibm-granite/granite-3.0-8b-instruct
   teacher_template:
     function:
       sys_prompt: str
@@ -46,16 +46,16 @@ defs:
       icl_answer: str
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         prompt_data:
-          call: question_template_freeform
+          call: ${question_template_freeform}
           spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
           args:
             num_samples: ${num_samples}
             task_description: ${task_description}
             icl_question: ${icl_question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -67,13 +67,13 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            temperature: 0
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
             mode: findall
-    - for:
+      for:
         question: ${teacher_output}
       repeat:
         data:
@@ -89,12 +89,12 @@ defs:
       seed_examples: [{question: str, answer: str}]
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         list_of_lists:
           for:
             example: ${seed_examples}
           repeat:
-            call: gen_questions_freeform_inner
+            call: ${gen_questions_freeform_inner}
             args:
               num_samples: 2
               task_description: ${task_description}
@@ -102,7 +102,7 @@ defs:
               icl_answer: ${example.answer}
           join:
             as: array
-    - lang: python
+      lang: python
       code: | # flatten list_of_lists into simple list
           result = [q for qs in ${list_of_lists} for q in qs]
 
@@ -137,15 +137,15 @@ defs:
       question: str
     spec: float
     return:
-    - defs:
+      defs:
         prompt_data:
-          call: filter_questions_template
+          call: ${filter_questions_template}
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             task_description: ${task_description}
             question: ${question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -156,15 +156,15 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
           parser:
             spec: { "rating": str }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - ${ teacher_output.rating | float }
+      data: ${ teacher_output.rating | float }
 
   filter_questions:
     function:
@@ -172,17 +172,18 @@ defs:
       questions: [{icl_question: str, icl_answer: str, question: str}]
     spec: [{icl_question: str, icl_answer: str, question: str}]
     return:
-    - defs:
+      defs:
         list_of_pairs:
           for:
             question: ${questions}
           repeat:
-          - def: filter_output
-            call: filter_questions_inner
-            args:
-              task_description: ${task_description}
-              question: ${question.question}
-          - data:
+            defs:
+              filter_output:
+                call: ${filter_questions_inner}
+                args:
+                  task_description: ${task_description}
+                  question: ${question.question}
+            data:
               question: ${question}
               keep: ${filter_output}
           join:
@@ -190,8 +191,8 @@ defs:
         filtered:
           lang: python
           code: | # keep only if "keep" column is non-zero
-              result = [p["question"] for p in ${list_of_pairs} if p["keep"]]
-    - ${filtered}
+              result = [p["question"] for p in ${ list_of_pairs } if p["keep"]]
+      data: ${filtered}
 
 
   answer_template:
@@ -230,16 +231,16 @@ defs:
       question: {icl_question: str, icl_answer: str, question: str}
     spec: {question: str, answer: str}
     return:
-    - defs:
+      defs:
         prompt_data:
-          call: answer_template
+          call: ${answer_template}
           spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
           args:
             icl_question: ${question.icl_question}
             icl_response: ${question.icl_answer}
             question: ${question.question}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -251,9 +252,9 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ${ [teacher_stop_token] + prompt_data.additional_stop_tokens }
-            include_stop_sequence: false
+            stop_sequences: ${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
         parsed_answer:
           lang: python
           code: | # parse model output
@@ -262,7 +263,7 @@ defs:
               result = result[result.find("[Response]") + len("[Response]"):]
             if "[Question]" in result:
               result = result[:result.find("[Question]")]
-    - data:
+      data:
         question: ${question.question}
         answer: ${parsed_answer}
 
@@ -271,18 +272,18 @@ defs:
       questions: [{icl_question: str, icl_answer: str, question: str}]
     spec: [{question: str, answer: str}]
     return:
-    - defs:
+      defs:
         all_results:
           spec: [{question: str, answer: str}]
           for:
             question: ${ questions }
           repeat:
-            call: gen_answers_inner
+            call: ${gen_answers_inner}
             args:
               question: ${question}
           join:
             as: array
-    - lang: python
+      lang: python
       spec: [{question: str, answer: str}]
       code: | # keep only if answer non-empty
           result = [r for r in ${all_results} if len(r["answer"]) > 0]
@@ -319,15 +320,15 @@ defs:
       answer: str
     spec: float
     return:
-    - defs:
+      defs:
         prompt_data:
-          call: filter_qa_template
+          call: ${filter_qa_template}
           spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
           args:
             question: ${question}
             answer: ${answer}
         teacher_input:
-          call: teacher_template
+          call: ${teacher_template}
           args:
             sys_prompt: ${teacher_sys_prompt}
             prompt: |-
@@ -338,32 +339,33 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: ["${teacher_stop_token}"]
-            include_stop_sequence: false
+            stop_sequences: "${teacher_stop_token}"
             max_new_tokens: ${prompt_data.max_new_tokens}
+            temperature: 0
           parser:
             spec: { "rating": str }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-    - ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
+      data: ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
 
   filter_question_answer_pair:
     function:
       qa_pairs: [{question: str, answer: str}]
     spec: [{question: str, answer: str}]
     return:
-    - defs:
+      defs:
         ratings:
           for:
             qa_pair: ${qa_pairs}
           repeat:
-          - def: filter_output
-            call: filter_question_answer_pair_inner
-            spec: float
-            args:
-              question: ${qa_pair.question}
-              answer: ${qa_pair.answer}
-          - data:
+            defs:
+              filter_output:
+                call: ${filter_question_answer_pair_inner}
+                spec: float
+                args:
+                  question: ${qa_pair.question}
+                  answer: ${qa_pair.answer}
+            data:
               qa_pair: ${qa_pair}
               rating: ${filter_output}
           join:
@@ -373,7 +375,7 @@ defs:
           spec: [{question: str, answer: str}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]
-    - ${filtered}
+      data: ${filtered}
 
 
 text:
@@ -383,25 +385,25 @@ text:
   parser: yaml
 - "\n\n----- Generating questions -----\n\n"
 - def: generated_questions
-  call: gen_questions_freeform
+  call: ${gen_questions_freeform}
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: ${seed_examples.task_description}
     seed_examples: ${seed_examples.seed_examples}
 - "\n\n----- Filtering questions -----\n\n"
 - def: filtered_questions
-  call: filter_questions
+  call: ${filter_questions}
   spec: [{icl_question: str, icl_answer: str, question: str}]
   args:
     task_description: ${seed_examples.task_description}
     questions: ${generated_questions}
 - "\n\n----- Generating answers -----\n\n"
 - def: qa_pairs
-  call: gen_answers
+  call: ${gen_answers}
   args:
     questions: ${filtered_questions} 
 - "\n\n----- Filtering QA pairs -----\n\n"
-- call: filter_question_answer_pair
+- call: ${filter_question_answer_pair}
   args:
     qa_pairs: ${qa_pairs}
-- "\n"
+

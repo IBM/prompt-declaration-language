@@ -1,30 +1,44 @@
+# Demonstrate using an LLM to write a program to compute Fibonacci numbers,
+# and invoke generated code with a random number
 description: Fibonacci
+
 text:
+# Use IBM Granite to author a program that computes the Nth Fibonacci number
 - def: CODE
-  model: watsonx/ibm/granite-20b-code-instruct
-  input: "Write a Python function to compute the Fibonacci sequence\n\n"
-  
+  model: replicate/ibm-granite/granite-3.0-8b-instruct
+  input: "Write a Python function to compute the Fibonacci sequence. Do not include a doc string.\n\n"
+  parameters:
+    # Request no randomness when generating code
+    temperature: 0
+
+# Pick a random number 1..20
 - "\nFind a random number between 1 and 20\n"
 - def: N
   lang: python
   code: |
     import random
     result = random.randint(1, 20)
-- "\nNow computing fib("
-- get: N
-- ")\n"
+
+- "\nNow computing fibonacci(${ N })\n"
+
+# Extract the LLM response inside backticks as executable Python code, and set PDL variable EXTRACTED
 - def: EXTRACTED
   lang: python
   code: |
     s = """'${ CODE } '"""
     result = s.split("```")[1].replace("python", "")
+
+# Run the extracted Fibonacci function using a random number
 - def: RESULT
   lang: python
   code: |
     ${ EXTRACTED }
-    result = fib(${ N })
+    result = fibonacci(${ N })
+  # (Don't store the result in the PDL context; store it in a PDL variable called RESULT)
   contribute: []
-- 'The result is: '
-- get: RESULT
+- 'The result is: ${ RESULT }'
+
+# Invoke the LLM again to explain the PDL context
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: watsonx/ibm/granite-20b-code-instruct
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
+  

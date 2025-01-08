@@ -5,8 +5,7 @@ defs:
       preamble: str
       question: str
       notes: str
-    return:
-    - |
+    return: |
       ${ preamble }
       ### Question: ${ question }
 
@@ -14,7 +13,6 @@ defs:
       ${ notes }
 
       ### Answer:
-text: ""
 
 
 

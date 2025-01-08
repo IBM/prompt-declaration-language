@@ -34,15 +34,12 @@ text:
 - for:
     prompt: ${ RETRIEVED.prompt }
     code: ${ RETRIEVED.code }
-  repeat:
-  - |
+  repeat: |
 
     Q: ${ prompt }
     A: ```${ code }```
 - |-
 
     Q: ${ TEST_PROMPT }
-    A: ```
-- model: watsonx/ibm/granite-34b-code-instruct
-  parameters:
-    stop: ["```"]
+    A: 
+- model: replicate/ibm-granite/granite-3.0-8b-instruct

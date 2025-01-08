@@ -1,36 +1,31 @@
 description: Using a weather API and LLM to make a small weather app
 text:
-- read:
-  def: QUERY
-  message: "Ask a query: "
-  contribute: []
-- model: watsonx/ibm/granite-34b-code-instruct
+- def: QUERY
+  text: "What is the weather in Madrid?\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: |
+      Extract the location from the question.
       Question: What is the weather in London?
-      London
+      Answer: London
       Question: What's the weather in Paris?
-      Paris
+      Answer: Paris
       Question: Tell me the weather in Lagos?
-      Lagos
+      Answer: Lagos
       Question: ${ QUERY }
   parameters:
-    stop:
-    - Question
-    - What
-    - '!'
-    include_stop_sequence: false
+    stop_sequences: "Question,What,!,\n"
   def: LOCATION
   contribute: []
 - lang: python
   code: |
     import requests
-    response = requests.get('https://api.weatherapi.com/v1/current.json?key=cf601276764642cb96224947230712&q=${ LOCATION }') 
-    result = response.content
+    #result = requests.get('https://api.weatherapi.com/v1/current.json?key==XYZ=${ LOCATION }') 
+    #Mock result:
+    result = '{"location": {"name": "Madrid", "region": "Madrid", "country": "Spain", "lat": 40.4, "lon": -3.6833, "tz_id": "Europe/Madrid", "localtime_epoch": 1732543839, "localtime": "2024-11-25 15:10"}, "current": {"last_updated_epoch": 1732543200, "last_updated": "2024-11-25 15:00", "temp_c": 14.4, "temp_f": 57.9, "is_day": 1, "condition": {"text": "Partly cloudy", "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png", "code": 1003}, "wind_mph": 13.2, "wind_kph": 21.2, "wind_degree": 265, "wind_dir": "W", "pressure_mb": 1017.0, "pressure_in": 30.03, "precip_mm": 0.01, "precip_in": 0.0, "humidity": 77, "cloud": 75, "feelslike_c": 12.8, "feelslike_f": 55.1, "windchill_c": 13.0, "windchill_f": 55.4, "heatindex_c": 14.5, "heatindex_f": 58.2, "dewpoint_c": 7.3, "dewpoint_f": 45.2, "vis_km": 10.0, "vis_miles": 6.0, "uv": 1.4, "gust_mph": 15.2, "gust_kph": 24.4}}'
   def: WEATHER
   parser: json
   contribute: []
-
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: |
       Explain the weather from the following JSON:
       ${ WEATHER }

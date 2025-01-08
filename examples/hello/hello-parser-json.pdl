@@ -3,30 +3,24 @@ defs:
   data:
     read: ./hello-parser-json-data.yaml
     parser: yaml
-    spec: { "questions": ["str"], "answers": ["obj"] }
+    spec: { questions: [str], answers: [obj] }
 text:
-  - model: watsonx/ibm/granite-34b-code-instruct
+  - model: replicate/ibm-granite/granite-3.0-8b-instruct
     def: model_output
-    spec: {"name": str, "age": int}
-    input: 
+    spec: {name: str, age: int}
+    input:
       text:
       - for: 
           question: ${ data.questions }
           answer: ${ data.answers }
-        repeat:
-          - |
+        repeat: |
             ${ question }
             ${ answer }
       - > 
         Question: Create a JSON object with fields 'name' and 'age' 
-        and set them appropriately.
+        and set them appropriately. Write the age in letters.
     parser: yaml
     parameters:
-      decoding_method: greedy
-      stop:
-      - '}'
-      include_stop_sequence: true
-
-
-
+      stop_sequences: "\n"
+      temperature: 0
 

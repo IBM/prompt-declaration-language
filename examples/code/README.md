@@ -15,7 +15,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-We have some information about the repository for this code stored in a JSON [file](examples/code/data.json), such as repository name, path and filename. Using that data, we wish to formulate a prompt as follows:
+We have some information about the repository for this code stored in a JSON [file](./data.yaml), such as repository name, path and filename. Using that data, we wish to formulate a prompt as follows:
 
 ```
 Here is some info about the location of the function in the repo.
@@ -38,5 +38,5 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-The PDL program for this example can be found [here](examples/code/code.yaml). This example also contains a comparison with some ground truth for evaluation and outputs a text similarity metric ([code-eval.pdl](examples/code/code-eval.yaml)).
-The program [code-json.pdl](examples/code/code-json.yaml) outputs its results in JSON format.
+The PDL program for this example can be found [here](code.pdl). This example also contains a comparison with some ground truth for evaluation and outputs a text similarity metric ([code-eval.pdl](code-eval.pdl)).
+The program [code-json.pdl](code-json.pdl) outputs its results in JSON format.

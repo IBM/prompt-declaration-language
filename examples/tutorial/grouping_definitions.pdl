@@ -5,17 +5,18 @@ defs:
       sentence: str
       language: str
     return:
-    - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-    - model: watsonx/ibm/granite-20b-multilingual
-      parameters:
-        stop: ["\n"]
+      lastOf:
+      - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
+      - model: replicate/ibm-granite/granite-3.0-8b-instruct
+        parameters:
+          stop_sequences: "\n"
 text:
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Paris!
     language: French
 - "\n"
-- call: translate
+- call: ${ translate }
   args:
     sentence: I love Madrid!
     language: Spanish

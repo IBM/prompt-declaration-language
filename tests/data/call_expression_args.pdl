@@ -1,0 +1,23 @@
+defs:
+  get_current_stock:
+    function:
+      product_name: str
+    return:
+      "FN::get_current_stock:: '${product_name}'\n"
+text:
+
+  - def: object_example
+    text: '{"product_name": "from_object"}'
+    parser: json
+    contribute: []
+
+  - def: simple_call
+    call: ${ get_current_stock }
+    args:
+      product_name: "Simple call!"
+
+  - "${object_example}\n"
+
+  - def: with_object_args
+    call: ${ get_current_stock }
+    args: ${object_example}

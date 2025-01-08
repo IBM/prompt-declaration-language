@@ -1,11 +1,8 @@
 description: Granite Single-Round Chat
 text:
 - include: ./granite_defs.pdl
-- role: system
-  content: ${ SYSTEM_CONTENT_CHAT }
-- ${ PROMPT }
-- model: watsonx/ibm/granite-13b-chat-v2
+- "${ PROMPT }\n"
+- model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
-    decoding_method: sample
-    max_new_tokens: 512
+    temperature: 0
 role: user

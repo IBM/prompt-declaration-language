@@ -5,7 +5,6 @@ from .pdl_ast import (
     BamModelBlock,
     BamTextGenerationParameters,
     Block,
-    BlocksType,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -36,65 +35,72 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
     if not isinstance(block, Block):
         return
     for blocks in block.defs.values():
-        iter_blocks(f, blocks)
+        f(blocks)
     match block:
         case FunctionBlock():
-            if block.returns is not None:
-                iter_blocks(f, block.returns)
+            f(block.returns)
         case CallBlock():
             if block.trace is not None:
-                iter_blocks(f, block.trace)
+                f(block.trace)
         case ModelBlock():
             if block.input is not None:
-                iter_blocks(f, block.input)
+                f(block.input)
             if block.trace is not None:
-                iter_blocks(f, block.trace)
+                f(block.trace)
         case CodeBlock():
-            iter_blocks(f, block.code)
+            f(block.code)
         case GetBlock():
             pass
         case DataBlock():
             pass
         case TextBlock():
-            iter_blocks(f, block.text)
+            if not isinstance(block.text, str) and isinstance(block.text, Sequence):
+                # is a list of blocks
+                for b in block.text:
+                    f(b)
+            else:
+                f(block.text)
         case LastOfBlock():
-            iter_blocks(f, block.lastOf)
+            for b in block.lastOf:
+                f(b)
         case ArrayBlock():
-            iter_blocks(f, block.array)
+            for b in block.array:
+                f(b)
         case ObjectBlock():
             if isinstance(block.object, dict):
-                for blocks in block.object.values():
-                    iter_blocks(f, blocks)
+                for b in block.object.values():
+                    f(b)
             else:
-                iter_blocks(f, block.object)
+                for b in block.object:
+                    f(b)
         case MessageBlock():
-            iter_blocks(f, block.content)
+            f(block.content)
         case IfBlock():
-            iter_blocks(f, block.then)
+            f(block.then)
             if block.elses is not None:
-                iter_blocks(f, block.elses)
+                f(block.elses)
         case RepeatBlock():
-            iter_blocks(f, block.repeat)
+            f(block.repeat)
             if block.trace is not None:
                 for trace in block.trace:
-                    iter_blocks(f, trace)
+                    f(trace)
         case RepeatUntilBlock():
-            iter_blocks(f, block.repeat)
+            f(block.repeat)
             if block.trace is not None:
                 for trace in block.trace:
-                    iter_blocks(f, trace)
+                    f(trace)
         case ForBlock():
-            iter_blocks(f, block.repeat)
+            f(block.repeat)
             if block.trace is not None:
                 for trace in block.trace:
-                    iter_blocks(f, trace)
+                    f(trace)
         case ErrorBlock():
-            iter_blocks(f, block.program)
+            f(block.program)
         case ReadBlock():
             pass
         case IncludeBlock():
             if block.trace is not None:
-                iter_blocks(f, block.trace)
+                f(block.trace)
         case EmptyBlock():
             pass
         case _:
@@ -105,17 +111,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case "json" | "yaml" | RegexParser():
             pass
         case PdlParser():
-            iter_blocks(f, block.parser.pdl)
+            f(block.parser.pdl)
     if block.fallback is not None:
-        iter_blocks(f, block.fallback)
-
-
-def iter_blocks(f: Callable[[BlockType], None], blocks: BlocksType) -> None:
-    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        for block in blocks:
-            f(block)
-    else:
-        f(blocks)
+        f(block.fallback)
 
 
 class MappedFunctions:
@@ -129,24 +127,20 @@ class MappedFunctions:
 def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
     if not isinstance(block, Block):
         return block
-    defs = {x: map_blocks(f, blocks) for x, blocks in block.defs.items()}
-    if block.fallback is not None:
-        fallback = map_blocks(f, block.fallback)
-    else:
-        fallback = None
-    block = block.model_copy(update={"defs": defs, "fallback": fallback})
+    defs = {x: f.f_block(b) for x, b in block.defs.items()}
+    block = block.model_copy(update={"defs": defs})
     match block:
         case FunctionBlock():
-            block.returns = map_blocks(f, block.returns)
+            block.returns = f.f_block(block.returns)
         case CallBlock():
             block.call = f.f_expr(block.call)
-            block.args = {x: f.f_expr(e) for x, e in block.args.items()}
+            block.args = f.f_expr(block.args)
             if block.trace is not None:
-                block.trace = map_blocks(f, block.trace)
+                block.trace = f.f_block(block.trace)
         case BamModelBlock() | LitellmModelBlock():
             block.model = f.f_expr(block.model)
             if block.input is not None:
-                block.input = map_blocks(f, block.input)
+                block.input = f.f_block(block.input)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
             if isinstance(block.parameters, BamTextGenerationParameters):
@@ -154,52 +148,54 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             elif isinstance(block.parameters, dict):
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
-            block.code = map_blocks(f, block.code)
+            block.code = f.f_block(block.code)
         case GetBlock():
             pass
         case DataBlock():
             block.data = f.f_expr(block.data)
         case TextBlock():
-            block.text = map_blocks(f, block.text)
+            if not isinstance(block.text, str) and isinstance(block.text, Sequence):
+                # is a list of blocks
+                block.text = [f.f_block(b) for b in block.text]
+            else:
+                block.text = f.f_block(block.text)
         case LastOfBlock():
-            block.lastOf = map_blocks(f, block.lastOf)
+            block.lastOf = [f.f_block(b) for b in block.lastOf]
         case ArrayBlock():
-            block.array = map_blocks(f, block.array)
+            block.array = [f.f_block(b) for b in block.array]
         case ObjectBlock():
             if isinstance(block.object, dict):
-                block.object = {
-                    x: map_blocks(f, blocks) for x, blocks in block.object.items()
-                }
+                block.object = {x: f.f_block(b) for x, b in block.object.items()}
             else:
                 block.object = [f.f_block(b) for b in block.object]
         case MessageBlock():
-            block.content = map_blocks(f, block.content)
+            block.content = f.f_block(block.content)
         case IfBlock():
             block.condition = f.f_expr(block.condition)
-            block.then = map_blocks(f, block.then)
+            block.then = f.f_block(block.then)
             if block.elses is not None:
-                block.elses = map_blocks(f, block.elses)
+                block.elses = f.f_block(block.elses)
         case RepeatBlock():
-            block.repeat = map_blocks(f, block.repeat)
+            block.repeat = f.f_block(block.repeat)
             if block.trace is not None:
-                block.trace = [map_blocks(f, trace) for trace in block.trace]
+                block.trace = [f.f_block(trace) for trace in block.trace]
         case RepeatUntilBlock():
             block.until = f.f_expr(block.until)
-            block.repeat = map_blocks(f, block.repeat)
+            block.repeat = f.f_block(block.repeat)
             if block.trace is not None:
-                block.trace = [map_blocks(f, trace) for trace in block.trace]
+                block.trace = [f.f_block(trace) for trace in block.trace]
         case ForBlock():
             block.fors = {x: f.f_expr(blocks) for x, blocks in block.fors.items()}
-            block.repeat = map_blocks(f, block.repeat)
+            block.repeat = f.f_block(block.repeat)
             if block.trace is not None:
-                block.trace = [map_blocks(f, trace) for trace in block.trace]
+                block.trace = [f.f_block(trace) for trace in block.trace]
         case ErrorBlock():
-            block.program = map_blocks(f, block.program)
+            block.program = f.f_block(block.program)
         case ReadBlock():
             block.read = f.f_expr(block.read)
         case IncludeBlock():
             if block.trace is not None:
-                block.trace = map_blocks(f, block.trace)
+                block.trace = f.f_block(block.trace)
         case EmptyBlock():
             pass
         case _:
@@ -210,14 +206,7 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case "json" | "yaml" | RegexParser():
             pass
         case PdlParser():
-            block.parser.pdl = map_blocks(f, block.parser.pdl)
+            block.parser.pdl = f.f_block(block.parser.pdl)
+    if block.fallback is not None:
+        block.fallback = f.f_block(block.fallback)
     return block
-
-
-def map_blocks(f: MappedFunctions, blocks: BlocksType) -> BlocksType:
-    if not isinstance(blocks, str) and isinstance(blocks, Sequence):
-        # is a list of blocks
-        blocks = [f.f_block(block) for block in blocks]
-    else:
-        blocks = f.f_block(blocks)
-    return blocks

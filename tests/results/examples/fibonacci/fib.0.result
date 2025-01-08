@@ -1,0 +1,43 @@
+Here is a simple Python function to compute the Fibonacci sequence:
+
+```python
+def fibonacci(n):
+    if n <= 0:
+        return "Input should be a positive integer."
+    elif n == 1:
+        return 0
+    elif n == 2:
+        return 1
+    else:
+        a, b = 0, 1
+        for _ in range(n - 2):
+            a, b = b, a + b
+        return b
+```
+
+This function takes an integer `n` as input and returns the `n`th number in the Fibonacci sequence. The Fibonacci sequence is a series of numbers in which each number is the sum of the two preceding ones, usually starting with 0 and 1.
+Find a random number between 1 and 20
+15
+Now computing fibonacci(15)
+
+def fibonacci(n):
+    if n <= 0:
+        return "Input should be a positive integer."
+    elif n == 1:
+        return 0
+    elif n == 2:
+        return 1
+    else:
+        a, b = 0, 1
+        for _ in range(n - 2):
+            a, b = b, a + b
+        return b
+The result is: 377
+
+Explain what the above code does and what the result means
+
+The provided code is a Python function named `fibonacci(n)` that computes the `n`th number in the Fibonacci sequence. The Fibonacci sequence is a series of numbers where each number is the sum of the two preceding ones, usually starting with 0 and 1.
+
+The function takes an integer `n` as input and returns the `n`th number in the Fibonacci sequence. It first checks if the input is a positive integer and returns an error message if it's not. If the input is 1, it returns 0 (the first number in the Fibonacci sequence). If the input is 2, it returns 1 (the second number in the Fibonacci sequence). For any other positive integer input, it uses a loop to calculate the `n`th number in the Fibonacci sequence and returns the result.
+
+In the given example, the function is called with the argument `15`, which means it will compute the 15th number in the Fibonacci sequence. The result of this computation is `377`. This number is the 15th number in the Fibonacci sequence, which is the sum of the 14th and 13th numbers in the sequence.

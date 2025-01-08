@@ -32,7 +32,7 @@ biz = {
     "text": [
         {"include": "data/function.pdl"},
         {
-            "call": "template",
+            "call": "${ template }",
             "args": {
                 "preamble": "preamble data",
                 "question": "question data",

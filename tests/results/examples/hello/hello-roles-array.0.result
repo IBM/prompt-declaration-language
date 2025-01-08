@@ -1,0 +1,42 @@
+Here is a Python function that implements the merge sort algorithm:
+
+```python
+def merge_sort(arr):
+    # Base case: if the array has 1 or 0 elements, it's already sorted
+    if len(arr) <= 1:
+        return arr
+
+    # Split the array into two halves
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    # Recursively sort both halves
+    left_sorted = merge_sort(left_half)
+    right_sorted = merge_sort(right_half)
+
+    # Merge the sorted halves
+    return merge(left_sorted, right_sorted)
+
+def merge(left, right):
+    merged = []
+    left_index = 0
+    right_index = 0
+
+    # Merge the two halves, keeping them sorted
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] < right[right_index]:
+            merged.append(left[left_index])
+            left_index += 1
+        else:
+            merged.append(right[right_index])
+            right_index += 1
+
+    # Add any remaining elements from the left and right halves
+    merged.extend(left[left_index:])
+    merged.extend(right[right_index:])
+
+    return merged
+```
+
+This function first checks if the input array has 1 or 0 elements, in which case it's already sorted. If not, it splits the array into two halves and recursively sorts each half using the merge sort algorithm. Finally, it merges the two sorted halves back together.
