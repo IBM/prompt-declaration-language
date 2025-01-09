@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Any, Generator, Optional
 
 import litellm
@@ -20,6 +21,14 @@ from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
 load_dotenv()
+
+# If the environment has a configured OpenTelemetry exporter, tell LiteLLM
+# to do OpenTelemetry callbacks for that exporter.  Note that this may
+# require optional OpenTelemetry Python libraries that are not pyproject.toml,
+# typically opentelemetry-api, opentelemetry-sdk,
+# opentelemetry-exporter-otlp-proto-http, and opentelemetry-exporter-otlp-proto-grpc
+if os.getenv("OTEL_EXPORTER") and os.getenv("OTEL_ENDPOINT"):
+    litellm.callbacks = ["otel"]
 
 # class Model(ABC):
 #     @staticmethod
