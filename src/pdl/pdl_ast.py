@@ -75,7 +75,38 @@ ExpressionType: TypeAlias = Any | LocalizedExpression
 #     | dict[str, "ExpressionType"]
 # )
 
-PatternType: TypeAlias = Any
+
+class Pattern(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class OrPattern(Pattern):
+    union: list["PatternType"]
+
+
+class ArrayPattern(Pattern):
+    array: list["PatternType"]
+
+
+class ObjectPattern(Pattern):
+    object: dict[str, "PatternType"]
+
+
+class AnyPattern(Pattern):
+    any: Literal[None]
+
+
+PatternType: TypeAlias = (
+    None
+    | bool
+    | int
+    | float
+    | str
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+)
 
 
 class Parser(BaseModel):

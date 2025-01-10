@@ -1375,6 +1375,10 @@ export type Fallback12 =
  */
 export type Role12 = string | null;
 export type Kind12 = "match";
+export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+export type Any = null;
+export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
+export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Return =
   | boolean
   | number
@@ -3417,9 +3421,24 @@ export interface JoinLastOf {
  * Case of a match.
  */
 export interface MatchCase {
-  case?: unknown;
+  case?: Case;
   if?: unknown;
   return: Return;
+}
+export interface OrPattern {
+  union: Union;
+}
+export interface ArrayPattern {
+  array: Array1;
+}
+export interface ObjectPattern {
+  object: Object1;
+}
+export interface Object1 {
+  [k: string]: boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+}
+export interface AnyPattern {
+  any: Any;
 }
 export interface ModerationParameters {
   hap?: ModerationHAP | null;

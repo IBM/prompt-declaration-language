@@ -26,7 +26,9 @@ from pydantic import BaseModel
 
 from .pdl_ast import (
     AdvancedBlockType,
+    AnyPattern,
     ArrayBlock,
+    ArrayPattern,
     BamModelBlock,
     BamTextGenerationParameters,
     Block,
@@ -54,7 +56,11 @@ from .pdl_ast import (
     Messages,
     ModelBlock,
     ObjectBlock,
+    ObjectPattern,
+    OrPattern,
     ParserType,
+    Pattern,
+    PatternType,
     PDLException,
     PdlParser,
     Program,
@@ -549,7 +555,9 @@ def step_block_body(
                     cases.append(match_case)
                     continue
                 loc_i = append(loc, "[" + str(i) + "]")
-                if "case" in match_case.model_fields_set and match_ != match_case.case:
+                if "case" in match_case.model_fields_set and not is_matching(
+                    match_, match_case.case
+                ):
                     cases.append(match_case)
                     continue
                 b = True
@@ -811,6 +819,30 @@ def step_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, background, scope, trace
+
+
+def is_matching(  # pylint: disable=too-many-return-statements
+    value: Any, pattern: PatternType
+) -> bool:
+    match pattern:
+        case OrPattern():
+            return any(is_matching(value, p) for p in pattern.union)
+        case ArrayPattern():
+            if not (isinstance(value, Sequence) and len(pattern.array) == len(value)):
+                return False
+            return all(is_matching(v, p) for v, p in zip(value, pattern.array))
+        case ObjectPattern():
+            if not isinstance(value, dict):
+                return False
+            return all(
+                k in value and is_matching(value[k], p)
+                for k, p in pattern.object.items()
+            )
+        case AnyPattern():
+            return True
+        case _:
+            assert not isinstance(pattern, Pattern)
+            return value == pattern
 
 
 def step_defs(

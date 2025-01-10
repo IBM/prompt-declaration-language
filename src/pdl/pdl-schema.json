@@ -1,5 +1,20 @@
 {
   "$defs": {
+    "AnyPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "any": {
+          "const": null,
+          "title": "Any",
+          "type": "null"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "AnyPattern",
+      "type": "object"
+    },
     "ArrayBlock": {
       "additionalProperties": false,
       "description": "Return the array of values computed by each block of the list of blocks.",
@@ -385,6 +400,51 @@
         "array"
       ],
       "title": "ArrayBlock",
+      "type": "object"
+    },
+    "ArrayPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "array": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Array",
+          "type": "array"
+        }
+      },
+      "required": [
+        "array"
+      ],
+      "title": "ArrayPattern",
       "type": "object"
     },
     "BamModelBlock": {
@@ -6877,7 +6937,30 @@
       "properties": {
         "case": {
           "anyOf": [
-            {},
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/OrPattern"
+            },
+            {
+              "$ref": "#/$defs/ArrayPattern"
+            },
+            {
+              "$ref": "#/$defs/ObjectPattern"
+            },
+            {
+              "$ref": "#/$defs/AnyPattern"
+            },
             {
               "type": "null"
             }
@@ -8118,6 +8201,96 @@
         "object"
       ],
       "title": "ObjectBlock",
+      "type": "object"
+    },
+    "ObjectPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "object": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Object",
+          "type": "object"
+        }
+      },
+      "required": [
+        "object"
+      ],
+      "title": "ObjectPattern",
+      "type": "object"
+    },
+    "OrPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "union": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Union",
+          "type": "array"
+        }
+      },
+      "required": [
+        "union"
+      ],
+      "title": "OrPattern",
       "type": "object"
     },
     "PdlBlock": {

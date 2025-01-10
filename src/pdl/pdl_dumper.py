@@ -5,7 +5,9 @@ import yaml
 
 from . import pdl_ast
 from .pdl_ast import (
+    AnyPattern,
     ArrayBlock,
+    ArrayPattern,
     BamModelBlock,
     BamTextGenerationParameters,
     Block,
@@ -32,7 +34,10 @@ from .pdl_ast import (
     MatchBlock,
     MessageBlock,
     ObjectBlock,
+    ObjectPattern,
+    OrPattern,
     ParserType,
+    PatternType,
     PdlParser,
     ReadBlock,
     RegexParser,
@@ -175,7 +180,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
             d["match"] = block.match_
             d["with"] = [
                 {
-                    "case": match_case.case,
+                    "case": pattern_to_dict(match_case.case),
                     "if": match_case.if_,
                     "return": block_to_dict(match_case.return_, json_compatible),
                 }
@@ -234,6 +239,25 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if block.fallback is not None:
         d["fallback"] = block_to_dict(block.fallback, json_compatible)
     return d
+
+
+def pattern_to_dict(pattern: PatternType):
+    result: Any
+    match pattern:
+        case OrPattern():
+            result = {"union": [pattern_to_dict(p) for p in pattern.union]}
+        case ArrayPattern():
+            result = {"array": [pattern_to_dict(p) for p in pattern.array]}
+        case ObjectPattern():
+            result = {
+                "object": {k: pattern_to_dict(p) for k, p in pattern.object.items()}
+            }
+        case AnyPattern():
+            result = {"any": None}
+        case _:
+            assert not isinstance(pattern, pdl_ast.Pattern)
+            result = pattern
+    return result
 
 
 def join_to_dict(join: JoinType) -> dict[str, Any]:
