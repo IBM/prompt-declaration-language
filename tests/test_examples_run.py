@@ -193,7 +193,9 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             actual_parse_error |= {str(pdl_file_name)}
         except PDLRuntimeError as exc:
             if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
+                print("^^^^")
                 print(exc)  # unexpected error: breakpoint
+                exit(1)
             actual_runtime_error |= {str(pdl_file_name)}
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
