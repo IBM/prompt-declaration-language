@@ -1,7 +1,7 @@
 description: Hello world with model chaining
 text:
 - Hello,
-- model: watsonx/ibm/granite-34b-code-instruct
+- model: watsonx_text/ibm/granite-34b-code-instruct
   def: GEN
   parameters:
     stop:
@@ -16,7 +16,7 @@ text:
   return:
     lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
-    - model: watsonx/ibm/granite-20b-multilingual
+    - model: watsonx_text/ibm/granite-20b-multilingual
       parameters:
         stop:
         - '!'

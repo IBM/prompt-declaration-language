@@ -16,7 +16,7 @@ var_data = {
             "def": "NAME",
             "text": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx_text/ibm/granite-34b-code-instruct",
                     "parameters": {
                         "temperature": 0,
                         "stop": ["!"],
@@ -48,7 +48,7 @@ var_shared_scope_data = {
             "def": "NAME",
             "text": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx_text/ibm/granite-34b-code-instruct",
                     "parameters": {
                         "temperature": 0,
                         "stop": ["!"],

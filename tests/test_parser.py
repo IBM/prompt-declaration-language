@@ -10,7 +10,7 @@ from pdl.pdl_interpreter import (
 )
 
 model_parser = {
-    "model": "watsonx/ibm/granite-20b-code-instruct",
+    "model": "watsonx_text/ibm/granite-20b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "text": [
@@ -39,7 +39,7 @@ def test_model_parser():
 
 
 model_parser1 = {
-    "model": "watsonx/ibm/granite-34b-code-instruct",
+    "model": "watsonx_text/ibm/granite-34b-code-instruct",
     "spec": {"bob": "int", "carol": "int"},
     "input": {
         "text": [

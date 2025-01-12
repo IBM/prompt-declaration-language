@@ -1,6 +1,6 @@
 description: Hello world to call into a model
 defs:
-  model: watsonx/ibm/granite-34b-code-instruct
+  model: watsonx_text/ibm/granite-34b-code-instruct
 text:
 - Hello,
 - model: ${ models }
