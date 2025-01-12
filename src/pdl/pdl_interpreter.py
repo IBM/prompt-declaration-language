@@ -8,7 +8,6 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
-warnings.filterwarnings("ignore")
 
 # from itertools import batched
 from pathlib import Path
@@ -92,6 +91,8 @@ from .pdl_utils import (
     replace_contribute_value,
     stringify,
 )
+
+warnings.filterwarnings("ignore")
 
 logger = logging.getLogger(__name__)
 
