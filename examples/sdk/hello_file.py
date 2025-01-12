@@ -2,7 +2,7 @@ from pdl.pdl import exec_file
 
 
 def main():
-    result = exec_file("./hello.pdl")
+    result = exec_file("../weather/weather.pdl")
     print(result)
 
 
