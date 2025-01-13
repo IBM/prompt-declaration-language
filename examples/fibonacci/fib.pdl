@@ -3,7 +3,8 @@
 description: Fibonacci
 
 text:
-# Use IBM Granite to author a program that computes the Nth Fibonacci number
+# Use IBM Granite to author a program that computes the Nth Fibonacci number,
+# storing the generated program into the variable `CODE`.
 - def: CODE
   model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: "Write a Python function to compute the Fibonacci sequence. Do not include a doc string.\n\n"
@@ -17,6 +18,7 @@ text:
   lang: python
   code: |
     import random
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = random.randint(1, 20)
 
 - "\nNow computing fibonacci(${ N })\n"

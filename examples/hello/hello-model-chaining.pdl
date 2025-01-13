@@ -3,7 +3,9 @@ text:
 - "Hello\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
+    # "greedy" sampling tells the LLM to use the most likely token at each step
     decoding_method: greedy
+    # Tell the LLM to stop after generating an exclamation point.
     stop_sequences: '!'
   def: GEN
 - "\nDid you say ${ GEN }?\n"

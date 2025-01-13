@@ -326,6 +326,7 @@ text:
     truth = """
     ${ TRUTH }
     """
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 
 ```
@@ -406,6 +407,7 @@ text:
     truth = """
     ${ TRUTH }
     """
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data: 
     input: ${ CODE }
