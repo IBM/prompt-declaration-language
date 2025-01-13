@@ -83,7 +83,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 f(block.elses)
         case MatchBlock():
             for match_case in block.with_:
-                f(match_case.return_)
+                f(match_case.then)
         case RepeatBlock():
             f(block.repeat)
             if block.trace is not None:
@@ -222,5 +222,5 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
 
 def map_match_case(f: MappedFunctions, match_case: MatchCase) -> MatchCase:
     if_ = f.f_expr(match_case.if_)
-    return_ = f.f_block(match_case.return_)
+    return_ = f.f_block(match_case.then)
     return match_case.model_copy(update={"if_": if_, "return_": return_})

@@ -83,7 +83,7 @@ export function map_block_children(
     })
     .with({kind: 'match'}, block => {
       const with_ = block.with.map(match_case => {
-        return {...match_case, return: f(match_case.return)};
+        return {...match_case, then: f(match_case.then)};
       });
       return {...block, with: with_};
     })

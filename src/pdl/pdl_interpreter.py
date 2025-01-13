@@ -583,7 +583,7 @@ def step_block_body(
                     result, background, scope, return_trace = yield from step_block(
                         state,
                         scope,
-                        match_case.return_,
+                        match_case.then,
                         append(loc_i, "return"),
                     )
                 except PDLRuntimeError as exc:

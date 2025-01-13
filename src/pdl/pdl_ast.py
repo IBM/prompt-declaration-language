@@ -424,8 +424,8 @@ class MatchCase(BaseModel):
     if_: Optional[ExpressionType] = Field(default=None, alias="if")
     """Boolean condition to satisfy.
     """
-    return_: "BlockType" = Field(alias="return")
-    """Branch to execute if the condition is satisfied.
+    then: "BlockType"
+    """Branch to execute if the value is matched and the condition is satisfied.
     """
 
 

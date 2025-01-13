@@ -1379,7 +1379,7 @@ export type Case = boolean | number | string | OrPattern | ArrayPattern | Object
 export type Any = null;
 export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
-export type Return =
+export type Then =
   | boolean
   | number
   | string
@@ -1465,7 +1465,7 @@ export type Kind13 = "if";
  * Branch to exectute if the condition is true.
  *
  */
-export type Then =
+export type Then1 =
   | boolean
   | number
   | string
@@ -2116,7 +2116,7 @@ export type Function = {
  * Body of the function
  *
  */
-export type Return1 =
+export type Return =
   | boolean
   | number
   | string
@@ -2188,7 +2188,7 @@ export interface FunctionBlock {
   location?: LocationType | null;
   kind?: Kind20;
   function: Function;
-  return: Return1;
+  return: Return;
   scope?: Scope;
 }
 /**
@@ -2597,7 +2597,7 @@ export interface IfBlock {
   location?: LocationType | null;
   kind?: Kind13;
   if: unknown;
-  then: Then;
+  then: Then1;
   else?: Else;
   if_result?: IfResult;
 }
@@ -3423,7 +3423,7 @@ export interface JoinLastOf {
 export interface MatchCase {
   case?: Case;
   if?: unknown;
-  return: Return;
+  then: Then;
 }
 export interface OrPattern {
   union: Union;

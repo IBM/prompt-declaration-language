@@ -6981,7 +6981,7 @@
           "default": null,
           "title": "If"
         },
-        "return": {
+        "then": {
           "anyOf": [
             {
               "type": "boolean"
@@ -7062,11 +7062,11 @@
               "type": "null"
             }
           ],
-          "title": "Return"
+          "title": "Then"
         }
       },
       "required": [
-        "return"
+        "then"
       ],
       "title": "MatchCase",
       "type": "object"

@@ -6,9 +6,9 @@ def test_match0():
 match: 0
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: 1
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 42
@@ -19,9 +19,9 @@ def test_match1():
 match: 1
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: 1
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -32,9 +32,9 @@ def test_match_fail():
 match: 2
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: 1
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == ""
@@ -47,9 +47,9 @@ defs:
 match:
 with:
 - if: ${x == 0}
-  return: 42
+  then: 42
 - if: ${x == 1}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 42
@@ -62,9 +62,9 @@ defs:
 match:
 with:
 - if: ${x == 0}
-  return: 42
+  then: 42
 - if: ${x == 1}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -77,9 +77,9 @@ defs:
 match:
 with:
 - if: ${x == 0}
-  return: 42
+  then: 42
 - if: ${x == 1}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == ""
@@ -93,10 +93,10 @@ match: ${x}
 with:
 - case: 1
   if: ${x == 0}
-  return: 42
+  then: 42
 - case: 1
   if: ${x == 1}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -109,9 +109,9 @@ defs:
 match: ${x}
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: 1
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -124,9 +124,9 @@ defs:
 match: ${x}
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: ${x}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == ""
@@ -141,9 +141,9 @@ defs:
 match: ${x}
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: ${x}
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -154,9 +154,9 @@ def test_match_null0():
 match: null
 with:
 - case: 0
-  return: 42
+  then: 42
 - case: null
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -167,9 +167,9 @@ def test_match_null1():
 match: null
 with:
 - if: false
-  return: 42
+  then: 42
 - case: null
-  return: 4012
+  then: 4012
 """
     result = exec_str(prog_str)
     assert result == 4012
@@ -184,25 +184,25 @@ match: ${x}
 with:
 - case:
     array: []
-  return: 1
+  then: 1
 - case:
     array: [1,2]
-  return: 2
+  then: 2
 - case:
     array: [1,3]
-  return: 3
+  then: 3
 - case:
     array: [1,2,3,4]
-  return: 4
+  then: 4
 - case:
     array: [1,3,2]
-  return: 5
+  then: 5
 - case:
     array: [1,2,3]
-  return: 6
+  then: 6
 - case:
     array: [3]
-  return: 7
+  then: 7
 """
     result = exec_str(prog_str)
     assert result == 6
@@ -219,13 +219,13 @@ match: ${x}
 with:
 - case:
     object: {"a": 2, "b": "hello"}
-  return: 3
+  then: 3
 - case:
     object: {"a": 1, "b": "hi"}
-  return: 4
+  then: 4
 - case:
     object: {"a": 1, "b": "hello"}
-  return: 5
+  then: 5
 """
     result = exec_str(prog_str)
     assert result == 5
@@ -242,13 +242,13 @@ match: ${x}
 with:
 - case:
     object: {"a": 2}
-  return: 1
+  then: 1
 - case:
     object: {"b": "hello"}
-  return: 2
+  then: 2
 - case:
     object: {"a": 1, "b": "hello"}
-  return: 5
+  then: 5
 """
     result = exec_str(prog_str)
     assert result == 2
@@ -265,16 +265,16 @@ match: ${x}
 with:
 - case:
     object: {"a": 2}
-  return: 1
+  then: 1
 - case:
     object: {"b": "hi"}
-  return: 2
+  then: 2
 - case:
     object: {"a": 1, "b": "hello", "c": "bye"}
-  return: 3
+  then: 3
 - case:
     object: {"a": 1, "b": "hello"}
-  return: 4
+  then: 4
 """
     result = exec_str(prog_str)
     assert result == 4
@@ -285,12 +285,12 @@ def test_any0():
 match: Hello
 with:
 - case: Hi
-  return: 1
+  then: 1
 - case:
     any:
-  return: 2
+  then: 2
 - case: Hello
-  return: 3
+  then: 3
 """
     result = exec_str(prog_str)
     assert result == 2
@@ -304,14 +304,14 @@ with:
     union:
       - bye
       - see you
-  return: 1
+  then: 1
 - case:
     union:
       - Hi
       - Hello
-  return: 2
+  then: 2
 - case: Hello
-  return: 3
+  then: 3
 """
     result = exec_str(prog_str)
     assert result == 2
@@ -330,13 +330,13 @@ with:
     union:
     - 1
     - object: {"a": 2, "b": "hello"}
-  return: 1
+  then: 1
 - case:
     union:
     - object: {"a": 1, "b": "hi"}
     - object: {"a": 1, "b": "hello"}
     - 42
-  return: 2
+  then: 2
 """
     result = exec_str(prog_str)
     assert result == 2
@@ -355,14 +355,14 @@ with:
     union:
     - 1
     - object: {"a": 2, "b": "hello"}
-  return: 1
+  then: 1
 - case:
     union:
     - object: {"a": 1, "b": "hi"}
     - object: {"a": 2, "b": "hello"}
     - 42
-  return: 2
-- return: 3
+  then: 2
+- then: 3
 """
     result = exec_str(prog_str)
     assert result == 3

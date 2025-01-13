@@ -182,7 +182,7 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
                 {
                     "case": pattern_to_dict(match_case.case),
                     "if": match_case.if_,
-                    "return": block_to_dict(match_case.return_, json_compatible),
+                    "then": block_to_dict(match_case.then, json_compatible),
                 }
                 for match_case in block.with_
             ]
