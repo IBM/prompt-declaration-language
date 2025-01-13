@@ -19,6 +19,7 @@ lastOf:
   spec: {thought: str, code_line: str}
   code: |
     import repair_main
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = repair_main.parse_output(raw_output)
 
 - spec: {before: str, after: str}
