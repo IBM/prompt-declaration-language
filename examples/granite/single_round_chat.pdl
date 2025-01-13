@@ -1,8 +1,9 @@
 description: Granite Single-Round Chat
 text:
-- include: ./granite_defs.pdl
+# (Note that 'PROMPT' is undefined will happen if you don't invoke pdl with `-f prompt.json`)
 - "${ PROMPT }\n"
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
   parameters:
+    # Use no LLM model creativity (0 is the default)
     temperature: 0
 role: user
