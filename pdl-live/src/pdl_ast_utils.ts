@@ -182,7 +182,7 @@ export function iter_block_children(
     })
     .with({kind: 'match'}, block => {
       block.with.forEach(match_case => {
-        f(match_case.return);
+        f(match_case.then);
       });
     })
     .with({kind: 'repeat'}, block => {
