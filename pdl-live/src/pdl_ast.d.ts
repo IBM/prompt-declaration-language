@@ -21,6 +21,7 @@ export type Program =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -135,6 +136,11 @@ export type Description18 = string | null;
  */
 export type Description19 = string | null;
 /**
+ * Documentation associated to the block.
+ *
+ */
+export type Description20 = string | null;
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -155,8 +161,8 @@ export type Contribute = (
  * Parser to use to construct a value out of a string result.
  */
 export type Parser = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
-export type Description20 = string | null;
-export type Spec20 = {
+export type Description21 = string | null;
+export type Spec21 = {
   [k: string]: unknown;
 } | null;
 export type Pdl =
@@ -171,6 +177,7 @@ export type Pdl =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -184,8 +191,8 @@ export type Pdl =
   | ErrorBlock
   | EmptyBlock
   | null;
-export type Description21 = string | null;
-export type Spec21 = {
+export type Description22 = string | null;
+export type Spec22 = {
   [k: string]: unknown;
 } | null;
 export type Regex = string;
@@ -206,6 +213,7 @@ export type Fallback =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -262,6 +270,7 @@ export type Fallback1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -294,6 +303,7 @@ export type Program1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -342,6 +352,7 @@ export type Fallback2 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -378,6 +389,7 @@ export type Trace =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -426,6 +438,7 @@ export type Fallback3 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -490,6 +503,7 @@ export type Fallback4 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -523,6 +537,7 @@ export type Content =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -571,6 +586,7 @@ export type Fallback5 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -604,6 +620,7 @@ export type Object =
         | GetBlock
         | DataBlock
         | IfBlock
+        | MatchBlock
         | RepeatBlock
         | RepeatUntilBlock
         | ForBlock
@@ -630,6 +647,7 @@ export type Object =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -679,6 +697,7 @@ export type Fallback6 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -710,6 +729,7 @@ export type Array = (
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -759,6 +779,7 @@ export type Fallback7 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -790,6 +811,7 @@ export type Lastof = (
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -839,6 +861,7 @@ export type Fallback8 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -874,6 +897,7 @@ export type Text =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -898,6 +922,7 @@ export type Text =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -948,6 +973,7 @@ export type Fallback9 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -983,6 +1009,7 @@ export type Repeat =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1034,6 +1061,7 @@ export type Trace1 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1084,6 +1112,7 @@ export type Fallback10 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1119,6 +1148,7 @@ export type Repeat1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1150,6 +1180,7 @@ export type Trace2 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1200,6 +1231,7 @@ export type Fallback11 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1235,6 +1267,7 @@ export type Repeat2 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1271,6 +1304,7 @@ export type Trace3 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1321,6 +1355,7 @@ export type Fallback12 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1339,11 +1374,11 @@ export type Fallback12 =
  *
  */
 export type Role12 = string | null;
-export type Kind12 = "if";
-/**
- * Branch to exectute if the condition is true.
- *
- */
+export type Kind12 = "match";
+export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+export type Any = null;
+export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
+export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Then =
   | boolean
   | number
@@ -1356,6 +1391,7 @@ export type Then =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1369,36 +1405,7 @@ export type Then =
   | ErrorBlock
   | EmptyBlock
   | null;
-/**
- * Branch to execute if the condition is false.
- *
- */
-export type Else =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-export type IfResult = boolean | null;
+export type With1 = MatchCase[];
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1434,6 +1441,7 @@ export type Fallback13 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1452,11 +1460,68 @@ export type Fallback13 =
  *
  */
 export type Role13 = string | null;
-export type Kind13 = "data";
+export type Kind13 = "if";
 /**
- * Do not evaluate expressions inside strings.
+ * Branch to exectute if the condition is true.
+ *
  */
-export type Raw = boolean;
+export type Then1 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
+export type Else =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+export type IfResult = boolean | null;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1492,6 +1557,7 @@ export type Fallback14 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1510,11 +1576,11 @@ export type Fallback14 =
  *
  */
 export type Role14 = string | null;
-export type Kind14 = "get";
+export type Kind14 = "data";
 /**
- * Name of the variable to access.
+ * Do not evaluate expressions inside strings.
  */
-export type Get = string;
+export type Raw = boolean;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1550,6 +1616,7 @@ export type Fallback15 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1568,41 +1635,11 @@ export type Fallback15 =
  *
  */
 export type Role15 = string | null;
-export type Kind15 = "code";
+export type Kind15 = "get";
 /**
- * Programming language of the code.
- *
+ * Name of the variable to access.
  */
-export type Lang = "python" | "command" | "jinja" | "pdl";
-/**
- * Code to execute.
- *
- */
-export type Code =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
+export type Get = string;
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1638,6 +1675,7 @@ export type Fallback16 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1656,7 +1694,97 @@ export type Fallback16 =
  *
  */
 export type Role16 = string | null;
-export type Kind16 = "model";
+export type Kind16 = "code";
+/**
+ * Programming language of the code.
+ *
+ */
+export type Lang = "python" | "command" | "jinja" | "pdl";
+/**
+ * Code to execute.
+ *
+ */
+export type Code =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def17 = string | null;
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute17 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback17 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
+export type Role17 = string | null;
+export type Kind17 = "model";
 export type Input =
   | boolean
   | number
@@ -1669,6 +1797,7 @@ export type Input =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1694,6 +1823,7 @@ export type Trace4 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1734,112 +1864,6 @@ export type ExampleFileIds =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def17 = string | null;
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute17 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue;
-    }
-)[];
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback17 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-/**
- * Role associated to the block and sub-blocks.
- *
- */
-export type Role17 = string | null;
-export type Kind17 = "model";
-export type Input1 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-export type Trace5 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | BamModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null;
-export type Modelresponse1 = string | null;
-export type Platform1 = "litellm";
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def18 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
@@ -1871,6 +1895,7 @@ export type Fallback18 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1889,8 +1914,8 @@ export type Fallback18 =
  *
  */
 export type Role18 = string | null;
-export type Kind18 = "call";
-export type Trace6 =
+export type Kind18 = "model";
+export type Input1 =
   | boolean
   | number
   | string
@@ -1902,6 +1927,7 @@ export type Trace6 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1915,6 +1941,34 @@ export type Trace6 =
   | ErrorBlock
   | EmptyBlock
   | null;
+export type Trace5 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+export type Modelresponse1 = string | null;
+export type Platform1 = "litellm";
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1950,6 +2004,7 @@ export type Fallback19 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1968,7 +2023,88 @@ export type Fallback19 =
  *
  */
 export type Role19 = string | null;
-export type Kind19 = "function";
+export type Kind19 = "call";
+export type Trace6 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def20 = string | null;
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute20 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue;
+    }
+)[];
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser20 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback20 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | BamModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null;
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
+export type Role20 = string | null;
+export type Kind20 = "function";
 /**
  * Functions parameters with their types.
  *
@@ -1992,6 +2128,7 @@ export type Return =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2020,6 +2157,7 @@ export type PdlBlock =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2041,14 +2179,14 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def19;
-  contribute?: Contribute19;
-  parser?: Parser19;
-  fallback?: Fallback19;
-  role?: Role19;
+  def?: Def20;
+  contribute?: Contribute20;
+  parser?: Parser20;
+  fallback?: Fallback20;
+  role?: Role20;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind19;
+  kind?: Kind20;
   function: Function;
   return: Return;
   scope?: Scope;
@@ -2077,6 +2215,7 @@ export interface Defs {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2098,16 +2237,16 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def18;
-  contribute?: Contribute18;
-  parser?: Parser18;
-  fallback?: Fallback18;
-  role?: Role18;
+  def?: Def19;
+  contribute?: Contribute19;
+  parser?: Parser19;
+  fallback?: Fallback19;
+  role?: Role19;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind18;
+  kind?: Kind19;
   call: unknown;
-  args?: Args;
+  args?: unknown;
   trace?: Trace6;
 }
 /**
@@ -2134,6 +2273,7 @@ export interface Defs1 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2155,14 +2295,14 @@ export interface LitellmModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def17;
-  contribute?: Contribute17;
-  parser?: Parser17;
-  fallback?: Fallback17;
-  role?: Role17;
+  def?: Def18;
+  contribute?: Contribute18;
+  parser?: Parser18;
+  fallback?: Fallback18;
+  role?: Role18;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind17;
+  kind?: Kind18;
   model: unknown;
   input?: Input1;
   trace?: Trace5;
@@ -2194,6 +2334,7 @@ export interface Defs2 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2212,14 +2353,14 @@ export interface BamModelBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def16;
-  contribute?: Contribute16;
-  parser?: Parser16;
-  fallback?: Fallback16;
-  role?: Role16;
+  def?: Def17;
+  contribute?: Contribute17;
+  parser?: Parser17;
+  fallback?: Fallback17;
+  role?: Role17;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind16;
+  kind?: Kind17;
   model: unknown;
   input?: Input;
   trace?: Trace4;
@@ -2255,6 +2396,7 @@ export interface Defs3 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2276,14 +2418,14 @@ export interface CodeBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
-  def?: Def15;
-  contribute?: Contribute15;
-  parser?: Parser15;
-  fallback?: Fallback15;
-  role?: Role15;
+  def?: Def16;
+  contribute?: Contribute16;
+  parser?: Parser16;
+  fallback?: Fallback16;
+  role?: Role16;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind15;
+  kind?: Kind16;
   lang: Lang;
   code: Code;
 }
@@ -2311,6 +2453,7 @@ export interface Defs4 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2332,14 +2475,14 @@ export interface GetBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
-  def?: Def14;
-  contribute?: Contribute14;
-  parser?: Parser14;
-  fallback?: Fallback14;
-  role?: Role14;
+  def?: Def15;
+  contribute?: Contribute15;
+  parser?: Parser15;
+  fallback?: Fallback15;
+  role?: Role15;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind14;
+  kind?: Kind15;
   get: Get;
 }
 /**
@@ -2366,6 +2509,7 @@ export interface Defs5 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2387,14 +2531,14 @@ export interface DataBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
-  def?: Def13;
-  contribute?: Contribute13;
-  parser?: Parser13;
-  fallback?: Fallback13;
-  role?: Role13;
+  def?: Def14;
+  contribute?: Contribute14;
+  parser?: Parser14;
+  fallback?: Fallback14;
+  role?: Role14;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind13;
+  kind?: Kind14;
   data: unknown;
   raw?: Raw;
 }
@@ -2422,6 +2566,7 @@ export interface Defs6 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2443,16 +2588,16 @@ export interface IfBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
-  def?: Def12;
-  contribute?: Contribute12;
-  parser?: Parser12;
-  fallback?: Fallback12;
-  role?: Role12;
+  def?: Def13;
+  contribute?: Contribute13;
+  parser?: Parser13;
+  fallback?: Fallback13;
+  role?: Role13;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind12;
+  kind?: Kind13;
   if: unknown;
-  then: Then;
+  then: Then1;
   else?: Else;
   if_result?: IfResult;
 }
@@ -2480,6 +2625,7 @@ export interface Defs7 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2495,24 +2641,22 @@ export interface Defs7 {
     | null;
 }
 /**
- * Repeat the execution of a block for a fixed number of iterations.
+ * Match control structure.
  */
-export interface RepeatBlock {
+export interface MatchBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
-  def?: Def11;
-  contribute?: Contribute11;
-  parser?: Parser11;
-  fallback?: Fallback11;
-  role?: Role11;
+  def?: Def12;
+  contribute?: Contribute12;
+  parser?: Parser12;
+  fallback?: Fallback12;
+  role?: Role12;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind11;
-  repeat: Repeat2;
-  num_iterations: NumIterations;
-  join?: Join2;
-  trace?: Trace3;
+  kind?: Kind12;
+  match: unknown;
+  with: With1;
 }
 /**
  * Type specification of the result of the block.
@@ -2538,6 +2682,7 @@ export interface Defs8 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2553,24 +2698,24 @@ export interface Defs8 {
     | null;
 }
 /**
- * Repeat the execution of a block until a condition is satisfied.
+ * Repeat the execution of a block for a fixed number of iterations.
  */
-export interface RepeatUntilBlock {
+export interface RepeatBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
-  def?: Def10;
-  contribute?: Contribute10;
-  parser?: Parser10;
-  fallback?: Fallback10;
-  role?: Role10;
+  def?: Def11;
+  contribute?: Contribute11;
+  parser?: Parser11;
+  fallback?: Fallback11;
+  role?: Role11;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind10;
-  repeat: Repeat1;
-  until: unknown;
-  join?: Join1;
-  trace?: Trace2;
+  kind?: Kind11;
+  repeat: Repeat2;
+  num_iterations: NumIterations;
+  join?: Join2;
+  trace?: Trace3;
 }
 /**
  * Type specification of the result of the block.
@@ -2596,6 +2741,7 @@ export interface Defs9 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2611,24 +2757,24 @@ export interface Defs9 {
     | null;
 }
 /**
- * Iteration over arrays.
+ * Repeat the execution of a block until a condition is satisfied.
  */
-export interface ForBlock {
+export interface RepeatUntilBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
-  def?: Def9;
-  contribute?: Contribute9;
-  parser?: Parser9;
-  fallback?: Fallback9;
-  role?: Role9;
+  def?: Def10;
+  contribute?: Contribute10;
+  parser?: Parser10;
+  fallback?: Fallback10;
+  role?: Role10;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind9;
-  for: For;
-  repeat: Repeat;
-  join?: Join;
-  trace?: Trace1;
+  kind?: Kind10;
+  repeat: Repeat1;
+  until: unknown;
+  join?: Join1;
+  trace?: Trace2;
 }
 /**
  * Type specification of the result of the block.
@@ -2654,6 +2800,7 @@ export interface Defs10 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2669,21 +2816,24 @@ export interface Defs10 {
     | null;
 }
 /**
- * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ * Iteration over arrays.
  */
-export interface TextBlock {
+export interface ForBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
-  def?: Def8;
-  contribute?: Contribute8;
-  parser?: Parser8;
-  fallback?: Fallback8;
-  role?: Role8;
+  def?: Def9;
+  contribute?: Contribute9;
+  parser?: Parser9;
+  fallback?: Fallback9;
+  role?: Role9;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind8;
-  text: Text;
+  kind?: Kind9;
+  for: For;
+  repeat: Repeat;
+  join?: Join;
+  trace?: Trace1;
 }
 /**
  * Type specification of the result of the block.
@@ -2709,6 +2859,7 @@ export interface Defs11 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2724,21 +2875,21 @@ export interface Defs11 {
     | null;
 }
 /**
- * Return the value of the last block if the list of blocks.
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
-export interface LastOfBlock {
+export interface TextBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
-  def?: Def7;
-  contribute?: Contribute7;
-  parser?: Parser7;
-  fallback?: Fallback7;
-  role?: Role7;
+  def?: Def8;
+  contribute?: Contribute8;
+  parser?: Parser8;
+  fallback?: Fallback8;
+  role?: Role8;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind7;
-  lastOf: Lastof;
+  kind?: Kind8;
+  text: Text;
 }
 /**
  * Type specification of the result of the block.
@@ -2764,6 +2915,7 @@ export interface Defs12 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2779,21 +2931,21 @@ export interface Defs12 {
     | null;
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Return the value of the last block if the list of blocks.
  */
-export interface ArrayBlock {
+export interface LastOfBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
-  def?: Def6;
-  contribute?: Contribute6;
-  parser?: Parser6;
-  fallback?: Fallback6;
-  role?: Role6;
+  def?: Def7;
+  contribute?: Contribute7;
+  parser?: Parser7;
+  fallback?: Fallback7;
+  role?: Role7;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind6;
-  array: Array;
+  kind?: Kind7;
+  lastOf: Lastof;
 }
 /**
  * Type specification of the result of the block.
@@ -2819,6 +2971,7 @@ export interface Defs13 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2834,21 +2987,21 @@ export interface Defs13 {
     | null;
 }
 /**
- * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface ObjectBlock {
+export interface ArrayBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
-  def?: Def5;
-  contribute?: Contribute5;
-  parser?: Parser5;
-  fallback?: Fallback5;
-  role?: Role5;
+  def?: Def6;
+  contribute?: Contribute6;
+  parser?: Parser6;
+  fallback?: Fallback6;
+  role?: Role6;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind5;
-  object: Object;
+  kind?: Kind6;
+  array: Array;
 }
 /**
  * Type specification of the result of the block.
@@ -2874,6 +3027,7 @@ export interface Defs14 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2889,21 +3043,21 @@ export interface Defs14 {
     | null;
 }
 /**
- * Create a message.
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface MessageBlock {
+export interface ObjectBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
-  def?: Def4;
-  contribute?: Contribute4;
-  parser?: Parser4;
-  fallback?: Fallback4;
-  role: Role4;
+  def?: Def5;
+  contribute?: Contribute5;
+  parser?: Parser5;
+  fallback?: Fallback5;
+  role?: Role5;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind4;
-  content: Content;
+  kind?: Kind5;
+  object: Object;
 }
 /**
  * Type specification of the result of the block.
@@ -2929,6 +3083,7 @@ export interface Defs15 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2944,23 +3099,21 @@ export interface Defs15 {
     | null;
 }
 /**
- * Read from a file or standard input.
+ * Create a message.
  */
-export interface ReadBlock {
+export interface MessageBlock {
   description?: Description16;
   spec?: Spec16;
   defs?: Defs16;
-  def?: Def3;
-  contribute?: Contribute3;
-  parser?: Parser3;
-  fallback?: Fallback3;
-  role?: Role3;
+  def?: Def4;
+  contribute?: Contribute4;
+  parser?: Parser4;
+  fallback?: Fallback4;
+  role: Role4;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind3;
-  read: unknown;
-  message?: Message;
-  multiline?: Multiline;
+  kind?: Kind4;
+  content: Content;
 }
 /**
  * Type specification of the result of the block.
@@ -2986,6 +3139,7 @@ export interface Defs16 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3001,22 +3155,23 @@ export interface Defs16 {
     | null;
 }
 /**
- * Include a PDL file.
+ * Read from a file or standard input.
  */
-export interface IncludeBlock {
+export interface ReadBlock {
   description?: Description17;
   spec?: Spec17;
   defs?: Defs17;
-  def?: Def2;
-  contribute?: Contribute2;
-  parser?: Parser2;
-  fallback?: Fallback2;
-  role?: Role2;
+  def?: Def3;
+  contribute?: Contribute3;
+  parser?: Parser3;
+  fallback?: Fallback3;
+  role?: Role3;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind2;
-  include: Include;
-  trace?: Trace;
+  kind?: Kind3;
+  read: unknown;
+  message?: Message;
+  multiline?: Multiline;
 }
 /**
  * Type specification of the result of the block.
@@ -3042,6 +3197,7 @@ export interface Defs17 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3056,20 +3212,23 @@ export interface Defs17 {
     | EmptyBlock
     | null;
 }
-export interface ErrorBlock {
+/**
+ * Include a PDL file.
+ */
+export interface IncludeBlock {
   description?: Description18;
   spec?: Spec18;
   defs?: Defs18;
-  def?: Def1;
-  contribute?: Contribute1;
-  parser?: Parser1;
-  fallback?: Fallback1;
-  role?: Role1;
+  def?: Def2;
+  contribute?: Contribute2;
+  parser?: Parser2;
+  fallback?: Fallback2;
+  role?: Role2;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind1;
-  msg: Msg;
-  program: Program1;
+  kind?: Kind2;
+  include: Include;
+  trace?: Trace;
 }
 /**
  * Type specification of the result of the block.
@@ -3095,6 +3254,7 @@ export interface Defs18 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3109,21 +3269,20 @@ export interface Defs18 {
     | EmptyBlock
     | null;
 }
-/**
- * Block without an action. It can contain definitions.
- */
-export interface EmptyBlock {
+export interface ErrorBlock {
   description?: Description19;
   spec?: Spec19;
   defs?: Defs19;
-  def?: Def;
-  contribute?: Contribute;
-  parser?: Parser;
-  fallback?: Fallback;
-  role?: Role;
+  def?: Def1;
+  contribute?: Contribute1;
+  parser?: Parser1;
+  fallback?: Fallback1;
+  role?: Role1;
   result?: unknown;
   location?: LocationType | null;
-  kind?: Kind;
+  kind?: Kind1;
+  msg: Msg;
+  program: Program1;
 }
 /**
  * Type specification of the result of the block.
@@ -3149,6 +3308,62 @@ export interface Defs19 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null;
+}
+/**
+ * Block without an action. It can contain definitions.
+ */
+export interface EmptyBlock {
+  description?: Description20;
+  spec?: Spec20;
+  defs?: Defs20;
+  def?: Def;
+  contribute?: Contribute;
+  parser?: Parser;
+  fallback?: Fallback;
+  role?: Role;
+  result?: unknown;
+  location?: LocationType | null;
+  kind?: Kind;
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec20 {
+  [k: string]: unknown;
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs20 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | BamModelBlock
+    | CodeBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3167,13 +3382,13 @@ export interface ContributeValue {
   value: Value;
 }
 export interface PdlParser {
-  description?: Description20;
-  spec?: Spec20;
+  description?: Description21;
+  spec?: Spec21;
   pdl: Pdl;
 }
 export interface RegexParser {
-  description?: Description21;
-  spec?: Spec21;
+  description?: Description22;
+  spec?: Spec22;
   regex: Regex;
   mode?: Mode;
 }
@@ -3201,6 +3416,29 @@ export interface JoinArray {
 }
 export interface JoinLastOf {
   as: As2;
+}
+/**
+ * Case of a match.
+ */
+export interface MatchCase {
+  case?: Case;
+  if?: unknown;
+  then: Then;
+}
+export interface OrPattern {
+  union: Union;
+}
+export interface ArrayPattern {
+  array: Array1;
+}
+export interface ObjectPattern {
+  object: Object1;
+}
+export interface Object1 {
+  [k: string]: boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+}
+export interface AnyPattern {
+  any: Any;
 }
 export interface ModerationParameters {
   hap?: ModerationHAP | null;
@@ -3246,12 +3484,5 @@ export interface PromptTemplateData {
   [k: string]: unknown;
 }
 export interface Constraints {
-  [k: string]: unknown;
-}
-/**
- * Arguments of the function with their values.
- *
- */
-export interface Args {
   [k: string]: unknown;
 }

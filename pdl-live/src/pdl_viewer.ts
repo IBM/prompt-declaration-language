@@ -180,6 +180,9 @@ export function show_block(data: PdlBlock): HTMLDivElement {
         body.appendChild(if_child);
       }
     })
+    .with({kind: 'match'}, _ => {
+      // TODO
+    })
     .with({kind: 'read'}, data => {
       // TODO
       body.classList.add('pdl_read');
