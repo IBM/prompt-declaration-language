@@ -1,0 +1,111 @@
+/* The color palette https://www.patternfly.org/design-foundations/colors#color-families */
+
+.pdl-accordion {
+  .pf-v6-c-accordion__item {
+    background-color: transparent;
+
+    &.pdl_block {
+      background-color: var(
+        --pf-v6-c-accordion__item--m-expanded--BackgroundColor
+      );
+
+      .pdl-wrap {
+        white-space: pre-wrap;
+      }
+
+      .pdl-block-icon {
+        font-size: 1.375em;
+      }
+
+      .pdl-result-panel {
+        --pf-v6-c-panel--BackgroundColor: transparent;
+      }
+    }
+  }
+}
+
+.pdl-accordion .pdl_block.pdl_model {
+  background-color: var(--pf-t--global--color--nonstatus--yellow--default);
+  background-color: #ece6ff; /* purple */
+  background-color: #fff4cc; /* yellow */
+  background-color: #daf2f2; /* teal */
+  background-color: #e0f0ff; /* blue */
+}
+
+.pf-v6-theme-dark .pdl-accordion .pdl_block.pdl_model {
+  background-color: #21134d; /* purple */
+  background-color: #73480b; /* yellow */
+  background-color: #204d00; /* green */
+  background-color: #732e00; /* orange */
+  background-color: #731f00; /* orangered */
+  background-color: #004d4d; /* teal */
+  background-color: #003366; /* blue */
+}
+
+.pdl_show_result_false {
+}
+
+.pdl_string {
+  background-color: var(--pf-t--global--background--color--secondary--default);
+}
+
+.pdl_empty {
+  background-color: var(--pf-t--global--icon--color--status--warning--default);
+}
+
+.pdl_text {
+  white-space: normal;
+  background-color: transparent;
+}
+
+.pdl_lastOf {
+  background-color: var(--pf-t--global--background--color--secondary--default);
+}
+
+.pdl_object {
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--purple--default
+  );
+}
+
+.pdl_array {
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--purple--clicked
+  );
+}
+
+/*.pdl_if,
+.pdl_code,
+.pdl_repeat_until,
+.pdl_repeat,
+.pdl_for {
+  background-color: var(--pf-t--global--background--color--secondary--default);
+}*/
+
+.pdl_api {
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--green--default
+  );
+}
+
+.pdl_get {
+  background-color: var(--pf-t--global--color--nonstatus--blue--default);
+}
+
+.pdl_include {
+  background-color: var(
+    --pf-t--global--border--color--nonstatus--teal--clicked
+  );
+}
+
+.pdl_function {
+  background-color: var(--pf-t--global--border--color--status--custom--default);
+}
+.pdl_call {
+  background-color: var(
+    --pf-t--global--icon--color--severity--important--default
+  );
+}
+.pdl_error {
+  background-color: var(--pf-t--global--icon--color--status--danger--default);
+}

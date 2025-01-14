@@ -1,24 +1,46 @@
-Install the dependencies:
-```
-npm install
+# PDL Viewer
+
+To get started, make sure you have a recent version of
+[NodeJS](https://nodejs.org/en/download) installed and
+[Yarn](https://classic.yarnpkg.com/lang/en/docs/install). On MacOS,
+these can be installed via `brew install node yarn`.
+
+## Implementation Details
+
+The PDL Viewer uses [Vite](https://vite.dev/) for bundling,
+[React](https://react.dev/) for the UI,
+[PatternFly](https://www.patternfly.org/) for UI components, and is
+written in [TypeScript](https://www.typescriptlang.org/). The React
+components are written in [TSX](https://react.dev/learn/typescript)
+(the Typescript variant of JSX).
+
+## Development
+
+To install dependencies:
+```shell
+yarn
 ```
 
-Update the type definitions (if needed):
-```
-npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
-```
-
-Automatically format the code
-```
-npm run fix
+To start the watcher:
+```shell
+yarn dev
 ```
 
-Package the code:
-```
-npm run build
+Which will open up a local port which you can view in your favorite
+browser. Edits to any source files will result in quick and automatic
+updates to that running UI.
+
+## Tests
+
+There are currently only simple tests for: linting, formatting, and
+type checking. These can be run via:
+```shell
+yarn test
 ```
 
-Open the UI:
-```
-open index.html
+## Production
+
+This will generate production bundles in `dist/`
+```shell
+yarn build
 ```

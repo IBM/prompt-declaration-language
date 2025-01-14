@@ -55,8 +55,8 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm install
+        run: yarn
       - name: Generate pdl_ast.d.ts
         run: npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
       - name: Build viewer
-        run: npm run build
+        run: yarn build
