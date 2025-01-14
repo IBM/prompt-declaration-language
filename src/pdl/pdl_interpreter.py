@@ -6,25 +6,30 @@ import subprocess  # nosec
 import sys
 import types
 
-# from itertools import batched
-from pathlib import Path
-from typing import Any, Generator, Optional, Sequence, TypeVar
+# TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
+import warnings
 
-import httpx
-import litellm
-import yaml
-from jinja2 import (
+warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
+
+# from itertools import batched
+from pathlib import Path  # noqa: E402
+from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+
+import httpx  # noqa: E402
+import litellm  # noqa: E402
+import yaml  # noqa: E402
+from jinja2 import (  # noqa: E402
     Environment,
     StrictUndefined,
     Template,
     TemplateSyntaxError,
     UndefinedError,
 )
-from jinja2.nodes import TemplateData
-from jinja2.runtime import Undefined
-from pydantic import BaseModel
+from jinja2.nodes import TemplateData  # noqa: E402
+from jinja2.runtime import Undefined  # noqa: E402
+from pydantic import BaseModel  # noqa: E402
 
-from .pdl_ast import (
+from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
     ArrayBlock,
     BamModelBlock,
@@ -66,11 +71,11 @@ from .pdl_ast import (
     TextBlock,
     empty_block_location,
 )
-from .pdl_dumper import block_to_dict
-from .pdl_llms import BamModel, LitellmModel
-from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_file, parse_str
-from .pdl_scheduler import (
+from .pdl_dumper import block_to_dict  # noqa: E402
+from .pdl_llms import BamModel, LitellmModel  # noqa: E402
+from .pdl_location_utils import append, get_loc_string  # noqa: E402
+from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
+from .pdl_scheduler import (  # noqa: E402
     CodeYieldResultMessage,
     GeneratorWrapper,
     ModelCallMessage,
@@ -80,8 +85,8 @@ from .pdl_scheduler import (
     YieldResultMessage,
     schedule,
 )
-from .pdl_schema_validator import type_check_args, type_check_spec
-from .pdl_utils import (
+from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
+from .pdl_utils import (  # noqa: E402
     get_contribute_value,
     messages_concat,
     messages_to_str,
