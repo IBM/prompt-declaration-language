@@ -581,7 +581,12 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
     """Model-specific defaults to apply"""
     return [
         {
-            "*watsonx*": {
+            "*watsonx/*": {
+                "temperature": 0,
+            },
+        },
+        {
+            "*watsonx_text*": {
                 "decoding_method": DECODING_METHOD,
                 "max_tokens": MAX_NEW_TOKENS,
                 "min_new_tokens": MIN_NEW_TOKENS,
