@@ -148,6 +148,7 @@ text:
   lang: python
   code: |
     import random
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = random.randint(1, 20)
 - "\nthe result is (${ N })\n"
 ```

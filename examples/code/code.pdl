@@ -1,10 +1,13 @@
 description: Code explanation example
 defs:
+  # Read data.yaml as YAML and store it in a variable `CODE`
   CODE:
     read: ./data.yaml
     parser: yaml
 text:
+# Output the `source_code:` of the YAML to the console
 - "\n${ CODE.source_code }\n"
+# Use replicate.com to invoke a Granite model with a prompt
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
   input: |
     Here is some info about the location of the function in the repo.
@@ -18,4 +21,5 @@ text:
     ```
     ${ CODE.source_code }```
   parameters:
+    # Use no LLM creativity.  (Note that 0 is the default; this line has no effect)
     temperature: 0

@@ -135,7 +135,7 @@ Yes, I did. How can I assist you today?
 ## Function Definition
 
 PDL also supports function definitions to make it easier to reuse code.
-Suppose we want to define a translation function that takes a string and calls a falcon model for the translation. This would be written in PDL as follows ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/function_definition.pdl)):
+Suppose we want to define a translation function that takes a string and calls a Granite model for the translation. This would be written in PDL as follows ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/function_definition.pdl)):
 
 
 ```yaml
