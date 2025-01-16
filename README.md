@@ -64,7 +64,7 @@ pdl <path/to/example.pdl>
 
 ## Documentation
 
-- [Documenation](https://ibm.github.io/prompt-declaration-language/)
+- [Documentation](https://ibm.github.io/prompt-declaration-language/)
 - [API References](https://ibm.github.io/prompt-declaration-language/api_reference/)
 - [Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial/)
 
