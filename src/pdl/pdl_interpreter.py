@@ -85,11 +85,11 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
+    apply_defaults,
     get_contribute_value,
     messages_concat,
     replace_contribute_value,
     stringify,
-    apply_defaults,
 )
 
 logger = logging.getLogger(__name__)
@@ -1116,9 +1116,11 @@ def step_call_model(
 
         def get_transformed_inputs(kwargs):
             # Apply PDL defaults to model invocation
-            kwargs['optional_params'] = apply_defaults(kwargs['model'],
-                                                       kwargs['optional_params'],
-                                                       scope['pdl_model_default_parameters'])
+            kwargs["optional_params"] = apply_defaults(
+                kwargs["model"],
+                kwargs["optional_params"],
+                scope["pdl_model_default_parameters"],
+            )
 
             params_to_model = kwargs["additional_args"]["complete_input_dict"]
             nonlocal litellm_params

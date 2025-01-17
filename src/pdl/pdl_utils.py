@@ -2,7 +2,14 @@ import fnmatch
 import json
 from typing import Any, Sequence
 
-from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages, get_sampling_defaults
+from .pdl_ast import (
+    ContributeTarget,
+    ContributeValue,
+    FunctionBlock,
+    Message,
+    Messages,
+    get_sampling_defaults,
+)
 
 
 def stringify(result):
@@ -85,7 +92,12 @@ def remove_none_values_from_message(message: Any) -> dict[str, Any]:
                 ret[key] = value
     return ret
 
-def apply_defaults(model_id: str, params: dict[str, Any], all_model_defaults: list[dict[str, dict[str, Any]]]) -> dict[str, Any]:
+
+def apply_defaults(
+    model_id: str,
+    params: dict[str, Any],
+    all_model_defaults: list[dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
     # Never apply defaults to granite-20b-code-instruct-r1.1
     if "granite-20b-code-instruct-r1.1" in model_id:
         return params
@@ -97,7 +109,12 @@ def apply_defaults(model_id: str, params: dict[str, Any], all_model_defaults: li
 
     return parameters
 
-def apply_raw_defaults(model_id: str, params: dict[str, Any], model_defaults: list[dict[str, dict[str, Any]]]) -> dict[str, Any]:
+
+def apply_raw_defaults(
+    model_id: str,
+    params: dict[str, Any],
+    model_defaults: list[dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
     """Apply defaults to params based on a list of model defaults
 
     Args:
@@ -120,7 +137,9 @@ def apply_raw_defaults(model_id: str, params: dict[str, Any], model_defaults: li
         assert isinstance(model_default, dict)
         for model_glob, glob_defaults in model_default.items():
             if not isinstance(glob_defaults, dict):
-                raise ValueError(f"invalid default type {type(glob_defaults)} for model matcher {model_glob}")
+                raise ValueError(
+                    f"invalid default type {type(glob_defaults)} for model matcher {model_glob}"
+                )
             assert isinstance(glob_defaults, dict)
             if fnmatch.fnmatchcase(model_id, model_glob):
                 print(f"model {model_id} matches {model_glob}")
@@ -134,17 +153,20 @@ def apply_raw_defaults(model_id: str, params: dict[str, Any], model_defaults: li
             retval[k] = v
     return retval
 
+
 def validate_scope(scope: dict):
     """Throw an exception if any key in scope is invalid"""
     validate_pdl_model_defaults(scope["pdl_model_default_parameters"])
 
+
 def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]]):
     """Throw an exception if the model_defaults is not in expected format"""
 
-    errors = False
     for model_default in model_defaults:
         assert isinstance(model_default, dict)
         for model_glob, glob_defaults in model_default.items():
             if not isinstance(glob_defaults, dict):
-                raise ValueError(f"invalid defaults {glob_defaults} for model matcher {model_glob}")
+                raise ValueError(
+                    f"invalid defaults {glob_defaults} for model matcher {model_glob}"
+                )
             assert isinstance(glob_defaults, dict)

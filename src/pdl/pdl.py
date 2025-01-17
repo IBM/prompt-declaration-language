@@ -235,9 +235,7 @@ def main():
         exec_docker(*args)
         assert False  # unreachable: exec_docker terminate the execution
 
-    initial_scope = {
-        "pdl_model_default_parameters": get_default_model_parameters()
-    }
+    initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     if args.data_file is not None:
         with open(args.data_file, "r", encoding="utf-8") as scope_fp:
             initial_scope = yaml.safe_load(scope_fp)

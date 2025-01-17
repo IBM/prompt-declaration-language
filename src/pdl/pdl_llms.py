@@ -5,10 +5,7 @@ import litellm
 from dotenv import load_dotenv
 from litellm import completion
 
-from .pdl_ast import (
-    Message,
-    set_structured_decoding_parameters,
-)
+from .pdl_ast import Message, set_structured_decoding_parameters
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables

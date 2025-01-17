@@ -571,47 +571,53 @@ def set_structured_decoding_parameters(
 def get_default_model_parameters() -> list[dict[str, Any]]:
     """Model-specific defaults to apply"""
     return [
-        { "*watsonx*": {
-            "decoding_method": DECODING_METHOD,
-            "max_tokens": MAX_NEW_TOKENS,
-            "min_new_tokens": MIN_NEW_TOKENS,
-            "repetition_penalty": REPETITION_PENALTY,
-          },
-        },
-        { "replicate*granite-3.0*": {
-            "temperature": 0,
-            "roles": {
-                "system": {
-                    "pre_message": "<|start_of_role|>system<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "user": {
-                    "pre_message": "<|start_of_role|>user<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "assistant": {
-                    "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "available_tools": {
-                    "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "tool_response": {
-                    "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
+        {
+            "*watsonx*": {
+                "decoding_method": DECODING_METHOD,
+                "max_tokens": MAX_NEW_TOKENS,
+                "min_new_tokens": MIN_NEW_TOKENS,
+                "repetition_penalty": REPETITION_PENALTY,
             },
-            "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>"
-          }
-        }]
+        },
+        {
+            "replicate*granite-3.0*": {
+                "temperature": 0,
+                "roles": {
+                    "system": {
+                        "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "user": {
+                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "assistant": {
+                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "available_tools": {
+                        "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tool_response": {
+                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                },
+                "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
+            }
+        },
+    ]
+
 
 def get_sampling_defaults() -> list[dict[str, Any]]:
     """Model-specific defaults to apply if we are sampling."""
     return [
-        { "*": {
-            "temperature": TEMPERATURE_SAMPLING,
-            "top_k": TOP_K_SAMPLING,
-            "top_p": TOP_P_SAMPLING,
+        {
+            "*": {
+                "temperature": TEMPERATURE_SAMPLING,
+                "top_k": TOP_K_SAMPLING,
+                "top_p": TOP_P_SAMPLING,
+            }
         }
-    }]
+    ]
