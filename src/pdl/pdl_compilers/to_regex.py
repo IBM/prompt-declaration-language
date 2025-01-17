@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Sequence, TypeAlias
 
 from ..pdl_ast import (
-    BamModelBlock,
     Block,
     BlockType,
     CallBlock,
@@ -264,25 +263,6 @@ def compile_block(
             stop_sequences: list[str]
             include_stop_sequence: bool
             match block:
-                case BamModelBlock():
-                    if block.parameters is None:
-                        stop_sequences = []
-                        include_stop_sequence = False
-                    elif isinstance(block.parameters, dict):
-                        stop_sequences = block.parameters.get("stop_sequences", [])
-                        include_stop_sequence = block.parameters.get(
-                            "include_stop_sequence", False
-                        )
-                    else:
-                        if isinstance(block.parameters, LocalizedExpression):
-                            parameters = block.parameters.expr
-                        else:
-                            parameters = block.parameters
-                        stop_sequences = parameters.stop_sequences or []
-                        include_stop_sequence = (
-                            parameters.include_stop_sequence is None
-                            or parameters.include_stop_sequence
-                        )
                 case LitellmModelBlock():
                     if block.parameters is None:
                         stop_sequences = []
