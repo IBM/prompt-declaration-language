@@ -89,6 +89,7 @@ from .pdl_utils import (  # noqa: E402
     messages_concat,
     replace_contribute_value,
     stringify,
+    apply_defaults,
 )
 
 logger = logging.getLogger(__name__)
@@ -1114,6 +1115,11 @@ def step_call_model(
         litellm_params = {}
 
         def get_transformed_inputs(kwargs):
+            # Apply PDL defaults to model invocation
+            kwargs['optional_params'] = apply_defaults(kwargs['model'],
+                                                       kwargs['optional_params'],
+                                                       scope['pdl_model_default_parameters'])
+
             params_to_model = kwargs["additional_args"]["complete_input_dict"]
             nonlocal litellm_params
             litellm_params = params_to_model
