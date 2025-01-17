@@ -4,12 +4,6 @@
 from enum import StrEnum
 from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
 
-from genai.schema import (
-    DecodingMethod,
-    ModerationParameters,
-    PromptTemplateData,
-    TextGenerationParameters,
-)
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 from .pdl_schema_utils import pdltype_to_jsonschema
@@ -172,10 +166,6 @@ class CallBlock(Block):
     trace: Optional["BlockType"] = None
 
 
-class BamTextGenerationParameters(TextGenerationParameters):
-    model_config = ConfigDict(extra="forbid")
-
-
 class LitellmParameters(BaseModel):
     """Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input."""
 
@@ -265,7 +255,6 @@ class LitellmParameters(BaseModel):
 
 
 class ModelPlatform(StrEnum):
-    BAM = "bam"
     LITELLM = "litellm"
 
 
@@ -275,15 +264,6 @@ class ModelBlock(Block):
     input: Optional["BlockType"] = None
     trace: Optional["BlockType"] = None
     modelResponse: Optional[str] = None
-
-
-class BamModelBlock(ModelBlock):
-    platform: Literal[ModelPlatform.BAM]
-    prompt_id: Optional[str] = None
-    parameters: Optional[BamTextGenerationParameters | ExpressionType] = None
-    moderations: Optional[ModerationParameters] = None
-    data: Optional[PromptTemplateData] = None
-    constraints: Any = None  # TODO
 
 
 class LitellmModelBlock(ModelBlock):
@@ -512,7 +492,6 @@ AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | LitellmModelBlock
-    | BamModelBlock
     | CodeBlock
     | GetBlock
     | DataBlock
@@ -568,64 +547,6 @@ TEMPERATURE_SAMPLING = 0.7
 TOP_P_SAMPLING = 0.85
 TOP_K_SAMPLING = 50
 DECODING_METHOD = "greedy"
-
-
-def empty_text_generation_parameters() -> BamTextGenerationParameters:
-    return BamTextGenerationParameters(
-        beam_width=None,
-        max_new_tokens=None,
-        min_new_tokens=None,
-        random_seed=None,
-        repetition_penalty=None,
-        stop_sequences=None,
-        temperature=None,
-        time_limit=None,
-        top_k=None,
-        top_p=None,
-        truncate_input_tokens=None,
-        typical_p=None,
-    )
-
-
-def set_default_model_params(
-    parameters: Optional[dict | BamTextGenerationParameters],
-) -> BamTextGenerationParameters:
-    if parameters is None:
-        params = empty_text_generation_parameters()
-    elif isinstance(parameters, BamTextGenerationParameters):
-        params = parameters
-    else:
-        params = BamTextGenerationParameters(**parameters)
-    if params.decoding_method is None:
-        params.decoding_method = (  # pylint: disable=attribute-defined-outside-init
-            DecodingMethod.GREEDY
-        )
-    if params.max_new_tokens is None:
-        params.max_new_tokens = (  # pylint: disable=attribute-defined-outside-init
-            MAX_NEW_TOKENS
-        )
-    if params.min_new_tokens is None:
-        params.min_new_tokens = (  # pylint: disable=attribute-defined-outside-init
-            MIN_NEW_TOKENS
-        )
-    if params.repetition_penalty is None:
-        params.repetition_penalty = (  # pylint: disable=attribute-defined-outside-init
-            REPETITION_PENATLY
-        )
-    if params.decoding_method == DecodingMethod.SAMPLE:
-        if params.temperature is None:
-            params.temperature = (  # pylint: disable=attribute-defined-outside-init
-                TEMPERATURE_SAMPLING
-            )
-        if params.top_k is None:
-            params.top_k = (  # pylint: disable=attribute-defined-outside-init
-                TOP_K_SAMPLING
-            )
-        if params.top_p is None:
-            params.top_p = (  # pylint: disable=attribute-defined-outside-init
-                TOP_P_SAMPLING
-            )
-    return params
 
 
 def set_structured_decoding_parameters(

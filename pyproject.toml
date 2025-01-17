@@ -7,7 +7,6 @@ name = "prompt-declaration-language"
 dynamic = ["version"]
 dependencies = [
   "pydantic~=2.0",
-  "ibm-generative-ai~=3.0",
   "requests~=2.0",
   "python-dotenv~=1.0",
   "jinja2~=3.0",

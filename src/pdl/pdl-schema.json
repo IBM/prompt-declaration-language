@@ -47,9 +47,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -188,9 +185,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -313,9 +307,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -378,771 +369,6 @@
       "title": "ArrayBlock",
       "type": "object"
     },
-    "BamModelBlock": {
-      "additionalProperties": false,
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatUntilBlock"
-              },
-              {
-                "$ref": "#/$defs/ForBlock"
-              },
-              {
-                "$ref": "#/$defs/TextBlock"
-              },
-              {
-                "$ref": "#/$defs/LastOfBlock"
-              },
-              {
-                "$ref": "#/$defs/ArrayBlock"
-              },
-              {
-                "$ref": "#/$defs/ObjectBlock"
-              },
-              {
-                "$ref": "#/$defs/MessageBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
-        },
-        "contribute": {
-          "default": [
-            "result",
-            "context"
-          ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Block to execute in case of error.\n    ",
-          "title": "Fallback"
-        },
-        "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
-          "title": "Role"
-        },
-        "result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Result"
-        },
-        "location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "kind": {
-          "const": "model",
-          "default": "model",
-          "title": "Kind",
-          "type": "string"
-        },
-        "model": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {},
-            {
-              "$ref": "#/$defs/LocalizedExpression"
-            }
-          ],
-          "title": "Model"
-        },
-        "input": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Input"
-        },
-        "trace": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatUntilBlock"
-            },
-            {
-              "$ref": "#/$defs/ForBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Trace"
-        },
-        "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Modelresponse"
-        },
-        "platform": {
-          "const": "bam",
-          "title": "Platform",
-          "type": "string"
-        },
-        "prompt_id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Prompt Id"
-        },
-        "parameters": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BamTextGenerationParameters"
-            },
-            {},
-            {
-              "$ref": "#/$defs/LocalizedExpression"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Parameters"
-        },
-        "moderations": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationParameters"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "data": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PromptTemplateData"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "constraints": {
-          "default": null,
-          "title": "Constraints"
-        }
-      },
-      "required": [
-        "model",
-        "platform"
-      ],
-      "title": "BamModelBlock",
-      "type": "object"
-    },
-    "BamTextGenerationParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "beam_width": {
-          "anyOf": [
-            {
-              "maximum": 3,
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Beam width"
-        },
-        "decoding_method": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/DecodingMethod"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "include_stop_sequence": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Include Stop Sequence"
-        },
-        "length_penalty": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LengthPenalty"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "max_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Max new tokens"
-        },
-        "min_new_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Min new tokens"
-        },
-        "random_seed": {
-          "anyOf": [
-            {
-              "maximum": 4294967295,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Random seed"
-        },
-        "repetition_penalty": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 1.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Repetition penalty"
-        },
-        "return_options": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/TextGenerationReturnOptions"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "stop_sequences": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "maxItems": 6,
-              "minItems": 1,
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "examples": [
-            "[\" and \"]"
-          ],
-          "title": "Stop sequences"
-        },
-        "temperature": {
-          "anyOf": [
-            {
-              "maximum": 2.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Temperature"
-        },
-        "time_limit": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Time limit"
-        },
-        "top_k": {
-          "anyOf": [
-            {
-              "maximum": 100,
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top K"
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.0,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top P (nucleus sampling)"
-        },
-        "truncate_input_tokens": {
-          "anyOf": [
-            {
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Truncate input tokens"
-        },
-        "typical_p": {
-          "anyOf": [
-            {
-              "maximum": 1.0,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Typical P"
-        }
-      },
-      "title": "BamTextGenerationParameters",
-      "type": "object"
-    },
     "CallBlock": {
       "additionalProperties": false,
       "description": "Calling a function.",
@@ -1190,9 +416,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -1331,9 +554,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1476,9 +696,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -1585,9 +802,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -1730,9 +944,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -1861,9 +1072,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -1998,9 +1206,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -2139,9 +1344,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2262,14 +1464,6 @@
       "title": "DataBlock",
       "type": "object"
     },
-    "DecodingMethod": {
-      "enum": [
-        "greedy",
-        "sample"
-      ],
-      "title": "DecodingMethod",
-      "type": "string"
-    },
     "EmptyBlock": {
       "additionalProperties": false,
       "description": "Block without an action. It can contain definitions.",
@@ -2315,9 +1509,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -2458,9 +1649,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2608,9 +1796,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -2749,9 +1934,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -2877,9 +2059,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -2986,9 +2165,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -3129,9 +2305,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3266,9 +2439,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -3367,9 +2537,6 @@
                   },
                   {
                     "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -3486,9 +2653,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -3629,9 +2793,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -3765,9 +2926,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -3887,9 +3045,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4030,9 +3185,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4189,9 +3341,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -4330,9 +3479,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4464,9 +3610,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -4543,9 +3686,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -4668,9 +3808,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -4813,9 +3950,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -4938,9 +4072,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5103,9 +4234,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -5244,9 +4372,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5369,9 +4494,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -5434,39 +4556,6 @@
       "title": "LastOfBlock",
       "type": "object"
     },
-    "LengthPenalty": {
-      "additionalProperties": true,
-      "properties": {
-        "decay_factor": {
-          "anyOf": [
-            {
-              "exclusiveMinimum": 1.0,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Decay factor"
-        },
-        "start_index": {
-          "anyOf": [
-            {
-              "minimum": 1,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Start index"
-        }
-      },
-      "title": "LengthPenalty",
-      "type": "object"
-    },
     "LitellmModelBlock": {
       "additionalProperties": false,
       "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
@@ -5512,9 +4601,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -5655,9 +4741,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -5791,9 +4874,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -5870,9 +4950,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6470,9 +5547,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -6611,9 +5685,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -6734,9 +5805,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -6799,277 +5867,6 @@
       "title": "MessageBlock",
       "type": "object"
     },
-    "ModerationHAP": {
-      "additionalProperties": true,
-      "properties": {
-        "input": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationHAPInput"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "output": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationHAPOutput"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        }
-      },
-      "title": "ModerationHAP",
-      "type": "object"
-    },
-    "ModerationHAPInput": {
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Enabled"
-        },
-        "send_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Send Tokens"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "maximum": 0.99,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0.75,
-          "title": "Threshold"
-        }
-      },
-      "title": "ModerationHAPInput",
-      "type": "object"
-    },
-    "ModerationHAPOutput": {
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Enabled"
-        },
-        "send_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Send Tokens"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "maximum": 0.99,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0.75,
-          "title": "Threshold"
-        }
-      },
-      "title": "ModerationHAPOutput",
-      "type": "object"
-    },
-    "ModerationParameters": {
-      "additionalProperties": true,
-      "properties": {
-        "hap": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationHAP"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "social_bias": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationSocialBias"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        }
-      },
-      "title": "ModerationParameters",
-      "type": "object"
-    },
-    "ModerationSocialBias": {
-      "additionalProperties": true,
-      "properties": {
-        "input": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationSocialBiasInput"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "output": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ModerationSocialBiasOutput"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        }
-      },
-      "title": "ModerationSocialBias",
-      "type": "object"
-    },
-    "ModerationSocialBiasInput": {
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Enabled"
-        },
-        "send_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Send Tokens"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "maximum": 0.99,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0.75,
-          "title": "Threshold"
-        }
-      },
-      "title": "ModerationSocialBiasInput",
-      "type": "object"
-    },
-    "ModerationSocialBiasOutput": {
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Enabled"
-        },
-        "send_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Send Tokens"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "maximum": 0.99,
-              "minimum": 0.01,
-              "multipleOf": 0.01,
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0.75,
-          "title": "Threshold"
-        }
-      },
-      "title": "ModerationSocialBiasOutput",
-      "type": "object"
-    },
     "ObjectBlock": {
       "additionalProperties": false,
       "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
@@ -7115,9 +5912,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -7258,9 +6052,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -7385,9 +6176,6 @@
                     "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
@@ -7465,9 +6253,6 @@
                   },
                   {
                     "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -7556,9 +6341,6 @@
         },
         {
           "$ref": "#/$defs/LitellmModelBlock"
-        },
-        {
-          "$ref": "#/$defs/BamModelBlock"
         },
         {
           "$ref": "#/$defs/CodeBlock"
@@ -7665,9 +6447,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -7752,9 +6531,6 @@
           "$ref": "#/$defs/LitellmModelBlock"
         },
         {
-          "$ref": "#/$defs/BamModelBlock"
-        },
-        {
           "$ref": "#/$defs/CodeBlock"
         },
         {
@@ -7809,30 +6585,6 @@
       "description": "Prompt Declaration Language program (PDL)",
       "title": "Program"
     },
-    "PromptTemplateData": {
-      "additionalProperties": true,
-      "properties": {
-        "example_file_ids": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "maxItems": 5,
-              "minItems": 0,
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Example File Ids"
-        }
-      },
-      "title": "PromptTemplateData",
-      "type": "object"
-    },
     "ReadBlock": {
       "additionalProperties": false,
       "description": "Read from a file or standard input.",
@@ -7878,9 +6630,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -8021,9 +6770,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8257,9 +7003,6 @@
                 "$ref": "#/$defs/LitellmModelBlock"
               },
               {
-                "$ref": "#/$defs/BamModelBlock"
-              },
-              {
                 "$ref": "#/$defs/CodeBlock"
               },
               {
@@ -8398,9 +7141,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -8522,9 +7262,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -8628,9 +7365,6 @@
                   },
                   {
                     "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -8747,9 +7481,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -8890,9 +7621,6 @@
             },
             {
               "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/BamModelBlock"
             },
             {
               "$ref": "#/$defs/CodeBlock"
@@ -9014,9 +7742,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9125,9 +7850,6 @@
                   },
                   {
                     "$ref": "#/$defs/LitellmModelBlock"
-                  },
-                  {
-                    "$ref": "#/$defs/BamModelBlock"
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
@@ -9244,9 +7966,6 @@
               },
               {
                 "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/BamModelBlock"
               },
               {
                 "$ref": "#/$defs/CodeBlock"
@@ -9389,9 +8108,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9511,9 +8227,6 @@
               "$ref": "#/$defs/LitellmModelBlock"
             },
             {
-              "$ref": "#/$defs/BamModelBlock"
-            },
-            {
               "$ref": "#/$defs/CodeBlock"
             },
             {
@@ -9586,9 +8299,6 @@
                     "$ref": "#/$defs/LitellmModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/BamModelBlock"
-                  },
-                  {
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
@@ -9655,99 +8365,6 @@
         "text"
       ],
       "title": "TextBlock",
-      "type": "object"
-    },
-    "TextGenerationReturnOptions": {
-      "additionalProperties": true,
-      "properties": {
-        "generated_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Generated Tokens"
-        },
-        "input_parameters": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Input Parameters"
-        },
-        "input_text": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Input text"
-        },
-        "input_tokens": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Input Tokens"
-        },
-        "token_logprobs": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Token logprobs"
-        },
-        "token_ranks": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": false,
-          "title": "Token ranks"
-        },
-        "top_n_tokens": {
-          "anyOf": [
-            {
-              "maximum": 5,
-              "minimum": 0,
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Top N tokens"
-        }
-      },
-      "title": "TextGenerationReturnOptions",
       "type": "object"
     }
   },

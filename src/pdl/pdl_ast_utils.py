@@ -2,8 +2,6 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     ArrayBlock,
-    BamModelBlock,
-    BamTextGenerationParameters,
     Block,
     BlockType,
     CallBlock,
@@ -137,15 +135,13 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.args = f.f_expr(block.args)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
-        case BamModelBlock() | LitellmModelBlock():
+        case LitellmModelBlock():
             block.model = f.f_expr(block.model)
             if block.input is not None:
                 block.input = f.f_block(block.input)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
-            if isinstance(block.parameters, BamTextGenerationParameters):
-                block.parameters = f.f_expr(block.parameters.model_dump())
-            elif isinstance(block.parameters, dict):
+            if isinstance(block.parameters, dict):
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
             block.code = f.f_block(block.code)
