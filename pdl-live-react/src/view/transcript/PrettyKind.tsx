@@ -25,10 +25,16 @@ export default function PrettyKind({
             typeof block.input === "string" &&
             block.input.length > 0 && (
               <>
-                <QAV q="Q">{block.input}</QAV>
+                <QAV q="Q" kind="dialog">
+                  {block.input}
+                </QAV>
               </>
             )}
-          {hasScalarResult(block) && <QAV q="A">{block.result}</QAV>}
+          {hasScalarResult(block) && (
+            <QAV q="A" kind="dialog">
+              {block.result}
+            </QAV>
+          )}
         </>
       )
     case "function":
@@ -76,12 +82,26 @@ export default function PrettyKind({
     case "error":
       return `${firstLineOf(block.msg)}`
     case "code":
-      return <>{hasScalarResult(block) && <QAV q="A">{block.result}</QAV>}</>
+      return (
+        <>
+          {hasScalarResult(block) && (
+            <QAV q="A" kind="code">
+              {block.result}
+            </QAV>
+          )}
+        </>
+      )
     case "read":
       return (
         <>
-          <QAV q="Q">{block.message ?? "Prompt user for input"}</QAV>
-          {hasScalarResult(block) && <QAV q="A">{block.result}</QAV>}
+          <QAV q="Q" kind="dialog">
+            {block.message ?? "Prompt user for input"}
+          </QAV>
+          {hasScalarResult(block) && (
+            <QAV q="A" kind="dialog">
+              {block.result}
+            </QAV>
+          )}
         </>
       )
     case "if":

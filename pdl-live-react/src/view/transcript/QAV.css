@@ -6,5 +6,6 @@
 .pdl-qav-label {
   font-weight: bold;
   font-size: 0.75em;
-  padding-right: 0.5em;
+  padding-right: 0.375em;
+  color: var(--pf-t--global--text--color--subtle);
 }
