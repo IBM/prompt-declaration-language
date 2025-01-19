@@ -1,16 +1,6 @@
 /* The color palette https://www.patternfly.org/design-foundations/colors#color-families */
 
 .pdl-transcript .pdl_block {
-  --pdl-block-color-1: #fff4cc;
-  --pdl-block-color-2: #ffe072;
-
-  &.pdl_model {
-    --pdl-block-color-1: #e0f0ff;
-    --pdl-block-color-2: var(--pf-t--global--color--nonstatus--blue--default);
-  }
-}
-
-.pdl-transcript .pdl_block {
   &.pdl_string {
     background-color: var(
       --pf-t--global--background--color--secondary--default

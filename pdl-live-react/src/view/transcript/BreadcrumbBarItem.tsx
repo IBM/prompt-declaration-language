@@ -1,19 +1,36 @@
-import type { ReactElement, ReactNode, JSXElementConstructor } from "react"
+import type {
+  JSXElementConstructor,
+  PropsWithChildren,
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+} from "react"
+import { Tooltip } from "@patternfly/react-core"
 
-type Props = {
-  children: ReactNode
-}
+type Props = PropsWithChildren<{
+  detail?: string
+  className?: string
+  onClick?: (evt: MouseEvent) => void
+  tooltip?: ReactNode
+}>
 
 export type BreadcrumbBarItemComponent = ReactElement<
   Props,
   JSXElementConstructor<Props>
 >
 
-export default function BreadcrumbBarItem(props: Props) {
+export default function BreadcrumbBarItem({
+  className,
+  children,
+  detail,
+  onClick,
+  tooltip,
+}: Props) {
+  const c = <span>{children}</span>
   return (
-    <li>
-      <a href="#">
-        <span>{props.children}</span>
+    <li className={className} data-detail={detail}>
+      <a onClick={onClick}>
+        {!tooltip ? c : <Tooltip content={tooltip}>{c}</Tooltip>}
       </a>
     </li>
   )
