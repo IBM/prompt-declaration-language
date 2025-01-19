@@ -3,15 +3,15 @@ import {
   AccordionContent,
   AccordionToggle,
   DescriptionList,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  DescriptionListDescription,
   Flex,
   FlexItem,
-  Stack,
-  StackItem,
 } from "@patternfly/react-core"
 
-import Defs from "./Defs"
+import Def from "./Def"
 import Icon from "./Icon"
-import QAV from "./QAV"
 import type Context from "../../Context"
 import PrettyKind from "./PrettyKind"
 import InfoPopover from "./InfoPopover"
@@ -33,50 +33,71 @@ function capitalizeAndUnSnakeCase(s: string) {
   return s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
 }
 
+function nonNullable<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined
+}
+
 /** One item in the Transcript UI */
 export default function TranscriptItem(props: Props) {
   const icon = Icon({ kind: props.block.kind })
 
+  const breadcrumbs = (
+    <BreadcrumbBar>
+      <>
+        {[...props.ctx.parents, props.block.kind ?? "unknown"]
+          .filter(nonNullable)
+          .map((parent, idx, A) => {
+            const isKind = idx === A.length - 1
+            const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
+            return (
+              <BreadcrumbBarItem
+                key={idx}
+                className={className}
+                detail={parent}
+              >
+                {capitalizeAndUnSnakeCase(parent)}
+              </BreadcrumbBarItem>
+            )
+          })}
+        {props.block.def && (
+          <Def
+            def={props.block.def}
+            ctx={props.ctx}
+            value={hasResult(props.block) && props.block.result}
+          />
+        )}
+      </>
+    </BreadcrumbBar>
+  )
+
+  const toggleContent = (
+    <Flex alignItems={alignCenter}>
+      {icon && <FlexItem className="pdl-block-icon">{icon}</FlexItem>}
+      <Flex>{breadcrumbs}</Flex>
+
+      <FlexItem flex={flex_1}>
+        <PrettyKind block={props.block} />
+      </FlexItem>
+    </Flex>
+  )
+
   return (
     <div className={props.className} data-id={props.ctx.id}>
       <AccordionToggle id={props.ctx.id} onClick={props.ctx.toggleAccordion}>
-        <Flex alignItems={alignCenter}>
-          {icon && <FlexItem className="pdl-block-icon">{icon}</FlexItem>}
-          <FlexItem>
-            <Flex>
-              <BreadcrumbBar>
-                {[...props.ctx.parents, props.block.kind ?? "unknown"].map(
-                  (parent, idx) => (
-                    <BreadcrumbBarItem key={idx}>
-                      {capitalizeAndUnSnakeCase(parent)}
-                    </BreadcrumbBarItem>
-                  ),
-                )}
-              </BreadcrumbBar>
-            </Flex>
-          </FlexItem>
-          <FlexItem flex={flex_1}>
-            <Stack>
-              <StackItem>
-                <PrettyKind block={props.block} />
-              </StackItem>
-              {props.block.def && hasResult(props.block) && (
-                <QAV q="V">
-                  <Defs
-                    defs={{ [props.block.def]: props.block.result }}
-                    ctx={props.ctx}
-                  />
-                </QAV>
-              )}
-            </Stack>
-          </FlexItem>
-          <FlexItem>
-            <InfoPopover block={props.block} ctx={props.ctx} />
-          </FlexItem>
-        </Flex>
+        {toggleContent}
       </AccordionToggle>
+
       <AccordionContent>
-        <DescriptionList>{props.children}</DescriptionList>
+        <DescriptionList>
+          {props.children}
+
+          <DescriptionListGroup>
+            <DescriptionListTerm>Raw Trace</DescriptionListTerm>
+            <DescriptionListDescription>
+              <InfoPopover block={props.block} ctx={props.ctx} />
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+        </DescriptionList>
       </AccordionContent>
     </div>
   )

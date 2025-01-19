@@ -15,6 +15,9 @@ export default interface Context {
   /** Are we rendering in dark mode? */
   darkMode: boolean
 
+  /** Is an accordion item expanded? */
+  isAccordionExpanded: string[]
+
   /** Callback to toggle accordion */
   toggleAccordion: TA
 

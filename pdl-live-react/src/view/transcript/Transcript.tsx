@@ -34,6 +34,7 @@ export default function Transcript({ data }: Props) {
     return {
       id: "root",
       darkMode,
+      isAccordionExpanded: expanded,
       toggleAccordion: (evt: MouseEvent<HTMLButtonElement>) => {
         const id = evt.currentTarget.id
 

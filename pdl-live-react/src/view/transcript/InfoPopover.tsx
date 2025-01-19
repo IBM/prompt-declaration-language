@@ -1,12 +1,11 @@
 import { useCallback, type MouseEvent } from "react"
+import { Button } from "@patternfly/react-core"
 
 import Code from "../Code"
 import type Context from "../../Context"
 import PrettyKind from "./PrettyKind"
 
-import InfoIcon from "@patternfly/react-icons/dist/esm/icons/info-circle-icon"
-
-import "./InfoPopover.css"
+import InfoIcon from "@patternfly/react-icons/dist/esm/icons/external-link-square-alt-icon"
 
 type Props = {
   ctx: Context
@@ -34,13 +33,16 @@ export default function InfoPopover({ block, ctx }: Props) {
 
   return (
     typeof block === "object" && (
-      <div
-        className="pdl-info-popover-button"
+      <Button
+        variant="link"
         aria-label="Action"
         onClick={onClick}
+        icon={<InfoIcon />}
+        iconPosition="end"
+        isInline
       >
-        <InfoIcon />
-      </div>
+        Show Raw Trace
+      </Button>
     )
   )
 }

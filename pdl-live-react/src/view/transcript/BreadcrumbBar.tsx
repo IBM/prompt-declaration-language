@@ -8,13 +8,5 @@ type Props = {
 
 /** Inspiration: https://codepen.io/renaudtertrais/pen/nMGWqm */
 export default function BreadcrumbBar(props: Props) {
-  return (
-    <ul
-      className="pdl-breadcrumb-bar"
-      itemScope
-      itemType="http://schema.org/BreadcrumbList"
-    >
-      {props.children}
-    </ul>
-  )
+  return <ul className="pdl-breadcrumb-bar">{props.children}</ul>
 }
