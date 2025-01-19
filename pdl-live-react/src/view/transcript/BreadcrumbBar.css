@@ -13,13 +13,15 @@
   li {
     float: left;
 
-    --pdl-block-color-1: #fff4cc;
+    --pdl-block-color-1: var(
+      --pf-t--global--color--nonstatus--gray--default
+    ); /*#fff4cc;*/
     --pdl-block-color-2: #ffe072;
-    --pdl-block-color-3: var(--pf-t--global--color--nonstatus--purple--default);
-    &[data-detail="model"] {
+    --pdl-block-color-3: var(--pf-t--global--color--nonstatus--blue--default);
+    /*&[data-detail="model"] {
       --pdl-block-color-1: #e0f0ff;
-      --pdl-block-color-2: var(--pf-t--global--color--nonstatus--blue--default);
-    }
+      --pdl-block-color-2: var(--pf-t--global--color--nonstatus--teal--default);
+    }*/
 
     --pdl-bb-color: var(--pdl-block-color-1);
     &.pdl-breadcrumb-bar-item--def {
