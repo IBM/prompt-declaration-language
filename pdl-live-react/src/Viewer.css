@@ -1,18 +1,3 @@
-/* Margin around text-ish comments between blocks */
-dl {
-  .pdl-defs {
-    margin-bottom: 0.25em;
-  }
-}
-
-.pdl-interstitial-text {
-  margin-top: 1em;
-}
-
-.pf-v6-c-clipboard-copy .pf-v6-c-form-control {
-  display: none;
-}
-
 .pdl-wrap {
   &,
   & p {
@@ -22,23 +7,4 @@ dl {
 
 .pdl-mono {
   font-family: var(--pf-t--global--font--family--mono);
-}
-
-.pdl-transcript {
-  max-width: 800px;
-
-  .pf-v6-c-accordion__expandable-content {
-    background-color: transparent;
-  }
-  .pf-v6-c-accordion__item {
-    &.pdl_block {
-      .pdl-block-icon {
-        font-size: 1.375em;
-      }
-
-      .pdl-result-panel {
-        --pf-v6-c-panel--BackgroundColor: transparent;
-      }
-    }
-  }
 }

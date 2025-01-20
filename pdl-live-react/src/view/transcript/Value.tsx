@@ -12,7 +12,7 @@ export default function Value({ children: s }: Props) {
         isMarkdownish(s) ? (
           <Markdown>{s}</Markdown>
         ) : (
-          <pre className="pdl-wrap">{s.trim()}</pre>
+          <span className="pdl-wrap">{s.trim()}</span>
         )
       ) : (
         JSON.stringify(s, undefined, 2)

@@ -42,7 +42,8 @@
       text-align: center;
       margin-right: calc(23px * var(--pdl-bb));
     }
-    &:last-child {
+    &:last-child,
+    &.pdl-breadcrumb-bar-item--def {
       a {
         background-color: var(--pdl-bb-color);
         &:before {
@@ -54,7 +55,7 @@
         }
       }
     }
-    &:first-child {
+    &:first-child:not(.pdl-breadcrumb-bar-item--def) {
       a {
         padding-left: calc(15px * var(--pdl-bb));
         @include border-radius(
@@ -65,7 +66,8 @@
         }
       }
     }
-    &:last-child {
+    &:last-child,
+    &.pdl-breadcrumb-bar-item--def {
       a {
         padding-right: calc(15px * var(--pdl-bb));
         @include border-radius(

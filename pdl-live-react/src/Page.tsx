@@ -1,9 +1,4 @@
-import {
-  useCallback,
-  useState,
-  type ReactNode,
-  type PropsWithChildren,
-} from "react"
+import { useCallback, useState, type PropsWithChildren } from "react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,11 +22,9 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
 
   /** Manage the drawer that slides in from the right */
-  const [drawerContent, setDrawerContent] = useState<null | {
-    header: string
-    description?: ReactNode
-    body: ReactNode
-  }>(null)
+  const [drawerContent, setDrawerContent] = useState<
+    null | import("./DrawerContent").DrawerContentSpec
+  >(null)
   const onCloseDrawer = useCallback(
     () => setDrawerContent(null),
     [setDrawerContent],

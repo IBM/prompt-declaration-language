@@ -1,9 +1,9 @@
 import { isValidElement } from "react"
-import { Tooltip, Truncate } from "@patternfly/react-core"
+import { Tooltip } from "@patternfly/react-core"
 
+import Markdown from "../Markdown"
 import { firstLineOf } from "../../helpers"
 
-import ChevronLeftIcon from "@patternfly/react-icons/dist/esm/icons/chevron-left-icon"
 import ChevronRightIcon from "@patternfly/react-icons/dist/esm/icons/chevron-right-icon"
 
 import "./QAV.css"
@@ -27,25 +27,19 @@ export default function QAV({ q, kind, children }: Props) {
           : "The execution result"
         : "Result is assigned to this variable"
 
-  const content = <Truncate content={firstLineOf(String(children))} />
+  const content = firstLineOf(String(children))
 
   return (
     <div className="pdl-qav">
       <Tooltip content={tip}>
         <span className="pdl-qav-label">
-          {q === "Q" ? (
-            <ChevronRightIcon />
-          ) : q === "A" ? (
-            <ChevronLeftIcon />
-          ) : (
-            <></>
-          )}
+          {q === "Q" ? <ChevronRightIcon /> : <></>}
         </span>
       </Tooltip>{" "}
       {isValidElement(children) ? (
         children
       ) : kind === "dialog" ? (
-        <i>{content}</i>
+        <Markdown>{content}</Markdown>
       ) : (
         <code>{content}</code>
       )}

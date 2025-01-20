@@ -1,0 +1,9 @@
+.pdl-drawer-content {
+  .pdl-breadcrumb-bar {
+    margin-top: 0.375em;
+
+    .pdl-breadcrumb-bar-item--def:first-child {
+      margin-left: 1em;
+    }
+  }
+}

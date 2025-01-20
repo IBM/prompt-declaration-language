@@ -1,0 +1,21 @@
+.pdl-transcript-item {
+  &:first-child {
+    margin-top: 1em;
+  }
+}
+
+.pdl-block-icon {
+  font-size: 1.375em;
+}
+
+.pdl-transcript {
+  max-width: 800px;
+
+  .pf-v6-c-accordion__expandable-content {
+    background-color: transparent;
+  }
+
+  .pdl-result-panel {
+    --pf-v6-c-panel--BackgroundColor: transparent;
+  }
+}
