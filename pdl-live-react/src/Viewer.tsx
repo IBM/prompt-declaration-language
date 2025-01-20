@@ -1,8 +1,6 @@
 import { useLocation } from "react-router"
 import { useContext, useMemo } from "react"
 
-import { Tabs, Tab, TabTitleText } from "@patternfly/react-core"
-
 import Code from "./view/Code"
 import Transcript from "./view/transcript/Transcript"
 import DarkModeContext from "./DarkModeContext"
@@ -14,7 +12,7 @@ import "./Viewer.css"
 /** This is the main view component */
 export default function Viewer({ value }: { value: string }) {
   // We will use this to find the current active tab (below)
-  let { hash: activeTab } = useLocation()
+  const { hash: activeTab } = useLocation()
 
   // DarkMode state
   const darkMode = useContext(DarkModeContext)
@@ -28,45 +26,17 @@ export default function Viewer({ value }: { value: string }) {
     return "Invalid trace content"
   }
 
-  // Note: please keep eventKey===href
-  const tabs = [
-    <Tab
-      key="#transcript"
-      href="#transcript"
-      eventKey="#transcript"
-      className="pdl-viewer-tab"
-      title={<TabTitleText>Transcript</TabTitleText>}
-    >
-      <Transcript data={data} />
-    </Tab>,
-    <Tab
-      key="#source"
-      href="#source"
-      eventKey="#source"
-      className="pdl-viewer-tab"
-      title={<TabTitleText>Source</TabTitleText>}
-    >
-      <Code block={data} darkMode={darkMode} limitHeight={false} />
-    </Tab>,
-    <Tab
-      key="#raw"
-      href="#raw"
-      eventKey="#raw"
-      className="pdl-viewer-tab"
-      title={<TabTitleText>Raw Trace</TabTitleText>}
-    >
-      <Code block={data} darkMode={darkMode} limitHeight={false} raw />
-    </Tab>,
-  ]
-
-  if (!tabs.find((tab) => tab.props.href === activeTab)) {
-    // User provided bogus hash, default to first tab
-    activeTab = tabs[0].props.href
-  }
-
   return (
-    <Tabs activeKey={activeTab} component="nav">
-      {tabs}
-    </Tabs>
+    <>
+      <section hidden={activeTab !== "#source"}>
+        <Code block={data} darkMode={darkMode} limitHeight={false} />
+      </section>
+      <section hidden={activeTab !== "raw"}>
+        <Code block={data} darkMode={darkMode} limitHeight={false} raw />
+      </section>
+      <section hidden={activeTab === "#source" || activeTab === "#raw"}>
+        <Transcript data={data} />
+      </section>
+    </>
   )
 }
