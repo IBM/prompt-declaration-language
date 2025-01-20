@@ -1,5 +1,6 @@
 import { type PropsWithChildren } from "react"
 import {
+  AccordionItem,
   AccordionContent,
   AccordionToggle,
   DescriptionList,
@@ -82,7 +83,12 @@ export default function TranscriptItem(props: Props) {
   )
 
   return (
-    <div className={props.className} data-id={props.ctx.id}>
+    <AccordionItem
+      key={props.ctx.id}
+      className={props.className}
+      data-id={props.ctx.id}
+      isExpanded={props.ctx.isAccordionExpanded.includes(props.ctx.id)}
+    >
       <AccordionToggle id={props.ctx.id} onClick={props.ctx.toggleAccordion}>
         {toggleContent}
       </AccordionToggle>
@@ -99,6 +105,6 @@ export default function TranscriptItem(props: Props) {
           </DescriptionListGroup>
         </DescriptionList>
       </AccordionContent>
-    </div>
+    </AccordionItem>
   )
 }

@@ -6,7 +6,7 @@ import {
   type MouseEvent,
 } from "react"
 
-import { Accordion, AccordionItem } from "@patternfly/react-core"
+import { Accordion } from "@patternfly/react-core"
 
 import Context from "../../Context"
 import DrawerContext from "../../DrawerContentContext"
@@ -61,16 +61,7 @@ export default function Transcript({ data }: Props) {
         .concat(hasResult(data) ? [<FinalResult block={data} ctx={ctx} />] : [])
         .map((block, idx) =>
           isValidElement(block) && "data-id" in block.props ? (
-            <AccordionItem
-              key={idx}
-              className={isValidElement(block) && block.props.className}
-              isExpanded={
-                !isValidElement(block) ||
-                expanded.includes(block.props["data-id"])
-              }
-            >
-              {block}
-            </AccordionItem>
+            block
           ) : (
             <div key={idx} className="pdl-interstitial-text">
               {block}
