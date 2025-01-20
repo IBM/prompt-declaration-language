@@ -1,25 +1,12 @@
-import { type MouseEvent, type ReactNode } from "react"
-
-type TA = (evt: MouseEvent<HTMLButtonElement>) => void
-type SDC = (props: {
-  header: string
-  description?: ReactNode
-  body: ReactNode
-}) => void
+type SDC = (props: import("./DrawerContent").DrawerContentSpec) => void
 
 /** Context info passed along with the render */
 export default interface Context {
-  /** Current id contextualized in trace AST tree */
+  /** Current tree parent chain as we are traversing the trace's AST, used to uniquely identify a node */
   id: string
 
   /** Are we rendering in dark mode? */
   darkMode: boolean
-
-  /** Is an accordion item expanded? */
-  isAccordionExpanded: string[]
-
-  /** Callback to toggle accordion */
-  toggleAccordion: TA
 
   /** Callback to set drawer content */
   setDrawerContent: SDC

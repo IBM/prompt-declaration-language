@@ -109,3 +109,7 @@ export function firstLineOf(s: string) {
   const suffix = endIdx - startIdx === 1 ? "" : "…"
   return lines[startIdx].replace(/:$/, "") + suffix
 }
+
+export function nonNullable<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined
+}

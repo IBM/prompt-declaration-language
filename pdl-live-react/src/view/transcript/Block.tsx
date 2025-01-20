@@ -243,9 +243,9 @@ export default function show_block(
 
   return [
     prefixContent,
-    data.defs && Object.keys(data.defs).length > 0 && (
-      <Defs defs={data.defs} ctx={ctx} />
-    ),
+    data.defs &&
+      Object.keys(data.defs).length > 0 &&
+      Defs({ defs: data.defs, ctx }),
     bodyContent &&
       TranscriptItem({
         className: ["pdl_block", ...extraClasses].join(" "),
@@ -255,6 +255,6 @@ export default function show_block(
       }),
     suffixContent,
   ]
-    .filter(Boolean)
     .flat()
+    .filter(Boolean)
 }
