@@ -26,7 +26,7 @@ export default function App() {
         <Route
           key={demo.name}
           path={`/demos/${demo.name}`}
-          element={<Demo value={demo.trace} />}
+          element={<Demo name={demo.name} value={demo.trace} />}
         />
       ))}
 
