@@ -60,7 +60,7 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
     >
       <PageSection
         isFilled
-        hasOverflowScroll
+        hasOverflowScroll={false}
         aria-label="PDL Viewer main section"
       >
         <DrawerContext.Provider value={setDrawerContent}>

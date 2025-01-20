@@ -34,6 +34,7 @@ export default function Viewer({ value }: { value: string }) {
       key="#transcript"
       href="#transcript"
       eventKey="#transcript"
+      className="pdl-viewer-tab"
       title={<TabTitleText>Transcript</TabTitleText>}
     >
       <Transcript data={data} />
@@ -42,6 +43,7 @@ export default function Viewer({ value }: { value: string }) {
       key="#source"
       href="#source"
       eventKey="#source"
+      className="pdl-viewer-tab"
       title={<TabTitleText>Source</TabTitleText>}
     >
       <Code block={data} darkMode={darkMode} limitHeight={false} />
@@ -50,6 +52,7 @@ export default function Viewer({ value }: { value: string }) {
       key="#raw"
       href="#raw"
       eventKey="#raw"
+      className="pdl-viewer-tab"
       title={<TabTitleText>Raw Trace</TabTitleText>}
     >
       <Code block={data} darkMode={darkMode} limitHeight={false} raw />
