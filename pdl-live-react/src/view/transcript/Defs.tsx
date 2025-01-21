@@ -82,11 +82,20 @@ export default function Defs({ defs, ctx }: Props) {
             hasParser(value) &&
             typeof value.result === "string" &&
             value.parser === "yaml" ? (
-              <Truncate
-                content={Object.keys(parseYaml(value.result))
-                  .map((k) => k + ": …")
-                  .join(", ")}
-              />
+              <code>
+                <Truncate
+                  content={
+                    "{" +
+                    Object.entries(parseYaml(value.result))
+                      .map(([k, v]) => {
+                        const vstring = JSON.stringify(v)
+                        return `"${k}": ${vstring.slice(0, 10)}${vstring.length > 10 ? "…" : ""}`
+                      })
+                      .join(", ") +
+                    "}"
+                  }
+                />
+              </code>
             ) : (
               <Markdown>{firstLineOf(String(value.result))}</Markdown>
             )
