@@ -3,7 +3,7 @@ from typing import Any, Generator, Optional
 
 import litellm
 from dotenv import load_dotenv
-from litellm import completion
+from litellm import acompletion, completion
 
 from .pdl_ast import (
     Message,
@@ -32,7 +32,7 @@ class LitellmModel:
         return None
 
     @staticmethod
-    def generate_text(
+    async def generate_text(
         model_id: str,
         messages: list[Message],
         spec: Any,
@@ -45,7 +45,7 @@ class LitellmModel:
         parameters = set_structured_decoding_parameters(spec, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
-        response = completion(
+        response = await acompletion(
             model=model_id, messages=messages, stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore

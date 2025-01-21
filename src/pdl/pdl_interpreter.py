@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import re
@@ -8,6 +9,7 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from asyncio import Task
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
@@ -1155,7 +1157,7 @@ def generate_client_response(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+) -> Generator[YieldMessage, Any, tuple[Message, Any] | Task[tuple[Message, Any]]]:
     raw_result = None
     match state.batch:
         case 0:
@@ -1237,25 +1239,31 @@ def generate_client_response_single(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+) -> Generator[YieldMessage, Any, Task[tuple[Message, Any]]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
         block.parameters, dict
     )  # block is a "concrete block"
-    msg: Message
     match block:
         case LitellmModelBlock():
-            msg, raw_result = LitellmModel.generate_text(
-                model_id=block.model,
-                messages=model_input,
-                spec=block.spec,
-                parameters=litellm_parameters_to_dict(block.parameters),
+            task = asyncio.create_task(
+                LitellmModel.generate_text(
+                    model_id=block.model,
+                    messages=model_input,
+                    spec=block.spec,
+                    parameters=litellm_parameters_to_dict(block.parameters),
+                )
             )
-    if state.yield_result:
-        yield YieldResultMessage("" if msg["content"] is None else msg["content"])
-    if state.yield_background:
-        yield YieldBackgroundMessage([msg])
-    return msg, raw_result
+
+    def callback(res):
+        msg, _ = res
+        if state.yield_result:
+            yield YieldResultMessage("" if msg["content"] is None else msg["content"])
+        if state.yield_background:
+            yield YieldBackgroundMessage([msg])
+
+    task.add_done_callback(callback)
+    return task
 
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
