@@ -41,7 +41,7 @@ export default function TranscriptItem(props: Props) {
   const breadcrumbs = (
     <BreadcrumbBar>
       <>
-        {[...parents, kind ?? "unknown"]
+        {[...parents, kind === "model" ? "LLM" : (kind ?? "unknown")]
           .filter(nonNullable)
           .map((parent, idx, A) => {
             const isKind = idx === A.length - 1

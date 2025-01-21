@@ -16,8 +16,8 @@ import ResultOrCode from "./ResultOrCode"
 import Text from "./Text"
 import TranscriptItem from "./TranscriptItem"
 
-import show_loop_trace from "./LoopTrace"
-import show_block_conjoin from "./BlocksConjoin"
+import LoopTrace from "./LoopTrace"
+import BlocksConjoin from "./BlocksConjoin"
 
 import Context, { withParent } from "../../Context"
 
@@ -25,14 +25,13 @@ import { isPdlBlock, type PdlBlock } from "../../helpers"
 
 import "./Block.css"
 
+type Props = { data: PdlBlock; ctx: Context }
+
 /**
  * Render one tree of blocks rooted at `data` as a list of
  * `TranscriptItem`.
  */
-export default function show_block(
-  data: PdlBlock,
-  ctx: Context,
-): ReactNode | ReactNode[] {
+export default function Block({ data, ctx }: Props): ReactNode {
   if (
     data === null ||
     typeof data === "boolean" ||
@@ -122,9 +121,9 @@ export default function show_block(
         data.if_result === undefined ? (
           <ResultOrCode block={data} ctx={ctx} />
         ) : data.if_result ? (
-          show_block_conjoin(data?.then ?? "", ctx)
+          <BlocksConjoin block={data?.then ?? ""} ctx={ctx} />
         ) : (
-          show_block_conjoin(data?.else ?? "", ctx)
+          <BlocksConjoin block={data?.else ?? ""} ctx={ctx} />
         ),
     }))
     .with({ kind: "read" }, (data) => ({
@@ -141,7 +140,7 @@ export default function show_block(
     .with({ kind: "include" }, (data) => ({
       C: ["pdl_include"],
       B: data.trace ? (
-        show_block(data.trace, ctx)
+        <Block data={data.trace} ctx={ctx} />
       ) : (
         <ResultOrCode block={data} ctx={ctx} />
       ),
@@ -150,14 +149,10 @@ export default function show_block(
       C: ["pdl_function"],
       B: <Function f={data} ctx={ctx} />,
     }))
-    // const args = document.createElement('pre');
-    // args.innerHTML = htmlize(stringify({function: data.function}));
-    // body.appendChild(args);
-    // body.appendChild(show_blocks(data.return));
     .with({ kind: "call" }, (data) => ({
       C: ["pdl_call"],
       B: data.trace ? (
-        show_block(data.trace, ctx)
+        <Block data={data.trace} ctx={ctx} />
       ) : (
         // const args = document.createElement('pre');
         // args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
@@ -171,7 +166,7 @@ export default function show_block(
     }))
     .with({ kind: "lastOf" }, (data) => ({
       C: ["pdl_lastOf"],
-      S: LastOf({ blocks: data.lastOf, ctx: withParent(ctx, data.kind) }),
+      S: <LastOf blocks={data.lastOf} ctx={withParent(ctx, data.kind)} />,
     }))
     .with({ kind: "array" }, (data) => ({
       C: ["pdl_array"],
@@ -191,32 +186,38 @@ export default function show_block(
       B: (
         <>
           <pre>{data.role + ": "}</pre>
-          {show_block(data.content, ctx)}
+          <Block data={data.content} ctx={ctx} />
         </>
       ),
     }))
     .with({ kind: "repeat" }, (data) => ({
       C: ["pdl_repeat"],
-      P: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
+      P: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
+        />
       ),
     }))
     .with({ kind: "repeat_until" }, (data) => ({
       C: ["pdl_repeat_until"],
-      S: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
+      S: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
+        />
       ),
     }))
     .with({ kind: "for" }, (data) => ({
       C: ["pdl_for"],
-      P: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
+      P: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
+        />
       ),
     }))
     .with({ kind: "empty" }, () => ({ C: ["pdl_empty"], B: "☐" }))
@@ -241,20 +242,22 @@ export default function show_block(
     }))
     .exhaustive()
 
-  return [
-    prefixContent,
-    data.defs &&
-      Object.keys(data.defs).length > 0 &&
-      Defs({ defs: data.defs, ctx }),
-    bodyContent &&
-      TranscriptItem({
-        className: ["pdl_block", ...extraClasses].join(" "),
-        ctx,
-        block: data,
-        children: bodyContent,
-      }),
-    suffixContent,
-  ]
-    .flat()
-    .filter(Boolean)
+  return (
+    <>
+      {prefixContent}
+      {data.defs && Object.keys(data.defs).length > 0 && (
+        <Defs defs={data.defs} ctx={ctx} />
+      )}
+      {bodyContent && (
+        <TranscriptItem
+          className={["pdl_block", ...extraClasses].join(" ")}
+          ctx={ctx}
+          block={data}
+        >
+          {bodyContent}
+        </TranscriptItem>
+      )}
+      {suffixContent}
+    </>
+  )
 }

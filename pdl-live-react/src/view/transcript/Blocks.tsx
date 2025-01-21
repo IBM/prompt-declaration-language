@@ -1,15 +1,18 @@
 import { type ReactElement } from "react"
 
-import show_block_conjoin from "./BlocksConjoin"
+import BlocksConjoin from "./BlocksConjoin"
 
 import Context, { withIter } from "../../Context"
 import { isPdlBlock, type PdlBlock } from "../../helpers"
 
-export default function show_blocks(
-  blocks: (ReactElement | PdlBlock)[],
-  ctx: Context,
-) {
+type Props = { blocks: (ReactElement | PdlBlock)[]; ctx: Context }
+
+export default function Blocks({ blocks, ctx }: Props) {
   return blocks.flatMap((block, idx) =>
-    !isPdlBlock(block) ? block : show_block_conjoin(block, withIter(ctx, idx)),
+    !isPdlBlock(block) ? (
+      block
+    ) : (
+      <BlocksConjoin key={idx} block={block} ctx={withIter(ctx, idx)} />
+    ),
   )
 }

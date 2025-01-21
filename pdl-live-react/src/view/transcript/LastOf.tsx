@@ -1,4 +1,4 @@
-import show_block from "./Block"
+import Block from "./Block"
 
 import type Context from "../../Context"
 import { withId } from "../../Context"
@@ -10,5 +10,7 @@ type Props = {
 }
 
 export default function LastOf({ blocks, ctx }: Props) {
-  return blocks.flatMap((block, idx) => show_block(block, withId(ctx, idx)))
+  return blocks.map((block, idx) => (
+    <Block key={idx} data={block} ctx={withId(ctx, idx)} />
+  ))
 }
