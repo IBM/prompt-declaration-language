@@ -80,8 +80,12 @@ export default function TranscriptItem(props: Props) {
           body: <DescriptionList>{children}</DescriptionList>,
         },
         {
-          title: "Trace Snippet",
+          title: "Source",
           body: <Code block={props.block} darkMode={ctx.darkMode} />,
+        },
+        {
+          title: "Raw Trace",
+          body: <Code block={props.block} darkMode={ctx.darkMode} raw />,
         },
       ],
     })
