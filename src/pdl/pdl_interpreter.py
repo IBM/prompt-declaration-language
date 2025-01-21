@@ -1123,12 +1123,12 @@ def step_call_model(
         # append_log(state, "Model Input", messages_to_str(model_input))
 
         # Apply PDL defaults to model invocation
-        print(f"@@@ ecs before applying defaults, concrete_block.parameters is a {type(concrete_block.parameters)}")
-        concrete_block.parameters = apply_defaults(
-            concrete_block.model,
-            concrete_block.parameters,
-            scope["pdl_model_default_parameters"],
-        )
+        if isinstance(concrete_block.parameters, dict):
+            concrete_block.parameters = apply_defaults(
+                str(concrete_block.model),
+                concrete_block.parameters,
+                scope["pdl_model_default_parameters"],
+            )
 
         msg, raw_result = yield from generate_client_response(
             state, concrete_block, model_input
