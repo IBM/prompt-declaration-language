@@ -255,6 +255,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -623,6 +662,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -1011,6 +1089,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -1414,6 +1531,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -1719,6 +1875,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -2003,6 +2198,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -2374,6 +2608,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -2863,6 +3136,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -3255,6 +3567,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -3548,6 +3899,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -4018,6 +4408,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -4442,6 +4871,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -4810,6 +5278,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -5754,6 +6261,45 @@
           "description": "Role of associated to the message.",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -6121,6 +6667,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -6840,6 +7425,45 @@
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
         },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
         "result": {
           "anyOf": [
             {},
@@ -7210,6 +7834,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -7690,6 +8353,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -8175,6 +8877,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [

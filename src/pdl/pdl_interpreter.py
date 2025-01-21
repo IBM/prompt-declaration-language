@@ -4,6 +4,7 @@ import re
 import shlex
 import subprocess  # nosec
 import sys
+import time
 import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
@@ -299,7 +300,7 @@ def step_block(
             yield YieldResultMessage(result)
         append_log(state, "pdl_context", background)
     else:
-        result, background, scope, trace = yield from step_advanced_block(
+        result, background, scope, trace = yield from step_advanced_block_timed(
             state, scope, block, loc
         )
     scope = scope | {"pdl_context": background}
@@ -312,6 +313,26 @@ def context_in_contribute(block: AdvancedBlockType) -> bool:
     if get_contribute_value(block.contribute) is not None:
         return True
     return False
+
+
+# A start-end time wrapper around `step_advanced_block`
+def step_advanced_block_timed(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: LocationType,
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+    start_nanos = time.time_ns()
+    result, background, scope, trace = yield from step_advanced_block(
+        state, scope, block, loc
+    )
+    end_nanos = time.time_ns()
+    match trace:
+        case Block():
+            trace = trace.model_copy(
+                update={"start_nanos": start_nanos, "end_nanos": end_nanos}
+            )
+    return result, background, scope, trace
 
 
 def step_advanced_block(

@@ -1,3 +1,4 @@
+import datetime
 import json
 from typing import Any, Sequence, TypeAlias
 
@@ -79,6 +80,18 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         return block
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
+    if block.start_nanos != 0:
+        d["start_nanos"] = block.start_nanos
+        d["end_nanos"] = block.end_nanos
+
+        now = datetime.datetime.now()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        if local_tz is not None:
+            local_tzname = local_tz.tzname(local_now)
+        else:
+            local_tzname = "UTC"
+        d["timezone"] = local_tzname
     if block.description is not None:
         d["description"] = block.description
     if block.role is not None:
