@@ -17,10 +17,12 @@ from .pdl_ast import (
     RoleType,
     ScopeType,
     empty_block_location,
+    get_default_model_parameters,
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_parser import parse_file, parse_str
 from .pdl_runner import exec_docker
+from .pdl_utils import validate_scope
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +165,7 @@ def main():
         "-f",
         "--data-file",
         dest="data_file",
-        help="file containing initial values to add to the scope",
+        help="YAML file containing initial values to add to the scope",
     )
     parser.add_argument(
         "-d",
@@ -233,12 +235,13 @@ def main():
         exec_docker(*args)
         assert False  # unreachable: exec_docker terminate the execution
 
-    initial_scope = {}
+    initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     if args.data_file is not None:
         with open(args.data_file, "r", encoding="utf-8") as scope_fp:
             initial_scope = yaml.safe_load(scope_fp)
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
+    validate_scope(initial_scope)
 
     match args.stream:
         case "result":

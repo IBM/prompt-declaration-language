@@ -85,6 +85,7 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
+    apply_defaults,
     get_contribute_value,
     messages_concat,
     replace_contribute_value,
@@ -1079,9 +1080,17 @@ def step_call_model(
     match concrete_block:
         case LitellmModelBlock():
             if isinstance(concrete_block.parameters, LitellmParameters):
-                concrete_block = concrete_block.model_copy(
-                    update={"parameters": concrete_block.parameters.model_dump()}
+                # Apply PDL defaults to model invocation
+                original_params = concrete_block.parameters.model_dump()
+                revised_params = apply_defaults(
+                    str(concrete_block.model),
+                    original_params,
+                    scope.get("pdl_model_default_parameters", []),
                 )
+                concrete_block = concrete_block.model_copy(
+                    update={"parameters": revised_params}
+                )
+
             _, concrete_block = process_expr_of(
                 concrete_block, "parameters", scope, loc
             )
