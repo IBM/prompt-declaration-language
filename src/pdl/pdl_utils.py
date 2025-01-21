@@ -126,9 +126,11 @@ def apply_raw_defaults(
         The parameters to send to the LLM
     """
 
-    assert isinstance(model_id, str)
-    assert isinstance(params, dict)
-    assert isinstance(model_defaults, list)
+    assert isinstance(model_id, str), f"model_id is a {type(model_id)}"
+    assert params is None or isinstance(params, dict), f"params is a {type(params)}"
+    assert isinstance(
+        model_defaults, list
+    ), f"model_defaults is a {type(model_defaults)}"
 
     # Construct defaults for this model.  If more than one set of default
     # applies, the last seen default "wins".
@@ -142,12 +144,12 @@ def apply_raw_defaults(
                 )
             assert isinstance(glob_defaults, dict)
             if fnmatch.fnmatchcase(model_id, model_glob):
-                print(f"model {model_id} matches {model_glob}")
+                # print(f"model {model_id} matches {model_glob}, applying {glob_defaults}")
                 for k, v in glob_defaults.items():
                     default_union[k] = v
 
     # Apply final list of defaults to explicit parameters
-    retval = dict(params)
+    retval = {} if params is None else dict(params)
     for k, v in default_union.items():
         if k not in retval or retval[k] is None:
             retval[k] = v

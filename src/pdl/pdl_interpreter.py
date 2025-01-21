@@ -1115,19 +1115,20 @@ def step_call_model(
         litellm_params = {}
 
         def get_transformed_inputs(kwargs):
-            # Apply PDL defaults to model invocation
-            kwargs["optional_params"] = apply_defaults(
-                kwargs["model"],
-                kwargs["optional_params"],
-                scope["pdl_model_default_parameters"],
-            )
-
             params_to_model = kwargs["additional_args"]["complete_input_dict"]
             nonlocal litellm_params
             litellm_params = params_to_model
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
+
+        # Apply PDL defaults to model invocation
+        print(f"@@@ ecs before applying defaults, concrete_block.parameters is a {type(concrete_block.parameters)}")
+        concrete_block.parameters = apply_defaults(
+            concrete_block.model,
+            concrete_block.parameters,
+            scope["pdl_model_default_parameters"],
+        )
 
         msg, raw_result = yield from generate_client_response(
             state, concrete_block, model_input
