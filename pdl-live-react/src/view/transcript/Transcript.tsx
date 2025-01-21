@@ -1,4 +1,4 @@
-import { isValidElement, useContext, useMemo } from "react"
+import { useContext, useMemo } from "react"
 
 import { Stack } from "@patternfly/react-core"
 
@@ -7,7 +7,7 @@ import DrawerContext from "../../DrawerContentContext"
 import DarkModeContext from "../../DarkModeContext"
 
 import { hasResult } from "../../helpers"
-import show_block_conjoin from "./BlocksConjoin"
+import BlocksConjoin from "./BlocksConjoin"
 import FinalResult from "./FinalResult"
 
 import "./Transcript.css"
@@ -34,19 +34,7 @@ export default function Transcript({ data }: Props) {
 
   return (
     <Stack className="pdl-transcript" hasGutter>
-      {show_block_conjoin(data, ctx)
-        .flat()
-        .filter(Boolean)
-        .map((block, idx) =>
-          isValidElement(block) && "data-id" in block.props ? (
-            block
-          ) : (
-            <div key={idx} className="pdl-interstitial-text">
-              {block}
-            </div>
-          ),
-        )}
-
+      <BlocksConjoin block={data} ctx={ctx} />
       {hasResult(data) && <FinalResult block={data} ctx={ctx} />}
     </Stack>
   )

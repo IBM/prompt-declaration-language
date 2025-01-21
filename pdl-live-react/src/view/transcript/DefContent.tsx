@@ -1,6 +1,6 @@
 import Code from "../Code"
+import Block from "./Block"
 import Value from "./Value"
-import show_block from "./Block"
 
 import { hasParser, hasResult, isPdlBlock } from "../../helpers"
 
@@ -26,10 +26,10 @@ export default function DefContent({ value, ctx }: Props) {
         ) : typeof value.result === "string" ? (
           <Value>{value.result}</Value>
         ) : (
-          show_block(value.result, ctx)
+          <Block data={value.result} ctx={ctx} />
         )
       ) : (
-        show_block(value, ctx)
+        <Block data={value} ctx={ctx} />
       )}
     </div>
   )
