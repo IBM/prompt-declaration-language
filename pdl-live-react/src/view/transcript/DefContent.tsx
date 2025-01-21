@@ -4,6 +4,8 @@ import Value from "./Value"
 
 import { hasParser, hasResult, isPdlBlock } from "../../helpers"
 
+import "./DefContent.css"
+
 type Props = {
   value: import("../../pdl_ast").PdlBlock
   ctx: import("../../Context").default

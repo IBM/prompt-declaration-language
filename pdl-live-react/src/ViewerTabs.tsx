@@ -39,7 +39,7 @@ export default function Viewer() {
   }
 
   return (
-    <Tabs activeKey={activeTab} component="nav">
+    <Tabs activeKey={activeTab} component="nav" mountOnEnter>
       {tabs}
     </Tabs>
   )

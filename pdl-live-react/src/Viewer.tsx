@@ -22,17 +22,14 @@ export default function Viewer({ value }: { value: string }) {
     return "Invalid trace content"
   }
 
-  return (
-    <>
-      <section hidden={activeTab !== "#source"}>
-        <Code block={data} limitHeight={false} />
-      </section>
-      <section hidden={activeTab !== "#raw"}>
-        <Code block={data} limitHeight={false} raw />
-      </section>
-      <section hidden={activeTab === "#source" || activeTab === "#raw"}>
-        <Transcript data={data} />
-      </section>
-    </>
-  )
+  switch (activeTab) {
+    case "#raw":
+    case "#source":
+      return (
+        <Code block={data} limitHeight={false} raw={activeTab === "#raw"} />
+      )
+    default:
+    case "#transcript":
+      return <Transcript data={data} />
+  }
 }
