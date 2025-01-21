@@ -6,6 +6,9 @@
   /** Size factor relative to 1em */
   --pdl-bb: 0.625;
 
+  /** So that clicks get sent here first, not to the <Card isClickable/> used in <TranscriptItem/> */
+  z-index: 1000;
+
   list-style: none;
   display: inline-block;
   font-size: calc(var(--pdl-bb) * 1em);

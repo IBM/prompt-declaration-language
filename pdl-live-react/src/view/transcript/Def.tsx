@@ -28,7 +28,8 @@ export default function Def(props: Props) {
       onClick={
         !value || !supportsDrilldown
           ? undefined
-          : () => {
+          : (evt) => {
+              evt.stopPropagation()
               ctx.setDrawerContent({
                 header: "Variable definition",
                 description: (

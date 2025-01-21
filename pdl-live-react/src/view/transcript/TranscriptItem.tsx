@@ -90,6 +90,7 @@ export default function TranscriptItem(props: Props) {
   return (
     <Card
       key={props.ctx.id}
+      id={props.ctx.id}
       onClick={drilldown}
       isClickable
       className={
@@ -98,13 +99,12 @@ export default function TranscriptItem(props: Props) {
       data-id={props.ctx.id}
     >
       <CardHeader
-        id={props.ctx.id}
         selectableActions={{
           onClickAction: drilldown,
           selectableActionAriaLabelledby: props.ctx.id,
         }}
       >
-        <CardTitle id={props.ctx.id}>{headerContent}</CardTitle>
+        <CardTitle>{headerContent}</CardTitle>
       </CardHeader>
 
       <CardBody>
