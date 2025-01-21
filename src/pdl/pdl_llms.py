@@ -1,19 +1,13 @@
-import json
+import os
 from typing import Any, Generator, Optional
 
 import litellm
 from dotenv import load_dotenv
-from genai.client import Client as BamClient
-from genai.credentials import Credentials as BamCredentials
-from genai.schema import ModerationParameters as BamModerationParameters
-from genai.schema import PromptTemplateData as BamPromptTemplateData
 from litellm import completion
 
 from .pdl_ast import (
-    BamTextGenerationParameters,
     Message,
     set_default_granite_model_parameters,
-    set_default_model_params,
     set_structured_decoding_parameters,
 )
 from .pdl_utils import remove_none_values_from_message
@@ -21,122 +15,13 @@ from .pdl_utils import remove_none_values_from_message
 # Load environment variables
 load_dotenv()
 
-# class Model(ABC):
-#     @staticmethod
-#     @abstractmethod
-#     def generate_text(*args, **kargs):
-#         pass
-
-#     @staticmethod
-#     @abstractmethod
-#     def generate_text_stream(*args, **kargs):
-#         pass
-
-
-# class BamModel(Model):
-class BamModel:
-    bam_client: Optional[BamClient] = None
-
-    @staticmethod
-    def get_model() -> BamClient:
-        if BamModel.bam_client is not None:
-            return BamModel.bam_client
-        credentials = BamCredentials.from_env()
-        BamModel.bam_client = BamClient(credentials=credentials)
-        return BamModel.bam_client
-
-    @staticmethod
-    def generate_text(  # pylint: disable=too-many-arguments,too-many-positional-arguments
-        model_id: str,
-        prompt_id: Optional[str],
-        model_input: Optional[str],
-        parameters: Optional[dict | BamTextGenerationParameters],
-        moderations: Optional[BamModerationParameters],
-        data: Optional[BamPromptTemplateData],
-    ) -> tuple[Message, Any]:
-        client = BamModel.get_model()
-        params = set_default_model_params(parameters)
-        text = ""
-        responses = []
-        for response in client.text.generation.create(
-            model_id=model_id,
-            prompt_id=prompt_id,
-            input=model_input,
-            parameters=params,
-            moderations=moderations,
-            data=data,
-        ):
-            # XXX TODO: moderation
-            responses.append(response)
-            for result in response.results:
-                if result.generated_text:
-                    text += result.generated_text
-        return {"role": None, "content": text}, responses
-
-    @staticmethod
-    def generate_text_stream(  # pylint: disable=too-many-arguments,too-many-positional-arguments
-        model_id: str,
-        prompt_id: Optional[str],
-        model_input: Optional[str],
-        parameters: Optional[dict | BamTextGenerationParameters],
-        moderations: Optional[BamModerationParameters],
-        data: Optional[BamPromptTemplateData],
-    ) -> Generator[Message, Any, Any]:
-        client = BamModel.get_model()
-        params = set_default_model_params(parameters)
-        responses = []
-        for response in client.text.generation.create_stream(
-            model_id=model_id,
-            prompt_id=prompt_id,
-            input=model_input,
-            parameters=params,
-            moderations=moderations,
-            data=data,
-        ):
-            responses.append(json.loads(response.model_dump_json()))
-            if response.results is None:
-                # append_log(
-                #     state,
-                #     "Moderation",
-                #     f"Generate from: {model_input}",
-                # )
-                continue
-            for result in response.results:
-                if result.generated_text:
-                    yield {"role": None, "content": result.generated_text}
-        return responses
-
-    # @staticmethod
-    # def generate_text_lazy(  # pylint: disable=too-many-arguments
-    #     model_id: str,
-    #     prompt_id: Optional[str],
-    #     model_input: Optional[str],
-    #     parameters: Optional[PDLTextGenerationParameters],
-    #     moderations: Optional[BamModerationParameters],
-    #     data: Optional[BamPromptTemplateData],
-    # ) -> Generator[None, Any, str]:
-    #     client = BamModel.get_model()
-    #     params = parameters
-    #     params = set_default_model_params(params)
-    #     gen = client.text.generation.create(
-    #         model_id=model_id,
-    #         prompt_id=prompt_id,
-    #         input=model_input,
-    #         parameters=params.__dict__,
-    #         moderations=moderations,
-    #         data=data,
-    #     )
-
-    #     def get_text():
-    #         text = ""
-    #         for response in gen:
-    #             # XXX TODO: moderation
-    #             for result in response.results:
-    #                 if result.generated_text:
-    #                     text += result.generated_text
-    #         return text
-
-    #     return gen_text
+# If the environment has a configured OpenTelemetry exporter, tell LiteLLM
+# to do OpenTelemetry callbacks for that exporter.  Note that this may
+# require optional OpenTelemetry Python libraries that are not pyproject.toml,
+# typically opentelemetry-api, opentelemetry-sdk,
+# opentelemetry-exporter-otlp-proto-http, and opentelemetry-exporter-otlp-proto-grpc
+if os.getenv("OTEL_EXPORTER") and os.getenv("OTEL_ENDPOINT"):
+    litellm.callbacks = ["otel"]
 
 
 class LitellmModel:

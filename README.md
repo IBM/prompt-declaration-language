@@ -64,7 +64,7 @@ pdl <path/to/example.pdl>
 
 ## Documentation
 
-- [Documenation](https://ibm.github.io/prompt-declaration-language/)
+- [Documentation](https://ibm.github.io/prompt-declaration-language/)
 - [API References](https://ibm.github.io/prompt-declaration-language/api_reference/)
 - [Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial/)
 
@@ -148,6 +148,7 @@ text:
   lang: python
   code: |
     import random
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = random.randint(1, 20)
 - "\nthe result is (${ N })\n"
 ```

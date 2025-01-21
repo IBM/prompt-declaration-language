@@ -1,0 +1,53 @@
+{
+  "name": "pdl-live",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently vite 'tsc --build --watch --noEmit'",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}'",
+    "preview": "vite preview",
+    "test:quality": "concurrently -n 'lint,types,formatting' 'yarn lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
+    "test:ui": "yarn playwright test",
+    "test": "concurrently -n 'quality,playwright' 'yarn test:quality' 'yarn test:ui'"
+  },
+  "dependencies": {
+    "@patternfly/react-core": "^6.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.3",
+    "react-router-dom": "^7.1.2",
+    "react-syntax-highlighter": "^15.6.1",
+    "ts-pattern": "^5.6.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.49.1",
+    "@types/node": "22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "json-schema-to-typescript": "^15.0.3",
+    "monaco-editor": "^0.52.2",
+    "prettier": "^3.4.2",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5",
+    "vite-plugin-checker": "^0.8.0",
+    "vite-plugin-svgr": "^4.3.0"
+  },
+  "prettier": {
+    "semi": false
+  },
+  "resolutions": {
+    "@types/react": "^18.3.18"
+  }
+}

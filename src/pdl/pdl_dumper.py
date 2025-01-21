@@ -8,8 +8,6 @@ from .pdl_ast import (
     AnyPattern,
     ArrayBlock,
     ArrayPattern,
-    BamModelBlock,
-    BamTextGenerationParameters,
     Block,
     CallBlock,
     CodeBlock,
@@ -98,26 +96,6 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
         }
     match block:
-        case BamModelBlock():
-            d["platform"] = str(block.platform)
-            d["model"] = block.model
-            if block.input is not None:
-                d["input"] = block_to_dict(block.input, json_compatible)
-            if block.prompt_id is not None:
-                d["prompt_id"] = block.prompt_id
-            if block.parameters is not None:
-                if isinstance(block.parameters, BamTextGenerationParameters):
-                    d["parameters"] = block.parameters.model_dump()
-                else:
-                    d["parameters"] = block.parameters
-            if block.moderations is not None:
-                d["moderations"] = block.moderations
-            if block.data is True:
-                d["data"] = block.data
-            if block.constraints is not None:
-                d["constraints"] = block.constraints
-            if block.modelResponse is not None:
-                d["modelResponse"] = block.modelResponse
         case LitellmModelBlock():
             d["platform"] = str(block.platform)
             d["model"] = block.model

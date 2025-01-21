@@ -162,7 +162,12 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 scope = inputs.scope
         try:
             random.seed(11)
-            output = pdl.exec_file(pdl_file_name, scope=scope, output="all")
+            output = pdl.exec_file(
+                pdl_file_name,
+                scope=scope,
+                output="all",
+                config=pdl.InterpreterConfig(batch=0),
+            )
             result = output["result"]
             block_to_dict(output["trace"], json_compatible=True)
             result_dir_name = (

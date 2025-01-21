@@ -1,0 +1,4 @@
+.pf-v6-c-panel__main > .pdl-markdown {
+  padding: 1em;
+  background-color: var(--pf-t--global--background--color--primary--default);
+}

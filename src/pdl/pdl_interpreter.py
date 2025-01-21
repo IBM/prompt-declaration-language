@@ -6,31 +6,34 @@ import subprocess  # nosec
 import sys
 import types
 
-# from itertools import batched
-from pathlib import Path
-from typing import Any, Generator, Optional, Sequence, TypeVar
+# TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
+import warnings
 
-import httpx
-import litellm
-import yaml
-from jinja2 import (
+warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
+
+# from itertools import batched
+from pathlib import Path  # noqa: E402
+from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+
+import httpx  # noqa: E402
+import litellm  # noqa: E402
+import yaml  # noqa: E402
+from jinja2 import (  # noqa: E402
     Environment,
     StrictUndefined,
     Template,
     TemplateSyntaxError,
     UndefinedError,
 )
-from jinja2.nodes import TemplateData
-from jinja2.runtime import Undefined
-from pydantic import BaseModel
+from jinja2.nodes import TemplateData  # noqa: E402
+from jinja2.runtime import Undefined  # noqa: E402
+from pydantic import BaseModel  # noqa: E402
 
-from .pdl_ast import (
+from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
     AnyPattern,
     ArrayBlock,
     ArrayPattern,
-    BamModelBlock,
-    BamTextGenerationParameters,
     Block,
     BlockType,
     CallBlock,
@@ -73,11 +76,11 @@ from .pdl_ast import (
     TextBlock,
     empty_block_location,
 )
-from .pdl_dumper import block_to_dict
-from .pdl_llms import BamModel, LitellmModel
-from .pdl_location_utils import append, get_loc_string
-from .pdl_parser import PDLParseError, parse_file, parse_str
-from .pdl_scheduler import (
+from .pdl_dumper import block_to_dict  # noqa: E402
+from .pdl_llms import LitellmModel  # noqa: E402
+from .pdl_location_utils import append, get_loc_string  # noqa: E402
+from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
+from .pdl_scheduler import (  # noqa: E402
     CodeYieldResultMessage,
     GeneratorWrapper,
     ModelCallMessage,
@@ -87,11 +90,10 @@ from .pdl_scheduler import (
     YieldResultMessage,
     schedule,
 )
-from .pdl_schema_validator import type_check_args, type_check_spec
-from .pdl_utils import (
+from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
+from .pdl_utils import (  # noqa: E402
     get_contribute_value,
     messages_concat,
-    messages_to_str,
     replace_contribute_value,
     stringify,
 )
@@ -1149,7 +1151,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
 def step_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: BamModelBlock | LitellmModelBlock,
+    block: LitellmModelBlock,
     loc: LocationType,
 ) -> Generator[
     YieldMessage,
@@ -1158,21 +1160,13 @@ def step_call_model(
         Any,
         Messages,
         ScopeType,
-        BamModelBlock | LitellmModelBlock,
+        LitellmModelBlock,
     ],
 ]:
     # evaluate model name
     _, concrete_block = process_expr_of(block, "model", scope, loc)
     # evaluate model params
     match concrete_block:
-        case BamModelBlock():
-            if isinstance(concrete_block.parameters, BamTextGenerationParameters):
-                concrete_block = concrete_block.model_copy(
-                    update={"parameters": concrete_block.parameters.model_dump()}
-                )
-            _, concrete_block = process_expr_of(
-                concrete_block, "parameters", scope, loc
-            )
         case LitellmModelBlock():
             if isinstance(concrete_block.parameters, LitellmParameters):
                 concrete_block = concrete_block.model_copy(
@@ -1247,9 +1241,9 @@ def step_call_model(
         ) from exc
 
 
-def generate_client_response(  # pylint: disable=too-many-arguments
+def generate_client_response(
     state: InterpreterState,
-    block: BamModelBlock | LitellmModelBlock,
+    block: LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     raw_result = None
@@ -1271,7 +1265,7 @@ def generate_client_response(  # pylint: disable=too-many-arguments
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: BamModelBlock | LitellmModelBlock,
+    block: LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     msg_stream: Generator[Message, Any, Any]
@@ -1280,16 +1274,6 @@ def generate_client_response_streaming(
         block.parameters, dict
     )  # block is a "concrete block"
     match block:
-        case BamModelBlock():
-            model_input_str = messages_to_str(model_input)
-            msg_stream = BamModel.generate_text_stream(
-                model_id=block.model,
-                prompt_id=block.prompt_id,
-                model_input=model_input_str,
-                parameters=block.parameters,
-                moderations=block.moderations,
-                data=block.data,
-            )
         case LitellmModelBlock():
             msg_stream = LitellmModel.generate_text_stream(
                 model_id=block.model,
@@ -1341,7 +1325,7 @@ def litellm_parameters_to_dict(
 
 def generate_client_response_single(
     state: InterpreterState,
-    block: BamModelBlock | LitellmModelBlock,
+    block: LitellmModelBlock,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
@@ -1350,16 +1334,6 @@ def generate_client_response_single(
     )  # block is a "concrete block"
     msg: Message
     match block:
-        case BamModelBlock():
-            model_input_str = messages_to_str(model_input)
-            msg, raw_result = BamModel.generate_text(
-                model_id=block.model,
-                prompt_id=block.prompt_id,
-                model_input=model_input_str,
-                parameters=block.parameters,
-                moderations=block.moderations,
-                data=block.data,
-            )
         case LitellmModelBlock():
             msg, raw_result = LitellmModel.generate_text(
                 model_id=block.model,
@@ -1376,7 +1350,7 @@ def generate_client_response_single(
 
 def generate_client_response_batching(  # pylint: disable=too-many-arguments
     state: InterpreterState,
-    block: BamModelBlock | LitellmModelBlock,
+    block: LitellmModelBlock,
     # model: str,
     model_input: Messages,
 ) -> Generator[YieldMessage, Any, Message]:
@@ -1385,22 +1359,17 @@ def generate_client_response_batching(  # pylint: disable=too-many-arguments
         block.parameters, dict
     )  # block is a "concrete block"
     match block:
-        case BamModelBlock():
-            model_input_str = messages_to_str(model_input)
+        case LitellmModelBlock():
             msg = yield ModelCallMessage(
                 model_id=block.model,
-                prompt_id=block.prompt_id,
-                model_input=model_input_str,
-                parameters=block.parameters,
-                moderations=block.moderations,
-                data=block.data,
+                messages=model_input,
+                spec=block.spec,
+                parameters=block.parameters or {},
             )
             if state.yield_result:
                 yield YieldResultMessage(msg)
             if state.yield_background:
                 yield YieldBackgroundMessage(msg)
-        case LitellmModelBlock():
-            assert False  # XXX TODO
         case _:
             assert False
     return msg

@@ -12,7 +12,7 @@ defs_data = {
         "NAME": {
             "text": [
                 {
-                    "model": "watsonx/ibm/granite-34b-code-instruct",
+                    "model": "watsonx_text/ibm/granite-34b-code-instruct",
                     "input": {"get": "HELLO"},
                     "parameters": {
                         "stop": ["!"],

@@ -2,12 +2,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Generator, Generic, Optional, TypeVar
 
-from genai.schema import ModerationParameters, PromptTemplateData
 from termcolor import colored
 from termcolor._types import Color
 
-from .pdl_ast import BamTextGenerationParameters, Message
-from .pdl_llms import BamModel
+from .pdl_ast import Message
+from .pdl_llms import LitellmModel
 from .pdl_utils import stringify
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
@@ -80,11 +79,9 @@ class YieldBackgroundMessage(YieldMessage):
 class ModelCallMessage(YieldMessage):
     kind = MessageKind.MODEL
     model_id: str
-    model_input: str
-    prompt_id: Optional[str]
-    parameters: Optional[dict | BamTextGenerationParameters]
-    moderations: Optional[ModerationParameters]
-    data: Optional[PromptTemplateData]
+    messages: list[Message]
+    spec: Any
+    parameters: dict[str, Any]
 
 
 _LAST_ROLE = None
@@ -130,13 +127,11 @@ def schedule(
                         print(s, end="", flush=True)
                         todo_next.append((i, gen, None))
                     case ModelCallMessage():
-                        text_msg = BamModel.generate_text(
+                        text_msg = LitellmModel.generate_text(
                             model_id=msg.model_id,
-                            prompt_id=msg.prompt_id,
-                            model_input=msg.model_input,
+                            messages=msg.messages,
+                            spec=msg.spec,
                             parameters=msg.parameters,
-                            moderations=msg.moderations,
-                            data=msg.data,
                         )
                         todo_next.append((i, gen, text_msg))
                     case _:
