@@ -66,24 +66,23 @@ export default function Block({ data, ctx }: Props): ReactNode {
             <Query q={data.model} ctx={ctx} prompt="Model" />
           )}
           {data.input && <Query q={data.input} ctx={ctx} />}
-          <ResultOrCode block={data} ctx={ctx} />
+          <ResultOrCode block={data} />
         </>
       ),
     }))
     .with({ kind: "code" }, (data) => ({
       C: ["pdl_code"],
-      B: <ResultOrCode block={data} ctx={ctx} term="Execution Output" />,
+      B: <ResultOrCode block={data} term="Execution Output" />,
     }))
     .with({ kind: "get" }, (data) => ({
       C: ["pdl_get"],
-      B: <ResultOrCode block={data} ctx={ctx} />,
+      B: <ResultOrCode block={data} />,
     }))
     .with({ kind: "data" }, (data) => ({
       C: ["pdl_data"],
       B: (
         <Result
           result={stringify(data.result)}
-          ctx={ctx}
           lang="yaml"
           term={data.def ?? "Struct"}
         />
@@ -119,7 +118,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
       ),
       S:
         data.if_result === undefined ? (
-          <ResultOrCode block={data} ctx={ctx} />
+          <ResultOrCode block={data} />
         ) : data.if_result ? (
           <BlocksConjoin block={data?.then ?? ""} ctx={ctx} />
         ) : (
@@ -133,7 +132,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
           {data.message && (
             <Query q={data.message.trim()} ctx={ctx} prompt="Question" />
           )}
-          <ResultOrCode block={data} ctx={ctx} term="Answer" />
+          <ResultOrCode block={data} term="Answer" />
         </>
       ),
     }))
@@ -142,7 +141,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
       B: data.trace ? (
         <Block data={data.trace} ctx={ctx} />
       ) : (
-        <ResultOrCode block={data} ctx={ctx} />
+        <ResultOrCode block={data} />
       ),
     }))
     .with({ kind: "function" }, (data) => ({
@@ -157,7 +156,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
         // const args = document.createElement('pre');
         // args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
         // body.appendChild(args);
-        <ResultOrCode block={data} ctx={ctx} />
+        <ResultOrCode block={data} />
       ),
     }))
     .with({ kind: "text" }, (data) => ({

@@ -81,11 +81,11 @@ export default function TranscriptItem(props: Props) {
         },
         {
           title: "Source",
-          body: <Code block={props.block} darkMode={ctx.darkMode} />,
+          body: <Code block={props.block} />,
         },
         {
           title: "Raw Trace",
-          body: <Code block={props.block} darkMode={ctx.darkMode} raw />,
+          body: <Code block={props.block} raw />,
         },
       ],
     })

@@ -8,7 +8,6 @@ import Preview, { type SupportedLanguage } from "./Preview"
 
 type Props = {
   block: PdlBlock
-  darkMode: boolean
   language?: SupportedLanguage
   showLineNumbers?: boolean
   limitHeight?: boolean
@@ -17,7 +16,6 @@ type Props = {
 
 export default function Code({
   block,
-  darkMode,
   language = "yaml",
   showLineNumbers = false,
   limitHeight = true,
@@ -25,7 +23,6 @@ export default function Code({
 }: Props) {
   return (
     <Preview
-      darkMode={darkMode}
       limitHeight={limitHeight}
       showLineNumbers={showLineNumbers ?? false}
       language={language || "yaml"}

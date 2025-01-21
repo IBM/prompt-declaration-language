@@ -10,7 +10,6 @@ import { hasScalarResult } from "../../helpers"
 import "./FinalResult.css"
 
 type Props = {
-  ctx: import("../../Context").default
   block: import("../../helpers").PdlBlockWithResult
 }
 
@@ -33,7 +32,7 @@ export default function FinalResult(props: Props) {
 /**
  * @return The content UI `element` and `clipboard` content text for clipboard copying
  */
-function content({ block, ctx }: Props): {
+function content({ block }: Props): {
   clipboard: string
   element: import("react").ReactNode
 } {
@@ -58,7 +57,6 @@ function content({ block, ctx }: Props): {
           data-clipboard-content={content}
           language={typeof block.result === "object" ? "yaml" : "plaintext"}
           block={content}
-          darkMode={ctx.darkMode}
           limitHeight
         />
       ),
