@@ -31,7 +31,7 @@ export default function Viewer({ value }: { value: string }) {
       <section hidden={activeTab !== "#source"}>
         <Code block={data} darkMode={darkMode} limitHeight={false} />
       </section>
-      <section hidden={activeTab !== "raw"}>
+      <section hidden={activeTab !== "#raw"}>
         <Code block={data} darkMode={darkMode} limitHeight={false} raw />
       </section>
       <section hidden={activeTab === "#source" || activeTab === "#raw"}>
