@@ -23,8 +23,6 @@ import Context, { withParent } from "../../Context"
 
 import { isPdlBlock, type PdlBlock } from "../../helpers"
 
-import "./Block.css"
-
 type Props = { data: PdlBlock; ctx: Context }
 
 /**
