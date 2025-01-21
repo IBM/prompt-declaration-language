@@ -5,26 +5,24 @@ import CodeGroup from "./CodeGroup"
 import Result from "./Result"
 import Value from "./Value"
 
-import type Context from "../../Context"
 import { type PdlBlock } from "../../pdl_ast"
 
 type Props = {
   block: PdlBlock
-  ctx: Context
   term?: string
 }
 
-export default function ResultOrCode({ block, ctx, term }: Props) {
+export default function ResultOrCode({ block, term }: Props) {
   return match(block)
     .with(P.union(P.string, P.number), (data) => <Value>{data}</Value>)
     .with({ lang: "python", code: P.string, result: P._ }, (data) => (
       <>
-        <CodeGroup code={data.code} ctx={ctx} lang={data.lang} />
-        <Result result={data.result} ctx={ctx} term={term} />
+        <CodeGroup code={data.code} lang={data.lang} />
+        <Result result={data.result} term={term} />
       </>
     ))
     .with({ result: P._ }, (data) => (
-      <Result result={data.result} ctx={ctx} term={term} />
+      <Result result={data.result} term={term} />
     ))
-    .otherwise((data) => <Code block={data} darkMode={ctx.darkMode} />)
+    .otherwise((data) => <Code block={data} />)
 }

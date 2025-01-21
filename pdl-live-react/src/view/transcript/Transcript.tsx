@@ -35,7 +35,7 @@ export default function Transcript({ data }: Props) {
   return (
     <Stack className="pdl-transcript" hasGutter>
       <BlocksConjoin block={data} ctx={ctx} />
-      {hasResult(data) && <FinalResult block={data} ctx={ctx} />}
+      {hasResult(data) && <FinalResult block={data} />}
     </Stack>
   )
 }

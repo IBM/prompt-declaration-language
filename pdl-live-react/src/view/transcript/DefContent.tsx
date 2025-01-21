@@ -19,7 +19,6 @@ export default function DefContent({ value, ctx }: Props) {
           value.parser === "jsonl") ? (
           <Code
             block={value.result}
-            darkMode={ctx.darkMode}
             limitHeight={false}
             language={value.parser === "jsonl" ? "json" : value.parser}
           />
