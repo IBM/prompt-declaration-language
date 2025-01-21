@@ -93,13 +93,10 @@ export default function TranscriptItem(props: Props) {
 
   return (
     <Card
-      key={props.ctx.id}
-      id={props.ctx.id}
       onClick={drilldown}
       className={
         "pdl-transcript-item" + (props.className ? " " + props.className : "")
       }
-      data-id={props.ctx.id}
     >
       <CardHeader>
         <CardTitle>{headerContent}</CardTitle>
