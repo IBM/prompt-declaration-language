@@ -1341,6 +1341,10 @@ export type Fallback12 =
 export type Role12 = string | null;
 export type Kind12 = "match";
 export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+export type Def13 = string | null;
+export type Def14 = string | null;
+export type Def15 = string | null;
+export type Def16 = string | null;
 export type Any = null;
 export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
@@ -1374,7 +1378,7 @@ export type With1 = MatchCase[];
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def13 = string | null;
+export type Def17 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1487,7 +1491,7 @@ export type IfResult = boolean | null;
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def14 = string | null;
+export type Def18 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1545,7 +1549,7 @@ export type Raw = boolean;
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def15 = string | null;
+export type Def19 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1603,7 +1607,7 @@ export type Get = string;
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null;
+export type Def20 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1691,7 +1695,7 @@ export type Code =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def17 = string | null;
+export type Def21 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1797,7 +1801,7 @@ export type Platform = "litellm";
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def18 = string | null;
+export type Def22 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1876,7 +1880,7 @@ export type Trace5 =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def19 = string | null;
+export type Def23 = string | null;
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1998,7 +2002,7 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
-  def?: Def19;
+  def?: Def23;
   contribute?: Contribute19;
   parser?: Parser19;
   fallback?: Fallback19;
@@ -2055,7 +2059,7 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
-  def?: Def18;
+  def?: Def22;
   contribute?: Contribute18;
   parser?: Parser18;
   fallback?: Fallback18;
@@ -2112,7 +2116,7 @@ export interface LitellmModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
-  def?: Def17;
+  def?: Def21;
   contribute?: Contribute17;
   parser?: Parser17;
   fallback?: Fallback17;
@@ -2172,7 +2176,7 @@ export interface CodeBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
-  def?: Def16;
+  def?: Def20;
   contribute?: Contribute16;
   parser?: Parser16;
   fallback?: Fallback16;
@@ -2228,7 +2232,7 @@ export interface GetBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
-  def?: Def15;
+  def?: Def19;
   contribute?: Contribute15;
   parser?: Parser15;
   fallback?: Fallback15;
@@ -2283,7 +2287,7 @@ export interface DataBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
-  def?: Def14;
+  def?: Def18;
   contribute?: Contribute14;
   parser?: Parser14;
   fallback?: Fallback14;
@@ -2339,7 +2343,7 @@ export interface IfBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
-  def?: Def13;
+  def?: Def17;
   contribute?: Contribute13;
   parser?: Parser13;
   fallback?: Fallback13;
@@ -3163,17 +3167,21 @@ export interface MatchCase {
   then: Then;
 }
 export interface OrPattern {
+  def?: Def13;
   union: Union;
 }
 export interface ArrayPattern {
+  def?: Def14;
   array: Array1;
 }
 export interface ObjectPattern {
+  def?: Def15;
   object: Object1;
 }
 export interface Object1 {
   [k: string]: boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
 }
 export interface AnyPattern {
+  def?: Def16;
   any: Any;
 }

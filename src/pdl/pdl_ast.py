@@ -73,6 +73,10 @@ ExpressionType: TypeAlias = Any | LocalizedExpression
 class Pattern(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the value matched by the pattern.
+    """
+
 
 class OrPattern(Pattern):
     union: list["PatternType"]

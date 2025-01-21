@@ -557,16 +557,18 @@ def step_block_body(
                     cases.append(match_case)
                     continue
                 loc_i = append(loc, "[" + str(i) + "]")
-                if "case" in match_case.model_fields_set and not is_matching(
-                    match_, match_case.case
-                ):
-                    cases.append(match_case)
-                    continue
+                if "case" in match_case.model_fields_set:
+                    new_scope = is_matching(match_, match_case.case, scope)
+                    if new_scope is None:
+                        cases.append(match_case)
+                        continue
+                else:
+                    new_scope = scope
                 b = True
                 if "if_" in match_case.model_fields_set:
                     loc_if = append(loc_i, "if")
                     try:
-                        b = process_expr(scope, match_case.if_, loc_if)
+                        b = process_expr(new_scope, match_case.if_, loc_if)
                     except PDLRuntimeExpressionError as exc:
                         cases.append(match_case)
                         block.with_ = cases
@@ -584,7 +586,7 @@ def step_block_body(
                 try:
                     result, background, scope, return_trace = yield from step_block(
                         state,
-                        scope,
+                        new_scope,
                         match_case.then,
                         append(loc_i, "return"),
                     )
@@ -824,27 +826,56 @@ def step_block_body(
 
 
 def is_matching(  # pylint: disable=too-many-return-statements
-    value: Any, pattern: PatternType
-) -> bool:
+    value: Any, pattern: PatternType, scope: ScopeType
+) -> Optional[ScopeType]:
+    """The function test if `value` matches the pattern `match` and returns the scope updated with the new variables bound by the matching.
+
+    Args:
+        value: Value to match.
+        pattern: Pattern to match.
+        scope: Current variable binding.
+
+    Returns:
+        The function returns `None` if the value is not matched by the pattern and a copy of the updated scope otherwise.
+    """
+    new_scope: Optional[ScopeType]
     match pattern:
         case OrPattern():
-            return any(is_matching(value, p) for p in pattern.union)
+            new_scope = None
+            for p in pattern.union:
+                new_scope = is_matching(value, p, scope)
+                if new_scope:
+                    break
         case ArrayPattern():
-            if not (isinstance(value, Sequence) and len(pattern.array) == len(value)):
-                return False
-            return all(is_matching(v, p) for v, p in zip(value, pattern.array))
+            if not isinstance(value, Sequence) or len(pattern.array) != len(value):
+                return None
+            new_scope = scope
+            for v, p in zip(value, pattern.array):
+                new_scope = is_matching(v, p, new_scope)
+                if new_scope is None:
+                    return None
         case ObjectPattern():
             if not isinstance(value, dict):
-                return False
-            return all(
-                k in value and is_matching(value[k], p)
-                for k, p in pattern.object.items()
-            )
+                return None
+            new_scope = scope
+            for k, p in pattern.object.items():
+                if k not in value:
+                    return None
+                new_scope = is_matching(value[k], p, new_scope)
+                if new_scope is None:
+                    return None
         case AnyPattern():
-            return True
+            new_scope = scope
         case _:
             assert not isinstance(pattern, Pattern)
-            return value == pattern
+            if value != pattern:
+                return None
+            new_scope = scope
+    if new_scope is None:
+        return None
+    if isinstance(pattern, Pattern) and pattern.assign is not None:
+        new_scope = new_scope | {pattern.assign: value}
+    return new_scope
 
 
 def step_defs(

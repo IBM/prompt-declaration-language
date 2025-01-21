@@ -3,6 +3,18 @@
     "AnyPattern": {
       "additionalProperties": false,
       "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
         "any": {
           "const": null,
           "title": "Any",
@@ -396,6 +408,18 @@
     "ArrayPattern": {
       "additionalProperties": false,
       "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
         "array": {
           "items": {
             "anyOf": [
@@ -6970,6 +6994,18 @@
     "ObjectPattern": {
       "additionalProperties": false,
       "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
         "object": {
           "additionalProperties": {
             "anyOf": [
@@ -7015,6 +7051,18 @@
     "OrPattern": {
       "additionalProperties": false,
       "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
         "union": {
           "items": {
             "anyOf": [

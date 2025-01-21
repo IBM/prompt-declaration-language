@@ -220,7 +220,9 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
 
 
 def pattern_to_dict(pattern: PatternType):
-    result: Any
+    if not isinstance(pattern, pdl_ast.Pattern):
+        return pattern
+    result: dict[str, Any]
     match pattern:
         case OrPattern():
             result = {"union": [pattern_to_dict(p) for p in pattern.union]}
@@ -233,8 +235,9 @@ def pattern_to_dict(pattern: PatternType):
         case AnyPattern():
             result = {"any": None}
         case _:
-            assert not isinstance(pattern, pdl_ast.Pattern)
-            result = pattern
+            assert False
+    if pattern.assign is not None:
+        result["def"] = pattern.assign
     return result
 
 

@@ -102,6 +102,89 @@ with:
     assert result == 4012
 
 
+def test_match_case_if2():
+    prog_str = """
+match: 1
+with:
+- case:
+    any:
+    def: x
+  if: ${x == 0}
+  then: 42
+- case:
+    any:
+    def: x
+  if: ${x == 1}
+  then: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == 1
+
+
+def test_match_case_if3():
+    prog_str = """
+text:
+- match: 1
+  with:
+  - case:
+      any:
+      def: x
+    if: ${x == 0}
+    then: 42
+  - case:
+      any:
+      def: x
+    if: ${x == 1}
+    then: ${x}
+- ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == "11"
+
+
+def test_match_case_if4():
+    prog_str = """
+text:
+- match: 1
+  with:
+  - case:
+      any:
+      def: x
+    if: ${x == 0}
+    then: 42
+  - case:
+      any:
+      def: y
+    if: ${y == 1}
+    then: 4012
+- ${x}
+"""
+    result = exec_str(prog_str)
+    # TODO: should raise an error (unbounded variable)
+    assert result == "40124012"
+
+
+def test_match_case_if5():
+    prog_str = """
+text:
+- match: 1
+  with:
+  - case:
+      any:
+      def: x
+    if: ${x == 0}
+    then: 42
+  - case:
+      any:
+      def: y
+    if: ${y == 1}
+    then: ${x}
+"""
+    result = exec_str(prog_str)
+    # TODO: should raise an error (unbounded variable)
+    assert result == "40124012"
+
+
 def test_match_expr0():
     prog_str = """
 defs:
@@ -136,13 +219,13 @@ def test_match_expr_in_case2():
     prog_str = """
 defs:
     x:
-        data: "${x}"
+        data: "${y}"
         raw: true
 match: ${x}
 with:
 - case: 0
   then: 42
-- case: ${x}
+- case: ${y}
   then: 4012
 """
     result = exec_str(prog_str)
@@ -206,6 +289,32 @@ with:
 """
     result = exec_str(prog_str)
     assert result == 6
+
+
+def test_match_array1():
+    prog_str = """
+defs:
+    v:
+      data: [1, 2, 3]
+match: ${v}
+with:
+- case:
+    array: []
+  then: 1
+- case:
+    array:
+    - 1
+    - any:
+      def: x
+    - any:
+      def: y
+  then: ${ x + y }
+- case:
+    array: [1,2,3]
+  then: 0
+"""
+    result = exec_str(prog_str)
+    assert result == 5
 
 
 def test_match_object0():
@@ -280,6 +389,49 @@ with:
     assert result == 4
 
 
+def test_match_object3():
+    prog_str = """
+defs:
+    v:
+      data:
+        a: 1
+        b: hello
+        c:
+          array: [1,2,3]
+match: ${v}
+with:
+- case:
+    object:
+      a:
+        any:
+        def: x
+      b: hello
+      c:
+        array:
+        - 1
+        - any:
+          def: y
+        - 3
+  if: ${x > y}
+  then: false
+- case:
+    object:
+      a:
+        any:
+        def: x
+      b: hello
+      c:
+        array:
+        - 1
+        - any:
+          def: y
+        - 3
+  then: ${x + y}
+"""
+    result = exec_str(prog_str)
+    assert result == 3
+
+
 def test_any0():
     prog_str = """
 match: Hello
@@ -340,6 +492,72 @@ with:
 """
     result = exec_str(prog_str)
     assert result == 2
+
+
+def test_match_union2():
+    prog_str = """
+defs:
+    v:
+      data:
+        a: 1
+        b: hello
+match: ${v}
+with:
+- case:
+    union:
+    - 1
+    - object: {"a": 2, "b": "hello"}
+  then: 1
+- case:
+    union:
+    - object:
+        a:
+          any:
+          def: x
+        b: hi
+    - object:
+        a: 1
+        b:
+          any:
+          def: x
+    - 42
+  then: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == "hello"
+
+
+def test_match_union3():
+    prog_str = """
+defs:
+    v:
+      data:
+        a: 1
+        b: hello
+match: ${v}
+with:
+- case:
+    union:
+    - 1
+    - object: {"a": 2, "b": "hello"}
+  then: 1
+- case:
+    union:
+    - object:
+        a:
+          any:
+          def: x
+        b: hello
+    - object:
+        a: 1
+        b:
+          any:
+          def: x
+    - 42
+  then: ${x}
+"""
+    result = exec_str(prog_str)
+    assert result == 1
 
 
 def test_match_catch_all():
