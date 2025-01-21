@@ -1080,9 +1080,17 @@ def step_call_model(
     match concrete_block:
         case LitellmModelBlock():
             if isinstance(concrete_block.parameters, LitellmParameters):
-                concrete_block = concrete_block.model_copy(
-                    update={"parameters": concrete_block.parameters.model_dump()}
+                # Apply PDL defaults to model invocation
+                original_params = concrete_block.parameters.model_dump()
+                revised_params = apply_defaults(
+                    str(concrete_block.model),
+                    original_params,
+                    scope.get("pdl_model_default_parameters", []),
                 )
+                concrete_block = concrete_block.model_copy(
+                    update={"parameters": revised_params}
+                )
+
             _, concrete_block = process_expr_of(
                 concrete_block, "parameters", scope, loc
             )
@@ -1121,14 +1129,6 @@ def step_call_model(
 
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
-
-        # Apply PDL defaults to model invocation
-        if isinstance(concrete_block.parameters, dict):
-            concrete_block.parameters = apply_defaults(
-                str(concrete_block.model),
-                concrete_block.parameters,
-                scope["pdl_model_default_parameters"],
-            )
 
         msg, raw_result = yield from generate_client_response(
             state, concrete_block, model_input
