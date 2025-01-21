@@ -1,7 +1,8 @@
 .pdl-preview {
   &[data-limit-height="true"] {
-    max-height: 350px;
-    overflow: auto;
+    .monaco-editor {
+      max-height: 350px;
+    }
   }
   pre {
     margin: 0 !important;

@@ -40,7 +40,7 @@ export default function DrawerContent(props: Props) {
   )
 
   return (
-    <Card isPlain isLarge className="pdl-drawer-content">
+    <Card isPlain isLarge isFullHeight className="pdl-drawer-content">
       <CardHeader
         actions={{
           actions: (
@@ -59,7 +59,13 @@ export default function DrawerContent(props: Props) {
         {!asTabs(props.body) ? (
           props.body
         ) : (
-          <Tabs isFilled activeKey={activeTab} onSelect={handleTabClick}>
+          <Tabs
+            isFilled
+            activeKey={activeTab}
+            onSelect={handleTabClick}
+            mountOnEnter
+            unmountOnExit
+          >
             {props.body.map(({ title, body }, idx) => (
               <Tab
                 key={idx}
