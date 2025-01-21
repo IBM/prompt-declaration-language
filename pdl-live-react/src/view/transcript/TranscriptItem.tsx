@@ -96,18 +96,12 @@ export default function TranscriptItem(props: Props) {
       key={props.ctx.id}
       id={props.ctx.id}
       onClick={drilldown}
-      isClickable
       className={
         "pdl-transcript-item" + (props.className ? " " + props.className : "")
       }
       data-id={props.ctx.id}
     >
-      <CardHeader
-        selectableActions={{
-          onClickAction: drilldown,
-          selectableActionAriaLabelledby: props.ctx.id,
-        }}
-      >
+      <CardHeader>
         <CardTitle>{headerContent}</CardTitle>
       </CardHeader>
 
