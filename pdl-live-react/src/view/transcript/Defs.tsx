@@ -34,7 +34,6 @@ const alignCenter = { default: "alignItemsCenter" as const }
 export default function Defs({ defs, ctx }: Props) {
   const entries = Object.entries(defs)
   return entries.map(([key, value]) => {
-    const id = "defs-" + ctx.id + "-" + key
     const breadcrumbs = (
       <BreadcrumbBar>
         <Def ctx={ctx} def={key} value={value} />
@@ -51,25 +50,17 @@ export default function Defs({ defs, ctx }: Props) {
     return (
       <Card
         isCompact
-        isClickable
         onClick={drilldown}
         key={key}
         className="pdl-transcript-item"
-        data-id={id}
       >
-        <CardHeader
-          id={id}
-          selectableActions={{
-            onClickAction: drilldown,
-            selectableActionAriaLabelledby: id,
-          }}
-        >
+        <CardHeader>
           <Flex alignItems={alignCenter}>
             <FlexItem className="pdl-block-icon">
               <EqualsIcon />
             </FlexItem>
 
-            <CardTitle id={id}>{breadcrumbs}</CardTitle>
+            <CardTitle>{breadcrumbs}</CardTitle>
           </Flex>
         </CardHeader>
 
