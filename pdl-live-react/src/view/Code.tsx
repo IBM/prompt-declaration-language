@@ -48,21 +48,25 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   const new_data = { ...data, result: undefined }
   // remove trace
   match(new_data).with({ trace: P._ }, (data) => {
-    data.trace = undefined
+    delete data.trace
   })
+  // remove other trace artifacts
+  delete new_data.start_nanos
+  delete new_data.end_nanos
+  delete new_data.timezone
   // remove contribute: ["result", context]
   if (
     new_data?.contribute?.includes("result") &&
     new_data?.contribute?.includes("context")
   ) {
-    new_data.contribute = undefined
+    delete new_data.contribute
   }
   // remove empty defs list
   if (Object.keys(data?.defs ?? {}).length === 0) {
-    new_data.defs = undefined
+    delete new_data.defs
   }
   // remove location info
-  new_data.location = undefined
+  delete new_data.location
   // recursive cleanup
   return map_block_children(block_code_cleanup, new_data)
 }

@@ -58,7 +58,8 @@ export default function PrettyKind({
           )}
         </>
       )
-    case "call":
+    case "call": {
+      const { args } = block
       return (
         <>
           Call{" "}
@@ -70,15 +71,19 @@ export default function PrettyKind({
                 {block.call.replace(/^\$\{\s*([^\s}]+)\s*\}$/, "$1")}
               </strong>
               (
-              {block.args &&
-                Object.values(block.args)
-                  .map((a) => `"${a}"`)
-                  .join(", ")}
+              {args != null && typeof args === "object" ? (
+                Object.values(args)
+                  .map((a) => `"${String(a)}"`)
+                  .join(", ")
+              ) : (
+                <></>
+              )}
               )
             </span>
           )}
         </>
       )
+    }
     case "error":
       return `${firstLineOf(block.msg)}`
     case "code":

@@ -13,11 +13,17 @@ import Def from "./Def"
 import Icon from "./Icon"
 import Code from "../Code"
 import type Context from "../../Context"
+import Duration from "./Duration"
 import PrettyKind from "./PrettyKind"
 import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
 
-import { hasResult, nonNullable, type NonScalarPdlBlock } from "../../helpers"
+import {
+  hasTimingInformation,
+  hasResult,
+  nonNullable,
+  type NonScalarPdlBlock,
+} from "../../helpers"
 
 type Props = PropsWithChildren<{
   className?: string
@@ -98,7 +104,13 @@ export default function TranscriptItem(props: Props) {
         "pdl-transcript-item" + (props.className ? " " + props.className : "")
       }
     >
-      <CardHeader>
+      <CardHeader
+        actions={
+          hasTimingInformation(props.block)
+            ? { actions: <Duration block={props.block} /> }
+            : undefined
+        }
+      >
         <CardTitle>{headerContent}</CardTitle>
       </CardHeader>
 

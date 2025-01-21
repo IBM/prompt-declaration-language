@@ -133,6 +133,15 @@ class Block(BaseModel):
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     """
+    start_nanos: Optional[int] = 0
+    """Time at which block execution began
+    """
+    end_nanos: Optional[int] = 0
+    """Time at which block execution ended
+    """
+    timezone: Optional[str] = ""
+    """Timezone of start_nanos and end_nanos
+    """
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
