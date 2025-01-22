@@ -14,7 +14,7 @@ export default function TimelineBar({
       left: (100 * (start_nanos - min)) / (max - min) + "%",
       width: (100 * (end_nanos - start_nanos)) / (max - min) + "%",
     }),
-    [start_nanos, end_nanos],
+    [start_nanos, end_nanos, min, max],
   )
 
   return (
