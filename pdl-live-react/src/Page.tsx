@@ -1,4 +1,4 @@
-import { useCallback, useState, type PropsWithChildren } from "react"
+import { useCallback, useEffect, useState, type PropsWithChildren } from "react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +12,10 @@ import ViewerTabs from "./ViewerTabs"
 import DrawerContent from "./DrawerContent"
 
 import DrawerContext from "./DrawerContentContext"
-import DarkModeContext, { getDarkModeUserSetting } from "./DarkModeContext"
+import DarkModeContext, {
+  setDarkModeForSession,
+  getDarkModeUserSetting,
+} from "./DarkModeContext"
 
 import "./Page.css"
 
@@ -25,6 +28,7 @@ type Props = PropsWithChildren<{
 
 export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
+  useEffect(() => setDarkModeForSession(darkMode), [])
 
   /** Manage the drawer that slides in from the right */
   const [drawerContent, setDrawerContent] = useState<
