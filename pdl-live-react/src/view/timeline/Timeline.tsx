@@ -55,34 +55,64 @@ function positionOf(
         : "pop"
 }
 
-/* function nextSibling(row: TimelineRowModel, idx: number, A: TimelineRowModel[]) {
+function nextSibling(
+  row: TimelineRowModel,
+  idx: number,
+  A: TimelineRowModel[],
+) {
   let sidx = idx + 1
   while (sidx < A.length && A[sidx].depth > row.depth) {
     sidx++
   }
   return sidx < A.length && A[sidx].depth === row.depth ? sidx : -1
-} */
-
-/*function pushPopsFor(model: TimelineRowModel[]): { prefix: string, position: Position }[] {
-  return model.reduce((Ps, row, idx) => {
-    const position = positionOf(row, idx, model)
-    if (Ps.parent === -1) {
-      return {prefix: "", position}
-    }
-
-    //const siblingIdx = nextSibling(model[Ps.parent], Ps.parent, model)
-    const prefix = Ps.parentPrefix
-    if (position === 'push' && Ps.parentHasSibling) {
-      prefix += "│   "
-
-    return {
-      prefix,
-      position,
-    }
-  })
 }
-*/
 
-function pushPopsFor(model: TimelineRowModel[]): { position: Position }[] {
-  return model.map((row, idx, A) => ({ position: positionOf(row, idx, A) }))
+type PushPop = { prefix: boolean[]; position: Position }
+
+function pushPopsFor(model: TimelineRowModel[]): PushPop[] {
+  if (model.length === 0) {
+    return []
+  }
+
+  const result: PushPop[] = []
+  const stack: number[] = [0]
+  const prefix: boolean[] = []
+  let n = 0
+  while (stack.length > 0) {
+    if (n++ > model.length * 2) {
+      break
+    }
+    const rootIdx = stack.pop()
+
+    if (rootIdx === undefined) {
+      break
+    } else if (rootIdx < 0) {
+      prefix.pop()
+      continue
+    }
+
+    const root = model[rootIdx]
+    const mine = {
+      prefix: prefix.slice(0),
+      position: positionOf(root, rootIdx, model),
+    }
+    result.push(mine)
+
+    stack.push(-rootIdx)
+    for (let idx = model.length - 1; idx >= rootIdx + 1; idx--) {
+      if (model[idx].parent === root) {
+        stack.push(idx)
+      }
+    }
+
+    const nextSibIdx = nextSibling(root, rootIdx, model)
+    if (nextSibIdx < 0) {
+      prefix.push(false)
+      mine.position = "pop"
+    } else {
+      prefix.push(true)
+    }
+  }
+
+  return result
 }

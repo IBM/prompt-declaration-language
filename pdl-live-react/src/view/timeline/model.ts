@@ -14,6 +14,9 @@ export type TimelineRow = Pick<
 > & {
   /** Call tree depth */
   depth: number
+
+  /** Parent node */
+  parent: null | TimelineRow
 }
 
 export type TimelineRowWithExtrema = TimelineRow & {
@@ -29,16 +32,18 @@ export type TimelineModel = TimelineRow[]
 export function computeModel(
   block: unknown | PdlBlock,
   depth = 0,
+  parent?: TimelineRow,
 ): TimelineModel {
   if (!hasTimingInformation(block)) {
     return []
   }
 
+  const root = Object.assign({ depth, parent: parent || null }, block)
   return [
-    Object.assign({ depth }, block),
+    root,
     ...childrenOf(block)
       .filter(nonNullable)
-      .flatMap((child) => computeModel(child, depth + 1)),
+      .flatMap((child) => computeModel(child, depth + 1, root)),
   ]
 }
 

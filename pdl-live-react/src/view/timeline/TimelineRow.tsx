@@ -6,6 +6,7 @@ import { capitalizeAndUnSnakeCase } from "../../helpers"
 export type Position = "push" | "middle" | "pop"
 
 type Props = import("./model").TimelineRowWithExtrema & {
+  prefix: boolean[]
   position: Position
 }
 
@@ -35,12 +36,7 @@ function treeSymbols(row: Props) {
 }
 
 function prefixSymbols(row: Props) {
-  return row.depth === 0
-    ? ""
-    : Array(row.depth - 1)
-        .fill("")
-        .map(() => "│   ")
-        .join("")
+  return row.prefix.slice(1).reduce((s, p) => s + (p ? "│   " : "    "), "")
 }
 
 function finalSymbol(row: Props) {
