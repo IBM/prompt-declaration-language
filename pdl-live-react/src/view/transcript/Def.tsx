@@ -1,3 +1,5 @@
+import { useCallback, type MouseEvent } from "react"
+
 import DefContent from "./DefContent"
 import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
@@ -16,6 +18,24 @@ type Props = {
 export default function Def(props: Props) {
   const { def, value, ctx, supportsDrilldown = true } = props
 
+  const drilldown = useCallback(
+    (evt: MouseEvent) => {
+      if (value) {
+        evt.stopPropagation()
+        ctx.setDrawerContent({
+          header: "Variable definition",
+          description: (
+            <BreadcrumbBar>
+              <Def {...props} supportsDrilldown={false} />
+            </BreadcrumbBar>
+          ),
+          body: <DefContent value={value} ctx={ctx} />,
+        })
+      }
+    },
+    [value, props, ctx],
+  )
+
   return (
     <BreadcrumbBarItem
       className="pdl-breadcrumb-bar-item--def"
@@ -25,22 +45,7 @@ export default function Def(props: Props) {
           {value && <>Click to see details.</>}
         </>
       }
-      onClick={
-        !value || !supportsDrilldown
-          ? undefined
-          : (evt) => {
-              evt.stopPropagation()
-              ctx.setDrawerContent({
-                header: "Variable definition",
-                description: (
-                  <BreadcrumbBar>
-                    <Def {...props} supportsDrilldown={false} />
-                  </BreadcrumbBar>
-                ),
-                body: <DefContent value={value} ctx={ctx} />,
-              })
-            }
-      }
+      onClick={!value || !supportsDrilldown ? undefined : drilldown}
     >
       ${def}
     </BreadcrumbBarItem>
