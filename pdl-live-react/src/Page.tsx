@@ -28,7 +28,7 @@ type Props = PropsWithChildren<{
 
 export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
-  useEffect(() => setDarkModeForSession(darkMode), [])
+  useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
   /** Manage the drawer that slides in from the right */
   const [drawerContent, setDrawerContent] = useState<
