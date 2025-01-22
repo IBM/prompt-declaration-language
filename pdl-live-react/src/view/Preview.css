@@ -4,9 +4,21 @@
       max-height: 350px;
     }
   }
-  pre {
-    margin: 0 !important;
-    font-size: 1em !important;
-    font-family: "Red Hat Mono" !important;
+
+  .pf-v6-c-code-editor__tab {
+    /* Bug in patternfly? the language element shows up with 1rem font-size */
+    font-size: 0.875em;
+  }
+}
+
+/**
+ * This adds some space above the code editor component. Necessary
+   when using any of the <CodeEditor/> options that pull in the editor
+   toolbar, e.g. isCopyEnabled.
+ */
+.pf-v6-c-page__main-body,
+section {
+  & > .pdl-preview {
+    margin-top: 1em;
   }
 }
