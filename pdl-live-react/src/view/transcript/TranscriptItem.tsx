@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react"
+import { useCallback, useMemo, type PropsWithChildren } from "react"
 import {
   Card,
   CardHeader,
@@ -43,30 +43,32 @@ export default function TranscriptItem(props: Props) {
   const { ctx, block, children } = props
   const { def, kind } = block
   const { parents } = ctx
+  const value = hasResult(block) && block.result
 
-  const breadcrumbs = (
-    <BreadcrumbBar>
-      <>
-        {[...parents, kind === "model" ? "LLM" : (kind ?? "unknown")]
-          .filter(nonNullable)
-          .map((parent, idx, A) => {
-            const isKind = idx === A.length - 1
-            const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
-            return (
-              <BreadcrumbBarItem
-                key={idx}
-                className={className}
-                detail={parent}
-              >
-                {capitalizeAndUnSnakeCase(parent)}
-              </BreadcrumbBarItem>
-            )
-          })}
-        {def && (
-          <Def def={def} ctx={ctx} value={hasResult(block) && block.result} />
-        )}
-      </>
-    </BreadcrumbBar>
+  const breadcrumbs = useMemo(
+    () => (
+      <BreadcrumbBar>
+        <>
+          {[...parents, kind === "model" ? "LLM" : (kind ?? "unknown")]
+            .filter(nonNullable)
+            .map((parent, idx, A) => {
+              const isKind = idx === A.length - 1
+              const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
+              return (
+                <BreadcrumbBarItem
+                  key={idx}
+                  className={className}
+                  detail={parent}
+                >
+                  {capitalizeAndUnSnakeCase(parent)}
+                </BreadcrumbBarItem>
+              )
+            })}
+          {def && <Def def={def} ctx={ctx} value={value} />}
+        </>
+      </BreadcrumbBar>
+    ),
+    [def, value, kind, parents, ctx],
   )
 
   const headerContent = (
@@ -76,7 +78,7 @@ export default function TranscriptItem(props: Props) {
     </Flex>
   )
 
-  const drilldown = () => {
+  const drilldown = useCallback(() => {
     ctx.setDrawerContent({
       header: "Block Details",
       description: breadcrumbs,
@@ -87,15 +89,23 @@ export default function TranscriptItem(props: Props) {
         },
         {
           title: "Source",
-          body: <Code block={props.block} />,
+          body: <Code block={block} />,
         },
         {
           title: "Raw Trace",
-          body: <Code block={props.block} raw />,
+          body: <Code block={block} raw />,
         },
       ],
     })
-  }
+  }, [block, children, breadcrumbs, ctx])
+
+  const actions = useMemo(
+    () =>
+      hasTimingInformation(block)
+        ? { actions: <Duration block={block} /> }
+        : undefined,
+    [block],
+  )
 
   return (
     <Card
@@ -104,18 +114,12 @@ export default function TranscriptItem(props: Props) {
         "pdl-transcript-item" + (props.className ? " " + props.className : "")
       }
     >
-      <CardHeader
-        actions={
-          hasTimingInformation(props.block)
-            ? { actions: <Duration block={props.block} /> }
-            : undefined
-        }
-      >
+      <CardHeader actions={actions}>
         <CardTitle>{headerContent}</CardTitle>
       </CardHeader>
 
       <CardBody>
-        <PrettyKind block={props.block} />
+        <PrettyKind block={block} />
       </CardBody>
     </Card>
   )
