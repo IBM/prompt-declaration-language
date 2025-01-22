@@ -42,7 +42,8 @@
   height: 0.875em;
   line-height: 0.875em;
 
-  border: 1px solid var(--pf-t--global--background--color--secondary--default);
+  border-radius: 2px / 4px;
+  background-color: var(--pf-t--global--background--color--control--read-only);
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
   &:hover {
@@ -54,6 +55,7 @@
   position: absolute;
   min-width: 1px;
 
+  border-radius: 2px / 4px;
   background-color: var(--pf-t--global--background--color--inverse--default);
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
@@ -61,7 +63,13 @@
     background-color: var(--pf-t--global--color--brand--hover);
   }
 
+  &[data-kind="text"] {
+    background-color: var(--pf-t--global--icon--color--disabled);
+  }
+  &[data-kind="repeat_until"] {
+    background-color: var(--pf-t--global--background--color--secondary--hover);
+  }
   &[data-kind="model"] {
-    background-color: var(--pf-t--global--icon--color--severity--none--default);
+    background-color: var(--pf-t--global--text--color--brand--default);
   }
 }
