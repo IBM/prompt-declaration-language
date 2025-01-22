@@ -18,6 +18,13 @@ export default function Viewer() {
       title={<TabTitleText>Transcript</TabTitleText>}
     />,
     <Tab
+      key="#timeline"
+      href="#timeline"
+      eventKey="#timeline"
+      className="pdl-viewer-tab"
+      title={<TabTitleText>Timeline</TabTitleText>}
+    />,
+    <Tab
       key="#source"
       href="#source"
       eventKey="#source"
@@ -39,7 +46,7 @@ export default function Viewer() {
   }
 
   return (
-    <Tabs activeKey={activeTab} component="nav">
+    <Tabs activeKey={activeTab} component="nav" mountOnEnter>
       {tabs}
     </Tabs>
   )

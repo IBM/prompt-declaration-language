@@ -224,6 +224,21 @@ export type Fallback =
  *
  */
 export type Role = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone = string | null;
 export type Path = string[];
 export type File = string;
 export type Kind = "empty";
@@ -280,6 +295,21 @@ export type Fallback1 =
  *
  */
 export type Role1 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos1 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos1 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone1 = string | null;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -360,6 +390,21 @@ export type Fallback2 =
  *
  */
 export type Role2 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos2 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos2 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone2 = string | null;
 export type Kind2 = "include";
 /**
  * Name of the file to include.
@@ -444,6 +489,21 @@ export type Fallback3 =
  *
  */
 export type Role3 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos3 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos3 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone3 = string | null;
 export type Kind3 = "read";
 /**
  * Message to prompt the user to enter a value.
@@ -507,6 +567,21 @@ export type Fallback4 =
  * Role of associated to the message.
  */
 export type Role4 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos4 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos4 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone4 = string | null;
 export type Kind4 = "message";
 /**
  * Content of the message.
@@ -589,6 +664,21 @@ export type Fallback5 =
  *
  */
 export type Role5 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos5 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos5 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone5 = string | null;
 export type Kind5 = "object";
 export type Object =
   | {
@@ -697,6 +787,21 @@ export type Fallback6 =
  *
  */
 export type Role6 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos6 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos6 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone6 = string | null;
 export type Kind6 = "array";
 export type Array = (
   | boolean
@@ -777,6 +882,21 @@ export type Fallback7 =
  *
  */
 export type Role7 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos7 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos7 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone7 = string | null;
 export type Kind7 = "lastOf";
 export type Lastof = (
   | boolean
@@ -857,6 +977,21 @@ export type Fallback8 =
  *
  */
 export type Role8 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos8 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos8 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone8 = string | null;
 export type Kind8 = "text";
 /**
  * Body of the text.
@@ -966,6 +1101,21 @@ export type Fallback9 =
  *
  */
 export type Role9 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos9 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos9 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone9 = string | null;
 export type Kind9 = "for";
 /**
  * Body of the loop.
@@ -1102,6 +1252,21 @@ export type Fallback10 =
  *
  */
 export type Role10 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos10 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos10 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone10 = string | null;
 export type Kind10 = "repeat_until";
 /**
  * Body of the loop.
@@ -1218,6 +1383,21 @@ export type Fallback11 =
  *
  */
 export type Role11 = string | null;
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos11 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos11 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone11 = string | null;
 export type Kind11 = "repeat";
 /**
  * Body of the loop.
@@ -1339,6 +1519,7 @@ export type Fallback12 =
  *
  */
 export type Role12 = string | null;
+<<<<<<< HEAD
 export type Kind12 = "match";
 export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
 export type Def13 = string | null;
@@ -1348,6 +1529,28 @@ export type Def16 = string | null;
 export type Any = null;
 export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos12 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos12 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone12 = string | null;
+export type Kind12 = "if";
+/**
+ * Branch to exectute if the condition is true.
+ *
+ */
+>>>>>>> main
 export type Then =
   | boolean
   | number
@@ -1427,7 +1630,26 @@ export type Fallback13 =
  *
  */
 export type Role13 = string | null;
+<<<<<<< HEAD
 export type Kind13 = "if";
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos13 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos13 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone13 = string | null;
+export type Kind13 = "data";
+>>>>>>> main
 /**
  * Branch to exectute if the condition is true.
  *
@@ -1540,7 +1762,26 @@ export type Fallback14 =
  *
  */
 export type Role14 = string | null;
+<<<<<<< HEAD
 export type Kind14 = "data";
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos14 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos14 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone14 = string | null;
+export type Kind14 = "get";
+>>>>>>> main
 /**
  * Do not evaluate expressions inside strings.
  */
@@ -1598,7 +1839,26 @@ export type Fallback15 =
  *
  */
 export type Role15 = string | null;
+<<<<<<< HEAD
 export type Kind15 = "get";
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos15 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos15 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone15 = string | null;
+export type Kind15 = "code";
+>>>>>>> main
 /**
  * Name of the variable to access.
  */
@@ -1656,6 +1916,7 @@ export type Fallback16 =
  *
  */
 export type Role16 = string | null;
+<<<<<<< HEAD
 export type Kind16 = "code";
 /**
  * Programming language of the code.
@@ -1667,6 +1928,25 @@ export type Lang = "python" | "command" | "jinja" | "pdl";
  *
  */
 export type Code =
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos16 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos16 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone16 = string | null;
+export type Kind16 = "model";
+export type Input =
+>>>>>>> main
   | boolean
   | number
   | string
@@ -1744,8 +2024,28 @@ export type Fallback17 =
  *
  */
 export type Role17 = string | null;
+<<<<<<< HEAD
 export type Kind17 = "model";
 export type Input =
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos17 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos17 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone17 = string | null;
+export type Kind17 = "call";
+export type Trace5 =
+>>>>>>> main
   | boolean
   | number
   | string
@@ -1850,6 +2150,7 @@ export type Fallback18 =
  *
  */
 export type Role18 = string | null;
+<<<<<<< HEAD
 export type Kind18 = "call";
 export type Trace5 =
   | boolean
@@ -1930,6 +2231,24 @@ export type Fallback19 =
  */
 export type Role19 = string | null;
 export type Kind19 = "function";
+=======
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos18 = number | null;
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos18 = number | null;
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone18 = string | null;
+export type Kind18 = "function";
+>>>>>>> main
 /**
  * Functions parameters with their types.
  *
@@ -2002,11 +2321,22 @@ export interface FunctionBlock {
   description?: Description;
   spec?: Spec;
   defs?: Defs;
+<<<<<<< HEAD
   def?: Def23;
   contribute?: Contribute19;
   parser?: Parser19;
   fallback?: Fallback19;
   role?: Role19;
+=======
+  def?: Def18;
+  contribute?: Contribute18;
+  parser?: Parser18;
+  fallback?: Fallback18;
+  role?: Role18;
+  start_nanos?: StartNanos18;
+  end_nanos?: EndNanos18;
+  timezone?: Timezone18;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind19;
@@ -2059,11 +2389,22 @@ export interface CallBlock {
   description?: Description1;
   spec?: Spec1;
   defs?: Defs1;
+<<<<<<< HEAD
   def?: Def22;
   contribute?: Contribute18;
   parser?: Parser18;
   fallback?: Fallback18;
   role?: Role18;
+=======
+  def?: Def17;
+  contribute?: Contribute17;
+  parser?: Parser17;
+  fallback?: Fallback17;
+  role?: Role17;
+  start_nanos?: StartNanos17;
+  end_nanos?: EndNanos17;
+  timezone?: Timezone17;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind18;
@@ -2116,11 +2457,22 @@ export interface LitellmModelBlock {
   description?: Description2;
   spec?: Spec2;
   defs?: Defs2;
+<<<<<<< HEAD
   def?: Def21;
   contribute?: Contribute17;
   parser?: Parser17;
   fallback?: Fallback17;
   role?: Role17;
+=======
+  def?: Def16;
+  contribute?: Contribute16;
+  parser?: Parser16;
+  fallback?: Fallback16;
+  role?: Role16;
+  start_nanos?: StartNanos16;
+  end_nanos?: EndNanos16;
+  timezone?: Timezone16;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind17;
@@ -2176,11 +2528,22 @@ export interface CodeBlock {
   description?: Description3;
   spec?: Spec3;
   defs?: Defs3;
+<<<<<<< HEAD
   def?: Def20;
   contribute?: Contribute16;
   parser?: Parser16;
   fallback?: Fallback16;
   role?: Role16;
+=======
+  def?: Def15;
+  contribute?: Contribute15;
+  parser?: Parser15;
+  fallback?: Fallback15;
+  role?: Role15;
+  start_nanos?: StartNanos15;
+  end_nanos?: EndNanos15;
+  timezone?: Timezone15;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind16;
@@ -2232,11 +2595,22 @@ export interface GetBlock {
   description?: Description4;
   spec?: Spec4;
   defs?: Defs4;
+<<<<<<< HEAD
   def?: Def19;
   contribute?: Contribute15;
   parser?: Parser15;
   fallback?: Fallback15;
   role?: Role15;
+=======
+  def?: Def14;
+  contribute?: Contribute14;
+  parser?: Parser14;
+  fallback?: Fallback14;
+  role?: Role14;
+  start_nanos?: StartNanos14;
+  end_nanos?: EndNanos14;
+  timezone?: Timezone14;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind15;
@@ -2287,11 +2661,22 @@ export interface DataBlock {
   description?: Description5;
   spec?: Spec5;
   defs?: Defs5;
+<<<<<<< HEAD
   def?: Def18;
   contribute?: Contribute14;
   parser?: Parser14;
   fallback?: Fallback14;
   role?: Role14;
+=======
+  def?: Def13;
+  contribute?: Contribute13;
+  parser?: Parser13;
+  fallback?: Fallback13;
+  role?: Role13;
+  start_nanos?: StartNanos13;
+  end_nanos?: EndNanos13;
+  timezone?: Timezone13;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind14;
@@ -2343,11 +2728,22 @@ export interface IfBlock {
   description?: Description6;
   spec?: Spec6;
   defs?: Defs6;
+<<<<<<< HEAD
   def?: Def17;
   contribute?: Contribute13;
   parser?: Parser13;
   fallback?: Fallback13;
   role?: Role13;
+=======
+  def?: Def12;
+  contribute?: Contribute12;
+  parser?: Parser12;
+  fallback?: Fallback12;
+  role?: Role12;
+  start_nanos?: StartNanos12;
+  end_nanos?: EndNanos12;
+  timezone?: Timezone12;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind13;
@@ -2401,11 +2797,22 @@ export interface MatchBlock {
   description?: Description7;
   spec?: Spec7;
   defs?: Defs7;
+<<<<<<< HEAD
   def?: Def12;
   contribute?: Contribute12;
   parser?: Parser12;
   fallback?: Fallback12;
   role?: Role12;
+=======
+  def?: Def11;
+  contribute?: Contribute11;
+  parser?: Parser11;
+  fallback?: Fallback11;
+  role?: Role11;
+  start_nanos?: StartNanos11;
+  end_nanos?: EndNanos11;
+  timezone?: Timezone11;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind12;
@@ -2457,11 +2864,22 @@ export interface RepeatBlock {
   description?: Description8;
   spec?: Spec8;
   defs?: Defs8;
+<<<<<<< HEAD
   def?: Def11;
   contribute?: Contribute11;
   parser?: Parser11;
   fallback?: Fallback11;
   role?: Role11;
+=======
+  def?: Def10;
+  contribute?: Contribute10;
+  parser?: Parser10;
+  fallback?: Fallback10;
+  role?: Role10;
+  start_nanos?: StartNanos10;
+  end_nanos?: EndNanos10;
+  timezone?: Timezone10;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind11;
@@ -2515,11 +2933,22 @@ export interface RepeatUntilBlock {
   description?: Description9;
   spec?: Spec9;
   defs?: Defs9;
+<<<<<<< HEAD
   def?: Def10;
   contribute?: Contribute10;
   parser?: Parser10;
   fallback?: Fallback10;
   role?: Role10;
+=======
+  def?: Def9;
+  contribute?: Contribute9;
+  parser?: Parser9;
+  fallback?: Fallback9;
+  role?: Role9;
+  start_nanos?: StartNanos9;
+  end_nanos?: EndNanos9;
+  timezone?: Timezone9;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind10;
@@ -2573,11 +3002,22 @@ export interface ForBlock {
   description?: Description10;
   spec?: Spec10;
   defs?: Defs10;
+<<<<<<< HEAD
   def?: Def9;
   contribute?: Contribute9;
   parser?: Parser9;
   fallback?: Fallback9;
   role?: Role9;
+=======
+  def?: Def8;
+  contribute?: Contribute8;
+  parser?: Parser8;
+  fallback?: Fallback8;
+  role?: Role8;
+  start_nanos?: StartNanos8;
+  end_nanos?: EndNanos8;
+  timezone?: Timezone8;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind9;
@@ -2631,11 +3071,22 @@ export interface TextBlock {
   description?: Description11;
   spec?: Spec11;
   defs?: Defs11;
+<<<<<<< HEAD
   def?: Def8;
   contribute?: Contribute8;
   parser?: Parser8;
   fallback?: Fallback8;
   role?: Role8;
+=======
+  def?: Def7;
+  contribute?: Contribute7;
+  parser?: Parser7;
+  fallback?: Fallback7;
+  role?: Role7;
+  start_nanos?: StartNanos7;
+  end_nanos?: EndNanos7;
+  timezone?: Timezone7;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind8;
@@ -2686,11 +3137,22 @@ export interface LastOfBlock {
   description?: Description12;
   spec?: Spec12;
   defs?: Defs12;
+<<<<<<< HEAD
   def?: Def7;
   contribute?: Contribute7;
   parser?: Parser7;
   fallback?: Fallback7;
   role?: Role7;
+=======
+  def?: Def6;
+  contribute?: Contribute6;
+  parser?: Parser6;
+  fallback?: Fallback6;
+  role?: Role6;
+  start_nanos?: StartNanos6;
+  end_nanos?: EndNanos6;
+  timezone?: Timezone6;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind7;
@@ -2741,11 +3203,22 @@ export interface ArrayBlock {
   description?: Description13;
   spec?: Spec13;
   defs?: Defs13;
+<<<<<<< HEAD
   def?: Def6;
   contribute?: Contribute6;
   parser?: Parser6;
   fallback?: Fallback6;
   role?: Role6;
+=======
+  def?: Def5;
+  contribute?: Contribute5;
+  parser?: Parser5;
+  fallback?: Fallback5;
+  role?: Role5;
+  start_nanos?: StartNanos5;
+  end_nanos?: EndNanos5;
+  timezone?: Timezone5;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind6;
@@ -2796,11 +3269,22 @@ export interface ObjectBlock {
   description?: Description14;
   spec?: Spec14;
   defs?: Defs14;
+<<<<<<< HEAD
   def?: Def5;
   contribute?: Contribute5;
   parser?: Parser5;
   fallback?: Fallback5;
   role?: Role5;
+=======
+  def?: Def4;
+  contribute?: Contribute4;
+  parser?: Parser4;
+  fallback?: Fallback4;
+  role: Role4;
+  start_nanos?: StartNanos4;
+  end_nanos?: EndNanos4;
+  timezone?: Timezone4;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind5;
@@ -2851,11 +3335,22 @@ export interface MessageBlock {
   description?: Description15;
   spec?: Spec15;
   defs?: Defs15;
+<<<<<<< HEAD
   def?: Def4;
   contribute?: Contribute4;
   parser?: Parser4;
   fallback?: Fallback4;
   role: Role4;
+=======
+  def?: Def3;
+  contribute?: Contribute3;
+  parser?: Parser3;
+  fallback?: Fallback3;
+  role?: Role3;
+  start_nanos?: StartNanos3;
+  end_nanos?: EndNanos3;
+  timezone?: Timezone3;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind4;
@@ -2906,11 +3401,22 @@ export interface ReadBlock {
   description?: Description16;
   spec?: Spec16;
   defs?: Defs16;
+<<<<<<< HEAD
   def?: Def3;
   contribute?: Contribute3;
   parser?: Parser3;
   fallback?: Fallback3;
   role?: Role3;
+=======
+  def?: Def2;
+  contribute?: Contribute2;
+  parser?: Parser2;
+  fallback?: Fallback2;
+  role?: Role2;
+  start_nanos?: StartNanos2;
+  end_nanos?: EndNanos2;
+  timezone?: Timezone2;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind3;
@@ -2963,11 +3469,22 @@ export interface IncludeBlock {
   description?: Description17;
   spec?: Spec17;
   defs?: Defs17;
+<<<<<<< HEAD
   def?: Def2;
   contribute?: Contribute2;
   parser?: Parser2;
   fallback?: Fallback2;
   role?: Role2;
+=======
+  def?: Def1;
+  contribute?: Contribute1;
+  parser?: Parser1;
+  fallback?: Fallback1;
+  role?: Role1;
+  start_nanos?: StartNanos1;
+  end_nanos?: EndNanos1;
+  timezone?: Timezone1;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind2;
@@ -3016,11 +3533,22 @@ export interface ErrorBlock {
   description?: Description18;
   spec?: Spec18;
   defs?: Defs18;
+<<<<<<< HEAD
   def?: Def1;
   contribute?: Contribute1;
   parser?: Parser1;
   fallback?: Fallback1;
   role?: Role1;
+=======
+  def?: Def;
+  contribute?: Contribute;
+  parser?: Parser;
+  fallback?: Fallback;
+  role?: Role;
+  start_nanos?: StartNanos;
+  end_nanos?: EndNanos;
+  timezone?: Timezone;
+>>>>>>> main
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind1;

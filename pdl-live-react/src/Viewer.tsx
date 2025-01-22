@@ -1,11 +1,9 @@
+import { lazy, useMemo } from "react"
 import { useLocation } from "react-router"
-import { useContext, useMemo } from "react"
 
-import Code from "./view/Code"
+const Code = lazy(() => import("./view/Code"))
+const Timeline = lazy(() => import("./view/timeline/Timeline"))
 import Transcript from "./view/transcript/Transcript"
-import DarkModeContext from "./DarkModeContext"
-
-import type { PdlBlock } from "./pdl_ast"
 
 import "./Viewer.css"
 
@@ -14,11 +12,8 @@ export default function Viewer({ value }: { value: string }) {
   // We will use this to find the current active tab (below)
   const { hash: activeTab } = useLocation()
 
-  // DarkMode state
-  const darkMode = useContext(DarkModeContext)
-
   const data = useMemo(
-    () => (value ? (JSON.parse(value) as PdlBlock) : null),
+    () => (value ? (JSON.parse(value) as import("./pdl_ast").PdlBlock) : null),
     [value],
   )
 
@@ -26,17 +21,16 @@ export default function Viewer({ value }: { value: string }) {
     return "Invalid trace content"
   }
 
-  return (
-    <>
-      <section hidden={activeTab !== "#source"}>
-        <Code block={data} darkMode={darkMode} limitHeight={false} />
-      </section>
-      <section hidden={activeTab !== "#raw"}>
-        <Code block={data} darkMode={darkMode} limitHeight={false} raw />
-      </section>
-      <section hidden={activeTab === "#source" || activeTab === "#raw"}>
-        <Transcript data={data} />
-      </section>
-    </>
-  )
+  switch (activeTab) {
+    case "#raw":
+    case "#source":
+      return (
+        <Code block={data} limitHeight={false} raw={activeTab === "#raw"} />
+      )
+    case "#timeline":
+      return <Timeline block={data} />
+    default:
+    case "#transcript":
+      return <Transcript data={data} />
+  }
 }

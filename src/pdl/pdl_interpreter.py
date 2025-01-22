@@ -4,6 +4,7 @@ import re
 import shlex
 import subprocess  # nosec
 import sys
+import time
 import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
@@ -92,6 +93,7 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
+    apply_defaults,
     get_contribute_value,
     messages_concat,
     replace_contribute_value,
@@ -305,7 +307,7 @@ def step_block(
             yield YieldResultMessage(result)
         append_log(state, "pdl_context", background)
     else:
-        result, background, scope, trace = yield from step_advanced_block(
+        result, background, scope, trace = yield from step_advanced_block_timed(
             state, scope, block, loc
         )
     scope = scope | {"pdl_context": background}
@@ -318,6 +320,26 @@ def context_in_contribute(block: AdvancedBlockType) -> bool:
     if get_contribute_value(block.contribute) is not None:
         return True
     return False
+
+
+# A start-end time wrapper around `step_advanced_block`
+def step_advanced_block_timed(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: LocationType,
+) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+    start_nanos = time.time_ns()
+    result, background, scope, trace = yield from step_advanced_block(
+        state, scope, block, loc
+    )
+    end_nanos = time.time_ns()
+    match trace:
+        case Block():
+            trace = trace.model_copy(
+                update={"start_nanos": start_nanos, "end_nanos": end_nanos}
+            )
+    return result, background, scope, trace
 
 
 def step_advanced_block(
@@ -1200,9 +1222,17 @@ def step_call_model(
     match concrete_block:
         case LitellmModelBlock():
             if isinstance(concrete_block.parameters, LitellmParameters):
-                concrete_block = concrete_block.model_copy(
-                    update={"parameters": concrete_block.parameters.model_dump()}
+                # Apply PDL defaults to model invocation
+                original_params = concrete_block.parameters.model_dump()
+                revised_params = apply_defaults(
+                    str(concrete_block.model),
+                    original_params,
+                    scope.get("pdl_model_default_parameters", []),
                 )
+                concrete_block = concrete_block.model_copy(
+                    update={"parameters": revised_params}
+                )
+
             _, concrete_block = process_expr_of(
                 concrete_block, "parameters", scope, loc
             )

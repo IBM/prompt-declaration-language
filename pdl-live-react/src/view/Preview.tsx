@@ -1,53 +1,56 @@
-import { useEffect, type PropsWithChildren } from "react"
-
-import { PrismAsyncLight as SyntaxHighlighter } from "react-syntax-highlighter"
+import { useCallback } from "react"
 import {
-  oneLight as light,
-  vscDarkPlus as dark,
-} from "react-syntax-highlighter/dist/esm/styles/prism"
-import yaml from "react-syntax-highlighter/dist/esm/languages/prism/yaml"
-import json from "react-syntax-highlighter/dist/esm/languages/prism/json"
-import python from "react-syntax-highlighter/dist/esm/languages/prism/python"
+  CodeEditor,
+  type CodeEditorProps,
+  Language,
+} from "@patternfly/react-code-editor"
 
 /**
  * This is TypeScript that says SupportedLanguage is the type union of
  * all possible enum values of Language (which is an enum).
  */
-export type SupportedLanguage = "yaml" | "json" | "python" | "plaintext"
+export type SupportedLanguage = keyof typeof Language
 
 import "./Preview.css"
 
 type Props = {
   value: string
-  darkMode?: boolean
   language?: SupportedLanguage
   showLineNumbers?: boolean
   limitHeight?: boolean
 }
 
+const options: Required<CodeEditorProps>["options"] = {
+  scrollBeyondLastLine: false,
+  scrollbar: { alwaysConsumeMouseWheel: false },
+}
+
 export default function Preview({
   language,
   value,
-  darkMode,
   showLineNumbers,
   limitHeight,
-}: PropsWithChildren<Props>) {
-  useEffect(() => {
-    SyntaxHighlighter.registerLanguage("json", json)
-    SyntaxHighlighter.registerLanguage("yaml", yaml)
-    SyntaxHighlighter.registerLanguage("python", python)
+}: Props) {
+  const onEditorDidMount = useCallback<
+    Required<CodeEditorProps>["onEditorDidMount"]
+  >((editor) => {
+    setTimeout(() => editor.layout())
   }, [])
 
-  // other options we could enable: isCopyEnabled isDownloadEnabled isLanguageLabelVisible
   return (
     <div className="pdl-preview" data-limit-height={limitHeight}>
-      <SyntaxHighlighter
-        style={darkMode ? dark : light}
-        showLineNumbers={showLineNumbers}
-        language={language}
-      >
-        {value}
-      </SyntaxHighlighter>
+      <CodeEditor
+        code={value}
+        isDarkTheme
+        isCopyEnabled
+        isDownloadEnabled
+        isLanguageLabelVisible
+        height="sizeToFit"
+        options={options}
+        onEditorDidMount={onEditorDidMount}
+        language={Language[language || "yaml"]}
+        isLineNumbersVisible={showLineNumbers}
+      />
     </div>
   )
 }

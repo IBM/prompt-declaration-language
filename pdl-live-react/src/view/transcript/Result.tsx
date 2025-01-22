@@ -9,17 +9,15 @@ import {
 import Code from "../Code"
 import Value from "./Value"
 
-import type Context from "../../Context"
 import { type SupportedLanguage } from "../Preview"
 
 type Props = {
   result: number | string | unknown
-  ctx: Context
   lang?: SupportedLanguage
   term?: string
 }
 
-export default function Result({ result, ctx, lang, term = "Result" }: Props) {
+export default function Result({ result, lang, term = "Result" }: Props) {
   const isCode = lang && result
 
   return (
@@ -30,7 +28,7 @@ export default function Result({ result, ctx, lang, term = "Result" }: Props) {
           <Panel className="pdl-result-panel" isScrollable={!isCode}>
             <PanelMain>
               {isCode ? (
-                <Code block={result} darkMode={ctx.darkMode} language={lang} />
+                <Code block={result} language={lang} />
               ) : (
                 <Value>{result}</Value>
               )}

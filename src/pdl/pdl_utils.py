@@ -1,7 +1,15 @@
+import fnmatch
 import json
 from typing import Any, Sequence
 
-from .pdl_ast import ContributeTarget, ContributeValue, FunctionBlock, Message, Messages
+from .pdl_ast import (
+    ContributeTarget,
+    ContributeValue,
+    FunctionBlock,
+    Message,
+    Messages,
+    get_sampling_defaults,
+)
 
 
 def stringify(result):
@@ -83,3 +91,84 @@ def remove_none_values_from_message(message: Any) -> dict[str, Any]:
             else:
                 ret[key] = value
     return ret
+
+
+def apply_defaults(
+    model_id: str,
+    params: dict[str, Any],
+    all_model_defaults: list[dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    # Never apply defaults to granite-20b-code-instruct-r1.1
+    if "granite-20b-code-instruct-r1.1" in model_id:
+        return params
+
+    parameters = apply_raw_defaults(model_id, params, all_model_defaults)
+
+    if "decoding_method" in parameters and parameters["decoding_method"] == "sample":
+        parameters = apply_raw_defaults(model_id, parameters, get_sampling_defaults())
+
+    return parameters
+
+
+def apply_raw_defaults(
+    model_id: str,
+    params: dict[str, Any],
+    model_defaults: list[dict[str, dict[str, Any]]],
+) -> dict[str, Any]:
+    """Apply defaults to params based on a list of model defaults
+
+    Args:
+        model_id: A PDL model ID
+        params: The explicit parameters set by in PDL
+        model_defaults: A list of dicts, where the keys are globs for model id, and the value is a dict of defaults
+
+    Returns:
+        The parameters to send to the LLM
+    """
+
+    assert isinstance(model_id, str), f"model_id is a {type(model_id)}"
+    assert params is None or isinstance(params, dict), f"params is a {type(params)}"
+    assert isinstance(
+        model_defaults, list
+    ), f"model_defaults is a {type(model_defaults)}"
+
+    # Construct defaults for this model.  If more than one set of default
+    # applies, the last seen default "wins".
+    default_union = {}
+    for model_default in model_defaults:
+        assert isinstance(model_default, dict)
+        for model_glob, glob_defaults in model_default.items():
+            if not isinstance(glob_defaults, dict):
+                raise ValueError(
+                    f"invalid default type {type(glob_defaults)} for model matcher {model_glob}"
+                )
+            assert isinstance(glob_defaults, dict)
+            if fnmatch.fnmatchcase(model_id, model_glob):
+                # print(f"model {model_id} matches {model_glob}, applying {glob_defaults}")
+                for k, v in glob_defaults.items():
+                    default_union[k] = v
+
+    # Apply final list of defaults to explicit parameters
+    retval = {} if params is None else dict(params)
+    for k, v in default_union.items():
+        if k not in retval or retval[k] is None:
+            retval[k] = v
+    return retval
+
+
+def validate_scope(scope: dict):
+    """Throw an exception if any key in scope is invalid"""
+    validate_pdl_model_defaults(scope["pdl_model_default_parameters"])
+
+
+def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]]):
+    """Throw an exception if the model_defaults is not in expected format"""
+
+    for model_default in model_defaults:
+        assert isinstance(model_default, dict)
+        for model_glob, glob_defaults in model_default.items():
+            if not isinstance(glob_defaults, dict):
+                raise ValueError(
+                    f"invalid defaults {glob_defaults} for model matcher {model_glob}"
+                )
+            assert isinstance(glob_defaults, dict)

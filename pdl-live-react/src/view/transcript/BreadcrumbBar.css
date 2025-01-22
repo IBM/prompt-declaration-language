@@ -6,9 +6,6 @@
   /** Size factor relative to 1em */
   --pdl-bb: 0.625;
 
-  /** So that clicks get sent here first, not to the <Card isClickable/> used in <TranscriptItem/> */
-  z-index: 1000;
-
   list-style: none;
   display: inline-block;
   font-size: calc(var(--pdl-bb) * 1em);
@@ -25,6 +22,10 @@
       --pdl-block-color-1: #e0f0ff;
       --pdl-block-color-2: var(--pf-t--global--color--nonstatus--teal--default);
     }*/
+    &[data-detail="error"] {
+      --pdl-block-color-1: #fce3e3;
+      --pdl-block-color-2: var(--pf-t--global--color--nonstatus--red--default);
+    }
 
     --pdl-bb-color: var(--pdl-block-color-1);
     &.pdl-breadcrumb-bar-item--def {
