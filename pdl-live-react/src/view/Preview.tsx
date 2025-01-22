@@ -21,7 +21,6 @@ type Props = {
 }
 
 const options: Required<CodeEditorProps>["options"] = {
-  automaticLayout: true,
   scrollBeyondLastLine: false,
   scrollbar: { alwaysConsumeMouseWheel: false },
 }
@@ -38,12 +37,14 @@ export default function Preview({
     setTimeout(() => editor.layout())
   }, [])
 
-  // other options we could enable: isCopyEnabled isDownloadEnabled isLanguageLabelVisible
   return (
     <div className="pdl-preview" data-limit-height={limitHeight}>
       <CodeEditor
         code={value}
         isDarkTheme
+        isCopyEnabled
+        isDownloadEnabled
+        isLanguageLabelVisible
         height="sizeToFit"
         options={options}
         onEditorDidMount={onEditorDidMount}
