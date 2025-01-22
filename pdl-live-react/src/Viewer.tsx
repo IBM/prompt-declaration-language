@@ -1,10 +1,9 @@
-import { useMemo } from "react"
+import { lazy, useMemo } from "react"
 import { useLocation } from "react-router"
 
-import Code from "./view/Code"
+const Code = lazy(() => import("./view/Code"))
+const Timeline = lazy(() => import("./view/timeline/Timeline"))
 import Transcript from "./view/transcript/Transcript"
-
-import type { PdlBlock } from "./pdl_ast"
 
 import "./Viewer.css"
 
@@ -14,7 +13,7 @@ export default function Viewer({ value }: { value: string }) {
   const { hash: activeTab } = useLocation()
 
   const data = useMemo(
-    () => (value ? (JSON.parse(value) as PdlBlock) : null),
+    () => (value ? (JSON.parse(value) as import("./pdl_ast").PdlBlock) : null),
     [value],
   )
 
@@ -28,6 +27,8 @@ export default function Viewer({ value }: { value: string }) {
       return (
         <Code block={data} limitHeight={false} raw={activeTab === "#raw"} />
       )
+    case "#timeline":
+      return <Timeline block={data} />
     default:
     case "#transcript":
       return <Transcript data={data} />

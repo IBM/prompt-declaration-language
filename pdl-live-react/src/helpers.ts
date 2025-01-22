@@ -42,7 +42,9 @@ export function isPdlBlock(
   )
 }
 
-export function isNonScalarPdlBlock(data: PdlBlock): data is NonScalarPdlBlock {
+export function isNonScalarPdlBlock(
+  data: unknown | PdlBlock,
+): data is NonScalarPdlBlock {
   return data != null && typeof data === "object"
 }
 
@@ -126,7 +128,7 @@ export function nonNullable<T>(value: T): value is NonNullable<T> {
 
 /** Does the given block have timing information? */
 export function hasTimingInformation(
-  block: PdlBlock,
+  block: unknown | PdlBlock,
 ): block is PdlBlockWithTiming {
   return (
     isNonScalarPdlBlock(block) &&
@@ -134,4 +136,8 @@ export function hasTimingInformation(
     typeof block.end_nanos === "number" &&
     typeof block.timezone === "string"
   )
+}
+
+export function capitalizeAndUnSnakeCase(s: string) {
+  return s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
 }
