@@ -14,6 +14,8 @@ import DrawerContent from "./DrawerContent"
 import DrawerContext from "./DrawerContentContext"
 import DarkModeContext, { getDarkModeUserSetting } from "./DarkModeContext"
 
+import "./Page.css"
+
 const notFilled = { isFilled: false }
 
 type Props = PropsWithChildren<{
@@ -67,6 +69,7 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
       <PageSection
         isFilled
         hasOverflowScroll
+        className="pdl-content-section"
         aria-label="PDL Viewer main section"
       >
         <DrawerContext.Provider value={setDrawerContent}>

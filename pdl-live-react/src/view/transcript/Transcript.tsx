@@ -33,9 +33,11 @@ export default function Transcript({ data }: Props) {
   }, [darkMode, setDrawerContent])
 
   return (
-    <Stack className="pdl-transcript">
-      <BlocksConjoin block={data} ctx={ctx} />
+    <>
+      <Stack className="pdl-transcript">
+        <BlocksConjoin block={data} ctx={ctx} />
+      </Stack>
       {hasResult(data) && <FinalResult block={data} />}
-    </Stack>
+    </>
   )
 }
