@@ -1,4 +1,7 @@
+import pytest
+
 from pdl.pdl import exec_str
+from pdl.pdl_interpreter import PDLRuntimeError
 
 
 def test_match0():
@@ -159,9 +162,8 @@ text:
     then: 4012
 - ${x}
 """
-    result = exec_str(prog_str)
-    # TODO: should raise an error (unbounded variable)
-    assert result == "40124012"
+    with pytest.raises(PDLRuntimeError):
+        exec_str(prog_str)
 
 
 def test_match_case_if5():
@@ -180,9 +182,8 @@ text:
     if: ${y == 1}
     then: ${x}
 """
-    result = exec_str(prog_str)
-    # TODO: should raise an error (unbounded variable)
-    assert result == "40124012"
+    with pytest.raises(PDLRuntimeError):
+        exec_str(prog_str)
 
 
 def test_match_expr0():
@@ -396,8 +397,7 @@ defs:
       data:
         a: 1
         b: hello
-        c:
-          array: [1,2,3]
+        c: [1,2,3]
 match: ${v}
 with:
 - case:
