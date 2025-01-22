@@ -11,7 +11,7 @@ import {
 import demos from "./demos/demos"
 
 export default function Sidebar() {
-  const { pathname: activeItem } = useLocation()
+  const { hash, pathname: activeItem } = useLocation()
 
   return (
     <PageSidebar id="pdl--vertical-sidebar">
@@ -26,18 +26,16 @@ export default function Sidebar() {
             </NavItem>
 
             <NavItem itemId="viewer" isActive={activeItem === "/upload"}>
-              <Link to="/upload">Upload a Trace</Link>
+              <Link to={"/upload" + hash}>Upload a Trace</Link>
             </NavItem>
           </NavList>
 
           <NavGroup title="Demos">
             {demos.map((demo) => {
-              const id = "/demos/" + demo.name
+              const id = "/demos/" + encodeURIComponent(demo.name)
               return (
                 <NavItem key={id} itemId={id} isActive={activeItem === id}>
-                  <Link to={`/demos/${encodeURIComponent(demo.name)}`}>
-                    {demo.name}
-                  </Link>
+                  <Link to={id + hash}>{demo.name}</Link>
                 </NavItem>
               )
             })}
