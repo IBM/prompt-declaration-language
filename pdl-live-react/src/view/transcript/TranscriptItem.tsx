@@ -19,6 +19,7 @@ import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
 
 import {
+  capitalizeAndUnSnakeCase,
   hasTimingInformation,
   hasResult,
   nonNullable,
@@ -32,10 +33,6 @@ type Props = PropsWithChildren<{
 }>
 
 const alignCenter = { default: "alignItemsCenter" as const }
-
-function capitalizeAndUnSnakeCase(s: string) {
-  return s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
-}
 
 /** One item in the Transcript UI */
 export default function TranscriptItem(props: Props) {
