@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 
-import TimelineRow, { type Position } from "./TimelineRow"
-import { type TimelineRow as TimelineRowModel, computeModel } from "./model"
+import TimelineRow from "./TimelineRow"
+import { computeModel, pushPopsFor } from "./model"
 
 import "./Timeline.css"
 
@@ -39,80 +39,4 @@ export default function Timeline({ block }: Props) {
       ))}
     </div>
   )
-}
-
-function positionOf(
-  row: TimelineRowModel,
-  idx: number,
-  A: TimelineRowModel[],
-): Position {
-  return idx === A.length - 1 || A[idx + 1].depth < row.depth
-    ? "pop"
-    : idx === 0 || A[idx - 1].depth < row.depth
-      ? "push"
-      : A[idx - 1].depth === row.depth
-        ? "middle"
-        : "pop"
-}
-
-function nextSibling(
-  row: TimelineRowModel,
-  idx: number,
-  A: TimelineRowModel[],
-) {
-  let sidx = idx + 1
-  while (sidx < A.length && A[sidx].depth > row.depth) {
-    sidx++
-  }
-  return sidx < A.length && A[sidx].depth === row.depth ? sidx : -1
-}
-
-type PushPop = { prefix: boolean[]; position: Position }
-
-function pushPopsFor(model: TimelineRowModel[]): PushPop[] {
-  if (model.length === 0) {
-    return []
-  }
-
-  const result: PushPop[] = []
-  const stack: number[] = [0]
-  const prefix: boolean[] = []
-  let n = 0
-  while (stack.length > 0) {
-    if (n++ > model.length * 2) {
-      break
-    }
-    const rootIdx = stack.pop()
-
-    if (rootIdx === undefined) {
-      break
-    } else if (rootIdx < 0) {
-      prefix.pop()
-      continue
-    }
-
-    const root = model[rootIdx]
-    const mine = {
-      prefix: prefix.slice(0),
-      position: positionOf(root, rootIdx, model),
-    }
-    result.push(mine)
-
-    stack.push(-rootIdx)
-    for (let idx = model.length - 1; idx >= rootIdx + 1; idx--) {
-      if (model[idx].parent === root) {
-        stack.push(idx)
-      }
-    }
-
-    const nextSibIdx = nextSibling(root, rootIdx, model)
-    if (nextSibIdx < 0) {
-      prefix.push(false)
-      mine.position = "pop"
-    } else {
-      prefix.push(true)
-    }
-  }
-
-  return result
 }
