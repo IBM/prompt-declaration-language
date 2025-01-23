@@ -55,7 +55,7 @@ export function hasParser(
   return isNonScalarPdlBlock(data) && "result" in data
 }
 
-const markdownPattern = /`/
+const markdownPattern = /[`#]/
 /** Should we render `s` with react-markdown? */
 export function isMarkdownish(s: string): boolean {
   /* try {
@@ -139,5 +139,7 @@ export function hasTimingInformation(
 }
 
 export function capitalizeAndUnSnakeCase(s: string) {
-  return s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
+  return s === "model"
+    ? "LLM"
+    : s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
 }

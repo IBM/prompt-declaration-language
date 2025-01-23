@@ -3,9 +3,7 @@ import { useMemo } from "react"
 type Props = import("./model").TimelineRowWithExtrema
 
 export default function TimelineBar({
-  kind,
-  start_nanos,
-  end_nanos,
+  block: { kind, start_nanos, end_nanos },
   min,
   max,
 }: Props) {

@@ -1,17 +1,17 @@
-import { useCallback, useMemo, type PropsWithChildren } from "react"
+import { useCallback, useMemo } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
 import {
   Card,
   CardHeader,
   CardBody,
   CardTitle,
-  DescriptionList,
   Flex,
   FlexItem,
 } from "@patternfly/react-core"
 
 import Def from "./Def"
 import Icon from "./Icon"
-import Code from "../Code"
 import type Context from "../../Context"
 import Duration from "./Duration"
 import PrettyKind from "./PrettyKind"
@@ -26,7 +26,7 @@ import {
   type NonScalarPdlBlock,
 } from "../../helpers"
 
-type Props = PropsWithChildren<{
+type Props = import("react").PropsWithChildren<{
   className?: string
   ctx: Context
   block: NonScalarPdlBlock
@@ -36,36 +36,37 @@ const alignCenter = { default: "alignItemsCenter" as const }
 
 /** One item in the Transcript UI */
 export default function TranscriptItem(props: Props) {
+  const navigate = useNavigate()
+  const { hash } = useLocation()
+
   const icon = Icon({ kind: props.block.kind })
-  const { ctx, block, children } = props
-  const { def, kind } = block
+  const { ctx, block } = props
   const { parents } = ctx
+  const { def } = block
   const value = hasResult(block) && block.result
 
   const breadcrumbs = useMemo(
     () => (
       <BreadcrumbBar>
         <>
-          {[...parents, kind === "model" ? "LLM" : (kind ?? "unknown")]
-            .filter(nonNullable)
-            .map((parent, idx, A) => {
-              const isKind = idx === A.length - 1
-              const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
-              return (
-                <BreadcrumbBarItem
-                  key={idx}
-                  className={className}
-                  detail={parent}
-                >
-                  {capitalizeAndUnSnakeCase(parent)}
-                </BreadcrumbBarItem>
-              )
-            })}
+          {parents.filter(nonNullable).map((parent, idx, A) => {
+            const isKind = idx === A.length - 1
+            const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
+            return (
+              <BreadcrumbBarItem
+                key={idx}
+                className={className}
+                detail={parent}
+              >
+                {capitalizeAndUnSnakeCase(parent)}
+              </BreadcrumbBarItem>
+            )
+          })}
           {def && <Def def={def} ctx={ctx} value={value} />}
         </>
       </BreadcrumbBar>
     ),
-    [def, value, kind, parents, ctx],
+    [def, value, parents, ctx],
   )
 
   const headerContent = (
@@ -75,8 +76,12 @@ export default function TranscriptItem(props: Props) {
     </Flex>
   )
 
-  const drilldown = useCallback(() => {
-    ctx.setDrawerContent({
+  const { id } = ctx
+  const drilldown = useCallback(
+    () => navigate(`?detail&type=block&id=${id}${hash}`),
+    [id, hash, navigate],
+  )
+  /*    ctx.setDrawerContent({
       header: "Block Details",
       description: breadcrumbs,
       body: [
@@ -94,7 +99,7 @@ export default function TranscriptItem(props: Props) {
         },
       ],
     })
-  }, [block, children, breadcrumbs, ctx])
+  }, [block, children, breadcrumbs, ctx])*/
 
   const actions = useMemo(
     () =>

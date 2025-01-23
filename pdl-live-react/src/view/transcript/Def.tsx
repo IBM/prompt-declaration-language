@@ -1,7 +1,6 @@
 import { useCallback, type MouseEvent } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
-import DefContent from "./DefContent"
-import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
 
 import type Context from "../../Context"
@@ -18,7 +17,17 @@ type Props = {
 export default function Def(props: Props) {
   const { def, value, ctx, supportsDrilldown = true } = props
 
+  const navigate = useNavigate()
+  const { hash } = useLocation()
+  const { id } = ctx
   const drilldown = useCallback(
+    (evt: MouseEvent) => {
+      evt.stopPropagation()
+      navigate(`?detail&type=def&id=${id}&def=${def}${hash}`)
+    },
+    [def, id, hash, navigate],
+  )
+  /*const drilldown = useCallback(
     (evt: MouseEvent) => {
       if (value) {
         evt.stopPropagation()
@@ -34,7 +43,7 @@ export default function Def(props: Props) {
       }
     },
     [value, props, ctx],
-  )
+  )*/
 
   return (
     <BreadcrumbBarItem

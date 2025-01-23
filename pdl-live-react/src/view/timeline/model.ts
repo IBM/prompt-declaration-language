@@ -8,15 +8,18 @@ import {
   type NonScalarPdlBlock,
 } from "../../helpers"
 
-type TimelineRow = Pick<
-  PdlBlockWithTiming,
-  "start_nanos" | "end_nanos" | "timezone" | "kind"
-> & {
+type TimelineRow = {
+  /** Unique identifier within tree */
+  id: string
+
   /** Call tree depth */
   depth: number
 
   /** Parent node */
   parent: null | TimelineRow
+
+  /** The original block model */
+  block: PdlBlockWithTiming
 }
 
 export type TimelineRowWithExtrema = TimelineRow & {
@@ -28,34 +31,50 @@ export type TimelineRowWithExtrema = TimelineRow & {
 }
 
 export type TimelineModel = TimelineRow[]
+export default TimelineModel
 
 export type Position = "push" | "middle" | "pop"
 
-function ignore({ kind }: PdlBlockWithTiming) {
-  return kind === "function"
+function ignore(_block: PdlBlockWithTiming) {
+  return false
 }
 
-export function computeModel(
+export function computeModel(block: unknown | PdlBlock): TimelineModel {
+  return computeModelIter(block).sort(
+    (a, b) => a.block.start_nanos - b.block.start_nanos,
+  )
+}
+
+function computeModelIter(
   block: unknown | PdlBlock,
   parent?: TimelineRow,
+  extraId?: string,
 ): TimelineModel {
   if (!hasTimingInformation(block)) {
     return []
   }
 
+  // Uniquely identify this node in the tree
+  const id =
+    (!parent ? "" : parent.id + ".") +
+    (extraId ? extraId + "." : "") +
+    block.kind
+
   const ignoreRoot = ignore(block)
   const root = ignoreRoot
     ? parent
-    : Object.assign(
-        { depth: !parent ? 0 : parent.depth + 1, parent: parent || null },
+    : {
+        id,
+        depth: !parent ? 0 : parent.depth + 1,
+        parent: parent || null,
         block,
-      )
+      }
 
   return [
     ...(ignoreRoot ? [] : [root]),
     ...childrenOf(block)
       .filter(nonNullable)
-      .flatMap((child) => computeModel(child, root)),
+      .flatMap((child, idx) => computeModelIter(child, root, String(idx))),
   ].filter(nonNullable)
 }
 
