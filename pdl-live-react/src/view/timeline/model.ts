@@ -31,22 +31,32 @@ export type TimelineModel = TimelineRow[]
 
 export type Position = "push" | "middle" | "pop"
 
+function ignore({ kind }: PdlBlockWithTiming) {
+  return kind === "function"
+}
+
 export function computeModel(
   block: unknown | PdlBlock,
-  depth = 0,
   parent?: TimelineRow,
 ): TimelineModel {
   if (!hasTimingInformation(block)) {
     return []
   }
 
-  const root = Object.assign({ depth, parent: parent || null }, block)
+  const ignoreRoot = ignore(block)
+  const root = ignoreRoot
+    ? parent
+    : Object.assign(
+        { depth: !parent ? 0 : parent.depth + 1, parent: parent || null },
+        block,
+      )
+
   return [
-    root,
+    ...(ignoreRoot ? [] : [root]),
     ...childrenOf(block)
       .filter(nonNullable)
-      .flatMap((child) => computeModel(child, depth + 1, root)),
-  ]
+      .flatMap((child) => computeModel(child, root)),
+  ].filter(nonNullable)
 }
 
 function childrenOf(block: NonScalarPdlBlock) {
@@ -99,10 +109,6 @@ function nextSibling(row: TimelineRow, idx: number, A: TimelineRow[]) {
 type PushPop = { prefix: boolean[]; position: Position }
 
 export function pushPopsFor(model: TimelineRow[]): PushPop[] {
-  if (model.length === 0) {
-    return []
-  }
-
   // Push all roots for the initial set
   const stack: number[] = model
     .map((_, idx) => (_.depth === 0 ? idx : undefined))

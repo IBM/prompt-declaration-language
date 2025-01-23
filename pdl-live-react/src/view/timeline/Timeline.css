@@ -66,8 +66,12 @@
   &[data-kind="text"] {
     background-color: var(--pf-t--global--icon--color--disabled);
   }
-  &[data-kind="repeat_until"] {
-    background-color: var(--pf-t--global--background--color--secondary--hover);
+  &[data-kind="repeat_until"],
+  &[data-kind="repeat"],
+  &[data-kind="for"],
+  &[data-kind="lastOf"],
+  &[data-kind="call"] {
+    background-color: var(--pf-t--global--border--color--default);
   }
   &[data-kind="model"] {
     background-color: var(--pf-t--global--text--color--brand--default);
