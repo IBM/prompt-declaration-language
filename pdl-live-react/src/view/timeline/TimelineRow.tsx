@@ -1,7 +1,7 @@
 import prettyMs from "pretty-ms"
 
 import TimelineBar from "./TimelineBar"
-import { capitalizeAndUnSnakeCase } from "../../helpers"
+import TimelineRowKindCell from "./TimelineRowKindCell"
 
 type Props = import("./model").TimelineRowWithExtrema & {
   prefix: boolean[]
@@ -13,9 +13,7 @@ export default function TimelineRow(row: Props) {
     <div className="pdl-timeline-row">
       <span className="pdl-timeline-cell" data-cell="kind">
         <span className="pdl-mono">{treeSymbols(row)}</span>
-        <span className="pdl-timeline-kind">
-          {capitalizeAndUnSnakeCase(row.kind ?? "unknown")}
-        </span>
+        <TimelineRowKindCell row={row} />
       </span>
 
       <span className="pdl-timeline-cell" data-cell="bar">
@@ -23,7 +21,7 @@ export default function TimelineRow(row: Props) {
       </span>
 
       <span className="pdl-timeline-cell pdl-duration" data-cell="duration">
-        {prettyMs((row.end_nanos - row.start_nanos) / 1000000)}
+        {prettyMs((row.block.end_nanos - row.block.start_nanos) / 1000000)}
       </span>
     </div>
   )

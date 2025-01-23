@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, type PropsWithChildren } from "react"
+import { useSearchParams } from "react-router-dom"
+import { useEffect, useState, type PropsWithChildren } from "react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,9 +11,8 @@ import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
 import ViewerTabs from "./ViewerTabs"
-import DrawerContent from "./DrawerContent"
+import DrawerContent from "./view/detail/DrawerContent"
 
-import DrawerContext from "./DrawerContentContext"
 import DarkModeContext, {
   setDarkModeForSession,
   getDarkModeUserSetting,
@@ -32,24 +32,14 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
   /** Manage the drawer that slides in from the right */
-  const [drawerContent, setDrawerContent] = useState<
-    null | import("./DrawerContent").DrawerContentSpec
-  >(null)
-  const onCloseDrawer = useCallback(
-    () => setDrawerContent(null),
-    [setDrawerContent],
-  )
+  const [searchParams] = useSearchParams()
+  const showingDetail = searchParams.has("detail")
 
   return (
     <Page
-      isNotificationDrawerExpanded={!!drawerContent}
+      isNotificationDrawerExpanded={showingDetail}
       notificationDrawer={
-        <DrawerContent
-          header={drawerContent?.header ?? ""}
-          description={drawerContent?.description}
-          body={drawerContent?.body ?? <></>}
-          onCloseDrawer={onCloseDrawer}
-        />
+        <DrawerContent value={typeof children === "string" ? children : ""} />
       }
       isContentFilled
       isManagedSidebar
@@ -77,15 +67,13 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
         className="pdl-content-section"
         aria-label="PDL Viewer main section"
       >
-        <DrawerContext.Provider value={setDrawerContent}>
-          <DarkModeContext.Provider value={darkMode}>
-            {typeof children === "string" && children.length > 0 ? (
-              <Viewer value={children} />
-            ) : (
-              children
-            )}
-          </DarkModeContext.Provider>
-        </DrawerContext.Provider>
+        <DarkModeContext.Provider value={darkMode}>
+          {typeof children === "string" && children.length > 0 ? (
+            <Viewer value={children} />
+          ) : (
+            children
+          )}
+        </DarkModeContext.Provider>
       </PageSection>
     </Page>
   )

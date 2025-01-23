@@ -3,7 +3,6 @@ import { useContext, useMemo } from "react"
 import { Stack } from "@patternfly/react-core"
 
 import Context from "../../Context"
-import DrawerContext from "../../DrawerContentContext"
 import DarkModeContext from "../../DarkModeContext"
 
 import { hasResult } from "../../helpers"
@@ -20,17 +19,13 @@ export default function Transcript({ data }: Props) {
   // DarkMode state
   const darkMode = useContext(DarkModeContext)
 
-  // DrawerContent updater
-  const setDrawerContent = useContext(DrawerContext)
-
   const ctx = useMemo<Context>(() => {
     return {
-      id: "root",
+      id: "",
       darkMode,
-      setDrawerContent,
       parents: [],
     }
-  }, [darkMode, setDrawerContent])
+  }, [darkMode])
 
   return (
     <>

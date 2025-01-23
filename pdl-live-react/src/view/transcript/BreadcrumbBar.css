@@ -6,6 +6,8 @@
   /** Size factor relative to 1em */
   --pdl-bb: 0.625;
 
+  font-weight: 500;
+
   list-style: none;
   display: inline-block;
   font-size: calc(var(--pdl-bb) * 1em);

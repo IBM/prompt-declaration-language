@@ -11,13 +11,11 @@ type Props = {
 
 export default function Timeline({ block }: Props) {
   const [model, min, max] = useMemo(() => {
-    const model = computeModel(block).sort(
-      (a, b) => a.start_nanos - b.start_nanos,
-    )
+    const model = computeModel(block)
     const [min, max] = model.reduce(
       ([min, max], row) => [
-        Math.min(min, row.start_nanos),
-        Math.max(max, row.end_nanos),
+        Math.min(min, row.block.start_nanos),
+        Math.max(max, row.block.end_nanos),
       ],
       [Number.MAX_VALUE, Number.MIN_VALUE],
     )
