@@ -6,6 +6,7 @@ import {
   PageSection,
 } from "@patternfly/react-core"
 
+import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
 import ViewerTabs from "./ViewerTabs"
@@ -58,7 +59,7 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      horizontalSubnav={<ViewerTabs />}
+      horizontalSubnav={typeof children === "string" && <ViewerTabs />}
       groupProps={notFilled /* so breadcrumbs aren't filled */}
       isBreadcrumbGrouped
       breadcrumb={
@@ -78,7 +79,11 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
       >
         <DrawerContext.Provider value={setDrawerContent}>
           <DarkModeContext.Provider value={darkMode}>
-            {children}
+            {typeof children === "string" && children.length > 0 ? (
+              <Viewer value={children} />
+            ) : (
+              children
+            )}
           </DarkModeContext.Provider>
         </DrawerContext.Provider>
       </PageSection>

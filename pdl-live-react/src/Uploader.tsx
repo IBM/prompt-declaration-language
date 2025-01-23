@@ -13,7 +13,6 @@ import {
 } from "@patternfly/react-core"
 
 import Page from "./Page"
-import Viewer from "./Viewer"
 
 export default function Uploader() {
   const [value, setValue] = useState("")
@@ -142,7 +141,7 @@ export default function Uploader() {
         </FormGroup>
       </Form>
 
-      {value && <Viewer value={value} />}
+      {value}
     </Page>
   )
 }

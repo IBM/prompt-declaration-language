@@ -1,5 +1,4 @@
 import Page from "./Page"
-import Viewer from "./Viewer"
 
 type Props = {
   name: string
@@ -9,7 +8,7 @@ type Props = {
 export default function Demo({ name, value }: Props) {
   return (
     <Page breadcrumb1="Demo" breadcrumb2={name}>
-      <Viewer value={value} />
+      {value}
     </Page>
   )
 }
