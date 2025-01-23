@@ -71,7 +71,7 @@ export default function TranscriptItem(props: Props) {
   const headerContent = (
     <Flex alignItems={alignCenter}>
       {icon && <FlexItem className="pdl-block-icon">{icon}</FlexItem>}
-      <Flex>{breadcrumbs}</Flex>
+      <FlexItem>{breadcrumbs}</FlexItem>
     </Flex>
   )
 

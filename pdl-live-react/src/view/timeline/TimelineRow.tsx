@@ -3,11 +3,9 @@ import prettyMs from "pretty-ms"
 import TimelineBar from "./TimelineBar"
 import { capitalizeAndUnSnakeCase } from "../../helpers"
 
-export type Position = "push" | "middle" | "pop"
-
 type Props = import("./model").TimelineRowWithExtrema & {
   prefix: boolean[]
-  position: Position
+  position: import("./model").Position
 }
 
 export default function TimelineRow(row: Props) {
@@ -36,7 +34,7 @@ function treeSymbols(row: Props) {
 }
 
 function prefixSymbols(row: Props) {
-  return row.prefix.slice(1).reduce((s, p) => s + (p ? "│   " : "    "), "")
+  return row.prefix.slice(1).reduce((s, p) => s + (p ? "│  " : "   "), "")
 }
 
 function finalSymbol(row: Props) {
@@ -47,9 +45,9 @@ function finalSymbol(row: Props) {
   switch (row.position) {
     case "push":
     case "middle":
-      return "├── "
+      return "├─ "
     default:
     case "pop":
-      return "└── "
+      return "└─ "
   }
 }
