@@ -8,8 +8,6 @@ import {
   CardTitle,
   CardBody,
   Tabs,
-  Tab,
-  TabTitleText,
   type TabsProps,
 } from "@patternfly/react-core"
 
@@ -19,11 +17,8 @@ import Def from "../transcript/Def"
 import BreadcrumbBar from "../transcript/BreadcrumbBar"
 import BreadcrumbBarItem from "../transcript/BreadcrumbBarItem"
 
-import DefContent from "./DefContent"
 import BlockNotFound from "./BlockNotFound"
-import SourceTabContent from "./SourceTabContent"
-import SummaryTabContent from "./SummaryTabContent"
-import RawTraceTabContent from "./RawTraceTabContent"
+import drawerContentBody from "./DrawerContentBody"
 
 import { capitalizeAndUnSnakeCase, hasResult } from "../../helpers"
 
@@ -32,8 +27,6 @@ import CloseIcon from "@patternfly/react-icons/dist/esm/icons/times-icon"
 import "./DrawerContent.css"
 
 type Props = {
-  //id: string | null
-  //type: string | null
   value: string
 }
 
@@ -87,70 +80,6 @@ function description(id: string, model: Model) {
   )
 }
 
-function defsBody(id: string, def: string | null, model: Model) {
-  const block = model.find((block) => block.id === id)
-  if (!block) {
-    return (
-      <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-        <BlockNotFound id={id} model={model} />
-      </Tab>
-    )
-  }
-
-  const value = def && block.block.defs ? block.block.defs[def] : undefined
-  return (
-    <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-      {!def ? (
-        <>Internal error, missing field 'def' in query</>
-      ) : (
-        value && <DefContent value={value} />
-      )}
-    </Tab>
-  )
-}
-
-function defBody(id: string, _def: string | null, model: Model) {
-  const block = model.find((block) => block.id === id)
-  if (!block) {
-    return (
-      <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-        <BlockNotFound id={id} model={model} />
-      </Tab>
-    )
-  }
-
-  const value = hasResult(block.block) ? block.block.result : undefined
-  console.error("!!!!!!", block, _def)
-  return (
-    <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-      {!value ? "Value not found" : <DefContent value={value} />}
-    </Tab>
-  )
-}
-
-function blockBody(id: string, model: Model) {
-  const block = model.find((block) => block.id === id)
-  if (!block) {
-    return (
-      <Tab eventKey={0} title={<TabTitleText>Summary</TabTitleText>}>
-        <BlockNotFound id={id} model={model} />
-      </Tab>
-    )
-  }
-
-  return [
-    <Tab key={0} eventKey={0} title={<TabTitleText>Summary</TabTitleText>}>
-      <SummaryTabContent block={block} />
-    </Tab>,
-    <Tab key={1} eventKey={1} title={<TabTitleText>Source</TabTitleText>}>
-      <SourceTabContent block={block} />
-    </Tab>,
-    <Tab key={2} eventKey={2} title={<TabTitleText>Raw Trace</TabTitleText>}>
-      <RawTraceTabContent block={block} />
-    </Tab>,
-  ]
-}
-
 export default function DrawerContent({ value }: Props) {
   const [activeTab, setActiveTab] = useState<string | number>(0)
   const handleTabClick = useCallback<Required<TabsProps>["onSelect"]>(
@@ -175,47 +104,23 @@ export default function DrawerContent({ value }: Props) {
     [id, objectType, value],
   )
 
+  const actions = useMemo(
+    () => ({
+      actions: (
+        <Button variant="plain" onClick={onCloseDrawer} icon={<CloseIcon />} />
+      ),
+    }),
+    [onCloseDrawer],
+  )
+
   if (!id || !objectType) {
+    // Should never happen. TODO error handling?
     return <></>
   }
 
-  //const model = useMemo(() => computeModel(
-  /*        {!asTabs(props.body) ? (
-          props.body
-        ) : (
-          <Tabs
-            isFilled
-            activeKey={activeTab}
-            onSelect={handleTabClick}
-            mountOnEnter
-            unmountOnExit
-          >
-            {props.body.map(({ title, body }, idx) => (
-              <Tab
-                key={idx}
-                eventKey={idx}
-                title={<TabTitleText>{title}</TabTitleText>}
-              >
-                {body}
-              </Tab>
-            ))}
-          </Tabs>
-        )}
-  */
-
   return (
     <Card isPlain isLarge isFullHeight className="pdl-drawer-content">
-      <CardHeader
-        actions={{
-          actions: (
-            <Button
-              variant="plain"
-              onClick={onCloseDrawer}
-              icon={<CloseIcon />}
-            />
-          ),
-        }}
-      >
+      <CardHeader actions={actions}>
         <CardTitle>{header(objectType)}</CardTitle>
         {description(id, model)}
       </CardHeader>
@@ -227,11 +132,7 @@ export default function DrawerContent({ value }: Props) {
           mountOnEnter
           unmountOnExit
         >
-          {objectType === "defs"
-            ? defsBody(id, def, model)
-            : objectType === "def"
-              ? defBody(id, def, model)
-              : blockBody(id, model)}
+          {drawerContentBody({ id, def, objectType, model })}
         </Tabs>
       </CardBody>
     </Card>

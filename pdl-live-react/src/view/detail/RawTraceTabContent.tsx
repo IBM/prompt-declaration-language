@@ -7,5 +7,5 @@ export default function RawTraceTabContent({
 }: {
   block: Model[number]
 }) {
-  return <Code block={block.block} raw />
+  return <Code block={block.block} showLineNumbers raw />
 }

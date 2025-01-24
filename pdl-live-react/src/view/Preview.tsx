@@ -23,6 +23,7 @@ type Props = {
 const options: Required<CodeEditorProps>["options"] = {
   scrollBeyondLastLine: false,
   scrollbar: { alwaysConsumeMouseWheel: false },
+  wordWrap: "on",
 }
 
 export default function Preview({
