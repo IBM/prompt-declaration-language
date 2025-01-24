@@ -24,6 +24,7 @@ export default function BreadcrumbBarForBlock({ id, block }: Props) {
           .map((part, idx, A) => (
             <BreadcrumbBarItem
               key={part + idx}
+              detail={part}
               className={
                 idx === A.length - 1 ? "pdl-breadcrumb-bar-item--kind" : ""
               }

@@ -1,6 +1,6 @@
 .pdl-qav {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .pdl-qav-label {
