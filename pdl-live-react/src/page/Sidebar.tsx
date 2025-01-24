@@ -8,7 +8,7 @@ import {
   PageSidebarBody,
 } from "@patternfly/react-core"
 
-import demos from "./demos/demos"
+import demos from "../demos/demos"
 
 export default function Sidebar() {
   const { hash, pathname: activeItem } = useLocation()

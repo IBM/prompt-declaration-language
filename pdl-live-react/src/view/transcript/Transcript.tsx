@@ -3,7 +3,7 @@ import { useContext, useMemo } from "react"
 import { Stack } from "@patternfly/react-core"
 
 import Context from "../../Context"
-import DarkModeContext from "../../DarkModeContext"
+import DarkModeContext from "../../page/DarkModeContext"
 
 import { hasResult } from "../../helpers"
 import BlocksConjoin from "./BlocksConjoin"
