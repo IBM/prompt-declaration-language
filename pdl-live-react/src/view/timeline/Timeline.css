@@ -26,6 +26,16 @@
   }
 }
 
+/* Link hover effects */
+.pdl-timeline-kind {
+  text-decoration: none;
+}
+.pdl-timeline-row:hover {
+  .pdl-timeline-kind {
+    text-decoration: underline;
+  }
+}
+
 .pdl-timeline-kind {
   font-size: 0.875em;
 }
