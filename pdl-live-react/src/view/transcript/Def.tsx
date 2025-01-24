@@ -1,7 +1,7 @@
 import { useCallback, type MouseEvent } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import BreadcrumbBarItem from "./BreadcrumbBarItem"
+import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
 
 import type Context from "../../Context"
 import type { PdlBlock } from "../../pdl_ast"
