@@ -14,7 +14,7 @@ import {
 
 import Def from "./Def"
 import Markdown from "../Markdown"
-import BreadcrumbBar from "./BreadcrumbBar"
+import BreadcrumbBar from "../breadcrumbs/BreadcrumbBar"
 
 import {
   hasParser,

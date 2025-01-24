@@ -15,7 +15,7 @@ export function withId(ctx: Context, id: string | number): Context {
 
 export function withIter(ctx: Context, iter: number): Context {
   // Note that we 1-index iters in the displayed UI
-  return withParent(withId(ctx, String(iter)), `Iter ${iter + 1}`)
+  return withParent(withId(ctx, String(iter)), `Step ${iter + 1}`)
 }
 
 export function withParentAndId(ctx: Context, parent: string): Context {

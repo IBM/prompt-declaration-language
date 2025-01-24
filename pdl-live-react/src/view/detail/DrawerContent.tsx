@@ -13,14 +13,9 @@ import {
 
 import Model, { computeModel } from "../timeline/model"
 
-import Def from "../transcript/Def"
-import BreadcrumbBar from "../transcript/BreadcrumbBar"
-import BreadcrumbBarItem from "../transcript/BreadcrumbBarItem"
-
 import BlockNotFound from "./BlockNotFound"
 import drawerContentBody from "./DrawerContentBody"
-
-import { capitalizeAndUnSnakeCase, hasResult } from "../../helpers"
+import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
 
 import CloseIcon from "@patternfly/react-icons/dist/esm/icons/times-icon"
 
@@ -40,44 +35,13 @@ function header(objectType: string) {
   }
 }
 
-function asIter(part: string) {
-  const int = parseInt(part)
-  return isNaN(int) ? capitalizeAndUnSnakeCase(part) : `Iter ${int}`
-}
-
 function description(id: string, model: Model) {
   const block = model.find((block) => block.id === id)
   if (!block) {
     return <BlockNotFound id={id} model={model} />
   }
 
-  return (
-    <BreadcrumbBar>
-      <>
-        {id
-          .replace(/text\.\d+\./g, "")
-          .split(/\./)
-          .map((part, idx, A) => (
-            <BreadcrumbBarItem
-              key={part}
-              className={
-                idx === A.length - 1 ? "pdl-breadcrumb-bar-item--kind" : ""
-              }
-            >
-              {asIter(part)}
-            </BreadcrumbBarItem>
-          ))}
-
-        {block.block.def && (
-          <Def
-            def={block.block.def}
-            ctx={{ id, parents: [] }}
-            value={hasResult(block.block) ? block.block.result : undefined}
-          />
-        )}
-      </>
-    </BreadcrumbBar>
-  )
+  return <BreadcrumbBarForBlock id={id} block={block.block} />
 }
 
 export default function DrawerContent({ value }: Props) {

@@ -15,8 +15,8 @@ import Icon from "./Icon"
 import type Context from "../../Context"
 import Duration from "./Duration"
 import PrettyKind from "./PrettyKind"
-import BreadcrumbBar from "./BreadcrumbBar"
-import BreadcrumbBarItem from "./BreadcrumbBarItem"
+import BreadcrumbBar from "../breadcrumbs/BreadcrumbBar"
+import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
 
 import {
   capitalizeAndUnSnakeCase,
