@@ -21,16 +21,29 @@ export default function Viewer({ value }: { value: string }) {
     return "Invalid trace content"
   }
 
-  switch (activeTab) {
-    case "#raw":
-    case "#source":
-      return (
+  return (
+    <>
+      <section
+        className="pdl-viewer-section"
+        data-no-scroll
+        hidden={activeTab !== "#source" && activeTab !== "#raw"}
+      >
         <Code block={data} limitHeight={false} raw={activeTab === "#raw"} />
-      )
-    case "#timeline":
-      return <Timeline block={data} />
-    default:
-    case "#transcript":
-      return <Transcript data={data} />
-  }
+      </section>
+      <section
+        className="pdl-viewer-section"
+        hidden={activeTab !== "#timeline"}
+      >
+        <Timeline block={data} />
+      </section>
+      <section
+        className="pdl-viewer-section"
+        hidden={
+          !(!activeTab || activeTab === "#" || activeTab === "#transcript")
+        }
+      >
+        <Transcript data={data} />
+      </section>
+    </>
+  )
 }
