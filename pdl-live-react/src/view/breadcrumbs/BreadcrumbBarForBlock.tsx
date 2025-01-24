@@ -21,6 +21,7 @@ export default function BreadcrumbBarForBlock({ id, block }: Props) {
         {id
           .replace(/text\.\d+\./g, "")
           .split(/\./)
+          .slice(-5)
           .map((part, idx, A) => (
             <BreadcrumbBarItem
               key={part + idx}
