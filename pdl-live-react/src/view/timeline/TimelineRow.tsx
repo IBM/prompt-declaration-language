@@ -32,7 +32,7 @@ function treeSymbols(row: Props) {
 }
 
 function prefixSymbols(row: Props) {
-  return row.prefix.reduce((s, p) => s + (p ? "│  " : "   "), "")
+  return row.prefix.slice(1).reduce((s, p) => s + (p ? "│  " : "   "), "")
 }
 
 function finalSymbol(row: Props) {

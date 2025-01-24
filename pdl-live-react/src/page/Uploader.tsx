@@ -14,7 +14,8 @@ import {
 } from "@patternfly/react-core"
 
 import Page from "./Page"
-import "./Upload.css"
+
+import "./Uploader.css"
 
 const maxSize = 10 * 1024 * 1024
 
