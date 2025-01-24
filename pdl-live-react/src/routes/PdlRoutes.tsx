@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom"
 
 const Demo = lazy(() => import("../page/Demo"))
 const About = lazy(() => import("../page/About"))
+const MyTrace = lazy(() => import("../page/MyTrace"))
 const Welcome = lazy(() => import("../page/Welcome"))
 const Uploader = lazy(() => import("../page/Uploader"))
 const PageNotFound = lazy(() => import("../page/PageNotFound"))
@@ -64,7 +65,7 @@ export default function PdlRoutes() {
           path={`/my/${title}`}
           element={
             <Suspense>
-              <Demo name={title} value={value} />
+              <MyTrace name={title} value={value} />
             </Suspense>
           }
         />
