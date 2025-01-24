@@ -1,3 +1,4 @@
+import prettyBytes from "pretty-bytes"
 import { useCallback, useMemo, useState } from "react"
 
 import {
@@ -14,14 +15,14 @@ import {
 
 import Page from "./Page"
 
+const maxSize = 10 * 1024 * 1024
+
 export default function Uploader() {
   const [value, setValue] = useState("")
   const [filename, setFilename] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isRejected, setIsRejected] = useState(false)
-  const [message, setMessage] = useState(
-    "Must be a JSON file no larger than 50 KB",
-  )
+  const [message, setMessage] = useState("")
 
   const handleFileInputChange = useCallback<
     Required<FileUploadProps>["onFileInputChange"]
@@ -80,11 +81,11 @@ export default function Uploader() {
   const dropzoneProps = useMemo<FileUploadProps["dropzoneProps"]>(
     () => ({
       accept: { "application/json": [".json"] },
-      maxSize: 50 * 1024,
+      maxSize,
       onDropRejected: (rejections) => {
         const error = rejections[0].errors[0]
         if (error.code === DropzoneErrorCode.FileTooLarge) {
-          setMessage("File is too big")
+          setMessage("File is larger than the limit of " + prettyBytes(maxSize))
         } else if (error.code === DropzoneErrorCode.FileInvalidType) {
           setMessage("File is not a JSON file")
         }
