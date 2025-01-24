@@ -1,9 +1,0 @@
-array:
-  - role: system
-    text: You are such a good LLM.
-  - role: user
-    text: Tell me a joke about dogs.
-  - role: assistant
-    model: watsonx_text/ibm/granite-34b-code-instruct
-    parameters:
-      base_url: https://us-south.ml.cloud.ibm.com/ml/v1/text/chat?version=2023-05-02   

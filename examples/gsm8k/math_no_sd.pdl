@@ -28,9 +28,6 @@ defs:
           solution: ${ solution }
           answer: 
             result: ${ answer } 
-
-      
-    
   truth:
     function: 
       answer: str 
@@ -51,7 +48,7 @@ defs:
 
 
 text:
-- read: ../../../grade-school-math/grade_school_math/data/test5.jsonl
+- read: ../../../grade-school-math/grade_school_math/data/test.jsonl
   parser: jsonl
   contribute: []
   def: mathdata

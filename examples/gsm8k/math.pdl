@@ -30,9 +30,6 @@ defs:
       - data:
           solution: ${ solution }
           answer: ${ answer } 
-
-      
-    
   truth:
     function: 
       answer: str 
