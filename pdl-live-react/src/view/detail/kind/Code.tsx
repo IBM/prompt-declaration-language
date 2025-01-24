@@ -16,6 +16,7 @@ export default function CodeItems({
           description={
             <Code
               block={code.trim()}
+              showLineNumbers
               language={
                 lang === "pdl" || lang === "jinja" || lang === "command"
                   ? "plaintext"
