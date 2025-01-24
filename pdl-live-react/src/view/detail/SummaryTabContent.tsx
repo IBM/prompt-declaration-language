@@ -8,6 +8,7 @@ import CodeItems from "./kind/Code"
 import DataItems from "./kind/Data"
 import ReadItems from "./kind/Read"
 import ModelItems from "./kind/Model"
+import FunctionItems from "./kind/Function"
 
 import type Model from "../timeline/model"
 
@@ -21,7 +22,8 @@ function descriptionItems(block: import("../../helpers").NonScalarPdlBlock) {
     .with({ kind: "call" }, (block) => <CallItems block={block} />)
     .with({ kind: "code" }, (block) => <CodeItems block={block} />)
     .with({ kind: "data" }, (block) => <DataItems block={block} />)
-    .with({ kind: "model" }, (block) => <ModelItems block={block} />)
     .with({ kind: "read" }, (block) => <ReadItems block={block} />)
+    .with({ kind: "model" }, (block) => <ModelItems block={block} />)
+    .with({ kind: "function" }, (block) => <FunctionItems block={block} />)
     .otherwise(() => <>This is a {block.kind} block</>)
 }

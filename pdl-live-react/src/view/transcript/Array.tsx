@@ -9,14 +9,7 @@ type Props = {
 }
 
 export default function Array({ array, ctx }: Props) {
-  return (
-    <>
-      <pre>{"["}</pre>
-      {array.flatMap((block, idx) => [
-        <Block key={idx} data={block} ctx={withIter(ctx, idx)} />,
-        idx < array.length - 1 && <pre>,</pre>,
-      ])}
-      <pre>{"]"}</pre>
-    </>
-  )
+  return array.map((block, idx) => [
+    <Block key={idx} data={block} ctx={withIter(ctx, idx)} />,
+  ])
 }

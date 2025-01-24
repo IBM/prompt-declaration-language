@@ -5,13 +5,11 @@ import { type DescriptionListProps } from "@patternfly/react-core"
 
 import ArrayUI from "./Array"
 import Defs from "./Defs"
-import Function from "./Function"
 import LastOf from "./LastOf"
 import ObjectUI from "./Object"
 import Output from "./Output"
 import Query from "./Query"
 import ResultOrCode from "./ResultOrCode"
-import Text from "./Text"
 import TranscriptItem from "./TranscriptItem"
 
 import LoopTrace from "./LoopTrace"
@@ -99,19 +97,17 @@ export default function Block({ data, ctx }: Props): ReactNode {
         <ResultOrCode block={data} />
       ),
     }))
-    .with({ kind: "function" }, (data) => ({
+    .with({ kind: "function" }, () => ({
       C: ["pdl_function"],
-      B: <Function f={data} ctx={withParent(ctx, data.kind)} />,
+      B: <></>,
     }))
     .with({ kind: "call" }, () => ({
       C: ["pdl_call"],
       B: <></>,
     }))
-    .with({ kind: "text" }, (data) => ({
+    .with({ kind: "text" }, () => ({
       C: ["pdl_text"],
-      B: data.text && (
-        <Text blocks={data.text} ctx={withParent(ctx, data.kind)} />
-      ),
+      B: <></>,
     }))
     .with({ kind: "lastOf" }, (data) => ({
       C: ["pdl_lastOf"],
@@ -119,7 +115,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
     }))
     .with({ kind: "array" }, (data) => ({
       C: ["pdl_array"],
-      B: <ArrayUI array={data.array} ctx={withParent(ctx, data.kind)} />,
+      S: <ArrayUI array={data.array} ctx={withParent(ctx, data.kind)} />,
     }))
     .with({ kind: "object" }, (data) => ({
       C: ["pdl_object"],
