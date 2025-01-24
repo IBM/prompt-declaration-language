@@ -1,6 +1,10 @@
 .pdl-qav {
   display: flex;
   align-items: baseline;
+
+  & + .pdl-qav {
+    margin-top: 0.375em;
+  }
 }
 
 .pdl-qav-label {
