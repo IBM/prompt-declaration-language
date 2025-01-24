@@ -3,7 +3,7 @@ import Page from "./Page"
 
 export default function Welcome() {
   return (
-    <Page>
+    <Page breadcrumb1="About PDL">
       <Content component="h1">Prompt Declaration Language (PDL)</Content>
 
       <Content component="p">
