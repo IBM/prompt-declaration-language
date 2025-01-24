@@ -1,17 +1,14 @@
 import { useSearchParams } from "react-router-dom"
 import { useEffect, useState, type PropsWithChildren } from "react"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Page,
-  PageSection,
-} from "@patternfly/react-core"
+
+import { Page, PageSection } from "@patternfly/react-core"
 
 import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
 import ViewerTabs from "./ViewerTabs"
 import DrawerContent from "./view/detail/DrawerContent"
+import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
 import DarkModeContext, {
   setDarkModeForSession,
@@ -21,13 +18,16 @@ import DarkModeContext, {
 import "./Page.css"
 
 const notFilled = { isFilled: false }
+const withPadding = { default: "padding" as const }
 
-type Props = PropsWithChildren<{
-  breadcrumb1?: string
-  breadcrumb2?: string
-}>
+type Props = PropsWithChildren<
+  PageBreadcrumbProps & {
+    /** The trace content */
+    value?: string
+  }
+>
 
-export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
+export default function PDLPage(props: Props) {
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
@@ -35,11 +35,13 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
   const [searchParams] = useSearchParams()
   const showingDetail = searchParams.has("detail")
 
+  const { value, children } = props
+
   return (
     <Page
       isNotificationDrawerExpanded={showingDetail}
       notificationDrawer={
-        <DrawerContent value={typeof children === "string" ? children : ""} />
+        <DrawerContent value={typeof value === "string" ? value : ""} />
       }
       isContentFilled
       isManagedSidebar
@@ -49,32 +51,29 @@ export default function PDLPage({ breadcrumb1, breadcrumb2, children }: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      horizontalSubnav={typeof children === "string" && <ViewerTabs />}
+      horizontalSubnav={typeof value === "string" && <ViewerTabs />}
       groupProps={notFilled /* so breadcrumbs aren't filled */}
       isBreadcrumbGrouped
-      breadcrumb={
-        breadcrumb1 && (
-          <Breadcrumb>
-            <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>
-            {breadcrumb2 && <BreadcrumbItem>{breadcrumb2}</BreadcrumbItem>}
-          </Breadcrumb>
-        )
-      }
+      breadcrumb={<PageBreadcrumbs {...props} />}
     >
-      <PageSection
-        isFilled
-        hasOverflowScroll
-        className="pdl-content-section"
-        aria-label="PDL Viewer main section"
-      >
-        <DarkModeContext.Provider value={darkMode}>
-          {typeof children === "string" && children.length > 0 ? (
-            <Viewer value={children} />
-          ) : (
-            children
-          )}
-        </DarkModeContext.Provider>
-      </PageSection>
+      {children && (
+        <PageSection padding={withPadding} aria-label="Non-viewer content">
+          {children}
+        </PageSection>
+      )}
+
+      {value && value.length > 0 && (
+        <PageSection
+          isFilled
+          hasOverflowScroll
+          className="pdl-content-section"
+          aria-label="PDL Viewer main section"
+        >
+          <DarkModeContext.Provider value={darkMode}>
+            <Viewer value={value} />
+          </DarkModeContext.Provider>
+        </PageSection>
+      )}
     </Page>
   )
 }

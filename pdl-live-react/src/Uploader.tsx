@@ -97,7 +97,7 @@ export default function Uploader() {
   )
 
   return (
-    <Page breadcrumb1="Uploader" breadcrumb2={filename}>
+    <Page breadcrumb1="Uploader" breadcrumb2={filename} value={value}>
       <Form>
         <FormGroup fieldId="text-file-with-restrictions-example">
           <FileUpload
@@ -141,8 +141,6 @@ export default function Uploader() {
           </FileUpload>
         </FormGroup>
       </Form>
-
-      {value}
     </Page>
   )
 }
