@@ -1,0 +1,88 @@
+defs:
+  RITS_API_KEY:
+    lang: python
+    code: |
+      import os
+      result = os.environ["RITS_API_KEY"]
+  solve:
+    function:
+      question: str 
+    return:
+      lastOf:
+      - "${ question }\n"
+      - model: openai/ibm-granite/granite-3.1-8b-instruct
+        def: solution
+        parameters:
+          api_key: ${RITS_API_KEY}
+          api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-3-1-8b-instruct/v1/
+          extra_headers:
+            RITS_API_KEY: ${RITS_API_KEY}
+      - def: answer
+        lang: python
+        code: |
+          try:
+            result = float(solution.split("The answer is:")[-1].strip())
+          except: 
+            result = 0
+      - data:
+          solution: ${ solution }
+          answer: 
+            result: ${ answer } 
+
+      
+    
+  truth:
+    function: 
+      answer: str 
+    return:
+      lang: python
+      code:
+        |
+        result = float(answer.split("####")[-1].strip().replace("$", "").replace(",", ""))
+  compare:
+    function:
+      ans1: float
+      ans2: float
+    return:
+      lang: python
+      code:
+        |
+        result = float(ans1) == float(ans2) 
+
+
+text:
+- read: ../../../grade-school-math/grade_school_math/data/test5.jsonl
+  parser: jsonl
+  contribute: []
+  def: mathdata
+- for:
+    problem: ${ mathdata }
+  repeat:
+    lastOf:
+      - call: ${ solve }
+        args:
+          question: ${ problem.question }
+          pdl_context: []
+        def: solution
+      - def: actual
+        call: ${ truth }
+        args: 
+          answer: ${ problem.answer }
+      - def: compare
+        lang: python
+        contribute: []
+        code:
+         |
+         result = float(solution["answer"]["result"]) == actual
+      - if: ${ compare }
+        then:
+          data:
+            solution: ${ solution }
+            matches: true
+        else:
+          data:
+            solution: ${ solution }
+            matches: false
+  join:
+    with: "\n"
+        
