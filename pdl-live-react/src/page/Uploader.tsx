@@ -1,5 +1,6 @@
 import prettyBytes from "pretty-bytes"
-import { useCallback, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
   FileUpload,
@@ -15,6 +16,8 @@ import {
 
 import Page from "./Page"
 
+import { addMyTrace } from "./MyTraces"
+
 import "./Uploader.css"
 
 const maxSize = 10 * 1024 * 1024
@@ -25,6 +28,14 @@ export default function Uploader() {
   const [isLoading, setIsLoading] = useState(false)
   const [isRejected, setIsRejected] = useState(false)
   const [message, setMessage] = useState("")
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (value) {
+      const trace = addMyTrace(filename, value)
+      navigate("/my/" + trace.title)
+    }
+  }, [value, filename, navigate])
 
   const handleFileInputChange = useCallback<
     Required<FileUploadProps>["onFileInputChange"]
@@ -99,7 +110,7 @@ export default function Uploader() {
   )
 
   return (
-    <Page breadcrumb1="Uploader" breadcrumb2={filename} value={value}>
+    <Page breadcrumb1="Upload Trace" breadcrumb2={filename}>
       <Form className="pdl-upload-form">
         <FormGroup fieldId="text-file-with-restrictions-example">
           <FileUpload
