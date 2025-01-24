@@ -1,7 +1,10 @@
 .pdl-preview {
+  /* This help to fit monaco-editor to the height of the tab content section. See Page.css for other rules in this arena. */
+  flex: 1;
+
   &[data-limit-height="true"] {
     .monaco-editor {
-      max-height: 350px;
+      max-height: 500px;
     }
   }
 
