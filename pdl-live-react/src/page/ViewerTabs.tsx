@@ -1,8 +1,6 @@
 import { useLocation } from "react-router"
 import { Tabs, Tab, TabTitleText } from "@patternfly/react-core"
 
-import "./Viewer.css"
-
 /** This is the main view component */
 export default function Viewer() {
   // We will use this to find the current active tab (below)

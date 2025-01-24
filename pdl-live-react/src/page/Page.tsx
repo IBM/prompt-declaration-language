@@ -7,7 +7,7 @@ import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
 import ViewerTabs from "./ViewerTabs"
-import DrawerContent from "./view/detail/DrawerContent"
+import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
 import DarkModeContext, {

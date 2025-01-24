@@ -16,8 +16,10 @@ import {
 
 import DarkModeToggle from "./DarkModeToggle"
 
+import PDLIcon from "../assets/ai-governance--prompt.svg?react"
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon"
-import PDLIcon from "./assets/ai-governance--prompt.svg?react"
+
+import "./Masthead.css"
 
 const alignRight = { default: "alignEnd" as const }
 const alignCenter = { default: "alignItemsCenter" as const }
