@@ -14,6 +14,7 @@ import {
 } from "@patternfly/react-core"
 
 import Page from "./Page"
+import "./Upload.css"
 
 const maxSize = 10 * 1024 * 1024
 
@@ -98,7 +99,7 @@ export default function Uploader() {
 
   return (
     <Page breadcrumb1="Uploader" breadcrumb2={filename} value={value}>
-      <Form>
+      <Form className="pdl-upload-form">
         <FormGroup fieldId="text-file-with-restrictions-example">
           <FileUpload
             id="text-file-with-restrictions-example"
