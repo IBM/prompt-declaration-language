@@ -9,7 +9,7 @@
   font-weight: 500;
 
   list-style: none;
-  display: inline-block;
+  display: flex;
   font-size: calc(var(--pdl-bb) * 1em);
 
   li {
@@ -44,6 +44,7 @@
     a {
       color: inherit;
       display: block;
+      white-space: nowrap;
       background: var(--pdl-bb-color);
       text-decoration: none;
       position: relative;
