@@ -3,16 +3,14 @@ import { match } from "ts-pattern"
 import { type ReactNode } from "react"
 import { type DescriptionListProps } from "@patternfly/react-core"
 
-import ArrayUI from "./Array"
 import Defs from "./Defs"
-import LastOf from "./LastOf"
-import ObjectUI from "./Object"
 import Output from "./Output"
-import Query from "./Query"
+import LastOf from "./LastOf"
+import ArrayUI from "./Array"
+import ObjectUI from "./Object"
+import LoopTrace from "./LoopTrace"
 import ResultOrCode from "./ResultOrCode"
 import TranscriptItem from "./TranscriptItem"
-
-import LoopTrace from "./LoopTrace"
 import BlocksConjoin from "./BlocksConjoin"
 
 import Context, { withParentAndId as withParent } from "../../Context"
@@ -137,7 +135,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
     }))
     .with({ kind: "repeat" }, (data) => ({
       C: ["pdl_repeat"],
-      P: (
+      S: (
         <LoopTrace
           trace={data?.trace ?? [data.repeat]}
           ctx={withParent(ctx, data.kind)}
@@ -157,7 +155,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
     }))
     .with({ kind: "for" }, (data) => ({
       C: ["pdl_for"],
-      P: (
+      S: (
         <LoopTrace
           trace={data?.trace ?? [data.repeat]}
           ctx={withParent(ctx, data.kind)}
@@ -166,24 +164,13 @@ export default function Block({ data, ctx }: Props): ReactNode {
       ),
     }))
     .with({ kind: "empty" }, () => ({ C: ["pdl_empty"], B: "☐" }))
-    .with({ kind: "error" }, (data) => ({
+    .with({ kind: "error" }, () => ({
       C: ["pdl_error"],
-      B: (
-        <Query
-          prompt="Error Message"
-          ctx={withParent(ctx, data.kind)}
-          q={data.msg}
-          className="pdl-mono"
-        />
-      ),
+      B: <></>,
     }))
     .with({ kind: undefined }, () => ({
       C: ["pdl_error"],
-      B: (
-        <pre>
-          Missing kind: <div>{JSON.stringify(data, undefined, 2)}</div>
-        </pre>
-      ),
+      B: <></>,
     }))
     .exhaustive()
 
@@ -198,9 +185,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
           className={["pdl_block", ...extraClasses].join(" ")}
           ctx={withParent(ctx, data.kind ?? "unknown")}
           block={data}
-        >
-          {bodyContent}
-        </TranscriptItem>
+        />
       )}
       {suffixContent}
     </>
