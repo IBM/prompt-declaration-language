@@ -15,7 +15,7 @@ export default function TimelineRowKindCell({ row }: Props) {
   const link = useCallback(
     (props: object) => (
       <Link
-        to={`?detail&type=block&id=${encodeURIComponent(id)}${hash}`}
+        to={`?detail&type=block&id=${encodeURIComponent(row.id)}${hash}`}
         {...props}
       />
     ),

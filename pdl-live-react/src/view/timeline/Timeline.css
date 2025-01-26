@@ -64,6 +64,12 @@
   position: absolute;
   min-width: 1px;
 
+  a {
+    /* This is the link that allows drilldown clicks from the bar */
+    display: block;
+    text-decoration: none; /* so the &nbsp; doesn't show up as a small underline */
+  }
+
   border-radius: 2px / 4px;
   background-color: var(--pf-t--global--background--color--inverse--default);
   transition: background-color var(--pf-t--global--motion--delay--short)
