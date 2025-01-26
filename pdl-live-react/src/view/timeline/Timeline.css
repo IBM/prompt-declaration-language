@@ -55,9 +55,6 @@
   background-color: var(--pf-t--global--background--color--control--read-only);
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
-  &:hover {
-    background-color: var(--pf-t--global--background--color--secondary--hover);
-  }
 }
 
 .pdl-timeline-bar {
@@ -72,11 +69,11 @@
 
   border-radius: 2px / 4px;
   background-color: var(--pf-t--global--background--color--inverse--default);
+  &:hover {
+    background-color: var(--pf-t--global--background--color--inverse--hover);
+  }
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
-  &:hover {
-    background-color: var(--pf-t--global--color--brand--hover);
-  }
 
   &[data-kind="text"] {
     background-color: var(--pf-t--global--icon--color--disabled);
@@ -87,8 +84,16 @@
   &[data-kind="lastOf"],
   &[data-kind="call"] {
     background-color: var(--pf-t--global--border--color--default);
+    &:hover {
+      background-color: var(
+        --pf-t--global--border--color--nonstatus--gray--clicked
+      );
+    }
   }
   &[data-kind="model"] {
     background-color: var(--pf-t--global--text--color--brand--default);
+    &:hover {
+      background-color: var(--pf-t--global--color--brand--hover);
+    }
   }
 }
