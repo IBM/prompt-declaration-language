@@ -1,12 +1,15 @@
 import { useMemo } from "react"
+import { Link, useLocation } from "react-router-dom"
 
 type Props = import("./model").TimelineRowWithExtrema
 
 export default function TimelineBar({
+  id,
   block: { kind, start_nanos, end_nanos },
   min,
   max,
 }: Props) {
+  const { hash } = useLocation()
   const style = useMemo(
     () => ({
       left: (100 * (start_nanos - min)) / (max - min) + "%",
@@ -16,10 +19,12 @@ export default function TimelineBar({
   )
 
   return (
-    <span className="pdl-timeline-bar-outer">
-      <span className="pdl-timeline-bar" style={style} data-kind={kind}>
-        &nbsp;
-      </span>
-    </span>
+    <div className="pdl-timeline-bar-outer">
+      <div className="pdl-timeline-bar" style={style} data-kind={kind}>
+        <Link to={`?detail&type=block&id=${encodeURIComponent(id)}${hash}`}>
+          &nbsp;
+        </Link>
+      </div>
+    </div>
   )
 }
