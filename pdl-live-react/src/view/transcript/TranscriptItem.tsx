@@ -26,11 +26,11 @@ import {
   type NonScalarPdlBlock,
 } from "../../helpers"
 
-type Props = import("react").PropsWithChildren<{
+type Props = {
   className?: string
   ctx: Context
   block: NonScalarPdlBlock
-}>
+}
 
 const alignCenter = { default: "alignItemsCenter" as const }
 
@@ -81,25 +81,6 @@ export default function TranscriptItem(props: Props) {
     () => navigate(`?detail&type=block&id=${id}${hash}`),
     [id, hash, navigate],
   )
-  /*    ctx.setDrawerContent({
-      header: "Block Details",
-      description: breadcrumbs,
-      body: [
-        {
-          title: "Summary",
-          body: <DescriptionList>{children}</DescriptionList>,
-        },
-        {
-          title: "Source",
-          body: <Code block={block} />,
-        },
-        {
-          title: "Raw Trace",
-          body: <Code block={block} raw />,
-        },
-      ],
-    })
-  }, [block, children, breadcrumbs, ctx])*/
 
   const actions = useMemo(
     () =>
@@ -111,6 +92,7 @@ export default function TranscriptItem(props: Props) {
 
   return (
     <Card
+      data-id={ctx.id}
       onClick={drilldown}
       className={
         "pdl-transcript-item" + (props.className ? " " + props.className : "")
