@@ -123,6 +123,12 @@ export default function Block({ data, ctx }: Props): ReactNode {
           <BlocksConjoin block={data?.else ?? ""} ctx={ctx} />
         ),
     }))
+    .with({ kind: "match"}, (_) => ({
+      C: ["pdl_match"], // TODO: define pdl_match
+      B: (
+        <>"TODO"</> // TODO
+      ),
+    }))
     .with({ kind: "read" }, (data) => ({
       C: ["pdl_read"],
       B: (

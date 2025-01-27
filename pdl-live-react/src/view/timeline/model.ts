@@ -51,6 +51,7 @@ function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "if" }, (data) =>
       data.if_result ? [data.then] : [data.else],
     )
+    .with({ kind: "match" }, (data) => [data.with]) // TODO
     .with({ kind: "read" }, (data) => [data.result])
     .with({ kind: "include" }, (data) => [data.trace ?? data.result])
     .with({ kind: "function" }, () => [])
