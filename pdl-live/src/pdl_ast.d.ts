@@ -239,6 +239,11 @@ export type EndNanos = number | null;
  *
  */
 export type Timezone = string | null;
+export type Context =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Path = string[];
 export type File = string;
 export type Kind = "empty";
@@ -310,6 +315,11 @@ export type EndNanos1 = number | null;
  *
  */
 export type Timezone1 = string | null;
+export type Context1 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind1 = "error";
 export type Msg = string;
 export type Program1 =
@@ -405,6 +415,11 @@ export type EndNanos2 = number | null;
  *
  */
 export type Timezone2 = string | null;
+export type Context2 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind2 = "include";
 /**
  * Name of the file to include.
@@ -504,6 +519,11 @@ export type EndNanos3 = number | null;
  *
  */
 export type Timezone3 = string | null;
+export type Context3 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind3 = "read";
 /**
  * Message to prompt the user to enter a value.
@@ -582,6 +602,11 @@ export type EndNanos4 = number | null;
  *
  */
 export type Timezone4 = string | null;
+export type Context4 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind4 = "message";
 /**
  * Content of the message.
@@ -679,6 +704,11 @@ export type EndNanos5 = number | null;
  *
  */
 export type Timezone5 = string | null;
+export type Context5 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind5 = "object";
 export type Object =
   | {
@@ -802,6 +832,11 @@ export type EndNanos6 = number | null;
  *
  */
 export type Timezone6 = string | null;
+export type Context6 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind6 = "array";
 export type Array = (
   | boolean
@@ -897,6 +932,11 @@ export type EndNanos7 = number | null;
  *
  */
 export type Timezone7 = string | null;
+export type Context7 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind7 = "lastOf";
 export type Lastof = (
   | boolean
@@ -992,6 +1032,11 @@ export type EndNanos8 = number | null;
  *
  */
 export type Timezone8 = string | null;
+export type Context8 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind8 = "text";
 /**
  * Body of the text.
@@ -1116,6 +1161,11 @@ export type EndNanos9 = number | null;
  *
  */
 export type Timezone9 = string | null;
+export type Context9 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind9 = "for";
 /**
  * Body of the loop.
@@ -1267,6 +1317,11 @@ export type EndNanos10 = number | null;
  *
  */
 export type Timezone10 = string | null;
+export type Context10 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind10 = "repeat_until";
 /**
  * Body of the loop.
@@ -1398,6 +1453,11 @@ export type EndNanos11 = number | null;
  *
  */
 export type Timezone11 = string | null;
+export type Context11 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind11 = "repeat";
 /**
  * Body of the loop.
@@ -1534,6 +1594,11 @@ export type EndNanos12 = number | null;
  *
  */
 export type Timezone12 = string | null;
+export type Context12 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind12 = "match";
 export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
 export type Def13 = string | null;
@@ -1637,6 +1702,11 @@ export type EndNanos13 = number | null;
  *
  */
 export type Timezone13 = string | null;
+export type Context13 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind13 = "if";
 /**
  * Branch to exectute if the condition is true.
@@ -1765,6 +1835,11 @@ export type EndNanos14 = number | null;
  *
  */
 export type Timezone14 = string | null;
+export type Context14 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind14 = "data";
 /**
  * Do not evaluate expressions inside strings.
@@ -1838,6 +1913,11 @@ export type EndNanos15 = number | null;
  *
  */
 export type Timezone15 = string | null;
+export type Context15 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind15 = "get";
 /**
  * Name of the variable to access.
@@ -1911,6 +1991,11 @@ export type EndNanos16 = number | null;
  *
  */
 export type Timezone16 = string | null;
+export type Context16 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind16 = "code";
 /**
  * Programming language of the code.
@@ -2014,6 +2099,11 @@ export type EndNanos17 = number | null;
  *
  */
 export type Timezone17 = string | null;
+export type Context17 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind17 = "model";
 export type Input =
   | boolean
@@ -2135,6 +2225,11 @@ export type EndNanos18 = number | null;
  *
  */
 export type Timezone18 = string | null;
+export type Context18 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind18 = "call";
 export type Trace5 =
   | boolean
@@ -2229,6 +2324,11 @@ export type EndNanos19 = number | null;
  *
  */
 export type Timezone19 = string | null;
+export type Context19 =
+  | {
+      [k: string]: unknown;
+    }[]
+  | null;
 export type Kind19 = "function";
 /**
  * Functions parameters with their types.
@@ -2310,6 +2410,7 @@ export interface FunctionBlock {
   start_nanos?: StartNanos19;
   end_nanos?: EndNanos19;
   timezone?: Timezone19;
+  context?: Context19;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind19;
@@ -2370,6 +2471,7 @@ export interface CallBlock {
   start_nanos?: StartNanos18;
   end_nanos?: EndNanos18;
   timezone?: Timezone18;
+  context?: Context18;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind18;
@@ -2430,6 +2532,7 @@ export interface LitellmModelBlock {
   start_nanos?: StartNanos17;
   end_nanos?: EndNanos17;
   timezone?: Timezone17;
+  context?: Context17;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind17;
@@ -2493,6 +2596,7 @@ export interface CodeBlock {
   start_nanos?: StartNanos16;
   end_nanos?: EndNanos16;
   timezone?: Timezone16;
+  context?: Context16;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind16;
@@ -2552,6 +2656,7 @@ export interface GetBlock {
   start_nanos?: StartNanos15;
   end_nanos?: EndNanos15;
   timezone?: Timezone15;
+  context?: Context15;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind15;
@@ -2610,6 +2715,7 @@ export interface DataBlock {
   start_nanos?: StartNanos14;
   end_nanos?: EndNanos14;
   timezone?: Timezone14;
+  context?: Context14;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind14;
@@ -2669,6 +2775,7 @@ export interface IfBlock {
   start_nanos?: StartNanos13;
   end_nanos?: EndNanos13;
   timezone?: Timezone13;
+  context?: Context13;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind13;
@@ -2730,6 +2837,7 @@ export interface MatchBlock {
   start_nanos?: StartNanos12;
   end_nanos?: EndNanos12;
   timezone?: Timezone12;
+  context?: Context12;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind12;
@@ -2789,6 +2897,7 @@ export interface RepeatBlock {
   start_nanos?: StartNanos11;
   end_nanos?: EndNanos11;
   timezone?: Timezone11;
+  context?: Context11;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind11;
@@ -2850,6 +2959,7 @@ export interface RepeatUntilBlock {
   start_nanos?: StartNanos10;
   end_nanos?: EndNanos10;
   timezone?: Timezone10;
+  context?: Context10;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind10;
@@ -2911,6 +3021,7 @@ export interface ForBlock {
   start_nanos?: StartNanos9;
   end_nanos?: EndNanos9;
   timezone?: Timezone9;
+  context?: Context9;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind9;
@@ -2972,6 +3083,7 @@ export interface TextBlock {
   start_nanos?: StartNanos8;
   end_nanos?: EndNanos8;
   timezone?: Timezone8;
+  context?: Context8;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind8;
@@ -3030,6 +3142,7 @@ export interface LastOfBlock {
   start_nanos?: StartNanos7;
   end_nanos?: EndNanos7;
   timezone?: Timezone7;
+  context?: Context7;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind7;
@@ -3088,6 +3201,7 @@ export interface ArrayBlock {
   start_nanos?: StartNanos6;
   end_nanos?: EndNanos6;
   timezone?: Timezone6;
+  context?: Context6;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind6;
@@ -3146,6 +3260,7 @@ export interface ObjectBlock {
   start_nanos?: StartNanos5;
   end_nanos?: EndNanos5;
   timezone?: Timezone5;
+  context?: Context5;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind5;
@@ -3204,6 +3319,7 @@ export interface MessageBlock {
   start_nanos?: StartNanos4;
   end_nanos?: EndNanos4;
   timezone?: Timezone4;
+  context?: Context4;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind4;
@@ -3262,6 +3378,7 @@ export interface ReadBlock {
   start_nanos?: StartNanos3;
   end_nanos?: EndNanos3;
   timezone?: Timezone3;
+  context?: Context3;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind3;
@@ -3322,6 +3439,7 @@ export interface IncludeBlock {
   start_nanos?: StartNanos2;
   end_nanos?: EndNanos2;
   timezone?: Timezone2;
+  context?: Context2;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind2;
@@ -3378,6 +3496,7 @@ export interface ErrorBlock {
   start_nanos?: StartNanos1;
   end_nanos?: EndNanos1;
   timezone?: Timezone1;
+  context?: Context1;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind1;
@@ -3437,6 +3556,7 @@ export interface EmptyBlock {
   start_nanos?: StartNanos;
   end_nanos?: EndNanos;
   timezone?: Timezone;
+  context?: Context;
   result?: unknown;
   location?: LocationType | null;
   kind?: Kind;

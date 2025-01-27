@@ -1,0 +1,6 @@
+.pf-topology-visualization-surface {
+  text.pdl-dataflow-content {
+    font-size: 0.75em;
+    fill: var(--pf-t--global--border--color--status--custom--default);
+  }
+}

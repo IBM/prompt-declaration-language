@@ -87,6 +87,8 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
     if block.start_nanos != 0:
+        if block.context is not None and len(block.context) > 0:
+            d["context"] = block.context
         d["start_nanos"] = block.start_nanos
         d["end_nanos"] = block.end_nanos
 

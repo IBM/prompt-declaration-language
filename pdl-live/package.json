@@ -20,6 +20,7 @@
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
+    "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
