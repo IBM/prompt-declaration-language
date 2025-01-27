@@ -1110,10 +1110,10 @@ def step_call_model(
             )
 
             # Apply PDL defaults to model invocation
-            if isinstance(concrete_block.parameters, dict):
+            if concrete_block.parameters is None or isinstance(concrete_block.parameters, dict):
                 concrete_block.parameters = apply_defaults(
                     str(concrete_block.model),
-                    concrete_block.parameters,
+                    concrete_block.parameters or {},
                     scope.get("pdl_model_default_parameters", []),
                 )
         case _:
