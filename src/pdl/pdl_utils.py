@@ -1,6 +1,6 @@
 import fnmatch
 import json
-from typing import Any, Sequence
+from typing import Any, Generator, Generic, Sequence, TypeVar
 
 from .pdl_ast import (
     ContributeTarget,
@@ -10,6 +10,37 @@ from .pdl_ast import (
     Messages,
     get_sampling_defaults,
 )
+
+GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
+GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
+GeneratorWrapperReturnT = TypeVar("GeneratorWrapperReturnT")
+
+
+class GeneratorWrapper(
+    Generic[GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT]
+):
+    value: GeneratorWrapperReturnT
+
+    def __init__(
+        self,
+        gen: Generator[
+            GeneratorWrapperYieldT, GeneratorWrapperSendT, GeneratorWrapperReturnT
+        ],
+    ):
+        self.gen = gen
+
+    def __iter__(self):
+        self.value = yield from self.gen
+
+
+GeneratorReturnT = TypeVar("GeneratorReturnT")
+
+
+def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorReturnT:
+    w = GeneratorWrapper(gen)
+    for _ in w:
+        pass
+    return w.value
 
 
 def stringify(result):
