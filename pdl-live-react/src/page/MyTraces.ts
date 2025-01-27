@@ -13,22 +13,25 @@ export function getMyTraces(): MyTrace[] {
 }
 
 export function addMyTrace(filename: string, value: string): MyTrace {
-  const traces = getMyTraces()
-  const already = traces.find(
-    (_) => _.filename === filename && _.value === value,
-  )
-  if (!already) {
-    const trace = {
-      title: filename.replace(/\.trace.json$/, ""),
-      timestamp: Date.now(),
-      filename,
-      value,
-    }
-    traces.push(trace)
-    localStorage.setItem(mytracesLocalStorageKey, JSON.stringify(traces))
-
-    return trace
+  let traces = getMyTraces()
+  const trace = {
+    title: filename.replace(/\.trace.json$/, ""),
+    timestamp: Date.now(),
+    filename,
+    value,
   }
 
-  return already
+  const alreadyIdx = traces.findIndex((_) => _.filename === filename)
+  if (alreadyIdx < 0) {
+    traces.push(trace)
+  } else {
+    traces = [
+      ...traces.slice(0, alreadyIdx),
+      trace,
+      ...traces.slice(alreadyIdx + 1),
+    ]
+  }
+  localStorage.setItem(mytracesLocalStorageKey, JSON.stringify(traces))
+
+  return trace
 }
