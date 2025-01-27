@@ -238,7 +238,7 @@ def pattern_to_dict(pattern: PatternType):
     result: dict[str, Any]
     match pattern:
         case OrPattern():
-            result = {"union": [pattern_to_dict(p) for p in pattern.union]}
+            result = {"anyOf": [pattern_to_dict(p) for p in pattern.anyOf]}
         case ArrayPattern():
             result = {"array": [pattern_to_dict(p) for p in pattern.array]}
         case ObjectPattern():

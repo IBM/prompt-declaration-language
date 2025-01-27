@@ -448,17 +448,17 @@ with:
     assert result == 2
 
 
-def test_union0():
+def test_or0():
     prog_str = """
 match: Hello
 with:
 - case:
-    union:
+    anyOf:
       - bye
       - see you
   then: 1
 - case:
-    union:
+    anyOf:
       - Hi
       - Hello
   then: 2
@@ -469,7 +469,7 @@ with:
     assert result == 2
 
 
-def test_match_union1():
+def test_match_or1():
     prog_str = """
 defs:
     x:
@@ -479,12 +479,12 @@ defs:
 match: ${x}
 with:
 - case:
-    union:
+    anyOf:
     - 1
     - object: {"a": 2, "b": "hello"}
   then: 1
 - case:
-    union:
+    anyOf:
     - object: {"a": 1, "b": "hi"}
     - object: {"a": 1, "b": "hello"}
     - 42
@@ -494,7 +494,7 @@ with:
     assert result == 2
 
 
-def test_match_union2():
+def test_match_or2():
     prog_str = """
 defs:
     v:
@@ -504,12 +504,12 @@ defs:
 match: ${v}
 with:
 - case:
-    union:
+    anyOf:
     - 1
     - object: {"a": 2, "b": "hello"}
   then: 1
 - case:
-    union:
+    anyOf:
     - object:
         a:
           any:
@@ -527,7 +527,7 @@ with:
     assert result == "hello"
 
 
-def test_match_union3():
+def test_match_or3():
     prog_str = """
 defs:
     v:
@@ -537,12 +537,12 @@ defs:
 match: ${v}
 with:
 - case:
-    union:
+    anyOf:
     - 1
     - object: {"a": 2, "b": "hello"}
   then: 1
 - case:
-    union:
+    anyOf:
     - object:
         a:
           any:
@@ -570,12 +570,12 @@ defs:
 match: ${x}
 with:
 - case:
-    union:
+    anyOf:
     - 1
     - object: {"a": 2, "b": "hello"}
   then: 1
 - case:
-    union:
+    anyOf:
     - object: {"a": 1, "b": "hi"}
     - object: {"a": 2, "b": "hello"}
     - 42

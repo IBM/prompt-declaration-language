@@ -7687,7 +7687,7 @@
           "default": null,
           "title": "Def"
         },
-        "union": {
+        "anyOf": {
           "items": {
             "anyOf": [
               {
@@ -7719,12 +7719,12 @@
               }
             ]
           },
-          "title": "Union",
+          "title": "Anyof",
           "type": "array"
         }
       },
       "required": [
-        "union"
+        "anyOf"
       ],
       "title": "OrPattern",
       "type": "object"

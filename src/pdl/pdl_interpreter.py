@@ -864,7 +864,7 @@ def is_matching(  # pylint: disable=too-many-return-statements
     match pattern:
         case OrPattern():
             new_scope = None
-            for p in pattern.union:
+            for p in pattern.anyOf:
                 new_scope = is_matching(value, p, scope)
                 if new_scope:
                     break

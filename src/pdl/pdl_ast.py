@@ -79,7 +79,7 @@ class Pattern(BaseModel):
 
 
 class OrPattern(Pattern):
-    union: list["PatternType"]
+    anyOf: list["PatternType"]
 
 
 class ArrayPattern(Pattern):

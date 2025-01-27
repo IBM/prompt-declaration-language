@@ -1542,7 +1542,7 @@ export type Def15 = string | null;
 export type Def16 = string | null;
 export type Any = null;
 export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
-export type Union = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
+export type Anyof = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
 export type Then =
   | boolean
   | number
@@ -3528,7 +3528,7 @@ export interface MatchCase {
 }
 export interface OrPattern {
   def?: Def13;
-  union: Union;
+  anyOf: Anyof;
 }
 export interface ArrayPattern {
   def?: Def14;
