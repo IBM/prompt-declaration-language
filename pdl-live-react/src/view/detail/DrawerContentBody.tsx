@@ -1,10 +1,11 @@
+import { lazy, Suspense } from "react"
 import { Tab, TabTitleText } from "@patternfly/react-core"
 
-import DefContent from "./DefContent"
-import BlockNotFound from "./BlockNotFound"
-import SourceTabContent from "./SourceTabContent"
-import SummaryTabContent from "./SummaryTabContent"
-import RawTraceTabContent from "./RawTraceTabContent"
+const DefContent = lazy(() => import("./DefContent"))
+const BlockNotFound = lazy(() => import("./BlockNotFound"))
+const SourceTabContent = lazy(() => import("./SourceTabContent"))
+const SummaryTabContent = lazy(() => import("./SummaryTabContent"))
+const RawTraceTabContent = lazy(() => import("./RawTraceTabContent"))
 
 import { hasResult } from "../../helpers"
 
@@ -26,7 +27,11 @@ function defsBody(id: string, def: string | null, model: Model) {
       {!def ? (
         <>Internal error, missing field 'def' in query</>
       ) : (
-        value && <DefContent value={value} />
+        value && (
+          <Suspense>
+            <DefContent value={value} />
+          </Suspense>
+        )
       )}
     </Tab>
   )
@@ -37,7 +42,9 @@ function defBody(id: string, _def: string | null, model: Model) {
   if (!block) {
     return (
       <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-        <BlockNotFound id={id} model={model} />
+        <Suspense>
+          <BlockNotFound id={id} model={model} />
+        </Suspense>
       </Tab>
     )
   }
@@ -62,13 +69,19 @@ function blockBody(id: string, model: Model) {
 
   return [
     <Tab key={0} eventKey={0} title={<TabTitleText>Summary</TabTitleText>}>
-      <SummaryTabContent block={block} />
+      <Suspense>
+        <SummaryTabContent block={block} />
+      </Suspense>
     </Tab>,
     <Tab key={1} eventKey={1} title={<TabTitleText>Source</TabTitleText>}>
-      <SourceTabContent block={block} />
+      <Suspense>
+        <SourceTabContent block={block} />
+      </Suspense>
     </Tab>,
     <Tab key={2} eventKey={2} title={<TabTitleText>Raw Trace</TabTitleText>}>
-      <RawTraceTabContent block={block} />
+      <Suspense>
+        <RawTraceTabContent block={block} />
+      </Suspense>
     </Tab>,
   ]
 }
