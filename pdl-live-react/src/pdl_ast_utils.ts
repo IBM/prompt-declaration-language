@@ -81,13 +81,13 @@ export function map_block_children(
       const else_ = block.else ? f(block.else) : undefined
       return { ...block, then: then_, else: else_ }
     })
-    .with({kind: "match"}, block => {
-      const with_ = block.with.map(match_case => {
-        return {...match_case, then: f(match_case.then)}
+    .with({ kind: "match" }, (block) => {
+      const with_ = block.with.map((match_case) => {
+        return { ...match_case, then: f(match_case.then) }
       })
-      return {...block, with: with_}
+      return { ...block, with: with_ }
     })
-   .with({ kind: "repeat" }, (block) => {
+    .with({ kind: "repeat" }, (block) => {
       const repeat = f(block.repeat)
       return { ...block, repeat: repeat }
     })
@@ -180,9 +180,9 @@ export function iter_block_children(
       if (block.then) f(block.then)
       if (block.else) f(block.else)
     })
-    .with({kind: "match"}, block => {
-      block.with.forEach(match_case => {
-        f(match_case.then);
+    .with({ kind: "match" }, (block) => {
+      block.with.forEach((match_case) => {
+        f(match_case.then)
       })
     })
     .with({ kind: "repeat" }, (block) => {

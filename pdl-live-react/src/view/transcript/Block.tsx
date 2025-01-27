@@ -83,11 +83,10 @@ export default function Block({ data, ctx }: Props): ReactNode {
           />
         ),
     }))
-    .with({ kind: "match"}, (_) => ({
+    .with({ kind: "match" }, (_) => ({
       C: ["pdl_match"], // TODO: define pdl_match
-      B: (
-        <>"TODO"</> // TODO
-      ),
+      // TODO
+      B: <>"TODO"</>,
     }))
     .with({ kind: "read" }, () => ({
       C: ["pdl_read"],
