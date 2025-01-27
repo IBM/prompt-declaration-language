@@ -36,6 +36,7 @@ from .pdl_ast import (  # noqa: E402
     ArrayBlock,
     ArrayPattern,
     Block,
+    BlockKind,
     BlockType,
     CallBlock,
     CodeBlock,
@@ -81,18 +82,10 @@ from .pdl_dumper import block_to_dict  # noqa: E402
 from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
-from .pdl_scheduler import (  # noqa: E402
-    CodeYieldResultMessage,
-    GeneratorWrapper,
-    ModelCallMessage,
-    ModelYieldResultMessage,
-    YieldBackgroundMessage,
-    YieldMessage,
-    YieldResultMessage,
-    schedule,
-)
+from .pdl_scheduler import yield_background, yield_result  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
+    GeneratorWrapper,
     apply_defaults,
     get_contribute_value,
     messages_concat,
@@ -126,7 +119,7 @@ class PDLRuntimeParserError(PDLRuntimeError):
     pass
 
 
-class PDLRuntimeStepBlocksError(PDLException):
+class PDLRuntimeProcessBlocksError(PDLException):
     def __init__(
         self,
         message: str,
@@ -248,45 +241,15 @@ def process_prog(
         PDLRuntimeError: If the program raises an error.
     """
     scope = empty_scope | scope
-    doc_generator = step_block(state, scope, block=prog.root, loc=loc)
-    for result, document, final_scope, trace in schedule([doc_generator]):
-        return result, document, final_scope, trace
-    assert False
-    # doc_generator = GeneratorWrapper(step_block(state, scope, block=prog.root, loc=loc))
-    # # result, document, scope, trace = schedule(doc_generator)
-    # incremental_document = ""
-    # for output in doc_generator:
-    #     print(output, end="")
-    #     assert output is not None
-    #     incremental_document += output
-    # print()
-    # result, document, scope, trace = doc_generator.value
-    # assert document == incremental_document or not state.yield_background
-    # return result, document, scope, trace
+    result, document, final_scope, trace = process_block(
+        state, scope, block=prog.root, loc=loc
+    )
+    return result, document, final_scope, trace
 
 
-# def process_progs(
-#     state: InterpreterState,
-#     initial_scopes: Iterable[ScopeType],
-#     prog: Program,
-#     loc=empty_block_location,
-# ) -> Iterable[tuple[Any, Messages, ScopeType, BlockType]]:
-#     if state.batch > 1:
-#         batch_size = state.batch
-#     else:
-#         batch_size = 1
-#     for batch in batched(initial_scopes, batch_size):
-#         doc_generators = [
-#             step_block(state, empty_scope | initial_scope, block=prog.root, loc=loc)
-#             for initial_scope in batch
-#         ]
-#         for result, document, scope, trace in schedule(doc_generators):
-#             yield result, document, scope, trace
-
-
-def step_block(
+def process_block(
     state: InterpreterState, scope: ScopeType, block: BlockType, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+) -> tuple[Any, Messages, ScopeType, BlockType]:
     result: Any
     background: Messages
     trace: BlockType
@@ -302,12 +265,12 @@ def step_block(
         background = [{"role": state.role, "content": stringify(result)}]
         trace = stringify(result)
         if state.yield_background:
-            yield YieldBackgroundMessage(background)
+            yield_background(background)
         if state.yield_result:
-            yield YieldResultMessage(result)
+            yield_result(result, BlockKind.DATA)
         append_log(state, "pdl_context", background)
     else:
-        result, background, scope, trace = yield from step_advanced_block_timed(
+        result, background, scope, trace = process_advanced_block_timed(
             state, scope, block, loc
         )
     scope = scope | {"pdl_context": background}
@@ -322,17 +285,15 @@ def context_in_contribute(block: AdvancedBlockType) -> bool:
     return False
 
 
-# A start-end time wrapper around `step_advanced_block`
-def step_advanced_block_timed(
+# A start-end time wrapper around `process_advanced_block`
+def process_advanced_block_timed(
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+) -> tuple[Any, Messages, ScopeType, BlockType]:
     start_nanos = time.time_ns()
-    result, background, scope, trace = yield from step_advanced_block(
-        state, scope, block, loc
-    )
+    result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     end_nanos = time.time_ns()
     match trace:
         case Block():
@@ -342,16 +303,16 @@ def step_advanced_block_timed(
     return result, background, scope, trace
 
 
-def step_advanced_block(
+def process_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType]]:
+) -> tuple[Any, Messages, ScopeType, BlockType]:
     if block.role is not None:
         state = state.with_role(block.role)
     if len(block.defs) > 0:
-        scope, defs_trace = yield from step_defs(state, scope, block.defs, loc)
+        scope, defs_trace = process_defs(state, scope, block.defs, loc)
         block = block.model_copy(update={"defs": defs_trace})
     state = state.with_yield_result(
         state.yield_result and ContributeTarget.RESULT in block.contribute
@@ -360,9 +321,7 @@ def step_advanced_block(
         state.yield_background and context_in_contribute(block)
     )
     try:
-        result, background, scope, trace = yield from step_block_body(
-            state, scope, block, loc
-        )
+        result, background, scope, trace = process_block_body(state, scope, block, loc)
         trace = trace.model_copy(update={"result": result})
         if block.parser is not None:
             result = parse_result(block.parser, result)
@@ -384,7 +343,7 @@ def step_advanced_block(
             background,
             scope,
             trace,
-        ) = yield from step_block_of(
+        ) = process_block_of(
             block,
             "fallback",
             state,
@@ -415,12 +374,12 @@ def step_advanced_block(
     return result, background, scope, trace
 
 
-def step_block_body(
+def process_block_body(
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, AdvancedBlockType]]:
+) -> tuple[Any, Messages, ScopeType, AdvancedBlockType]:
     scope_init = scope
     result: Any
     background: Messages
@@ -428,17 +387,17 @@ def step_block_body(
     block.location = loc
     match block:
         case ModelBlock():
-            result, background, scope, trace = yield from step_call_model(
+            result, background, scope, trace = process_call_model(
                 state, scope, block, loc
             )
         case CodeBlock():
-            result, background, scope, trace = yield from step_call_code(
+            result, background, scope, trace = process_call_code(
                 state, scope, block, loc
             )
             if state.yield_result:
-                yield CodeYieldResultMessage(result)
+                yield_result(result, block.kind)
             if state.yield_background:
-                yield YieldBackgroundMessage(background)
+                yield_background(background)
         case GetBlock(get=var):
             block.location = append(loc, "get")
             try:
@@ -452,9 +411,9 @@ def step_block_body(
             background = [{"role": state.role, "content": stringify(result)}]
             trace = block.model_copy()
             if state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             if state.yield_background:
-                yield YieldBackgroundMessage(background)
+                yield_background(background)
         case DataBlock(data=v):
             block.location = append(loc, "data")
             if block.raw:
@@ -464,11 +423,11 @@ def step_block_body(
                 result, trace = process_expr_of(block, "data", scope, loc)
             background = [{"role": state.role, "content": stringify(result)}]
             if state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             if state.yield_background:
-                yield YieldBackgroundMessage(background)
+                yield_background(background)
         case TextBlock():
-            result, background, scope, trace = yield from step_blocks_of(
+            result, background, scope, trace = process_blocks_of(
                 block,
                 "text",
                 IterationType.TEXT,
@@ -477,7 +436,7 @@ def step_block_body(
                 loc,
             )
         case LastOfBlock():
-            result, background, scope, trace = yield from step_blocks_of(
+            result, background, scope, trace = process_blocks_of(
                 block,
                 "lastOf",
                 IterationType.LASTOF,
@@ -486,7 +445,7 @@ def step_block_body(
                 loc,
             )
         case ArrayBlock():
-            result, background, scope, trace = yield from step_blocks_of(
+            result, background, scope, trace = process_blocks_of(
                 block,
                 "array",
                 IterationType.ARRAY,
@@ -503,19 +462,18 @@ def step_block_body(
                 try:
                     obj_loc = append(loc, "object")
                     for k, value_blocks in block.object.items():
-                        value, value_background, scope, value_trace = (
-                            yield from step_blocks(
-                                IterationType.LASTOF,
-                                iteration_state,
-                                scope,
-                                value_blocks,
-                                append(obj_loc, k),
-                            )
+                        value, value_background, scope, value_trace = process_blocks(
+                            IterationType.LASTOF,
+                            iteration_state,
+                            scope,
+                            value_blocks,
+                            block.kind,
+                            append(obj_loc, k),
                         )
                         background = messages_concat(background, value_background)
                         values.append(value)
                         values_trace.append(value_trace)
-                except PDLRuntimeStepBlocksError as exc:
+                except PDLRuntimeProcessBlocksError as exc:
                     obj = dict(zip(block.object.keys(), exc.blocks))
                     trace = block.model_copy(update={"object": obj})
                     raise PDLRuntimeError(
@@ -527,7 +485,7 @@ def step_block_body(
                 object_trace = dict(zip(block.object.keys(), values_trace))
                 trace = block.model_copy(update={"object": object_trace})
             else:
-                results, background, scope, trace = yield from step_blocks_of(
+                results, background, scope, trace = process_blocks_of(
                     block,
                     "object",
                     IterationType.ARRAY,
@@ -539,9 +497,9 @@ def step_block_body(
                 for d in results:
                     result = result | d
             if state.yield_result and not iteration_state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
         case MessageBlock():
-            content, background, scope, trace = yield from step_block_of(
+            content, background, scope, trace = process_block_of(
                 block,
                 "content",
                 state,
@@ -552,11 +510,11 @@ def step_block_body(
         case IfBlock():
             b = process_condition_of(block, "condition", scope, loc, "if")
             if b:
-                result, background, scope, trace = yield from step_block_of(
+                result, background, scope, trace = process_block_of(
                     block, "then", state, scope, loc
                 )
             elif block.elses is not None:
-                result, background, scope, trace = yield from step_block_of(
+                result, background, scope, trace = process_block_of(
                     block, "elses", state, scope, loc, "else"
                 )
             else:
@@ -606,7 +564,7 @@ def step_block_body(
                     continue
                 matched = True
                 try:
-                    result, background, scope, return_trace = yield from step_block(
+                    result, background, scope, return_trace = process_block(
                         state,
                         new_scope,
                         match_case.then,
@@ -647,9 +605,9 @@ def step_block_body(
                         join_string = block.join.join_string
                         results.append(join_string)
                         if iteration_state.yield_result:
-                            yield YieldResultMessage(join_string)
+                            yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
-                            yield YieldBackgroundMessage(
+                            yield_background(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
@@ -660,7 +618,7 @@ def step_block_body(
                         iteration_background,
                         scope,
                         body_trace,
-                    ) = yield from step_block(
+                    ) = process_block(
                         iteration_state,
                         scope,
                         block.repeat,
@@ -679,7 +637,7 @@ def step_block_body(
                 ) from exc
             result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
             results = []
@@ -723,9 +681,9 @@ def step_block_body(
                         join_string = block.join.join_string
                         results.append(join_string)
                         if iteration_state.yield_result:
-                            yield YieldResultMessage(join_string)
+                            yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
-                            yield YieldBackgroundMessage(
+                            yield_background(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
@@ -738,7 +696,7 @@ def step_block_body(
                         iteration_background,
                         scope,
                         body_trace,
-                    ) = yield from step_block(
+                    ) = process_block(
                         iteration_state,
                         scope,
                         block.repeat,
@@ -757,7 +715,7 @@ def step_block_body(
                 ) from exc
             result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             trace = block.model_copy(update={"trace": iter_trace})
         case RepeatUntilBlock():
             results = []
@@ -778,9 +736,9 @@ def step_block_body(
                         join_string = block.join.join_string
                         results.append(join_string)
                         if iteration_state.yield_result:
-                            yield YieldResultMessage(join_string)
+                            yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
-                            yield YieldBackgroundMessage(
+                            yield_background(
                                 [{"role": block.role, "content": join_string}]
                             )
                     scope = scope | {
@@ -791,7 +749,7 @@ def step_block_body(
                         iteration_background,
                         scope,
                         body_trace,
-                    ) = yield from step_block(
+                    ) = process_block(
                         iteration_state,
                         scope,
                         block.repeat,
@@ -811,19 +769,17 @@ def step_block_body(
                 ) from exc
             result = combine_results(block.join.iteration_type, results)
             if state.yield_result and not iteration_state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
-                yield YieldResultMessage(result)
+                yield_result(result, block.kind)
             if state.yield_background:
-                yield YieldBackgroundMessage(background)
+                yield_background(background)
 
         case IncludeBlock():
-            result, background, scope, trace = yield from step_include(
-                state, scope, block, loc
-            )
+            result, background, scope, trace = process_include(state, scope, block, loc)
 
         case FunctionBlock():
             closure = block.model_copy()
@@ -834,9 +790,7 @@ def step_block_body(
             background = []
             trace = closure.model_copy(update={})
         case CallBlock():
-            result, background, scope, trace = yield from step_call(
-                state, scope, block, loc
-            )
+            result, background, scope, trace = process_call(state, scope, block, loc)
         case EmptyBlock():
             result = ""
             background = []
@@ -900,39 +854,39 @@ def is_matching(  # pylint: disable=too-many-return-statements
     return new_scope
 
 
-def step_defs(
+def process_defs(
     state: InterpreterState,
     scope: ScopeType,
     defs: dict[str, BlockType],
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[ScopeType, dict[str, BlockType]]]:
+) -> tuple[ScopeType, dict[str, BlockType]]:
     defs_trace: dict[str, BlockType] = {}
     defloc = append(loc, "defs")
     for x, block in defs.items():
         newloc = append(defloc, x)
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
-        result, _, _, block_trace = yield from step_block(state, scope, block, newloc)
+        result, _, _, block_trace = process_block(state, scope, block, newloc)
         scope = scope | {x: result}
         defs_trace[x] = block_trace
     return scope, defs_trace
 
 
-BlockTypeTVarStepBlockOf = TypeVar("BlockTypeTVarStepBlockOf", bound=AdvancedBlockType)
+BlockTypeTVarProcessBlockOf = TypeVar(
+    "BlockTypeTVarProcessBlockOf", bound=AdvancedBlockType
+)
 
 
-def step_block_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-    block: BlockTypeTVarStepBlockOf,
+def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    block: BlockTypeTVarProcessBlockOf,
     field: str,
     state: InterpreterState,
     scope: ScopeType,
     loc: LocationType,
     field_alias: Optional[str] = None,
-) -> Generator[
-    YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockTypeTVarStepBlockOf]
-]:
+) -> tuple[Any, Messages, ScopeType, BlockTypeTVarProcessBlockOf]:
     try:
-        result, background, scope, child_trace = yield from step_block(
+        result, background, scope, child_trace = process_block(
             state,
             scope,
             getattr(block, field),
@@ -949,31 +903,30 @@ def step_block_of(  # pylint: disable=too-many-arguments, too-many-positional-ar
     return result, background, scope, trace
 
 
-BlockTypeTVarStepBlocksOf = TypeVar(
-    "BlockTypeTVarStepBlocksOf", bound=AdvancedBlockType
+BlockTypeTVarProcessBlocksOf = TypeVar(
+    "BlockTypeTVarProcessBlocksOf", bound=AdvancedBlockType
 )
 
 
-def step_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-    block: BlockTypeTVarStepBlocksOf,
+def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    block: BlockTypeTVarProcessBlocksOf,
     field: str,
     iteration_type: IterationType,
     state: InterpreterState,
     scope: ScopeType,
     loc: LocationType,
     field_alias: Optional[str] = None,
-) -> Generator[
-    YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockTypeTVarStepBlocksOf]
-]:
+) -> tuple[Any, Messages, ScopeType, BlockTypeTVarProcessBlocksOf]:
     try:
-        result, background, scope, blocks = yield from step_blocks(
+        result, background, scope, blocks = process_blocks(
             iteration_type,
             state,
             scope,
             getattr(block, field),
+            block.kind,
             append(loc, field_alias or field),
         )
-    except PDLRuntimeStepBlocksError as exc:
+    except PDLRuntimeProcessBlocksError as exc:
         trace = block.model_copy(update={field: exc.blocks})
         raise PDLRuntimeError(
             exc.message,
@@ -984,15 +937,14 @@ def step_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-a
     return result, background, scope, trace
 
 
-def step_blocks(
+def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-arguments
     iteration_type: IterationType,
     state: InterpreterState,
     scope: ScopeType,
     blocks: BlockType | list[BlockType],
+    block_kind: BlockKind,
     loc: LocationType,
-) -> Generator[
-    YieldMessage, Any, tuple[Any, Messages, ScopeType, BlockType | list[BlockType]]
-]:
+) -> tuple[Any, Messages, ScopeType, BlockType | list[BlockType]]:
     result: Any
     background: Messages
     trace: BlockType | list[BlockType]
@@ -1019,26 +971,26 @@ def step_blocks(
                     iteration_background,
                     scope,
                     t,
-                ) = yield from step_block(iteration_state, scope, block, new_loc)
+                ) = process_block(iteration_state, scope, block, new_loc)
                 results.append(iteration_result)
                 background = messages_concat(background, iteration_background)
                 trace.append(t)  # type: ignore
         except PDLRuntimeError as exc:
             trace.append(exc.trace)  # type: ignore
-            raise PDLRuntimeStepBlocksError(
+            raise PDLRuntimeProcessBlocksError(
                 message=exc.message, blocks=trace, loc=exc.loc or new_loc
             ) from exc
     else:
         iteration_state = state.with_yield_result(
             state.yield_result and iteration_type != IterationType.ARRAY
         )
-        block_result, background, scope, trace = yield from step_block(
+        block_result, background, scope, trace = process_block(
             iteration_state, scope, blocks, loc
         )
         results.append(block_result)
     result = combine_results(iteration_type, results)
     if state.yield_result and not iteration_state.yield_result:
-        yield YieldResultMessage(result)
+        yield_result(result, block_kind)
     return result, background, scope, trace
 
 
@@ -1201,20 +1153,16 @@ def process_expr(  # pylint: disable=too-many-return-statements
     return expr
 
 
-def step_call_model(
+def process_call_model(
     state: InterpreterState,
     scope: ScopeType,
     block: LitellmModelBlock,
     loc: LocationType,
-) -> Generator[
-    YieldMessage,
+) -> tuple[
     Any,
-    tuple[
-        Any,
-        Messages,
-        ScopeType,
-        LitellmModelBlock,
-    ],
+    Messages,
+    ScopeType,
+    LitellmModelBlock,
 ]:
     # evaluate model name
     _, concrete_block = process_expr_of(block, "model", scope, loc)
@@ -1244,7 +1192,7 @@ def step_call_model(
     # evaluate input
     model_input: Messages
     if concrete_block.input is not None:  # If not implicit, then input must be a block
-        model_input_result, _, _, input_trace = yield from step_block_of(
+        model_input_result, _, _, input_trace = process_block_of(
             concrete_block,
             "input",
             state.with_yield_result(False).with_yield_background(False),
@@ -1275,9 +1223,7 @@ def step_call_model(
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
 
-        msg, raw_result = yield from generate_client_response(
-            state, concrete_block, model_input
-        )
+        msg, raw_result = generate_client_response(state, concrete_block, model_input)
         # if "input" in litellm_params:
         append_log(state, "Model Input", litellm_params)
         # else:
@@ -1309,21 +1255,19 @@ def generate_client_response(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+) -> tuple[Message, Any]:
     raw_result = None
     match state.batch:
         case 0:
-            model_output, raw_result = yield from generate_client_response_streaming(
+            model_output, raw_result = generate_client_response_streaming(
                 state, block, model_input
             )
         case 1:
-            model_output, raw_result = yield from generate_client_response_single(
+            model_output, raw_result = generate_client_response_single(
                 state, block, model_input
             )
         case _:
-            model_output = yield from generate_client_response_batching(
-                state, block, model_input
-            )
+            assert False
     return model_output, raw_result
 
 
@@ -1331,7 +1275,7 @@ def generate_client_response_streaming(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+) -> tuple[Message, Any]:
     msg_stream: Generator[Message, Any, Any]
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
@@ -1352,11 +1296,11 @@ def generate_client_response_streaming(
     wrapped_gen = GeneratorWrapper(msg_stream)
     for chunk in wrapped_gen:
         if state.yield_result:
-            yield ModelYieldResultMessage(
-                "" if chunk["content"] is None else chunk["content"]
+            yield_result(
+                "" if chunk["content"] is None else chunk["content"], block.kind
             )
         if state.yield_background:
-            yield YieldBackgroundMessage([chunk])
+            yield_background([chunk])
         if complete_msg is None:
             complete_msg = chunk
             role = complete_msg["role"]
@@ -1391,7 +1335,7 @@ def generate_client_response_single(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Generator[YieldMessage, Any, tuple[Message, Any]]:
+) -> tuple[Message, Any]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
         block.parameters, dict
@@ -1406,44 +1350,17 @@ def generate_client_response_single(
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
     if state.yield_result:
-        yield YieldResultMessage("" if msg["content"] is None else msg["content"])
+        yield_result("" if msg["content"] is None else msg["content"], block.kind)
     if state.yield_background:
-        yield YieldBackgroundMessage([msg])
+        yield_background([msg])
     return msg, raw_result
 
 
-def generate_client_response_batching(  # pylint: disable=too-many-arguments
-    state: InterpreterState,
-    block: LitellmModelBlock,
-    # model: str,
-    model_input: Messages,
-) -> Generator[YieldMessage, Any, Message]:
-    assert isinstance(block.model, str)  # block is a "concrete block"
-    assert block.parameters is None or isinstance(
-        block.parameters, dict
-    )  # block is a "concrete block"
-    match block:
-        case LitellmModelBlock():
-            msg = yield ModelCallMessage(
-                model_id=block.model,
-                messages=model_input,
-                spec=block.spec,
-                parameters=block.parameters or {},
-            )
-            if state.yield_result:
-                yield YieldResultMessage(msg)
-            if state.yield_background:
-                yield YieldBackgroundMessage(msg)
-        case _:
-            assert False
-    return msg
-
-
-def step_call_code(
+def process_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, CodeBlock]]:
+) -> tuple[Any, Messages, ScopeType, CodeBlock]:
     background: Messages
-    code_s, _, _, block = yield from step_block_of(
+    code_s, _, _, block = process_block_of(
         block,
         "code",
         state.with_yield_result(False).with_yield_background(False),
@@ -1546,9 +1463,9 @@ def call_pdl(code: str, scope: dict) -> Any:
     return result
 
 
-def step_call(
+def process_call(
     state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, CallBlock]]:
+) -> tuple[Any, Messages, ScopeType, CallBlock]:
     result = None
     background: Messages = []
     args, block = process_expr_of(block, "args", scope, loc)
@@ -1584,9 +1501,7 @@ def step_call(
     else:
         fun_loc = empty_block_location
     try:
-        result, background, _, f_trace = yield from step_block(
-            state, f_scope, f_body, fun_loc
-        )
+        result, background, _, f_trace = process_block(state, f_scope, f_body, fun_loc)
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1654,16 +1569,16 @@ def process_input(
     return s, background, scope, trace
 
 
-def step_include(
+def process_include(
     state: InterpreterState,
     scope: ScopeType,
     block: IncludeBlock,
     loc: LocationType,
-) -> Generator[YieldMessage, Any, tuple[Any, Messages, ScopeType, IncludeBlock]]:
+) -> tuple[Any, Messages, ScopeType, IncludeBlock]:
     file = state.cwd / block.include
     try:
         prog, new_loc = parse_file(file)
-        result, background, scope, trace = yield from step_block(
+        result, background, scope, trace = process_block(
             state, scope, prog.root, new_loc
         )
         include_trace = block.model_copy(update={"trace": trace})
@@ -1675,7 +1590,7 @@ def step_include(
             loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
-    except PDLRuntimeStepBlocksError as exc:
+    except PDLRuntimeProcessBlocksError as exc:
         trace = block.model_copy(update={"trace": exc.blocks})
         raise PDLRuntimeError(
             exc.message,
