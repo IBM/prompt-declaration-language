@@ -327,6 +327,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -801,6 +816,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -1236,6 +1266,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -1687,6 +1732,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -2037,6 +2097,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -2366,6 +2441,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -2785,6 +2875,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -3325,6 +3430,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -3765,6 +3885,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -4103,6 +4238,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -4624,6 +4774,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -5096,6 +5261,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -5512,6 +5692,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -6508,6 +6703,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -6996,6 +7206,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -7411,6 +7636,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -8304,6 +8544,21 @@
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
         },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
+        },
         "result": {
           "anyOf": [
             {},
@@ -8719,6 +8974,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -9250,6 +9520,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [
@@ -9786,6 +10071,21 @@
           "default": "",
           "description": "Timezone of start_nanos and end_nanos\n    ",
           "title": "Timezone"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Context"
         },
         "result": {
           "anyOf": [

@@ -10,11 +10,13 @@
     "preview": "vite preview",
     "test:quality": "concurrently -n 'lint,types,formatting' 'yarn lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
     "test:ui": "yarn playwright install --with-deps && yarn playwright test",
+    "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions",
     "test": "concurrently -n 'quality,playwright' 'yarn test:quality' 'yarn test:ui'"
   },
   "dependencies": {
     "@patternfly/react-code-editor": "^6.1.0",
     "@patternfly/react-core": "^6.1.0",
+    "@patternfly/react-topology": "^6.1.0",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^9.2.0",
     "react": "^18.3.1",

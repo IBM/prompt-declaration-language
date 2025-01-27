@@ -23,6 +23,13 @@ export default function Viewer() {
       title={<TabTitleText>Timeline</TabTitleText>}
     />,
     <Tab
+      key="#dataflow"
+      href="#dataflow"
+      eventKey="#dataflow"
+      className="pdl-viewer-tab"
+      title={<TabTitleText>Data Flow</TabTitleText>}
+    />,
+    <Tab
       key="#source"
       href="#source"
       eventKey="#source"

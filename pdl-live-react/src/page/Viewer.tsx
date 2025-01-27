@@ -2,6 +2,7 @@ import { lazy, useEffect, useMemo, useState } from "react"
 import { useLocation } from "react-router"
 
 const Code = lazy(() => import("../view/Code"))
+const DataFlow = lazy(() => import("../view/dataflow/DataFlow"))
 const Timeline = lazy(() => import("../view/timeline/Timeline"))
 import Transcript from "../view/transcript/Transcript"
 
@@ -55,6 +56,14 @@ export default function Viewer({ value }: { value: string }) {
           hidden={activeTab !== "#timeline"}
         >
           <Timeline block={data} />
+        </section>,
+        <section
+          className="pdl-viewer-section"
+          key="#dataflow"
+          data-hash="#dataflow"
+          hidden={activeTab !== "#dataflow"}
+        >
+          <DataFlow block={data} />
         </section>,
         <section
           className="pdl-viewer-section"

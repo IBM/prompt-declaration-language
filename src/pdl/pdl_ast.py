@@ -180,6 +180,7 @@ class Block(BaseModel):
     timezone: Optional[str] = ""
     """Timezone of start_nanos and end_nanos
     """
+    context: Optional[Messages] = []
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None

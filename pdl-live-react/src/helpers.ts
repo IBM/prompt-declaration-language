@@ -19,6 +19,10 @@ export type PdlBlockWithTiming = NonScalarPdlBlock & {
   timezone: string
 }
 
+export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
+  context: { role: string; content: string }[]
+}
+
 /** Does the given block have a `result` field? */
 export function hasResult(block: PdlBlock): block is PdlBlockWithResult {
   return (
@@ -135,6 +139,17 @@ export function hasTimingInformation(
     typeof block.start_nanos === "number" &&
     typeof block.end_nanos === "number" &&
     typeof block.timezone === "string"
+  )
+}
+
+/** Does the given block have context/background information? */
+export function hasContextInformation(
+  block: unknown | PdlBlock,
+): block is PdlBlockWithContext {
+  return (
+    hasTimingInformation(block) &&
+    block.context !== null &&
+    Array.isArray(block.context)
   )
 }
 

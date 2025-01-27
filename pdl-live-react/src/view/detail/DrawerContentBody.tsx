@@ -4,10 +4,11 @@ import { Tab, TabTitleText } from "@patternfly/react-core"
 const DefContent = lazy(() => import("./DefContent"))
 const BlockNotFound = lazy(() => import("./BlockNotFound"))
 const SourceTabContent = lazy(() => import("./SourceTabContent"))
+const ContextTabContent = lazy(() => import("./ContextTabContent"))
 const SummaryTabContent = lazy(() => import("./SummaryTabContent"))
 const RawTraceTabContent = lazy(() => import("./RawTraceTabContent"))
 
-import { hasResult } from "../../helpers"
+import { hasContextInformation, hasResult } from "../../helpers"
 
 import type Model from "../timeline/model"
 
@@ -67,7 +68,7 @@ function blockBody(id: string, model: Model) {
     )
   }
 
-  return [
+  const tabs = [
     <Tab key={0} eventKey={0} title={<TabTitleText>Summary</TabTitleText>}>
       <Suspense>
         <SummaryTabContent block={block} />
@@ -84,6 +85,21 @@ function blockBody(id: string, model: Model) {
       </Suspense>
     </Tab>,
   ]
+
+  const pdlBlock = block.block
+  if (hasContextInformation(pdlBlock)) {
+    tabs.splice(
+      1,
+      0,
+      <Tab key={3} eventKey={3} title={<TabTitleText>Context</TabTitleText>}>
+        <Suspense>
+          <ContextTabContent block={pdlBlock} />
+        </Suspense>
+      </Tab>,
+    )
+  }
+
+  return tabs
 }
 
 type Props = {
