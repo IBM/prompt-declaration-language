@@ -5,11 +5,7 @@ import litellm
 from dotenv import load_dotenv
 from litellm import acompletion, completion
 
-from .pdl_ast import (
-    Message,
-    set_default_granite_model_parameters,
-    set_structured_decoding_parameters,
-)
+from .pdl_ast import Message, set_structured_decoding_parameters
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
@@ -38,10 +34,6 @@ class LitellmModel:
         spec: Any,
         parameters: dict[str, Any],
     ) -> tuple[Message, Any]:
-        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(
-                model_id, spec, parameters
-            )
         parameters = set_structured_decoding_parameters(spec, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
@@ -63,10 +55,6 @@ class LitellmModel:
         spec: Any,
         parameters: dict[str, Any],
     ) -> Generator[Message, Any, Any]:
-        if "granite" in model_id and "granite-20b-code-instruct-r1.1" not in model_id:
-            parameters = set_default_granite_model_parameters(
-                model_id, spec, parameters
-            )
         parameters = set_structured_decoding_parameters(spec, parameters)
         response = completion(
             model=model_id,

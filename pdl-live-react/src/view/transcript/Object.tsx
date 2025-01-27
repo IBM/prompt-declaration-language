@@ -1,4 +1,4 @@
-import show_block from "./Block"
+import Block from "./Block"
 import type Context from "../../Context"
 import { type PdlBlock } from "../../pdl_ast"
 
@@ -7,14 +7,14 @@ type Props = {
   object: { [key: string]: PdlBlock }
 }
 
-export default function show_object({ object, ctx }: Props) {
+export default function ObjectUI({ object, ctx }: Props) {
   return (
     <>
       <pre>{"{"}</pre>
       {Object.keys(object).forEach((key) => (
         <>
           <pre>{key + ":"}</pre>
-          {show_block(object[key], ctx)}
+          <Block data={object[key]} ctx={ctx} />
           <pre>,</pre>
         </>
       ))}

@@ -1,0 +1,99 @@
+.pdl-timeline {
+  margin: 1em 0;
+  display: table;
+  border-collapse: collapse;
+}
+
+.pdl-timeline-row {
+  display: table-row;
+}
+
+.pdl-timeline-cell {
+  display: table-cell;
+  vertical-align: middle;
+
+  &[data-cell="kind"] {
+    white-space: pre;
+    height: 0.875em;
+    line-height: 0.875em;
+  }
+  &[data-cell="bar"] {
+    width: 100%;
+    padding: 0 1em;
+  }
+  &[data-cell="duration"] {
+    white-space: nowrap;
+  }
+}
+
+/* Link hover effects */
+.pdl-timeline-kind {
+  text-decoration: none;
+}
+.pdl-timeline-row:hover {
+  .pdl-timeline-kind {
+    text-decoration: underline;
+  }
+}
+
+.pdl-timeline-kind {
+  font-size: 0.875em;
+}
+.pdl-timeline-row:hover {
+  .pdl-timeline-kind {
+  }
+}
+
+.pdl-timeline-bar-outer {
+  width: 100%;
+  position: relative;
+  display: block;
+  height: 0.875em;
+  line-height: 0.875em;
+
+  border-radius: 2px / 4px;
+  background-color: var(--pf-t--global--background--color--control--read-only);
+  transition: background-color var(--pf-t--global--motion--delay--short)
+    var(--pf-t--global--motion--timing-function--default);
+}
+
+.pdl-timeline-bar {
+  position: absolute;
+  min-width: 1px;
+
+  a {
+    /* This is the link that allows drilldown clicks from the bar */
+    display: block;
+    text-decoration: none; /* so the &nbsp; doesn't show up as a small underline */
+  }
+
+  border-radius: 2px / 4px;
+  background-color: var(--pf-t--global--background--color--inverse--default);
+  &:hover {
+    background-color: var(--pf-t--global--background--color--inverse--hover);
+  }
+  transition: background-color var(--pf-t--global--motion--delay--short)
+    var(--pf-t--global--motion--timing-function--default);
+
+  &[data-kind="text"] {
+    background-color: var(--pf-t--global--icon--color--disabled);
+  }
+  &[data-kind="repeat_until"],
+  &[data-kind="repeat"],
+  &[data-kind="for"],
+  &[data-kind="lastOf"],
+  &[data-kind="call"] {
+    background-color: var(--pf-t--global--border--color--default);
+    &:hover {
+      background-color: var(
+        --pf-t--global--border--color--nonstatus--gray--clicked
+      );
+    }
+  }
+  &[data-kind="model"] {
+    background-color: var(--pf-t--global--text--color--brand--default);
+    &:hover {
+      background-color: var(--pf-t--global--color--brand--hover);
+    }
+  }
+}

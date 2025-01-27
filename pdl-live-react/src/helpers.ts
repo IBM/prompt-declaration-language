@@ -1,6 +1,6 @@
 import { type ReactElement } from "react"
 
-import type { BamModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
+import type { LitellmModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
 
 /** Re-export for convenience */
 export { type PdlBlock } from "./pdl_ast"
@@ -11,6 +11,12 @@ export type NonScalarPdlBlock = Exclude<
 >
 export type PdlBlockWithResult = NonScalarPdlBlock & {
   result: NonNullable<PdlBlock>
+}
+
+export type PdlBlockWithTiming = NonScalarPdlBlock & {
+  start_nanos: number
+  end_nanos: number
+  timezone: string
 }
 
 /** Does the given block have a `result` field? */
@@ -36,14 +42,20 @@ export function isPdlBlock(
   )
 }
 
+export function isNonScalarPdlBlock(
+  data: unknown | PdlBlock,
+): data is NonScalarPdlBlock {
+  return data != null && typeof data === "object"
+}
+
 /** Does the given block have a `parser` field? */
 export function hasParser(
   data: PdlBlock,
 ): data is NonScalarPdlBlock & { parser: import("./pdl_ast").Parser } {
-  return data != null && typeof data === "object" && "result" in data
+  return isNonScalarPdlBlock(data) && "result" in data
 }
 
-const markdownPattern = /`/
+const markdownPattern = /[`#]/
 /** Should we render `s` with react-markdown? */
 export function isMarkdownish(s: string): boolean {
   /* try {
@@ -80,8 +92,8 @@ export function isTextBlockWithArrayContent(
 }
 
 /** Does the given block represent an LLM interaction? */
-export function isLLMBlock(data: PdlBlock): data is BamModelBlock {
-  return (data as BamModelBlock).kind === "model"
+export function isLLMBlock(data: PdlBlock): data is LitellmModelBlock {
+  return (data as LitellmModelBlock).kind === "model"
 }
 
 /** Does the given block have a `result` field? of type string */
@@ -112,4 +124,22 @@ export function firstLineOf(s: string) {
 
 export function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined
+}
+
+/** Does the given block have timing information? */
+export function hasTimingInformation(
+  block: unknown | PdlBlock,
+): block is PdlBlockWithTiming {
+  return (
+    isNonScalarPdlBlock(block) &&
+    typeof block.start_nanos === "number" &&
+    typeof block.end_nanos === "number" &&
+    typeof block.timezone === "string"
+  )
+}
+
+export function capitalizeAndUnSnakeCase(s: string) {
+  return s === "model"
+    ? "LLM"
+    : s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
 }

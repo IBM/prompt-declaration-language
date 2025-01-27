@@ -8,3 +8,4 @@ These demo traces were sourced as follows:
 - demo4: [chatbot.pdl](../../../examples/chatbot/chatbot.pdl)
 - demo5: [6-code-json.pdl](../../../examples/talk/6-code-json.pdl)
 - demo6: [error.pdl](../../demos/error.pdl)
+- demo7: [4-talk.pdl](../../../examples/talk/4-function.pdl)

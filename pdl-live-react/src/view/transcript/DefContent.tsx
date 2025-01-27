@@ -1,8 +1,10 @@
 import Code from "../Code"
+import Block from "./Block"
 import Value from "./Value"
-import show_block from "./Block"
 
 import { hasParser, hasResult, isPdlBlock } from "../../helpers"
+
+import "./DefContent.css"
 
 type Props = {
   value: import("../../pdl_ast").PdlBlock
@@ -19,17 +21,16 @@ export default function DefContent({ value, ctx }: Props) {
           value.parser === "jsonl") ? (
           <Code
             block={value.result}
-            darkMode={ctx.darkMode}
             limitHeight={false}
             language={value.parser === "jsonl" ? "json" : value.parser}
           />
         ) : typeof value.result === "string" ? (
           <Value>{value.result}</Value>
         ) : (
-          show_block(value.result, ctx)
+          <Block data={value.result} ctx={ctx} />
         )
       ) : (
-        show_block(value, ctx)
+        <Block data={value} ctx={ctx} />
       )}
     </div>
   )

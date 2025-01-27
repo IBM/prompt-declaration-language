@@ -1,5 +1,32 @@
 {
   "$defs": {
+    "AnyPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "any": {
+          "const": null,
+          "title": "Any",
+          "type": "null"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "AnyPattern",
+      "type": "object"
+    },
     "ArrayBlock": {
       "additionalProperties": false,
       "description": "Return the array of values computed by each block of the list of blocks.",
@@ -57,6 +84,9 @@
               },
               {
                 "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
@@ -199,6 +229,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -254,6 +287,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -319,6 +391,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -367,6 +442,63 @@
         "array"
       ],
       "title": "ArrayBlock",
+      "type": "object"
+    },
+    "ArrayPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "array": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Array",
+          "type": "array"
+        }
+      },
+      "required": [
+        "array"
+      ],
+      "title": "ArrayPattern",
       "type": "object"
     },
     "CallBlock": {
@@ -426,6 +558,9 @@
               },
               {
                 "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
@@ -568,6 +703,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -623,6 +761,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -706,6 +883,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -816,6 +996,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -956,6 +1139,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -1011,6 +1197,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -1084,6 +1309,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -1218,6 +1446,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -1358,6 +1589,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -1413,6 +1647,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -1523,6 +1796,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -1663,6 +1939,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -1718,6 +1997,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -1808,6 +2126,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -1948,6 +2269,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -2003,6 +2327,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -2069,6 +2432,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -2179,6 +2545,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -2319,6 +2688,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -2374,6 +2746,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -2449,6 +2860,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -2549,6 +2963,9 @@
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
@@ -2667,6 +3084,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -2807,6 +3227,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -2862,6 +3285,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -2936,6 +3398,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -3059,6 +3524,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -3199,6 +3667,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -3254,6 +3725,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -3353,6 +3863,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -3493,6 +4006,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -3548,6 +4064,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -3620,6 +4175,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -3698,6 +4256,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -3822,6 +4383,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -3962,6 +4526,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -4017,6 +4584,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -4084,6 +4690,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -4246,6 +4855,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -4386,6 +4998,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -4441,6 +5056,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -4504,6 +5158,9 @@
               },
               {
                 "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
@@ -4615,6 +5272,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -4755,6 +5415,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -4810,6 +5473,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -4884,6 +5586,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -4962,6 +5667,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -5500,9 +6208,9 @@
       "title": "LocationType",
       "type": "object"
     },
-    "MessageBlock": {
+    "MatchBlock": {
       "additionalProperties": false,
-      "description": "Create a message.",
+      "description": "Match control structure.",
       "properties": {
         "description": {
           "anyOf": [
@@ -5557,6 +6265,9 @@
               },
               {
                 "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
@@ -5699,6 +6410,498 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\n    ",
+          "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
+        },
+        "result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "const": "match",
+          "default": "match",
+          "title": "Kind",
+          "type": "string"
+        },
+        "match": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
+          "description": "Matched expression.\n    ",
+          "title": "Match"
+        },
+        "with": {
+          "items": {
+            "$ref": "#/$defs/MatchCase"
+          },
+          "title": "With",
+          "type": "array"
+        }
+      },
+      "required": [
+        "match",
+        "with"
+      ],
+      "title": "MatchBlock",
+      "type": "object"
+    },
+    "MatchCase": {
+      "additionalProperties": false,
+      "description": "Case of a match.",
+      "properties": {
+        "case": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/OrPattern"
+            },
+            {
+              "$ref": "#/$defs/ArrayPattern"
+            },
+            {
+              "$ref": "#/$defs/ObjectPattern"
+            },
+            {
+              "$ref": "#/$defs/AnyPattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case"
+        },
+        "if": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "If"
+        },
+        "then": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatUntilBlock"
+            },
+            {
+              "$ref": "#/$defs/ForBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Then"
+        }
+      },
+      "required": [
+        "then"
+      ],
+      "title": "MatchCase",
+      "type": "object"
+    },
+    "MessageBlock": {
+      "additionalProperties": false,
+      "description": "Create a message.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatUntilBlock"
+              },
+              {
+                "$ref": "#/$defs/ForBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -5753,6 +6956,45 @@
           ],
           "description": "Role of associated to the message.",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -5815,6 +7057,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -5926,6 +7171,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -6066,6 +7314,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -6121,6 +7372,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -6186,6 +7476,9 @@
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
@@ -6267,6 +7560,9 @@
                     "$ref": "#/$defs/IfBlock"
                   },
                   {
+                    "$ref": "#/$defs/MatchBlock"
+                  },
+                  {
                     "$ref": "#/$defs/RepeatBlock"
                   },
                   {
@@ -6319,6 +7615,120 @@
       "title": "ObjectBlock",
       "type": "object"
     },
+    "ObjectPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "object": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Object",
+          "type": "object"
+        }
+      },
+      "required": [
+        "object"
+      ],
+      "title": "ObjectPattern",
+      "type": "object"
+    },
+    "OrPattern": {
+      "additionalProperties": false,
+      "properties": {
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Def"
+        },
+        "anyOf": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/OrPattern"
+              },
+              {
+                "$ref": "#/$defs/ArrayPattern"
+              },
+              {
+                "$ref": "#/$defs/ObjectPattern"
+              },
+              {
+                "$ref": "#/$defs/AnyPattern"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Anyof",
+          "type": "array"
+        }
+      },
+      "required": [
+        "anyOf"
+      ],
+      "title": "OrPattern",
+      "type": "object"
+    },
     "PdlBlock": {
       "anyOf": [
         {
@@ -6353,6 +7763,9 @@
         },
         {
           "$ref": "#/$defs/IfBlock"
+        },
+        {
+          "$ref": "#/$defs/MatchBlock"
         },
         {
           "$ref": "#/$defs/RepeatBlock"
@@ -6459,6 +7872,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -6541,6 +7957,9 @@
         },
         {
           "$ref": "#/$defs/IfBlock"
+        },
+        {
+          "$ref": "#/$defs/MatchBlock"
         },
         {
           "$ref": "#/$defs/RepeatBlock"
@@ -6642,6 +8061,9 @@
               },
               {
                 "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
@@ -6784,6 +8206,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -6839,6 +8264,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -7015,6 +8479,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -7155,6 +8622,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -7210,6 +8680,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -7272,6 +8781,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -7377,6 +8889,9 @@
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
@@ -7495,6 +9010,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -7635,6 +9153,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -7690,6 +9211,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -7752,6 +9312,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -7862,6 +9425,9 @@
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
@@ -7980,6 +9546,9 @@
                 "$ref": "#/$defs/IfBlock"
               },
               {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
@@ -8120,6 +9689,9 @@
               "$ref": "#/$defs/IfBlock"
             },
             {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
               "$ref": "#/$defs/RepeatBlock"
             },
             {
@@ -8175,6 +9747,45 @@
           "default": null,
           "description": "Role associated to the block and sub-blocks.\n    ",
           "title": "Role"
+        },
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution began\n    ",
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "description": "Time at which block execution ended\n    ",
+          "title": "End Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Timezone of start_nanos and end_nanos\n    ",
+          "title": "Timezone"
         },
         "result": {
           "anyOf": [
@@ -8237,6 +9848,9 @@
             },
             {
               "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
             },
             {
               "$ref": "#/$defs/RepeatBlock"
@@ -8309,6 +9923,9 @@
                   },
                   {
                     "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"

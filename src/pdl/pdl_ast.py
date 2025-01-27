@@ -28,6 +28,7 @@ class BlockKind(StrEnum):
     OBJECT = "object"
     MESSAGE = "message"
     IF = "if"
+    MATCH = "match"
     REPEAT = "repeat"
     REPEAT_UNTIL = "repeat_until"
     READ = "read"
@@ -67,6 +68,43 @@ ExpressionType: TypeAlias = Any | LocalizedExpression
 #     | list["ExpressionType"]
 #     | dict[str, "ExpressionType"]
 # )
+
+
+class Pattern(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the value matched by the pattern.
+    """
+
+
+class OrPattern(Pattern):
+    anyOf: list["PatternType"]
+
+
+class ArrayPattern(Pattern):
+    array: list["PatternType"]
+
+
+class ObjectPattern(Pattern):
+    object: dict[str, "PatternType"]
+
+
+class AnyPattern(Pattern):
+    any: Literal[None]
+
+
+PatternType: TypeAlias = (
+    None
+    | bool
+    | int
+    | float
+    | str
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+)
 
 
 class Parser(BaseModel):
@@ -132,6 +170,15 @@ class Block(BaseModel):
     """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
+    """
+    start_nanos: Optional[int] = 0
+    """Time at which block execution began
+    """
+    end_nanos: Optional[int] = 0
+    """Time at which block execution ended
+    """
+    timezone: Optional[str] = ""
+    """Timezone of start_nanos and end_nanos
     """
     # Fields for internal use
     result: Optional[Any] = None
@@ -360,6 +407,31 @@ class IfBlock(Block):
     if_result: Optional[bool] = None
 
 
+class MatchCase(BaseModel):
+    """Case of a match."""
+
+    model_config = ConfigDict(extra="forbid")
+    case: Optional[PatternType] = None
+    """Value to match.
+    """
+    if_: Optional[ExpressionType] = Field(default=None, alias="if")
+    """Boolean condition to satisfy.
+    """
+    then: "BlockType"
+    """Branch to execute if the value is matched and the condition is satisfied.
+    """
+
+
+class MatchBlock(Block):
+    """Match control structure."""
+
+    kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
+    match_: ExpressionType = Field(alias="match")
+    """Matched expression.
+    """
+    with_: list[MatchCase] = Field(alias="with")
+
+
 class IterationType(StrEnum):
     LASTOF = "lastOf"
     ARRAY = "array"
@@ -496,6 +568,7 @@ AdvancedBlockType: TypeAlias = (
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -542,7 +615,7 @@ class PDLException(Exception):
 
 MAX_NEW_TOKENS = 1024
 MIN_NEW_TOKENS = 1
-REPETITION_PENATLY = 1.05
+REPETITION_PENALTY = 1.05
 TEMPERATURE_SAMPLING = 0.7
 TOP_P_SAMPLING = 0.85
 TOP_K_SAMPLING = 50
@@ -568,73 +641,61 @@ def set_structured_decoding_parameters(
     return parameters
 
 
-def set_default_granite_model_parameters(
-    model_id: str,
-    spec: Any,
-    parameters: Optional[dict[str, Any]],
-) -> dict[str, Any]:
-    if parameters is None:
-        parameters = {}
-
-    if "watsonx" in model_id:
-        if "decoding_method" not in parameters:
-            parameters["decoding_method"] = (
-                DECODING_METHOD  # pylint: disable=attribute-defined-outside-init
-            )
-        if "max_tokens" in parameters and parameters["max_tokens"] is None:
-            parameters["max_tokens"] = (
-                MAX_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-            )
-        if "min_new_tokens" not in parameters:
-            parameters["min_new_tokens"] = (
-                MIN_NEW_TOKENS  # pylint: disable=attribute-defined-outside-init
-            )
-        if "repetition_penalty" not in parameters:
-            parameters["repetition_penalty"] = (
-                REPETITION_PENATLY  # pylint: disable=attribute-defined-outside-init
-            )
-        if parameters["decoding_method"] == "sample":
-            if "temperature" not in parameters:
-                parameters["temperature"] = (
-                    TEMPERATURE_SAMPLING  # pylint: disable=attribute-defined-outside-init
-                )
-            if "top_k" not in parameters:
-                parameters["top_k"] = (
-                    TOP_K_SAMPLING  # pylint: disable=attribute-defined-outside-init
-                )
-            if "top_p" not in parameters:
-                parameters["top_p"] = (
-                    TOP_P_SAMPLING  # pylint: disable=attribute-defined-outside-init
-                )
-    if "replicate" in model_id and "granite-3.0" in model_id:
-        if "temperature" not in parameters or parameters["temperature"] is None:
-            parameters["temperature"] = 0  # setting to decoding greedy
-        if "roles" not in parameters:
-            parameters["roles"] = {
-                "system": {
-                    "pre_message": "<|start_of_role|>system<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
+def get_default_model_parameters() -> list[dict[str, Any]]:
+    """Model-specific defaults to apply"""
+    return [
+        {
+            "*watsonx/*": {
+                "temperature": 0,
+            },
+        },
+        {
+            "*watsonx_text*": {
+                "decoding_method": DECODING_METHOD,
+                "max_tokens": MAX_NEW_TOKENS,
+                "min_new_tokens": MIN_NEW_TOKENS,
+                "repetition_penalty": REPETITION_PENALTY,
+            },
+        },
+        {
+            "replicate*granite-3.0*": {
+                "temperature": 0,
+                "roles": {
+                    "system": {
+                        "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "user": {
+                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "assistant": {
+                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "available_tools": {
+                        "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tool_response": {
+                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
                 },
-                "user": {
-                    "pre_message": "<|start_of_role|>user<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "assistant": {
-                    "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "available_tools": {
-                    "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
-                "tool_response": {
-                    "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
-                    "post_message": "<|end_of_text|>",
-                },
+                "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
             }
-        if "final_prompt_value" not in parameters:
-            parameters["final_prompt_value"] = (
-                "<|start_of_role|>assistant<|end_of_role|>"
-            )
+        },
+    ]
 
-    return parameters
+
+def get_sampling_defaults() -> list[dict[str, Any]]:
+    """Model-specific defaults to apply if we are sampling."""
+    return [
+        {
+            "*": {
+                "temperature": TEMPERATURE_SAMPLING,
+                "top_k": TOP_K_SAMPLING,
+                "top_p": TOP_P_SAMPLING,
+            }
+        }
+    ]

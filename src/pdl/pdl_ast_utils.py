@@ -17,6 +17,8 @@ from .pdl_ast import (
     IncludeBlock,
     LastOfBlock,
     LitellmModelBlock,
+    MatchBlock,
+    MatchCase,
     MessageBlock,
     ModelBlock,
     ObjectBlock,
@@ -77,6 +79,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             f(block.then)
             if block.elses is not None:
                 f(block.elses)
+        case MatchBlock():
+            for match_case in block.with_:
+                f(match_case.then)
         case RepeatBlock():
             f(block.repeat)
             if block.trace is not None:
@@ -171,6 +176,9 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.then = f.f_block(block.then)
             if block.elses is not None:
                 block.elses = f.f_block(block.elses)
+        case MatchBlock():
+            block.match_ = f.f_expr(block.match_)
+            block.with_ = [map_match_case(f, c) for c in block.with_]
         case RepeatBlock():
             block.repeat = f.f_block(block.repeat)
             if block.trace is not None:
@@ -206,3 +214,9 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
     if block.fallback is not None:
         block.fallback = f.f_block(block.fallback)
     return block
+
+
+def map_match_case(f: MappedFunctions, match_case: MatchCase) -> MatchCase:
+    if_ = f.f_expr(match_case.if_)
+    then = f.f_block(match_case.then)
+    return match_case.model_copy(update={"if_": if_, "then": then})

@@ -1,13 +1,12 @@
-import { isValidElement, useContext, useMemo } from "react"
+import { useContext, useMemo } from "react"
 
 import { Stack } from "@patternfly/react-core"
 
 import Context from "../../Context"
-import DrawerContext from "../../DrawerContentContext"
-import DarkModeContext from "../../DarkModeContext"
+import DarkModeContext from "../../page/DarkModeContext"
 
 import { hasResult } from "../../helpers"
-import show_block_conjoin from "./BlocksConjoin"
+import BlocksConjoin from "./BlocksConjoin"
 import FinalResult from "./FinalResult"
 
 import "./Transcript.css"
@@ -20,34 +19,20 @@ export default function Transcript({ data }: Props) {
   // DarkMode state
   const darkMode = useContext(DarkModeContext)
 
-  // DrawerContent updater
-  const setDrawerContent = useContext(DrawerContext)
-
   const ctx = useMemo<Context>(() => {
     return {
-      id: "root",
+      id: "",
       darkMode,
-      setDrawerContent,
       parents: [],
     }
-  }, [darkMode, setDrawerContent])
+  }, [darkMode])
 
   return (
-    <Stack className="pdl-transcript" hasGutter>
-      {show_block_conjoin(data, ctx)
-        .flat()
-        .filter(Boolean)
-        .map((block, idx) =>
-          isValidElement(block) && "data-id" in block.props ? (
-            block
-          ) : (
-            <div key={idx} className="pdl-interstitial-text">
-              {block}
-            </div>
-          ),
-        )}
-
-      {hasResult(data) && <FinalResult block={data} ctx={ctx} />}
-    </Stack>
+    <>
+      <Stack className="pdl-transcript">
+        <BlocksConjoin block={data} ctx={ctx} />
+      </Stack>
+      {hasResult(data) && <FinalResult block={data} />}
+    </>
   )
 }

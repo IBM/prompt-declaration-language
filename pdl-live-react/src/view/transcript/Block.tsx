@@ -1,38 +1,29 @@
 import { match } from "ts-pattern"
-import { stringify } from "yaml"
 
 import { type ReactNode } from "react"
 import { type DescriptionListProps } from "@patternfly/react-core"
 
-import ArrayUI from "./Array"
 import Defs from "./Defs"
-import Function from "./Function"
-import LastOf from "./LastOf"
-import ObjectUI from "./Object"
 import Output from "./Output"
-import Query from "./Query"
-import Result from "./Result"
+import LastOf from "./LastOf"
+import ArrayUI from "./Array"
+import ObjectUI from "./Object"
+import LoopTrace from "./LoopTrace"
 import ResultOrCode from "./ResultOrCode"
-import Text from "./Text"
 import TranscriptItem from "./TranscriptItem"
+import BlocksConjoin from "./BlocksConjoin"
 
-import show_loop_trace from "./LoopTrace"
-import show_block_conjoin from "./BlocksConjoin"
+import Context, { withParentAndId as withParent } from "../../Context"
 
-import Context, { withParent } from "../../Context"
+import { type PdlBlock } from "../../helpers"
 
-import { isPdlBlock, type PdlBlock } from "../../helpers"
-
-import "./Block.css"
+type Props = { data: PdlBlock; ctx: Context }
 
 /**
  * Render one tree of blocks rooted at `data` as a list of
  * `TranscriptItem`.
  */
-export default function show_block(
-  data: PdlBlock,
-  ctx: Context,
-): ReactNode | ReactNode[] {
+export default function Block({ data, ctx }: Props): ReactNode {
   if (
     data === null ||
     typeof data === "boolean" ||
@@ -59,131 +50,83 @@ export default function show_block(
       S?: ReactNode
       D?: DescriptionListProps["columnModifier"]
     }>()
-    .with({ kind: "model" }, (data) => ({
+    .with({ kind: "model" }, () => ({
       C: ["pdl_model"],
-      B: (
-        <>
-          {typeof data.model === "string" && (
-            <Query q={data.model} ctx={ctx} prompt="Model" />
-          )}
-          {data.input && <Query q={data.input} ctx={ctx} />}
-          <ResultOrCode block={data} ctx={ctx} />
-        </>
-      ),
+      B: <></>,
     }))
-    .with({ kind: "code" }, (data) => ({
+    .with({ kind: "code" }, () => ({
       C: ["pdl_code"],
-      B: <ResultOrCode block={data} ctx={ctx} term="Execution Output" />,
+      B: <></>,
     }))
     .with({ kind: "get" }, (data) => ({
       C: ["pdl_get"],
-      B: <ResultOrCode block={data} ctx={ctx} />,
+      B: <ResultOrCode block={data} />,
     }))
-    .with({ kind: "data" }, (data) => ({
+    .with({ kind: "data" }, () => ({
       C: ["pdl_data"],
-      B: (
-        <Result
-          result={stringify(data.result)}
-          ctx={ctx}
-          lang="yaml"
-          term={data.def ?? "Struct"}
-        />
-      ),
+      B: <></>,
     }))
     .with({ kind: "if" }, (data) => ({
       C: ["pdl_if"],
-      B: (
-        <>
-          <Query
-            q={
-              typeof data.if === "string"
-                ? data.if.replace(/^\$\{*(.+)\}$/, "$1").trim()
-                : isPdlBlock(data.if)
-                  ? data.if
-                  : "unknown"
-            }
-            ctx={ctx}
-            prompt="Condition"
-          />
-          {data.if_result !== undefined && (
-            <Query
-              q={
-                data.if_result === true
-                  ? "Then (condition is true)"
-                  : "Else (condition is false)"
-              }
-              ctx={ctx}
-              prompt="Then or Else?"
-            />
-          )}
-        </>
-      ),
       S:
         data.if_result === undefined ? (
-          <ResultOrCode block={data} ctx={ctx} />
+          <ResultOrCode block={data} />
         ) : data.if_result ? (
-          show_block_conjoin(data?.then ?? "", ctx)
+          <BlocksConjoin
+            block={data?.then ?? ""}
+            ctx={withParent(ctx, `${data.kind}.0`)}
+          />
         ) : (
-          show_block_conjoin(data?.else ?? "", ctx)
+          <BlocksConjoin
+            block={data?.else ?? ""}
+            ctx={withParent(ctx, `${data.kind}.0`)}
+          />
         ),
     }))
-    .with({ kind: "read" }, (data) => ({
+    .with({ kind: "match" }, (_) => ({
+      C: ["pdl_match"], // TODO: define pdl_match
+      // TODO
+      B: <>"TODO"</>,
+    }))
+    .with({ kind: "read" }, () => ({
       C: ["pdl_read"],
-      B: (
-        <>
-          {data.message && (
-            <Query q={data.message.trim()} ctx={ctx} prompt="Question" />
-          )}
-          <ResultOrCode block={data} ctx={ctx} term="Answer" />
-        </>
-      ),
+      B: <></>,
     }))
     .with({ kind: "include" }, (data) => ({
       C: ["pdl_include"],
       B: data.trace ? (
-        show_block(data.trace, ctx)
+        <Block data={data.trace} ctx={withParent(ctx, data.kind)} />
       ) : (
-        <ResultOrCode block={data} ctx={ctx} />
+        <ResultOrCode block={data} />
       ),
     }))
-    .with({ kind: "function" }, (data) => ({
+    .with({ kind: "function" }, () => ({
       C: ["pdl_function"],
-      B: <Function f={data} ctx={ctx} />,
+      B: <></>,
     }))
-    // const args = document.createElement('pre');
-    // args.innerHTML = htmlize(stringify({function: data.function}));
-    // body.appendChild(args);
-    // body.appendChild(show_blocks(data.return));
-    .with({ kind: "call" }, (data) => ({
+    .with({ kind: "call" }, () => ({
       C: ["pdl_call"],
-      B: data.trace ? (
-        show_block(data.trace, ctx)
-      ) : (
-        // const args = document.createElement('pre');
-        // args.innerHTML = htmlize(stringify({call: data.call, args: data.args}));
-        // body.appendChild(args);
-        <ResultOrCode block={data} ctx={ctx} />
-      ),
+      B: <></>,
     }))
-    .with({ kind: "text" }, (data) => ({
+    .with({ kind: "text" }, () => ({
       C: ["pdl_text"],
-      B: data.text && <Text blocks={data.text} ctx={ctx} />,
+      B: <></>,
     }))
     .with({ kind: "lastOf" }, (data) => ({
       C: ["pdl_lastOf"],
-      S: LastOf({ blocks: data.lastOf, ctx: withParent(ctx, data.kind) }),
+      S: <LastOf blocks={data.lastOf} ctx={withParent(ctx, data.kind)} />,
     }))
     .with({ kind: "array" }, (data) => ({
       C: ["pdl_array"],
-      B: <ArrayUI array={data.array} ctx={ctx} />,
+      S: <ArrayUI array={data.array} ctx={withParent(ctx, data.kind)} />,
     }))
     .with({ kind: "object" }, (data) => ({
       C: ["pdl_object"],
       B:
         data.object instanceof Array ? (
-          <ArrayUI array={data.object} ctx={ctx} />
+          <ArrayUI array={data.object} ctx={withParent(ctx, data.kind)} />
         ) : (
-          <ObjectUI object={data.object} ctx={ctx} />
+          <ObjectUI object={data.object} ctx={withParent(ctx, data.kind)} />
         ),
     }))
     .with({ kind: "message" }, (data) => ({
@@ -191,70 +134,65 @@ export default function show_block(
       B: (
         <>
           <pre>{data.role + ": "}</pre>
-          {show_block(data.content, ctx)}
+          <Block data={data.content} ctx={withParent(ctx, data.kind)} />
         </>
       ),
     }))
     .with({ kind: "repeat" }, (data) => ({
       C: ["pdl_repeat"],
-      P: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
+      S: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
+        />
       ),
     }))
     .with({ kind: "repeat_until" }, (data) => ({
       C: ["pdl_repeat_until"],
-      S: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
+      S: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
+        />
       ),
     }))
     .with({ kind: "for" }, (data) => ({
       C: ["pdl_for"],
-      P: show_loop_trace(
-        data?.trace ?? [data.repeat],
-        withParent(ctx, data.kind),
-        data.join,
-      ),
-    }))
-    .with({ kind: "empty" }, () => ({ C: ["pdl_empty"], B: "☐" }))
-    .with({ kind: "error" }, (data) => ({
-      C: ["pdl_error"],
-      B: (
-        <Query
-          prompt="Error Message"
-          ctx={ctx}
-          q={data.msg}
-          className="pdl-mono"
+      S: (
+        <LoopTrace
+          trace={data?.trace ?? [data.repeat]}
+          ctx={withParent(ctx, data.kind)}
+          join_config={data.join}
         />
       ),
     }))
+    .with({ kind: "empty" }, () => ({ C: ["pdl_empty"], B: "☐" }))
+    .with({ kind: "error" }, () => ({
+      C: ["pdl_error"],
+      B: <></>,
+    }))
     .with({ kind: undefined }, () => ({
       C: ["pdl_error"],
-      B: (
-        <pre>
-          Missing kind: <div>{JSON.stringify(data, undefined, 2)}</div>
-        </pre>
-      ),
+      B: <></>,
     }))
     .exhaustive()
 
-  return [
-    prefixContent,
-    data.defs &&
-      Object.keys(data.defs).length > 0 &&
-      Defs({ defs: data.defs, ctx }),
-    bodyContent &&
-      TranscriptItem({
-        className: ["pdl_block", ...extraClasses].join(" "),
-        ctx,
-        block: data,
-        children: bodyContent,
-      }),
-    suffixContent,
-  ]
-    .flat()
-    .filter(Boolean)
+  return (
+    <>
+      {prefixContent}
+      {data.defs && Object.keys(data.defs).length > 0 && (
+        <Defs defs={data.defs} ctx={withParent(ctx, data.kind ?? "unknown")} />
+      )}
+      {bodyContent && (
+        <TranscriptItem
+          className={["pdl_block", ...extraClasses].join(" ")}
+          ctx={withParent(ctx, data.kind ?? "unknown")}
+          block={data}
+        />
+      )}
+      {suffixContent}
+    </>
+  )
 }

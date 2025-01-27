@@ -1,6 +1,7 @@
-import DefContent from "./DefContent"
-import BreadcrumbBar from "./BreadcrumbBar"
-import BreadcrumbBarItem from "./BreadcrumbBarItem"
+import { useCallback, type MouseEvent } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
+import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
 
 import type Context from "../../Context"
 import type { PdlBlock } from "../../pdl_ast"
@@ -16,6 +17,34 @@ type Props = {
 export default function Def(props: Props) {
   const { def, value, ctx, supportsDrilldown = true } = props
 
+  const navigate = useNavigate()
+  const { hash } = useLocation()
+  const { id } = ctx
+  const drilldown = useCallback(
+    (evt: MouseEvent) => {
+      evt.stopPropagation()
+      navigate(`?detail&type=def&id=${id}&def=${def}${hash}`)
+    },
+    [def, id, hash, navigate],
+  )
+  /*const drilldown = useCallback(
+    (evt: MouseEvent) => {
+      if (value) {
+        evt.stopPropagation()
+        ctx.setDrawerContent({
+          header: "Variable definition",
+          description: (
+            <BreadcrumbBar>
+              <Def {...props} supportsDrilldown={false} />
+            </BreadcrumbBar>
+          ),
+          body: <DefContent value={value} ctx={ctx} />,
+        })
+      }
+    },
+    [value, props, ctx],
+  )*/
+
   return (
     <BreadcrumbBarItem
       className="pdl-breadcrumb-bar-item--def"
@@ -25,22 +54,7 @@ export default function Def(props: Props) {
           {value && <>Click to see details.</>}
         </>
       }
-      onClick={
-        !value || !supportsDrilldown
-          ? undefined
-          : (evt) => {
-              evt.stopPropagation()
-              ctx.setDrawerContent({
-                header: "Variable definition",
-                description: (
-                  <BreadcrumbBar>
-                    <Def {...props} supportsDrilldown={false} />
-                  </BreadcrumbBar>
-                ),
-                body: <DefContent value={value} ctx={ctx} />,
-              })
-            }
-      }
+      onClick={!value || !supportsDrilldown ? undefined : drilldown}
     >
       ${def}
     </BreadcrumbBarItem>
