@@ -1,4 +1,6 @@
-import { useCallback, useMemo, useState } from "react"
+import prettyBytes from "pretty-bytes"
+import { useNavigate } from "react-router-dom"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
   FileUpload,
@@ -13,16 +15,27 @@ import {
 } from "@patternfly/react-core"
 
 import Page from "./Page"
-import Viewer from "./Viewer"
+
+import { addMyTrace } from "./MyTraces"
+
+import "./Uploader.css"
+
+const maxSize = 10 * 1024 * 1024
 
 export default function Uploader() {
   const [value, setValue] = useState("")
   const [filename, setFilename] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isRejected, setIsRejected] = useState(false)
-  const [message, setMessage] = useState(
-    "Must be a JSON file no larger than 50 KB",
-  )
+  const [message, setMessage] = useState("")
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (value) {
+      const trace = addMyTrace(filename, value)
+      navigate("/my/" + trace.title)
+    }
+  }, [value, filename, navigate])
 
   const handleFileInputChange = useCallback<
     Required<FileUploadProps>["onFileInputChange"]
@@ -81,11 +94,11 @@ export default function Uploader() {
   const dropzoneProps = useMemo<FileUploadProps["dropzoneProps"]>(
     () => ({
       accept: { "application/json": [".json"] },
-      maxSize: 50 * 1024,
+      maxSize,
       onDropRejected: (rejections) => {
         const error = rejections[0].errors[0]
         if (error.code === DropzoneErrorCode.FileTooLarge) {
-          setMessage("File is too big")
+          setMessage("File is larger than the limit of " + prettyBytes(maxSize))
         } else if (error.code === DropzoneErrorCode.FileInvalidType) {
           setMessage("File is not a JSON file")
         }
@@ -97,8 +110,8 @@ export default function Uploader() {
   )
 
   return (
-    <Page breadcrumb1="Uploader" breadcrumb2={filename}>
-      <Form>
+    <Page breadcrumb1="Upload Trace" breadcrumb2={filename}>
+      <Form className="pdl-upload-form">
         <FormGroup fieldId="text-file-with-restrictions-example">
           <FileUpload
             id="text-file-with-restrictions-example"
@@ -141,8 +154,6 @@ export default function Uploader() {
           </FileUpload>
         </FormGroup>
       </Form>
-
-      {value && <Viewer value={value} />}
     </Page>
   )
 }

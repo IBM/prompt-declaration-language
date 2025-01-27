@@ -1,20 +1,21 @@
 import { Link, useLocation } from "react-router-dom"
+
 import {
   Nav,
-  NavGroup,
-  NavList,
   NavItem,
+  NavList,
   PageSidebar,
   PageSidebarBody,
 } from "@patternfly/react-core"
 
-import demos from "./demos/demos"
+import Demos from "./DemoNavItems"
+import MyTraces from "./MyTracesNavItems"
 
 export default function Sidebar() {
   const { hash, pathname: activeItem } = useLocation()
 
   return (
-    <PageSidebar id="pdl--vertical-sidebar">
+    <PageSidebar>
       <PageSidebarBody>
         <Nav>
           <NavList>
@@ -30,16 +31,8 @@ export default function Sidebar() {
             </NavItem>
           </NavList>
 
-          <NavGroup title="Demos">
-            {demos.map((demo) => {
-              const id = "/demos/" + encodeURIComponent(demo.name)
-              return (
-                <NavItem key={id} itemId={id} isActive={activeItem === id}>
-                  <Link to={id + hash}>{demo.name}</Link>
-                </NavItem>
-              )
-            })}
-          </NavGroup>
+          <MyTraces hash={hash} activeItem={activeItem} />
+          <Demos hash={hash} activeItem={activeItem} />
 
           <NavItem itemId="about" isActive={activeItem === "/about"}>
             <Link to="/about">About PDL</Link>

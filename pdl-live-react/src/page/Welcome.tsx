@@ -3,7 +3,7 @@ import Page from "./Page"
 
 export default function Welcome() {
   return (
-    <Page>
+    <Page breadcrumb1="Welcome">
       <Content component="h1">Prompt Declaration Language (PDL) Viewer</Content>
 
       <Content component="p">

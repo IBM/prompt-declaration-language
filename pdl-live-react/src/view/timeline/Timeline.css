@@ -26,12 +26,21 @@
   }
 }
 
+/* Link hover effects */
+.pdl-timeline-kind {
+  text-decoration: none;
+}
+.pdl-timeline-row:hover {
+  .pdl-timeline-kind {
+    text-decoration: underline;
+  }
+}
+
 .pdl-timeline-kind {
   font-size: 0.875em;
 }
 .pdl-timeline-row:hover {
   .pdl-timeline-kind {
-    text-decoration: underline;
   }
 }
 
@@ -46,30 +55,45 @@
   background-color: var(--pf-t--global--background--color--control--read-only);
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
-  &:hover {
-    background-color: var(--pf-t--global--background--color--secondary--hover);
-  }
 }
 
 .pdl-timeline-bar {
   position: absolute;
   min-width: 1px;
 
+  a {
+    /* This is the link that allows drilldown clicks from the bar */
+    display: block;
+    text-decoration: none; /* so the &nbsp; doesn't show up as a small underline */
+  }
+
   border-radius: 2px / 4px;
   background-color: var(--pf-t--global--background--color--inverse--default);
+  &:hover {
+    background-color: var(--pf-t--global--background--color--inverse--hover);
+  }
   transition: background-color var(--pf-t--global--motion--delay--short)
     var(--pf-t--global--motion--timing-function--default);
-  &:hover {
-    background-color: var(--pf-t--global--color--brand--hover);
-  }
 
   &[data-kind="text"] {
     background-color: var(--pf-t--global--icon--color--disabled);
   }
-  &[data-kind="repeat_until"] {
-    background-color: var(--pf-t--global--background--color--secondary--hover);
+  &[data-kind="repeat_until"],
+  &[data-kind="repeat"],
+  &[data-kind="for"],
+  &[data-kind="lastOf"],
+  &[data-kind="call"] {
+    background-color: var(--pf-t--global--border--color--default);
+    &:hover {
+      background-color: var(
+        --pf-t--global--border--color--nonstatus--gray--clicked
+      );
+    }
   }
   &[data-kind="model"] {
     background-color: var(--pf-t--global--text--color--brand--default);
+    &:hover {
+      background-color: var(--pf-t--global--color--brand--hover);
+    }
   }
 }

@@ -1,0 +1,18 @@
+.pdl-content-section {
+  /* This places the content e.g. editors flush with the tabs. See Preview.css for other rules in this arena. */
+  padding-top: 0;
+
+  /* These help to fit monaco-editor to the height of the tab content section */
+  & > .pf-v6-c-page__main-body {
+    display: flex;
+    flex-direction: column;
+
+    & > .pdl-viewer-section {
+      flex-direction: column;
+      flex: 1;
+      &:not([hidden]) {
+        display: flex;
+      }
+    }
+  }
+}

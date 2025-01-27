@@ -1,5 +1,6 @@
 import { parse as parseYaml } from "yaml"
 import { useCallback, useMemo } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import {
   Card,
@@ -13,8 +14,7 @@ import {
 
 import Def from "./Def"
 import Markdown from "../Markdown"
-import DefContent from "./DefContent"
-import BreadcrumbBar from "./BreadcrumbBar"
+import BreadcrumbBar from "../breadcrumbs/BreadcrumbBar"
 
 import {
   hasParser,
@@ -37,20 +37,18 @@ export default function TranscriptItemDef({ def: key, value, ctx }: Props) {
   const breadcrumbs = useMemo(
     () => (
       <BreadcrumbBar>
-        <Def ctx={ctx} def={key} value={value} />
+        <Def ctx={ctx} def={key} value={value} supportsDrilldown={false} />
       </BreadcrumbBar>
     ),
     [key, value, ctx],
   )
 
+  const navigate = useNavigate()
+  const { hash } = useLocation()
+  const { id } = ctx
   const drilldown = useCallback(
-    () =>
-      ctx.setDrawerContent({
-        header: "Variable definition",
-        description: breadcrumbs,
-        body: <DefContent value={value} ctx={ctx} />,
-      }),
-    [breadcrumbs, value, ctx],
+    () => navigate(`?detail&type=defs&id=${id}&def=${key}${hash}`),
+    [key, id, hash, navigate],
   )
 
   return (

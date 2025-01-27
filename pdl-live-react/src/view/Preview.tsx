@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+
 import {
   CodeEditor,
   type CodeEditorProps,
@@ -21,9 +22,13 @@ type Props = {
 }
 
 const options: Required<CodeEditorProps>["options"] = {
+  wordWrap: "on",
+  automaticLayout: true,
   scrollBeyondLastLine: false,
   scrollbar: { alwaysConsumeMouseWheel: false },
 }
+
+type Editor = Parameters<Required<CodeEditorProps>["onEditorDidMount"]>[0]
 
 export default function Preview({
   language,
@@ -31,10 +36,8 @@ export default function Preview({
   showLineNumbers,
   limitHeight,
 }: Props) {
-  const onEditorDidMount = useCallback<
-    Required<CodeEditorProps>["onEditorDidMount"]
-  >((editor) => {
-    setTimeout(() => editor.layout())
+  const onEditorDidMount = useCallback((editor: Editor) => {
+    editor.layout()
   }, [])
 
   return (
@@ -45,11 +48,11 @@ export default function Preview({
         isCopyEnabled
         isDownloadEnabled
         isLanguageLabelVisible
-        height="sizeToFit"
         options={options}
         onEditorDidMount={onEditorDidMount}
         language={Language[language || "yaml"]}
         isLineNumbersVisible={showLineNumbers}
+        height={limitHeight ? "sizeToFit" : "100%"}
       />
     </div>
   )

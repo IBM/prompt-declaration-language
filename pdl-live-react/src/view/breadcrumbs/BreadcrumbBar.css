@@ -6,8 +6,10 @@
   /** Size factor relative to 1em */
   --pdl-bb: 0.625;
 
+  font-weight: 500;
+
   list-style: none;
-  display: inline-block;
+  display: flex;
   font-size: calc(var(--pdl-bb) * 1em);
 
   li {
@@ -26,6 +28,11 @@
       --pdl-block-color-1: #fce3e3;
       --pdl-block-color-2: var(--pf-t--global--color--nonstatus--red--default);
     }
+    &[data-detail="lastOf"],
+    &[data-detail="text"],
+    &[data-detail="array"] {
+      --pdl-bb-color: var(--pf-t--global--icon--color--disabled);
+    }
 
     --pdl-bb-color: var(--pdl-block-color-1);
     &.pdl-breadcrumb-bar-item--def {
@@ -37,6 +44,7 @@
     a {
       color: inherit;
       display: block;
+      white-space: nowrap;
       background: var(--pdl-bb-color);
       text-decoration: none;
       position: relative;

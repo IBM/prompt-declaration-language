@@ -8,12 +8,18 @@ import {
   type NonScalarPdlBlock,
 } from "../../helpers"
 
-export type TimelineRow = Pick<
-  PdlBlockWithTiming,
-  "start_nanos" | "end_nanos" | "timezone" | "kind"
-> & {
+type TimelineRow = {
+  /** Unique identifier within tree */
+  id: string
+
   /** Call tree depth */
   depth: number
+
+  /** Parent node */
+  parent: null | TimelineRow
+
+  /** The original block model */
+  block: PdlBlockWithTiming
 }
 
 export type TimelineRowWithExtrema = TimelineRow & {
@@ -25,21 +31,51 @@ export type TimelineRowWithExtrema = TimelineRow & {
 }
 
 export type TimelineModel = TimelineRow[]
+export default TimelineModel
 
-export function computeModel(
+export type Position = "push" | "middle" | "pop"
+
+function ignore(_block: PdlBlockWithTiming) {
+  return false
+}
+
+export function computeModel(block: unknown | PdlBlock): TimelineModel {
+  return computeModelIter(block).sort(
+    (a, b) => a.block.start_nanos - b.block.start_nanos,
+  )
+}
+
+function computeModelIter(
   block: unknown | PdlBlock,
-  depth = 0,
+  parent?: TimelineRow,
+  extraId?: string,
 ): TimelineModel {
   if (!hasTimingInformation(block)) {
     return []
   }
 
+  // Uniquely identify this node in the tree
+  const id =
+    (!parent ? "" : parent.id + ".") +
+    (extraId ? extraId + "." : "") +
+    block.kind
+
+  const ignoreRoot = ignore(block)
+  const root = ignoreRoot
+    ? parent
+    : {
+        id,
+        depth: !parent ? 0 : parent.depth + 1,
+        parent: parent || null,
+        block,
+      }
+
   return [
-    Object.assign({ depth }, block),
+    ...(ignoreRoot ? [] : [root]),
     ...childrenOf(block)
       .filter(nonNullable)
-      .flatMap((child) => computeModel(child, depth + 1)),
-  ]
+      .flatMap((child, idx) => computeModelIter(child, root, String(idx))),
+  ].filter(nonNullable)
 }
 
 function childrenOf(block: NonScalarPdlBlock) {
@@ -70,4 +106,77 @@ function childrenOf(block: NonScalarPdlBlock) {
     .exhaustive()
     .flat()
     .filter(nonNullable)
+}
+
+function positionOf(row: TimelineRow, idx: number, A: TimelineRow[]): Position {
+  return idx === A.length - 1 || A[idx + 1].depth < row.depth
+    ? "pop"
+    : idx === 0 || A[idx - 1].depth < row.depth
+      ? "push"
+      : A[idx - 1].depth === row.depth
+        ? "middle"
+        : "pop"
+}
+
+function nextSibling(row: TimelineRow, idx: number, A: TimelineRow[]) {
+  let sidx = idx + 1
+  while (sidx < A.length && A[sidx].depth > row.depth) {
+    sidx++
+  }
+  return sidx < A.length && A[sidx].depth === row.depth ? sidx : -1
+}
+
+type PushPop = { prefix: boolean[]; position: Position }
+
+export function pushPopsFor(model: TimelineRow[]): PushPop[] {
+  // Push all roots for the initial set
+  const stack: number[] = model
+    .map((_, idx) => (_.depth === 0 ? idx : undefined))
+    .filter(nonNullable)
+
+  // This is the return value
+  const result: PushPop[] = []
+
+  // This is an array of parents; false indicates that the parent has
+  // no nextSibling; true indicates it does
+  const prefix: boolean[] = []
+
+  let n = 0
+  while (stack.length > 0) {
+    if (n++ > model.length * 2) {
+      break
+    }
+    const rootIdx = stack.pop()
+
+    if (rootIdx === undefined) {
+      break
+    } else if (rootIdx < 0) {
+      prefix.pop()
+      continue
+    }
+
+    const root = model[rootIdx]
+    const mine = {
+      prefix: prefix.slice(0),
+      position: positionOf(root, rootIdx, model),
+    }
+    result.push(mine)
+
+    stack.push(-rootIdx)
+    for (let idx = model.length - 1; idx >= rootIdx + 1; idx--) {
+      if (model[idx].parent === root) {
+        stack.push(idx)
+      }
+    }
+
+    const nextSibIdx = nextSibling(root, rootIdx, model)
+    if (nextSibIdx < 0) {
+      prefix.push(false)
+      mine.position = "pop"
+    } else {
+      prefix.push(true)
+    }
+  }
+
+  return result
 }
