@@ -28,6 +28,7 @@ class BlockKind(StrEnum):
     OBJECT = "object"
     MESSAGE = "message"
     IF = "if"
+    MATCH = "match"
     REPEAT = "repeat"
     REPEAT_UNTIL = "repeat_until"
     READ = "read"
@@ -67,6 +68,43 @@ ExpressionType: TypeAlias = Any | LocalizedExpression
 #     | list["ExpressionType"]
 #     | dict[str, "ExpressionType"]
 # )
+
+
+class Pattern(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    assign: Optional[str] = Field(default=None, alias="def")
+    """Name of the variable used to store the value matched by the pattern.
+    """
+
+
+class OrPattern(Pattern):
+    anyOf: list["PatternType"]
+
+
+class ArrayPattern(Pattern):
+    array: list["PatternType"]
+
+
+class ObjectPattern(Pattern):
+    object: dict[str, "PatternType"]
+
+
+class AnyPattern(Pattern):
+    any: Literal[None]
+
+
+PatternType: TypeAlias = (
+    None
+    | bool
+    | int
+    | float
+    | str
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+)
 
 
 class Parser(BaseModel):
@@ -369,6 +407,31 @@ class IfBlock(Block):
     if_result: Optional[bool] = None
 
 
+class MatchCase(BaseModel):
+    """Case of a match."""
+
+    model_config = ConfigDict(extra="forbid")
+    case: Optional[PatternType] = None
+    """Value to match.
+    """
+    if_: Optional[ExpressionType] = Field(default=None, alias="if")
+    """Boolean condition to satisfy.
+    """
+    then: "BlockType"
+    """Branch to execute if the value is matched and the condition is satisfied.
+    """
+
+
+class MatchBlock(Block):
+    """Match control structure."""
+
+    kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
+    match_: ExpressionType = Field(alias="match")
+    """Matched expression.
+    """
+    with_: list[MatchCase] = Field(alias="with")
+
+
 class IterationType(StrEnum):
     LASTOF = "lastOf"
     ARRAY = "array"
@@ -505,6 +568,7 @@ AdvancedBlockType: TypeAlias = (
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock

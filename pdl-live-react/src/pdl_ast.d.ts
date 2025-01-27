@@ -20,6 +20,7 @@ export type Program =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -129,6 +130,11 @@ export type Description17 = string | null
  */
 export type Description18 = string | null
 /**
+ * Documentation associated to the block.
+ *
+ */
+export type Description19 = string | null
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -153,8 +159,8 @@ export type Parser =
   | PdlParser
   | RegexParser
   | null
-export type Description19 = string | null
-export type Spec19 = {
+export type Description20 = string | null
+export type Spec20 = {
   [k: string]: unknown
 } | null
 export type Pdl =
@@ -168,6 +174,7 @@ export type Pdl =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -181,8 +188,8 @@ export type Pdl =
   | ErrorBlock
   | EmptyBlock
   | null
-export type Description20 = string | null
-export type Spec20 = {
+export type Description21 = string | null
+export type Spec21 = {
   [k: string]: unknown
 } | null
 export type Regex = string
@@ -202,6 +209,7 @@ export type Fallback =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -276,6 +284,7 @@ export type Fallback1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -322,6 +331,7 @@ export type Program1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -373,6 +383,7 @@ export type Fallback2 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -423,6 +434,7 @@ export type Trace =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -474,6 +486,7 @@ export type Fallback3 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -556,6 +569,7 @@ export type Fallback4 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -603,6 +617,7 @@ export type Content =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -654,6 +669,7 @@ export type Fallback5 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -701,6 +717,7 @@ export type Object =
         | GetBlock
         | DataBlock
         | IfBlock
+        | MatchBlock
         | RepeatBlock
         | RepeatUntilBlock
         | ForBlock
@@ -726,6 +743,7 @@ export type Object =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -778,6 +796,7 @@ export type Fallback6 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -823,6 +842,7 @@ export type Array = (
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -875,6 +895,7 @@ export type Fallback7 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -920,6 +941,7 @@ export type Lastof = (
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -972,6 +994,7 @@ export type Fallback8 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1021,6 +1044,7 @@ export type Text =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1044,6 +1068,7 @@ export type Text =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1097,6 +1122,7 @@ export type Fallback9 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1146,6 +1172,7 @@ export type Repeat =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1196,6 +1223,7 @@ export type Trace1 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1249,6 +1277,7 @@ export type Fallback10 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1298,6 +1327,7 @@ export type Repeat1 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1328,6 +1358,7 @@ export type Trace2 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1381,6 +1412,7 @@ export type Fallback11 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1430,6 +1462,7 @@ export type Repeat2 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1465,6 +1498,7 @@ export type Trace3 =
       | GetBlock
       | DataBlock
       | IfBlock
+      | MatchBlock
       | RepeatBlock
       | RepeatUntilBlock
       | ForBlock
@@ -1518,6 +1552,7 @@ export type Fallback12 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1551,11 +1586,41 @@ export type EndNanos12 = number | null
  *
  */
 export type Timezone12 = string | null
-export type Kind12 = "if"
-/**
- * Branch to exectute if the condition is true.
- *
- */
+export type Kind12 = "match"
+export type Case =
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+export type Def13 = string | null
+export type Def14 = string | null
+export type Def15 = string | null
+export type Def16 = string | null
+export type Any = null
+export type Array1 = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
+export type Union = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
 export type Then =
   | boolean
   | number
@@ -1567,6 +1632,7 @@ export type Then =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1580,40 +1646,12 @@ export type Then =
   | ErrorBlock
   | EmptyBlock
   | null
-/**
- * Branch to execute if the condition is false.
- *
- */
-export type Else =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-export type IfResult = boolean | null
+export type With1 = MatchCase[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def13 = string | null
+export type Def17 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1647,6 +1685,7 @@ export type Fallback13 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1680,16 +1719,71 @@ export type EndNanos13 = number | null
  *
  */
 export type Timezone13 = string | null
-export type Kind13 = "data"
+export type Kind13 = "if"
 /**
- * Do not evaluate expressions inside strings.
+ * Branch to exectute if the condition is true.
+ *
  */
-export type Raw = boolean
+export type Then1 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
+export type Else =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+export type IfResult = boolean | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def14 = string | null
+export type Def18 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1723,6 +1817,7 @@ export type Fallback14 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1756,16 +1851,16 @@ export type EndNanos14 = number | null
  *
  */
 export type Timezone14 = string | null
-export type Kind14 = "get"
+export type Kind14 = "data"
 /**
- * Name of the variable to access.
+ * Do not evaluate expressions inside strings.
  */
-export type Get = string
+export type Raw = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def15 = string | null
+export type Def19 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1799,6 +1894,7 @@ export type Fallback15 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1832,45 +1928,16 @@ export type EndNanos15 = number | null
  *
  */
 export type Timezone15 = string | null
-export type Kind15 = "code"
+export type Kind15 = "get"
 /**
- * Programming language of the code.
- *
+ * Name of the variable to access.
  */
-export type Lang = "python" | "command" | "jinja" | "pdl"
-/**
- * Code to execute.
- *
- */
-export type Code =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
+export type Get = string
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null
+export type Def20 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1904,6 +1971,7 @@ export type Fallback16 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1937,8 +2005,17 @@ export type EndNanos16 = number | null
  *
  */
 export type Timezone16 = string | null
-export type Kind16 = "model"
-export type Input =
+export type Kind16 = "code"
+/**
+ * Programming language of the code.
+ *
+ */
+export type Lang = "python" | "command" | "jinja" | "pdl"
+/**
+ * Code to execute.
+ *
+ */
+export type Code =
   | boolean
   | number
   | string
@@ -1949,6 +2026,7 @@ export type Input =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -1962,37 +2040,11 @@ export type Input =
   | ErrorBlock
   | EmptyBlock
   | null
-export type Trace4 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | RepeatBlock
-  | RepeatUntilBlock
-  | ForBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-export type Modelresponse = string | null
-export type Platform = "litellm"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def17 = string | null
+export type Def21 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2026,6 +2078,7 @@ export type Fallback17 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2059,8 +2112,8 @@ export type EndNanos17 = number | null
  *
  */
 export type Timezone17 = string | null
-export type Kind17 = "call"
-export type Trace5 =
+export type Kind17 = "model"
+export type Input =
   | boolean
   | number
   | string
@@ -2071,6 +2124,7 @@ export type Trace5 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2084,11 +2138,38 @@ export type Trace5 =
   | ErrorBlock
   | EmptyBlock
   | null
+export type Trace4 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+export type Modelresponse = string | null
+export type Platform = "litellm"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def18 = string | null
+export type Def22 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2122,6 +2203,7 @@ export type Fallback18 =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2155,7 +2237,105 @@ export type EndNanos18 = number | null
  *
  */
 export type Timezone18 = string | null
-export type Kind18 = "function"
+export type Kind18 = "call"
+export type Trace5 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def23 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute19 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser19 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback19 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | CodeBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | RepeatUntilBlock
+  | ForBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Role associated to the block and sub-blocks.
+ *
+ */
+export type Role19 = string | null
+/**
+ * Time at which block execution began
+ *
+ */
+export type StartNanos19 = number | null
+/**
+ * Time at which block execution ended
+ *
+ */
+export type EndNanos19 = number | null
+/**
+ * Timezone of start_nanos and end_nanos
+ *
+ */
+export type Timezone19 = string | null
+export type Kind19 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -2178,6 +2358,7 @@ export type Return =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2205,6 +2386,7 @@ export type PdlBlock =
   | GetBlock
   | DataBlock
   | IfBlock
+  | MatchBlock
   | RepeatBlock
   | RepeatUntilBlock
   | ForBlock
@@ -2226,17 +2408,17 @@ export interface FunctionBlock {
   description?: Description
   spec?: Spec
   defs?: Defs
-  def?: Def18
-  contribute?: Contribute18
-  parser?: Parser18
-  fallback?: Fallback18
-  role?: Role18
-  start_nanos?: StartNanos18
-  end_nanos?: EndNanos18
-  timezone?: Timezone18
+  def?: Def23
+  contribute?: Contribute19
+  parser?: Parser19
+  fallback?: Fallback19
+  role?: Role19
+  start_nanos?: StartNanos19
+  end_nanos?: EndNanos19
+  timezone?: Timezone19
   result?: unknown
   location?: LocationType | null
-  kind?: Kind18
+  kind?: Kind19
   function: Function
   return: Return
   scope?: Scope
@@ -2264,6 +2446,7 @@ export interface Defs {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2285,17 +2468,17 @@ export interface CallBlock {
   description?: Description1
   spec?: Spec1
   defs?: Defs1
-  def?: Def17
-  contribute?: Contribute17
-  parser?: Parser17
-  fallback?: Fallback17
-  role?: Role17
-  start_nanos?: StartNanos17
-  end_nanos?: EndNanos17
-  timezone?: Timezone17
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  role?: Role18
+  start_nanos?: StartNanos18
+  end_nanos?: EndNanos18
+  timezone?: Timezone18
   result?: unknown
   location?: LocationType | null
-  kind?: Kind17
+  kind?: Kind18
   call: unknown
   args?: unknown
   trace?: Trace5
@@ -2323,6 +2506,7 @@ export interface Defs1 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2344,17 +2528,17 @@ export interface LitellmModelBlock {
   description?: Description2
   spec?: Spec2
   defs?: Defs2
-  def?: Def16
-  contribute?: Contribute16
-  parser?: Parser16
-  fallback?: Fallback16
-  role?: Role16
-  start_nanos?: StartNanos16
-  end_nanos?: EndNanos16
-  timezone?: Timezone16
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  role?: Role17
+  start_nanos?: StartNanos17
+  end_nanos?: EndNanos17
+  timezone?: Timezone17
   result?: unknown
   location?: LocationType | null
-  kind?: Kind16
+  kind?: Kind17
   model: unknown
   input?: Input
   trace?: Trace4
@@ -2385,6 +2569,7 @@ export interface Defs2 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2406,17 +2591,17 @@ export interface CodeBlock {
   description?: Description3
   spec?: Spec3
   defs?: Defs3
-  def?: Def15
-  contribute?: Contribute15
-  parser?: Parser15
-  fallback?: Fallback15
-  role?: Role15
-  start_nanos?: StartNanos15
-  end_nanos?: EndNanos15
-  timezone?: Timezone15
+  def?: Def20
+  contribute?: Contribute16
+  parser?: Parser16
+  fallback?: Fallback16
+  role?: Role16
+  start_nanos?: StartNanos16
+  end_nanos?: EndNanos16
+  timezone?: Timezone16
   result?: unknown
   location?: LocationType | null
-  kind?: Kind15
+  kind?: Kind16
   lang: Lang
   code: Code
 }
@@ -2443,6 +2628,7 @@ export interface Defs3 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2464,17 +2650,17 @@ export interface GetBlock {
   description?: Description4
   spec?: Spec4
   defs?: Defs4
-  def?: Def14
-  contribute?: Contribute14
-  parser?: Parser14
-  fallback?: Fallback14
-  role?: Role14
-  start_nanos?: StartNanos14
-  end_nanos?: EndNanos14
-  timezone?: Timezone14
+  def?: Def19
+  contribute?: Contribute15
+  parser?: Parser15
+  fallback?: Fallback15
+  role?: Role15
+  start_nanos?: StartNanos15
+  end_nanos?: EndNanos15
+  timezone?: Timezone15
   result?: unknown
   location?: LocationType | null
-  kind?: Kind14
+  kind?: Kind15
   get: Get
 }
 /**
@@ -2500,6 +2686,7 @@ export interface Defs4 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2521,17 +2708,17 @@ export interface DataBlock {
   description?: Description5
   spec?: Spec5
   defs?: Defs5
-  def?: Def13
-  contribute?: Contribute13
-  parser?: Parser13
-  fallback?: Fallback13
-  role?: Role13
-  start_nanos?: StartNanos13
-  end_nanos?: EndNanos13
-  timezone?: Timezone13
+  def?: Def18
+  contribute?: Contribute14
+  parser?: Parser14
+  fallback?: Fallback14
+  role?: Role14
+  start_nanos?: StartNanos14
+  end_nanos?: EndNanos14
+  timezone?: Timezone14
   result?: unknown
   location?: LocationType | null
-  kind?: Kind13
+  kind?: Kind14
   data: unknown
   raw?: Raw
 }
@@ -2558,6 +2745,7 @@ export interface Defs5 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2579,19 +2767,19 @@ export interface IfBlock {
   description?: Description6
   spec?: Spec6
   defs?: Defs6
-  def?: Def12
-  contribute?: Contribute12
-  parser?: Parser12
-  fallback?: Fallback12
-  role?: Role12
-  start_nanos?: StartNanos12
-  end_nanos?: EndNanos12
-  timezone?: Timezone12
+  def?: Def17
+  contribute?: Contribute13
+  parser?: Parser13
+  fallback?: Fallback13
+  role?: Role13
+  start_nanos?: StartNanos13
+  end_nanos?: EndNanos13
+  timezone?: Timezone13
   result?: unknown
   location?: LocationType | null
-  kind?: Kind12
+  kind?: Kind13
   if: unknown
-  then: Then
+  then: Then1
   else?: Else
   if_result?: IfResult
 }
@@ -2618,6 +2806,7 @@ export interface Defs6 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2633,27 +2822,25 @@ export interface Defs6 {
     | null
 }
 /**
- * Repeat the execution of a block for a fixed number of iterations.
+ * Match control structure.
  */
-export interface RepeatBlock {
+export interface MatchBlock {
   description?: Description7
   spec?: Spec7
   defs?: Defs7
-  def?: Def11
-  contribute?: Contribute11
-  parser?: Parser11
-  fallback?: Fallback11
-  role?: Role11
-  start_nanos?: StartNanos11
-  end_nanos?: EndNanos11
-  timezone?: Timezone11
+  def?: Def12
+  contribute?: Contribute12
+  parser?: Parser12
+  fallback?: Fallback12
+  role?: Role12
+  start_nanos?: StartNanos12
+  end_nanos?: EndNanos12
+  timezone?: Timezone12
   result?: unknown
   location?: LocationType | null
-  kind?: Kind11
-  repeat: Repeat2
-  num_iterations: NumIterations
-  join?: Join2
-  trace?: Trace3
+  kind?: Kind12
+  match: unknown
+  with: With1
 }
 /**
  * Type specification of the result of the block.
@@ -2678,6 +2865,7 @@ export interface Defs7 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2693,27 +2881,27 @@ export interface Defs7 {
     | null
 }
 /**
- * Repeat the execution of a block until a condition is satisfied.
+ * Repeat the execution of a block for a fixed number of iterations.
  */
-export interface RepeatUntilBlock {
+export interface RepeatBlock {
   description?: Description8
   spec?: Spec8
   defs?: Defs8
-  def?: Def10
-  contribute?: Contribute10
-  parser?: Parser10
-  fallback?: Fallback10
-  role?: Role10
-  start_nanos?: StartNanos10
-  end_nanos?: EndNanos10
-  timezone?: Timezone10
+  def?: Def11
+  contribute?: Contribute11
+  parser?: Parser11
+  fallback?: Fallback11
+  role?: Role11
+  start_nanos?: StartNanos11
+  end_nanos?: EndNanos11
+  timezone?: Timezone11
   result?: unknown
   location?: LocationType | null
-  kind?: Kind10
-  repeat: Repeat1
-  until: unknown
-  join?: Join1
-  trace?: Trace2
+  kind?: Kind11
+  repeat: Repeat2
+  num_iterations: NumIterations
+  join?: Join2
+  trace?: Trace3
 }
 /**
  * Type specification of the result of the block.
@@ -2738,6 +2926,7 @@ export interface Defs8 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2753,27 +2942,27 @@ export interface Defs8 {
     | null
 }
 /**
- * Iteration over arrays.
+ * Repeat the execution of a block until a condition is satisfied.
  */
-export interface ForBlock {
+export interface RepeatUntilBlock {
   description?: Description9
   spec?: Spec9
   defs?: Defs9
-  def?: Def9
-  contribute?: Contribute9
-  parser?: Parser9
-  fallback?: Fallback9
-  role?: Role9
-  start_nanos?: StartNanos9
-  end_nanos?: EndNanos9
-  timezone?: Timezone9
+  def?: Def10
+  contribute?: Contribute10
+  parser?: Parser10
+  fallback?: Fallback10
+  role?: Role10
+  start_nanos?: StartNanos10
+  end_nanos?: EndNanos10
+  timezone?: Timezone10
   result?: unknown
   location?: LocationType | null
-  kind?: Kind9
-  for: For
-  repeat: Repeat
-  join?: Join
-  trace?: Trace1
+  kind?: Kind10
+  repeat: Repeat1
+  until: unknown
+  join?: Join1
+  trace?: Trace2
 }
 /**
  * Type specification of the result of the block.
@@ -2798,6 +2987,7 @@ export interface Defs9 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2813,24 +3003,27 @@ export interface Defs9 {
     | null
 }
 /**
- * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ * Iteration over arrays.
  */
-export interface TextBlock {
+export interface ForBlock {
   description?: Description10
   spec?: Spec10
   defs?: Defs10
-  def?: Def8
-  contribute?: Contribute8
-  parser?: Parser8
-  fallback?: Fallback8
-  role?: Role8
-  start_nanos?: StartNanos8
-  end_nanos?: EndNanos8
-  timezone?: Timezone8
+  def?: Def9
+  contribute?: Contribute9
+  parser?: Parser9
+  fallback?: Fallback9
+  role?: Role9
+  start_nanos?: StartNanos9
+  end_nanos?: EndNanos9
+  timezone?: Timezone9
   result?: unknown
   location?: LocationType | null
-  kind?: Kind8
-  text: Text
+  kind?: Kind9
+  for: For
+  repeat: Repeat
+  join?: Join
+  trace?: Trace1
 }
 /**
  * Type specification of the result of the block.
@@ -2855,6 +3048,7 @@ export interface Defs10 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2870,24 +3064,24 @@ export interface Defs10 {
     | null
 }
 /**
- * Return the value of the last block if the list of blocks.
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
-export interface LastOfBlock {
+export interface TextBlock {
   description?: Description11
   spec?: Spec11
   defs?: Defs11
-  def?: Def7
-  contribute?: Contribute7
-  parser?: Parser7
-  fallback?: Fallback7
-  role?: Role7
-  start_nanos?: StartNanos7
-  end_nanos?: EndNanos7
-  timezone?: Timezone7
+  def?: Def8
+  contribute?: Contribute8
+  parser?: Parser8
+  fallback?: Fallback8
+  role?: Role8
+  start_nanos?: StartNanos8
+  end_nanos?: EndNanos8
+  timezone?: Timezone8
   result?: unknown
   location?: LocationType | null
-  kind?: Kind7
-  lastOf: Lastof
+  kind?: Kind8
+  text: Text
 }
 /**
  * Type specification of the result of the block.
@@ -2912,6 +3106,7 @@ export interface Defs11 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2927,24 +3122,24 @@ export interface Defs11 {
     | null
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Return the value of the last block if the list of blocks.
  */
-export interface ArrayBlock {
+export interface LastOfBlock {
   description?: Description12
   spec?: Spec12
   defs?: Defs12
-  def?: Def6
-  contribute?: Contribute6
-  parser?: Parser6
-  fallback?: Fallback6
-  role?: Role6
-  start_nanos?: StartNanos6
-  end_nanos?: EndNanos6
-  timezone?: Timezone6
+  def?: Def7
+  contribute?: Contribute7
+  parser?: Parser7
+  fallback?: Fallback7
+  role?: Role7
+  start_nanos?: StartNanos7
+  end_nanos?: EndNanos7
+  timezone?: Timezone7
   result?: unknown
   location?: LocationType | null
-  kind?: Kind6
-  array: Array
+  kind?: Kind7
+  lastOf: Lastof
 }
 /**
  * Type specification of the result of the block.
@@ -2969,6 +3164,7 @@ export interface Defs12 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -2984,24 +3180,24 @@ export interface Defs12 {
     | null
 }
 /**
- * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface ObjectBlock {
+export interface ArrayBlock {
   description?: Description13
   spec?: Spec13
   defs?: Defs13
-  def?: Def5
-  contribute?: Contribute5
-  parser?: Parser5
-  fallback?: Fallback5
-  role?: Role5
-  start_nanos?: StartNanos5
-  end_nanos?: EndNanos5
-  timezone?: Timezone5
+  def?: Def6
+  contribute?: Contribute6
+  parser?: Parser6
+  fallback?: Fallback6
+  role?: Role6
+  start_nanos?: StartNanos6
+  end_nanos?: EndNanos6
+  timezone?: Timezone6
   result?: unknown
   location?: LocationType | null
-  kind?: Kind5
-  object: Object
+  kind?: Kind6
+  array: Array
 }
 /**
  * Type specification of the result of the block.
@@ -3026,6 +3222,7 @@ export interface Defs13 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3041,24 +3238,24 @@ export interface Defs13 {
     | null
 }
 /**
- * Create a message.
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface MessageBlock {
+export interface ObjectBlock {
   description?: Description14
   spec?: Spec14
   defs?: Defs14
-  def?: Def4
-  contribute?: Contribute4
-  parser?: Parser4
-  fallback?: Fallback4
-  role: Role4
-  start_nanos?: StartNanos4
-  end_nanos?: EndNanos4
-  timezone?: Timezone4
+  def?: Def5
+  contribute?: Contribute5
+  parser?: Parser5
+  fallback?: Fallback5
+  role?: Role5
+  start_nanos?: StartNanos5
+  end_nanos?: EndNanos5
+  timezone?: Timezone5
   result?: unknown
   location?: LocationType | null
-  kind?: Kind4
-  content: Content
+  kind?: Kind5
+  object: Object
 }
 /**
  * Type specification of the result of the block.
@@ -3083,6 +3280,7 @@ export interface Defs14 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3098,26 +3296,24 @@ export interface Defs14 {
     | null
 }
 /**
- * Read from a file or standard input.
+ * Create a message.
  */
-export interface ReadBlock {
+export interface MessageBlock {
   description?: Description15
   spec?: Spec15
   defs?: Defs15
-  def?: Def3
-  contribute?: Contribute3
-  parser?: Parser3
-  fallback?: Fallback3
-  role?: Role3
-  start_nanos?: StartNanos3
-  end_nanos?: EndNanos3
-  timezone?: Timezone3
+  def?: Def4
+  contribute?: Contribute4
+  parser?: Parser4
+  fallback?: Fallback4
+  role: Role4
+  start_nanos?: StartNanos4
+  end_nanos?: EndNanos4
+  timezone?: Timezone4
   result?: unknown
   location?: LocationType | null
-  kind?: Kind3
-  read: unknown
-  message?: Message
-  multiline?: Multiline
+  kind?: Kind4
+  content: Content
 }
 /**
  * Type specification of the result of the block.
@@ -3142,6 +3338,7 @@ export interface Defs15 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3157,25 +3354,26 @@ export interface Defs15 {
     | null
 }
 /**
- * Include a PDL file.
+ * Read from a file or standard input.
  */
-export interface IncludeBlock {
+export interface ReadBlock {
   description?: Description16
   spec?: Spec16
   defs?: Defs16
-  def?: Def2
-  contribute?: Contribute2
-  parser?: Parser2
-  fallback?: Fallback2
-  role?: Role2
-  start_nanos?: StartNanos2
-  end_nanos?: EndNanos2
-  timezone?: Timezone2
+  def?: Def3
+  contribute?: Contribute3
+  parser?: Parser3
+  fallback?: Fallback3
+  role?: Role3
+  start_nanos?: StartNanos3
+  end_nanos?: EndNanos3
+  timezone?: Timezone3
   result?: unknown
   location?: LocationType | null
-  kind?: Kind2
-  include: Include
-  trace?: Trace
+  kind?: Kind3
+  read: unknown
+  message?: Message
+  multiline?: Multiline
 }
 /**
  * Type specification of the result of the block.
@@ -3200,6 +3398,7 @@ export interface Defs16 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3214,23 +3413,26 @@ export interface Defs16 {
     | EmptyBlock
     | null
 }
-export interface ErrorBlock {
+/**
+ * Include a PDL file.
+ */
+export interface IncludeBlock {
   description?: Description17
   spec?: Spec17
   defs?: Defs17
-  def?: Def1
-  contribute?: Contribute1
-  parser?: Parser1
-  fallback?: Fallback1
-  role?: Role1
-  start_nanos?: StartNanos1
-  end_nanos?: EndNanos1
-  timezone?: Timezone1
+  def?: Def2
+  contribute?: Contribute2
+  parser?: Parser2
+  fallback?: Fallback2
+  role?: Role2
+  start_nanos?: StartNanos2
+  end_nanos?: EndNanos2
+  timezone?: Timezone2
   result?: unknown
   location?: LocationType | null
-  kind?: Kind1
-  msg: Msg
-  program: Program1
+  kind?: Kind2
+  include: Include
+  trace?: Trace
 }
 /**
  * Type specification of the result of the block.
@@ -3255,6 +3457,7 @@ export interface Defs17 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3269,24 +3472,23 @@ export interface Defs17 {
     | EmptyBlock
     | null
 }
-/**
- * Block without an action. It can contain definitions.
- */
-export interface EmptyBlock {
+export interface ErrorBlock {
   description?: Description18
   spec?: Spec18
   defs?: Defs18
-  def?: Def
-  contribute?: Contribute
-  parser?: Parser
-  fallback?: Fallback
-  role?: Role
-  start_nanos?: StartNanos
-  end_nanos?: EndNanos
-  timezone?: Timezone
+  def?: Def1
+  contribute?: Contribute1
+  parser?: Parser1
+  fallback?: Fallback1
+  role?: Role1
+  start_nanos?: StartNanos1
+  end_nanos?: EndNanos1
+  timezone?: Timezone1
   result?: unknown
   location?: LocationType | null
-  kind?: Kind
+  kind?: Kind1
+  msg: Msg
+  program: Program1
 }
 /**
  * Type specification of the result of the block.
@@ -3311,6 +3513,64 @@ export interface Defs18 {
     | GetBlock
     | DataBlock
     | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | RepeatUntilBlock
+    | ForBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Block without an action. It can contain definitions.
+ */
+export interface EmptyBlock {
+  description?: Description19
+  spec?: Spec19
+  defs?: Defs19
+  def?: Def
+  contribute?: Contribute
+  parser?: Parser
+  fallback?: Fallback
+  role?: Role
+  start_nanos?: StartNanos
+  end_nanos?: EndNanos
+  timezone?: Timezone
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec19 {
+  [k: string]: unknown
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs19 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | CodeBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
     | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
@@ -3329,13 +3589,13 @@ export interface ContributeValue {
   value: Value
 }
 export interface PdlParser {
-  description?: Description19
-  spec?: Spec19
+  description?: Description20
+  spec?: Spec20
   pdl: Pdl
 }
 export interface RegexParser {
-  description?: Description20
-  spec?: Spec20
+  description?: Description21
+  spec?: Spec21
   regex: Regex
   mode?: Mode
 }
@@ -3363,4 +3623,39 @@ export interface JoinArray {
 }
 export interface JoinLastOf {
   as: As2
+}
+/**
+ * Case of a match.
+ */
+export interface MatchCase {
+  case?: Case
+  if?: unknown
+  then: Then
+}
+export interface OrPattern {
+  def?: Def13
+  union: Union
+}
+export interface ArrayPattern {
+  def?: Def14
+  array: Array1
+}
+export interface ObjectPattern {
+  def?: Def15
+  object: Object1
+}
+export interface Object1 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+    | null
+}
+export interface AnyPattern {
+  def?: Def16
+  any: Any
 }

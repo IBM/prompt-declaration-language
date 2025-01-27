@@ -32,7 +32,9 @@ from pydantic import BaseModel  # noqa: E402
 
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
+    AnyPattern,
     ArrayBlock,
+    ArrayPattern,
     Block,
     BlockType,
     CallBlock,
@@ -52,12 +54,17 @@ from .pdl_ast import (  # noqa: E402
     LitellmParameters,
     LocalizedExpression,
     LocationType,
+    MatchBlock,
     Message,
     MessageBlock,
     Messages,
     ModelBlock,
     ObjectBlock,
+    ObjectPattern,
+    OrPattern,
     ParserType,
+    Pattern,
+    PatternType,
     PDLException,
     PdlParser,
     Program,
@@ -561,6 +568,67 @@ def step_block_body(
                     "if_result": b,
                 }
             )
+        case MatchBlock():
+            match_, block = process_expr_of(block, "match_", scope, loc, "match")
+            cases = []
+            matched = False
+            result = ""
+            background = []
+            for i, match_case in enumerate(block.with_):
+                if matched:
+                    cases.append(match_case)
+                    continue
+                loc_i = append(loc, "[" + str(i) + "]")
+                if "case" in match_case.model_fields_set:
+                    new_scope = is_matching(match_, match_case.case, scope)
+                    if new_scope is None:
+                        cases.append(match_case)
+                        continue
+                else:
+                    new_scope = scope
+                b = True
+                if "if_" in match_case.model_fields_set:
+                    loc_if = append(loc_i, "if")
+                    try:
+                        b = process_expr(new_scope, match_case.if_, loc_if)
+                    except PDLRuntimeExpressionError as exc:
+                        cases.append(match_case)
+                        block.with_ = cases
+                        raise PDLRuntimeError(
+                            exc.message,
+                            loc=exc.loc or loc_if,
+                            trace=ErrorBlock(
+                                msg=exc.message, location=loc, program=block
+                            ),
+                        ) from exc
+                if not b:
+                    cases.append(match_case)
+                    continue
+                matched = True
+                try:
+                    result, background, scope, return_trace = yield from step_block(
+                        state,
+                        new_scope,
+                        match_case.then,
+                        append(loc_i, "return"),
+                    )
+                except PDLRuntimeError as exc:
+                    match_case_trace = match_case.model_copy(
+                        update={"return_": exc.trace}
+                    )
+                    cases.append(match_case_trace)
+                    block.with_ = cases
+                    raise PDLRuntimeError(
+                        exc.message,
+                        loc=exc.loc or loc,
+                        trace=block,
+                    ) from exc
+                match_case_trace = block.model_copy(update={"return_": return_trace})
+                cases.append(match_case_trace)
+            if not matched:
+                append_log(state, "Match", "no match!")
+            block.with_ = cases
+            trace = block
         case RepeatBlock(num_iterations=n):
             results = []
             background = []
@@ -777,6 +845,59 @@ def step_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, background, scope, trace
+
+
+def is_matching(  # pylint: disable=too-many-return-statements
+    value: Any, pattern: PatternType, scope: ScopeType
+) -> Optional[ScopeType]:
+    """The function test if `value` matches the pattern `match` and returns the scope updated with the new variables bound by the matching.
+
+    Args:
+        value: Value to match.
+        pattern: Pattern to match.
+        scope: Current variable binding.
+
+    Returns:
+        The function returns `None` if the value is not matched by the pattern and a copy of the updated scope otherwise.
+    """
+    new_scope: Optional[ScopeType]
+    match pattern:
+        case OrPattern():
+            new_scope = None
+            for p in pattern.anyOf:
+                new_scope = is_matching(value, p, scope)
+                if new_scope:
+                    break
+        case ArrayPattern():
+            if not isinstance(value, Sequence) or len(pattern.array) != len(value):
+                return None
+            new_scope = scope
+            for v, p in zip(value, pattern.array):
+                new_scope = is_matching(v, p, new_scope)
+                if new_scope is None:
+                    return None
+        case ObjectPattern():
+            if not isinstance(value, dict):
+                return None
+            new_scope = scope
+            for k, p in pattern.object.items():
+                if k not in value:
+                    return None
+                new_scope = is_matching(value[k], p, new_scope)
+                if new_scope is None:
+                    return None
+        case AnyPattern():
+            new_scope = scope
+        case _:
+            assert not isinstance(pattern, Pattern)
+            if value != pattern:
+                return None
+            new_scope = scope
+    if new_scope is None:
+        return None
+    if isinstance(pattern, Pattern) and pattern.assign is not None:
+        new_scope = new_scope | {pattern.assign: value}
+    return new_scope
 
 
 def step_defs(

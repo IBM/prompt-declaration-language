@@ -6,7 +6,9 @@ import yaml
 
 from . import pdl_ast
 from .pdl_ast import (
+    AnyPattern,
     ArrayBlock,
+    ArrayPattern,
     Block,
     CallBlock,
     CodeBlock,
@@ -28,9 +30,13 @@ from .pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocationType,
+    MatchBlock,
     MessageBlock,
     ObjectBlock,
+    ObjectPattern,
+    OrPattern,
     ParserType,
+    PatternType,
     PdlParser,
     ReadBlock,
     RegexParser,
@@ -161,6 +167,16 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
                 d["else"] = block_to_dict(block.elses, json_compatible)
             if block.if_result is not None:
                 d["if_result"] = block.if_result
+        case MatchBlock():
+            d["match"] = block.match_
+            d["with"] = [
+                {
+                    "case": pattern_to_dict(match_case.case),
+                    "if": match_case.if_,
+                    "then": block_to_dict(match_case.then, json_compatible),
+                }
+                for match_case in block.with_
+            ]
         case RepeatBlock():
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["num_iterations"] = block.num_iterations
@@ -214,6 +230,28 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if block.fallback is not None:
         d["fallback"] = block_to_dict(block.fallback, json_compatible)
     return d
+
+
+def pattern_to_dict(pattern: PatternType):
+    if not isinstance(pattern, pdl_ast.Pattern):
+        return pattern
+    result: dict[str, Any]
+    match pattern:
+        case OrPattern():
+            result = {"anyOf": [pattern_to_dict(p) for p in pattern.anyOf]}
+        case ArrayPattern():
+            result = {"array": [pattern_to_dict(p) for p in pattern.array]}
+        case ObjectPattern():
+            result = {
+                "object": {k: pattern_to_dict(p) for k, p in pattern.object.items()}
+            }
+        case AnyPattern():
+            result = {"any": None}
+        case _:
+            assert False
+    if pattern.assign is not None:
+        result["def"] = pattern.assign
+    return result
 
 
 def join_to_dict(join: JoinType) -> dict[str, Any]:
