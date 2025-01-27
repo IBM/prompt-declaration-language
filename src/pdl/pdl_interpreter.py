@@ -1110,7 +1110,9 @@ def step_call_model(
             )
 
             # Apply PDL defaults to model invocation
-            if concrete_block.parameters is None or isinstance(concrete_block.parameters, dict):
+            if concrete_block.parameters is None or isinstance(
+                concrete_block.parameters, dict
+            ):
                 concrete_block.parameters = apply_defaults(
                     str(concrete_block.model),
                     concrete_block.parameters or {},
