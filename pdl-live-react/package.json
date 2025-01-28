@@ -9,7 +9,7 @@
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}'",
     "preview": "vite preview",
     "test:quality": "concurrently -n 'lint,types,formatting' 'yarn lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
-    "test:ui": "yarn playwright test",
+    "test:ui": "yarn playwright install --with-deps && yarn playwright test",
     "test": "concurrently -n 'quality,playwright' 'yarn test:quality' 'yarn test:ui'"
   },
   "dependencies": {
@@ -51,5 +51,6 @@
   },
   "resolutions": {
     "@types/react": "^18.3.18"
-  }
+  },
+  "packageManager": "yarn@4.6.0"
 }
