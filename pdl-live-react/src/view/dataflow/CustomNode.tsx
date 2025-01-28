@@ -1,14 +1,18 @@
 import { type FunctionComponent } from "react"
-import { DefaultNode, type GraphElement } from "@patternfly/react-topology"
+import {
+  DefaultNode,
+  type GraphElement,
+  type WithSelectionProps,
+} from "@patternfly/react-topology"
 
-interface CustomNodeProps {
+type CustomNodeProps = WithSelectionProps & {
   element: GraphElement
 }
 
-const CustomNode: FunctionComponent<CustomNodeProps> = ({
-  element,
-}: CustomNodeProps) => {
-  const data = element.getData()
+const CustomNode: FunctionComponent<CustomNodeProps> = (
+  props: CustomNodeProps,
+) => {
+  const data = props.element.getData()
   const ordinal = data && "ordinal" in data ? data.ordinal : undefined
   const variant = data && "variant" in data ? data.variant : undefined
   /*const content =
@@ -18,7 +22,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
 
   return (
     <DefaultNode
-      element={element}
+      {...props}
       badge={(ordinal !== undefined ? `[${ordinal}] ` : "") + variant}
       badgeColor={
         variant === "Final Result"

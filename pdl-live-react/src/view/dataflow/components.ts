@@ -3,6 +3,7 @@ import {
   DefaultGroup,
   ModelKind,
   withPanZoom,
+  withSelection,
   GraphComponent,
   type ComponentFactory,
 } from "@patternfly/react-topology"
@@ -18,7 +19,7 @@ const componentFactory: ComponentFactory = (kind: ModelKind, type: string) => {
         case ModelKind.graph:
           return withPanZoom()(GraphComponent)
         case ModelKind.node:
-          return CustomNode
+          return withSelection()(CustomNode)
         case ModelKind.edge:
           return DefaultEdge
         default:
