@@ -8,10 +8,11 @@
     "lint": "eslint .",
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}'",
     "preview": "vite preview",
-    "test:quality": "concurrently -n 'lint,types,formatting' 'yarn lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
-    "test:ui": "yarn playwright install --with-deps && yarn playwright test",
+    "test:quality": "concurrently -n 'lint,types,formatting' 'npm run lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
+    "test:ui": "playwright install --with-deps && playwright test",
     "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions",
-    "test": "concurrently -n 'quality,playwright' 'yarn test:quality' 'yarn test:ui'"
+    "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@patternfly/react-code-editor": "^6.1.0",
@@ -53,6 +54,5 @@
   },
   "resolutions": {
     "@types/react": "^18.3.18"
-  },
-  "packageManager": "yarn@4.6.0"
+  }
 }

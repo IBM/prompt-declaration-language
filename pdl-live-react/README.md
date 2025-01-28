@@ -1,9 +1,8 @@
 # PDL Viewer
 
 To get started, make sure you have a recent version of
-[NodeJS](https://nodejs.org/en/download) installed and
-[Yarn](https://classic.yarnpkg.com/lang/en/docs/install). On MacOS,
-these can be installed via `brew install node yarn`.
+[NodeJS](https://nodejs.org/en/download) installed. On MacOS,
+these can be installed via `brew install node`.
 
 ## Implementation Details
 
@@ -18,12 +17,12 @@ components are written in [TSX](https://react.dev/learn/typescript)
 
 To install dependencies:
 ```shell
-yarn
+npm ci
 ```
 
 To start the watcher:
 ```shell
-yarn dev
+npm start
 ```
 
 Which will open up a local port which you can view in your favorite
@@ -35,12 +34,12 @@ updates to that running UI.
 There are currently only simple tests for: linting, formatting, and
 type checking. These can be run via:
 ```shell
-yarn test
+npm test
 ```
 
 ## Production
 
 This will generate production bundles in `dist/`
 ```shell
-yarn build
+npm run build
 ```
