@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Enable Corepack
+        run: corepack enable
       - name: Install dependencies
         run: yarn
       - name: Install Playwright Browsers
