@@ -69,7 +69,6 @@ text:
           answer: ${ problem.answer }
       - def: compare
         lang: python
-        contribute: []
         code:
          |
          result = float(solution["answer"]["result"]) == actual
