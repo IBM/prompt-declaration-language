@@ -81,7 +81,9 @@ function isTextBlock(data: PdlBlock): data is TextBlock {
 }
 
 /** Is the given block a generic text block with non-null content? */
-type TextBlockWithContent = TextBlock & { text: NonNullable<TextBlock["text"]> }
+type TextBlockWithContent = TextBlock & {
+  text: NonNullable<TextBlock["text"]>
+}
 export function isTextBlockWithContent(
   data: PdlBlock,
 ): data is TextBlockWithContent {

@@ -16,7 +16,7 @@ import {
 
 import DarkModeToggle from "./DarkModeToggle"
 
-import PDLIcon from "../assets/ai-governance--prompt.svg?react"
+import PDLIcon from "../assets/ai-governance--prompt.svg"
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon"
 
 import "./Masthead.css"
@@ -46,7 +46,8 @@ function Brand() {
         target="_blank"
       >
         <Flex alignItems={alignCenter}>
-          <PDLIcon className="pdl-logo" /> <Title headingLevel="h4">PDL</Title>
+          <img className="pdl-logo" src={PDLIcon} />{" "}
+          <Title headingLevel="h4">PDL</Title>
         </Flex>
       </MastheadLogo>
     </MastheadBrand>
