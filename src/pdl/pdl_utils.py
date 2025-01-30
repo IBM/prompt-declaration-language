@@ -43,6 +43,13 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     return w.value
 
 
+ToAsyncT = TypeVar("ToAsyncT")
+
+
+async def to_async(value: ToAsyncT) -> ToAsyncT:
+    return value
+
+
 def stringify(result):
     if isinstance(result, str):
         s = result
@@ -111,7 +118,7 @@ def simple_message(message: Message) -> bool:
     return False
 
 
-def remove_none_values_from_message(message: Any) -> dict[str, Any]:
+def remove_none_values_from_message(message: dict) -> dict[str, Any]:
     ret = {}
     for key, value in message.items():
         if key == "content":

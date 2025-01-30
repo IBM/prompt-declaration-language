@@ -5,12 +5,14 @@ import re
 import shlex
 import subprocess  # nosec
 import sys
+import threading
 import time
 import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from asyncio import Task
+from dataclasses import dataclass
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
@@ -53,6 +55,8 @@ from .pdl_ast import (  # noqa: E402
     IncludeBlock,
     IterationType,
     LastOfBlock,
+    LazyMessage,
+    LazyRawResponse,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -93,7 +97,18 @@ from .pdl_utils import (  # noqa: E402
     messages_concat,
     replace_contribute_value,
     stringify,
+    to_async,
 )
+
+def _start_background_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+_LOOP = asyncio.new_event_loop()
+_LOOP_THREAD = threading.Thread(
+    target=_start_background_loop, args=(_LOOP,), daemon=True
+)
+_LOOP_THREAD.start()
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +154,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
 empty_scope: ScopeType = {"pdl_context": []}
 
 
+@dataclass
 class InterpreterState(BaseModel):
     yield_result: bool = False
     yield_background: bool = False
@@ -147,6 +163,7 @@ class InterpreterState(BaseModel):
     # batch=1: call to generate with `input`
     role: RoleType = "user"
     cwd: Path = Path.cwd()
+    background_tasks = {}
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -1225,7 +1242,9 @@ def process_call_model(
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
 
-        msg, raw_result = generate_client_response(state, concrete_block, model_input)
+        lazy_msg, lazy_raw_result = generate_client_response(
+            state, concrete_block, model_input
+        )
         # if "input" in litellm_params:
         append_log(state, "Model Input", litellm_params)
         # else:
@@ -1257,27 +1276,27 @@ def generate_client_response(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> tuple[Message, Any] | Task[tuple[Message, Any]]:
+) -> tuple[LazyMessage, LazyRawResponse]:
     raw_result = None
     match state.batch:
         case 0:
-            model_output, raw_result = generate_client_response_streaming(
+            lazy_model_output, lazy_raw_result = generate_client_response_streaming(
                 state, block, model_input
             )
         case 1:
-            model_output, raw_result = generate_client_response_single(
+            lazy_model_output, lazy_raw_result = generate_client_response_single(
                 state, block, model_input
             )
         case _:
             assert False
-    return model_output, raw_result
+    return lazy_model_output, lazy_raw_result
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> tuple[Message, Any]:
+) -> tuple[LazyMessage, LazyRawResponse]:
     msg_stream: Generator[Message, Any, Any]
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
@@ -1318,8 +1337,11 @@ def generate_client_response_streaming(
     if block.modelResponse is not None:
         raw_result = wrapped_gen.value
     if complete_msg is None:
-        return Message(role=state.role, content=""), raw_result
-    return complete_msg, raw_result
+        complete_msg = Message(role=state.role, content="")
+    lazy_pair = to_async(complete_msg, raw_result)
+    lazy_message = LazyMessage(lazy_pair)
+    lazy_result = LazyRawResponse(lazy_pair)
+    return lazy_message, lazy_result
 
 
 def litellm_parameters_to_dict(
@@ -1337,7 +1359,7 @@ def generate_client_response_single(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> Task[tuple[Message, Any]]:
+) -> tuple[LazyMessage, LazyRawResponse]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
         block.parameters, dict
@@ -1352,16 +1374,19 @@ def generate_client_response_single(
                     parameters=litellm_parameters_to_dict(block.parameters),
                 )
             )
-
-    def callback(res):
-        msg, _ = res
-        if state.yield_result:
-            yield_result("" if msg["content"] is None else msg["content"], block.kind)
-        if state.yield_background:
-            yield_background([msg])
-
-    task.add_done_callback(callback)
-    return task
+            # state.background_tasks.add(task)
+            # task.add_done_callback(state.background_tasks.discard)
+            lazy_message = LazyMessage(task)
+            lazy_response = LazyRawResponse(task)
+        case _:
+            assert False
+    if state.yield_result:
+        msg = lazy_message.get()
+        yield_result("" if msg["content"] is None else msg["content"], block.kind)
+    if state.yield_background:
+        msg = lazy_message.get()
+        yield_background([msg])
+    return (lazy_message, lazy_response)
 
 
 def process_call_code(

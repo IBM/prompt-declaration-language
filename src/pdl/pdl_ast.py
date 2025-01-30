@@ -1,6 +1,7 @@
 """PDL programs are represented by the Pydantic data structure defined in this file.
 """
 
+from asyncio import Task
 from enum import StrEnum
 from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
 
@@ -13,6 +14,28 @@ ScopeType: TypeAlias = dict[str, Any]
 
 Message: TypeAlias = dict[str, Any]
 Messages: TypeAlias = list[Message]
+
+
+class LazyMessage:
+    def __init__(self, task: Task[Message, Any]):
+        self.task = task
+
+    async def get(self) -> Message:
+        msg, _ = await self.task
+        return msg
+
+
+class LazyMessages:
+    pass
+
+
+class LazyRawResponse:
+    def __init__(self, task: Task[Message, Any]):
+        self.task = task
+
+    async def get(self) -> Message:
+        _, response = await self.task
+        return response
 
 
 class BlockKind(StrEnum):

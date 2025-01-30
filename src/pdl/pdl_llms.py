@@ -1,5 +1,5 @@
 import os
-from typing import Any, Generator, Optional
+from typing import Any, Generator
 
 import litellm
 from dotenv import load_dotenv
@@ -21,12 +21,6 @@ if os.getenv("OTEL_EXPORTER") and os.getenv("OTEL_ENDPOINT"):
 
 
 class LitellmModel:
-    litellm_client: Optional[None] = None
-
-    @staticmethod
-    def get_model() -> None:
-        return None
-
     @staticmethod
     async def generate_text(
         model_id: str,
