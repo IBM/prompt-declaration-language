@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: 22
       - name: Install Linux dependencies
-        run: sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev # for tauri builds in linux
+        run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf # for tauri builds in linux
       - name: Install NodeJs dependencies
         run: npm ci
       - name: Install Playwright Browsers
