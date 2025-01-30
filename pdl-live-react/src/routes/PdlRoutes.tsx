@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom"
 
 const Demo = lazy(() => import("../page/Demo"))
 const About = lazy(() => import("../page/About"))
+const Local = lazy(() => import("../page/Local"))
 const MyTrace = lazy(() => import("../page/MyTrace"))
 const Welcome = lazy(() => import("../page/Welcome"))
 const Uploader = lazy(() => import("../page/Uploader"))
@@ -27,6 +28,14 @@ export default function PdlRoutes() {
         element={
           <Suspense>
             <Welcome />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/local/:traceFile"
+        element={
+          <Suspense>
+            <Local />
           </Suspense>
         }
       />

@@ -10,15 +10,27 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [
-      {
-        "title": "Prompt Declaration Language",
-        "width": 1400,
-        "height": 1050
-      }
-    ],
     "security": {
       "csp": null
+    }
+  },
+  "plugins": {
+    "cli": {
+      "description": "PDL",
+      "args": [
+      ],
+      "subcommands": {
+        "view": {
+          "description": "View a trace",
+          "args": [
+            {
+              "name": "trace",
+              "index": 1,
+              "takesValue": true
+            }
+          ]
+        }
+      }
     }
   },
   "bundle": {
