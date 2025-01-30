@@ -9,6 +9,7 @@
     "main"
   ],
   "permissions": [
-    "window-state:default"
+    "window-state:default",
+    "cli:default"
   ]
 }
