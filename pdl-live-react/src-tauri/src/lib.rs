@@ -1,9 +1,15 @@
-use serde_json::Value;
+use std::env::args_os;
 use std::fs::read;
-use std::path::Path;
+use std::io::{BufRead, BufReader};
+use std::path::{Path, PathBuf};
+use std::process::{exit, Command, Stdio};
+
+use serde_json::Value;
 use urlencoding::encode;
 
 use tauri::ipc::Response;
+use tauri::path::BaseDirectory;
+use tauri::Manager;
 use tauri_plugin_cli::CliExt;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -21,65 +27,55 @@ pub fn run() {
             app.handle().plugin(tauri_plugin_cli::init())?;
 
             // Default to GUI if the app was opened with no CLI args.
-            if std::env::args_os().count() <= 1 {
+            if args_os().count() <= 1 {
                 gui(app.handle().clone(), "".to_owned())?;
             }
             match app.cli().matches() {
                 // `matches` here is a Struct with { args, subcommand }.
                 // `args` is `HashMap<String, ArgData>` where `ArgData` is a struct with { value, occurrences }.
                 // `subcommand` is `Option<Box<SubcommandMatches>>` where `SubcommandMatches` is a struct with { name, matches }.
-                Ok(matches) => {
-                    match matches.subcommand {
-                        Some(subcommand_matches) => {
-                            match subcommand_matches.name.as_str() {
-                                "view" => {
-                                    match subcommand_matches.matches.args.get("trace") {
-                                        Some(trace) => {
-                                            match &trace.value {
-                                                Value::String(trace_file) => {
-                                                    // app.handle().plugin(tauri_plugin_fs::init())?;
+                Ok(matches) => match matches.subcommand {
+                    Some(subcommand_matches) => match subcommand_matches.name.as_str() {
+                        "run" => {
+                            if let Some(source) = subcommand_matches.matches.args.get("source") {
+                                if let Value::String(source_file_path) = &source.value {
+                                    let interpreter_path = app
+                                        .path()
+                                        .resolve("interpreter/", BaseDirectory::Resource)?;
 
-                                                    //let src = Path::new(trace_file);
-                                                    //let name = src.file_name().unwrap();
-                                                    //let tmp =  app.path().app_local_data_dir().join("mytraces").join(name);
-                                                    //fs::copy(src, &tmp)?;
-
-                                                    // allowed access to the trace directory
-                                                    // let src = Path::new(&trace_file);
-                                                    //let canon = fs::canonicalize(src)?;
-                                                    //let abs = canon.as_path();
-                                                    //println!("!!!!!!!!!!!! {:?}", abs);
-                                                    //let src = &abs.display().to_string();
-
-                                                    let encoded = encode(trace_file);
-                                                    gui(
-                                                        app.handle().clone(),
-                                                        Path::new("/local")
-                                                            .join(encoded.as_ref())
-                                                            .display()
-                                                            .to_string(),
-                                                    )?
-                                                }
-                                                _ => {
-                                                    println!("Usage: view <tracefile.json>");
-                                                    std::process::exit(1)
-                                                }
-                                            }
-                                        }
-                                        _ => {
-                                            println!("Usage: view <tracefile.json>");
-                                            std::process::exit(1)
-                                        }
-                                    }
+                                    eval_pdl_program(source_file_path.clone(), interpreter_path)?;
+                                    exit(0)
                                 }
-                                _ => {}
                             }
+                            println!("Usage: run <source.pdl>");
+                            exit(1)
                         }
-                        None => {}
-                    }
-                    //println!(" {:?}", matches);
-                    //gui(app.handle().clone(), "".to_owned())?;
-                }
+                        "view" => match subcommand_matches.matches.args.get("trace") {
+                            Some(trace) => match &trace.value {
+                                Value::String(trace_file) => {
+                                    let encoded = encode(trace_file);
+                                    gui(
+                                        app.handle().clone(),
+                                        Path::new("/local")
+                                            .join(encoded.as_ref())
+                                            .display()
+                                            .to_string(),
+                                    )?
+                                }
+                                _ => {
+                                    println!("Usage: view <tracefile.json>");
+                                    exit(1)
+                                }
+                            },
+                            _ => {
+                                println!("Usage: view <tracefile.json>");
+                                exit(1)
+                            }
+                        },
+                        _ => {}
+                    },
+                    None => {}
+                },
                 Err(_) => {}
             }
             Ok(())
@@ -99,5 +95,39 @@ fn gui(app: tauri::AppHandle, path: String) -> Result<(), tauri::Error> {
         .zoom_hotkeys_enabled(true)
         .inner_size(1400.0, 1050.0)
         .build()?;
+    Ok(())
+}
+
+#[cfg(desktop)]
+fn eval_pdl_program(
+    source_file_path: String,
+    interpreter_path: PathBuf,
+) -> Result<(), tauri::Error> {
+    println!("Evaluating {:?}", source_file_path);
+    //let interp = interpreter_path.display().to_string()
+    let activate = interpreter_path.join("bin/activate").display().to_string();
+    let mut child = Command::new("sh")
+        .args([
+            "-c",
+            &[
+                "source",
+                activate.as_str(),
+                "; pdl",
+                source_file_path.as_str(),
+            ]
+            .join(" "),
+        ])
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let stdout = child.stdout.take().unwrap();
+
+    // Stream output.
+    let lines = BufReader::new(stdout).lines();
+    for line in lines {
+        println!("{}", line.unwrap());
+    }
+
     Ok(())
 }

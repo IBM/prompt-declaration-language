@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:app": "npm run tauri build",
+    "build:app": "npm run prep_interpreter && npm run tauri build",
     "lint": "eslint .",
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}' && (cd src-tauri && cargo fmt)",
     "tauri": "tauri",
@@ -14,8 +14,10 @@
     "test:ui": "playwright install --with-deps && playwright test",
     "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions",
     "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
-    "view": "./src-tauri/target/debug/PDL view",
-    "start": "npm run tauri dev"
+    "pdl": "./src-tauri/target/debug/PDL",
+    "view": "npm run pdl view",
+    "prep_interpreter": "if [ ! -d .venv ]; then python3.12 -mvenv .venv; source .venv/bin/activate; pip install -e ..; fi",
+    "start": "npm run prep_interpreter && npm run tauri dev"
   },
   "dependencies": {
     "@patternfly/react-code-editor": "^6.1.0",
