@@ -5,6 +5,8 @@ import {
   DescriptionListDescription,
 } from "@patternfly/react-core"
 
+import Result from "../transcript/Result"
+
 type Props = {
   block: import("../../helpers").PdlBlockWithContext
 }
@@ -17,7 +19,9 @@ export default function SummaryTabContent({ block }: Props) {
           <DescriptionListTerm>
             {c.role[0].toUpperCase() + c.role.slice(1)}
           </DescriptionListTerm>
-          <DescriptionListDescription>{c.content}</DescriptionListDescription>
+          <DescriptionListDescription>
+            <Result result={c.content} />
+          </DescriptionListDescription>
         </DescriptionListGroup>
       ))}
     </DescriptionList>

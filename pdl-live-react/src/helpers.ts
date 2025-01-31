@@ -59,7 +59,7 @@ export function hasParser(
   return isNonScalarPdlBlock(data) && "result" in data
 }
 
-const markdownPattern = /[`#]/
+const markdownPattern = /[`#*]/
 /** Should we render `s` with react-markdown? */
 export function isMarkdownish(s: string): boolean {
   /* try {
