@@ -253,6 +253,7 @@ def process_block(
     result: Any
     background: Messages
     trace: BlockType
+    start_nanos=time.time_ns()
     try:
         if not isinstance(block, Block):
             try:
@@ -305,21 +306,20 @@ def process_advanced_block_timed(
     block: AdvancedBlockType,
     loc: LocationType,
 ) -> tuple[Any, Messages, ScopeType, BlockType]:
-    start_nanos = time.time_ns()
+    block.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     end_nanos = time.time_ns()
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
                 update={
-                    "start_nanos": start_nanos,
                     "end_nanos": end_nanos,
                     "context": scope["pdl_context"],
                 }
             )
         case Block():
             trace = trace.model_copy(
-                update={"start_nanos": start_nanos, "end_nanos": end_nanos}
+                update={"end_nanos": end_nanos}
             )
     return result, background, scope, trace
 
