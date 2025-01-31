@@ -1,5 +1,5 @@
 use serde_json::Value;
-use std::fs;
+use std::fs::read;
 use std::path::Path;
 use urlencoding::encode;
 
@@ -9,7 +9,7 @@ use tauri_plugin_cli::CliExt;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn read_trace(trace_file: &str) -> Response {
-    let data = fs::read(trace_file).unwrap();
+    let data = read(trace_file).unwrap();
     Response::new(data)
 }
 
@@ -19,13 +19,6 @@ pub fn run() {
         .setup(|app| {
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_cli::init())?;
-
-            // let tmp =  app.handle().path().app_local_data_dir().join("mytraces");
-
-            //let tmp_dir = TempDir::new("pdl")?;
-            //println!("TMP {:?}", tmp_dir);
-            //let scope = app.fs_scope();
-            //let _ = scope.allow_directory(tmp_dir.path(), false); // TODO error handling
 
             // Default to GUI if the app was opened with no CLI args.
             if std::env::args_os().count() <= 1 {
@@ -101,8 +94,9 @@ pub fn run() {
 fn gui(app: tauri::AppHandle, path: String) -> Result<(), tauri::Error> {
     #[cfg(all(not(debug_assertions), windows))]
     remove_windows_console();
-    tauri::WebviewWindowBuilder::new(&app, "label", tauri::WebviewUrl::App(path.into()))
+    tauri::WebviewWindowBuilder::new(&app, "main", tauri::WebviewUrl::App(path.into()))
         .title("Prompt Declaration Language")
+        .zoom_hotkeys_enabled(true)
         .inner_size(1400.0, 1050.0)
         .build()?;
     Ok(())
