@@ -253,26 +253,39 @@ def process_block(
     result: Any
     background: Messages
     trace: BlockType
-    if not isinstance(block, Block):
-        try:
-            result = process_expr(scope, block, loc)
-        except PDLRuntimeExpressionError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, location=loc, program=block),
-            ) from exc
-        background = [{"role": state.role, "content": stringify(result)}]
-        trace = stringify(result)
-        if state.yield_background:
-            yield_background(background)
-        if state.yield_result:
-            yield_result(result, BlockKind.DATA)
-        append_log(state, "pdl_context", background)
-    else:
-        result, background, scope, trace = process_advanced_block_timed(
-            state, scope, block, loc
-        )
+    try:
+        if not isinstance(block, Block):
+            try:
+                result = process_expr(scope, block, loc)
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+                ) from exc
+            background = [{"role": state.role, "content": stringify(result)}]
+            trace = stringify(result)
+            if state.yield_background:
+                yield_background(background)
+            if state.yield_result:
+                yield_result(result, BlockKind.DATA)
+            append_log(state, "pdl_context", background)
+        else:
+            result, background, scope, trace = process_advanced_block_timed(
+                state, scope, block, loc
+            )
+    except EOFError as exc:
+        raise PDLRuntimeError(
+            "EOF",
+            loc=loc,
+            trace=ErrorBlock(msg="EOF", location=loc, program=block),
+        ) from exc
+    except KeyboardInterrupt as exc:
+        raise PDLRuntimeError(
+            "Keyboard Interrupt",
+            loc=loc,
+            trace=ErrorBlock(msg="Keyboard Interrupt", location=loc, program=block),
+        ) from exc
     scope = scope | {"pdl_context": background}
     return result, background, scope, trace
 
