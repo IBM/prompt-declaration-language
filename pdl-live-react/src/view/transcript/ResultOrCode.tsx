@@ -22,7 +22,7 @@ export default function ResultOrCode({ block, term }: Props) {
       </>
     ))
     .with({ result: P._ }, (data) => (
-      <Result result={data.result} term={term} />
+      <Result result={data.result} term={term} limitHeight />
     ))
     .otherwise((data) => <Code block={data} />)
 }

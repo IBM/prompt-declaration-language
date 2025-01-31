@@ -15,26 +15,36 @@ type Props = {
   result: number | string | unknown
   lang?: SupportedLanguage
   term?: string
+  limitHeight?: boolean
 }
 
-export default function Result({ result, lang, term = "Result" }: Props) {
+export default function Result({
+  result,
+  lang,
+  term = "Result",
+  limitHeight = false,
+}: Props) {
   const isCode = lang && result
+
+  const innerContent = isCode ? (
+    <Code block={result} language={lang} />
+  ) : (
+    <Value>{result}</Value>
+  )
+
+  const content = !limitHeight ? (
+    innerContent
+  ) : (
+    <Panel className="pdl-result-panel" isScrollable={!isCode}>
+      <PanelMain>{innerContent}</PanelMain>
+    </Panel>
+  )
 
   return (
     <>
       <DescriptionListGroup>
         <DescriptionListTerm>{term}</DescriptionListTerm>
-        <DescriptionListDescription>
-          <Panel className="pdl-result-panel" isScrollable={!isCode}>
-            <PanelMain>
-              {isCode ? (
-                <Code block={result} language={lang} />
-              ) : (
-                <Value>{result}</Value>
-              )}
-            </PanelMain>
-          </Panel>
-        </DescriptionListDescription>
+        <DescriptionListDescription>{content}</DescriptionListDescription>
       </DescriptionListGroup>
     </>
   )
