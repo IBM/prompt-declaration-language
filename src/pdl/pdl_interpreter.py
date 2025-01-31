@@ -253,7 +253,6 @@ def process_block(
     result: Any
     background: Messages
     trace: BlockType
-    start_nanos=time.time_ns()
     try:
         if not isinstance(block, Block):
             try:
@@ -318,9 +317,7 @@ def process_advanced_block_timed(
                 }
             )
         case Block():
-            trace = trace.model_copy(
-                update={"end_nanos": end_nanos}
-            )
+            trace = trace.model_copy(update={"end_nanos": end_nanos})
     return result, background, scope, trace
 
 
