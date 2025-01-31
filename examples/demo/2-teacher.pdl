@@ -378,31 +378,49 @@ defs:
       data: ${filtered}
 
 
-text:
-- "----- Loading seed examples -----\n\n"
-- def: seed_examples
-  read: ./qna.yaml
-  parser: yaml
-- "\n\n----- Generating questions -----\n\n"
-- def: generated_questions
-  call: ${gen_questions_freeform}
-  spec: [{icl_question: str, icl_answer: str, question: str}]
-  args:
-    task_description: ${seed_examples.task_description}
-    seed_examples: ${seed_examples.seed_examples}
-- "\n\n----- Filtering questions -----\n\n"
-- def: filtered_questions
-  call: ${filter_questions}
-  spec: [{icl_question: str, icl_answer: str, question: str}]
-  args:
-    task_description: ${seed_examples.task_description}
-    questions: ${generated_questions}
-- "\n\n----- Generating answers -----\n\n"
-- def: qa_pairs
-  call: ${gen_answers}
-  args:
-    questions: ${filtered_questions} 
-- "\n\n----- Filtering QA pairs -----\n\n"
+lastOf:
+- text: "----- Loading seed examples -----\n\n"
+  # contribute: [log]
+- defs:
+    seed_examples:
+      read: ./qna.yaml
+      parser: yaml
+  text: ${seed_examples}
+  # contribute: [log]
+- text: "\n\n----- Generating questions -----\n\n"
+  # contribute: [log]
+- defs:
+    generated_questions:
+      call: ${gen_questions_freeform}
+      spec: [{icl_question: str, icl_answer: str, question: str}]
+      args:
+        task_description: ${seed_examples.task_description}
+        seed_examples: ${seed_examples.seed_examples}
+  text:
+    ${generated_questions}
+  # contribute: [log]
+- text: "\n\n----- Filtering questions -----\n\n"
+  # contribute: [log]
+- defs:
+   filtered_questions:
+      call: ${filter_questions}
+      spec: [{icl_question: str, icl_answer: str, question: str}]
+      args:
+        task_description: ${seed_examples.task_description}
+        questions: ${generated_questions}
+  text: ${filtered_questions}
+  # contribute: [log]
+- text: "\n\n----- Generating answers -----\n\n"
+  # contribute: [log]
+- defs:
+    qa_pairs:
+      call: ${gen_answers}
+      args:
+        questions: ${filtered_questions} 
+  text: ${qa_pairs}
+  # contribute: [log]
+- text: "\n\n----- Filtering QA pairs -----\n\n"
+  # contribute: [log]
 - call: ${filter_question_answer_pair}
   args:
     qa_pairs: ${qa_pairs}

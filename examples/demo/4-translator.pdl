@@ -1,15 +1,21 @@
 description: PDL program
 text:
-- "What is APR?\n"
+- text: "What is APR?\n"
+  contribute: [context]
 - model: replicate/ibm-granite/granite-3.0-8b-instruct
+  input: ${pdl_context}
+  contribute: [context]
 - repeat:
-    text:
-    - read:
-      message: "\nLanguage please: "
-      def: language
-    - if: ${ language != 'stop' }
-      then:
-        text:
-        - "\n\nTranslate the above to ${ language }\n"
-        - model: replicate/ibm-granite/granite-3.0-8b-instruct
+    defs:
+      language:
+        read:
+        message: "\nLanguage please: "
+    if: ${ language != 'stop' }
+    then:
+      text:
+      - text: "\n\nTranslate the above to ${ language }\n"
+        contribute: [context]  
+      - model: replicate/ibm-granite/granite-3.0-8b-instruct
+        input: ${pdl_context}
+        contribute: [context]  
   until: ${ language == 'stop' }

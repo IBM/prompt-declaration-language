@@ -7,35 +7,34 @@ defs:
   # The variable `TRUTH` shall be the text of the file
   TRUTH:
     read: ./ground_truth.txt
+  # Use replicate.com to invoke a Granite model with a prompt.
+  EXPLANATION:
+    model: replicate/ibm-granite/granite-3.0-8b-instruct
+    input: |
+        Here is some info about the location of the function in the repo.
+        repo: 
+        ${ CODE.repo_info.repo }
+        path: ${ CODE.repo_info.path }
+        Function_name: ${ CODE.repo_info.function_name }
+
+
+        Explain the following code:
+        ```
+        ${ CODE.source_code }```
+    parameters:
+      # Use no LLM creativity.  (Note that 0 is the default; this line has no effect)
+      temperature: 0
+
 text:
 # Print the source code to the console
-- "\n${ CODE.source_code }\n"
-# Use replicate.com to invoke a Granite model with a prompt.  Output AND
-# set the variable `EXPLANATION` to the output.
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
-  def: EXPLANATION
-  input: |
-      Here is some info about the location of the function in the repo.
-      repo: 
-      ${ CODE.repo_info.repo }
-      path: ${ CODE.repo_info.path }
-      Function_name: ${ CODE.repo_info.function_name }
-
-
-      Explain the following code:
-      ```
-      ${ CODE.source_code }```
-  parameters:
-    # Use no LLM creativity.  (Note that 0 is the default; this line has no effect)
-    temperature: 0
 - |
+  ${ CODE.source_code }
+  ${ EXPLANATION }
 
 
   EVALUATION:
   The similarity (Levenshtein) between this answer and the ground truth is:
-# We aren't only defining `EVAL`, we are also executing it.
-- def: EVAL
-  lang: python
+- lang: python
   # (Use `pip install textdistance` if needed to install the textdistance package)
   code: |
     import textdistance

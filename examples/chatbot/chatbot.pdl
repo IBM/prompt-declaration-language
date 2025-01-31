@@ -3,22 +3,26 @@ text:
 # Allow the user to type any question, implicitly adding the question to the context.
 - read:
   message: "What is your query?\n"
+  contribute: [ context ]
 - repeat:
     text:
     # Send context to Granite model hosted at replicate.com
     - model: replicate/ibm-granite/granite-3.0-8b-instruct
+      input: ${pdl_context}
     # Allow the user to type 'yes', 'no', or anything else, storing
     # the input into a variable named `eval`.  The input is also implicitly
     # added to the context.
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
-    - "\n"
+      contribute: [ context ]
+    - text: "\n"
+      contribute: [ context ]
     # If the user only typed "no", prompt the user for input to add to the context.
     - if: ${ eval == 'no' }
       then:
-        text:
-        - read:
-          message: "Why not?\n"
+        read:
+        message: "Why not?\n"
+        contribute: [ context ]
   # If the user typed only "yes", finish the `repeat` and end the program
   until: ${ eval == 'yes'}
