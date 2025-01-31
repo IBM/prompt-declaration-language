@@ -253,26 +253,39 @@ def process_block(
     result: Any
     background: Messages
     trace: BlockType
-    if not isinstance(block, Block):
-        try:
-            result = process_expr(scope, block, loc)
-        except PDLRuntimeExpressionError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, location=loc, program=block),
-            ) from exc
-        background = [{"role": state.role, "content": stringify(result)}]
-        trace = stringify(result)
-        if state.yield_background:
-            yield_background(background)
-        if state.yield_result:
-            yield_result(result, BlockKind.DATA)
-        append_log(state, "pdl_context", background)
-    else:
-        result, background, scope, trace = process_advanced_block_timed(
-            state, scope, block, loc
-        )
+    try:
+        if not isinstance(block, Block):
+            try:
+                result = process_expr(scope, block, loc)
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+                ) from exc
+            background = [{"role": state.role, "content": stringify(result)}]
+            trace = stringify(result)
+            if state.yield_background:
+                yield_background(background)
+            if state.yield_result:
+                yield_result(result, BlockKind.DATA)
+            append_log(state, "pdl_context", background)
+        else:
+            result, background, scope, trace = process_advanced_block_timed(
+                state, scope, block, loc
+            )
+    except EOFError as exc:
+        raise PDLRuntimeError(
+            "EOF",
+            loc=loc,
+            trace=ErrorBlock(msg="EOF", location=loc, program=block),
+        ) from exc
+    except KeyboardInterrupt as exc:
+        raise PDLRuntimeError(
+            "Keyboard Interrupt",
+            loc=loc,
+            trace=ErrorBlock(msg="Keyboard Interrupt", location=loc, program=block),
+        ) from exc
     scope = scope | {"pdl_context": background}
     return result, background, scope, trace
 
@@ -292,22 +305,19 @@ def process_advanced_block_timed(
     block: AdvancedBlockType,
     loc: LocationType,
 ) -> tuple[Any, Messages, ScopeType, BlockType]:
-    start_nanos = time.time_ns()
+    block.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     end_nanos = time.time_ns()
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
                 update={
-                    "start_nanos": start_nanos,
                     "end_nanos": end_nanos,
                     "context": scope["pdl_context"],
                 }
             )
         case Block():
-            trace = trace.model_copy(
-                update={"start_nanos": start_nanos, "end_nanos": end_nanos}
-            )
+            trace = trace.model_copy(update={"end_nanos": end_nanos})
     return result, background, scope, trace
 
 
