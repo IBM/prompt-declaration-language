@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router"
 import { useEffect, useState, type PropsWithChildren } from "react"
 
 import { Page, PageSection } from "@patternfly/react-core"
