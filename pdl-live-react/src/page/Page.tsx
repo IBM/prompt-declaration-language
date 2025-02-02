@@ -39,6 +39,7 @@ export default function PDLPage(props: Props) {
 
   return (
     <Page
+      drawerMinSize="600px"
       isNotificationDrawerExpanded={showingDetail}
       notificationDrawer={
         <DrawerContent value={typeof value === "string" ? value : ""} />
