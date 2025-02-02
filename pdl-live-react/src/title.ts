@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation } from "react-router"
 
 function capitalize(s: string) {
   return s.length === 0 ? s : s[0].toUpperCase() + s.slice(1)

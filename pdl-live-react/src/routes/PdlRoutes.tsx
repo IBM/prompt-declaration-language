@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router"
 
 const Demo = lazy(() => import("../page/Demo"))
 const About = lazy(() => import("../page/About"))

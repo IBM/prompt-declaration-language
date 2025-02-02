@@ -1,15 +1,12 @@
-import { useCallback, type MouseEvent } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useCallback } from "react"
+import { useLocation, useNavigate } from "react-router"
 
 import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
 
-import type Context from "../../Context"
-import type { PdlBlock } from "../../pdl_ast"
-
 type Props = {
   def: string
-  value?: PdlBlock
-  ctx: Context
+  value?: import("../../pdl_ast").PdlBlock
+  ctx: import("../../Context").default
   supportsDrilldown?: boolean
 }
 
@@ -21,29 +18,12 @@ export default function Def(props: Props) {
   const { hash } = useLocation()
   const { id } = ctx
   const drilldown = useCallback(
-    (evt: MouseEvent) => {
+    (evt: import("react").MouseEvent) => {
       evt.stopPropagation()
       navigate(`?detail&type=def&id=${id}&def=${def}${hash}`)
     },
     [def, id, hash, navigate],
   )
-  /*const drilldown = useCallback(
-    (evt: MouseEvent) => {
-      if (value) {
-        evt.stopPropagation()
-        ctx.setDrawerContent({
-          header: "Variable definition",
-          description: (
-            <BreadcrumbBar>
-              <Def {...props} supportsDrilldown={false} />
-            </BreadcrumbBar>
-          ),
-          body: <DefContent value={value} ctx={ctx} />,
-        })
-      }
-    },
-    [value, props, ctx],
-  )*/
 
   return (
     <BreadcrumbBarItem
