@@ -5,7 +5,7 @@ const Demo = lazy(() => import("../page/Demo"))
 const About = lazy(() => import("../page/About"))
 const Local = lazy(() => import("../page/Local"))
 const MyTrace = lazy(() => import("../page/MyTrace"))
-const Welcome = lazy(() => import("../page/Welcome"))
+const Welcome = lazy(() => import("../page/welcome/Welcome"))
 const Uploader = lazy(() => import("../page/Uploader"))
 const PageNotFound = lazy(() => import("../page/PageNotFound"))
 
