@@ -19,9 +19,13 @@ import "./Page.css"
 
 const notFilled = { isFilled: false }
 const withPadding = { default: "padding" as const }
+const withoutPadding = { default: "noPadding" as const }
 
 type Props = PropsWithChildren<
   PageBreadcrumbProps & {
+    /** Should the page content use default padding? [default: true] */
+    padding?: boolean
+
     /** The trace content */
     value?: string
   }
@@ -35,7 +39,7 @@ export default function PDLPage(props: Props) {
   const [searchParams] = useSearchParams()
   const showingDetail = searchParams.has("detail")
 
-  const { value, children } = props
+  const { padding = true, value, children } = props
 
   return (
     <Page
@@ -58,7 +62,10 @@ export default function PDLPage(props: Props) {
       breadcrumb={<PageBreadcrumbs {...props} />}
     >
       {children && (
-        <PageSection padding={withPadding} aria-label="Non-viewer content">
+        <PageSection
+          padding={padding ? withPadding : withoutPadding}
+          aria-label="Non-viewer content"
+        >
           {children}
         </PageSection>
       )}
