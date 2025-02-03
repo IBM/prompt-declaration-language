@@ -14,7 +14,8 @@ import { getMyTraces } from "../page/MyTraces"
 export default function PdlRoutes() {
   return (
     <Routes>
-      <Route index path="welcome" element={<Welcome />} />
+      <Route index element={<Welcome />} />
+      <Route path="welcome" element={<Welcome />} />
       <Route path="local/:traceFile" element={<Local />} />
       <Route path="about" element={<About />} />
       <Route path="upload" element={<Uploader />} />

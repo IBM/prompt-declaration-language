@@ -1,34 +1,40 @@
 import {
+  Content,
   Panel,
+  PanelFooter,
   PanelHeader,
   PanelMain,
   PanelMainBody,
   Stack,
-  Title,
 } from "@patternfly/react-core"
-import Page from "../Page"
 
+import Page from "../Page"
 import Intro from "./Intro"
 import Links from "./Links"
 import Tiles from "./Tiles"
+
+import "./Welcome.css"
 
 export default function Welcome() {
   return (
     <Page breadcrumb1="Welcome" padding={false}>
       <Panel>
         <PanelHeader>
-          <Title headingLevel="h1">Prompt Declaration Language (PDL)</Title>
+          <Content component="h1">Prompt Declaration Language (PDL)</Content>
+          <Intro />
         </PanelHeader>
 
-        <PanelMain>
+        <PanelMain className="pdl-welcome-content">
           <PanelMainBody>
-            <Intro />
             <Stack hasGutter>
-              <Links />
               <Tiles />
             </Stack>
           </PanelMainBody>
         </PanelMain>
+
+        <PanelFooter>
+          <Links />
+        </PanelFooter>
       </Panel>
     </Page>
   )
