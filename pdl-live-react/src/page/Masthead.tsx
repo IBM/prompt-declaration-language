@@ -1,3 +1,6 @@
+import { useCallback } from "react"
+import { useSearchParams } from "react-router"
+
 import {
   Flex,
   Masthead,
@@ -25,12 +28,25 @@ const alignRight = { default: "alignEnd" as const }
 const alignCenter = { default: "alignItemsCenter" as const }
 
 function Toggle() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const onSidebarToggle = useCallback(() => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    const isOpen = !!searchParams.get("sidebar")
+    if (isOpen) {
+      newSearchParams.delete("sidebar")
+    } else {
+      newSearchParams.set("sidebar", "true")
+    }
+    setSearchParams(newSearchParams)
+  }, [searchParams, setSearchParams])
+
   return (
     <MastheadToggle>
       <PageToggleButton
         variant="plain"
         aria-label="Global navigation"
         id="pdl--vertical-nav-toggle"
+        onSidebarToggle={onSidebarToggle}
       >
         <BarsIcon />
       </PageToggleButton>
