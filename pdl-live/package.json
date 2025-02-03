@@ -4,7 +4,7 @@
   "description": "Interactive PDL viewer.",
   "private": true,
   "devDependencies": {
-    "@types/node": "22.10.5",
+    "@types/node": "22.13.0",
     "gts": "^6.0.2",
     "ts-loader": "^9.5.1",
     "typescript": "~5.7.2",
