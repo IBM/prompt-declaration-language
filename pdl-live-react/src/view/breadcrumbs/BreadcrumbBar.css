@@ -1,5 +1,9 @@
-.pf-v6-theme-dark .pdl-breadcrumb-bar li a {
-  color: var(--pf-t--global--background--color--primary--default);
+.pf-v6-theme-dark .pdl-breadcrumb-bar li {
+  &.pdl-breadcrumb-bar-item--kind {
+    a {
+      color: var(--pf-t--global--background--color--primary--default);
+    }
+  }
 }
 
 .pdl-breadcrumb-bar {
