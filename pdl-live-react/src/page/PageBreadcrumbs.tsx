@@ -1,4 +1,4 @@
-import { Link } from "react-router"
+import { useSearchParams, Link } from "react-router"
 import { useCallback } from "react"
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core"
 
@@ -14,7 +14,13 @@ export default function PageBreadcrumbs({
   breadcrumb1,
   breadcrumb2,
 }: PageBreadcrumbProps) {
-  const renderHome = useCallback(() => <Link to="/welcome">Home</Link>, [])
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString()
+  const search = s.length > 0 ? "?" + s : ""
+  const renderHome = useCallback(
+    () => <Link to={"/welcome" + search}>Home</Link>,
+    [search],
+  )
 
   return (
     <Breadcrumb>
