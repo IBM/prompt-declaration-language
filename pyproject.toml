@@ -12,7 +12,7 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm>=1.59.6,<1.59.9",
+  "litellm>=1.57.3,<1.59.9",
   "termcolor~=2.0",
   "ipython~=8.0",
 ]
