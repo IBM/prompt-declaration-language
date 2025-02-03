@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router"
-import { useEffect, useState, type PropsWithChildren } from "react"
+import { useEffect, useState } from "react"
 
 import { Page, PageSection } from "@patternfly/react-core"
 
@@ -21,7 +21,7 @@ const notFilled = { isFilled: false }
 const withPadding = { default: "padding" as const }
 const withoutPadding = { default: "noPadding" as const }
 
-type Props = PropsWithChildren<
+type Props = import("react").PropsWithChildren<
   PageBreadcrumbProps & {
     /** Should the page content use default padding? [default: true] */
     padding?: boolean
@@ -50,7 +50,6 @@ export default function PDLPage(props: Props) {
         <DrawerContent value={typeof value === "string" ? value : ""} />
       }
       isContentFilled
-      isManagedSidebar
       sidebar={<Sidebar />}
       masthead={
         <DarkModeContext.Provider value={darkMode}>

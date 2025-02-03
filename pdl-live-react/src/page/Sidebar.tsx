@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router"
+import { Link, useLocation, useSearchParams } from "react-router"
 
 import {
   Nav,
@@ -12,10 +12,11 @@ import Demos from "./DemoNavItems"
 import MyTraces from "./MyTracesNavItems"
 
 export default function Sidebar() {
+  const [searchParams] = useSearchParams()
   const { hash, pathname: activeItem } = useLocation()
 
   return (
-    <PageSidebar>
+    <PageSidebar isSidebarOpen={!!searchParams.get("sidebar")}>
       <PageSidebarBody>
         <Nav>
           <NavList>
