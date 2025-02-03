@@ -24,8 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      #- name: Install Linux dependencies
-      #  run: sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev # for tauri builds in linux
+      - name: Install Linux dependencies
+        run: sudo apt update && sudo apt install -y libglib2.0-dev libgtk-3-dev libwebkit2gtk-4.1-dev # for tauri builds in linux
       - name: Install NodeJs dependencies
         run: npm ci
       - name: Install Playwright Browsers
