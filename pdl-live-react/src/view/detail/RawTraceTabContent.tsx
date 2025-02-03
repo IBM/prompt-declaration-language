@@ -1,11 +1,6 @@
-import type Model from "../timeline/model"
-
 import Code from "../Code"
+import { type NonScalarPdlBlock as Model } from "../../helpers"
 
-export default function RawTraceTabContent({
-  block,
-}: {
-  block: Model[number]
-}) {
-  return <Code block={block.block} showLineNumbers raw />
+export default function RawTraceTabContent({ block }: { block: Model }) {
+  return <Code block={block} showLineNumbers raw />
 }

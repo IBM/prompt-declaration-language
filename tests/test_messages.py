@@ -26,19 +26,23 @@ array:
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
+            "defsite": "array.0.message",
         },
         {
             "role": "user",
             "content": "Write a Python function that implement merge sort.",
+            "defsite": "array.1.message",
         },
     ]
     assert output == [
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
+            "defsite": "array.0.message",
         },
         {
             "role": "user",
             "content": "Write a Python function that implement merge sort.",
+            "defsite": "array.1.message",
         },
     ]

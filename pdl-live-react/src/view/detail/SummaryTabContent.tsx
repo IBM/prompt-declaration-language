@@ -11,10 +11,10 @@ import TextItems from "./kind/Text"
 import ModelItems from "./kind/Model"
 import FunctionItems from "./kind/Function"
 
-import type Model from "../timeline/model"
+import { type NonScalarPdlBlock as Block } from "../../helpers"
 
-export default function SummaryTabContent({ block }: { block: Model[number] }) {
-  return <DescriptionList>{descriptionItems(block.block)}</DescriptionList>
+export default function SummaryTabContent({ block }: { block: Block }) {
+  return <DescriptionList>{descriptionItems(block)}</DescriptionList>
 }
 
 function descriptionItems(block: import("../../helpers").NonScalarPdlBlock) {

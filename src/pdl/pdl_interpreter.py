@@ -145,6 +145,7 @@ class InterpreterState(BaseModel):
     # batch=1: call to generate with `input`
     role: RoleType = "user"
     cwd: Path = Path.cwd()
+    id_stack: list[str] = []
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -154,6 +155,19 @@ class InterpreterState(BaseModel):
 
     def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
         return self.model_copy(update={"role": role})
+
+    def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
+        stack = self.id_stack.copy() if self.id_stack is not None else []
+        stack.append(n)
+        return self.model_copy(update={"id_stack": stack})
+
+    def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
+        return self.with_id(str(i))
+
+    def with_pop(self: "InterpreterState") -> "InterpreterState":
+        stack = self.id_stack.copy() if self.id_stack is not None else []
+        stack.pop()
+        return self.model_copy(update={"id_stack": stack})
 
 
 def generate(
@@ -255,7 +269,15 @@ def process_block(
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, location=loc, program=block),
                 ) from exc
-            background = [{"role": state.role, "content": stringify(result)}]
+            background = [
+                {
+                    "role": state.role,
+                    "content": stringify(result),
+                    "defsite": ".".join(
+                        state.id_stack
+                    ),  # Warning: defsite for a literal value
+                }
+            ]
             trace = stringify(result)
             if state.yield_background:
                 yield_background(background)
@@ -297,16 +319,16 @@ def process_advanced_block_timed(
     block: AdvancedBlockType,
     loc: LocationType,
 ) -> tuple[Any, Messages, ScopeType, BlockType]:
+    state = state.with_id(str(block.kind))
+    if state.id_stack is not None:
+        block.id = ".".join(state.id_stack)
     block.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     end_nanos = time.time_ns()
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
-                update={
-                    "end_nanos": end_nanos,
-                    "context": scope["pdl_context"],
-                }
+                update={"end_nanos": end_nanos, "context": scope["pdl_context"]}
             )
         case Block():
             trace = trace.model_copy(update={"end_nanos": end_nanos})
@@ -516,17 +538,21 @@ def process_block_body(
                 scope,
                 loc,
             )
-            result = {"role": state.role, "content": content}
+            result = {"role": state.role, "content": content, "defsite": block.id}
         case IfBlock():
             b = process_condition_of(block, "condition", scope, loc, "if")
             if b:
+                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "then", state, scope, loc
                 )
+                state = state.with_pop()
             elif block.elses is not None:
+                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "elses", state, scope, loc, "else"
                 )
+                state = state.with_pop()
             else:
                 result = ""
                 background = []
@@ -607,8 +633,10 @@ def process_block_body(
             )
             repeat_loc = append(loc, "repeat")
             try:
+                iidx = 0
                 first = True
                 for _ in range(n):
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -618,7 +646,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": messages_concat(pdl_context_init, background)
@@ -637,6 +671,8 @@ def process_block_body(
                     results.append(iteration_result)
                     background = messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iterations_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iterations_trace})
@@ -682,9 +718,11 @@ def process_block_body(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
+            iidx = 0
             try:
                 first = True
                 for i in range(lengths[0]):
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -694,7 +732,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": messages_concat(pdl_context_init, background)
@@ -715,6 +759,8 @@ def process_block_body(
                     background = messages_concat(background, iteration_background)
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iter_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iter_trace})
@@ -739,7 +785,9 @@ def process_block_body(
             repeat_loc = append(loc, "repeat")
             try:
                 first = True
+                iidx = 0
                 while not stop:
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -749,7 +797,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": messages_concat(pdl_context_init, background)
@@ -769,6 +823,8 @@ def process_block_body(
                     background = messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
                     stop = process_condition_of(block, "until", scope, loc)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iterations_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iterations_trace})
@@ -872,13 +928,17 @@ def process_defs(
 ) -> tuple[ScopeType, dict[str, BlockType]]:
     defs_trace: dict[str, BlockType] = {}
     defloc = append(loc, "defs")
+    idx = 0
     for x, block in defs.items():
         newloc = append(defloc, x)
+        state = state.with_iter(idx)
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
         result, _, _, block_trace = process_block(state, scope, block, newloc)
         scope = scope | {x: result}
         defs_trace[x] = block_trace
+        idx = idx + 1
+        state = state.with_pop()
     return scope, defs_trace
 
 
@@ -970,6 +1030,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         pdl_context_init = scope["pdl_context"]
         try:
             for i, block in enumerate(blocks):
+                iteration_state = iteration_state.with_iter(i)
                 scope = scope | {
                     "pdl_context": messages_concat(pdl_context_init, background)
                 }
@@ -985,6 +1046,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 results.append(iteration_result)
                 background = messages_concat(background, iteration_background)
                 trace.append(t)  # type: ignore
+                iteration_state = iteration_state.with_pop()
         except PDLRuntimeError as exc:
             trace.append(exc.trace)  # type: ignore
             raise PDLRuntimeProcessBlocksError(
@@ -1238,6 +1300,7 @@ def process_call_model(
         append_log(state, "Model Input", litellm_params)
         # else:
         #    append_log(state, "Model Input", messages_to_str(model_input))
+        msg["defsite"] = block.id
         background: Messages = [msg]
         result = "" if msg["content"] is None else msg["content"]
         append_log(state, "Model Output", result)
@@ -1382,17 +1445,23 @@ def process_call_code(
         case "python":
             try:
                 result = call_python(code_s, scope)
-                background = [{"role": state.role, "content": str(result)}]
+                background = [
+                    {"role": state.role, "content": str(result), "defsite": block.id}
+                ]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
                     loc=loc,
-                    trace=block.model_copy(update={"code": code_s}),
+                    trace=block.model_copy(
+                        update={"code": code_s, "defsite": block.id}
+                    ),
                 ) from exc
         case "command":
             try:
                 result = call_command(code_s)
-                background = [{"role": state.role, "content": result}]
+                background = [
+                    {"role": state.role, "content": result, "defsite": block.id}
+                ]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1402,7 +1471,9 @@ def process_call_code(
         case "jinja":
             try:
                 result = call_jinja(code_s, scope)
-                background = [{"role": state.role, "content": result}]
+                background = [
+                    {"role": state.role, "content": result, "defsite": block.id}
+                ]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1412,7 +1483,9 @@ def process_call_code(
         case "pdl":
             try:
                 result = call_pdl(code_s, scope)
-                background = [{"role": state.role, "content": result}]
+                background = [
+                    {"role": state.role, "content": result, "defsite": block.id}
+                ]
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1575,7 +1648,7 @@ def process_input(
             s = "".join(contents)
             append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
-    background: Messages = [{"role": state.role, "content": s}]
+    background: Messages = [{"role": state.role, "content": s, "defsite": block.id}]
     return s, background, scope, trace
 
 

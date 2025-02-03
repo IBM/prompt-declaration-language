@@ -124,7 +124,16 @@ def test_code_var():
     state = InterpreterState()
     data = Program.model_validate(code_var_data)
     text, _, scope, _ = process_prog(state, empty_scope, data)
-    assert scope == {"pdl_context": [{"role": "user", "content": text}], "I": 0}
+    assert scope == {
+        "pdl_context": [
+            {
+                "role": "user",
+                "content": text,
+                "defsite": "text.0.code",
+            }
+        ],
+        "I": 0,
+    }
     assert text == "0"
 
 

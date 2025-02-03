@@ -35,11 +35,11 @@ export default function PDLPage(props: Props) {
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
+  const { padding = true, value, children } = props
+
   /** Manage the drawer that slides in from the right */
   const [searchParams] = useSearchParams()
-  const showingDetail = searchParams.has("detail")
-
-  const { padding = true, value, children } = props
+  const showingDetail = searchParams.has("detail") && !!value
 
   if (value) {
     JSON.parse(value)

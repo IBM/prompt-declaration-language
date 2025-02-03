@@ -40,7 +40,9 @@ export default function Result({
     </Panel>
   )
 
-  return (
+  return !term ? (
+    content
+  ) : (
     <>
       <DescriptionListGroup>
         <DescriptionListTerm>{term}</DescriptionListTerm>

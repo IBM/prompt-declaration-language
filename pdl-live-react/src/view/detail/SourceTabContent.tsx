@@ -1,7 +1,6 @@
-import type Model from "../timeline/model"
-
 import Code from "../Code"
+import { type NonScalarPdlBlock as Model } from "../../helpers"
 
-export default function SourceTabContent({ block }: { block: Model[number] }) {
-  return <Code block={block.block} showLineNumbers />
+export default function SourceTabContent({ block }: { block: Model }) {
+  return <Code block={block} showLineNumbers />
 }

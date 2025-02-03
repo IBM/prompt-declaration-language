@@ -26,26 +26,26 @@ import {
 import EqualsIcon from "@patternfly/react-icons/dist/esm/icons/equals-icon"
 
 type Props = {
+  block: import("../../helpers").NonScalarPdlBlock
   def: string
   value: import("../../pdl_ast").PdlBlock
-  ctx: import("../../Context").default
 }
 
 const alignCenter = { default: "alignItemsCenter" as const }
 
-export default function TranscriptItemDef({ def: key, value, ctx }: Props) {
+export default function TranscriptItemDef({ block, def: key, value }: Props) {
   const breadcrumbs = useMemo(
     () => (
       <BreadcrumbBar>
-        <Def ctx={ctx} def={key} value={value} supportsDrilldown={false} />
+        <Def block={block} def={key} value={value} supportsDrilldown={false} />
       </BreadcrumbBar>
     ),
-    [key, value, ctx],
+    [block, key, value],
   )
 
+  const { id } = block
   const navigate = useNavigate()
   const { hash } = useLocation()
-  const { id } = ctx
   const drilldown = useCallback(
     () => navigate(`?detail&type=defs&id=${id}&def=${key}${hash}`),
     [key, id, hash, navigate],

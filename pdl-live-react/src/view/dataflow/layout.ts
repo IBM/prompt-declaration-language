@@ -12,11 +12,11 @@ const layoutFactory: LayoutFactory = (
   const options = { groupDistance: 80, nodeDistance: 50 }
   //return new ConcentricLayout(graph, options)
   //return new DagreLayout(graph)
-  //return new ForceLayout(graph)
+  //return new ForceLayout(graph, options)
   //  return new GridLayout(graph)
   //return new ConcentricLayout(graph)
-  return new ColaLayout(graph, Object.assign(options, { layoutOnDrag: false }))
-  // return new ColaLayout(graph, options)
+  //return new ColaLayout(graph, Object.assign(options, { layoutOnDrag: false }))
+  return new ColaLayout(graph, options)
   //return new ColaGroupsLayout(graph, options)
 }
 

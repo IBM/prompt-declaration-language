@@ -86,6 +86,8 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         return block
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
+    if block.id is not None:
+        d["id"] = block.id
     if block.start_nanos != 0:
         if block.context is not None and len(block.context) > 0:
             d["context"] = block.context

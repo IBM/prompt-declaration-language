@@ -28,7 +28,7 @@ function demoTiles() {
               </PanelMain>
             </Panel>
           ) : (
-            <>View {demo.name}</>
+            <></>
           )
         }
       >

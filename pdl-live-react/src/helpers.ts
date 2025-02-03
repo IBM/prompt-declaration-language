@@ -20,11 +20,11 @@ export type PdlBlockWithTiming = NonScalarPdlBlock & {
 }
 
 export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
-  context: { role: string; content: string }[]
+  context: { role: string; content: string; defsite?: string }[]
 }
 
 /** Does the given block have a `result` field? */
-export function hasResult(block: PdlBlock): block is PdlBlockWithResult {
+export function hasResult(block: unknown): block is PdlBlockWithResult {
   return (
     block != null &&
     typeof block === "object" &&
@@ -49,7 +49,7 @@ export function isPdlBlock(
 export function isNonScalarPdlBlock(
   data: unknown | PdlBlock,
 ): data is NonScalarPdlBlock {
-  return data != null && typeof data === "object"
+  return data != null && typeof data === "object" && "id" in data
 }
 
 /** Does the given block have a `parser` field? */

@@ -10,25 +10,15 @@ import {
   FlexItem,
 } from "@patternfly/react-core"
 
-import Def from "./Def"
 import Icon from "./Icon"
-import type Context from "../../Context"
 import Duration from "./Duration"
 import PrettyKind from "./PrettyKind"
-import BreadcrumbBar from "../breadcrumbs/BreadcrumbBar"
-import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
+import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
 
-import {
-  capitalizeAndUnSnakeCase,
-  hasTimingInformation,
-  hasResult,
-  nonNullable,
-  type NonScalarPdlBlock,
-} from "../../helpers"
+import { hasTimingInformation, type NonScalarPdlBlock } from "../../helpers"
 
 type Props = {
   className?: string
-  ctx: Context
   block: NonScalarPdlBlock
 }
 
@@ -40,33 +30,12 @@ export default function TranscriptItem(props: Props) {
   const { hash } = useLocation()
 
   const icon = Icon({ kind: props.block.kind })
-  const { ctx, block } = props
-  const { parents } = ctx
-  const { def } = block
-  const value = hasResult(block) && block.result
+  const { block } = props
+  const { id } = block
 
   const breadcrumbs = useMemo(
-    () => (
-      <BreadcrumbBar>
-        <>
-          {parents.filter(nonNullable).map((parent, idx, A) => {
-            const isKind = idx === A.length - 1
-            const className = isKind ? "pdl-breadcrumb-bar-item--kind" : ""
-            return (
-              <BreadcrumbBarItem
-                key={idx}
-                className={className}
-                detail={parent}
-              >
-                {capitalizeAndUnSnakeCase(parent)}
-              </BreadcrumbBarItem>
-            )
-          })}
-          {def && <Def def={def} ctx={ctx} value={value} />}
-        </>
-      </BreadcrumbBar>
-    ),
-    [def, value, parents, ctx],
+    () => <BreadcrumbBarForBlock block={block} />,
+    [block],
   )
 
   const headerContent = (
@@ -76,7 +45,6 @@ export default function TranscriptItem(props: Props) {
     </Flex>
   )
 
-  const { id } = ctx
   const drilldown = useCallback(
     () => navigate(`?detail&type=block&id=${id}${hash}`),
     [id, hash, navigate],
@@ -92,7 +60,7 @@ export default function TranscriptItem(props: Props) {
 
   return (
     <Card
-      data-id={ctx.id}
+      data-id={id}
       onClick={drilldown}
       className={
         "pdl-transcript-item" + (props.className ? " " + props.className : "")

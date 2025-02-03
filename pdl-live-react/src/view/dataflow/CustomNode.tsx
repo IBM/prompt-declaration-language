@@ -23,11 +23,14 @@ const CustomNode: FunctionComponent<CustomNodeProps> = (
   return (
     <DefaultNode
       {...props}
+      showStatusDecorator
       badge={(ordinal !== undefined ? `[${ordinal}] ` : "") + variant}
       badgeColor={
         variant === "Final Result"
           ? "var(--pf-t--global--icon--color--status--success--default)"
-          : "var(--pf-t--global--color--brand--default)"
+          : ordinal !== undefined
+            ? "var(--pf-t--global--color--brand--default)"
+            : "var(--pf-t--global--background--color--inverse--default)"
       }
       badgeTextColor="var(--pf-t--global--background--color--primary--default)"
       badgeBorderColor="transparent"
