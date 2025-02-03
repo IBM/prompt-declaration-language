@@ -43,6 +43,7 @@ export default function PDLPage(props: Props) {
 
   return (
     <Page
+      className="pdl-page"
       drawerMinSize="600px"
       isNotificationDrawerExpanded={showingDetail}
       notificationDrawer={
@@ -56,32 +57,25 @@ export default function PDLPage(props: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      horizontalSubnav={typeof value === "string" && <ViewerTabs />}
+      horizontalSubnav={<ViewerTabs hidden={typeof value !== "string"} />}
       groupProps={notFilled /* so breadcrumbs aren't filled */}
       isBreadcrumbGrouped
-      breadcrumb={<PageBreadcrumbs {...props} />}
+      breadcrumb={
+        <PageBreadcrumbs
+          breadcrumb1={props.breadcrumb1}
+          breadcrumb2={props.breadcrumb2}
+        />
+      }
     >
-      {children && (
-        <PageSection
-          padding={padding ? withPadding : withoutPadding}
-          aria-label="Non-viewer content"
-        >
-          {children}
-        </PageSection>
-      )}
-
-      {value && value.length > 0 && (
-        <PageSection
-          isFilled
-          hasOverflowScroll
-          className="pdl-content-section"
-          aria-label="PDL Viewer main section"
-        >
-          <DarkModeContext.Provider value={darkMode}>
-            <Viewer value={value} />
-          </DarkModeContext.Provider>
-        </PageSection>
-      )}
+      <PageSection
+        isFilled
+        hasOverflowScroll
+        padding={padding ? withPadding : withoutPadding}
+        className="pdl-content-section"
+        aria-label="PDL Viewer main section"
+      >
+        {children || (value && value.length > 0 && <Viewer value={value} />)}
+      </PageSection>
     </Page>
   )
 }

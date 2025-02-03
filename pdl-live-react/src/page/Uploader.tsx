@@ -22,7 +22,19 @@ import "./Uploader.css"
 
 const maxSize = 10 * 1024 * 1024
 
-export default function Uploader() {
+type Props = {
+  title?: string
+  helperText?: string
+  contentType?: string
+  fileExtension?: string
+}
+
+export default function Uploader({
+  title = "Upload Trace",
+  helperText = "Upload a JSON trace file",
+  contentType = "application/json",
+  fileExtension = ".json",
+}: Props) {
   const [value, setValue] = useState("")
   const [filename, setFilename] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -93,24 +105,24 @@ export default function Uploader() {
 
   const dropzoneProps = useMemo<FileUploadProps["dropzoneProps"]>(
     () => ({
-      accept: { "application/json": [".json"] },
+      accept: { [contentType]: [fileExtension] },
       maxSize,
       onDropRejected: (rejections) => {
         const error = rejections[0].errors[0]
         if (error.code === DropzoneErrorCode.FileTooLarge) {
           setMessage("File is larger than the limit of " + prettyBytes(maxSize))
         } else if (error.code === DropzoneErrorCode.FileInvalidType) {
-          setMessage("File is not a JSON file")
+          setMessage("Not a valid input file")
         }
         handleFileRejected()
       },
       onDropAccepted: handleFileAccepted,
     }),
-    [handleFileAccepted, handleFileRejected],
+    [contentType, fileExtension, handleFileAccepted, handleFileRejected],
   )
 
   return (
-    <Page breadcrumb1="Upload Trace" breadcrumb2={filename}>
+    <Page breadcrumb1={title} breadcrumb2={filename}>
       <Form className="pdl-upload-form">
         <FormGroup fieldId="text-file-with-restrictions-example">
           <FileUpload
@@ -145,7 +157,7 @@ export default function Uploader() {
                         {message}
                       </>
                     ) : (
-                      "Upload a JSON trace file"
+                      helperText
                     )}
                   </HelperTextItem>
                 </HelperText>

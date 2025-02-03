@@ -1,3 +1,5 @@
+import { Link } from "react-router"
+import { useCallback } from "react"
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core"
 
 export type PageBreadcrumbProps = {
@@ -12,12 +14,13 @@ export default function PageBreadcrumbs({
   breadcrumb1,
   breadcrumb2,
 }: PageBreadcrumbProps) {
+  const renderHome = useCallback(() => <Link to="/welcome">Home</Link>, [])
+
   return (
-    breadcrumb1 && (
-      <Breadcrumb>
-        <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>
-        {breadcrumb2 && <BreadcrumbItem>{breadcrumb2}</BreadcrumbItem>}
-      </Breadcrumb>
-    )
+    <Breadcrumb>
+      <BreadcrumbItem render={renderHome} />
+      {breadcrumb1 && <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>}
+      {breadcrumb2 && <BreadcrumbItem>{breadcrumb2}</BreadcrumbItem>}
+    </Breadcrumb>
   )
 }

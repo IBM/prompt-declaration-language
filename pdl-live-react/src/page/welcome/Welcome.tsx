@@ -3,6 +3,7 @@ import {
   PanelHeader,
   PanelMain,
   PanelMainBody,
+  Stack,
   Title,
 } from "@patternfly/react-core"
 import Page from "../Page"
@@ -22,8 +23,10 @@ export default function Welcome() {
         <PanelMain>
           <PanelMainBody>
             <Intro />
-            <Links />
-            <Tiles />
+            <Stack hasGutter>
+              <Links />
+              <Tiles />
+            </Stack>
           </PanelMainBody>
         </PanelMain>
       </Panel>

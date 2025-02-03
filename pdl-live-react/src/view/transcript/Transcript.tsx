@@ -1,8 +1,7 @@
-import { useContext, useMemo } from "react"
+import { useMemo } from "react"
 import { Stack } from "@patternfly/react-core"
 
 import Context from "../../Context"
-import DarkModeContext from "../../page/DarkModeContext"
 
 import { hasResult } from "../../helpers"
 import BlocksConjoin from "./BlocksConjoin"
@@ -15,16 +14,12 @@ type Props = {
 }
 
 export default function Transcript({ data }: Props) {
-  // DarkMode state
-  const darkMode = useContext(DarkModeContext)
-
   const ctx = useMemo<Context>(() => {
     return {
       id: "",
-      darkMode,
       parents: [],
     }
-  }, [darkMode])
+  }, [])
 
   return (
     <>
