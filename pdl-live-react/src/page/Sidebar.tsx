@@ -12,8 +12,11 @@ import Demos from "./DemoNavItems"
 import MyTraces from "./MyTracesNavItems"
 
 export default function Sidebar() {
-  const [searchParams] = useSearchParams()
   const { hash, pathname: activeItem } = useLocation()
+
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString()
+  const search = (s.length > 0 ? "?" + s : "") + hash
 
   return (
     <PageSidebar isSidebarOpen={!!searchParams.get("sidebar")}>
@@ -24,19 +27,19 @@ export default function Sidebar() {
               itemId="welcome"
               isActive={activeItem === "" || activeItem === "/welcome"}
             >
-              <Link to="/welcome">Welcome</Link>
+              <Link to={"/welcome" + search}>Welcome</Link>
             </NavItem>
 
             <NavItem itemId="viewer" isActive={activeItem === "/upload"}>
-              <Link to={"/upload" + hash}>Upload a Trace</Link>
+              <Link to={"/upload" + search}>Upload a Trace</Link>
             </NavItem>
           </NavList>
 
-          <MyTraces hash={hash} activeItem={activeItem} />
+          <MyTraces hash={search + hash} activeItem={activeItem} />
           <Demos hash={hash} activeItem={activeItem} />
 
           <NavItem itemId="about" isActive={activeItem === "/about"}>
-            <Link to="/about">About PDL</Link>
+            <Link to={"/about" + search}>About PDL</Link>
           </NavItem>
         </Nav>
       </PageSidebarBody>
