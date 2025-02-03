@@ -48,7 +48,13 @@ def test_contribute_context():
     state = InterpreterState()
     data = Program.model_validate(show_result_data(["context"]))
     _, background, _, _ = process_prog(state, empty_scope, data)
-    assert background == [{"role": "user", "content": "How can I help you?: "}]
+    assert background == [
+        {
+            "role": "user",
+            "content": "How can I help you?: ",
+            "defsite": "text.0.text.code",
+        }
+    ]
 
 
 def test_contribute_false():

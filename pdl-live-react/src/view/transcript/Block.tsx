@@ -11,19 +11,16 @@ import ObjectUI from "./Object"
 import LoopTrace from "./LoopTrace"
 import ResultOrCode from "./ResultOrCode"
 import TranscriptItem from "./TranscriptItem"
-import BlocksConjoin from "./BlocksConjoin"
-
-import Context, { withParentAndId as withParent } from "../../Context"
 
 import { type PdlBlock } from "../../helpers"
 
-type Props = { data: PdlBlock; ctx: Context }
+type Props = { data: PdlBlock }
 
 /**
  * Render one tree of blocks rooted at `data` as a list of
  * `TranscriptItem`.
  */
-export default function Block({ data, ctx }: Props): ReactNode {
+export default function Block({ data }: Props): ReactNode {
   if (
     data === null ||
     typeof data === "boolean" ||
@@ -72,15 +69,9 @@ export default function Block({ data, ctx }: Props): ReactNode {
         data.if_result === undefined ? (
           <ResultOrCode block={data} />
         ) : data.if_result ? (
-          <BlocksConjoin
-            block={data?.then ?? ""}
-            ctx={withParent(ctx, `${data.kind}.0`)}
-          />
+          <Block data={data?.then ?? ""} />
         ) : (
-          <BlocksConjoin
-            block={data?.else ?? ""}
-            ctx={withParent(ctx, `${data.kind}.0`)}
-          />
+          <Block data={data?.else ?? ""} />
         ),
     }))
     .with({ kind: "match" }, (_) => ({
@@ -95,7 +86,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
     .with({ kind: "include" }, (data) => ({
       C: ["pdl_include"],
       B: data.trace ? (
-        <Block data={data.trace} ctx={withParent(ctx, data.kind)} />
+        <Block data={data.trace} />
       ) : (
         <ResultOrCode block={data} />
       ),
@@ -108,25 +99,27 @@ export default function Block({ data, ctx }: Props): ReactNode {
       C: ["pdl_call"],
       B: <></>,
     }))
-    .with({ kind: "text" }, () => ({
+    .with({ kind: "text" }, (data) => ({
       C: ["pdl_text"],
-      B: <></>,
+      S: !Array.isArray(data.text)
+        ? undefined
+        : data.text.map((b, idx) => <Block key={idx} data={b} />),
     }))
     .with({ kind: "lastOf" }, (data) => ({
       C: ["pdl_lastOf"],
-      S: <LastOf blocks={data.lastOf} ctx={withParent(ctx, data.kind)} />,
+      S: <LastOf blocks={data.lastOf} />,
     }))
     .with({ kind: "array" }, (data) => ({
       C: ["pdl_array"],
-      S: <ArrayUI array={data.array} ctx={withParent(ctx, data.kind)} />,
+      S: <ArrayUI array={data.array} />,
     }))
     .with({ kind: "object" }, (data) => ({
       C: ["pdl_object"],
       B:
         data.object instanceof Array ? (
-          <ArrayUI array={data.object} ctx={withParent(ctx, data.kind)} />
+          <ArrayUI array={data.object} />
         ) : (
-          <ObjectUI object={data.object} ctx={withParent(ctx, data.kind)} />
+          <ObjectUI object={data.object} />
         ),
     }))
     .with({ kind: "message" }, (data) => ({
@@ -134,7 +127,7 @@ export default function Block({ data, ctx }: Props): ReactNode {
       B: (
         <>
           <pre>{data.role + ": "}</pre>
-          <Block data={data.content} ctx={withParent(ctx, data.kind)} />
+          <Block data={data.content} />
         </>
       ),
     }))
@@ -143,7 +136,6 @@ export default function Block({ data, ctx }: Props): ReactNode {
       S: (
         <LoopTrace
           trace={data?.trace ?? [data.repeat]}
-          ctx={withParent(ctx, data.kind)}
           join_config={data.join}
         />
       ),
@@ -153,7 +145,6 @@ export default function Block({ data, ctx }: Props): ReactNode {
       S: (
         <LoopTrace
           trace={data?.trace ?? [data.repeat]}
-          ctx={withParent(ctx, data.kind)}
           join_config={data.join}
         />
       ),
@@ -163,7 +154,6 @@ export default function Block({ data, ctx }: Props): ReactNode {
       S: (
         <LoopTrace
           trace={data?.trace ?? [data.repeat]}
-          ctx={withParent(ctx, data.kind)}
           join_config={data.join}
         />
       ),
@@ -183,12 +173,11 @@ export default function Block({ data, ctx }: Props): ReactNode {
     <>
       {prefixContent}
       {data.defs && Object.keys(data.defs).length > 0 && (
-        <Defs defs={data.defs} ctx={withParent(ctx, data.kind ?? "unknown")} />
+        <Defs block={data} defs={data.defs} />
       )}
       {bodyContent && (
         <TranscriptItem
           className={["pdl_block", ...extraClasses].join(" ")}
-          ctx={withParent(ctx, data.kind ?? "unknown")}
           block={data}
         />
       )}

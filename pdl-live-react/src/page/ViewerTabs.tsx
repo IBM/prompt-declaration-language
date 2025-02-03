@@ -27,7 +27,7 @@ export default function Viewer({ hidden = false }: { hidden?: boolean }) {
       href="#dataflow"
       eventKey="#dataflow"
       className="pdl-viewer-tab"
-      title={<TabTitleText>Data Flow</TabTitleText>}
+      title={<TabTitleText>Memory</TabTitleText>}
     />,
     <Tab
       key="#source"

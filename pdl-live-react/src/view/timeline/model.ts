@@ -48,23 +48,16 @@ export function computeModel(block: unknown | PdlBlock): TimelineModel {
 function computeModelIter(
   block: unknown | PdlBlock,
   parent?: TimelineRow,
-  extraId?: string,
 ): TimelineModel {
   if (!hasTimingInformation(block)) {
     return []
   }
 
-  // Uniquely identify this node in the tree
-  const id =
-    (!parent ? "" : parent.id + ".") +
-    (extraId ? extraId + "." : "") +
-    block.kind
-
   const ignoreRoot = ignore(block)
   const root = ignoreRoot
     ? parent
     : {
-        id,
+        id: block.id ?? block.kind ?? "",
         depth: !parent ? 0 : parent.depth + 1,
         parent: parent || null,
         block,
@@ -74,11 +67,11 @@ function computeModelIter(
     ...(ignoreRoot ? [] : [root]),
     ...childrenOf(block)
       .filter(nonNullable)
-      .flatMap((child, idx) => computeModelIter(child, root, String(idx))),
+      .flatMap((child) => computeModelIter(child, root)),
   ].filter(nonNullable)
 }
 
-function childrenOf(block: NonScalarPdlBlock) {
+export function childrenOf(block: NonScalarPdlBlock) {
   return match(block)
     .with({ kind: "model" }, (data) => [data.input, data.result])
     .with({ kind: "code" }, (data) => [data.result])

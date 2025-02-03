@@ -1,11 +1,8 @@
-import { useMemo } from "react"
 import { Stack } from "@patternfly/react-core"
 
-import Context from "../../Context"
-
-import { hasResult } from "../../helpers"
-import BlocksConjoin from "./BlocksConjoin"
+import Block from "./Block"
 import FinalResult from "./FinalResult"
+import { hasResult } from "../../helpers"
 
 import "./Transcript.css"
 
@@ -14,17 +11,10 @@ type Props = {
 }
 
 export default function Transcript({ data }: Props) {
-  const ctx = useMemo<Context>(() => {
-    return {
-      id: "",
-      parents: [],
-    }
-  }, [])
-
   return (
     <>
       <Stack className="pdl-transcript">
-        <BlocksConjoin block={data} ctx={ctx} />
+        <Block data={data} />
       </Stack>
       {hasResult(data) && <FinalResult block={data} />}
     </>

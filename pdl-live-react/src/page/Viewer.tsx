@@ -2,7 +2,7 @@ import { lazy, useEffect, useMemo, useState } from "react"
 import { useLocation } from "react-router"
 
 const Code = lazy(() => import("../view/Code"))
-const DataFlow = lazy(() => import("../view/dataflow/DataFlow"))
+const Memory = lazy(() => import("../view/memory/Memory"))
 const Timeline = lazy(() => import("../view/timeline/Timeline"))
 import Transcript from "../view/transcript/Transcript"
 
@@ -23,7 +23,6 @@ export default function Viewer({ value }: { value: string }) {
     () => (value ? (JSON.parse(value) as import("../pdl_ast").PdlBlock) : null),
     [value],
   )
-
   if (!data) {
     return "Invalid trace content"
   }
@@ -63,7 +62,7 @@ export default function Viewer({ value }: { value: string }) {
           data-hash="#dataflow"
           hidden={activeTab !== "#dataflow"}
         >
-          <DataFlow block={data} />
+          <Memory block={data} />
         </section>,
         <section
           className="pdl-viewer-section"

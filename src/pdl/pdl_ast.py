@@ -181,6 +181,11 @@ class Block(BaseModel):
     """Timezone of start_nanos and end_nanos
     """
     context: Optional[Messages] = []
+    """Current context
+    """
+    id: Optional[str] = ""
+    """Unique identifier for this block
+    """
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None

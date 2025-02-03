@@ -3,6 +3,7 @@ import {
   EdgeStyle,
   EdgeAnimationSpeed,
   NodeShape,
+  NodeStatus,
   type NodeModel,
   type EdgeModel,
 } from "@patternfly/react-topology"
@@ -12,74 +13,33 @@ import { type PdlBlock } from "../../pdl_ast"
 import { computeModel as computePdlModel } from "../timeline/model"
 import { hasContextInformation, hasResult, nonNullable } from "../../helpers"
 
-type SymbolTable = Record<string, string | number | boolean> // map from def site id to value defined
-
-const NODE_DIAMETER = 15
-
-function exists(
-  S: SymbolTable,
-  value: string | number | boolean,
-): string | null {
-  for (const [k, v] of Object.entries(S)) {
-    //    if (String(value).includes(String(v))) {
-    if (v === value) {
-      return k
-    }
-  }
-  return null
-}
-
-function lookup(S: SymbolTable, value: string) {
-  const parents: string[] = []
-  for (const [k, v] of Object.entries(S)) {
-    if (
-      typeof v !== "string"
-        ? value.includes(String(v))
-        : v.length > 0 && value.includes(v)
-    ) {
-      // For now, don't try to guess at def-use for small strings,
-      // such as "yes".
-      parents.push(k)
-    }
-  }
-  return parents.sort()
-}
+const NODE_DIAMETER = 25
 
 function computeGraphModel(pdlModel: PdlModel): {
   nodes: NodeModel[]
   edges: EdgeModel[]
 } {
-  const symbolTable: SymbolTable = {}
   const dataflowEdges: EdgeModel[] = []
 
   // So we can convey a partial ordering in the UI
   const ordinals = ordinalize(pdlModel)
 
-  const nodes: NodeModel[] = pdlModel.flatMap(
-    ({ id, parent, block }, blockIdx) => {
+  const nodes: NodeModel[] = pdlModel
+    .filter((block) => block.block.kind === "model" || hasResult(block.block))
+    .flatMap(({ id, parent, block }, blockIdx) => {
       const resultId = id + "-result"
-      if (hasResult(block)) {
-        symbolTable[resultId] =
-          typeof block.result === "object"
-            ? stringify(block.result)
-            : block.result
-      }
 
       // No need to add a new node for a value we've already
       // represented in the model (but we do add an edge, just
       // above)
       if (hasContextInformation(block)) {
         block.context.forEach((ctx) => {
-          const { content } = ctx
-          if (typeof content !== "string") {
-            return
-          }
-          const contextId = exists(symbolTable, content)
-          if (contextId) {
+          const { defsite } = ctx
+          if (typeof defsite === "string") {
             dataflowEdges.push({
-              id: `edge-${contextId}-${resultId}`,
+              id: `edge-${defsite}-${resultId}`,
               type: "edge",
-              source: contextId,
+              source: defsite + "-result",
               target: resultId,
               edgeStyle: EdgeStyle.dashedMd,
               animationSpeed: EdgeAnimationSpeed.medium,
@@ -90,13 +50,10 @@ function computeGraphModel(pdlModel: PdlModel): {
 
       const contexts = !hasContextInformation(block)
         ? []
-        : block.context.filter(
-            ({ content }) =>
-              typeof content !== "string" || !exists(symbolTable, content),
-          )
+        : block.context.filter(({ content }) => typeof content === "string")
       const contextItems: NodeModel[] = [
         ...contexts.flatMap((ctx, idx) => {
-          const { role, content } = ctx
+          const { role, content, defsite } = ctx
 
           // wtf typescript sucks
           if (typeof role !== "string" || typeof content !== "string") {
@@ -119,26 +76,27 @@ function computeGraphModel(pdlModel: PdlModel): {
 
           const contextId = id + "-" + idx
 
-          dataflowEdges.push({
-            id: `edge-${contextId}-${resultId}`,
-            type: "edge",
-            source: contextId,
-            target: resultId,
-            edgeStyle: EdgeStyle.dashedMd,
-            animationSpeed: EdgeAnimationSpeed.medium,
-          })
-          symbolTable[contextId] = content
+          if (typeof defsite === "string") {
+            dataflowEdges.push({
+              id: `edge-${defsite}-${resultId}`,
+              type: "edge",
+              source: defsite + "-result",
+              target: resultId,
+              edgeStyle: EdgeStyle.dashedMd,
+              animationSpeed: EdgeAnimationSpeed.medium,
+            })
+          }
 
           return [
             {
               id: contextId,
               type: "node",
-              label: content.slice(0, 30),
+              label: content.slice(0, 20),
               width: NODE_DIAMETER, //"content" in ctx && typeof ctx.content === "string" ? Math.min(ctx.content.length,20)*16*2 : NODE_DIAMETER,
               height: NODE_DIAMETER,
-              shape: NodeShape.rect,
+              shape: NodeShape.circle,
               data: {
-                ordinal: ordinals[blockIdx] + "." + letter(idx + 1),
+                //ordinal: ordinals[blockIdx] + "." + letter(idx + 1),
                 variant: role[0].toUpperCase() + role.slice(1),
                 content,
               },
@@ -166,16 +124,20 @@ function computeGraphModel(pdlModel: PdlModel): {
                 width: !parent ? NODE_DIAMETER * 3 : NODE_DIAMETER, //Math.min(content.length,20)*16*2,
                 height: !parent ? NODE_DIAMETER * 3 : NODE_DIAMETER,
                 shape: !parent ? NodeShape.hexagon : NodeShape.rect,
+                status: !parent
+                  ? NodeStatus.success
+                  : block.kind === "read"
+                    ? NodeStatus.warning
+                    : undefined,
                 data: {
-                  ordinal:
-                    ordinals[blockIdx] +
-                    (hasContextInformation(block)
-                      ? "." + letter(contexts.length + 1)
-                      : ""),
+                  ordinal: ordinals[blockIdx] /*+
+                                         (hasContextInformation(block)
+                     ? "." + letter(contexts.length + 1)
+                     : "")*/,
                   variant: !parent
                     ? "Final Result"
                     : block.def
-                      ? `$${block.def}=`
+                      ? `$${block.def}`
                       : block.kind === "model"
                         ? "LLM"
                         : block.kind === "read"
@@ -200,17 +162,16 @@ function computeGraphModel(pdlModel: PdlModel): {
         children: contextItems.map((_) => _.id),
         type: "group",
         group: true,
-        label: "LLM",
+        label: "LLM Model Block",
         style: {
-          padding: 80,
+          padding: 50,
         },
       }
 
       return block.kind === "model" ? [group, ...contextItems] : contextItems
-    },
-  )
+    })
 
-  pdlModel.forEach(({ id, block }) => {
+  /*pdlModel.forEach(({ id, block }) => {
     if (hasResult(block) && typeof block.result === "string") {
       const resultId = id + "-result"
       const dataflowParents = lookup(symbolTable, block.result).filter(
@@ -229,7 +190,7 @@ function computeGraphModel(pdlModel: PdlModel): {
           })
         })
     }
-  })
+  })*/
 
   /*const controlFlowEdges: EdgeModel[] = pdlModel.reduce((edges, { id, parent }) => {
     if (parent) {
@@ -326,8 +287,4 @@ function childrenOf(parentIdx: number, model: PdlModel) {
   return model
     .map((node, idx) => (node.parent === parent ? idx : null))
     .filter(nonNullable)
-}
-
-function letter(idx: number) {
-  return String.fromCharCode(96 + idx)
 }

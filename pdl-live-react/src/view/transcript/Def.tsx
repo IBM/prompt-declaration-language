@@ -4,19 +4,19 @@ import { useLocation, useNavigate } from "react-router"
 import BreadcrumbBarItem from "../breadcrumbs/BreadcrumbBarItem"
 
 type Props = {
+  block: import("../../helpers").NonScalarPdlBlock
   def: string
   value?: import("../../pdl_ast").PdlBlock
-  ctx: import("../../Context").default
   supportsDrilldown?: boolean
 }
 
 /** One variable definition */
 export default function Def(props: Props) {
-  const { def, value, ctx, supportsDrilldown = true } = props
+  const { block, def, value, supportsDrilldown = true } = props
 
   const navigate = useNavigate()
   const { hash } = useLocation()
-  const { id } = ctx
+  const { id } = block
   const drilldown = useCallback(
     (evt: import("react").MouseEvent) => {
       evt.stopPropagation()

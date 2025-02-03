@@ -1,20 +1,25 @@
-import { capitalizeAndUnSnakeCase, hasResult } from "../../helpers"
+import {
+  capitalizeAndUnSnakeCase,
+  hasResult,
+  type NonScalarPdlBlock as Block,
+} from "../../helpers"
 
 import Def from "../transcript/Def"
 import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
 
 type Props = {
-  id: string
-  block: import("../../helpers").NonScalarPdlBlock
+  block: Pick<Block, "id" | "def">
 }
 
 function asIter(part: string) {
+  if (!part) return ""
   const int = parseInt(part)
   return isNaN(int) ? capitalizeAndUnSnakeCase(part) : `Step ${int + 1}`
 }
 
-export default function BreadcrumbBarForBlock({ id, block }: Props) {
+export default function BreadcrumbBarForBlock({ block }: Props) {
+  const id = block.id ?? ""
   return (
     <BreadcrumbBar>
       <>
@@ -36,8 +41,8 @@ export default function BreadcrumbBarForBlock({ id, block }: Props) {
 
         {block.def && (
           <Def
+            block={block}
             def={block.def}
-            ctx={{ id, parents: [] }}
             value={hasResult(block) ? block.result : undefined}
           />
         )}
