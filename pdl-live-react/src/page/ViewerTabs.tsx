@@ -2,7 +2,7 @@ import { useLocation } from "react-router"
 import { Tabs, Tab, TabTitleText } from "@patternfly/react-core"
 
 /** This is the main view component */
-export default function Viewer() {
+export default function Viewer({ hidden = false }: { hidden?: boolean }) {
   // We will use this to find the current active tab (below)
   let { hash: activeTab } = useLocation()
 
@@ -51,8 +51,10 @@ export default function Viewer() {
   }
 
   return (
-    <Tabs activeKey={activeTab} component="nav" mountOnEnter>
-      {tabs}
-    </Tabs>
+    <section hidden={hidden}>
+      <Tabs activeKey={activeTab} component="nav" mountOnEnter>
+        {tabs}
+      </Tabs>
+    </section>
   )
 }
