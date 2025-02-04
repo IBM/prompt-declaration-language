@@ -19,7 +19,7 @@ export default function Sidebar() {
   const search = (s.length > 0 ? "?" + s : "") + hash
 
   return (
-    <PageSidebar isSidebarOpen={!!searchParams.get("sidebar")}>
+    <PageSidebar isSidebarOpen={searchParams.has("sidebar")}>
       <PageSidebarBody>
         <Nav>
           <NavList>
@@ -35,8 +35,8 @@ export default function Sidebar() {
             </NavItem>
           </NavList>
 
-          <MyTraces hash={search + hash} activeItem={activeItem} />
-          <Demos hash={hash} activeItem={activeItem} />
+          <MyTraces hash={search} activeItem={activeItem} />
+          <Demos hash={search} activeItem={activeItem} />
 
           <NavItem itemId="about" isActive={activeItem === "/about"}>
             <Link to={"/about" + search}>About PDL</Link>
