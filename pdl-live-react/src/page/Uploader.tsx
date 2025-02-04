@@ -1,5 +1,5 @@
 import prettyBytes from "pretty-bytes"
-import { useNavigate } from "react-router"
+import { useNavigate, useSearchParams } from "react-router"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
@@ -41,13 +41,17 @@ export default function Uploader({
   const [isRejected, setIsRejected] = useState(false)
   const [message, setMessage] = useState("")
 
+  const [searchParams] = useSearchParams()
+  const search = searchParams.toString()
+  const s = search ? `?${search}` : ""
+
   const navigate = useNavigate()
   useEffect(() => {
     if (value) {
       const trace = addMyTrace(filename, value)
-      navigate("/my/" + trace.title)
+      navigate("/my/" + trace.title + s)
     }
-  }, [value, filename, navigate])
+  }, [value, filename, navigate, s])
 
   const handleFileInputChange = useCallback<
     Required<FileUploadProps>["onFileInputChange"]
