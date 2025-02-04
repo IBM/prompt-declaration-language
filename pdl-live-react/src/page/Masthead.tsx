@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { useSearchParams } from "react-router"
+import { useLocation, useSearchParams } from "react-router"
 
 import {
   Flex,
@@ -28,17 +28,24 @@ const alignRight = { default: "alignEnd" as const }
 const alignCenter = { default: "alignItemsCenter" as const }
 
 function Toggle() {
+  const { hash } = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
+
   const onSidebarToggle = useCallback(() => {
     const newSearchParams = new URLSearchParams(searchParams)
-    const isOpen = !!searchParams.get("sidebar")
+    const isOpen = searchParams.has("sidebar")
     if (isOpen) {
       newSearchParams.delete("sidebar")
     } else {
       newSearchParams.set("sidebar", "true")
     }
     setSearchParams(newSearchParams)
-  }, [searchParams, setSearchParams])
+
+    // sigh, see https://github.com/remix-run/react-router/issues/8393
+    if (hash) {
+      setTimeout(() => (window.location.hash = hash))
+    }
+  }, [searchParams, setSearchParams, hash])
 
   return (
     <MastheadToggle>
