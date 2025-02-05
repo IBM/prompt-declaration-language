@@ -1,3 +1,4 @@
+import { type ReactNode } from "react"
 import {
   Content,
   Panel,
@@ -5,7 +6,6 @@ import {
   PanelHeader,
   PanelMain,
   PanelMainBody,
-  Stack,
 } from "@patternfly/react-core"
 
 import Page from "../Page"
@@ -15,20 +15,24 @@ import Tiles from "./Tiles"
 
 import "./Welcome.css"
 
-export default function Welcome() {
+type Props = {
+  breadcrumb1?: string
+  intro?: ReactNode
+  tiles?: ReactNode | ReactNode[]
+}
+
+export default function Welcome(props: Props) {
   return (
-    <Page breadcrumb1="Welcome" padding={false}>
+    <Page breadcrumb1={props.breadcrumb1 ?? "Welcome"} padding={false}>
       <Panel>
         <PanelHeader>
           <Content component="h1">Prompt Declaration Language (PDL)</Content>
-          <Intro />
+          {props.intro ?? <Intro />}
         </PanelHeader>
 
         <PanelMain className="pdl-welcome-content">
           <PanelMainBody>
-            <Stack hasGutter>
-              <Tiles />
-            </Stack>
+            <Tiles tiles={props.tiles} />
           </PanelMainBody>
         </PanelMain>
 

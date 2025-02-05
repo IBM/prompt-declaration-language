@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router"
 
 import Demo from "../page/Demo"
+import Demos from "../page/Demos"
+import MyTraces from "../page/MyTracesPage"
 import About from "../page/About"
 import Local from "../page/Local"
 import MyTrace from "../page/MyTrace"
@@ -20,6 +22,8 @@ export default function PdlRoutes() {
         <Route path="local/:traceFile" element={<Local />} />
         <Route path="about" element={<About />} />
         <Route path="upload" element={<Uploader />} />
+        <Route path="my" element={<MyTraces />} />
+        <Route path="demos" element={<Demos />} />
 
         {demos.map((demo, idx) => (
           <Route
