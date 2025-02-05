@@ -174,9 +174,9 @@ def main():
     )
     parser.add_argument(
         "--stream",
-        choices=["result", "background", "none"],
-        default="result",
-        help="stream the result, the background messages, or nothing on the standard output",
+        choices=["context", "none"],
+        default="context",
+        help="stream the background context, or nothing on the standard output",
     )
     parser.add_argument(
         "-t",
@@ -244,10 +244,7 @@ def main():
     validate_scope(initial_scope)
 
     match args.stream:
-        case "result":
-            stream_result = True
-            stream_background = False
-        case "background":
+        case "context":
             stream_result = False
             stream_background = True
         case "none":

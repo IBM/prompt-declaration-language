@@ -53,6 +53,20 @@ def color_of(kind: BlockKind):
     return color
 
 
+def color_of_role(role: str):
+    color: Optional[Color] = None
+    match role:
+        case "assistant":
+            color = "green"
+        case "user":
+            color = None
+        case "system":
+            color = "cyan"
+        case "available_tools":
+            color = "magenta"
+    return color
+
+
 def yield_result(result: Any, kind: BlockKind) -> None:
     if color_of(kind) is None:
         text = stringify(result)
@@ -72,5 +86,10 @@ def yield_background(background) -> None:
         background = background[1:]
     else:
         s = "\n"
-    s += "\n".join([f"{msg['role']}: {msg['content']}" for msg in background])
+    s += "\n".join(
+        [
+            f"{colored(msg['role'], "blue")}: {colored(msg['content'], color_of_role(msg['role']))}"
+            for msg in background
+        ]
+    )
     print(s, end="", flush=True)
