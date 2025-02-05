@@ -282,7 +282,7 @@ def as_json(value: Any) -> JsonType:
 def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
     p: str | dict[str, Any]
     match parser:
-        case "json" | "yaml":
+        case "json" | "yaml" | "jsonl":
             p = parser
         case RegexParser():
             p = parser.model_dump()
