@@ -192,7 +192,9 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                     break
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + "." + str(RESULTS_VERSION) + ".result"
+                    result_file_name_0 = (
+                        pdl_file_name.stem + "." + str(RESULTS_VERSION) + ".result"
+                    )
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
