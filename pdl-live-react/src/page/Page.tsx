@@ -41,6 +41,10 @@ export default function PDLPage(props: Props) {
 
   const { padding = true, value, children } = props
 
+  if (value) {
+    JSON.parse(value)
+  }
+
   return (
     <Page
       className="pdl-page"
