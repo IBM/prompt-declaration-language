@@ -22,10 +22,23 @@ export default function PageBreadcrumbs({
     [search],
   )
 
+  const renderFirst = useCallback(
+    () => (
+      <Link to={"/" + breadcrumb1?.split(/\s+/)[0].toLowerCase()}>
+        {breadcrumb1}
+      </Link>
+    ),
+    [breadcrumb1],
+  )
+
   return (
     <Breadcrumb>
       <BreadcrumbItem render={renderHome} />
-      {breadcrumb1 && <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>}
+      {breadcrumb1 && !breadcrumb2 ? (
+        <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>
+      ) : (
+        <BreadcrumbItem render={renderFirst} />
+      )}
       {breadcrumb2 && <BreadcrumbItem>{breadcrumb2}</BreadcrumbItem>}
     </Breadcrumb>
   )
