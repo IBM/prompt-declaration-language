@@ -8,7 +8,7 @@
 
 .pdl-breadcrumb-bar {
   /** Size factor relative to 1em */
-  --pdl-bb: 0.625;
+  --pdl-bb: 0.75;
 
   font-weight: 500;
 
