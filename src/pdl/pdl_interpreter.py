@@ -179,16 +179,8 @@ def generate(
         prog, loc = parse_file(pdl_file)
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
-        result, _, _, trace = process_prog(state, initial_scope, prog, loc)
-        if not state.yield_result:
-            if state.yield_background:
-                print("\n----------------")
-            if result is None:
-                print()
-            else:
-                print(stringify(result))
-        else:
-            print()
+        _, _, _, trace = process_prog(state, initial_scope, prog, loc)
+        print()
         if trace_file:
             write_trace(trace_file, trace)
     except PDLParseError as exc:
