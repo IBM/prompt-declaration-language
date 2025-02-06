@@ -76,7 +76,7 @@ def yield_result(result: Any, kind: BlockKind) -> None:
 
 
 _LAST_ROLE = None
-
+ROLE_COLOR = "blue"
 
 def yield_background(background) -> None:
     global _LAST_ROLE  # pylint: disable= global-statement
@@ -88,7 +88,7 @@ def yield_background(background) -> None:
         s = "\n"
     s += "\n".join(
         [
-            f"{colored(msg['role'], "blue")}: {colored(msg['content'], color_of_role(msg['role']))}"
+            f"{colored(msg['role'], ROLE_COLOR)}: {colored(msg['content'], color_of_role(msg['role']))}"
             for msg in background
         ]
     )
