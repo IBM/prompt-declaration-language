@@ -2,6 +2,8 @@ import fnmatch
 import json
 from typing import Any, Generator, Generic, Sequence, TypeVar
 
+from pdl.pdl_future import PdlList
+
 from .pdl_ast import (
     ContributeTarget,
     ContributeValue,
@@ -95,17 +97,18 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
         return messages2
     if len(messages2) == 0:
         return messages1
-    left = messages1[-1]
-    right = messages2[0]
-    if (
-        left["role"] == right["role"] and simple_message(left) and simple_message(right)
-    ):  # test that there are no other keys
-        return (
-            messages1[:-1]
-            + [{"role": left["role"], "content": left["content"] + right["content"]}]
-            + messages2[1:]
-        )
-    return messages1 + messages2
+    # left = messages1[-1]
+    # right = messages2[0]
+    # if (
+    #     left["role"] == right["role"] and simple_message(left) and simple_message(right)
+    # ):  # test that there are no other keys
+    #     return (
+    #         messages1[:-1]
+    #         + [{"role": left["role"], "content": left["content"] + right["content"]}]
+    #         + messages2[1:]
+    #     )
+    # return messages1 + messages2
+    return PdlList(messages1.data + messages2.data)  # XXX TODO: merge messages
 
 
 def messages_to_str(messages: Messages) -> str:

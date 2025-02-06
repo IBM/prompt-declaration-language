@@ -1,24 +1,21 @@
-import asyncio
 import json
 import logging
 import re
 import shlex
 import subprocess  # nosec
 import sys
-import threading
 import time
 import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
-from asyncio import Task
 from dataclasses import dataclass
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 # from itertools import batched
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+from typing import Any, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import litellm  # noqa: E402
@@ -55,8 +52,6 @@ from .pdl_ast import (  # noqa: E402
     IncludeBlock,
     IterationType,
     LastOfBlock,
-    LazyMessage,
-    LazyRawResponse,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -85,30 +80,19 @@ from .pdl_ast import (  # noqa: E402
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
-from .pdl_llms import LitellmModel  # noqa: E402
+from .pdl_future import PdlDict, PdlFuture, PdlList  # noqa: E402
+from .pdl_llms import LitellmModel, map_future  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
-    GeneratorWrapper,
     apply_defaults,
     get_contribute_value,
     messages_concat,
     replace_contribute_value,
     stringify,
-    to_async,
 )
-
-def _start_background_loop(loop):
-    asyncio.set_event_loop(loop)
-    loop.run_forever()
-
-_LOOP = asyncio.new_event_loop()
-_LOOP_THREAD = threading.Thread(
-    target=_start_background_loop, args=(_LOOP,), daemon=True
-)
-_LOOP_THREAD.start()
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +135,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self.message = message
 
 
-empty_scope: ScopeType = {"pdl_context": []}
+empty_scope: ScopeType = PdlDict({"pdl_context": PdlList([])})
 
 
 @dataclass
@@ -163,7 +147,7 @@ class InterpreterState(BaseModel):
     # batch=1: call to generate with `input`
     role: RoleType = "user"
     cwd: Path = Path.cwd()
-    background_tasks = {}
+    # background_tasks = {}
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -281,7 +265,9 @@ def process_block(
                 loc=exc.loc or loc,
                 trace=ErrorBlock(msg=exc.message, location=loc, program=block),
             ) from exc
-        background = [{"role": state.role, "content": stringify(result)}]
+        background = PdlList(
+            [PdlDict({"role": state.role, "content": stringify(result)})]
+        )
         trace = stringify(result)
         if state.yield_background:
             yield_background(background)
@@ -385,7 +371,7 @@ def process_advanced_block(
     if ContributeTarget.RESULT not in block.contribute:
         result = ""
     if ContributeTarget.CONTEXT not in block.contribute:
-        background = []
+        background = PdlList([])
     contribute_value, trace = process_contribute(trace, scope, loc)
     if contribute_value is not None:
         background = contribute_value
@@ -427,7 +413,9 @@ def process_block_body(
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, location=loc, program=block),
                 ) from exc
-            background = [{"role": state.role, "content": stringify(result)}]
+            background = PdlList(
+                [PdlDict({"role": state.role, "content": stringify(result)})]
+            )
             trace = block.model_copy()
             if state.yield_result:
                 yield_result(result, block.kind)
@@ -440,7 +428,9 @@ def process_block_body(
                 trace = block.model_copy()
             else:
                 result, trace = process_expr_of(block, "data", scope, loc)
-            background = [{"role": state.role, "content": stringify(result)}]
+            background = PdlList(
+                [PdlDict({"role": state.role, "content": stringify(result)})]
+            )
             if state.yield_result:
                 yield_result(result, block.kind)
             if state.yield_background:
@@ -475,7 +465,7 @@ def process_block_body(
         case ObjectBlock():
             iteration_state = state.with_yield_result(False)
             if isinstance(block.object, dict):
-                background = []
+                background = PdlList([])
                 values = []
                 values_trace = []
                 try:
@@ -538,7 +528,7 @@ def process_block_body(
                 )
             else:
                 result = ""
-                background = []
+                background = PdlList([])
                 trace = block
             trace = trace.model_copy(
                 update={
@@ -550,7 +540,7 @@ def process_block_body(
             cases = []
             matched = False
             result = ""
-            background = []
+            background = PdlList([])
             for i, match_case in enumerate(block.with_):
                 if matched:
                     cases.append(match_case)
@@ -608,9 +598,9 @@ def process_block_body(
             trace = block
         case RepeatBlock(num_iterations=n):
             results = []
-            background = []
+            background = PdlList([])
             iterations_trace: list[BlockType] = []
-            pdl_context_init = scope_init["pdl_context"]
+            pdl_context_init: Messages = scope_init["pdl_context"]  # pyright: ignore
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
@@ -660,9 +650,9 @@ def process_block_body(
             trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
             results = []
-            background = []
+            background = PdlList([])
             iter_trace: list[BlockType] = []
-            pdl_context_init = scope_init["pdl_context"]
+            pdl_context_init = scope_init["pdl_context"]  # pyright: ignore
             items, block = process_expr_of(block, "fors", scope, loc, "for")
             lengths = []
             for idx, lst in items.items():
@@ -739,9 +729,9 @@ def process_block_body(
         case RepeatUntilBlock():
             results = []
             stop = False
-            background = []
+            background = PdlList([])
             iterations_trace = []
-            pdl_context_init = scope_init["pdl_context"]
+            pdl_context_init = scope_init["pdl_context"]  # pyright: ignore
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
@@ -806,13 +796,13 @@ def process_block_body(
                 scope = scope | {block.assign: closure}
             closure.scope = scope
             result = closure
-            background = []
+            background = PdlList([])
             trace = closure.model_copy(update={})
         case CallBlock():
             result, background, scope, trace = process_call(state, scope, block, loc)
         case EmptyBlock():
             result = ""
-            background = []
+            background = PdlList([])
             trace = block.model_copy()
 
         case _:
@@ -974,9 +964,9 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
             state.yield_result and iteration_type != IterationType.ARRAY
         )
         new_loc = None
-        background = []
+        background = PdlList([])
         trace = []
-        pdl_context_init = scope["pdl_context"]
+        pdl_context_init: Messages = scope["pdl_context"]  # pyright: ignore
         try:
             for i, block in enumerate(blocks):
                 scope = scope | {
@@ -1219,11 +1209,13 @@ def process_call_model(
             loc,
         )
         if isinstance(model_input_result, str):
-            model_input = [{"role": state.role, "content": model_input_result}]
+            model_input = PdlList(
+                [PdlDict({"role": state.role, "content": model_input_result})]
+            )
         else:
             model_input = model_input_result
     else:
-        model_input = scope["pdl_context"]
+        model_input = scope["pdl_context"]  # pyright: ignore
         input_trace = None
     concrete_block = concrete_block.model_copy(
         update={
@@ -1242,15 +1234,15 @@ def process_call_model(
         litellm.input_callback = [get_transformed_inputs]
         # append_log(state, "Model Input", messages_to_str(model_input))
 
-        lazy_msg, lazy_raw_result = generate_client_response(
-            state, concrete_block, model_input
-        )
+        msg, raw_result = generate_client_response(state, concrete_block, model_input)
         # if "input" in litellm_params:
         append_log(state, "Model Input", litellm_params)
         # else:
         #    append_log(state, "Model Input", messages_to_str(model_input))
-        background: Messages = [msg]
-        result = "" if msg["content"] is None else msg["content"]
+        background = PdlList([msg])
+        result = map_future(
+            lambda msg: "" if msg["content"] is None else msg["content"], msg
+        )
         append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
         if block.modelResponse is not None:
@@ -1276,72 +1268,71 @@ def generate_client_response(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> tuple[LazyMessage, LazyRawResponse]:
-    raw_result = None
+) -> tuple[Message, PdlFuture[Any]]:
     match state.batch:
         case 0:
-            lazy_model_output, lazy_raw_result = generate_client_response_streaming(
+            model_output, raw_result = generate_client_response_streaming(
                 state, block, model_input
             )
         case 1:
-            lazy_model_output, lazy_raw_result = generate_client_response_single(
+            model_output, raw_result = generate_client_response_single(
                 state, block, model_input
             )
         case _:
             assert False
-    return lazy_model_output, lazy_raw_result
+    return model_output, raw_result
 
 
 def generate_client_response_streaming(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> tuple[LazyMessage, LazyRawResponse]:
-    msg_stream: Generator[Message, Any, Any]
-    assert isinstance(block.model, str)  # block is a "concrete block"
-    assert block.parameters is None or isinstance(
-        block.parameters, dict
-    )  # block is a "concrete block"
-    match block:
-        case LitellmModelBlock():
-            msg_stream = LitellmModel.generate_text_stream(
-                model_id=block.model,
-                messages=model_input,
-                spec=block.spec,
-                parameters=litellm_parameters_to_dict(block.parameters),
-            )
-        case _:
-            assert False
-    complete_msg: Optional[Message] = None
-    role = None
-    wrapped_gen = GeneratorWrapper(msg_stream)
-    for chunk in wrapped_gen:
-        if state.yield_result:
-            yield_result(
-                "" if chunk["content"] is None else chunk["content"], block.kind
-            )
-        if state.yield_background:
-            yield_background([chunk])
-        if complete_msg is None:
-            complete_msg = chunk
-            role = complete_msg["role"]
-        else:
-            chunk_role = chunk["role"]
-            if (
-                chunk_role is None
-                or chunk_role == role
-                and chunk["content"] is not None
-            ):
-                complete_msg["content"] += chunk["content"]
-    raw_result = None
-    if block.modelResponse is not None:
-        raw_result = wrapped_gen.value
-    if complete_msg is None:
-        complete_msg = Message(role=state.role, content="")
-    lazy_pair = to_async(complete_msg, raw_result)
-    lazy_message = LazyMessage(lazy_pair)
-    lazy_result = LazyRawResponse(lazy_pair)
-    return lazy_message, lazy_result
+) -> tuple[Message, PdlFuture[Any]]:
+    # msg_stream: Generator[Message, Any, Any]
+    # assert isinstance(block.model, str)  # block is a "concrete block"
+    # assert block.parameters is None or isinstance(
+    #     block.parameters, dict
+    # )  # block is a "concrete block"
+    # match block:
+    #     case LitellmModelBlock():
+    #         msg_stream = LitellmModel.generate_text_stream(
+    #             model_id=block.model,
+    #             messages=model_input,
+    #             spec=block.spec,
+    #             parameters=litellm_parameters_to_dict(block.parameters),
+    #         )
+    #     case _:
+    #         assert False
+    # complete_msg: Optional[Message] = None
+    # role = None
+    # wrapped_gen = GeneratorWrapper(msg_stream)
+    # for chunk in wrapped_gen:
+    #     if state.yield_result:
+    #         yield_result(
+    #             "" if chunk["content"] is None else chunk["content"], block.kind
+    #         )
+    #     if state.yield_background:
+    #         yield_background([chunk])
+    #     if complete_msg is None:
+    #         complete_msg = chunk
+    #         role = complete_msg["role"]
+    #     else:
+    #         chunk_role = chunk["role"]
+    #         if (
+    #             chunk_role is None
+    #             or chunk_role == role
+    #             and chunk["content"] is not None
+    #         ):
+    #             complete_msg["content"] += chunk["content"]
+    # raw_result = None
+    # if block.modelResponse is not None:
+    #     raw_result = wrapped_gen.value
+    # if complete_msg is None:
+    #     complete_msg = PdlDict({"role": state.role, "content": ""})
+    # future_message = PdlConst(complete_msg)
+    # future_result = PdlConst(raw_result)
+    # return future_message, future_result
+    assert False, "XXX TODO XXX"  # TODO
 
 
 def litellm_parameters_to_dict(
@@ -1359,34 +1350,28 @@ def generate_client_response_single(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: Messages,
-) -> tuple[LazyMessage, LazyRawResponse]:
+) -> tuple[Message, PdlFuture[Any]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
         block.parameters, dict
     )  # block is a "concrete block"
     match block:
         case LitellmModelBlock():
-            task = asyncio.create_task(
-                LitellmModel.generate_text(
-                    model_id=block.model,
-                    messages=model_input,
-                    spec=block.spec,
-                    parameters=litellm_parameters_to_dict(block.parameters),
-                )
+            message, response = LitellmModel.generate_text(
+                model_id=block.model,
+                messages=model_input,
+                spec=block.spec,
+                parameters=litellm_parameters_to_dict(block.parameters),
             )
-            # state.background_tasks.add(task)
-            # task.add_done_callback(state.background_tasks.discard)
-            lazy_message = LazyMessage(task)
-            lazy_response = LazyRawResponse(task)
         case _:
             assert False
     if state.yield_result:
-        msg = lazy_message.get()
+        msg = message.result()
         yield_result("" if msg["content"] is None else msg["content"], block.kind)
     if state.yield_background:
-        msg = lazy_message.get()
+        msg = message.result()
         yield_background([msg])
-    return (lazy_message, lazy_response)
+    return (message, response)
 
 
 def process_call_code(
@@ -1404,8 +1389,12 @@ def process_call_code(
     match block.lang:
         case "python":
             try:
-                result = call_python(code_s, scope)
-                background = [{"role": state.role, "content": str(result)}]
+                result = call_python(
+                    code_s, scope.result()
+                )  # TODO: avoid calling `result()`
+                background = PdlList(
+                    [PdlDict({"role": state.role, "content": str(result)})]
+                )
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1415,7 +1404,7 @@ def process_call_code(
         case "command":
             try:
                 result = call_command(code_s)
-                background = [{"role": state.role, "content": result}]
+                background = PdlList([PdlDict({"role": state.role, "content": result})])
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1425,7 +1414,7 @@ def process_call_code(
         case "jinja":
             try:
                 result = call_jinja(code_s, scope)
-                background = [{"role": state.role, "content": result}]
+                background = PdlList([PdlDict({"role": state.role, "content": result})])
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1435,7 +1424,7 @@ def process_call_code(
         case "pdl":
             try:
                 result = call_pdl(code_s, scope)
-                background = [{"role": state.role, "content": result}]
+                background = PdlList([PdlDict({"role": state.role, "content": result})])
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
@@ -1481,7 +1470,7 @@ def call_command(code: str) -> str:
     return output
 
 
-def call_jinja(code: str, scope: dict) -> Any:
+def call_jinja(code: str, scope: ScopeType) -> Any:
     template = Template(
         code,
     )
@@ -1489,7 +1478,7 @@ def call_jinja(code: str, scope: dict) -> Any:
     return result
 
 
-def call_pdl(code: str, scope: dict) -> Any:
+def call_pdl(code: str, scope: ScopeType) -> Any:
     program, loc = parse_str(code)
     state = InterpreterState()
     result, _, _, _ = process_prog(state, scope, program, loc)
@@ -1500,7 +1489,7 @@ def process_call(
     state: InterpreterState, scope: ScopeType, block: CallBlock, loc: LocationType
 ) -> tuple[Any, Messages, ScopeType, CallBlock]:
     result = None
-    background: Messages = []
+    background: Messages = PdlList([])
     args, block = process_expr_of(block, "args", scope, loc)
     closure, _ = process_expr_of(block, "call", scope, loc)
     if not isinstance(closure, FunctionBlock):
@@ -1523,7 +1512,9 @@ def process_call(
         )
     f_body = closure.returns
     f_scope = (
-        (closure.scope or {}) | {"pdl_context": scope["pdl_context"]} | (args or {})
+        (closure.scope or PdlDict({}))
+        | PdlDict({"pdl_context": scope.data["pdl_context"]})
+        | PdlDict((args or {}))
     )
     if closure.location is not None:
         fun_loc = LocationType(
@@ -1598,7 +1589,7 @@ def process_input(
             s = "".join(contents)
             append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
-    background: Messages = [{"role": state.role, "content": s}]
+    background: Messages = PdlList([PdlDict({"role": state.role, "content": s})])
     return s, background, scope, trace
 
 

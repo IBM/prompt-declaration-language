@@ -9,6 +9,7 @@ from pytest import CaptureFixture, MonkeyPatch
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_dumper import block_to_dict
+from pdl.pdl_future import PdlDict
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
@@ -88,10 +89,12 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
         pathlib.Path("examples")
         / "granite"
-        / "single_round_chat.pdl": InputsType(scope={"PROMPT": "What is APR?\nyes\n"}),
+        / "single_round_chat.pdl": InputsType(
+            scope=PdlDict({"PROMPT": "What is APR?\nyes\n"})
+        ),
         pathlib.Path("examples")
         / "hello"
-        / "hello-data.pdl": InputsType(scope={"something": "ABC"}),
+        / "hello-data.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
         pathlib.Path("examples")
         / "tutorial"
         / "conditionals_loops.pdl": InputsType(
@@ -148,7 +151,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     actual_runtime_error: set[str] = set()
     wrong_results = {}
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        scope: ScopeType = {}
+        scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue
         if str(pdl_file_name) in TESTS_WITH_INPUT:

@@ -2,6 +2,7 @@ import pytest
 
 from pdl.pdl import exec_str
 from pdl.pdl_ast import Program
+from pdl.pdl_future import PdlDict
 from pdl.pdl_interpreter import (
     InterpreterState,
     PDLRuntimeError,
@@ -64,7 +65,7 @@ get_parser = {"get": "x", "parser": "json", "def": "y", "contribute": []}
 def test_get_parser():
     state = InterpreterState()
     data = Program.model_validate(get_parser)
-    scope = {"x": '{"a": "foo", "b": "bar"}'}
+    scope = PdlDict({"x": '{"a": "foo", "b": "bar"}'})
     result, _, scope, _ = process_prog(state, scope, data)
     assert result == ""
     assert scope["x"] == '{"a": "foo", "b": "bar"}'
