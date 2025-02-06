@@ -78,6 +78,7 @@ def yield_result(result: Any, kind: BlockKind) -> None:
 _LAST_ROLE = None
 ROLE_COLOR = "blue"
 
+
 def yield_background(background) -> None:
     global _LAST_ROLE  # pylint: disable= global-statement
     if len(background) > 0 and background[0]["role"] == _LAST_ROLE:
