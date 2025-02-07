@@ -37,7 +37,12 @@ export default function TranscriptItemDef({ block, def: key, value }: Props) {
   const breadcrumbs = useMemo(
     () => (
       <BreadcrumbBar>
-        <Def block={block} def={key} value={value} supportsDrilldown={false} />
+        <Def
+          id={block.id ?? ""}
+          def={key}
+          value={value}
+          supportsDrilldown={false}
+        />
       </BreadcrumbBar>
     ),
     [block, key, value],

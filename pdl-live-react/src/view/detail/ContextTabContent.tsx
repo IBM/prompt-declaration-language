@@ -1,50 +1,42 @@
-import { Link, useLocation } from "react-router"
 import {
-  Button,
   DescriptionList,
   DescriptionListTerm,
   DescriptionListGroup,
   DescriptionListDescription,
   Divider,
-  Stack,
 } from "@patternfly/react-core"
 
 import Result from "../transcript/Result"
+import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 
 type Props = {
   block: import("../../helpers").PdlBlockWithContext
 }
 
-export default function SummaryTabContent({ block }: Props) {
-  const { hash } = useLocation()
-
+export default function ContextTabContent({ block }: Props) {
   return (
     <DescriptionList>
-      {block.context.map((c, idx, A) => (
-        <>
-          <DescriptionListGroup key={idx}>
-            <DescriptionListTerm>
-              {c.role[0].toUpperCase() + c.role.slice(1)}
-            </DescriptionListTerm>
-            <DescriptionListDescription>
-              <Stack>
-                <Result result={c.content} term="" />
-                {c.defsite && (
-                  <Button variant="link" isInline>
-                    <Link
-                      to={`?detail&type=block&id=${encodeURIComponent(c.defsite)}${hash}`}
-                    >
-                      Where is this value defined?
-                    </Link>
-                  </Button>
-                )}
-              </Stack>
-            </DescriptionListDescription>
-          </DescriptionListGroup>
+      {block.context.flatMap((c, idx, A) => [
+        <DescriptionListGroup key={idx + ".value"}>
+          <DescriptionListTerm>
+            {c.role[0].toUpperCase() + c.role.slice(1)}
+          </DescriptionListTerm>
+          <DescriptionListDescription>
+            <Result result={c.content} term="" />
+          </DescriptionListDescription>
+        </DescriptionListGroup>,
 
-          {idx < A.length - 1 && <Divider />}
-        </>
-      ))}
+        <DescriptionListGroup key={idx + ".defsite"}>
+          <DescriptionListTerm>
+            Where was this value defined?
+          </DescriptionListTerm>
+          <DescriptionListDescription>
+            {c.defsite && <BreadcrumbBarForBlockId id={c.defsite} />}
+          </DescriptionListDescription>
+        </DescriptionListGroup>,
+
+        idx < A.length - 1 && <Divider key={idx + ".divider"} />,
+      ])}
     </DescriptionList>
   )
 }
