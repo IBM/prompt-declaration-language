@@ -9,9 +9,11 @@ type Props = {
   tiles?: ReactNode | ReactNode[]
 }
 
+const minWidths = { default: "300px" }
+
 export default function Tiles(props: Props) {
   return (
-    <Gallery hasGutter>
+    <Gallery hasGutter minWidths={minWidths}>
       {props.tiles ?? (
         <>
           <Upload />
