@@ -74,11 +74,13 @@ def exec_program(
     if not isinstance(scope, PdlDict):
         scope = PdlDict(scope or {})
     loc = loc or empty_block_location
-    result, _, scope, trace = process_prog(state, scope, prog, loc)
+    future_result, _, future_scope, trace = process_prog(state, scope, prog, loc)
+    result = future_result.result()
     match output:
         case "result":
             return result
         case "all":
+            scope = future_scope.result()
             return {"result": result, "scope": scope, "trace": trace}
         case _:
             assert False, 'The `output` variable should be "result" or "all"'

@@ -1,15 +1,15 @@
 import fnmatch
 import json
-from typing import Any, Generator, Generic, Sequence, TypeVar
+from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 
-from pdl.pdl_future import PdlList
+from pdl.pdl_future import lazy_apply
 
 from .pdl_ast import (
     ContributeTarget,
     ContributeValue,
     FunctionBlock,
-    Message,
-    Messages,
+    LazyMessage,
+    LazyMessages,
     get_sampling_defaults,
 )
 
@@ -92,30 +92,37 @@ def get_contribute_value(
     return None
 
 
-def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
+def messages_concat(
+    messages1: Sequence[Mapping[str, Any]], messages2: Sequence[Mapping[str, Any]]
+) -> Sequence[Mapping[str, Any]]:
     if len(messages1) == 0:
         return messages2
     if len(messages2) == 0:
         return messages1
-    # left = messages1[-1]
-    # right = messages2[0]
-    # if (
-    #     left["role"] == right["role"] and simple_message(left) and simple_message(right)
-    # ):  # test that there are no other keys
-    #     return (
-    #         messages1[:-1]
-    #         + [{"role": left["role"], "content": left["content"] + right["content"]}]
-    #         + messages2[1:]
-    #     )
-    # return messages1 + messages2
-    return PdlList(messages1.data + messages2.data)  # XXX TODO: merge messages
+    left = messages1[-1]
+    right = messages2[0]
+    if (
+        left["role"] == right["role"] and simple_message(left) and simple_message(right)
+    ):  # test that there are no other keys
+        return (
+            messages1[:-1]
+            + [{"role": left["role"], "content": left["content"] + right["content"]}]
+            + messages2[1:]
+        )
+    return messages1 + messages2
 
 
-def messages_to_str(messages: Messages) -> str:
+def lazy_messages_concat(
+    messages1: LazyMessages, messages2: LazyMessages
+) -> LazyMessages:
+    return lazy_apply(messages_concat, (messages1, messages2))
+
+
+def messages_to_str(messages: LazyMessages) -> str:
     return "\n".join([str(msg) for msg in messages])
 
 
-def simple_message(message: Message) -> bool:
+def simple_message(message: LazyMessage) -> bool:
     if message.keys() == {"role", "content"} and message["content"] is not None:
         return True
     return False

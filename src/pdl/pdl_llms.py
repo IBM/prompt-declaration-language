@@ -8,8 +8,8 @@ import litellm
 from dotenv import load_dotenv
 from litellm import acompletion
 
-from .pdl_ast import Message, Messages, set_structured_decoding_parameters
-from .pdl_future import PdlConst, PdlDict, PdlFuture
+from .pdl_ast import LazyMessage, ModelInput, set_structured_decoding_parameters
+from .pdl_future import PdlConst, PdlFuture, lazy_apply
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
@@ -34,13 +34,14 @@ _LOOP_THREAD = threading.Thread(
     target=_start_background_loop, args=(_LOOP,), daemon=True
 )
 _LOOP_THREAD.start()
+# _BACKGROUND_TASKS = set()
 
 
 class LitellmModel:
     @staticmethod
     async def async_generate_text(
         model_id: str,
-        messages: Messages,
+        messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
     ):
@@ -48,7 +49,7 @@ class LitellmModel:
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = await acompletion(
-            model=model_id, messages=messages.result(), stream=False, **parameters
+            model=model_id, messages=list(messages), stream=False, **parameters
         )
         msg = response.choices[0].message  # pyright: ignore
         if msg.role is None:
@@ -61,10 +62,11 @@ class LitellmModel:
     @staticmethod
     def generate_text(
         model_id: str,
-        messages: Messages,
+        messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ) -> tuple[Message, PdlFuture[Any]]:
+    ) -> tuple[LazyMessage, PdlFuture[Any]]:
+        global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
                 model_id,
@@ -74,17 +76,20 @@ class LitellmModel:
             ),
             _LOOP,
         )
-        message = map_future(lambda x: x[0], future)
-        response = map_future(lambda x: x[1], future)
-        return PdlDict(message), PdlConst(response)
+        # _BACKGROUND_TASKS.add(future)
+        # future.add_done_callback(_BACKGROUND_TASKS.discard)
+        pdl_future = PdlConst(future)
+        message = lazy_apply((lambda x: x[0]), pdl_future)
+        response = lazy_apply((lambda x: x[1]), pdl_future)
+        return PdlConst(message), PdlConst(response)
 
     @staticmethod
     def generate_text_stream(
         model_id: str,
-        messages: list[Message],
+        messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ) -> Generator[Message, Any, Any]:
+    ) -> Generator[LazyMessage, Any, Any]:
         # parameters = set_structured_decoding_parameters(spec, parameters)
         # response = completion(
         #     model=model_id,
@@ -108,12 +113,12 @@ MapOutputT = TypeVar("MapOutputT")
 
 
 def map_future(
-    f: Callable[[MapInputT], MapOutputT], x: Future[MapInputT] | PdlFuture[MapInputT]
+    f: Callable[[MapInputT], MapOutputT], x: Future[MapInputT]
 ) -> Future[MapOutputT]:
     future = asyncio.run_coroutine_threadsafe(_async_call(f, x), _LOOP)
     return future
 
 
 async def _async_call(f, x):
-    v = await x
+    v = x.result()
     return f(v)
