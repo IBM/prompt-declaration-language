@@ -18,6 +18,9 @@ type TimelineRow = {
   /** Parent node */
   parent: null | TimelineRow
 
+  /** Child nodes */
+  children: TimelineRow[]
+
   /** The original block model */
   block: PdlBlockWithTiming
 }
@@ -40,9 +43,17 @@ function ignore(_block: PdlBlockWithTiming) {
 }
 
 export function computeModel(block: unknown | PdlBlock): TimelineModel {
-  return computeModelIter(block).sort(
+  const model = computeModelIter(block).sort(
     (a, b) => a.block.start_nanos - b.block.start_nanos,
   )
+
+  model.forEach((node) => {
+    if (node.parent) {
+      node.parent.children.push(node)
+    }
+  })
+
+  return model
 }
 
 function computeModelIter(
@@ -60,6 +71,7 @@ function computeModelIter(
         id: block.id ?? block.kind ?? "",
         depth: !parent ? 0 : parent.depth + 1,
         parent: parent || null,
+        children: [], // filled in at the end
         block,
       }
 

@@ -1,0 +1,38 @@
+.pdl-masonry-responsive {
+  margin-top: 1em;
+}
+
+.pdl-masonry {
+  &,
+  & > div {
+    gap: 0.375em !important;
+  }
+}
+
+.pdl-masonry-tile {
+  flex: 1;
+  border-radius: 0;
+  min-height: 13em;
+
+  &:before {
+    border: none;
+  }
+
+  background: var(--pf-t--global--background--color--secondary--default);
+  &[data-kind="model"] {
+    background: var(--pf-t--global--color--nonstatus--teal--default);
+  }
+  &[data-kind="read"] {
+    background: var(--pf-t--global--color--nonstatus--orange--default);
+  }
+  &[data-kind="code"] {
+    background: var(--pf-t--global--color--nonstatus--green--default);
+  }
+}
+
+.pdl-masonry-index {
+  border-radius: 50%;
+  background-color: var(--pf-t--global--background--color--inverse--default);
+  color: var(--pf-t--global--text--color--inverse);
+  padding: 0.5em;
+}

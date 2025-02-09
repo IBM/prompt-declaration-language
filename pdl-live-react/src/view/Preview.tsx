@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { useLocation } from "react-router"
 
 import {
   CodeEditor,
@@ -19,6 +20,7 @@ type Props = {
   language?: SupportedLanguage
   showLineNumbers?: boolean
   limitHeight?: boolean
+  remount?: boolean
 }
 
 const options: Required<CodeEditorProps>["options"] = {
@@ -35,7 +37,9 @@ export default function Preview({
   value,
   showLineNumbers,
   limitHeight,
+  remount,
 }: Props) {
+  const { hash } = useLocation()
   const onEditorDidMount = useCallback((editor: Editor) => {
     editor.layout()
   }, [])
@@ -43,6 +47,7 @@ export default function Preview({
   return (
     <div className="pdl-preview" data-limit-height={limitHeight}>
       <CodeEditor
+        key={remount ? hash + value : undefined}
         code={value}
         isDarkTheme
         isCopyEnabled

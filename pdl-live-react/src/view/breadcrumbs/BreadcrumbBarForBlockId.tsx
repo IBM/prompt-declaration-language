@@ -25,7 +25,7 @@ export default function BreadcrumbBarForBlockId({ id, def, value }: Props) {
   const [searchParams] = useSearchParams()
   const s = searchParams.toString().length === 0 ? "" : "&" + searchParams
   const onClick = useCallback(
-    () => navigate(`?detail&type=def&id=${id}${s}${hash}`),
+    () => navigate(`?detail&type=block&id=${id}${s}${hash}`),
     [id, hash, s],
   )
 

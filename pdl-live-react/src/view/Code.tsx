@@ -12,6 +12,7 @@ type Props = {
   showLineNumbers?: boolean
   limitHeight?: boolean
   raw?: boolean
+  remount?: boolean
 }
 
 export default function Code({
@@ -20,12 +21,14 @@ export default function Code({
   showLineNumbers = false,
   limitHeight = true,
   raw = false,
+  remount = false,
 }: Props) {
   return (
     <Preview
       limitHeight={limitHeight}
       showLineNumbers={showLineNumbers ?? false}
       language={language || "yaml"}
+      remount={remount}
       value={
         typeof block === "string"
           ? block
