@@ -3,8 +3,8 @@ import { useLocation } from "react-router"
 
 const Code = lazy(() => import("../view/Code"))
 const Memory = lazy(() => import("../view/memory/Memory"))
+const Summary = lazy(() => import("../view/masonry/Masonry"))
 const Timeline = lazy(() => import("../view/timeline/Timeline"))
-import Transcript from "../view/transcript/Transcript"
 
 import "./Viewer.css"
 
@@ -12,7 +12,7 @@ import "./Viewer.css"
 export default function Viewer({ value }: { value: string }) {
   // We will use this to find the current active tab (below)
   const { hash } = useLocation()
-  const activeTab = !hash || hash === "#" ? "#transcript" : hash
+  const activeTab = !hash || hash === "#" ? "#summary" : hash
 
   const [shown, setShown] = useState<Record<string, boolean>>({})
   useEffect(() => {
@@ -66,11 +66,11 @@ export default function Viewer({ value }: { value: string }) {
         </section>,
         <section
           className="pdl-viewer-section"
-          key="#transcript"
-          data-hash="#transcript"
-          hidden={activeTab !== "#transcript"}
+          key="#summary"
+          data-hash="#summary"
+          hidden={activeTab !== "#summary"}
         >
-          <Transcript data={data} />
+          <Summary block={data} />
         </section>,
       ].filter((_) => shown[_.props["data-hash"]])}
     </>

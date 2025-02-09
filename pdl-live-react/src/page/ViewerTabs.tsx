@@ -9,11 +9,11 @@ export default function Viewer({ hidden = false }: { hidden?: boolean }) {
   // Note: please keep eventKey===href
   const tabs = [
     <Tab
-      key="#transcript"
-      href="#transcript"
-      eventKey="#transcript"
+      key="#summary"
+      href="#summary"
+      eventKey="#summary"
       className="pdl-viewer-tab"
-      title={<TabTitleText>Transcript</TabTitleText>}
+      title={<TabTitleText>Summary</TabTitleText>}
     />,
     <Tab
       key="#timeline"

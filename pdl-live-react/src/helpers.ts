@@ -55,8 +55,13 @@ export function isNonScalarPdlBlock(
 /** Does the given block have a `parser` field? */
 export function hasParser(
   data: PdlBlock,
-): data is NonScalarPdlBlock & { parser: import("./pdl_ast").Parser } {
-  return isNonScalarPdlBlock(data) && "result" in data
+): data is NonScalarPdlBlock & { parser: "json" | "jsonl" | "yaml" } {
+  return (
+    isNonScalarPdlBlock(data) &&
+    "parser" in data &&
+    data.parser !== null &&
+    typeof data.parser !== "object"
+  )
 }
 
 const markdownPattern = /[`#*]/
@@ -76,7 +81,7 @@ export function isMarkdownish(s: string): boolean {
 }
 
 /** Is the given block a generic text block? */
-function isTextBlock(data: PdlBlock): data is TextBlock {
+export function isTextBlock(data: PdlBlock): data is TextBlock {
   return (data as TextBlock).kind === "text"
 }
 
@@ -159,4 +164,11 @@ export function capitalizeAndUnSnakeCase(s: string) {
   return s === "model"
     ? "LLM"
     : s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
+}
+
+type MessageBearing = Omit<import("./pdl_ast").ReadBlock, "message"> & {
+  message: string
+}
+export function hasMessage(block: PdlBlock): block is MessageBearing {
+  return typeof (block as MessageBearing).message === "string"
 }
