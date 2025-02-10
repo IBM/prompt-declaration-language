@@ -21,7 +21,9 @@ export default function TimelineRow(row: Props) {
       </span>
 
       <span className="pdl-timeline-cell pdl-duration" data-cell="duration">
-        {prettyMs((row.block.end_nanos - row.block.start_nanos) / 1000000)}
+        {prettyMs(
+          ((row.block.end_nanos || row.max) - row.block.start_nanos) / 1000000,
+        )}
       </span>
     </div>
   )
