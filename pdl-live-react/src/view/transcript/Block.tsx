@@ -101,9 +101,11 @@ export default function Block({ data }: Props): ReactNode {
     }))
     .with({ kind: "text" }, (data) => ({
       C: ["pdl_text"],
-      S: !Array.isArray(data.text)
-        ? undefined
-        : data.text.map((b, idx) => <Block key={idx} data={b} />),
+      S: !Array.isArray(data.text) ? (
+        <Block data={data.text} />
+      ) : (
+        data.text.map((b, idx) => <Block key={idx} data={b} />)
+      ),
     }))
     .with({ kind: "lastOf" }, (data) => ({
       C: ["pdl_lastOf"],
