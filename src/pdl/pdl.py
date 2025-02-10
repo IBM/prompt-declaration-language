@@ -238,7 +238,7 @@ def main():
     initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     if args.data_file is not None:
         with open(args.data_file, "r", encoding="utf-8") as scope_fp:
-            initial_scope = yaml.safe_load(scope_fp)
+            initial_scope = initial_scope | yaml.safe_load(scope_fp)
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
     validate_scope(initial_scope)
