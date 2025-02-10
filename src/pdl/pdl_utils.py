@@ -2,16 +2,14 @@ import fnmatch
 import json
 from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 
-from pdl.pdl_future import lazy_apply
-
 from .pdl_ast import (
     ContributeTarget,
     ContributeValue,
     FunctionBlock,
-    LazyMessage,
     LazyMessages,
     get_sampling_defaults,
 )
+from .pdl_future import lazy_apply2
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -93,8 +91,8 @@ def get_contribute_value(
 
 
 def messages_concat(
-    messages1: Sequence[Mapping[str, Any]], messages2: Sequence[Mapping[str, Any]]
-) -> Sequence[Mapping[str, Any]]:
+    messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
     if len(messages1) == 0:
         return messages2
     if len(messages2) == 0:
@@ -115,14 +113,14 @@ def messages_concat(
 def lazy_messages_concat(
     messages1: LazyMessages, messages2: LazyMessages
 ) -> LazyMessages:
-    return lazy_apply(messages_concat, (messages1, messages2))
+    return lazy_apply2(messages_concat, messages1, messages2)
 
 
 def messages_to_str(messages: LazyMessages) -> str:
-    return "\n".join([str(msg) for msg in messages])
+    return "\n".join([str(msg) for msg in messages.result()])
 
 
-def simple_message(message: LazyMessage) -> bool:
+def simple_message(message: Mapping[str, Any]) -> bool:
     if message.keys() == {"role", "content"} and message["content"] is not None:
         return True
     return False

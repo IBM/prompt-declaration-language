@@ -44,7 +44,7 @@ class LitellmModel:
         messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ):
+    ) -> tuple[dict[str, Any], Any]:
         parameters = set_structured_decoding_parameters(spec, parameters)
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
@@ -66,7 +66,7 @@ class LitellmModel:
         spec: Any,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlFuture[Any]]:
-        global _BACKGROUND_TASKS
+        # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
                 model_id,
@@ -78,10 +78,10 @@ class LitellmModel:
         )
         # _BACKGROUND_TASKS.add(future)
         # future.add_done_callback(_BACKGROUND_TASKS.discard)
-        pdl_future = PdlConst(future)
+        pdl_future: PdlFuture[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
         response = lazy_apply((lambda x: x[1]), pdl_future)
-        return PdlConst(message), PdlConst(response)
+        return message, response
 
     @staticmethod
     def generate_text_stream(

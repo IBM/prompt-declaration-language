@@ -267,7 +267,7 @@ def process_block(
             ) from exc
         stringified_result = lazy_apply(stringify, result)
         background = PdlList(
-            [PdlDict({"role": state.role, "content": stringified_result})]
+            [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
         )
         trace = DataBlock(data=block, result=stringified_result)
         if state.yield_background:
@@ -419,8 +419,9 @@ def process_block_body(
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, location=loc, program=block),
                 ) from exc
+            stringified_result = lazy_apply(stringify, result)
             background = PdlList(
-                [PdlDict({"role": state.role, "content": stringify(result.result())})]
+                [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
             )
             trace = block.model_copy()
             if state.yield_result:
@@ -437,7 +438,7 @@ def process_block_body(
                 result = PdlConst(v)
             stringified_result = stringify(v)
             background = PdlList(
-                [PdlDict({"role": state.role, "content": stringified_result})]
+                [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
             )
             if state.yield_result:
                 yield_result(result.result(), block.kind)
@@ -1255,7 +1256,7 @@ def process_call_model(
         append_log(state, "Model Input", litellm_params)
         # else:
         #    append_log(state, "Model Input", messages_to_str(model_input))
-        background = PdlList([msg])
+        background: LazyMessages = PdlList([msg])  # type: ignore
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
@@ -1408,7 +1409,7 @@ def process_call_code(
             try:
                 result = call_python(code_s, scope)
                 background = PdlList(
-                    [PdlDict({"role": state.role, "content": lazy_apply(str, result)})]
+                    [PdlDict({"role": state.role, "content": lazy_apply(str, result)})]  # type: ignore
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
@@ -1421,7 +1422,7 @@ def process_call_code(
                 result = call_command(code_s)
                 background = PdlList(
                     [
-                        PdlDict(
+                        PdlDict(  # type: ignore
                             {
                                 "role": state.role,
                                 "content": result,
@@ -1440,7 +1441,7 @@ def process_call_code(
                 result = call_jinja(code_s, scope)
                 background = PdlList(
                     [
-                        PdlDict(
+                        PdlDict(  # type: ignore
                             {
                                 "role": state.role,
                                 "content": lazy_apply(lambda r: r.result(), result),
@@ -1459,7 +1460,7 @@ def process_call_code(
                 result = call_pdl(code_s, scope)
                 stringified_result = lazy_apply(stringify, result)
                 background = PdlList(
-                    [PdlDict({"role": state.role, "content": stringified_result})]
+                    [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
@@ -1625,7 +1626,9 @@ def process_input(
             s = "".join(contents)
             append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
-    background: LazyMessages = PdlList([PdlDict({"role": state.role, "content": s})])
+    background: LazyMessages = PdlList(
+        [PdlDict({"role": state.role, "content": s})]  # type: ignore
+    )
     return PdlConst(s), background, scope, trace
 
 
