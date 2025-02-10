@@ -1,13 +1,7 @@
 import pytest
 
-from pdl.pdl import exec_str
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_interpreter import PDLRuntimeError
 
 arith_data = {
     "description": "Test arith",
@@ -17,11 +11,9 @@ arith_data = {
 
 
 def test_arith():
-    state = InterpreterState()
-    data = Program.model_validate(arith_data)
-    result, _, scope, _ = process_prog(state, empty_scope, data)
-    assert result == "2"
-    assert scope["X"] == 2
+    result = exec_dict(arith_data, output="all")
+    assert result["result"] == "2"
+    assert result["scope"]["X"] == 2
 
 
 var_data = {
@@ -31,9 +23,7 @@ var_data = {
 
 
 def test_var():
-    state = InterpreterState()
-    data = Program.model_validate(var_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(var_data)
     assert result == "3"
 
 
@@ -43,9 +33,7 @@ true_data = {
 
 
 def test_true():
-    state = InterpreterState()
-    data = Program.model_validate(true_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(true_data)
     assert result == "true"
 
 
@@ -55,9 +43,7 @@ false_data = {
 
 
 def test_false():
-    state = InterpreterState()
-    data = Program.model_validate(false_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(false_data)
     assert result == "false"
 
 
@@ -65,19 +51,15 @@ undefined_var_data = {"text": "Hello ${ X }"}
 
 
 def test_undefined_var():
-    state = InterpreterState()
-    data = Program.model_validate(undefined_var_data)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(undefined_var_data)
 
 
 autoescape_data = {"text": "<|system|>"}
 
 
 def test_autoescape():
-    state = InterpreterState()
-    data = Program.model_validate(autoescape_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(autoescape_data)
     assert text == "<|system|>"
 
 
@@ -85,9 +67,7 @@ var_data1 = {"defs": {"X": "something"}, "text": "${ X }"}
 
 
 def test_var1():
-    state = InterpreterState()
-    data = Program.model_validate(var_data1)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(var_data1)
     assert result == "something"
 
 
@@ -98,10 +78,9 @@ var_data2 = {
 
 
 def test_var2():
-    state = InterpreterState()
-    data = Program.model_validate(var_data2)
-    result, _, scope, _ = process_prog(state, empty_scope, data)
-    assert result == '["something", "something else"]'
+    result = exec_dict(var_data2, output="all")
+    scope = result["scope"]
+    assert result["result"] == '["something", "something else"]'
     assert scope["X"] == "something"
     assert scope["Y"] == "something else"
 
@@ -110,10 +89,9 @@ list_data = {"defs": {"X": {"data": [1, 2, 3]}, "Y": "${ X }"}, "text": "${ X }"
 
 
 def test_list():
-    state = InterpreterState()
-    data = Program.model_validate(list_data)
-    result, _, scope, _ = process_prog(state, empty_scope, data)
-    assert result == "[1, 2, 3]"
+    result = exec_dict(list_data, output="all")
+    scope = result["scope"]
+    assert result["result"] == "[1, 2, 3]"
     assert scope["X"] == [1, 2, 3]
     assert scope["Y"] == [1, 2, 3]
 
@@ -122,9 +100,7 @@ disable_jinja_block_data = {"text": '{% for x in ["hello", "bye"]%} X {% endfor 
 
 
 def test_disable_jinja_block():
-    state = InterpreterState()
-    data = Program.model_validate(disable_jinja_block_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(disable_jinja_block_data)
     assert text == '{% for x in ["hello", "bye"]%} X {% endfor %}'
 
 
@@ -136,9 +112,7 @@ jinja_block_data = {
 
 
 def test_jinja_block():
-    state = InterpreterState()
-    data = Program.model_validate(jinja_block_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(jinja_block_data)
     assert text == " X  X "
 
 
