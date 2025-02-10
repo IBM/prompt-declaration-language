@@ -105,6 +105,29 @@ def test_code_parser1():
 
 
 def test_json_parser():
+    # Test json-repair,
+    # see https://github.com/mangiucugna/json_repair/blob/main/tests/test_json_repair.py
+    json_parser = """
+    text: |
+        The next 64 elements are:
+        ```json
+        { "key": "value" }
+        ```
+    parser: json
+    """
+    result = exec_str(json_parser)
+    assert result == {"key": "value"}
+
+    json_parser = """
+    text: |
+        {'key': 'string', 'key2': false, \"key3\": null, \"key4\": unquoted}
+    parser: json
+    """
+    result = exec_str(json_parser)
+    assert result == {"key": "string", "key2": False, "key3": None, "key4": "unquoted"}
+
+
+def test_jsonl_parser():
     jsonl_parser = """
     text: |
         { "a": 1, "b": 2}

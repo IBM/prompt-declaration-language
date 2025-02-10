@@ -17,6 +17,7 @@ from pathlib import Path  # noqa: E402
 from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
+import json_repair  # noqa: E402
 import litellm  # noqa: E402
 import yaml  # noqa: E402
 from jinja2 import (  # noqa: E402
@@ -1682,12 +1683,15 @@ def process_include(
         ) from exc
 
 
-def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
-    result: Optional[dict[str, Any] | list[Any]]
+JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None
+
+
+def parse_result(parser: ParserType, text: str) -> JSONReturnType:
+    result: JSONReturnType
     match parser:
         case "json":
             try:
-                result = json.loads(text)
+                result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"

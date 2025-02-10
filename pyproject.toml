@@ -15,6 +15,7 @@ dependencies = [
   "litellm>=1.57.3,<1.59.9",
   "termcolor~=2.0",
   "ipython~=8.0",
+  "json-repair~=0.35",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },

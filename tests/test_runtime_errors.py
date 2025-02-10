@@ -40,10 +40,10 @@ ${ {}[ }
     )
 
 
-def test_parser_json():
+def test_parser_jsonl():
     prog_str = """
 text: "{ x: 1 + 1 }"
-parser: json
+parser: jsonl
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
