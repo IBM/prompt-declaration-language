@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation, useNavigate, useSearchParams } from "react-router"
 
 import Def from "../transcript/Def"
 import BreadcrumbBar from "./BreadcrumbBar"
@@ -22,9 +22,11 @@ function asIter(part: string) {
 export default function BreadcrumbBarForBlockId({ id, def, value }: Props) {
   const { hash } = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString().length === 0 ? "" : "&" + searchParams
   const onClick = useCallback(
-    () => navigate(`?detail&type=def&id=${id}${hash}`),
-    [id, hash],
+    () => navigate(`?detail&type=def&id=${id}${s}${hash}`),
+    [id, hash, s],
   )
 
   return (
