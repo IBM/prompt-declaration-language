@@ -548,7 +548,7 @@ def process_block_body(
             match_v, block = process_expr_of(block, "match_", scope, loc, "match")
             cases = []
             matched = False
-            result = ""
+            result = PdlConst("")
             background = PdlList([])
             for i, match_case in enumerate(block.with_):
                 if matched:

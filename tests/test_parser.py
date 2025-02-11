@@ -1,14 +1,8 @@
 import pytest
 
-from pdl.pdl import exec_str
-from pdl.pdl_ast import Program
+from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_future import PdlDict
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl_interpreter import PDLRuntimeError
 
 model_parser = {
     "model": "watsonx_text/ibm/granite-20b-code-instruct",
@@ -33,9 +27,7 @@ model_parser = {
 
 
 def test_model_parser():
-    state = InterpreterState()
-    data = Program.model_validate(model_parser)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(model_parser)
     assert result == {"bob": 20, "carol": 30}
 
 
@@ -53,21 +45,18 @@ model_parser1 = {
 
 
 def test_model_parser1():
-    state = InterpreterState()
-    data = Program.model_validate(model_parser1)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(model_parser1)
 
 
 get_parser = {"get": "x", "parser": "json", "def": "y", "contribute": []}
 
 
 def test_get_parser():
-    state = InterpreterState()
-    data = Program.model_validate(get_parser)
     scope = PdlDict({"x": '{"a": "foo", "b": "bar"}'})
-    result, _, scope, _ = process_prog(state, scope, data)
-    assert result == ""
+    result = exec_dict(get_parser, scope=scope, output="all")
+    scope = result["scope"]
+    assert result["result"] == ""
     assert scope["x"] == '{"a": "foo", "b": "bar"}'
     assert scope["y"] == {"a": "foo", "b": "bar"}
 
@@ -86,9 +75,7 @@ code_parser = {
 
 
 def test_code_parser():
-    state = InterpreterState()
-    data = Program.model_validate(code_parser)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(code_parser)
     assert result == {"a": "b", "c": "d"}
 
 
@@ -99,9 +86,7 @@ code_parser1 = {
 
 
 def test_code_parser1():
-    state = InterpreterState()
-    data = Program.model_validate(code_parser1)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(code_parser1)
     assert result == "{'a': 'b', 'c': 'd'}"
 
 

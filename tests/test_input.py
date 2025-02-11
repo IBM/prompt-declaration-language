@@ -1,11 +1,6 @@
 from pathlib import Path
 
-from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
-from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
-    InterpreterState,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import InterpreterConfig, exec_dict
 
 input_data = {
     "description": "Input block example",
@@ -36,9 +31,8 @@ input_json_data = {
 
 
 def test_input_json():
-    state = InterpreterState(cwd=Path(__file__).parent)
-    data = Program.model_validate(input_json_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    config = InterpreterConfig(cwd=Path(__file__).parent)
+    text = exec_dict(input_json_data, config=config)
     assert (
         text
         == "Bob lives at the following address:\n87 Smith Road in the town of Armonk NY"
@@ -53,9 +47,7 @@ input_json_data_defs = {
 
 
 def test_input_json_defs():
-    state = InterpreterState()
-    data = Program.model_validate(input_json_data_defs)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(input_json_data_defs)
     assert text == "The name in the input is: Carol"
 
 
@@ -71,7 +63,5 @@ input_json_data_defs1 = {
 
 
 def test_input_json_defs1():
-    state = InterpreterState()
-    data = Program.model_validate(input_json_data_defs1)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(input_json_data_defs1)
     assert text == "Hello World!\nThis is a prompt descriptor.\nOr is it?\n"

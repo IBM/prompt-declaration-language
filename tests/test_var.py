@@ -1,12 +1,7 @@
 import pytest
 
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict
+from pdl.pdl_interpreter import PDLRuntimeError
 
 var_data = {
     "description": "Hello world with variable use",
@@ -34,9 +29,7 @@ var_data = {
 
 
 def test_var():
-    state = InterpreterState()
-    data = Program.model_validate(var_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(var_data)
     assert text == "Hello, World!\nTell me about World?\n"
 
 
@@ -69,9 +62,7 @@ var_shared_scope_data = {
 
 
 def test_code_shared_scope():
-    state = InterpreterState()
-    data = Program.model_validate(var_shared_scope_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(var_shared_scope_data)
     assert text == "Hello, WorlddlroW !\n"
 
 
@@ -101,10 +92,7 @@ def test_code_shared_scope_no_mutate():
     Python should be able to access variables in the PDL document scope,
     but any modifications should _not_ affect the document scope.
     """
-
-    state = InterpreterState()
-    data = Program.model_validate(var_shared_scope_mutate_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(var_shared_scope_mutate_data)
     assert text == "Hello, foooof"
 
 
@@ -121,9 +109,9 @@ code_var_data = {
 
 
 def test_code_var():
-    state = InterpreterState()
-    data = Program.model_validate(code_var_data)
-    text, _, scope, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(code_var_data, output="all")
+    text = result["result"]
+    scope = result["scope"]
     assert scope == {"pdl_context": [{"role": "user", "content": text}], "I": 0}
     assert text == "0"
 
@@ -135,10 +123,8 @@ missing_var = {
 
 
 def test_missing_var():
-    state = InterpreterState()
-    data = Program.model_validate(missing_var)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(missing_var)
 
 
 missing_call = {
@@ -148,7 +134,5 @@ missing_call = {
 
 
 def test_missing_call():
-    state = InterpreterState()
-    data = Program.model_validate(missing_call)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(missing_call)
