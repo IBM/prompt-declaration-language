@@ -2,7 +2,6 @@
   margin: 1em 0;
   display: table;
   border-collapse: collapse;
-  min-width: 350px;
 
   white-space: nowrap;
 }
@@ -40,21 +39,14 @@
 }
 
 /* Link hover effects */
-.pdl-timeline-kind {
-  text-decoration: none;
-}
 .pdl-timeline-row:hover {
-  .pdl-timeline-kind {
+  .pdl-timeline-kind a {
     text-decoration: underline;
   }
 }
 
 .pdl-timeline-kind {
   font-size: 0.875em;
-}
-.pdl-timeline-row:hover {
-  .pdl-timeline-kind {
-  }
 }
 
 .pdl-timeline-bar-outer {
