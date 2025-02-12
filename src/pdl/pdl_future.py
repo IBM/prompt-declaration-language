@@ -130,8 +130,8 @@ class PdlDict(
     def __repr__(self):
         return self.result().__repr__()
 
-    def __or__(self, value: Union["PdlDict", dict]):
-        if isinstance(value, PdlDict):
+    def __or__(self, value: Union["PdlFuture", dict]):
+        if isinstance(value, PdlFuture):
             d = value.data
         else:
             d = value

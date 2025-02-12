@@ -1,7 +1,6 @@
 import yaml
 
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import exec_str
 
 
 def parse_prog_str(prog_str):
@@ -25,11 +24,10 @@ text:
   role: B
 role: Top
 """
-    prog = parse_prog_str(prog_str)
-    state = InterpreterState()
-    result, output, scope, _ = process_prog(state, empty_scope, prog)
-    assert result == "AHiB"
-    assert output == [
+    result = exec_str(prog_str, output="all")
+    scope = result["scope"]
+    assert result["result"] == "AHiB"
+    assert scope["pdl_context"] == [
         {"role": "A", "content": "A"},
         {"role": "Top", "content": "Hi"},
         {"role": "B", "content": "B"},

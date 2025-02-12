@@ -329,6 +329,8 @@ def process_advanced_block(
     try:
         result, background, scope, trace = process_block_body(state, scope, block, loc)
         trace = trace.model_copy(update={"result": result})
+        if block.fallback is not None:
+            result.result()
         if block.parser is not None:
             parser = block.parser
             result = lazy_apply(lambda r: parse_result(parser, r), result)
@@ -1571,7 +1573,7 @@ def process_call(
         ) from exc
     trace = block.model_copy(update={"trace": f_trace})
     if closure.spec is not None:
-        errors = type_check_spec(result, closure.spec, fun_loc)
+        errors = type_check_spec(result.result(), closure.spec, fun_loc)
         if len(errors) > 0:
             raise PDLRuntimeError(
                 f"Type errors in result of function call to {block.call}:\n"

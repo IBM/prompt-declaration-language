@@ -220,9 +220,9 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         if isinstance(block.result, FunctionBlock):
             d["result"] = ""
         elif json_compatible:
-            d["result"] = as_json(block.result)
+            d["result"] = as_json(block.result.result())
         else:
-            d["result"] = block.result
+            d["result"] = block.result.result()
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     # if block.location is not None:
