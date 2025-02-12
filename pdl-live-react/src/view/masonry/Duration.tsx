@@ -4,6 +4,8 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   DescriptionListDescription,
+  Flex,
+  FlexItem,
   Tooltip,
 } from "@patternfly/react-core"
 
@@ -12,7 +14,11 @@ import "../transcript/Duration.css"
 type Props = Pick<
   Required<import("../../helpers").PdlBlockWithTiming>,
   "start_nanos" | "end_nanos" | "timezone"
->
+> & { as: import("./Toolbar").As }
+
+const gapSm = { default: "gapSm" as const }
+const nowrap = { default: "nowrap" as const }
+const center = { default: "alignItemsCenter" as const }
 
 /** Duration of block execution */
 function duration(block: Props) {
@@ -53,7 +59,23 @@ export default function Duration(block: Props) {
 
   return (
     <Tooltip content={tip}>
-      <span className="pdl-duration">{dur}</span>
+      <Flex
+        gap={gapSm}
+        alignItems={center}
+        flexWrap={nowrap}
+        className="pdl-duration"
+      >
+        <FlexItem>
+          <strong>
+            {block.as === "list" && format(block.start_nanos, block.timezone)}
+          </strong>
+        </FlexItem>
+        <FlexItem>
+          {block.as === "list" ? "(" : ""}
+          {dur}
+          {block.as === "list" ? ")" : ""}
+        </FlexItem>
+      </Flex>
     </Tooltip>
   )
 }
