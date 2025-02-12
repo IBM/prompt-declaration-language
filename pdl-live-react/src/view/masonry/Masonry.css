@@ -15,7 +15,7 @@
   }
 
   &[data-padding] > div {
-    margin: 1em;
+    margin: 2em;
   }
 }
 
