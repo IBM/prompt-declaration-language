@@ -3,12 +3,6 @@ import yaml
 from pdl.pdl import exec_str
 
 
-def parse_prog_str(prog_str):
-    prog_yaml = yaml.safe_load(prog_str)
-    prog = Program.model_validate(prog_yaml)
-    return prog
-
-
 def test_role1():
     prog_str = """
 description: Test role
