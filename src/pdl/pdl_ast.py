@@ -2,7 +2,16 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Mapping, Optional, Sequence, TypeAlias, Union
+from typing import (
+    Annotated,
+    Any,
+    Literal,
+    Mapping,
+    Optional,
+    Sequence,
+    TypeAlias,
+    Union,
+)
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
@@ -200,7 +209,7 @@ class FunctionBlock(Block):
     """Body of the function
     """
     # Field for internal use
-    scope: Optional[ScopeType] = None
+    scope: Annotated[Optional[ScopeType], Field(repr=False)] = None
 
 
 class CallBlock(Block):

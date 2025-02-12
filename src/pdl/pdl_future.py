@@ -30,6 +30,9 @@ class PdlConst(PdlFuture[PdlConstT]):
     def data(self):
         return self._data
 
+    def __repr__(self):
+        return self.result().__repr__()
+
     def result(self) -> PdlConstT:
         while isinstance(self._data, (Future, PdlFuture)):
             self._data = self._data.result()
