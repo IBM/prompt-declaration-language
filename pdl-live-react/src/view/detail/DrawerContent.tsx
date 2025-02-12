@@ -32,7 +32,6 @@ type Props = {
 
 function header(objectType: string) {
   switch (objectType) {
-    case "defs":
     case "def":
       return "Variable Definition"
     default:

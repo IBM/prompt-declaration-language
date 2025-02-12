@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core"
 
-import "../transcript/Duration.css"
+import "./Duration.css"
 
 type Props = Pick<
   Required<import("../../helpers").PdlBlockWithTiming>,
