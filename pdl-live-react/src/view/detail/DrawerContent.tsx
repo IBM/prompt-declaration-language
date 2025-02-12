@@ -15,12 +15,9 @@ import BlockNotFound from "./BlockNotFound"
 import drawerContentBody from "./DrawerContentBody"
 import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
 
-import { childrenOf } from "../timeline/model"
-import {
-  isNonScalarPdlBlock,
-  nonNullable,
-  type NonScalarPdlBlock as Block,
-} from "../../helpers"
+import findNode from "./find"
+
+import { type NonScalarPdlBlock as Block } from "../../helpers"
 
 import CloseIcon from "@patternfly/react-icons/dist/esm/icons/times-icon"
 
@@ -68,7 +65,7 @@ export default function DrawerContent({ value }: Props) {
     [value],
   )
   const block = useMemo<null | Block>(
-    () => (!id || !data ? null : find(data, id)),
+    () => (!id || !data ? null : findNode(data, id)),
     [id, data],
   )
   useEffect(() => {
@@ -113,22 +110,4 @@ export default function DrawerContent({ value }: Props) {
       </CardBody>
     </Card>
   )
-}
-
-/** Traverse the tree under `block` looking for a sub-block with then given `id` */
-function find(
-  block: import("../../pdl_ast").PdlBlock,
-  id: string,
-): null | Block {
-  if (!isNonScalarPdlBlock(block)) {
-    return null
-  } else if (block.id === id) {
-    return block
-  } else {
-    return (
-      childrenOf(block)
-        .map((child) => find(child, id))
-        .filter(nonNullable)[0] || null
-    )
-  }
 }
