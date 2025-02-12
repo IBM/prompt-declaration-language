@@ -694,7 +694,7 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         },
         # Note that we match both granite-3.0 and 3.1 rather than using a granite-3.* wildcard
         {
-            "replicate*granite-3.1*": {
+            "*granite-3.1*": {
                 "temperature": 0,
                 "roles": {
                     "system": {
