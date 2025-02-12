@@ -11,6 +11,7 @@ type Props = {
   id: string
   def?: string | null | undefined
   value?: import("../../pdl_ast").PdlBlock
+  maxCrumbs?: number
 }
 
 function asIter(part: string) {
@@ -19,7 +20,12 @@ function asIter(part: string) {
   return isNaN(int) ? capitalizeAndUnSnakeCase(part) : `Step ${int + 1}`
 }
 
-export default function BreadcrumbBarForBlockId({ id, def, value }: Props) {
+export default function BreadcrumbBarForBlockId({
+  id,
+  def,
+  value,
+  maxCrumbs = 5,
+}: Props) {
   const { hash } = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -29,25 +35,25 @@ export default function BreadcrumbBarForBlockId({ id, def, value }: Props) {
     [id, hash, s],
   )
 
+  const crumbs = id.replace(/text\.\d+\./g, "").split(/\./)
+
   return (
     <BreadcrumbBar>
       <>
-        {id
-          .replace(/text\.\d+\./g, "")
-          .split(/\./)
-          .slice(-5)
-          .map((part, idx, A) => (
-            <BreadcrumbBarItem
-              key={part + idx}
-              detail={part}
-              onClick={onClick}
-              className={
-                idx === A.length - 1 ? "pdl-breadcrumb-bar-item--kind" : ""
-              }
-            >
-              {asIter(part)}
-            </BreadcrumbBarItem>
-          ))}
+        {crumbs.length > maxCrumbs && <BreadcrumbBarItem>…</BreadcrumbBarItem>}
+
+        {crumbs.slice(-maxCrumbs).map((part, idx, A) => (
+          <BreadcrumbBarItem
+            key={part + idx}
+            detail={part}
+            onClick={onClick}
+            className={
+              idx === A.length - 1 ? "pdl-breadcrumb-bar-item--kind" : ""
+            }
+          >
+            {asIter(part)}
+          </BreadcrumbBarItem>
+        ))}
 
         {def && <Def id={id} def={def} value={value} />}
       </>
