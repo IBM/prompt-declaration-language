@@ -23,7 +23,7 @@ text:
   contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
 - def: actions
-  model: replicate/ibm-granite/granite-3.0-8b-instruct
+  model: replicate/ibm-granite/granite-3.1-8b-instruct
   parser: json
   spec: [{ name: str, arguments: { expr: str }}]  
 - "\n"

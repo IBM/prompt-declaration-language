@@ -4,6 +4,6 @@ text:
   - call: ${ react }
     args:
       question: How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2024.
-      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
 
 

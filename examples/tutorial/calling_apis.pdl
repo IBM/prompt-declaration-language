@@ -2,7 +2,7 @@ description: Using a weather API and LLM to make a small weather app
 text:
 - def: QUERY
   text: "What is the weather in Madrid?\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   input: |
       Extract the location from the question.
       Question: What is the weather in London?
@@ -25,7 +25,7 @@ text:
   def: WEATHER
   parser: json
   contribute: []
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   input: |
       Explain the weather from the following JSON:
       ${ WEATHER }

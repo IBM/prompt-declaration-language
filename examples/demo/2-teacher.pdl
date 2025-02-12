@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: replicate/ibm-granite/granite-3.0-8b-instruct
+  teacher_model: replicate/ibm-granite/granite-3.1-8b-instruct
   teacher_template:
     function:
       sys_prompt: str
