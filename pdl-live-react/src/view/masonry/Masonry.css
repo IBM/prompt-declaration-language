@@ -14,8 +14,14 @@
     border: none;
   }
 
-  &[data-padding] > div {
+  &[data-padding="l"] > div {
     margin: 2em;
+  }
+  &[data-padding="m"] > div {
+    margin: 1.5em;
+  }
+  &[data-padding="s"] > div {
+    margin: 1em;
   }
 }
 

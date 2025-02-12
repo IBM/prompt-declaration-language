@@ -1,52 +1,34 @@
-import { useCallback } from "react"
 import {
-  ToggleGroup,
-  ToggleGroupItem,
   Toolbar,
   ToolbarGroup,
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core"
 
-import ListIcon from "@patternfly/react-icons/dist/esm/icons/list-icon"
-import GridIcon from "@patternfly/react-icons/dist/esm/icons/th-large-icon"
+import ToolbarAsToggle from "./ToolbarAsToggle"
+import ToolbarSMLToggle from "./ToolbarSMLToggle"
 
 const alignEnd = { default: "alignEnd" as const }
 
 export type As = "grid" | "list"
+export type SML = "s" | "m" | "l"
 
-type Props = {
+export type Props = {
   as: As
   setAs(as: As): void
+
+  sml: SML
+  setSML(sml: SML): void
 }
 
-export default function MasonryToolbar({ as, setAs }: Props) {
-  const handleClickGrid = useCallback(() => {
-    setAs("grid")
-  }, [setAs])
-  const handleClickList = useCallback(() => {
-    setAs("list")
-  }, [setAs])
-
+export default function MasonryToolbar({ as, setAs, sml, setSML }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar" isSticky>
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain" align={alignEnd}>
           <ToolbarItem>
-            <ToggleGroup aria-label="masonry grid-table toggle">
-              <ToggleGroupItem
-                icon={<GridIcon />}
-                aria-label="masonry as grid"
-                isSelected={as === "grid"}
-                onChange={handleClickGrid}
-              />
-              <ToggleGroupItem
-                icon={<ListIcon />}
-                aria-label="masonry as list"
-                isSelected={as === "list"}
-                onChange={handleClickList}
-              />
-            </ToggleGroup>
+            <ToolbarSMLToggle sml={sml} setSML={setSML} />
+            <ToolbarAsToggle as={as} setAs={setAs} />
           </ToolbarItem>
         </ToolbarGroup>
       </ToolbarContent>

@@ -16,6 +16,7 @@ import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 type Props = import("./Tile").default & {
   idx: number
   as: import("./Toolbar").As
+  sml: import("./Toolbar").SML
 }
 
 const gapSm = { default: "gapSm" as const }
@@ -24,6 +25,7 @@ const center = { default: "alignItemsCenter" as const }
 
 export default function MasonryTile({
   as,
+  sml,
   id,
   def,
   start_nanos,
@@ -56,7 +58,8 @@ export default function MasonryTile({
   return (
     <Card
       isPlain
-      isLarge
+      isLarge={sml === "l"}
+      isCompact={sml === "s"}
       key={id}
       data-kind={kind}
       className="pdl-masonry-tile"
