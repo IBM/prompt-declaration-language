@@ -26,8 +26,16 @@
     width: 100%;
     padding: 0 1em;
   }
-  &[data-cell="duration"] {
-    white-space: nowrap;
+}
+
+@media screen and (max-width: 1200px) {
+  .pdl-timeline-cell {
+    &[data-cell="bar"] {
+      padding-right: 0;
+    }
+    &[data-cell="duration"] {
+      display: none;
+    }
   }
 }
 
