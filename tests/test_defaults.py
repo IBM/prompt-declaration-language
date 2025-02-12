@@ -72,7 +72,7 @@ def test_default_model_params():
 
     # Granite-3.0 defaults for this model
     params = apply_defaults(
-        "replicate/ibm-granite/granite-3.0-8b-instruct", {}, model_defaults
+        "replicate/ibm-granite/granite-3.1-8b-instruct", {}, model_defaults
     )
     assert {
         "temperature": 0,
