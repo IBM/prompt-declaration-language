@@ -3,7 +3,7 @@ from pdl.pdl import exec_str
 HELLO = """
 text:
 - "Hello\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   parameters:
     stop_sequences: '!'
 """

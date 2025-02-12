@@ -52,12 +52,12 @@ text:
 - repeat:
     text:
     - def: thought
-      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "Act:"
     - "Act:\n"
     - def: action
-      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "\n"
       parser: json
