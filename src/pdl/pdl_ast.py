@@ -14,6 +14,7 @@ from typing import (
 )
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
+from pydantic.json_schema import SkipJsonSchema
 
 from .pdl_future import PdlDict, PdlFuture
 from .pdl_schema_utils import pdltype_to_jsonschema
@@ -194,7 +195,7 @@ class Block(BaseModel):
     """Timezone of start_nanos and end_nanos
     """
     # Fields for internal use
-    result: Optional[PdlFuture[Any]] = None
+    result: Optional[Any] = None
     location: Optional[LocationType] = None
 
 
@@ -209,7 +210,7 @@ class FunctionBlock(Block):
     """Body of the function
     """
     # Field for internal use
-    scope: Annotated[Optional[ScopeType], Field(repr=False)] = None
+    scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
 
 class CallBlock(Block):

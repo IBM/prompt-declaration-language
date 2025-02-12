@@ -3444,18 +3444,6 @@
           ],
           "description": "Body of the function\n    ",
           "title": "Return"
-        },
-        "scope": {
-          "anyOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Scope"
         }
       },
       "required": [
