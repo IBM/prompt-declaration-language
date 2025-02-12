@@ -17,7 +17,20 @@
   &:before {
     border: none;
   }
+}
 
+.pf-v6-theme-dark {
+  .pdl-masonry-tile {
+    &[data-kind="model"] {
+      background: var(--pf-t--global--color--status--custom--default);
+    }
+    &[data-kind="code"] {
+      background: var(--pf-t--global--color--status--success--default);
+    }
+  }
+}
+
+.pdl-masonry-tile {
   background: var(--pf-t--global--background--color--secondary--default);
   &[data-kind="model"] {
     background: var(--pf-t--global--color--nonstatus--teal--default);
