@@ -6,7 +6,6 @@ import { Page, PageSection } from "@patternfly/react-core"
 import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
-import ViewerTabs from "./ViewerTabs"
 import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
@@ -60,7 +59,6 @@ export default function PDLPage(props: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      horizontalSubnav={<ViewerTabs hidden={typeof value !== "string"} />}
       groupProps={notFilled /* so breadcrumbs aren't filled */}
       isBreadcrumbGrouped
       breadcrumb={

@@ -32,7 +32,7 @@ export default function BreadcrumbBarForBlockId({
   const s = searchParams.toString().length === 0 ? "" : "&" + searchParams
   const onClick = useCallback(
     () => navigate(`?detail&type=block&id=${id}${s}${hash}`),
-    [id, hash, s],
+    [id, hash, s, navigate],
   )
 
   const crumbs = id.replace(/text\.\d+\./g, "").split(/\./)
