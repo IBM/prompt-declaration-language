@@ -2,16 +2,7 @@
 """
 
 from enum import StrEnum
-from typing import (
-    Annotated,
-    Any,
-    Literal,
-    Mapping,
-    Optional,
-    Sequence,
-    TypeAlias,
-    Union,
-)
+from typing import Any, Literal, Mapping, Optional, Sequence, TypeAlias, Union
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 from pydantic.json_schema import SkipJsonSchema

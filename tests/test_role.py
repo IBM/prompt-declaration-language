@@ -1,5 +1,3 @@
-import yaml
-
 from pdl.pdl import exec_str
 
 

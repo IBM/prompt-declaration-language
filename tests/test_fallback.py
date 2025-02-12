@@ -74,5 +74,5 @@ fallback: "Error"
         _ = exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Type errors during spec checking:\nline 0 - Error should be of type <class 'int'>"  # TODO: check line number
+        == "Type errors during spec checking:\nline 4 - Error should be of type <class 'int'>"
     )

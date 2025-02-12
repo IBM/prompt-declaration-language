@@ -327,32 +327,29 @@ def process_advanced_block(
         state.yield_background and context_in_contribute(block)
     )
     try:
-        result, background, scope, trace = process_block_body(state, scope, block, loc)
+        result, background, new_scope, trace = process_block_body(
+            state, scope, block, loc
+        )
         trace = trace.model_copy(update={"result": result})
-        if block.fallback is not None:
-            result.result()
         if block.parser is not None:
             parser = block.parser
             result = lazy_apply(lambda r: parse_result(parser, r), result)
         if block.spec is not None and not isinstance(block, FunctionBlock):
-            errors = type_check_spec(
-                result.result(), block.spec, block.location
-            )  # Warning: makes the interpreter blocking
-            if len(errors) > 0:
-                message = "Type errors during spec checking:\n" + "\n".join(errors)
-                raise PDLRuntimeError(
-                    message,
-                    loc=loc,
-                    trace=ErrorBlock(msg=message, program=trace),
-                    fallback=result,
-                )
+            result = lazy_apply(
+                lambda r: result_with_type_checking(
+                    r, block.spec, "Type errors during spec checking:", loc, trace
+                ),
+                result,
+            )
+        if block.fallback is not None:
+            result.result()
     except Exception as exc:
         if block.fallback is None:
             raise exc from exc
         (
             result,
             background,
-            scope,
+            new_scope,
             trace,
         ) = process_block_of(
             block,
@@ -362,29 +359,46 @@ def process_advanced_block(
             loc=loc,
         )
         if block.spec is not None and not isinstance(block, FunctionBlock):
-            errors = type_check_spec(
-                result.result(), block.spec, block.location
-            )  # Warning: makes the interpreter blocking
-            if len(errors) > 0:
-                message = "Type errors during spec checking:\n" + "\n".join(errors)
-                raise PDLRuntimeError(  # pylint: disable=raise-missing-from
-                    message,
-                    loc=append(loc, "fallback"),
-                    trace=ErrorBlock(msg=message, program=trace),
-                    fallback=result,
-                )
+            loc = append(loc, "fallback")
+            result = lazy_apply(
+                lambda r: result_with_type_checking(
+                    r, block.spec, "Type errors during spec checking:", loc, trace
+                ),
+                result,
+            )
     if block.assign is not None:
         var = block.assign
-        scope = scope | PdlDict({var: result})
+        new_scope = new_scope | PdlDict({var: result})
     if ContributeTarget.RESULT not in block.contribute:
         result = PdlConst("")
     if ContributeTarget.CONTEXT not in block.contribute:
         background = PdlList([])
-    contribute_value, trace = process_contribute(trace, scope, loc)
+    contribute_value, trace = process_contribute(trace, new_scope, loc)
     if contribute_value is not None:
         background = contribute_value
 
-    return result, background, scope, trace
+    return result, background, new_scope, trace
+
+
+ResultWithTypeCheckingT = TypeVar("ResultWithTypeCheckingT")
+
+
+def result_with_type_checking(
+    result: ResultWithTypeCheckingT, spec, msg: str, loc: LocationType, trace: BlockType
+) -> ResultWithTypeCheckingT:
+    errors = type_check_spec(
+        result, spec, loc
+    )  # Warning: makes the interpreter blocking
+    print("XXXXXXX CHECK TYPE")
+    if len(errors) > 0:
+        message = msg + "\n" + "\n".join(errors)
+        raise PDLRuntimeError(
+            message,
+            loc=loc,
+            trace=ErrorBlock(msg=message, program=trace),
+            fallback=result,
+        )
+    return result
 
 
 def process_block_body(
@@ -1573,14 +1587,16 @@ def process_call(
         ) from exc
     trace = block.model_copy(update={"trace": f_trace})
     if closure.spec is not None:
-        errors = type_check_spec(result.result(), closure.spec, fun_loc)
-        if len(errors) > 0:
-            raise PDLRuntimeError(
-                f"Type errors in result of function call to {block.call}:\n"
-                + "\n".join(errors),
-                loc=loc,
-                trace=trace,
-            )
+        result = lazy_apply(
+            lambda r: result_with_type_checking(
+                r,
+                closure.spec,
+                f"Type errors in result of function call to {block.call}:",
+                loc,
+                trace,
+            ),
+            result,
+        )
     return result, background, scope, trace
 
 
