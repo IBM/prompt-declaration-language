@@ -1,8 +1,8 @@
-.pdl-masonry-responsive {
+.pdl-masonry {
   margin-top: 1em;
 }
 
-.pdl-masonry {
+.pdl-masonry-view {
   &,
   & > div {
     gap: 0.375em !important;

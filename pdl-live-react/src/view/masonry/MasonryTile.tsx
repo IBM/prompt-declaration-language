@@ -13,27 +13,17 @@ import Result from "../transcript/Result"
 import Duration from "./Duration"
 import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 
-export type Tile = {
-  id: string
-  def?: string | null
-  message?: string
-  start_nanos?: number
-  end_nanos?: number
-  timezone?: string
-  content: string
-  lang?: import("../Preview").SupportedLanguage
-  crumb?: boolean
-  kind?: string
-  boundedHeight?: boolean
+type Props = import("./Tile").default & {
+  idx: number
+  as: import("./Toolbar").As
 }
-
-type Props = Tile & { idx: number }
 
 const gapSm = { default: "gapSm" as const }
 const nowrap = { default: "nowrap" as const }
 const center = { default: "alignItemsCenter" as const }
 
 export default function MasonryTile({
+  as,
   id,
   def,
   start_nanos,
@@ -52,6 +42,7 @@ export default function MasonryTile({
         ? {
             actions: (
               <Duration
+                as={as}
                 start_nanos={start_nanos}
                 end_nanos={end_nanos}
                 timezone={timezone}
@@ -59,7 +50,7 @@ export default function MasonryTile({
             ),
           }
         : undefined,
-    [start_nanos, end_nanos, timezone],
+    [start_nanos, end_nanos, timezone, as],
   )
 
   return (
