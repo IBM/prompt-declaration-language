@@ -13,6 +13,10 @@
   &:before {
     border: none;
   }
+
+  &[data-padding] > div {
+    margin: 1em;
+  }
 }
 
 .pf-v6-theme-dark {
