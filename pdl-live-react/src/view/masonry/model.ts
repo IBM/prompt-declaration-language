@@ -12,10 +12,9 @@ import {
 
 import type Tile from "./Tile"
 
-export default function computeModel(
-  block: import("../../pdl_ast").PdlBlock,
-): Tile[] {
-  return computeBaseModel(block)
+export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
+  const base = computeBaseModel(block)
+  const masonry: Tile[] = base
     .filter(({ block }) => block.kind !== "if")
     .flatMap(({ id, block, children }) => {
       if (isTextBlock(block)) {
@@ -73,6 +72,16 @@ export default function computeModel(
       return []
     })
     .sort((a, b) => a.id.localeCompare(b.id))
+
+  const numbering = masonry.reduce(
+    (N, node, idx) => {
+      N[node.id] = idx
+      return N
+    },
+    {} as Record<string, number>,
+  )
+
+  return { base, masonry, numbering }
 }
 
 function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {

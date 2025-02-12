@@ -29,7 +29,7 @@ export default function MasonryToolbar({ as, setAs }: Props) {
   }, [setAs])
 
   return (
-    <Toolbar className="pdl-masonry-toolbar">
+    <Toolbar className="pdl-masonry-toolbar" isSticky>
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain" align={alignEnd}>
           <ToolbarItem>

@@ -16,13 +16,6 @@ export default function Viewer({ hidden = false }: { hidden?: boolean }) {
       title={<TabTitleText>Summary</TabTitleText>}
     />,
     <Tab
-      key="#timeline"
-      href="#timeline"
-      eventKey="#timeline"
-      className="pdl-viewer-tab"
-      title={<TabTitleText>Timeline</TabTitleText>}
-    />,
-    <Tab
       key="#dataflow"
       href="#dataflow"
       eventKey="#dataflow"

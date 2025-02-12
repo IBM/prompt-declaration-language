@@ -6,9 +6,10 @@ import { capitalizeAndUnSnakeCase } from "../../helpers"
 
 type Props = {
   row: import("./model").TimelineRowWithExtrema
+  ordinal?: number
 }
 
-export default function TimelineRowKindCell({ row }: Props) {
+export default function TimelineRowKindCell({ row, ordinal }: Props) {
   const { id } = row
   const { hash } = useLocation()
 
@@ -23,13 +24,11 @@ export default function TimelineRowKindCell({ row }: Props) {
   )
 
   return (
-    <Button
-      variant="link"
-      isInline
-      className="pdl-timeline-kind"
-      component={link}
-    >
-      {capitalizeAndUnSnakeCase(row.block.kind ?? "unknown")}
-    </Button>
+    <span className="pdl-timeline-kind">
+      {ordinal ? <strong>{ordinal}. </strong> : ""}
+      <Button variant="link" isInline component={link}>
+        <span>{capitalizeAndUnSnakeCase(row.block.kind ?? "unknown")}</span>
+      </Button>
+    </span>
   )
 }
