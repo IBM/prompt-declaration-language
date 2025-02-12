@@ -2,6 +2,9 @@
   margin: 1em 0;
   display: table;
   border-collapse: collapse;
+  min-width: 350px;
+
+  white-space: nowrap;
 }
 
 .pdl-timeline-row {
@@ -13,9 +16,11 @@
   vertical-align: middle;
 
   &[data-cell="kind"] {
-    white-space: pre;
     height: 0.875em;
     line-height: 0.875em;
+    .pdl-mono {
+      white-space: pre;
+    }
   }
   &[data-cell="bar"] {
     width: 100%;
@@ -91,7 +96,7 @@
     }
   }
   &[data-kind="model"] {
-    background-color: var(--pf-t--global--text--color--brand--default);
+    background-color: #37a3a3; /*var(--pf-t--global--border--color--nonstatus--teal--default);*/
     &:hover {
       background-color: var(--pf-t--global--color--brand--hover);
     }

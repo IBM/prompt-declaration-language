@@ -3,8 +3,7 @@ import { useLocation } from "react-router"
 
 const Code = lazy(() => import("../view/code/Code"))
 const Memory = lazy(() => import("../view/memory/Memory"))
-const Summary = lazy(() => import("../view/masonry/Masonry"))
-const Timeline = lazy(() => import("../view/timeline/Timeline"))
+const Summary = lazy(() => import("../view/masonry/MasonryTimelineCombo"))
 
 import "./Viewer.css"
 
@@ -47,14 +46,6 @@ export default function Viewer({ value }: { value: string }) {
           hidden={activeTab !== "#raw"}
         >
           <Code block={data} limitHeight={false} raw />
-        </section>,
-        <section
-          className="pdl-viewer-section"
-          key="#timeline"
-          data-hash="#timeline"
-          hidden={activeTab !== "#timeline"}
-        >
-          <Timeline block={data} />
         </section>,
         <section
           className="pdl-viewer-section"
