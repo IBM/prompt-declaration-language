@@ -1,5 +1,6 @@
+import { stringify } from "yaml"
+
 import Code from "../Code"
-import Block from "./Block"
 import Value from "./Value"
 
 import { hasParser, hasResult, isPdlBlock } from "../../helpers"
@@ -26,10 +27,10 @@ export default function DefContent({ value }: Props) {
         ) : typeof value.result === "string" ? (
           <Value>{value.result}</Value>
         ) : (
-          <Block data={value.result} />
+          <Value>{stringify(value.result)}</Value>
         )
       ) : (
-        <Block data={value} />
+        <Value>{stringify(value)}</Value>
       )}
     </div>
   )

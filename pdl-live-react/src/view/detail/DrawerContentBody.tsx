@@ -13,23 +13,6 @@ import {
   type NonScalarPdlBlock as Model,
 } from "../../helpers"
 
-function defsBody(def: string | null, block: Model) {
-  const value = def && block.defs ? block.defs[def] : undefined
-  return (
-    <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-      {!def ? (
-        <>Internal error, missing field 'def' in query</>
-      ) : (
-        value && (
-          <Suspense>
-            <DefContent value={value} />
-          </Suspense>
-        )
-      )}
-    </Tab>
-  )
-}
-
 function defBody(_def: string | null, block: Model) {
   const value = hasResult(block) ? block.result : undefined
   return (
@@ -81,8 +64,6 @@ type Props = {
 
 export default function DrawerContentBody({ def, objectType, model }: Props) {
   switch (objectType) {
-    case "defs":
-      return defsBody(def, model)
     case "def":
       return defBody(def, model)
     default:
