@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@patternfly/react-core"
 
-import Result from "../transcript/Result"
+import Result from "../Result"
 import Duration from "./Duration"
 import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 

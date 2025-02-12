@@ -1,8 +1,8 @@
 import { stringify } from "yaml"
 import { match, P } from "ts-pattern"
 
-import { type PdlBlock } from "../pdl_ast"
-import { map_block_children } from "../pdl_ast_utils"
+import { type PdlBlock } from "../../pdl_ast"
+import { map_block_children } from "../../pdl_ast_utils"
 
 import Preview, { type SupportedLanguage } from "./Preview"
 

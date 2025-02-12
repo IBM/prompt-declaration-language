@@ -6,7 +6,7 @@ import {
   Divider,
 } from "@patternfly/react-core"
 
-import Result from "../transcript/Result"
+import Result from "../Result"
 import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 
 type Props = {

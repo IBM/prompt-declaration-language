@@ -4,7 +4,7 @@ import {
   DescriptionListDescription,
 } from "@patternfly/react-core"
 
-import Value from "../transcript/Value"
+import Value from "../Value"
 
 export default function Group({
   term,

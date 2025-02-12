@@ -6,10 +6,10 @@ import {
   PanelMain,
 } from "@patternfly/react-core"
 
-import Code from "../Code"
+import Code from "./code/Code"
 import Value from "./Value"
 
-import { type SupportedLanguage } from "../Preview"
+import { type SupportedLanguage } from "./code/Preview"
 
 type Props = {
   result: number | string | unknown
