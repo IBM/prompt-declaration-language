@@ -1,5 +1,5 @@
-import Markdown from "../Markdown"
-import { isMarkdownish } from "../../helpers"
+import Markdown from "./Markdown"
+import { isMarkdownish } from "../helpers"
 
 type Props = { children: number | string | unknown }
 

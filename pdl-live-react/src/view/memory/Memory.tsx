@@ -12,7 +12,7 @@ import {
   Tr,
 } from "@patternfly/react-table"
 
-import Result from "../transcript/Result"
+import Result from "../Result"
 import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
 
 import { hasResult } from "../../helpers"

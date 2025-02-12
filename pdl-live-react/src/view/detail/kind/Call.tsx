@@ -1,4 +1,4 @@
-import Result from "../../transcript/Result"
+import Result from "../../Result"
 
 export default function ModelItems({
   block: { result },

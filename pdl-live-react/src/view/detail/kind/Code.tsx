@@ -1,7 +1,7 @@
 import Group from "../Group"
 
-import Code from "../../Code"
-import Result from "../../transcript/Result"
+import Code from "../../code/Code"
+import Result from "../../Result"
 
 export default function CodeItems({
   block: { code, lang, result },

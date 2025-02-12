@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useLocation, useNavigate, useSearchParams } from "react-router"
 
-import Def from "../transcript/Def"
+import Def from "./Def"
 import BreadcrumbBar from "./BreadcrumbBar"
 import BreadcrumbBarItem from "./BreadcrumbBarItem"
 

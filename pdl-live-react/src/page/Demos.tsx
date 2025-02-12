@@ -2,8 +2,8 @@ import { Link } from "react-router"
 import { Button, Panel, PanelMain } from "@patternfly/react-core"
 
 import Tile from "./welcome/Tile"
+import Result from "../view/Result"
 import Welcome from "./welcome/Welcome"
-import Result from "../view/transcript/Result"
 
 import demos from "../demos/demos"
 

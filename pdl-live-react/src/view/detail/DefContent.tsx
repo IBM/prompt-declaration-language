@@ -1,5 +1,5 @@
-import Code from "../Code"
-import Value from "../transcript/Value"
+import Code from "../code/Code"
+import Value from "../Value"
 
 import { hasParser, hasResult, isMarkdownish, isPdlBlock } from "../../helpers"
 

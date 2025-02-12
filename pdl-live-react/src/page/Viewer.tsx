@@ -1,7 +1,7 @@
 import { lazy, useEffect, useMemo, useState } from "react"
 import { useLocation } from "react-router"
 
-const Code = lazy(() => import("../view/Code"))
+const Code = lazy(() => import("../view/code/Code"))
 const Memory = lazy(() => import("../view/memory/Memory"))
 const Summary = lazy(() => import("../view/masonry/Masonry"))
 const Timeline = lazy(() => import("../view/timeline/Timeline"))

@@ -4,9 +4,8 @@ import {
   DescriptionListDescription,
 } from "@patternfly/react-core"
 
-import Code from "../Code"
-
-import { type SupportedLanguage } from "../Preview"
+import Code from "./Code"
+import { type SupportedLanguage } from "./Preview"
 
 type Props = {
   code: string
