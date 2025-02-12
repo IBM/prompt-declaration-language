@@ -71,7 +71,12 @@ export default function MasonryTile({
           >
             <div className="pdl-masonry-index">{idx}</div>
             {crumb && (
-              <BreadcrumbBarForBlockId id={id} def={def} value={content} />
+              <BreadcrumbBarForBlockId
+                id={id}
+                def={def}
+                value={content}
+                maxCrumbs={3}
+              />
             )}
           </Flex>
         </CardTitle>
