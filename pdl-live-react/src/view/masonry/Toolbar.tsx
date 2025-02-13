@@ -37,7 +37,7 @@ export default function MasonryToolbar({
   setView,
 }: Props) {
   return (
-    <Toolbar className="pdl-masonry-toolbar" isSticky>
+    <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup>
           <ToolbarItem>

@@ -68,15 +68,19 @@ export default function PDLPage(props: Props) {
         />
       }
     >
-      <PageSection
-        isFilled
-        hasOverflowScroll
-        padding={padding ? withPadding : withoutPadding}
-        className="pdl-content-section"
-        aria-label="PDL Viewer main section"
-      >
-        {children || (value && value.length > 0 && <Viewer value={value} />)}
-      </PageSection>
+      {!children ? (
+        value && value.length > 0 && <Viewer value={value} />
+      ) : (
+        <PageSection
+          isFilled
+          hasOverflowScroll
+          padding={padding ? withPadding : withoutPadding}
+          className="pdl-content-section"
+          aria-label="PDL Viewer main section"
+        >
+          {children}
+        </PageSection>
+      )}
     </Page>
   )
 }

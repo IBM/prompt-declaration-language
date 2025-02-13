@@ -7,6 +7,7 @@ import {
   lazy,
   Suspense,
 } from "react"
+import { PageSection } from "@patternfly/react-core"
 
 import Timeline from "../timeline/TimelineFromModel"
 const Code = lazy(() => import("../code/Code"))
@@ -62,23 +63,32 @@ export default function MasonryTimelineCombo({ block, view }: Props) {
 
   return (
     <>
-      <Toolbar
-        as={as}
-        setAs={setAs}
-        sml={sml}
-        setSML={setSML}
-        view={view}
-        setView={setView}
-      />
-      {view === "program" ? (
-        <Masonry model={masonry} as={as} sml={sml}>
-          <Timeline model={base} numbering={numbering} />
-        </Masonry>
-      ) : (
-        <Suspense>
-          <Code block={block} limitHeight={false} raw={view === "rawtrace"} />
-        </Suspense>
-      )}
+      <PageSection type="subnav">
+        <Toolbar
+          as={as}
+          setAs={setAs}
+          sml={sml}
+          setSML={setSML}
+          view={view}
+          setView={setView}
+        />
+      </PageSection>
+      <PageSection
+        isFilled
+        hasOverflowScroll
+        className="pdl-content-section"
+        aria-label="PDL Viewer main section"
+      >
+        {view === "program" ? (
+          <Masonry model={masonry} as={as} sml={sml}>
+            <Timeline model={base} numbering={numbering} />
+          </Masonry>
+        ) : (
+          <Suspense>
+            <Code block={block} limitHeight={false} raw={view === "rawtrace"} />
+          </Suspense>
+        )}
+      </PageSection>
     </>
   )
 }
