@@ -15,7 +15,12 @@ export default function ToolbarProgramOrSourceToggle() {
 
   return (
     <Tooltip content="Show program source">
-      <Button size="sm" icon={<CodeIcon />} onClick={handleClickSource} />
+      <Button
+        size="sm"
+        variant="secondary"
+        icon={<CodeIcon />}
+        onClick={handleClickSource}
+      />
     </Tooltip>
   )
 }
