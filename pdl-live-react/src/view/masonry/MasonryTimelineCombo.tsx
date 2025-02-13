@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { PageSection } from "@patternfly/react-core"
+import { BackToTop, PageSection } from "@patternfly/react-core"
 
 import Timeline from "../timeline/TimelineFromModel"
 
@@ -49,13 +49,15 @@ export default function MasonryTimelineCombo({ block }: Props) {
       <PageSection
         isFilled
         hasOverflowScroll
-        className="pdl-content-section"
+        className="pdl-content-section pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
         <Masonry model={masonry} as={as} sml={sml}>
           <Timeline model={base} numbering={numbering} />
         </Masonry>
       </PageSection>
+
+      <BackToTop scrollableSelector=".pdl-masonry-page-section" />
     </>
   )
 }
