@@ -386,10 +386,7 @@ ResultWithTypeCheckingT = TypeVar("ResultWithTypeCheckingT")
 def result_with_type_checking(
     result: ResultWithTypeCheckingT, spec, msg: str, loc: LocationType, trace: BlockType
 ) -> ResultWithTypeCheckingT:
-    errors = type_check_spec(
-        result, spec, loc
-    )  # Warning: makes the interpreter blocking
-    print("XXXXXXX CHECK TYPE")
+    errors = type_check_spec(result, spec, loc)
     if len(errors) > 0:
         message = msg + "\n" + "\n".join(errors)
         raise PDLRuntimeError(
@@ -1172,13 +1169,13 @@ def process_expr(  # pylint: disable=too-many-return-statements
             )
             result = template.render(scope)
             return result
-        except UndefinedError as exc:
-            raise PDLRuntimeExpressionError(
-                f"Error during the evaluation of {expr}: {exc}", loc
-            ) from exc
         except TemplateSyntaxError as exc:
             raise PDLRuntimeExpressionError(
                 f"Syntax error in {expr}: {exc}", loc
+            ) from exc
+        except Exception as exc:
+            raise PDLRuntimeExpressionError(
+                f"Error during the evaluation of {expr}: {exc}", loc
             ) from exc
 
     if isinstance(expr, list):
