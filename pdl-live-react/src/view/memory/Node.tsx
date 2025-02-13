@@ -1,5 +1,6 @@
 import { type FunctionComponent } from "react"
 import {
+  BadgeLocation,
   DefaultNode,
   type GraphElement,
   type WithSelectionProps,
@@ -12,16 +13,16 @@ type CustomNodeProps = WithSelectionProps & {
 const CustomNode: FunctionComponent<CustomNodeProps> = (
   props: CustomNodeProps,
 ) => {
+  const { ordinal } = props.element.getData()
   const label = props.element.getLabel()
-  const badge = label[0].toUpperCase()
-  const badgeColor = /read/.test(label)
+  const badge = ordinal
+  const badgeColor = /Read/.test(label)
     ? "var(--pf-t--global--color--nonstatus--orange--default)"
-    : /code/.test(label)
+    : /Code/.test(label)
       ? "var(--pf-t--global--color--nonstatus--blue--default)"
       : /LLM/.test(label)
         ? "var(--pf-t--global--color--nonstatus--teal--default)"
-        : undefined
-  console.error(label, badgeColor)
+        : "var(--pf-t--color--white)"
   /*const content =
     data && "content" in data && typeof data.content === "string"
       ? data.content
@@ -38,7 +39,13 @@ const CustomNode: FunctionComponent<CustomNodeProps> = (
 */
 
   return (
-    <DefaultNode {...props} badge={badge} badgeColor={badgeColor}>
+    <DefaultNode
+      {...props}
+      badge={badge}
+      badgeColor={badgeColor}
+      badgeTextColor="var(--pf-t--color--black)"
+      badgeLocation={BadgeLocation.below}
+    >
       {/*content && (
         <g
           transform={`translate(${(-Math.min(30, content.length - 1) * 3.5) / 2 + 5}, 10.5)`}

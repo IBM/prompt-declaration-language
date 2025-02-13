@@ -66,7 +66,7 @@ export default function MasonryCombo({ value }: Props) {
       >
         <Masonry model={masonry} as={as} sml={sml}>
           <Timeline model={base} numbering={numbering} />
-          <Memory block={block} />
+          <Memory block={block} numbering={numbering} />
         </Masonry>
       </PageSection>
 
