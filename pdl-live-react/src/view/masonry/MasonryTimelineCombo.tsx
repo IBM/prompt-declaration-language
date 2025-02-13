@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router"
+import { useNavigate, useSearchParams } from "react-router"
 import {
   useCallback,
   useEffect,
@@ -7,6 +7,7 @@ import {
   lazy,
   Suspense,
 } from "react"
+import { PageSection } from "@patternfly/react-core"
 
 import Timeline from "../timeline/TimelineFromModel"
 const Code = lazy(() => import("../code/Code"))
@@ -45,12 +46,14 @@ export default function MasonryTimelineCombo({ block, view }: Props) {
   useEffect(() => setAsUserSetting(as), [as])
   useEffect(() => setSMLUserSetting(sml), [sml])
 
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString().length === 0 ? "" : "?" + searchParams
   const navigate = useNavigate()
   const setView = useCallback(
     (view: View) => {
-      navigate("#" + view)
+      navigate(s + "#" + view)
     },
-    [navigate],
+    [navigate, s],
   )
 
   const { base, masonry, numbering } = useMemo(
@@ -60,23 +63,32 @@ export default function MasonryTimelineCombo({ block, view }: Props) {
 
   return (
     <>
-      <Toolbar
-        as={as}
-        setAs={setAs}
-        sml={sml}
-        setSML={setSML}
-        view={view}
-        setView={setView}
-      />
-      {view === "program" ? (
-        <Masonry model={masonry} as={as} sml={sml}>
-          <Timeline model={base} numbering={numbering} />
-        </Masonry>
-      ) : (
-        <Suspense>
-          <Code block={block} limitHeight={false} raw={view === "rawtrace"} />
-        </Suspense>
-      )}
+      <PageSection type="subnav">
+        <Toolbar
+          as={as}
+          setAs={setAs}
+          sml={sml}
+          setSML={setSML}
+          view={view}
+          setView={setView}
+        />
+      </PageSection>
+      <PageSection
+        isFilled
+        hasOverflowScroll
+        className="pdl-content-section"
+        aria-label="PDL Viewer main section"
+      >
+        {view === "program" ? (
+          <Masonry model={masonry} as={as} sml={sml}>
+            <Timeline model={base} numbering={numbering} />
+          </Masonry>
+        ) : (
+          <Suspense>
+            <Code block={block} limitHeight={false} raw={view === "rawtrace"} />
+          </Suspense>
+        )}
+      </PageSection>
     </>
   )
 }

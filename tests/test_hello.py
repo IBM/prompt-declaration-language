@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from pdl.pdl import exec_dict, exec_str
@@ -39,6 +41,11 @@ def nested_repeat_data(n):
 def test_hello():
     text = exec_dict(hello)
     assert text == "Hello, world!\nThis is your first prompt descriptor!\n"
+
+
+def test_hello_json():
+    result = exec_str(json.dumps(hello))
+    assert result == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
 def repeat(n):
