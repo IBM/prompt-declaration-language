@@ -158,6 +158,9 @@ class PdlApply(PdlFuture[ApplyOutputT]):
     def data(self):
         return self.result()
 
+    def __repr__(self):
+        return self.result().__repr__()
+
     def result(self) -> ApplyOutputT:
         if self._done:
             return self._data
@@ -199,6 +202,9 @@ class PdlApply2(PdlFuture[Apply2OutputT]):
     @property
     def data(self):
         return self.result()
+
+    def __repr__(self):
+        return self.result().__repr__()
 
     def result(self) -> Apply2OutputT:
         if self._done:

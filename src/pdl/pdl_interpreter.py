@@ -196,19 +196,20 @@ def generate(
         prog, loc = parse_file(pdl_file)
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
-        # future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
-        # result = future_result.result()
-        # if not state.yield_result:
-        #     if state.yield_background:
-        #         print("\n----------------")
-        #     if result is None:
-        #         print()
-        #     else:
-        #         print(stringify(result))
-        # else:
-        #     print()
-        _, _, _, trace = process_prog(state, initial_scope, prog, loc)
-        print()
+        future_result, background, _, trace = process_prog(
+            state, initial_scope, prog, loc
+        )
+        _ = future_result.result()
+        if not state.yield_background:
+            print(background)
+            # if state.yield_background:
+            #     print("\n----------------")
+            # if result is None:
+            #     print()
+            # else:
+            #     print(stringify(result))
+        else:
+            print()
         if trace_file:
             write_trace(trace_file, trace)
     except PDLParseError as exc:
@@ -1258,6 +1259,8 @@ def process_expr(  # pylint: disable=too-many-return-statements
             )
             result = template.render(scope)
             return result
+        except PDLRuntimeError as exc:
+            raise exc from exc
         except TemplateSyntaxError as exc:
             raise PDLRuntimeExpressionError(
                 f"Syntax error in {expr}: {exc}", loc
