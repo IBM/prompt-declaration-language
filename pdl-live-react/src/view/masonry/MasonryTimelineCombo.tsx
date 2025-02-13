@@ -1,25 +1,15 @@
-import { useNavigate, useSearchParams } from "react-router"
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  lazy,
-  Suspense,
-} from "react"
+import { useEffect, useMemo, useState } from "react"
 import { PageSection } from "@patternfly/react-core"
 
 import Timeline from "../timeline/TimelineFromModel"
-const Code = lazy(() => import("../code/Code"))
 
 import Masonry from "./Masonry"
 import computeModel from "./model"
-import Toolbar, { type As, type SML, type View } from "./Toolbar"
+import Toolbar, { type As, type SML } from "./Toolbar"
 
 import "./Masonry.css"
 
 type Props = {
-  view: View
   block: import("../../pdl_ast").PdlBlock
 }
 
@@ -39,22 +29,12 @@ function setSMLUserSetting(sml: SML) {
   localStorage.setItem(smlLocalStorageKey, sml)
 }
 
-export default function MasonryTimelineCombo({ block, view }: Props) {
+export default function MasonryTimelineCombo({ block }: Props) {
   const [as, setAs] = useState<As>(getAsUserSetting())
   const [sml, setSML] = useState<SML>(getSMLUserSetting())
 
   useEffect(() => setAsUserSetting(as), [as])
   useEffect(() => setSMLUserSetting(sml), [sml])
-
-  const [searchParams] = useSearchParams()
-  const s = searchParams.toString().length === 0 ? "" : "?" + searchParams
-  const navigate = useNavigate()
-  const setView = useCallback(
-    (view: View) => {
-      navigate(s + "#" + view)
-    },
-    [navigate, s],
-  )
 
   const { base, masonry, numbering } = useMemo(
     () => computeModel(block),
@@ -64,14 +44,7 @@ export default function MasonryTimelineCombo({ block, view }: Props) {
   return (
     <>
       <PageSection type="subnav">
-        <Toolbar
-          as={as}
-          setAs={setAs}
-          sml={sml}
-          setSML={setSML}
-          view={view}
-          setView={setView}
-        />
+        <Toolbar as={as} setAs={setAs} sml={sml} setSML={setSML} />
       </PageSection>
       <PageSection
         isFilled
@@ -79,15 +52,9 @@ export default function MasonryTimelineCombo({ block, view }: Props) {
         className="pdl-content-section"
         aria-label="PDL Viewer main section"
       >
-        {view === "program" ? (
-          <Masonry model={masonry} as={as} sml={sml}>
-            <Timeline model={base} numbering={numbering} />
-          </Masonry>
-        ) : (
-          <Suspense>
-            <Code block={block} limitHeight={false} raw={view === "rawtrace"} />
-          </Suspense>
-        )}
+        <Masonry model={masonry} as={as} sml={sml}>
+          <Timeline model={base} numbering={numbering} />
+        </Masonry>
       </PageSection>
     </>
   )

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react"
 import { Tab, TabTitleText } from "@patternfly/react-core"
 
+const BlockNotFound = lazy(() => import("./BlockNotFound"))
 const DefContent = lazy(() => import("./DefContent"))
 const SourceTabContent = lazy(() => import("./SourceTabContent"))
 const ContextTabContent = lazy(() => import("./ContextTabContent"))
@@ -12,6 +13,21 @@ import {
   hasResult,
   type NonScalarPdlBlock as Model,
 } from "../../helpers"
+
+function sourceBody(value: string) {
+  return [
+    <Tab eventKey={0} title={<TabTitleText>Source</TabTitleText>}>
+      <Suspense>
+        <SourceTabContent block={JSON.parse(value)} />
+      </Suspense>
+    </Tab>,
+    <Tab eventKey={1} title={<TabTitleText>Raw Trace</TabTitleText>}>
+      <Suspense>
+        <RawTraceTabContent block={JSON.parse(value)} />
+      </Suspense>
+    </Tab>,
+  ]
+}
 
 function defBody(_def: string | null, block: Model) {
   const value = hasResult(block) ? block.result : undefined
@@ -57,16 +73,42 @@ function blockBody(block: Model) {
 }
 
 type Props = {
+  id: string | null
+  value: string
   def: string | null
   objectType: string
-  model: Model
+  model: Model | null
 }
 
-export default function DrawerContentBody({ def, objectType, model }: Props) {
+export default function DrawerContentBody({
+  id,
+  value,
+  def,
+  objectType,
+  model,
+}: Props) {
   switch (objectType) {
+    case "source":
+    case "rawtrace":
+      return sourceBody(value)
     case "def":
+      if (!model) {
+        return (
+          <Suspense>
+            <BlockNotFound id={id} value={value} />
+          </Suspense>
+        )
+      }
       return defBody(def, model)
     default:
+      if (!model) {
+        return (
+          <Suspense>
+            <BlockNotFound id={id} value={value} />
+          </Suspense>
+        )
+      }
+
       return blockBody(model)
   }
 }

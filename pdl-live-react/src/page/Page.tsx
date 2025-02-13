@@ -16,7 +16,6 @@ import DarkModeContext, {
 
 import "./Page.css"
 
-const notFilled = { isFilled: false }
 const withPadding = { default: "padding" as const }
 const withoutPadding = { default: "noPadding" as const }
 
@@ -59,8 +58,6 @@ export default function PDLPage(props: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      groupProps={notFilled /* so breadcrumbs aren't filled */}
-      isBreadcrumbGrouped
       breadcrumb={
         <PageBreadcrumbs
           breadcrumb1={props.breadcrumb1}
