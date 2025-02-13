@@ -9,7 +9,7 @@ from .pdl_ast import (
     LazyMessages,
     get_sampling_defaults,
 )
-from .pdl_future import lazy_apply2
+from .pdl_lazy import lazy_apply2
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")

@@ -81,7 +81,7 @@ from .pdl_ast import (  # noqa: E402
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
-from .pdl_future import PdlConst, PdlDict, PdlFuture, PdlList, lazy_apply  # noqa: E402
+from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
 from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
@@ -247,7 +247,7 @@ def process_prog(
     scope: ScopeType,
     prog: Program,
     loc: LocationType = empty_block_location,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     """Execute a PDL program.
 
     Args:
@@ -271,8 +271,8 @@ def process_prog(
 
 def process_block(
     state: InterpreterState, scope: ScopeType, block: BlockType, loc: LocationType
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType]:
-    result: PdlFuture[Any]
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
+    result: PdlLazy[Any]
     background: LazyMessages
     trace: BlockType
     try:
@@ -339,7 +339,7 @@ def process_advanced_block_timed(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     state = state.with_id(str(block.kind))
     if state.id_stack is not None:
         block.id = ".".join(state.id_stack)
@@ -361,7 +361,7 @@ def process_advanced_block(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     if block.role is not None:
         state = state.with_role(block.role)
     if len(block.defs) > 0:
@@ -450,7 +450,7 @@ def process_block_body(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: LocationType,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     scope_init = scope
     result: Any
     background: LazyMessages
@@ -672,7 +672,7 @@ def process_block_body(
             block.with_ = cases
             trace = block
         case RepeatBlock(num_iterations=n):
-            results: list[PdlFuture[Any]] = []
+            results: list[PdlLazy[Any]] = []
             background = PdlList([])
             iterations_trace: list[BlockType] = []
             pdl_context_init: LazyMessages = scope_init.data["pdl_context"]
@@ -1008,7 +1008,7 @@ def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional
     scope: ScopeType,
     loc: LocationType,
     field_alias: Optional[str] = None,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlockOf]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlockOf]:
     try:
         result, background, scope, child_trace = process_block(
             state,
@@ -1040,7 +1040,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
     scope: ScopeType,
     loc: LocationType,
     field_alias: Optional[str] = None,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlocksOf]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlocksOf]:
     try:
         result, background, scope, blocks = process_blocks(
             iteration_type,
@@ -1068,7 +1068,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     blocks: BlockType | list[BlockType],
     block_kind: BlockKind,
     loc: LocationType,
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType | list[BlockType]]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType | list[BlockType]]:
     result: Any
     background: LazyMessages
     trace: BlockType | list[BlockType]
@@ -1120,7 +1120,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     return result, background, scope, trace
 
 
-def combine_results(iteration_type: IterationType, results: list[PdlFuture[Any]]):
+def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     result: Any
     match iteration_type:
         case IterationType.ARRAY:
@@ -1391,7 +1391,7 @@ def generate_client_response(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: ModelInput,
-) -> tuple[LazyMessage, PdlFuture[Any]]:
+) -> tuple[LazyMessage, PdlLazy[Any]]:
     match state.batch:
         case 0:
             model_output, raw_result = generate_client_response_streaming(
@@ -1410,7 +1410,7 @@ def generate_client_response_streaming(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: ModelInput,
-) -> tuple[LazyMessage, PdlFuture[Any]]:
+) -> tuple[LazyMessage, PdlLazy[Any]]:
     msg_stream: Generator[dict[str, Any], Any, Any]
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
@@ -1470,7 +1470,7 @@ def generate_client_response_single(
     state: InterpreterState,
     block: LitellmModelBlock,
     model_input: ModelInput,
-) -> tuple[LazyMessage, PdlFuture[Any]]:
+) -> tuple[LazyMessage, PdlLazy[Any]]:
     assert isinstance(block.model, str)  # block is a "concrete block"
     assert block.parameters is None or isinstance(
         block.parameters, dict
@@ -1496,7 +1496,7 @@ def generate_client_response_single(
 
 def process_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: LocationType
-) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, CodeBlock]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, CodeBlock]:
     background: LazyMessages
     code_, _, _, block = process_block_of(
         block,
@@ -1586,7 +1586,7 @@ def process_call_code(
 __PDL_SESSION = types.SimpleNamespace()
 
 
-def call_python(code: str, scope: ScopeType) -> PdlFuture[Any]:
+def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
     exec(code, my_namespace.__dict__)  # nosec B102
     # [B102:exec_used] Use of exec detected.
@@ -1595,7 +1595,7 @@ def call_python(code: str, scope: ScopeType) -> PdlFuture[Any]:
     return PdlConst(result)
 
 
-def call_command(code: str) -> PdlFuture[str]:
+def call_command(code: str) -> PdlLazy[str]:
     args = shlex.split(code)
     p = subprocess.run(
         args, capture_output=True, text=True, check=False, shell=False
@@ -1610,7 +1610,7 @@ def call_command(code: str) -> PdlFuture[str]:
     return PdlConst(output)
 
 
-def call_jinja(code: str, scope: ScopeType) -> PdlFuture[Any]:
+def call_jinja(code: str, scope: ScopeType) -> PdlLazy[Any]:
     template = Template(
         code,
     )
@@ -1618,7 +1618,7 @@ def call_jinja(code: str, scope: ScopeType) -> PdlFuture[Any]:
     return PdlConst(result)
 
 
-def call_pdl(code: str, scope: ScopeType) -> PdlFuture[Any]:
+def call_pdl(code: str, scope: ScopeType) -> PdlLazy[Any]:
     program, loc = parse_str(code)
     state = InterpreterState()
     result, _, _, _ = process_prog(state, scope, program, loc)
@@ -1689,7 +1689,7 @@ def process_call(
 
 def process_input(
     state: InterpreterState, scope: ScopeType, block: ReadBlock, loc: LocationType
-) -> tuple[PdlFuture[str], LazyMessages, ScopeType, ReadBlock]:
+) -> tuple[PdlLazy[str], LazyMessages, ScopeType, ReadBlock]:
     read, block = process_expr_of(block, "read", scope, loc)
     if read is not None:
         file = state.cwd / read

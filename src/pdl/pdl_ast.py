@@ -7,7 +7,7 @@ from typing import Any, Literal, Mapping, Optional, Sequence, TypeAlias, Union
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 from pydantic.json_schema import SkipJsonSchema
 
-from .pdl_future import PdlDict, PdlFuture
+from .pdl_lazy import PdlDict, PdlLazy
 from .pdl_schema_utils import pdltype_to_jsonschema
 
 ScopeType: TypeAlias = PdlDict[str, Any]
@@ -16,8 +16,8 @@ ScopeType: TypeAlias = PdlDict[str, Any]
 ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
 
 
-LazyMessage: TypeAlias = PdlFuture[dict[str, Any]]
-LazyMessages: TypeAlias = PdlFuture[list[dict[str, Any]]]
+LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
+LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
 
 
 class BlockKind(StrEnum):

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from litellm import acompletion, completion
 
 from .pdl_ast import LazyMessage, ModelInput, set_structured_decoding_parameters
-from .pdl_future import PdlConst, PdlFuture, lazy_apply
+from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
@@ -65,7 +65,7 @@ class LitellmModel:
         messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ) -> tuple[LazyMessage, PdlFuture[Any]]:
+    ) -> tuple[LazyMessage, PdlLazy[Any]]:
         # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
@@ -78,7 +78,7 @@ class LitellmModel:
         )
         # _BACKGROUND_TASKS.add(future)
         # future.add_done_callback(_BACKGROUND_TASKS.discard)
-        pdl_future: PdlFuture[tuple[dict[str, Any], Any]] = PdlConst(future)
+        pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
         response = lazy_apply((lambda x: x[1]), pdl_future)
         return message, response

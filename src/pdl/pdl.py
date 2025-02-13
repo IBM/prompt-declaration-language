@@ -19,8 +19,8 @@ from .pdl_ast import (
     empty_block_location,
     get_default_model_parameters,
 )
-from .pdl_future import PdlDict
 from .pdl_interpreter import InterpreterState, process_prog
+from .pdl_lazy import PdlDict
 from .pdl_parser import parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import validate_scope

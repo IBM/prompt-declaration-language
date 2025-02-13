@@ -1,8 +1,8 @@
 import pytest
 
 from pdl.pdl import exec_dict, exec_str
-from pdl.pdl_future import PdlDict
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_lazy import PdlDict
 
 model_parser = {
     "model": "watsonx_text/ibm/granite-20b-code-instruct",

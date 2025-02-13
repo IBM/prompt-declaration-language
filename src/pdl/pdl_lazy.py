@@ -3,14 +3,14 @@ from collections.abc import Mapping, Sequence
 from concurrent.futures import Future
 from typing import Any, Callable, Generic, TypeVar, Union
 
-FutureDataT = TypeVar("FutureDataT")
+LazyDataT = TypeVar("LazyDataT")
 
 
-class PdlFuture(Generic[FutureDataT]):
-    """A value of this type `PdlFuture[T]` is a suspended computation that returns a value of `T` type."""
+class PdlLazy(Generic[LazyDataT]):
+    """A value of this type `PdlLazy[T]` is a suspended computation that returns a value of `T` type."""
 
     @abstractmethod
-    def result(self) -> FutureDataT:
+    def result(self) -> LazyDataT:
         """Recursively force the execution of the suspended computation."""
 
     @property
@@ -22,7 +22,7 @@ class PdlFuture(Generic[FutureDataT]):
 PdlConstT = TypeVar("PdlConstT")
 
 
-class PdlConst(PdlFuture[PdlConstT]):
+class PdlConst(PdlLazy[PdlConstT]):
     def __init__(self, data: PdlConstT | Future[PdlConstT]):
         self._data = data
 
@@ -34,7 +34,7 @@ class PdlConst(PdlFuture[PdlConstT]):
         return self.result().__repr__()
 
     def result(self) -> PdlConstT:
-        while isinstance(self._data, (Future, PdlFuture)):
+        while isinstance(self._data, (Future, PdlLazy)):
             self._data = self._data.result()
         return self._data  # pyright: ignore
 
@@ -42,13 +42,13 @@ class PdlConst(PdlFuture[PdlConstT]):
 PdlListElemT = TypeVar("PdlListElemT")
 
 
-class PdlList(Sequence[PdlListElemT], PdlFuture[list[PdlListElemT]]):
+class PdlList(Sequence[PdlListElemT], PdlLazy[list[PdlListElemT]]):
     def __init__(
         self,
         data: (
             list[PdlListElemT]
             | Future[list[PdlListElemT]]
-            | PdlFuture[list[PdlListElemT]]
+            | PdlLazy[list[PdlListElemT]]
         ),
     ):
         self._data = data
@@ -58,7 +58,7 @@ class PdlList(Sequence[PdlListElemT], PdlFuture[list[PdlListElemT]]):
         while not isinstance(self._data, (list, PdlList)):
             if isinstance(self._data, Future):
                 self._data = self._data.result()
-            if isinstance(self._data, PdlFuture):
+            if isinstance(self._data, PdlLazy):
                 self._data = self._data.data
         return self._data
 
@@ -66,7 +66,7 @@ class PdlList(Sequence[PdlListElemT], PdlFuture[list[PdlListElemT]]):
         if isinstance(index, slice):
             return PdlList(self.data[index])  # pyright: ignore
         v = self.data[index]
-        if isinstance(v, PdlFuture):
+        if isinstance(v, PdlLazy):
             v = v.result()
         return v
 
@@ -92,14 +92,14 @@ PdlDictElemT = TypeVar("PdlDictElemT")
 
 
 class PdlDict(
-    Mapping[PdlDictKeyT, PdlDictElemT], PdlFuture[dict[PdlDictKeyT, PdlDictElemT]]
+    Mapping[PdlDictKeyT, PdlDictElemT], PdlLazy[dict[PdlDictKeyT, PdlDictElemT]]
 ):
     def __init__(
         self,
         data: (
             dict[PdlDictKeyT, PdlDictElemT]
             | Future[dict[PdlDictKeyT, PdlDictElemT]]
-            | PdlFuture[dict[PdlDictKeyT, PdlDictElemT]]
+            | PdlLazy[dict[PdlDictKeyT, PdlDictElemT]]
         ),
     ):
         self._data = data
@@ -109,13 +109,13 @@ class PdlDict(
         while not isinstance(self._data, Mapping):
             if isinstance(self._data, Future):
                 self._data = self._data.result()
-            if isinstance(self._data, PdlFuture):
+            if isinstance(self._data, PdlLazy):
                 self._data = self._data.data
         return self._data
 
     def __getitem__(self, key):  # pyright: ignore
         v = self.data[key]
-        if isinstance(v, PdlFuture):
+        if isinstance(v, PdlLazy):
             result = v.result()
         else:
             result = v
@@ -130,8 +130,8 @@ class PdlDict(
     def __repr__(self):
         return self.result().__repr__()
 
-    def __or__(self, value: Union["PdlFuture", dict]):
-        if isinstance(value, PdlFuture):
+    def __or__(self, value: Union["PdlLazy", dict]):
+        if isinstance(value, PdlLazy):
             d = value.data
         else:
             d = value
@@ -145,9 +145,9 @@ ApplyInputT = TypeVar("ApplyInputT")
 ApplyOutputT = TypeVar("ApplyOutputT")
 
 
-class PdlApply(PdlFuture[ApplyOutputT]):
+class PdlApply(PdlLazy[ApplyOutputT]):
     def __init__(
-        self, f: Callable[[ApplyInputT], ApplyOutputT], x: PdlFuture[ApplyInputT]
+        self, f: Callable[[ApplyInputT], ApplyOutputT], x: PdlLazy[ApplyInputT]
     ):
         self._data: ApplyOutputT
         self.f = f
@@ -175,10 +175,9 @@ LazyApplyOutputT = TypeVar("LazyApplyOutputT")
 
 
 def lazy_apply(
-    f: Callable[[LazyApplyInputT], LazyApplyOutputT], x: PdlFuture[LazyApplyInputT]
-) -> PdlFuture[LazyApplyOutputT]:
-    future = PdlApply(f, x)
-    return future
+    f: Callable[[LazyApplyInputT], LazyApplyOutputT], x: PdlLazy[LazyApplyInputT]
+) -> PdlLazy[LazyApplyOutputT]:
+    return PdlApply(f, x)
 
 
 Apply2Input1T = TypeVar("Apply2Input1T")  # pylint: disable=invalid-name
@@ -186,12 +185,12 @@ Apply2Input2T = TypeVar("Apply2Input2T")  # pylint: disable=invalid-name
 Apply2OutputT = TypeVar("Apply2OutputT")  # pylint: disable=invalid-name
 
 
-class PdlApply2(PdlFuture[Apply2OutputT]):
+class PdlApply2(PdlLazy[Apply2OutputT]):
     def __init__(
         self,
         f: Callable[[Apply2Input1T, Apply2Input2T], Apply2OutputT],
-        x1: PdlFuture[Apply2Input1T],
-        x2: PdlFuture[Apply2Input2T],
+        x1: PdlLazy[Apply2Input1T],
+        x2: PdlLazy[Apply2Input2T],
     ):
         self._data: Apply2OutputT
         self.f = f
@@ -223,8 +222,7 @@ LazyApply2OutputT = TypeVar("LazyApply2OutputT")  # pylint: disable=invalid-name
 
 def lazy_apply2(
     f: Callable[[LazyApply2Input1T, LazyApply2Input2T], LazyApply2OutputT],
-    x1: PdlFuture[LazyApply2Input1T],
-    x2: PdlFuture[LazyApply2Input2T],
-) -> PdlFuture[LazyApply2OutputT]:
-    future = PdlApply2(f, x1, x2)
-    return future
+    x1: PdlLazy[LazyApply2Input1T],
+    x2: PdlLazy[LazyApply2Input2T],
+) -> PdlLazy[LazyApply2OutputT]:
+    return PdlApply2(f, x1, x2)

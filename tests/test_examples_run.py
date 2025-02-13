@@ -9,8 +9,8 @@ from pytest import CaptureFixture, MonkeyPatch
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_dumper import block_to_dict
-from pdl.pdl_future import PdlDict
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_lazy import PdlDict
 from pdl.pdl_parser import PDLParseError
 
 UPDATE_RESULTS = False
