@@ -3,9 +3,9 @@ import { useEffect, useState } from "react"
 
 import { Page, PageSection } from "@patternfly/react-core"
 
-import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
+import MasonryCombo from "../view/masonry/MasonryCombo"
 import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
@@ -13,6 +13,8 @@ import DarkModeContext, {
   setDarkModeForSession,
   getDarkModeUserSetting,
 } from "./DarkModeContext"
+
+import "./Page.css"
 
 const withPadding = { default: "padding" as const }
 const withoutPadding = { default: "noPadding" as const }
@@ -65,7 +67,7 @@ export default function PDLPage(props: Props) {
       }
     >
       {!children ? (
-        value && value.length > 0 && <Viewer value={value} />
+        value && value.length > 0 && <MasonryCombo value={value} />
       ) : (
         <PageSection
           isFilled
