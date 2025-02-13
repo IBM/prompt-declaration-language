@@ -6,7 +6,7 @@ from typing import Any, Callable, Generator, TypeVar
 
 import litellm
 from dotenv import load_dotenv
-from litellm import acompletion
+from litellm import acompletion, completion
 
 from .pdl_ast import LazyMessage, ModelInput, set_structured_decoding_parameters
 from .pdl_future import PdlConst, PdlFuture, lazy_apply
@@ -89,23 +89,22 @@ class LitellmModel:
         messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ) -> Generator[LazyMessage, Any, Any]:
-        # parameters = set_structured_decoding_parameters(spec, parameters)
-        # response = completion(
-        #     model=model_id,
-        #     messages=messages,
-        #     stream=True,
-        #     **parameters,
-        # )
-        # result = []
-        # for chunk in response:
-        #     result.append(chunk.json())  # pyright: ignore
-        #     msg = chunk.choices[0].delta  # pyright: ignore
-        #     if msg.role is None:
-        #         msg.role = "assistant"
-        #     yield remove_none_values_from_message(msg.model_dump())
-        # return result
-        assert False, "XXX TODO XXX"  # TODO
+    ) -> Generator[dict[str, Any], Any, Any]:
+        parameters = set_structured_decoding_parameters(spec, parameters)
+        response = completion(
+            model=model_id,
+            messages=list(messages),
+            stream=True,
+            **parameters,
+        )
+        result = []
+        for chunk in response:
+            result.append(chunk.json())  # pyright: ignore
+            msg = chunk.choices[0].delta  # pyright: ignore
+            if msg.role is None:
+                msg.role = "assistant"
+            yield remove_none_values_from_message(msg.model_dump())
+        return result
 
 
 MapInputT = TypeVar("MapInputT")

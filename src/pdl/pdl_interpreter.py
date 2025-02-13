@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 # from itertools import batched
 from pathlib import Path  # noqa: E402
-from typing import Any, Optional, Sequence, TypeVar  # noqa: E402
+from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -88,6 +88,7 @@ from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
+    GeneratorWrapper,
     apply_defaults,
     get_contribute_value,
     lazy_messages_concat,
@@ -1410,51 +1411,48 @@ def generate_client_response_streaming(
     block: LitellmModelBlock,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlFuture[Any]]:
-    # msg_stream: Generator[Message, Any, Any]
-    # assert isinstance(block.model, str)  # block is a "concrete block"
-    # assert block.parameters is None or isinstance(
-    #     block.parameters, dict
-    # )  # block is a "concrete block"
-    # match block:
-    #     case LitellmModelBlock():
-    #         msg_stream = LitellmModel.generate_text_stream(
-    #             model_id=block.model,
-    #             messages=model_input,
-    #             spec=block.spec,
-    #             parameters=litellm_parameters_to_dict(block.parameters),
-    #         )
-    #     case _:
-    #         assert False
-    # complete_msg: Optional[Message] = None
-    # role = None
-    # wrapped_gen = GeneratorWrapper(msg_stream)
-    # for chunk in wrapped_gen:
-    #     if state.yield_result:
-    #         yield_result(
-    #             "" if chunk["content"] is None else chunk["content"], block.kind
-    #         )
-    #     if state.yield_background:
-    #         yield_background([chunk])
-    #     if complete_msg is None:
-    #         complete_msg = chunk
-    #         role = complete_msg["role"]
-    #     else:
-    #         chunk_role = chunk["role"]
-    #         if (
-    #             chunk_role is None
-    #             or chunk_role == role
-    #             and chunk["content"] is not None
-    #         ):
-    #             complete_msg["content"] += chunk["content"]
-    # raw_result = None
-    # if block.modelResponse is not None:
-    #     raw_result = wrapped_gen.value
-    # if complete_msg is None:
-    #     complete_msg = PdlDict({"role": state.role, "content": ""})
-    # future_message = PdlConst(complete_msg)
-    # future_result = PdlConst(raw_result)
-    # return future_message, future_result
-    assert False, "XXX TODO XXX"  # TODO
+    msg_stream: Generator[dict[str, Any], Any, Any]
+    assert isinstance(block.model, str)  # block is a "concrete block"
+    assert block.parameters is None or isinstance(
+        block.parameters, dict
+    )  # block is a "concrete block"
+    match block:
+        case LitellmModelBlock():
+            msg_stream = LitellmModel.generate_text_stream(
+                model_id=block.model,
+                messages=model_input,
+                spec=block.spec,
+                parameters=litellm_parameters_to_dict(block.parameters),
+            )
+        case _:
+            assert False
+    complete_msg: Optional[dict[str, Any]] = None
+    role = None
+    wrapped_gen = GeneratorWrapper(msg_stream)
+    for chunk in wrapped_gen:
+        if state.yield_result:
+            yield_result(
+                "" if chunk["content"] is None else chunk["content"], block.kind
+            )
+        if state.yield_background:
+            yield_background([chunk])
+        if complete_msg is None:
+            complete_msg = chunk
+            role = complete_msg["role"]
+        else:
+            chunk_role = chunk["role"]
+            if (
+                chunk_role is None
+                or chunk_role == role
+                and chunk["content"] is not None
+            ):
+                complete_msg["content"] += chunk["content"]
+    raw_result = None
+    if block.modelResponse is not None:
+        raw_result = wrapped_gen.value
+    if complete_msg is None:
+        complete_msg = {"role": state.role, "content": ""}
+    return PdlConst(complete_msg), PdlConst(raw_result)
 
 
 def litellm_parameters_to_dict(
