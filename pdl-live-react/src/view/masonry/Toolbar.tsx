@@ -7,10 +7,7 @@ import {
 
 import ToolbarAsToggle from "./ToolbarAsToggle"
 import ToolbarSMLToggle from "./ToolbarSMLToggle"
-import ToolbarViewToggle from "./ToolbarViewToggle"
-
-import { type View } from "./View"
-export { type View }
+import ToolbarShowSourceButton from "./ToolbarShowSourceButton"
 
 const alignEnd = { default: "alignEnd" as const }
 
@@ -23,31 +20,20 @@ export type Props = {
 
   sml: SML
   setSML(sml: SML): void
-
-  view: View
-  setView(view: View): void
 }
 
-export default function MasonryToolbar({
-  as,
-  setAs,
-  sml,
-  setSML,
-  view,
-  setView,
-}: Props) {
+export default function MasonryToolbar({ as, setAs, sml, setSML }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
-        <ToolbarGroup>
+        <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarItem>
-            <ToolbarViewToggle view={view} setView={setView} />
+            <ToolbarShowSourceButton />
           </ToolbarItem>
-        </ToolbarGroup>
-
-        <ToolbarGroup variant="action-group-plain" align={alignEnd}>
           <ToolbarItem>
             <ToolbarSMLToggle sml={sml} setSML={setSML} />
+          </ToolbarItem>
+          <ToolbarItem>
             <ToolbarAsToggle as={as} setAs={setAs} />
           </ToolbarItem>
         </ToolbarGroup>
