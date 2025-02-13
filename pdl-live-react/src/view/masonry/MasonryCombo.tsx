@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { BackToTop, PageSection } from "@patternfly/react-core"
 
+import Memory from "../memory/Memory"
 import Timeline from "../timeline/TimelineFromModel"
 
 import Masonry from "./Masonry"
@@ -65,6 +66,7 @@ export default function MasonryCombo({ value }: Props) {
       >
         <Masonry model={masonry} as={as} sml={sml}>
           <Timeline model={base} numbering={numbering} />
+          <Memory block={block} />
         </Masonry>
       </PageSection>
 
