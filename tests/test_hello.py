@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from pdl.pdl import exec_str
@@ -47,6 +49,11 @@ def test_hello():
     data = Program.model_validate(hello)
     text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == "Hello, world!\nThis is your first prompt descriptor!\n"
+
+
+def test_hello_json():
+    result = exec_str(json.dumps(hello))
+    assert result == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
 def repeat(n):
