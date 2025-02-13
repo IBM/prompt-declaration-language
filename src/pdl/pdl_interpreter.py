@@ -349,7 +349,10 @@ def process_advanced_block_timed(
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
-                update={"end_nanos": end_nanos, "context": scope["pdl_context"]}
+                update={
+                    "end_nanos": end_nanos,
+                    "context": lazy_apply(lambda s: s["pdl_context"], scope),
+                }
             )
         case Block():
             trace = trace.model_copy(update={"end_nanos": end_nanos})

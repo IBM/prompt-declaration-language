@@ -44,6 +44,7 @@ from .pdl_ast import (
     RepeatUntilBlock,
     TextBlock,
 )
+from .pdl_lazy import PdlLazy
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
 
@@ -89,8 +90,13 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if block.id is not None:
         d["id"] = block.id
     if block.start_nanos != 0:
-        if block.context is not None and len(block.context) > 0:
-            d["context"] = block.context
+        if block.context is not None:
+            if isinstance(block.context, PdlLazy):
+                context = block.context.result()
+            else:
+                context = block.context
+            if len(context) > 0:
+                d["context"] = context
         d["start_nanos"] = block.start_nanos
         d["end_nanos"] = block.end_nanos
 
