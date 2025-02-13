@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useSearchParams } from "react-router"
 
 import {
   Nav,
@@ -14,8 +14,12 @@ import MyTraces from "./MyTracesNavItems"
 export default function Sidebar() {
   const { hash, pathname: activeItem } = useLocation()
 
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString()
+  const search = (s.length > 0 ? "?" + s : "") + hash
+
   return (
-    <PageSidebar>
+    <PageSidebar isSidebarOpen={searchParams.has("sidebar")}>
       <PageSidebarBody>
         <Nav>
           <NavList>
@@ -23,19 +27,19 @@ export default function Sidebar() {
               itemId="welcome"
               isActive={activeItem === "" || activeItem === "/welcome"}
             >
-              <Link to="/welcome">Welcome</Link>
+              <Link to={"/welcome" + search}>Welcome</Link>
             </NavItem>
 
             <NavItem itemId="viewer" isActive={activeItem === "/upload"}>
-              <Link to={"/upload" + hash}>Upload a Trace</Link>
+              <Link to={"/upload" + search}>Upload a Trace</Link>
             </NavItem>
           </NavList>
 
-          <MyTraces hash={hash} activeItem={activeItem} />
-          <Demos hash={hash} activeItem={activeItem} />
+          <MyTraces hash={search} activeItem={activeItem} />
+          <Demos hash={search} activeItem={activeItem} />
 
           <NavItem itemId="about" isActive={activeItem === "/about"}>
-            <Link to="/about">About PDL</Link>
+            <Link to={"/about" + search}>About PDL</Link>
           </NavItem>
         </Nav>
       </PageSidebarBody>

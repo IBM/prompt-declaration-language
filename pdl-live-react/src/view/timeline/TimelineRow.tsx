@@ -4,6 +4,7 @@ import TimelineBar from "./TimelineBar"
 import TimelineRowKindCell from "./TimelineRowKindCell"
 
 type Props = import("./model").TimelineRowWithExtrema & {
+  ordinal?: number
   prefix: boolean[]
   position: import("./model").Position
 }
@@ -13,7 +14,7 @@ export default function TimelineRow(row: Props) {
     <div className="pdl-timeline-row">
       <span className="pdl-timeline-cell" data-cell="kind">
         <span className="pdl-mono">{treeSymbols(row)}</span>
-        <TimelineRowKindCell row={row} />
+        <TimelineRowKindCell row={row} ordinal={row.ordinal} />
       </span>
 
       <span className="pdl-timeline-cell" data-cell="bar">
@@ -21,7 +22,9 @@ export default function TimelineRow(row: Props) {
       </span>
 
       <span className="pdl-timeline-cell pdl-duration" data-cell="duration">
-        {prettyMs((row.block.end_nanos - row.block.start_nanos) / 1000000)}
+        {prettyMs(
+          ((row.block.end_nanos || row.max) - row.block.start_nanos) / 1000000,
+        )}
       </span>
     </div>
   )

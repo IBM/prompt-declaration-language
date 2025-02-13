@@ -233,7 +233,7 @@ defs:
     parser: yaml
 text:
 - "\n${ CODE.source_code }\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   input:
       - |
         Here is some info about the location of the function in the repo.
@@ -298,7 +298,7 @@ defs:
     read: ./ground_truth.txt
 text:
 - "\n${ CODE.source_code }\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
@@ -380,7 +380,7 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   def: EXPLANATION
   contribute: []
   input:

@@ -8,7 +8,7 @@ import { test, expect } from "@playwright/test"
   { path: "demos/Fibonacci", title: /Fibonacci/ },
 ].forEach(({ path, title }) =>
   test(`${path} has title ${title}`, async ({ page }) => {
-    await page.goto(join("http://localhost:5173", path))
+    await page.goto(join("http://localhost:1420", path))
 
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(title)

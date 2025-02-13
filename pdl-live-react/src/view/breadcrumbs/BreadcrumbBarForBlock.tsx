@@ -1,47 +1,17 @@
-import { capitalizeAndUnSnakeCase, hasResult } from "../../helpers"
+import { hasResult, type NonScalarPdlBlock as Block } from "../../helpers"
 
-import Def from "../transcript/Def"
-import BreadcrumbBar from "./BreadcrumbBar"
-import BreadcrumbBarItem from "./BreadcrumbBarItem"
+import BreadcrumbBarForBlockId from "./BreadcrumbBarForBlockId"
 
 type Props = {
-  id: string
-  block: import("../../helpers").NonScalarPdlBlock
+  block: Pick<Block, "id" | "def">
 }
 
-function asIter(part: string) {
-  const int = parseInt(part)
-  return isNaN(int) ? capitalizeAndUnSnakeCase(part) : `Step ${int + 1}`
-}
-
-export default function BreadcrumbBarForBlock({ id, block }: Props) {
+export default function BreadcrumbBarForBlock({ block }: Props) {
   return (
-    <BreadcrumbBar>
-      <>
-        {id
-          .replace(/text\.\d+\./g, "")
-          .split(/\./)
-          .slice(-5)
-          .map((part, idx, A) => (
-            <BreadcrumbBarItem
-              key={part + idx}
-              detail={part}
-              className={
-                idx === A.length - 1 ? "pdl-breadcrumb-bar-item--kind" : ""
-              }
-            >
-              {asIter(part)}
-            </BreadcrumbBarItem>
-          ))}
-
-        {block.def && (
-          <Def
-            def={block.def}
-            ctx={{ id, parents: [] }}
-            value={hasResult(block) ? block.result : undefined}
-          />
-        )}
-      </>
-    </BreadcrumbBar>
+    <BreadcrumbBarForBlockId
+      id={block.id ?? ""}
+      def={block.def}
+      value={hasResult(block) ? block.result : undefined}
+    />
   )
 }

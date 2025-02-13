@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "PDL",
+  "version": "0.1.0",
+  "identifier": "com.ibm.prompt-declaration-language.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "security": {
+      "csp": null
+    }
+  },
+  "plugins": {
+    "cli": {
+      "description": "PDL",
+      "args": [
+      ],
+      "subcommands": {
+        "run": {
+          "description": "Run a PDL program",
+          "args": [
+            {
+              "name": "source",
+              "index": 1,
+              "takesValue": true
+            }
+          ]
+        },
+        "view": {
+          "description": "View a trace",
+          "args": [
+            {
+              "name": "trace",
+              "index": 1,
+              "takesValue": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "resources": {
+      "../.venv/": "interpreter/"
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

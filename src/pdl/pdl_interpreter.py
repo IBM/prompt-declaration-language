@@ -17,6 +17,7 @@ from pathlib import Path  # noqa: E402
 from typing import Any, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
+import json_repair  # noqa: E402
 import litellm  # noqa: E402
 import yaml  # noqa: E402
 from jinja2 import (  # noqa: E402
@@ -147,6 +148,7 @@ class InterpreterState(BaseModel):
     role: RoleType = "user"
     cwd: Path = Path.cwd()
     # background_tasks = {}
+    id_stack: list[str] = []
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -156,6 +158,19 @@ class InterpreterState(BaseModel):
 
     def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
         return self.model_copy(update={"role": role})
+
+    def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
+        stack = self.id_stack.copy() if self.id_stack is not None else []
+        stack.append(n)
+        return self.model_copy(update={"id_stack": stack})
+
+    def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
+        return self.with_id(str(i))
+
+    def with_pop(self: "InterpreterState") -> "InterpreterState":
+        stack = self.id_stack.copy() if self.id_stack is not None else []
+        stack.pop()
+        return self.model_copy(update={"id_stack": stack})
 
 
 def generate(
@@ -181,17 +196,19 @@ def generate(
         prog, loc = parse_file(pdl_file)
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
-        future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
-        result = future_result.result()
-        if not state.yield_result:
-            if state.yield_background:
-                print("\n----------------")
-            if result is None:
-                print()
-            else:
-                print(stringify(result))
-        else:
-            print()
+        # future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
+        # result = future_result.result()
+        # if not state.yield_result:
+        #     if state.yield_background:
+        #         print("\n----------------")
+        #     if result is None:
+        #         print()
+        #     else:
+        #         print(stringify(result))
+        # else:
+        #     print()
+        _, _, _, trace = process_prog(state, initial_scope, prog, loc)
+        print()
         if trace_file:
             write_trace(trace_file, trace)
     except PDLParseError as exc:
@@ -256,29 +273,52 @@ def process_block(
     result: PdlFuture[Any]
     background: LazyMessages
     trace: BlockType
-    if not isinstance(block, Block):
-        try:
-            result = PdlConst(process_expr(scope, block, loc))
-        except PDLRuntimeExpressionError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, location=loc, program=block),
-            ) from exc
-        stringified_result = lazy_apply(stringify, result)
-        background = PdlList(
-            [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
-        )
-        trace = DataBlock(data=block, result=stringified_result)
-        if state.yield_background:
-            yield_background(background)
-        if state.yield_result:
-            yield_result(result.result(), BlockKind.DATA)
-        append_log(state, "pdl_context", background)
-    else:
-        result, background, scope, trace = process_advanced_block_timed(
-            state, scope, block, loc
-        )
+    try:
+        if not isinstance(block, Block):
+            try:
+                result = PdlConst(process_expr(scope, block, loc))
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, location=loc, program=block),
+                ) from exc
+            stringified_result = lazy_apply(stringify, result)
+            background = PdlList(
+                [
+                    PdlDict(  # type: ignore
+                        {
+                            "role": state.role,
+                            "content": stringified_result,
+                            "defsite": ".".join(
+                                state.id_stack
+                            ),  # Warning: defsite for a literal value
+                        }
+                    )
+                ]
+            )
+            trace = DataBlock(data=block, result=stringified_result)
+            if state.yield_background:
+                yield_background(background)
+            if state.yield_result:
+                yield_result(result.result(), BlockKind.DATA)
+            append_log(state, "pdl_context", background)
+        else:
+            result, background, scope, trace = process_advanced_block_timed(
+                state, scope, block, loc
+            )
+    except EOFError as exc:
+        raise PDLRuntimeError(
+            "EOF",
+            loc=loc,
+            trace=ErrorBlock(msg="EOF", location=loc, program=block),
+        ) from exc
+    except KeyboardInterrupt as exc:
+        raise PDLRuntimeError(
+            "Keyboard Interrupt",
+            loc=loc,
+            trace=ErrorBlock(msg="Keyboard Interrupt", location=loc, program=block),
+        ) from exc
     scope = scope | {"pdl_context": background}
     return result, background, scope, trace
 
@@ -298,14 +338,19 @@ def process_advanced_block_timed(
     block: AdvancedBlockType,
     loc: LocationType,
 ) -> tuple[PdlFuture[Any], LazyMessages, ScopeType, BlockType]:
-    start_nanos = time.time_ns()
+    state = state.with_id(str(block.kind))
+    if state.id_stack is not None:
+        block.id = ".".join(state.id_stack)
+    block.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     end_nanos = time.time_ns()
     match trace:
-        case Block():
+        case LitellmModelBlock():
             trace = trace.model_copy(
-                update={"start_nanos": start_nanos, "end_nanos": end_nanos}
+                update={"end_nanos": end_nanos, "context": scope["pdl_context"]}
             )
+        case Block():
+            trace = trace.model_copy(update={"end_nanos": end_nanos})
     return result, background, scope, trace
 
 
@@ -537,17 +582,23 @@ def process_block_body(
                 scope,
                 loc,
             )
-            result = PdlDict({"role": state.role, "content": content})
+            result = PdlDict(
+                {"role": state.role, "content": content, "defsite": block.id}
+            )
         case IfBlock():
             b = process_condition_of(block, "condition", scope, loc, "if")
             if b:
+                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "then", state, scope, loc
                 )
+                state = state.with_pop()
             elif block.elses is not None:
+                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "elses", state, scope, loc, "else"
                 )
+                state = state.with_pop()
             else:
                 result = PdlConst("")
                 background = PdlList([])
@@ -628,8 +679,10 @@ def process_block_body(
             )
             repeat_loc = append(loc, "repeat")
             try:
+                iidx = 0
                 first = True
                 for _ in range(n):
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -639,7 +692,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": lazy_messages_concat(
@@ -660,6 +719,8 @@ def process_block_body(
                     results.append(iteration_result)
                     background = lazy_messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iterations_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iterations_trace})
@@ -705,9 +766,11 @@ def process_block_body(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
             repeat_loc = append(loc, "repeat")
+            iidx = 0
             try:
                 first = True
                 for i in range(lengths[0]):
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -717,7 +780,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": lazy_messages_concat(
@@ -740,6 +809,8 @@ def process_block_body(
                     background = lazy_messages_concat(background, iteration_background)
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iter_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iter_trace})
@@ -764,7 +835,9 @@ def process_block_body(
             repeat_loc = append(loc, "repeat")
             try:
                 first = True
+                iidx = 0
                 while not stop:
+                    iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
                     elif block.join.iteration_type == IterationType.TEXT:
@@ -774,7 +847,13 @@ def process_block_body(
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
                             yield_background(
-                                [{"role": block.role, "content": join_string}]
+                                [
+                                    {
+                                        "role": block.role,
+                                        "content": join_string,
+                                        "defsite": block.id,
+                                    }
+                                ]
                             )
                     scope = scope | {
                         "pdl_context": lazy_messages_concat(
@@ -796,6 +875,8 @@ def process_block_body(
                     background = lazy_messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
                     stop = process_condition_of(block, "until", scope, loc)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
             except PDLRuntimeError as exc:
                 iterations_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iterations_trace})
@@ -899,13 +980,17 @@ def process_defs(
 ) -> tuple[ScopeType, dict[str, BlockType]]:
     defs_trace: dict[str, BlockType] = {}
     defloc = append(loc, "defs")
+    idx = 0
     for x, block in defs.items():
         newloc = append(defloc, x)
+        state = state.with_iter(idx)
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
         result, _, _, block_trace = process_block(state, scope, block, newloc)
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace
+        idx = idx + 1
+        state = state.with_pop()
     return scope, defs_trace
 
 
@@ -997,6 +1082,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         pdl_context_init: LazyMessages = scope.data["pdl_context"]
         try:
             for i, block in enumerate(blocks):
+                iteration_state = iteration_state.with_iter(i)
                 scope = scope | {
                     "pdl_context": lazy_messages_concat(pdl_context_init, background)
                 }
@@ -1012,6 +1098,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 results.append(iteration_result)
                 background = lazy_messages_concat(background, iteration_background)
                 trace.append(t)  # type: ignore
+                iteration_state = iteration_state.with_pop()
         except PDLRuntimeError as exc:
             trace.append(exc.trace)  # type: ignore
             raise PDLRuntimeProcessBlocksError(
@@ -1143,7 +1230,9 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 expr_ast_nodes = []
             if len(expr_ast_nodes) == 1:
                 # `expr` is either a single jinja expression or a string without expression
-                if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
+                if expr.startswith(EXPR_START_STRING) and expr.endswith(
+                    EXPR_END_STRING
+                ):
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
                     result = env.compile_expression(
                         expr[2:-1], undefined_to_none=False
@@ -1269,7 +1358,7 @@ def process_call_model(
         append_log(state, "Model Input", litellm_params)
         # else:
         #    append_log(state, "Model Input", messages_to_str(model_input))
-        background: LazyMessages = PdlList([msg])  # type: ignore
+        background: LazyMessages = PdlList([lazy_apply(lambda msg: msg | {"defsite": block.id}, msg)])  # type: ignore
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
@@ -1422,13 +1511,15 @@ def process_call_code(
             try:
                 result = call_python(code_s, scope)
                 background = PdlList(
-                    [PdlDict({"role": state.role, "content": lazy_apply(str, result)})]  # type: ignore
+                    [PdlDict({"role": state.role, "content": lazy_apply(str, result), "defsite": block.id})]  # type: ignore
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {repr(exc)}",
                     loc=loc,
-                    trace=block.model_copy(update={"code": code_s}),
+                    trace=block.model_copy(
+                        update={"code": code_s, "defsite": block.id}
+                    ),
                 ) from exc
         case "command":
             try:
@@ -1436,10 +1527,7 @@ def process_call_code(
                 background = PdlList(
                     [
                         PdlDict(  # type: ignore
-                            {
-                                "role": state.role,
-                                "content": result,
-                            }
+                            {"role": state.role, "content": result, "defsite": block.id}
                         )
                     ]
                 )
@@ -1458,6 +1546,7 @@ def process_call_code(
                             {
                                 "role": state.role,
                                 "content": lazy_apply(lambda r: r.result(), result),
+                                "defsite": block.id,
                             }
                         )
                     ]
@@ -1473,7 +1562,7 @@ def process_call_code(
                 result = call_pdl(code_s, scope)
                 stringified_result = lazy_apply(stringify, result)
                 background = PdlList(
-                    [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
+                    [PdlDict({"role": state.role, "content": stringified_result, "defsite": block.id})]  # type: ignore
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
@@ -1642,7 +1731,7 @@ def process_input(
             append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
     background: LazyMessages = PdlList(
-        [PdlDict({"role": state.role, "content": s})]  # type: ignore
+        [PdlDict({"role": state.role, "content": s, "defsite": block.id})]  # type: ignore
     )
     return PdlConst(s), background, scope, trace
 
@@ -1677,12 +1766,15 @@ def process_include(
         ) from exc
 
 
-def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | list[Any]]:
-    result: Optional[dict[str, Any] | list[Any]]
+JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None
+
+
+def parse_result(parser: ParserType, text: str) -> JSONReturnType:
+    result: JSONReturnType
     match parser:
         case "json":
             try:
-                result = json.loads(text)
+                result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"

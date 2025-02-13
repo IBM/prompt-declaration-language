@@ -14,6 +14,8 @@ from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 
 UPDATE_RESULTS = False
+RESULTS_VERSION = 14
+
 
 TO_SKIP = {
     str(name)
@@ -34,6 +36,10 @@ TO_SKIP = {
         pathlib.Path("examples") / "rag" / "rag.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
         pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
+        pathlib.Path("examples") / "gsm8k" / "math.pdl",
+        pathlib.Path("examples") / "gsm8k" / "math_no_sd.pdl",
+        pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
+        pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
     ]
 }
 
@@ -186,9 +192,12 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                     expected_result = str(result_file.read())
                 if str(result).strip() == expected_result.strip():
                     wrong_result = False
+                    break
             if wrong_result:
                 if UPDATE_RESULTS:
-                    result_file_name_0 = pdl_file_name.stem + ".12.result"
+                    result_file_name_0 = (
+                        pdl_file_name.stem + "." + str(RESULTS_VERSION) + ".result"
+                    )
                     result_dir_name.mkdir(parents=True, exist_ok=True)
                     with open(
                         result_dir_name / result_file_name_0, "w", encoding="utf-8"
@@ -203,6 +212,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
             if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
                 print(exc)  # unexpected error: breakpoint
             actual_runtime_error |= {str(pdl_file_name)}
+            print(exc)
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
     unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))

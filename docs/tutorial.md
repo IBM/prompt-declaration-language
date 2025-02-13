@@ -36,7 +36,7 @@ Hello, world!
 --8<-- "./examples/tutorial/calling_llm.pdl"
 ```
 
-In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`replicate/ibm-granite/granite-3.0-8b-instruct`) with this as input prompt. 
+In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`replicate/ibm-granite/granite-3.1-8b-instruct`) with this as input prompt. 
 The model is passed a parameter `stop_sequences`.
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
@@ -522,7 +522,7 @@ text:
   contribute: [context]
 - repeat:
     text:
-    - model: replicate/ibm-granite/granite-3.0-8b-instruct
+    - model: replicate/ibm-granite/granite-3.1-8b-instruct
       role: assistant
     - read:
       def: eval
@@ -553,7 +553,7 @@ The prompt that is actually submitted to the first model call (with query `What 
 To change the template that is applied, you can specify it as a parameter of the model call:
 
 ```yaml
-model: replicate/ibm-granite/granite-3.0-8b-instruct
+model: replicate/ibm-granite/granite-3.1-8b-instruct
 parameters:
   roles:
     system:

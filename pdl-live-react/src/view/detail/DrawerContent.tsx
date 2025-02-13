@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react"
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { useLocation, useNavigate, useSearchParams } from "react-router"
 
 import {
   Button,
@@ -11,11 +11,13 @@ import {
   type TabsProps,
 } from "@patternfly/react-core"
 
-import Model, { computeModel } from "../timeline/model"
-
 import BlockNotFound from "./BlockNotFound"
 import drawerContentBody from "./DrawerContentBody"
 import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
+
+import findNode from "./find"
+
+import { type NonScalarPdlBlock as Block } from "../../helpers"
 
 import CloseIcon from "@patternfly/react-icons/dist/esm/icons/times-icon"
 
@@ -27,7 +29,6 @@ type Props = {
 
 function header(objectType: string) {
   switch (objectType) {
-    case "defs":
     case "def":
       return "Variable Definition"
     default:
@@ -35,13 +36,8 @@ function header(objectType: string) {
   }
 }
 
-function description(id: string, model: Model) {
-  const block = model.find((block) => block.id === id)
-  if (!block) {
-    return <BlockNotFound id={id} model={model} />
-  }
-
-  return <BreadcrumbBarForBlock id={id} block={block.block} />
+function description(block: Block) {
+  return <BreadcrumbBarForBlock block={block} />
 }
 
 export default function DrawerContent({ value }: Props) {
@@ -63,10 +59,18 @@ export default function DrawerContent({ value }: Props) {
     [hash, pathname, navigate],
   )
 
-  const model = useMemo<Model>(
-    () => (!id || !objectType || !value ? [] : computeModel(JSON.parse(value))),
-    [id, objectType, value],
+  const data = useMemo(
+    () =>
+      value ? (JSON.parse(value) as import("../../pdl_ast").PdlBlock) : null,
+    [value],
   )
+  const block = useMemo<null | Block>(
+    () => (!id || !data ? null : findNode(data, id)),
+    [id, data],
+  )
+  useEffect(() => {
+    setActiveTab(0)
+  }, [id, objectType, value])
 
   const actions = useMemo(
     () => ({
@@ -80,13 +84,18 @@ export default function DrawerContent({ value }: Props) {
   if (!id || !objectType) {
     // Should never happen. TODO error handling?
     return <></>
+  } else if (!value) {
+    // Nothing to show
+    return <></>
+  } else if (!block) {
+    return <BlockNotFound id={id} value={value} />
   }
 
   return (
     <Card isPlain isLarge isFullHeight className="pdl-drawer-content">
       <CardHeader actions={actions}>
         <CardTitle>{header(objectType)}</CardTitle>
-        {description(id, model)}
+        {description(block)}
       </CardHeader>
       <CardBody>
         <Tabs
@@ -96,7 +105,7 @@ export default function DrawerContent({ value }: Props) {
           mountOnEnter
           unmountOnExit
         >
-          {drawerContentBody({ id, def, objectType, model })}
+          {drawerContentBody({ def, objectType, model: block })}
         </Tabs>
       </CardBody>
     </Card>

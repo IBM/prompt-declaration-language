@@ -52,35 +52,34 @@ text:
 - repeat:
     text:
     - def: thought
-      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "Act:"
     - "Act:\n"
     - def: action
-      model: replicate/ibm-granite/granite-3.0-8b-instruct
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "\n"
       parser: json
-    - if: ${ action[0].name == 'Search' }
-      then:
-        text:
-        - "\nObs: "
-        - lang: python
-          code: |
-            import warnings, wikipedia
-            warnings.simplefilter("ignore")
-            try:
-              result = wikipedia.summary("${ action[0].arguments.topic }")
-            except wikipedia.WikipediaException as e:
-              result = str(e)
-        - "\n"
-      else:
-        if: ${ action[0].name == "Calc" }
-        then:
-          text:
-          - "\nObs: "
-          - lang: python
-            code: result = ${ action[0].arguments.expr }
-          - "\n"
+    - match: ${ action[0].name } 
+      with:
+        - case: 'Search'
+          then: 
+            text:
+            - "\nObs: "
+            - lang: python
+              code: |
+                import warnings, wikipedia
+                warnings.simplefilter("ignore")
+                try:
+                  result = wikipedia.summary("${ action[0].arguments.topic }")
+                except wikipedia.WikipediaException as e:
+                  result = str(e)
+        - case: 'Calc'
+          then: 
+            text:
+            - "\nObs: "
+            - lang: python
+              code: result = ${ action[0].arguments.expr }
+    - "\n"
   until: ${ action[0].name == "Finish" }
-    

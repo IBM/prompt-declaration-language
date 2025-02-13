@@ -1,0 +1,57 @@
+.pdl-masonry-view {
+  &,
+  & > div {
+    gap: 0.375em !important;
+  }
+}
+
+.pdl-masonry-tile {
+  flex: 1;
+  border-radius: 0;
+  min-height: 13em;
+
+  &:before {
+    border: none;
+  }
+
+  &[data-padding="l"] > div {
+    margin: 2em;
+  }
+  &[data-padding="m"] > div {
+    margin: 1.5em;
+  }
+  &[data-padding="s"] > div {
+    margin: 1em;
+  }
+}
+
+.pf-v6-theme-dark {
+  .pdl-masonry-tile {
+    &[data-kind="model"] {
+      background: var(--pf-t--global--color--status--custom--default);
+    }
+    &[data-kind="code"] {
+      background: var(--pf-t--global--color--status--success--default);
+    }
+  }
+}
+
+.pdl-masonry-tile {
+  background: var(--pf-t--global--background--color--secondary--default);
+  &[data-kind="model"] {
+    background: var(--pf-t--global--color--nonstatus--teal--default);
+  }
+  &[data-kind="read"] {
+    background: var(--pf-t--global--color--nonstatus--orange--default);
+  }
+  &[data-kind="code"] {
+    background: var(--pf-t--global--color--nonstatus--blue--default);
+  }
+}
+
+.pdl-masonry-index {
+  border-radius: 50%;
+  background-color: var(--pf-t--global--background--color--inverse--default);
+  color: var(--pf-t--global--text--color--inverse);
+  padding: 0.5em;
+}

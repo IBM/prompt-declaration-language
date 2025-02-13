@@ -1,5 +1,4 @@
-import type Model from "../timeline/model"
-
-export default function BlockNotFound(_props: { id: string; model: Model }) {
+export default function BlockNotFound(props: { id: string; value: string }) {
+  console.error("Block not found", props.id, props.value)
   return <div>Block not found</div>
 }

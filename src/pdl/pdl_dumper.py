@@ -86,7 +86,11 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         return block
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
+    if block.id is not None:
+        d["id"] = block.id
     if block.start_nanos != 0:
+        if block.context is not None and len(block.context) > 0:
+            d["context"] = block.context
         d["start_nanos"] = block.start_nanos
         d["end_nanos"] = block.end_nanos
 
@@ -280,7 +284,7 @@ def as_json(value: Any) -> JsonType:
 def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
     p: str | dict[str, Any]
     match parser:
-        case "json" | "yaml":
+        case "json" | "yaml" | "jsonl":
             p = parser
         case RegexParser():
             p = parser.model_dump()

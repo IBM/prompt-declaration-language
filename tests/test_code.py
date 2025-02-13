@@ -41,7 +41,11 @@ def test_contribute_result():
 def test_contribute_context():
     result = exec_dict(show_result_data(["context"]), output="all")
     assert result["scope"]["pdl_context"] == [
-        {"role": "user", "content": "How can I help you?: "}
+        {
+            "role": "user",
+            "content": "How can I help you?: ",
+            "defsite": "text.0.text.code",
+        }
     ]
 
 

@@ -36,7 +36,7 @@ text:
     - if: ${ query != 'quit'}
       then: 
         text:
-          - model: replicate/ibm-granite/granite-3.0-8b-instruct
+          - model: replicate/ibm-granite/granite-3.1-8b-instruct
             def: PDL
             input: |
                 Question: What are all the classes?
@@ -109,7 +109,7 @@ text:
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a summary of method Foo\n\n"
-                - model: replicate/ibm-granite/granite-3.0-8b-instruct
+                - model: replicate/ibm-granite/granite-3.1-8b-instruct
                 ```
 
                 Question: Generate a different comment for method Foo(string) in class org.ibm.App?
@@ -121,7 +121,7 @@ text:
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a different comment for method Foo(string)\n\n"
-                - model: replicate/ibm-granite/granite-3.0-8b-instruct
+                - model: replicate/ibm-granite/granite-3.1-8b-instruct
                 ```
 
                 If the query contains something about a field be sure to call a model.

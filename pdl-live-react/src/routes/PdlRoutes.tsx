@@ -1,77 +1,48 @@
-import { lazy, Suspense } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router"
 
-const Demo = lazy(() => import("../page/Demo"))
-const About = lazy(() => import("../page/About"))
-const MyTrace = lazy(() => import("../page/MyTrace"))
-const Welcome = lazy(() => import("../page/Welcome"))
-const Uploader = lazy(() => import("../page/Uploader"))
-const PageNotFound = lazy(() => import("../page/PageNotFound"))
+import Demo from "../page/Demo"
+import Demos from "../page/Demos"
+import MyTraces from "../page/MyTracesPage"
+import About from "../page/About"
+import Local from "../page/Local"
+import MyTrace from "../page/MyTrace"
+import Welcome from "../page/welcome/Welcome"
+import Uploader from "../page/Uploader"
+import ErrorBoundary from "../page/ErrorBoundary"
 
 import demos from "../demos/demos"
 import { getMyTraces } from "../page/MyTraces"
 
 export default function PdlRoutes() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Suspense>
-            <Welcome />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/welcome"
-        element={
-          <Suspense>
-            <Welcome />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <Suspense>
-            <About />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/upload"
-        element={
-          <Suspense>
-            <Uploader />
-          </Suspense>
-        }
-      />
+    <ErrorBoundary>
+      <Routes>
+        <Route index element={<Welcome />} />
+        <Route path="welcome" element={<Welcome />} />
+        <Route path="local/:traceFile" element={<Local />} />
+        <Route path="about" element={<About />} />
+        <Route path="upload" element={<Uploader />} />
+        <Route path="my" element={<MyTraces />} />
+        <Route path="demos" element={<Demos />} />
 
-      {demos.map((demo) => (
-        <Route
-          key={demo.name}
-          path={`/demos/${demo.name}`}
-          element={
-            <Suspense>
-              <Demo name={demo.name} value={demo.trace} />
-            </Suspense>
-          }
-        />
-      ))}
+        {demos.map((demo, idx) => (
+          <Route
+            key={demo.name + "." + idx}
+            path={`/demos/${demo.name}`}
+            element={<Demo name={demo.name} value={demo.trace} />}
+          />
+        ))}
 
-      {getMyTraces().map(({ title, filename, value }) => (
-        <Route
-          key={filename}
-          path={`/my/${title}`}
-          element={
-            <Suspense>
-              <MyTrace name={title} value={value} />
-            </Suspense>
-          }
-        />
-      ))}
+        {getMyTraces().map(({ title, filename, value }, idx) => (
+          <Route
+            key={filename + "." + idx}
+            path={`/my/${title}`}
+            element={<MyTrace name={title} value={value} />}
+          />
+        ))}
 
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+        <Route path="*" element={<ErrorBoundary />} />
+      </Routes>
+    </ErrorBoundary>
   )
 }

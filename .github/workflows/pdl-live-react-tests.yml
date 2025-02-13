@@ -24,9 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: yarn
+      - name: Install Linux dependencies
+        run: sudo apt update && sudo apt install -y libglib2.0-dev libgtk-3-dev libwebkit2gtk-4.1-dev # for tauri builds in linux
+      - name: Install NodeJs dependencies
+        run: npm ci
       - name: Install Playwright Browsers
-        run: yarn playwright install --with-deps
+        run: npx playwright install --with-deps
       - name: Test pdl-live viewer
-        run: yarn test
+        run: npm test

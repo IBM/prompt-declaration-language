@@ -1,3 +1,6 @@
+import { useCallback } from "react"
+import { useLocation, useSearchParams } from "react-router"
+
 import {
   Flex,
   Masthead,
@@ -16,7 +19,7 @@ import {
 
 import DarkModeToggle from "./DarkModeToggle"
 
-import PDLIcon from "../assets/ai-governance--prompt.svg?react"
+import PDLIcon from "../assets/ai-governance--prompt.svg"
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon"
 
 import "./Masthead.css"
@@ -25,12 +28,32 @@ const alignRight = { default: "alignEnd" as const }
 const alignCenter = { default: "alignItemsCenter" as const }
 
 function Toggle() {
+  const { hash } = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const onSidebarToggle = useCallback(() => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    const isOpen = searchParams.has("sidebar")
+    if (isOpen) {
+      newSearchParams.delete("sidebar")
+    } else {
+      newSearchParams.set("sidebar", "true")
+    }
+    setSearchParams(newSearchParams)
+
+    // sigh, see https://github.com/remix-run/react-router/issues/8393
+    if (hash) {
+      setTimeout(() => (window.location.hash = hash))
+    }
+  }, [searchParams, setSearchParams, hash])
+
   return (
     <MastheadToggle>
       <PageToggleButton
         variant="plain"
         aria-label="Global navigation"
         id="pdl--vertical-nav-toggle"
+        onSidebarToggle={onSidebarToggle}
       >
         <BarsIcon />
       </PageToggleButton>
@@ -46,7 +69,8 @@ function Brand() {
         target="_blank"
       >
         <Flex alignItems={alignCenter}>
-          <PDLIcon className="pdl-logo" /> <Title headingLevel="h4">PDL</Title>
+          <img className="pdl-logo" src={PDLIcon} />{" "}
+          <Title headingLevel="h4">PDL</Title>
         </Flex>
       </MastheadLogo>
     </MastheadBrand>

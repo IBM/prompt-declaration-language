@@ -1,7 +1,7 @@
 import { stringify } from "yaml"
 
 import Group from "../Group"
-import CodeGroup from "../../transcript/CodeGroup"
+import CodeGroup from "../../code/CodeGroup"
 
 export default function FunctionItems({
   block: { def, function: func, return: retrn },

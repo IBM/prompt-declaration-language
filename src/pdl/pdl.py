@@ -178,9 +178,9 @@ def main():
     )
     parser.add_argument(
         "--stream",
-        choices=["result", "background", "none"],
-        default="result",
-        help="stream the result, the background messages, or nothing on the standard output",
+        choices=["context", "none"],
+        default="context",
+        help="stream the background context, or nothing on the standard output",
     )
     parser.add_argument(
         "-t",
@@ -242,16 +242,13 @@ def main():
     initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     if args.data_file is not None:
         with open(args.data_file, "r", encoding="utf-8") as scope_fp:
-            initial_scope = yaml.safe_load(scope_fp)
+            initial_scope = initial_scope | yaml.safe_load(scope_fp)
     if args.data is not None:
         initial_scope = initial_scope | yaml.safe_load(args.data)
     validate_scope(initial_scope)
 
     match args.stream:
-        case "result":
-            stream_result = True
-            stream_background = False
-        case "background":
+        case "context":
             stream_result = False
             stream_background = True
         case "none":

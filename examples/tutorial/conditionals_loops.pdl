@@ -5,7 +5,7 @@ text:
   contribute: [context]
 - repeat:
     text:
-    - model: replicate/ibm-granite/granite-3.0-8b-instruct
+    - model: replicate/ibm-granite/granite-3.1-8b-instruct
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"

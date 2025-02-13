@@ -1,7 +1,7 @@
 description: Model call
 text: 
 - "Hello\n"
-- model: replicate/ibm-granite/granite-3.0-8b-instruct
+- model: replicate/ibm-granite/granite-3.1-8b-instruct
   parameters:
     stop_sequences: "!"
     include_stop_sequence: true

@@ -19,8 +19,12 @@ export type PdlBlockWithTiming = NonScalarPdlBlock & {
   timezone: string
 }
 
+export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
+  context: { role: string; content: string; defsite?: string }[]
+}
+
 /** Does the given block have a `result` field? */
-export function hasResult(block: PdlBlock): block is PdlBlockWithResult {
+export function hasResult(block: unknown): block is PdlBlockWithResult {
   return (
     block != null &&
     typeof block === "object" &&
@@ -45,17 +49,22 @@ export function isPdlBlock(
 export function isNonScalarPdlBlock(
   data: unknown | PdlBlock,
 ): data is NonScalarPdlBlock {
-  return data != null && typeof data === "object"
+  return data != null && typeof data === "object" && "id" in data
 }
 
 /** Does the given block have a `parser` field? */
 export function hasParser(
   data: PdlBlock,
-): data is NonScalarPdlBlock & { parser: import("./pdl_ast").Parser } {
-  return isNonScalarPdlBlock(data) && "result" in data
+): data is NonScalarPdlBlock & { parser: "json" | "jsonl" | "yaml" } {
+  return (
+    isNonScalarPdlBlock(data) &&
+    "parser" in data &&
+    data.parser !== null &&
+    typeof data.parser !== "object"
+  )
 }
 
-const markdownPattern = /[`#]/
+const markdownPattern = /[`#*]/
 /** Should we render `s` with react-markdown? */
 export function isMarkdownish(s: string): boolean {
   /* try {
@@ -72,12 +81,14 @@ export function isMarkdownish(s: string): boolean {
 }
 
 /** Is the given block a generic text block? */
-function isTextBlock(data: PdlBlock): data is TextBlock {
+export function isTextBlock(data: PdlBlock): data is TextBlock {
   return (data as TextBlock).kind === "text"
 }
 
 /** Is the given block a generic text block with non-null content? */
-type TextBlockWithContent = TextBlock & { text: NonNullable<TextBlock["text"]> }
+type TextBlockWithContent = TextBlock & {
+  text: NonNullable<TextBlock["text"]>
+}
 export function isTextBlockWithContent(
   data: PdlBlock,
 ): data is TextBlockWithContent {
@@ -138,8 +149,26 @@ export function hasTimingInformation(
   )
 }
 
+/** Does the given block have context/background information? */
+export function hasContextInformation(
+  block: unknown | PdlBlock,
+): block is PdlBlockWithContext {
+  return (
+    hasTimingInformation(block) &&
+    block.context !== null &&
+    Array.isArray(block.context)
+  )
+}
+
 export function capitalizeAndUnSnakeCase(s: string) {
   return s === "model"
     ? "LLM"
     : s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
+}
+
+type MessageBearing = Omit<import("./pdl_ast").ReadBlock, "message"> & {
+  message: string
+}
+export function hasMessage(block: PdlBlock): block is MessageBearing {
+  return typeof (block as MessageBearing).message === "string"
 }
