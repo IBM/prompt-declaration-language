@@ -29,7 +29,7 @@ function label(id: string) {
     case "model":
       return "LLM"
     default:
-      return l
+      return l[0].toUpperCase() + l.slice(1)
   }
 }
 
@@ -38,10 +38,12 @@ export default function extractVariables(block: PdlBlock): {
   edges: Edge[]
 } {
   const edges = extractVariablesIter(block)
-  const nodes = edges.flatMap(({ source, target }) => [
-    { id: source, label: label(source) },
-    { id: target, label: label(target) },
-  ])
+  const nodes = edges
+    .flatMap(({ source, target }) => [
+      { id: source, label: label(source) },
+      { id: target, label: label(target) },
+    ])
+    .sort((a, b) => -a.id.localeCompare(b.id))
   return { nodes, edges }
 }
 

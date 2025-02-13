@@ -75,7 +75,7 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
 
   const numbering = masonry.reduce(
     (N, node, idx) => {
-      N[node.id] = idx
+      N[node.id] = idx + 1
       return N
     },
     {} as Record<string, number>,

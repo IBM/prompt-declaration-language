@@ -4,6 +4,7 @@ import {
   EdgeAnimationSpeed,
   EdgeModel,
   EdgeStyle,
+  LabelPosition,
   Model,
   NodeModel,
   NodeShape,
@@ -22,9 +23,10 @@ const NODE_DIAMETER = 10
 type Props = {
   nodes: import("./model").Node[]
   edges: import("./model").Edge[]
+  numbering: Record<string, number>
 }
 
-export default function Topology({ nodes, edges }: Props) {
+export default function Topology({ nodes, edges, numbering }: Props) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const controller = useMemo(() => {
@@ -44,13 +46,17 @@ export default function Topology({ nodes, edges }: Props) {
       width: NODE_DIAMETER,
       height: NODE_DIAMETER,
       shape: NODE_SHAPE,
+      labelPosition: LabelPosition.top,
+      data: {
+        ordinal: numbering[id],
+      },
     }))
     const myEdges: EdgeModel[] = edges.map(({ source, target }) => ({
       id: `${source}-${target}`,
       type: "edge",
       source,
       target,
-      edgeStyle: EdgeStyle.dashedMd,
+      edgeStyle: EdgeStyle.dashedXl,
       animationSpeed: EdgeAnimationSpeed.medium,
     }))
     const model: Model = {
@@ -67,8 +73,10 @@ export default function Topology({ nodes, edges }: Props) {
   }, [nodes, edges, controller])
 
   return (
-    <VisualizationProvider controller={controller}>
-      <VisualizationSurface state={{ selectedIds }} />
-    </VisualizationProvider>
+    <div className="pdl-memory-topology">
+      <VisualizationProvider controller={controller}>
+        <VisualizationSurface state={{ selectedIds }} />
+      </VisualizationProvider>
+    </div>
   )
 }

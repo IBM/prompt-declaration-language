@@ -1,5 +1,5 @@
 import {
-  ForceLayout as ColaLayout,
+  ColaLayout,
   Graph,
   Layout,
   LayoutFactory,
@@ -9,11 +9,12 @@ const layoutFactory: LayoutFactory = (
   type: string,
   graph: Graph,
 ): Layout | undefined => {
+  const nodeDistance = 28
   switch (type) {
     case "Cola":
-      return new ColaLayout(graph)
+      return new ColaLayout(graph, { nodeDistance })
     default:
-      return new ColaLayout(graph, { layoutOnDrag: false })
+      return new ColaLayout(graph, { nodeDistance, layoutOnDrag: false })
   }
 }
 
