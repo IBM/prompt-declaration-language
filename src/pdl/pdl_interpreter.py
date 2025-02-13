@@ -1127,26 +1127,23 @@ def process_expr(  # pylint: disable=too-many-return-statements
         return process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
         try:
-            if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
-                # `expr` might be a single expression and should not be stringify
-                env = Environment(  # nosec B701
-                    # [B701:jinja2_autoescape_false] By default, jinja2 sets autoescape to False. Consider using autoescape=True or use the select_autoescape function to mitigate XSS vulnerabilities.
-                    # This is safe because autoescape is not needed since we do not generate HTML
-                    block_start_string="{%%%%%PDL%%%%%%%%%%",
-                    block_end_string="%%%%%PDL%%%%%%%%%%}",
-                    variable_start_string=EXPR_START_STRING,
-                    variable_end_string=EXPR_END_STRING,
-                    undefined=StrictUndefined,
-                )
-                expr_ast = env.parse(expr)
-                if len(expr_ast.body) == 1:
-                    expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
-                else:
-                    expr_ast_nodes = []
-                if len(expr_ast_nodes) == 1:
-                    if isinstance(expr_ast_nodes[0], TemplateData):
-                        # `expr` is a string that do not include jinja expression
-                        return expr
+            env = Environment(  # nosec B701
+                # [B701:jinja2_autoescape_false] By default, jinja2 sets autoescape to False. Consider using autoescape=True or use the select_autoescape function to mitigate XSS vulnerabilities.
+                # This is safe because autoescape is not needed since we do not generate HTML
+                block_start_string="{%%%%%PDL%%%%%%%%%%",
+                block_end_string="%%%%%PDL%%%%%%%%%%}",
+                variable_start_string=EXPR_START_STRING,
+                variable_end_string=EXPR_END_STRING,
+                undefined=StrictUndefined,
+            )
+            expr_ast = env.parse(expr)
+            if len(expr_ast.body) == 1:
+                expr_ast_nodes = getattr(expr_ast.body[0], "nodes", [])
+            else:
+                expr_ast_nodes = []
+            if len(expr_ast_nodes) == 1:
+                # `expr` is either a single jinja expression or a string without expression
+                if expr.startswith(EXPR_START_STRING) and expr.endswith(EXPR_END_STRING):
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
                     result = env.compile_expression(
                         expr[2:-1], undefined_to_none=False
@@ -1154,6 +1151,9 @@ def process_expr(  # pylint: disable=too-many-return-statements
                     if isinstance(result, Undefined):
                         raise UndefinedError(str(result))
                     return result
+                if isinstance(expr_ast_nodes[0], TemplateData):
+                    # `expr` is a string that do not include jinja expression
+                    return expr
             # `expr` is not a single jinja expression
             template = Template(
                 expr,
