@@ -22,7 +22,6 @@
   "dependencies": {
     "@patternfly/react-code-editor": "^6.1.0",
     "@patternfly/react-core": "^6.1.0",
-    "@patternfly/react-table": "^6.1.0",
     "@patternfly/react-topology": "^6.1.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-cli": "^2.2.0",

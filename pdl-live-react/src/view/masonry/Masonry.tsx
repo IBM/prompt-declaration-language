@@ -20,10 +20,12 @@ export default function Masonry({ as, sml, model, children }: Props) {
   return (
     <ResponsiveMasonry columnsCountBreakPoints={breakpoints}>
       <MasonryView className="pdl-masonry-view">
-        {children && (
-          <div className="pdl-masonry-tile" data-padding={sml}>
-            {children}
-          </div>
+        {(!children ? [] : Array.isArray(children) ? children : [children]).map(
+          (child, idx) => (
+            <div key={idx} className="pdl-masonry-tile" data-padding={sml}>
+              {child}
+            </div>
+          ),
         )}
         {model.map((props, idx) => (
           <MasonryTile
