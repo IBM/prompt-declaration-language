@@ -10,7 +10,7 @@ import Toolbar, { type As, type SML } from "./Toolbar"
 import "./Masonry.css"
 
 type Props = {
-  block: import("../../pdl_ast").PdlBlock
+  value: string
 }
 
 const asLocalStorageKey = "pdl-viewer.masonry.as"
@@ -29,7 +29,14 @@ function setSMLUserSetting(sml: SML) {
   localStorage.setItem(smlLocalStorageKey, sml)
 }
 
-export default function MasonryTimelineCombo({ block }: Props) {
+/** Combines <Masonry/>, <Timeline/>, ... */
+export default function MasonryCombo({ value }: Props) {
+  const block = useMemo(
+    () =>
+      value ? (JSON.parse(value) as import("../../pdl_ast").PdlBlock) : null,
+    [value],
+  )
+
   const [as, setAs] = useState<As>(getAsUserSetting())
   const [sml, setSML] = useState<SML>(getSMLUserSetting())
 
@@ -40,6 +47,10 @@ export default function MasonryTimelineCombo({ block }: Props) {
     () => computeModel(block),
     [block],
   )
+
+  if (!block) {
+    return "Invalid trace content"
+  }
 
   return (
     <>
