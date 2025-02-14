@@ -28,10 +28,13 @@
 .pf-v6-theme-dark {
   .pdl-masonry-tile {
     &[data-kind="model"] {
-      background: var(--pf-t--global--color--status--custom--default);
+      background: #63bdbd;
+    }
+    &[data-kind="read"] {
+      background: #f5921b;
     }
     &[data-kind="code"] {
-      background: var(--pf-t--global--color--status--success--default);
+      background: #876fd4;
     }
   }
 }
@@ -39,13 +42,13 @@
 .pdl-masonry-tile {
   background: var(--pf-t--global--background--color--secondary--default);
   &[data-kind="model"] {
-    background: var(--pf-t--global--color--nonstatus--teal--default);
+    background: #daf2f2;
   }
   &[data-kind="read"] {
-    background: var(--pf-t--global--color--nonstatus--orange--default);
+    background: #ffe8cc;
   }
   &[data-kind="code"] {
-    background: var(--pf-t--global--color--nonstatus--purple--default);
+    background: #ece6ff;
   }
 }
 
