@@ -65,8 +65,8 @@ export default function MasonryCombo({ value }: Props) {
         aria-label="PDL Viewer main section"
       >
         <Masonry model={masonry} as={as} sml={sml}>
-          <Timeline model={base} numbering={numbering} />
-          <Memory block={block} numbering={numbering} />
+          {sml !== "s" && <Timeline model={base} numbering={numbering} />}
+          {sml === "l" && <Memory block={block} numbering={numbering} />}
         </Masonry>
       </PageSection>
 
