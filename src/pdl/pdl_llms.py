@@ -4,11 +4,19 @@ import threading
 from concurrent.futures import Future
 from typing import Any, Callable, Generator, TypeVar
 
+import httpx
 import litellm
 from dotenv import load_dotenv
 from litellm import acompletion, completion
 
-from .pdl_ast import LazyMessage, ModelInput, set_structured_decoding_parameters
+from .pdl_ast import (
+    ErrorBlock,
+    LazyMessage,
+    LitellmModelBlock,
+    ModelInput,
+    PDLRuntimeError,
+    set_structured_decoding_parameters,
+)
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_utils import remove_none_values_from_message
 
@@ -40,38 +48,55 @@ _LOOP_THREAD.start()
 class LitellmModel:
     @staticmethod
     async def async_generate_text(
-        model_id: str,
+        block: LitellmModelBlock,
         messages: ModelInput,
-        spec: Any,
         parameters: dict[str, Any],
     ) -> tuple[dict[str, Any], Any]:
-        parameters = set_structured_decoding_parameters(spec, parameters)
-        if parameters.get("mock_response") is not None:
-            litellm.suppress_debug_info = True
-        response = await acompletion(
-            model=model_id, messages=list(messages), stream=False, **parameters
-        )
-        msg = response.choices[0].message  # pyright: ignore
-        if msg.role is None:
-            msg.role = "assistant"
-        return (
-            remove_none_values_from_message(msg.json()),
-            response.json(),  # pyright: ignore
-        )
+        try:
+            assert isinstance(block.model, str)
+            model_id = block.model
+            spec = block.spec
+            parameters = set_structured_decoding_parameters(spec, parameters)
+            if parameters.get("mock_response") is not None:
+                litellm.suppress_debug_info = True
+            response = await acompletion(
+                model=model_id, messages=list(messages), stream=False, **parameters
+            )
+            msg = response.choices[0].message  # pyright: ignore
+            if msg.role is None:
+                msg.role = "assistant"
+            return (
+                remove_none_values_from_message(msg.json()),
+                response.json(),  # pyright: ignore
+            )
+        except httpx.RequestError as exc:
+            message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+            loc = block.location
+            raise PDLRuntimeError(
+                message,
+                loc=loc,
+                trace=ErrorBlock(msg=message, location=loc, program=block),
+            ) from exc
+        except Exception as exc:
+            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            loc = block.location
+            raise PDLRuntimeError(
+                message,
+                loc=loc,
+                trace=ErrorBlock(msg=message, location=loc, program=block),
+            ) from exc
 
     @staticmethod
     def generate_text(
-        model_id: str,
+        block: LitellmModelBlock,
         messages: ModelInput,
-        spec: Any,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
         # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
-                model_id,
+                block,
                 messages,
-                spec,
                 parameters,
             ),
             _LOOP,

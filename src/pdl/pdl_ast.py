@@ -624,6 +624,44 @@ class PDLException(Exception):
         self.message = message
 
 
+class PDLRuntimeError(PDLException):
+    def __init__(
+        self,
+        message: str,
+        loc: Optional[LocationType] = None,
+        trace: Optional[BlockType] = None,
+        fallback: Optional[Any] = None,
+    ):
+        super().__init__(message)
+        self.loc = loc
+        self.trace = trace
+        self.fallback = fallback
+        self.message = message
+
+
+class PDLRuntimeExpressionError(PDLRuntimeError):
+    pass
+
+
+class PDLRuntimeParserError(PDLRuntimeError):
+    pass
+
+
+class PDLRuntimeProcessBlocksError(PDLException):
+    def __init__(
+        self,
+        message: str,
+        blocks: list[BlockType],
+        loc: Optional[LocationType] = None,
+        fallback: Optional[Any] = None,
+    ):
+        super().__init__(message)
+        self.loc = loc
+        self.blocks = blocks
+        self.fallback = fallback
+        self.message = message
+
+
 MAX_NEW_TOKENS = 1024
 MIN_NEW_TOKENS = 1
 REPETITION_PENALTY = 1.05

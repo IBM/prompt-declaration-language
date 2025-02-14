@@ -82,9 +82,9 @@ def program_to_dict(
     return block_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(
+def block_to_dict(  # noqa: C901
     block: pdl_ast.BlockType, json_compatible: bool
-) -> DumpedBlockType:  # noqa: C901
+) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}

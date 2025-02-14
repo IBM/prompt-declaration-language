@@ -69,8 +69,11 @@ from .pdl_ast import (  # noqa: E402
     ParserType,
     Pattern,
     PatternType,
-    PDLException,
     PdlParser,
+    PDLRuntimeError,
+    PDLRuntimeExpressionError,
+    PDLRuntimeParserError,
+    PDLRuntimeProcessBlocksError,
     Program,
     ReadBlock,
     RegexParser,
@@ -98,44 +101,6 @@ from .pdl_utils import (  # noqa: E402
 )
 
 logger = logging.getLogger(__name__)
-
-
-class PDLRuntimeError(PDLException):
-    def __init__(
-        self,
-        message: str,
-        loc: Optional[LocationType] = None,
-        trace: Optional[BlockType] = None,
-        fallback: Optional[Any] = None,
-    ):
-        super().__init__(message)
-        self.loc = loc
-        self.trace = trace
-        self.fallback = fallback
-        self.message = message
-
-
-class PDLRuntimeExpressionError(PDLRuntimeError):
-    pass
-
-
-class PDLRuntimeParserError(PDLRuntimeError):
-    pass
-
-
-class PDLRuntimeProcessBlocksError(PDLException):
-    def __init__(
-        self,
-        message: str,
-        blocks: list[BlockType],
-        loc: Optional[LocationType] = None,
-        fallback: Optional[Any] = None,
-    ):
-        super().__init__(message)
-        self.loc = loc
-        self.blocks = blocks
-        self.fallback = fallback
-        self.message = message
 
 
 empty_scope: ScopeType = PdlDict({"pdl_context": PdlList([])})
@@ -1484,9 +1449,8 @@ def generate_client_response_single(
     match block:
         case LitellmModelBlock():
             message, response = LitellmModel.generate_text(
-                model_id=block.model,
+                block=block,
                 messages=model_input,
-                spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
         case _:
