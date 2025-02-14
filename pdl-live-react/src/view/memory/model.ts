@@ -1,82 +1,67 @@
 import { PdlBlock } from "../../pdl_ast"
-
-import {
-  hasContextInformation,
-  hasResult,
-  isNonScalarPdlBlock,
-  NonScalarPdlBlock as Block,
-} from "../../helpers"
+import { hasContextInformation, isNonScalarPdlBlock } from "../../helpers"
 
 import { childrenOf } from "../timeline/model"
 
-type Node = {
-  incrNanos: number
-  block: Block
-  name: string
-  value: PdlBlock
-  defsiteId?: string
-  defsite?: Block
+export type Node = {
+  id: string
+  label: string
 }
 
-export default function extractVariables(block: PdlBlock): Node[] {
-  const nodes = extractVariablesIter(block)
-
-  nodes.forEach((node) => {
-    if (typeof node.defsiteId === "string") {
-      const defNode = nodes.find((n) => n.block.id === node.defsiteId)
-      if (defNode) {
-        node.defsite = defNode.block
-      }
-    }
-  })
-
-  return (
-    nodes
-      //.filter((node) => node.defs.length > 0 || node.uses.length > 0)
-      .map((node, idx, A) =>
-        idx === 0
-          ? node
-          : Object.assign(node, {
-              incrNanos:
-                (node.block.start_nanos || 0) -
-                (A[idx - 1].block.start_nanos || 0),
-            }),
-      )
-  )
+export type Edge = {
+  label: string
+  source: string
+  target: string
 }
 
-function extractVariablesIter(block: PdlBlock): Node[] {
+function label0(id: string) {
+  const m1 = id.match(/\.?([^.]+)(\.\d+)$/)
+  if (m1) {
+    return m1[1] + m1[2]
+  } else {
+    return id.replace(/.+\.([^.]+)$/, "$1")
+  }
+}
+
+function label(id: string) {
+  const l = label0(id)
+  switch (l) {
+    case "model":
+      return "LLM"
+    default:
+      return l[0].toUpperCase() + l.slice(1)
+  }
+}
+
+export default function extractVariables(block: PdlBlock): {
+  nodes: Node[]
+  edges: Edge[]
+} {
+  const edges = extractVariablesIter(block)
+  const nodes = edges
+    .flatMap(({ source, target }) => [
+      { id: source, label: label(source) },
+      { id: target, label: label(target) },
+    ])
+    .sort((a, b) => -a.id.localeCompare(b.id))
+  return { nodes, edges }
+}
+
+function extractVariablesIter(block: PdlBlock): Edge[] {
   if (!isNonScalarPdlBlock(block)) {
     return []
   }
 
-  const myDefs: Node[] = Object.entries(block.defs || [])?.map(
-    ([name, value]) => ({
-      incrNanos: 0,
-      block,
-      name,
-      value,
-    }),
-  )
-  const myDef: Node[] =
-    !hasResult(block) || !block.def
-      ? []
-      : [{ incrNanos: 0, block, name: block.def, value: block.result }]
-
-  const uses: Node[] = !hasContextInformation(block)
+  const mine: Edge[] = !hasContextInformation(block)
     ? []
-    : block.context.map(({ role, content, defsite }) => ({
-        incrNanos: 0,
-        block,
-        name: String(role),
-        value: String(content),
-        defsiteId: String(defsite),
-      }))
+    : block.context
+        .filter(({ defsite }) => !!defsite)
+        .map(({ role, defsite }) => ({
+          label: String(role),
+          source: String(defsite),
+          target: block.id ?? "",
+        }))
+        .filter((edge) => !!edge.source && !!edge.target)
 
-  return [
-    ...myDefs,
-    ...uses,
-    ...myDef,
-    ...childrenOf(block).flatMap(extractVariablesIter),
-  ]
+  return mine.concat(childrenOf(block).flatMap(extractVariablesIter))
 }

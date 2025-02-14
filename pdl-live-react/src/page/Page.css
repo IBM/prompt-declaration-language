@@ -1,15 +1,22 @@
-.pdl-page .pdl-content-section {
-  /* These help to fit monaco-editor to the height of the tab content section */
-  & > .pf-v6-c-page__main-body {
-    display: flex;
-    flex-direction: column;
-
-    & > .pdl-viewer-section {
-      flex-direction: column;
-      flex: 1;
-      &:not([hidden]) {
-        display: flex;
-      }
-    }
+.pdl-wrap {
+  &,
+  & p {
+    white-space: pre-wrap;
   }
+}
+
+.pdl-mono {
+  font-family: var(--pf-t--global--font--family--mono);
+}
+
+.pf-v6-c-page__main-body {
+  flex: 1;
+
+  & > section[data-fill-height] {
+    height: 100%;
+  }
+}
+.pdl-viewer-tab:not([hidden]) {
+  height: 100%;
+  overflow: auto;
 }

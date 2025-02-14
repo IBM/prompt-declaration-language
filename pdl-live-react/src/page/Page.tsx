@@ -3,9 +3,9 @@ import { useEffect, useState } from "react"
 
 import { Page, PageSection } from "@patternfly/react-core"
 
-import Viewer from "./Viewer"
 import Sidebar from "./Sidebar"
 import Masthead from "./Masthead"
+import MasonryCombo from "../view/masonry/MasonryCombo"
 import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
@@ -16,7 +16,6 @@ import DarkModeContext, {
 
 import "./Page.css"
 
-const notFilled = { isFilled: false }
 const withPadding = { default: "padding" as const }
 const withoutPadding = { default: "noPadding" as const }
 
@@ -41,6 +40,7 @@ export default function PDLPage(props: Props) {
   const showingDetail = searchParams.has("detail") && !!value
 
   if (value) {
+    // Fail fast if `value` is bogus
     JSON.parse(value)
   }
 
@@ -59,8 +59,6 @@ export default function PDLPage(props: Props) {
           <Masthead setDarkMode={setDarkMode} />
         </DarkModeContext.Provider>
       }
-      groupProps={notFilled /* so breadcrumbs aren't filled */}
-      isBreadcrumbGrouped
       breadcrumb={
         <PageBreadcrumbs
           breadcrumb1={props.breadcrumb1}
@@ -69,7 +67,7 @@ export default function PDLPage(props: Props) {
       }
     >
       {!children ? (
-        value && value.length > 0 && <Viewer value={value} />
+        value && value.length > 0 && <MasonryCombo value={value} />
       ) : (
         <PageSection
           isFilled

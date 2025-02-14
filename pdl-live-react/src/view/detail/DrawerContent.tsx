@@ -11,7 +11,6 @@ import {
   type TabsProps,
 } from "@patternfly/react-core"
 
-import BlockNotFound from "./BlockNotFound"
 import drawerContentBody from "./DrawerContentBody"
 import BreadcrumbBarForBlock from "../breadcrumbs/BreadcrumbBarForBlock"
 
@@ -29,6 +28,9 @@ type Props = {
 
 function header(objectType: string) {
   switch (objectType) {
+    case "source":
+    case "rawtrace":
+      return "Code"
     case "def":
       return "Variable Definition"
     default:
@@ -81,21 +83,19 @@ export default function DrawerContent({ value }: Props) {
     [onCloseDrawer],
   )
 
-  if (!id || !objectType) {
+  if (!objectType) {
     // Should never happen. TODO error handling?
     return <></>
   } else if (!value) {
     // Nothing to show
     return <></>
-  } else if (!block) {
-    return <BlockNotFound id={id} value={value} />
   }
 
   return (
     <Card isPlain isLarge isFullHeight className="pdl-drawer-content">
       <CardHeader actions={actions}>
         <CardTitle>{header(objectType)}</CardTitle>
-        {description(block)}
+        {block && description(block)}
       </CardHeader>
       <CardBody>
         <Tabs
@@ -105,7 +105,7 @@ export default function DrawerContent({ value }: Props) {
           mountOnEnter
           unmountOnExit
         >
-          {drawerContentBody({ def, objectType, model: block })}
+          {drawerContentBody({ id, value, def, objectType, model: block })}
         </Tabs>
       </CardBody>
     </Card>

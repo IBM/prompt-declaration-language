@@ -37,6 +37,11 @@ export default function BreadcrumbBarForBlockId({
 
   const crumbs = id.replace(/text\.\d+\./g, "").split(/\./)
 
+  if (def) {
+    // We'll add one crumb for the def
+    maxCrumbs--
+  }
+
   return (
     <BreadcrumbBar>
       <>
