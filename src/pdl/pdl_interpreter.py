@@ -1516,7 +1516,7 @@ def process_call_code(
                         PdlDict(  # type: ignore
                             {
                                 "role": state.role,
-                                "content": lazy_apply(lambda r: r.result(), result),
+                                "content": result,
                                 "defsite": block.id,
                             }
                         )
