@@ -223,8 +223,8 @@ def write_trace(
     try:
         with open(trace_file, "w", encoding="utf-8") as fp:
             json.dump(block_to_dict(trace, json_compatible=True), fp)
-    except Exception:
-        print("Fail to generate the trace", file=sys.stderr)
+    except Exception as e:
+        print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
 
 
 def process_prog(
