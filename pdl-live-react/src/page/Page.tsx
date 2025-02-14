@@ -24,25 +24,22 @@ type Props = import("react").PropsWithChildren<
     /** Should the page content use default padding? [default: true] */
     padding?: boolean
 
-    /** The trace content */
-    value?: string
+    /** The initial trace content */
+    initialValue?: string
   }
 >
 
 export default function PDLPage(props: Props) {
+  const { padding = true, initialValue, children } = props
+
   const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
-  const { padding = true, value, children } = props
+  const [value, setValue] = useState(initialValue)
 
   /** Manage the drawer that slides in from the right */
   const [searchParams] = useSearchParams()
   const showingDetail = searchParams.has("detail") && !!value
-
-  if (value) {
-    // Fail fast if `value` is bogus
-    JSON.parse(value)
-  }
 
   return (
     <Page
@@ -67,7 +64,8 @@ export default function PDLPage(props: Props) {
       }
     >
       {!children ? (
-        value && value.length > 0 && <MasonryCombo value={value} />
+        value &&
+        value.length > 0 && <MasonryCombo value={value} setValue={setValue} />
       ) : (
         <PageSection
           isFilled

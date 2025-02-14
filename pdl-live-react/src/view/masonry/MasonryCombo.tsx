@@ -12,6 +12,7 @@ import "./Masonry.css"
 
 type Props = {
   value: string
+  setValue(value: string): void
 }
 
 const asLocalStorageKey = "pdl-viewer.masonry.as"
@@ -31,7 +32,7 @@ function setSMLUserSetting(sml: SML) {
 }
 
 /** Combines <Masonry/>, <Timeline/>, ... */
-export default function MasonryCombo({ value }: Props) {
+export default function MasonryCombo({ value, setValue }: Props) {
   const block = useMemo(
     () =>
       value ? (JSON.parse(value) as import("../../pdl_ast").PdlBlock) : null,
@@ -56,7 +57,14 @@ export default function MasonryCombo({ value }: Props) {
   return (
     <>
       <PageSection type="subnav">
-        <Toolbar as={as} setAs={setAs} sml={sml} setSML={setSML} />
+        <Toolbar
+          as={as}
+          setAs={setAs}
+          sml={sml}
+          setSML={setSML}
+          block={block}
+          setValue={setValue}
+        />
       </PageSection>
       <PageSection
         isFilled

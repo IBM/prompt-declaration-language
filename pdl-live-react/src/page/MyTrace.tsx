@@ -6,5 +6,7 @@ type Props = {
 }
 
 export default function MyTrace({ name, value }: Props) {
-  return <Page breadcrumb1="My Traces" breadcrumb2={name} value={value} />
+  return (
+    <Page breadcrumb1="My Traces" breadcrumb2={name} initialValue={value} />
+  )
 }
