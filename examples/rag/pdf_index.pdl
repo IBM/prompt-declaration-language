@@ -1,4 +1,4 @@
-# This is an attempt to create AgraBOT in PDL
+# Load PDF document into vector database
 
 description: Load document into vector database
 text:

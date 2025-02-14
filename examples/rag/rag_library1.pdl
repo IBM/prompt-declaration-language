@@ -1,4 +1,4 @@
-# This glue could be dynamically auto-generated from Python...
+# This module can be included from a PDL program to bring in Python functions.
 
 description: RAG library for PDL
 text:

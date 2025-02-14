@@ -59,9 +59,6 @@ def rag_index(input: list[str],
 
     return True
 
-# def create_db_client(database_name: str):
-#     return MilvusClient(database_name)  # Use URL if talking to remote Milvus (non-Lite)
-
 # Global cache of database clients.
 # (We do this so the PDL programmer doesn't need to explicitly maintain the client connection)
 DATABASE_CLIENTS = {}
