@@ -6,5 +6,5 @@ type Props = {
 }
 
 export default function Demo({ name, value }: Props) {
-  return <Page breadcrumb1="Demos" breadcrumb2={name} value={value} />
+  return <Page breadcrumb1="Demos" breadcrumb2={name} initialValue={value} />
 }

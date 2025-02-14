@@ -28,7 +28,11 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                                 .path()
                                 .resolve("interpreter/", BaseDirectory::Resource)?;
 
-                            run::run_pdl_program(source_file_path.clone(), interpreter_path)?;
+                            run::run_pdl_program(
+                                source_file_path.clone(),
+                                interpreter_path,
+                                false,
+                            )?;
                             exit(0)
                         }
                     }

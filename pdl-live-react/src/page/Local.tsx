@@ -36,7 +36,7 @@ export default function Local() {
     <Page
       breadcrumb1="Local"
       breadcrumb2={traceFile?.replace(/\.json$/, "")}
-      value={value}
+      initialValue={value}
     />
   )
 }

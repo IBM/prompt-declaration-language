@@ -19,7 +19,10 @@ pub fn run() {
         })
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![commands::read_trace::read_trace])
+        .invoke_handler(tauri::generate_handler![
+            commands::read_trace::read_trace,
+            commands::replay::replay
+        ])
         .run(tauri::generate_context!())
         .expect("error while running PDL");
 }
