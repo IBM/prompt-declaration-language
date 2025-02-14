@@ -26,6 +26,7 @@ from jinja2 import (  # noqa: E402
     Template,
     TemplateSyntaxError,
     UndefinedError,
+    meta,
 )
 from jinja2.nodes import TemplateData  # noqa: E402
 from jinja2.runtime import Undefined  # noqa: E402
@@ -1239,9 +1240,10 @@ def process_expr(  # pylint: disable=too-many-return-statements
                     EXPR_END_STRING
                 ):
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
+                    free_vars = meta.find_undeclared_variables(expr_ast)
                     result = env.compile_expression(
                         expr[2:-1], undefined_to_none=False
-                    )(scope)
+                    )({x: scope[x] for x in free_vars if x in scope})
                     if isinstance(result, Undefined):
                         raise UndefinedError(str(result))
                     return result
@@ -1261,7 +1263,8 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 autoescape=False,
                 undefined=StrictUndefined,
             )
-            result = template.render(scope)
+            free_vars = meta.find_undeclared_variables(expr_ast)
+            result = template.render({x: scope[x] for x in free_vars if x in scope})
             return result
         except PDLRuntimeError as exc:
             raise exc from exc
