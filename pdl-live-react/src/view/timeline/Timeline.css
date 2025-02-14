@@ -84,7 +84,7 @@
     background-color: var(--pf-t--global--icon--color--disabled);
   }
   &[data-kind="code"] {
-    background-color: var(--pf-t--global--color--nonstatus--blue--default);
+    background-color: var(--pf-t--global--color--nonstatus--purple--default);
   }
   &[data-kind="read"] {
     background-color: var(--pf-t--global--color--nonstatus--orange--default);

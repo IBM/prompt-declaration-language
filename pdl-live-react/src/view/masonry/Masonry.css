@@ -45,7 +45,7 @@
     background: var(--pf-t--global--color--nonstatus--orange--default);
   }
   &[data-kind="code"] {
-    background: var(--pf-t--global--color--nonstatus--blue--default);
+    background: var(--pf-t--global--color--nonstatus--purple--default);
   }
 }
 
