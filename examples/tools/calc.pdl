@@ -2,23 +2,17 @@ description: tool use
 defs:
   tools:
     data:
-    - type: function
-      function: 
-        name: calc
-        description: Calculator function
-        parameters:
-          type: object
-          properties:
-            expr: 
-              type: string
-              description: Arithmetic expression to calculate
-          required:
-          - expr
+    - name: calc
+      description: Calculator function
+      arguments:
+        expr: 
+          type: string
+          description: Arithmetic expression to calculate
 text:
 - role: system
-  text: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
   contribute: [context]
-- role: available_tools
+- role: tools
   text: ${ tools }
   contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"

@@ -174,8 +174,8 @@ def main():
     )
     parser.add_argument(
         "--stream",
-        choices=["context", "none"],
-        default="context",
+        choices=["result", "context", "none"],
+        default="result",
         help="stream the background context, or nothing on the standard output",
     )
     parser.add_argument(
@@ -244,6 +244,9 @@ def main():
     validate_scope(initial_scope)
 
     match args.stream:
+        case "result":
+            stream_result = True
+            stream_background = False
         case "context":
             stream_result = False
             stream_background = True
@@ -253,7 +256,7 @@ def main():
         case _:
             assert False
 
-    if stream_result:
+    if stream_result or stream_background:
         batch = 0
     else:
         batch = 1
