@@ -5,70 +5,78 @@ defs:
     function:
       trajectory: { list: obj }
     return:
-      - for:
-          trajectory: ${ trajectory }
-        repeat:
-          - defs:
-              type: ${ trajectory.keys()|first }
-          - if: ${ type == 'question'}
-            then: |
-              Question: ${ trajectory[type]|trim }
-          - if: ${ type == 'task'}
-            then: |
-              Task: ${ trajectory[type]|trim }
-          - if: ${ type == 'thought'}
-            then: |
-              Tho: ${ trajectory[type]|trim }
-          - if: ${ type == 'action'}
-            then: |
-              Act: ${ trajectory[type]|trim }
-          - if: ${ type == 'observation'}
-            then: |
-              Obs: ${ trajectory[type]|trim }
-          - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
-            then: "${ type }: ${ trajectory[type]|trim }"
-      - "\n"
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          # join:
+          #   with: "\n"
+          repeat:
+            text:
+              - def: type
+                text: ${ trajectory.keys()|first }
+                contribute: []
+              - if: ${ type == 'question'}
+                then: |
+                  Question: ${ trajectory[type]|trim }
+              - if: ${ type == 'task'}
+                then: |
+                  Task: ${ trajectory[type]|trim }
+              - if: ${ type == 'thought'}
+                then: |
+                  Tho: ${ trajectory[type]|trim }
+              - if: ${ type == 'action'}
+                then: |
+                  Act: ${ trajectory[type]|trim }
+              - if: ${ type == 'observation'}
+                then: |
+                  Obs: ${ trajectory[type]|trim }
+              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
 
   react_code_block:
     function:
       trajectory: { list: obj }
     return:
-      - for:
-          trajectory: ${ trajectory }
-        repeat:
-          - defs:
-              type: ${ trajectory.keys()|first }
-          - if: ${ type == 'task'}
-            then: |
-              Task:
-              ${ trajectory[type]|trim }
-          - if: ${ type == 'thought'}
-            then:
-              text:
-                - "\n"
-                - |
-                  Assistant:
-                  <thought> ${ trajectory[type]|trim } </thought>
-          - if: ${ type == 'action'}
-            then: |
-              <execute>
-              ${ trajectory[type]|trim }
-              </execute>
-          - if: ${ type == 'observation'}
-            then:
-              text:
-                - "\n"
-                - |
-                  Observation:
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
+              - def: type
+                text: ${ trajectory.keys()|first }
+                contribute: []
+              - if: ${ type == 'task'}
+                then: |
+                  Task:
                   ${ trajectory[type]|trim }
-          - if: ${ type == 'solution'}
-            then: |-
-              <solution>
-              ${ trajectory[type]|trim }
-              </solution>
-          - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation', 'solution'] }
-            then: "${ type }: ${ trajectory[type]|trim }"
-      - "\n"
+              - if: ${ type == 'thought'}
+                then:
+                  text:
+                    - "\n"
+                    - |
+                      Assistant:
+                      <thought> ${ trajectory[type]|trim } </thought>
+              - if: ${ type == 'action'}
+                then: |
+                  <execute>
+                  ${ trajectory[type]|trim }
+                  </execute>
+              - if: ${ type == 'observation'}
+                then:
+                  text:
+                    - "\n"
+                    - |
+                      Observation:
+                      ${ trajectory[type]|trim }
+              - if: ${ type == 'solution'}
+                then: |-
+                  <solution>
+                  ${ trajectory[type]|trim }
+                  </solution>
+              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation', 'solution'] }
+                then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
 
   finish_action:
     data:
@@ -91,9 +99,102 @@ defs:
         for:
           example: ${ tool.examples }
         repeat:
-          call: react_block
+          call: ${ react_block }
           args:
             trajectory: ${ example }
+
+  granite_prompt_messages:
+    text:
+      - role: system
+        contribute: [context]
+        # content: "Knowledge Cutoff Date: April 2024.\nToday's Date: "
+        text:
+          - "Knowledge Cutoff Date: April 2024.\nToday's Date: "
+          - lang: python
+            code: |
+              from datetime import datetime
+              result = datetime.today().strftime('%B %d, %Y.\n')
+          - "You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request."
+      - role: tools
+        contribute: [context]
+        text: "TOOLS"
+        #  ${ tools }
+
+  # granite_prompt: |
+  #   <|start_of_role|>system<|end_of_role|>Knowledge Cutoff Date: April 2024.
+  #   Today's Date: February 09, 2025.
+  #   You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.<|end_of_text|>
+  #   <|start_of_role|>tools<|end_of_role|>[
+  #       {
+  #           "type": "function",
+  #           "function": {
+  #               "name": "hello",
+  #               "description": "Hellos a planet",
+  #               "parameters": {
+  #                   "type": "object",
+  #                   "properties": {
+  #                       "planet": {
+  #                           "type": "string",
+  #                           "description": "The planet"
+  #                       }
+  #                   },
+  #                   "required": [
+  #                       "planet"
+  #                   ]
+  #               },
+  #               "return": {
+  #                   "type": "string"
+  #               }
+  #           }
+  #       }
+  #   ]<|end_of_text|>
+  #   <|start_of_role|>user<|end_of_role|>test<|end_of_text|>
+
+  granite_function_llama_cross: # the default
+    text:
+      - role: system
+        contribute: [context]
+        text: |
+          You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+
+          Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+  #   ${ tools }
+
+  llama_tool_messages:
+    text:
+      - role: system
+        contribute: [context]
+        text:
+          - "Cutting Knowledge Date: December 2023\nToday Date: "
+          - lang: python
+            code: |
+              from datetime import datetime
+              result = datetime.today().strftime('%d %B %Y\n\n')
+      - role: system
+        text: You are a helpful assistant with tool calling capabilities. When you receive a tool call response, use the output to format an answer to the orginal use question.
+        contribute: [context]
+      - role: user
+        text: |
+          Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+          Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+        contribute: [context]
+    # ${ tools }
+
+  # llama_tool: |
+  #   <|begin_of_text|><|start_header_id|>system<|end_header_id|>
+
+  #   Cutting Knowledge Date: December 2023
+  #   Today Date: 23 July 2024
+
+  #   When you receive a tool call response, use the output to format an answer to the orginal user question.
+
+  #   You are a helpful assistant with tool calling capabilities.<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+  #   Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+  #   Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}. Do not use variables.
 
   react:
     function:
@@ -102,439 +203,89 @@ defs:
       tools: { list: obj }
       trajectories: { list: list }
     return:
-      # text:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: ${ tools.append(finish_action) or tools }
-      - "Available tools:\n"
-      - for:
-          name: ${ TOOL_INFO.display_names }
-          sig: ${ TOOL_INFO.signatures }
-          desc: ${ TOOL_INFO.descriptions }
-        repeat: "${ name }: ${ desc }\n"
-        # join:
-        # with: "\n"
-      # - "\n"
-      - call: demonstrate_tools
-        args:
-          tools: ${ tools }
-      - "\n"
-      - for:
-          traj: ${ trajectories }
-        repeat:
-          call: react_block
-          args:
-            trajectory: ${ traj }
-      - ${ task }
-      - "\n"
-      - def: prev_action
-        contribute: []
-        data: none
-      - def: exit
-        contribute: []
-        data: False
-      - repeat:
-          text:
-            - def: thought
-              model: ${ model }
-              role: user
-              parameters:
-                stop:
-                  - "Act:"
-                max_tokens: 256
-                include_stop_sequence: true
-                final_prompt_value: ""
-                roles:
-                  system:
-                    pre_message: ""
-                    post_message: ""
-                  user:
-                    pre_message: ""
-                    post_message: ""
-                  assistant:
-                    pre_message: ""
-                    post_message: ""
-            - def: action
-              model: ${ model }
-              role: user
-              # fallback: "Please provide valid JSON. Do not include any characters outside of the JSON object."
-              parameters:
-                stop:
-                  - "\n"
-                  - "}}"
-                # include_stop_sequence: false
-                max_tokens: 256
-                final_prompt_value: ""
-                roles:
-                  system:
-                    pre_message: ""
-                    post_message: ""
-                  user:
-                    pre_message: ""
-                    post_message: ""
-                  assistant:
-                    pre_message: ""
-                    post_message: ""
-              parser: json
-              spec: { name: str, arguments: obj }
-            - if: ${ action != prev_action }
-              then:
-                # ----
-                - def: observation
-                  if: ${ action.name != 'Finish' }
+      lastOf:
+        - if: ${ model == "watsonx/meta-llama/llama-3-1-70b-instruct"}
+          then:
+            text:
+              - role: system
+                text: You are a helpful assistant with tool calling capabilities. When you receive a tool call response, use the output to format an answer to the orginal use question.
+                contribute: [context]
+              - role: user
+                text: |
+                  Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+                  Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+                  ${ tools }
+                contribute: [context]
+          else:
+            text:
+              - role: system
+                text: |
+                  You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+
+                  Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+                  ${ tools }
+                contribute: [context]
+        - "\n"
+        - for:
+            traj: ${ trajectories }
+          repeat:
+            text:
+              call: ${ react_block }
+              args:
+                trajectory: ${ traj }
+        - ${ task }
+        # - "\n"
+        - def: prev_action
+          contribute: []
+          data: none
+        - def: exit
+          contribute: []
+          data: False
+        - repeat:
+            text:
+              - "Tho: " # Factor 2: enforcing Tho/Act sections
+              - def: thought
+                model: "${ model }"
+                parameters:
+                  stop:
+                    - "Act:"
+                  max_tokens: 256
+                  include_stop_sequence: false
+              - "\nAct: "
+              - def: action
+                model: "${ model }"
+                parser: json
+                parameters:
+                  temperature: 0
+                  stop: ["\n", "Obs:", "<|eom_id|>"] # Factor 3: action output, e.g. Llama 3 outputs eom_id special token
+                  include_stop_sequence: false
+                spec: { name: str, arguments: obj } # Factor 4: granite likes arrays, argument names cannot be enforced #{ expr: str }} # spec: [{ name: str, arguments: obj }]
+              - if: ${ action != prev_action }
+                then:
+                  def: observation
+                  if: ${ action.name.lower() != 'finish' }
                   then:
                     text:
                       - "\nObs: "
-                      - if: ${ action.name in TOOL_INFO.display_names }
+                      - if: ${ action.name.lower() in pdl_tools }
                         then:
-                          - call: ${ TOOL_INFO.name_map[action.name] }
-                            args:
-                              arguments: ${ action.arguments }
-                        else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-                      - "\nTho:"
-              # ----
-              # - def: observation
-              #   if: ${ action.name == "Calc" }
-              #   then:
-              #     text:
-              #     - "Obs: "
-              #     - call: Calculator
-              #       args:
-              #         subject: ${ action.arguments.expr }
-              #   else:
-              #     - "Obs: Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-              else:
-                def: exit
+                          call: ${ pdl_tools[action.name.lower()] }
+                          args:
+                            arguments: ${ action.arguments }
+                        else: "Invalid action. Valid actions are ${ pdl_tools.keys() }." # ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
+                      - "\n" # Factor 2 #Tho:"
+                else:
+                  def: exit
+                  contribute: []
+                  data: True
+              - def: prev_action
                 contribute: []
-                data: True
-            - def: prev_action
-              contribute: []
-              data: ${ action }
-        until: ${ action.name == "Finish" or exit }
-      - data:
-          answer: ${ (action.arguments.topic|default("No answer found."))|trim }
-
-  reacttools:
-    function:
-      task: str
-      model: str
-      tools: { list: obj }
-      trajectories: { list: list }
-    return:
-      # text:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: ${ tools.append(finish_action) or tools }
-      - "Available tools:\n"
-      - role: system
-        text: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
-        contribute: [context]
-      - role: available_tools
-        text: ${ tools }
-        contribute: [context]
-      # - for:
-      #     name: ${ TOOL_INFO.display_names }
-      #     sig: ${ TOOL_INFO.signatures }
-      #     desc: ${ TOOL_INFO.descriptions }
-      #   repeat: "${ name }: ${ desc }\n"
-      #   # join:
-      #   # with: "\n"
-      # # - "\n"
-      # - call: demonstrate_tools
-      #   args:
-      #     tools: ${ tools }
-      # - "\n"
-      - for:
-          traj: ${ trajectories }
-        repeat:
-          call: react_block
-          args:
-            trajectory: ${ traj }
-      - ${ task }
-      - "\n"
-      - def: prev_action
-        contribute: []
-        data: none
-      - def: exit
-        contribute: []
-        data: False
-      - repeat:
-          text:
-            - def: thought
-              model: ${ model }
-              role: user
-              parameters:
-                stop:
-                  - "Act:"
-                max_tokens: 256
-                include_stop_sequence: true
-                final_prompt_value: ""
-                roles:
-                  system:
-                    pre_message: ""
-                    post_message: ""
-                  user:
-                    pre_message: ""
-                    post_message: ""
-                  assistant:
-                    pre_message: ""
-                    post_message: ""
-            - def: actions
-              model: ${ model }
-              role: user
-              parser: json
-              spec: [{ name: str, arguments: { expr: str }}] # spec: [{ name: str, arguments: obj }]
-              # fallback: "Please provide valid JSON. Do not include any characters outside of the JSON object."
-              # parameters:
-                # stop:
-                #   - "\n"
-                #   - "}}"
-                # include_stop_sequence: false
-                # max_tokens: 256
-                # final_prompt_value: ""
-                # roles:
-                #   system:
-                #     pre_message: ""
-                #     post_message: ""
-                #   user:
-                #     pre_message: ""
-                #     post_message: ""
-                #   assistant:
-                #     pre_message: ""
-                #     post_message: ""
-
-            - if: ${ action != prev_action }
-              then:
-                # ----
-                - def: observation
-                  if: ${ action.name != 'Finish' }
-                  then:
-                    text:
-                      - "\nObs: "
-                      - if: ${ action.name in TOOL_INFO.display_names }
-                        then:
-                          - call: ${ TOOL_INFO.name_map[action.name] }
-                            args:
-                              arguments: ${ action.arguments }
-                        else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-                      - "\nTho:"
-              # ----
-              # - def: observation
-              #   if: ${ action.name == "Calc" }
-              #   then:
-              #     text:
-              #     - "Obs: "
-              #     - call: Calculator
-              #       args:
-              #         subject: ${ action.arguments.expr }
-              #   else:
-              #     - "Obs: Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-              else:
-                def: exit
-                contribute: []
-                data: True
-            - def: prev_action
-              contribute: []
-              data: ${ action }
-        until: ${ action.name == "Finish" or exit }
-      - data:
-          answer: ${ (action.arguments.topic|default("No answer found."))|trim }
-
-  reactold:
-    function:
-      task: str
-      model: str
-      tools: { list: obj }
-      trajectories: { list: list }
-    return:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: ${ tools.append(finish_action) or tools }
-      - "Available tools:\n"
-      - for:
-          name: ${ TOOL_INFO.display_names }
-          sig: ${ TOOL_INFO.signatures }
-          desc: ${ TOOL_INFO.descriptions }
-        repeat: "${ name }: ${ desc }\n"
-        # join:
-        #   with: "\n"
-      - "\n"
-      - call: demonstrate_tools
-        args:
-          tools: ${ tools }
-      - "\n"
-      - for:
-          traj: ${ trajectories }
-        repeat:
-          call: react_block
-          args:
-            trajectory: ${ traj }
-      - "${ task }\nTho:"
-      - defs:
-          temperature: 0.7
-          iterations: 0
-        repeat:
-          - repeat:
-              - defs:
-                  iterations: ${ iterations+1 }
-              - def: THOUGHT
-                model: ${ model }
-                # role: user
-                # contribute: []
-                parameters:
-                  max_tokens: 1024
-                  time_limit: 60000
-                  random_seed: 42
-                  truncate_input_tokens: 8191
-                  decoding_method: sample
-                  repetition_penalty: 1.1
-                  temperature: ${ temperature }
-                  stop: ["\n", "Act:", "Obs:", "Tho:"]
-                  include_stop_sequence: true
-              # - def: THOUGHT
-              #   text: ${ THOUGHT|trim(' ') }
-              # - "${ THOUGHT }"
-            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
-          - def: action_raw
-            # role: user
-            model: ${ model }
-            contribute: []
-            parameters:
-              max_tokens: 1024
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
-              decoding_method: sample
-              repetition_penalty: 1.1
-              temperature: ${ temperature }
-              stop: ["[", "\n"]
-              include_stop_sequence: false
-          - defs:
-              ACTION: ${ action_raw|trim }
-          - " ${ ACTION }["
-          # - "["
-          - def: SUBJECT
-            model: ${ model }
-            contribute: []
-            # role: user
-            parameters:
-              max_tokens: 1024
-              time_limit: 60000
-              random_seed: 42
-              truncate_input_tokens: 8191
-              decoding_method: sample
-              repetition_penalty: 1.1
-              temperature: ${ temperature }
-              stop: ["]", "\n"]
-              include_stop_sequence: false
-          - "${ SUBJECT|trim }]"
-          # - "]"
-          - if: ${ ACTION != 'Finish' }
-            then:
-              - "\nObs: "
-              - if: ${ ACTION in TOOL_INFO.display_names }
-                then:
-                  - call: ${ TOOL_INFO.name_map[ACTION] }
-                    args:
-                      subject: ${ SUBJECT }
-                  - "\nTho: "
-                  - model: ${ model }
-                    fallback: "Error calling model"
-                    # role: user
-                    parameters:
-                      max_tokens: 1024
-                      time_limit: 60000
-                      random_seed: 42
-                      truncate_input_tokens: 8191
-                      repetition_penalty: 1.1
-                      decoding_method: sample
-                      temperature: ${ temperature }
-                      stop: ["\n", "Act:", "Obs:", "Tho:"]
-                      include_stop_sequence: false
-                else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
-        until: ${ ACTION == 'Finish' or iterations>20 }
-      - data:
-          answer: ${ SUBJECT|trim }
-
-  react_json:
-    function:
-      task: str
-      model: str
-      tools: { list: obj }
-      trajectories: { list: list }
-    return:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: ${ tools.append(finish_action) or tools }
-      - "Available tools:\n" # The preprompt!
-      - for:
-          name: ${ TOOL_INFO.display_names }
-          sig: ${ TOOL_INFO.signatures }
-          desc: ${ TOOL_INFO.descriptions }
-        repeat: |
-          ${ name }: ${ desc }
-      - "\n"
-      - call: demonstrate_tools
-        args:
-          tools: ${ tools }
-      - for:
-          traj: ${ trajectories }
-        repeat:
-          call: react_block
-          args:
-            trajectory: ${ traj }
-      - "${ task }\nTho:"
-      - defs:
-          temperature: 0.05
-          decoding_method: greedy
-          iterations: 0
-        repeat:
-          - repeat:
-              - defs:
-                  iterations: ${ iterations+1 }
-              - def: THOUGHT
-                model: ${ model }
-                parameters:
-                  max_tokens: 1024
-                  decoding_method: ${ decoding_method }
-                  temperature: ${ temperature }
-                  stop: ["\n", "Act:", "Obs:", "Tho:"]
-                  include_stop_sequence: true
-            until: ${ THOUGHT.endswith('Act:') or iterations>20 }
-          - def: action
-            model: ${ model }
-            parser: json
-            spec: { name: str, arguments: obj }
-            parameters:
-              max_tokens: 1024
-              decoding_method: ${ decoding_method }
-              temperature: ${ temperature }
-              stop: ["\n", "<|endoftext|>"]
-              include_stop_sequence: false
-          - if: ${ action.name != 'Finish' }
-            then:
-              - "\nObs: "
-              - if: ${ action.name in TOOL_INFO.display_names }
-                then:
-                  - call: ${ TOOL_INFO.name_map[action.name] }
-                    args:
-                      arguments: ${ action.arguments }
-                  - model: ${ model }
-                    parameters:
-                      max_tokens: 1024
-                      decoding_method: ${ decoding_method }
-                      temperature: ${ temperature }
-                      stop: ["\n", "Act:", "Obs:", "Tho:"]
-                      include_stop_sequence: false
-                else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') } and Finish[<answer>]."
-        until: ${ action.name == 'Finish' or iterations>20 }
-      - data:
-          answer: ${ action.arguments }
+                data: ${ action }
+          until: ${ action.name.lower() == "finish" or exit }
+        - data:
+            answer: ${ (action.arguments.answer|default("No answer found."))|trim } # Factor 5: answer argument name. some models really like putting answer in.
+        # - data:
+        #     answer: "No answer"
