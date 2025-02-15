@@ -641,10 +641,10 @@ def set_structured_decoding_parameters(
         and "guided_decoding_backend" not in parameters
     ):
         schema = pdltype_to_jsonschema(spec, True)
-        
+
         parameters["guided_decoding_backend"] = "lm-format-enforcer"
         parameters["guided_json"] = schema
-        #parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
+        # parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
     return parameters
 
 
