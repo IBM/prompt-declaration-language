@@ -21,6 +21,8 @@ text:
       Explain the following code:
       ```
       ${ CODE.source_code }```
+  parameters:
+    temperature: 0
 - def: EVAL
   contribute: []
   lang: python
@@ -33,8 +35,10 @@ text:
     truth = """
     ${ TRUTH }
     """
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data: 
     input: ${ CODE }
     output: ${ EXPLANATION }
     metric: ${ EVAL }
+

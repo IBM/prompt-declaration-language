@@ -9,17 +9,21 @@ text:
     def: model_output
     spec: {name: str, age: int}
     input:
-      text:
-      - for: 
-          question: ${ data.questions }
-          answer: ${ data.answers }
-        repeat: |
-            ${ question }
-            ${ answer }
-      - > 
-        Question: Create a JSON object with fields 'name' and 'age' 
-        and set them appropriately. Write the age in letters.
+      array:
+      - role: user
+        content: 
+          text:
+          - for: 
+              question: ${ data.questions }
+              answer: ${ data.answers }
+            repeat: |
+              ${ question }
+              ${ answer }
+          - > 
+            Question: Generate only a JSON object with fields 'name' and 'age' and set them appropriately. Write the age all in letters. Only generate a single JSON object and nothing else.
     parser: yaml
     parameters:
-      stop_sequences: "\n"
+      stop_sequences: "Question"
       temperature: 0
+
+ 

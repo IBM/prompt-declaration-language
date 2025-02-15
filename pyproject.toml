@@ -42,7 +42,9 @@ examples = [
   "wikipedia~=1.0",
   "textdistance~=4.0",
   "datasets>2,<4",
-  "sympy~=1.0"
+  "sympy~=1.0",
+  "scikit-learn~=1.6.1",
+  "faiss-cpu~=1.10.0"
 ]
 docs = [
   "mkdocs~=1.0",
