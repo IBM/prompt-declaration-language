@@ -87,10 +87,6 @@ export function map_block_children(
       })
       return { ...block, with: with_ }
     })
-    .with({ kind: "repeat" }, (block) => {
-      const repeat = f(block.repeat)
-      return { ...block, repeat: repeat }
-    })
     .with({ kind: "repeat_until" }, (block) => {
       const repeat = f(block.repeat)
       return { ...block, repeat: repeat }
@@ -184,9 +180,6 @@ export function iter_block_children(
       block.with.forEach((match_case) => {
         f(match_case.then)
       })
-    })
-    .with({ kind: "repeat" }, (block) => {
-      f(block.repeat)
     })
     .with({ kind: "repeat_until" }, (block) => {
       f(block.repeat)
