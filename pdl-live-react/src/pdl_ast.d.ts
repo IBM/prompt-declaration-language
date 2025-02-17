@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type PDLSchemas = Program | PdlBlock;
+export type PDLSchemas = Program | PdlBlock
 /**
  * Prompt Declaration Language program (PDL)
  */
@@ -32,109 +32,109 @@ export type Program =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description = string | null;
+export type Description = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description1 = string | null;
+export type Description1 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description2 = string | null;
+export type Description2 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description3 = string | null;
+export type Description3 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description4 = string | null;
+export type Description4 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description5 = string | null;
+export type Description5 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description6 = string | null;
+export type Description6 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description7 = string | null;
+export type Description7 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description8 = string | null;
+export type Description8 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description9 = string | null;
+export type Description9 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description10 = string | null;
+export type Description10 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description11 = string | null;
+export type Description11 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description12 = string | null;
+export type Description12 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description13 = string | null;
+export type Description13 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description14 = string | null;
+export type Description14 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description15 = string | null;
+export type Description15 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description16 = string | null;
+export type Description16 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description17 = string | null;
+export type Description17 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description18 = string | null;
+export type Description18 = string | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def = string | null;
-export type ContributeTarget = "result" | "context";
-export type Value = unknown[];
+export type Def = string | null
+export type ContributeTarget = "result" | "context"
+export type Value = unknown[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -142,17 +142,21 @@ export type Value = unknown[];
 export type Contribute = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
-export type Description19 = string | null;
+export type Parser =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+export type Description19 = string | null
 export type Spec19 = {
-  [k: string]: unknown;
-} | null;
+  [k: string]: unknown
+} | null
 export type Pdl =
   | boolean
   | number
@@ -176,13 +180,13 @@ export type Pdl =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type Description20 = string | null;
+  | null
+export type Description20 = string | null
 export type Spec20 = {
-  [k: string]: unknown;
-} | null;
-export type Regex = string;
-export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
+  [k: string]: unknown
+} | null
+export type Regex = string
+export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
  * Block to execute in case of error.
  *
@@ -210,49 +214,49 @@ export type Fallback =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role = string | null;
+export type Role = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos = number | null;
+export type StartNanos = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos = number | null;
+export type EndNanos = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone = string | null;
+export type Timezone = string | null
 /**
  * Current context
  *
  */
 export type Context =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id = string | null;
-export type Path = string[];
-export type File = string;
-export type Kind = "empty";
+export type Id = string | null
+export type Path = string[]
+export type File = string
+export type Kind = "empty"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def1 = string | null;
+export type Def1 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -260,13 +264,17 @@ export type Def1 = string | null;
 export type Contribute1 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser1 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser1 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -294,43 +302,43 @@ export type Fallback1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role1 = string | null;
+export type Role1 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos1 = number | null;
+export type StartNanos1 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos1 = number | null;
+export type EndNanos1 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone1 = string | null;
+export type Timezone1 = string | null
 /**
  * Current context
  *
  */
 export type Context1 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id1 = string | null;
-export type Kind1 = "error";
-export type Msg = string;
+export type Id1 = string | null
+export type Kind1 = "error"
+export type Msg = string
 export type Program1 =
   | boolean
   | number
@@ -354,12 +362,12 @@ export type Program1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def2 = string | null;
+export type Def2 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -367,13 +375,17 @@ export type Def2 = string | null;
 export type Contribute2 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser2 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser2 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -401,47 +413,47 @@ export type Fallback2 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role2 = string | null;
+export type Role2 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos2 = number | null;
+export type StartNanos2 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos2 = number | null;
+export type EndNanos2 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone2 = string | null;
+export type Timezone2 = string | null
 /**
  * Current context
  *
  */
 export type Context2 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id2 = string | null;
-export type Kind2 = "include";
+export type Id2 = string | null
+export type Kind2 = "include"
 /**
  * Name of the file to include.
  *
  */
-export type Include = string;
+export type Include = string
 export type Trace =
   | boolean
   | number
@@ -465,12 +477,12 @@ export type Trace =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def3 = string | null;
+export type Def3 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -478,13 +490,17 @@ export type Def3 = string | null;
 export type Contribute3 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser3 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser3 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -512,57 +528,57 @@ export type Fallback3 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role3 = string | null;
+export type Role3 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos3 = number | null;
+export type StartNanos3 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos3 = number | null;
+export type EndNanos3 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone3 = string | null;
+export type Timezone3 = string | null
 /**
  * Current context
  *
  */
 export type Context3 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id3 = string | null;
-export type Kind3 = "read";
+export type Id3 = string | null
+export type Kind3 = "read"
 /**
  * Message to prompt the user to enter a value.
  *
  */
-export type Message = string | null;
+export type Message = string | null
 /**
  * Indicate if one or multiple lines shoud be read.
  *
  */
-export type Multiline = boolean;
+export type Multiline = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def4 = string | null;
+export type Def4 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -570,13 +586,17 @@ export type Def4 = string | null;
 export type Contribute4 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser4 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser4 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -604,41 +624,41 @@ export type Fallback4 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role of associated to the message.
  */
-export type Role4 = string | null;
+export type Role4 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos4 = number | null;
+export type StartNanos4 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos4 = number | null;
+export type EndNanos4 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone4 = string | null;
+export type Timezone4 = string | null
 /**
  * Current context
  *
  */
 export type Context4 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id4 = string | null;
-export type Kind4 = "message";
+export type Id4 = string | null
+export type Kind4 = "message"
 /**
  * Content of the message.
  */
@@ -665,12 +685,12 @@ export type Content =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def5 = string | null;
+export type Def5 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -678,13 +698,17 @@ export type Def5 = string | null;
 export type Contribute5 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser5 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser5 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -712,42 +736,42 @@ export type Fallback5 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role5 = string | null;
+export type Role5 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos5 = number | null;
+export type StartNanos5 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos5 = number | null;
+export type EndNanos5 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone5 = string | null;
+export type Timezone5 = string | null
 /**
  * Current context
  *
  */
 export type Context5 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id5 = string | null;
-export type Kind5 = "object";
+export type Id5 = string | null
+export type Kind5 = "object"
 export type Object =
   | {
       [k: string]:
@@ -773,7 +797,7 @@ export type Object =
         | IncludeBlock
         | ErrorBlock
         | EmptyBlock
-        | null;
+        | null
     }
   | (
       | boolean
@@ -799,12 +823,12 @@ export type Object =
       | ErrorBlock
       | EmptyBlock
       | null
-    )[];
+    )[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def6 = string | null;
+export type Def6 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -812,13 +836,17 @@ export type Def6 = string | null;
 export type Contribute6 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser6 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser6 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -846,42 +874,42 @@ export type Fallback6 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role6 = string | null;
+export type Role6 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos6 = number | null;
+export type StartNanos6 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos6 = number | null;
+export type EndNanos6 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone6 = string | null;
+export type Timezone6 = string | null
 /**
  * Current context
  *
  */
 export type Context6 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id6 = string | null;
-export type Kind6 = "array";
+export type Id6 = string | null
+export type Kind6 = "array"
 export type Array = (
   | boolean
   | number
@@ -906,12 +934,12 @@ export type Array = (
   | ErrorBlock
   | EmptyBlock
   | null
-)[];
+)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def7 = string | null;
+export type Def7 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -919,13 +947,17 @@ export type Def7 = string | null;
 export type Contribute7 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser7 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser7 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -953,42 +985,42 @@ export type Fallback7 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role7 = string | null;
+export type Role7 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos7 = number | null;
+export type StartNanos7 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos7 = number | null;
+export type EndNanos7 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone7 = string | null;
+export type Timezone7 = string | null
 /**
  * Current context
  *
  */
 export type Context7 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id7 = string | null;
-export type Kind7 = "lastOf";
+export type Id7 = string | null
+export type Kind7 = "lastOf"
 export type Lastof = (
   | boolean
   | number
@@ -1013,12 +1045,12 @@ export type Lastof = (
   | ErrorBlock
   | EmptyBlock
   | null
-)[];
+)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def8 = string | null;
+export type Def8 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1026,13 +1058,17 @@ export type Def8 = string | null;
 export type Contribute8 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser8 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser8 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1060,42 +1096,42 @@ export type Fallback8 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role8 = string | null;
+export type Role8 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos8 = number | null;
+export type StartNanos8 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos8 = number | null;
+export type EndNanos8 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone8 = string | null;
+export type Timezone8 = string | null
 /**
  * Current context
  *
  */
 export type Context8 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id8 = string | null;
-export type Kind8 = "text";
+export type Id8 = string | null
+export type Kind8 = "text"
 /**
  * Body of the text.
  *
@@ -1148,12 +1184,12 @@ export type Text =
       | EmptyBlock
       | null
     )[]
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def9 = string | null;
+export type Def9 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1161,13 +1197,17 @@ export type Def9 = string | null;
 export type Contribute9 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser9 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser9 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1195,42 +1235,42 @@ export type Fallback9 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role9 = string | null;
+export type Role9 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos9 = number | null;
+export type StartNanos9 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos9 = number | null;
+export type EndNanos9 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone9 = string | null;
+export type Timezone9 = string | null
 /**
  * Current context
  *
  */
 export type Context9 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id9 = string | null;
-export type Kind9 = "for";
+export type Id9 = string | null
+export type Kind9 = "for"
 /**
  * Body of the loop.
  *
@@ -1258,32 +1298,32 @@ export type Repeat =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Define how to combine the result of each iteration.
  *
  */
-export type Join = JoinText | JoinArray | JoinLastOf;
+export type Join = JoinText | JoinArray | JoinLastOf
 /**
  * String concatenation of the result of each iteration.
  *
  */
-export type As = "text";
+export type As = "text"
 /**
  * String used to concatenate each iteration of the loop.
  *
  */
-export type With = string;
+export type With = string
 /**
  * Return the result of each iteration as an array.
  *
  */
-export type As1 = "array";
+export type As1 = "array"
 /**
  * Return the result of the last iteration.
  *
  */
-export type As2 = "lastOf";
+export type As2 = "lastOf"
 export type Trace1 =
   | (
       | boolean
@@ -1310,12 +1350,12 @@ export type Trace1 =
       | EmptyBlock
       | null
     )[]
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def10 = string | null;
+export type Def10 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1323,13 +1363,17 @@ export type Def10 = string | null;
 export type Contribute10 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser10 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser10 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1357,42 +1401,42 @@ export type Fallback10 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role10 = string | null;
+export type Role10 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos10 = number | null;
+export type StartNanos10 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos10 = number | null;
+export type EndNanos10 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone10 = string | null;
+export type Timezone10 = string | null
 /**
  * Current context
  *
  */
 export type Context10 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id10 = string | null;
-export type Kind10 = "repeat_until";
+export type Id10 = string | null
+export type Kind10 = "repeat_until"
 /**
  * Body of the loop.
  *
@@ -1420,12 +1464,12 @@ export type Repeat1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Define how to combine the result of each iteration.
  *
  */
-export type Join1 = JoinText | JoinArray | JoinLastOf;
+export type Join1 = JoinText | JoinArray | JoinLastOf
 export type Trace2 =
   | (
       | boolean
@@ -1452,12 +1496,12 @@ export type Trace2 =
       | EmptyBlock
       | null
     )[]
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def11 = string | null;
+export type Def11 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1465,13 +1509,17 @@ export type Def11 = string | null;
 export type Contribute11 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser11 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser11 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1499,50 +1547,76 @@ export type Fallback11 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role11 = string | null;
+export type Role11 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos11 = number | null;
+export type StartNanos11 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos11 = number | null;
+export type EndNanos11 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone11 = string | null;
+export type Timezone11 = string | null
 /**
  * Current context
  *
  */
 export type Context11 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id11 = string | null;
-export type Kind11 = "match";
-export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
-export type Def12 = string | null;
-export type Def13 = string | null;
-export type Def14 = string | null;
-export type Def15 = string | null;
-export type Any = null;
-export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
-export type Anyof = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
+export type Id11 = string | null
+export type Kind11 = "match"
+export type Case =
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+export type Def12 = string | null
+export type Def13 = string | null
+export type Def14 = string | null
+export type Def15 = string | null
+export type Any = null
+export type Array1 = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
+export type Anyof = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
 export type Then =
   | boolean
   | number
@@ -1566,13 +1640,13 @@ export type Then =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type With1 = MatchCase[];
+  | null
+export type With1 = MatchCase[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null;
+export type Def16 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1580,13 +1654,17 @@ export type Def16 = string | null;
 export type Contribute12 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser12 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser12 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1614,42 +1692,42 @@ export type Fallback12 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role12 = string | null;
+export type Role12 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos12 = number | null;
+export type StartNanos12 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos12 = number | null;
+export type EndNanos12 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone12 = string | null;
+export type Timezone12 = string | null
 /**
  * Current context
  *
  */
 export type Context12 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id12 = string | null;
-export type Kind12 = "if";
+export type Id12 = string | null
+export type Kind12 = "if"
 /**
  * Branch to exectute if the condition is true.
  *
@@ -1677,7 +1755,7 @@ export type Then1 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Branch to execute if the condition is false.
  *
@@ -1705,13 +1783,13 @@ export type Else =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type IfResult = boolean | null;
+  | null
+export type IfResult = boolean | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def17 = string | null;
+export type Def17 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1719,13 +1797,17 @@ export type Def17 = string | null;
 export type Contribute13 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser13 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser13 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1753,51 +1835,51 @@ export type Fallback13 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role13 = string | null;
+export type Role13 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos13 = number | null;
+export type StartNanos13 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos13 = number | null;
+export type EndNanos13 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone13 = string | null;
+export type Timezone13 = string | null
 /**
  * Current context
  *
  */
 export type Context13 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id13 = string | null;
-export type Kind13 = "data";
+export type Id13 = string | null
+export type Kind13 = "data"
 /**
  * Do not evaluate expressions inside strings.
  */
-export type Raw = boolean;
+export type Raw = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def18 = string | null;
+export type Def18 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1805,13 +1887,17 @@ export type Def18 = string | null;
 export type Contribute14 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser14 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser14 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1839,51 +1925,51 @@ export type Fallback14 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role14 = string | null;
+export type Role14 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos14 = number | null;
+export type StartNanos14 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos14 = number | null;
+export type EndNanos14 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone14 = string | null;
+export type Timezone14 = string | null
 /**
  * Current context
  *
  */
 export type Context14 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id14 = string | null;
-export type Kind14 = "get";
+export type Id14 = string | null
+export type Kind14 = "get"
 /**
  * Name of the variable to access.
  */
-export type Get = string;
+export type Get = string
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def19 = string | null;
+export type Def19 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1891,13 +1977,17 @@ export type Def19 = string | null;
 export type Contribute15 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser15 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser15 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1925,47 +2015,47 @@ export type Fallback15 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role15 = string | null;
+export type Role15 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos15 = number | null;
+export type StartNanos15 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos15 = number | null;
+export type EndNanos15 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone15 = string | null;
+export type Timezone15 = string | null
 /**
  * Current context
  *
  */
 export type Context15 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id15 = string | null;
-export type Kind15 = "code";
+export type Id15 = string | null
+export type Kind15 = "code"
 /**
  * Programming language of the code.
  *
  */
-export type Lang = "python" | "command" | "jinja" | "pdl";
+export type Lang = "python" | "command" | "jinja" | "pdl"
 /**
  * Code to execute.
  *
@@ -1993,12 +2083,12 @@ export type Code =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def20 = string | null;
+export type Def20 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2006,13 +2096,17 @@ export type Def20 = string | null;
 export type Contribute16 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser16 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser16 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2040,42 +2134,42 @@ export type Fallback16 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role16 = string | null;
+export type Role16 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos16 = number | null;
+export type StartNanos16 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos16 = number | null;
+export type EndNanos16 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone16 = string | null;
+export type Timezone16 = string | null
 /**
  * Current context
  *
  */
 export type Context16 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id16 = string | null;
-export type Kind16 = "model";
+export type Id16 = string | null
+export type Kind16 = "model"
 export type Input =
   | boolean
   | number
@@ -2099,7 +2193,7 @@ export type Input =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 export type Trace3 =
   | boolean
   | number
@@ -2123,14 +2217,14 @@ export type Trace3 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type Modelresponse = string | null;
-export type Platform = "litellm";
+  | null
+export type Modelresponse = string | null
+export type Platform = "litellm"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def21 = string | null;
+export type Def21 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2138,13 +2232,17 @@ export type Def21 = string | null;
 export type Contribute17 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser17 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2172,42 +2270,42 @@ export type Fallback17 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role17 = string | null;
+export type Role17 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos17 = number | null;
+export type StartNanos17 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos17 = number | null;
+export type EndNanos17 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone17 = string | null;
+export type Timezone17 = string | null
 /**
  * Current context
  *
  */
 export type Context17 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id17 = string | null;
-export type Kind17 = "call";
+export type Id17 = string | null
+export type Kind17 = "call"
 export type Trace4 =
   | boolean
   | number
@@ -2231,12 +2329,12 @@ export type Trace4 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def22 = string | null;
+export type Def22 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2244,13 +2342,17 @@ export type Def22 = string | null;
 export type Contribute18 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser18 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser18 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2278,49 +2380,49 @@ export type Fallback18 =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  *
  */
-export type Role18 = string | null;
+export type Role18 = string | null
 /**
  * Time at which block execution began
  *
  */
-export type StartNanos18 = number | null;
+export type StartNanos18 = number | null
 /**
  * Time at which block execution ended
  *
  */
-export type EndNanos18 = number | null;
+export type EndNanos18 = number | null
 /**
  * Timezone of start_nanos and end_nanos
  *
  */
-export type Timezone18 = string | null;
+export type Timezone18 = string | null
 /**
  * Current context
  *
  */
 export type Context18 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type Id18 = string | null;
-export type Kind18 = "function";
+export type Id18 = string | null
+export type Kind18 = "function"
 /**
  * Functions parameters with their types.
  *
  */
 export type Function = {
-  [k: string]: unknown;
-} | null;
+  [k: string]: unknown
+} | null
 /**
  * Body of the function
  *
@@ -2348,7 +2450,7 @@ export type Return =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 export type PdlBlock =
   | boolean
   | number
@@ -2372,37 +2474,37 @@ export type PdlBlock =
   | IncludeBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 
 /**
  * Function declaration.
  */
 export interface FunctionBlock {
-  description?: Description;
-  spec?: Spec;
-  defs?: Defs;
-  def?: Def22;
-  contribute?: Contribute18;
-  parser?: Parser18;
-  fallback?: Fallback18;
-  role?: Role18;
-  start_nanos?: StartNanos18;
-  end_nanos?: EndNanos18;
-  timezone?: Timezone18;
-  context?: Context18;
-  id?: Id18;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind18;
-  function: Function;
-  return: Return;
+  description?: Description
+  spec?: Spec
+  defs?: Defs
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  role?: Role18
+  start_nanos?: StartNanos18
+  end_nanos?: EndNanos18
+  timezone?: Timezone18
+  context?: Context18
+  id?: Id18
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind18
+  function: Function
+  return: Return
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2432,38 +2534,38 @@ export interface Defs {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Calling a function.
  */
 export interface CallBlock {
-  description?: Description1;
-  spec?: Spec1;
-  defs?: Defs1;
-  def?: Def21;
-  contribute?: Contribute17;
-  parser?: Parser17;
-  fallback?: Fallback17;
-  role?: Role17;
-  start_nanos?: StartNanos17;
-  end_nanos?: EndNanos17;
-  timezone?: Timezone17;
-  context?: Context17;
-  id?: Id17;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind17;
-  call: unknown;
-  args?: unknown;
-  trace?: Trace4;
+  description?: Description1
+  spec?: Spec1
+  defs?: Defs1
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  role?: Role17
+  start_nanos?: StartNanos17
+  end_nanos?: EndNanos17
+  timezone?: Timezone17
+  context?: Context17
+  id?: Id17
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind17
+  call: unknown
+  args?: unknown
+  trace?: Trace4
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec1 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2493,41 +2595,41 @@ export interface Defs1 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
  */
 export interface LitellmModelBlock {
-  description?: Description2;
-  spec?: Spec2;
-  defs?: Defs2;
-  def?: Def20;
-  contribute?: Contribute16;
-  parser?: Parser16;
-  fallback?: Fallback16;
-  role?: Role16;
-  start_nanos?: StartNanos16;
-  end_nanos?: EndNanos16;
-  timezone?: Timezone16;
-  context?: Context16;
-  id?: Id16;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind16;
-  model: unknown;
-  input?: Input;
-  trace?: Trace3;
-  modelResponse?: Modelresponse;
-  platform?: Platform;
-  parameters?: unknown;
+  description?: Description2
+  spec?: Spec2
+  defs?: Defs2
+  def?: Def20
+  contribute?: Contribute16
+  parser?: Parser16
+  fallback?: Fallback16
+  role?: Role16
+  start_nanos?: StartNanos16
+  end_nanos?: EndNanos16
+  timezone?: Timezone16
+  context?: Context16
+  id?: Id16
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind16
+  model: unknown
+  input?: Input
+  trace?: Trace3
+  modelResponse?: Modelresponse
+  platform?: Platform
+  parameters?: unknown
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec2 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2557,37 +2659,37 @@ export interface Defs2 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Execute a piece of code.
  */
 export interface CodeBlock {
-  description?: Description3;
-  spec?: Spec3;
-  defs?: Defs3;
-  def?: Def19;
-  contribute?: Contribute15;
-  parser?: Parser15;
-  fallback?: Fallback15;
-  role?: Role15;
-  start_nanos?: StartNanos15;
-  end_nanos?: EndNanos15;
-  timezone?: Timezone15;
-  context?: Context15;
-  id?: Id15;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind15;
-  lang: Lang;
-  code: Code;
+  description?: Description3
+  spec?: Spec3
+  defs?: Defs3
+  def?: Def19
+  contribute?: Contribute15
+  parser?: Parser15
+  fallback?: Fallback15
+  role?: Role15
+  start_nanos?: StartNanos15
+  end_nanos?: EndNanos15
+  timezone?: Timezone15
+  context?: Context15
+  id?: Id15
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind15
+  lang: Lang
+  code: Code
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec3 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2617,36 +2719,36 @@ export interface Defs3 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Get the value of a variable.
  */
 export interface GetBlock {
-  description?: Description4;
-  spec?: Spec4;
-  defs?: Defs4;
-  def?: Def18;
-  contribute?: Contribute14;
-  parser?: Parser14;
-  fallback?: Fallback14;
-  role?: Role14;
-  start_nanos?: StartNanos14;
-  end_nanos?: EndNanos14;
-  timezone?: Timezone14;
-  context?: Context14;
-  id?: Id14;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind14;
-  get: Get;
+  description?: Description4
+  spec?: Spec4
+  defs?: Defs4
+  def?: Def18
+  contribute?: Contribute14
+  parser?: Parser14
+  fallback?: Fallback14
+  role?: Role14
+  start_nanos?: StartNanos14
+  end_nanos?: EndNanos14
+  timezone?: Timezone14
+  context?: Context14
+  id?: Id14
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind14
+  get: Get
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec4 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2676,37 +2778,37 @@ export interface Defs4 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Arbitrary JSON value.
  */
 export interface DataBlock {
-  description?: Description5;
-  spec?: Spec5;
-  defs?: Defs5;
-  def?: Def17;
-  contribute?: Contribute13;
-  parser?: Parser13;
-  fallback?: Fallback13;
-  role?: Role13;
-  start_nanos?: StartNanos13;
-  end_nanos?: EndNanos13;
-  timezone?: Timezone13;
-  context?: Context13;
-  id?: Id13;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind13;
-  data: unknown;
-  raw?: Raw;
+  description?: Description5
+  spec?: Spec5
+  defs?: Defs5
+  def?: Def17
+  contribute?: Contribute13
+  parser?: Parser13
+  fallback?: Fallback13
+  role?: Role13
+  start_nanos?: StartNanos13
+  end_nanos?: EndNanos13
+  timezone?: Timezone13
+  context?: Context13
+  id?: Id13
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind13
+  data: unknown
+  raw?: Raw
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec5 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2736,39 +2838,39 @@ export interface Defs5 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Conditional control structure.
  */
 export interface IfBlock {
-  description?: Description6;
-  spec?: Spec6;
-  defs?: Defs6;
-  def?: Def16;
-  contribute?: Contribute12;
-  parser?: Parser12;
-  fallback?: Fallback12;
-  role?: Role12;
-  start_nanos?: StartNanos12;
-  end_nanos?: EndNanos12;
-  timezone?: Timezone12;
-  context?: Context12;
-  id?: Id12;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind12;
-  if: unknown;
-  then: Then1;
-  else?: Else;
-  if_result?: IfResult;
+  description?: Description6
+  spec?: Spec6
+  defs?: Defs6
+  def?: Def16
+  contribute?: Contribute12
+  parser?: Parser12
+  fallback?: Fallback12
+  role?: Role12
+  start_nanos?: StartNanos12
+  end_nanos?: EndNanos12
+  timezone?: Timezone12
+  context?: Context12
+  id?: Id12
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind12
+  if: unknown
+  then: Then1
+  else?: Else
+  if_result?: IfResult
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec6 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2798,37 +2900,37 @@ export interface Defs6 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Match control structure.
  */
 export interface MatchBlock {
-  description?: Description7;
-  spec?: Spec7;
-  defs?: Defs7;
-  def?: Def11;
-  contribute?: Contribute11;
-  parser?: Parser11;
-  fallback?: Fallback11;
-  role?: Role11;
-  start_nanos?: StartNanos11;
-  end_nanos?: EndNanos11;
-  timezone?: Timezone11;
-  context?: Context11;
-  id?: Id11;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind11;
-  match: unknown;
-  with: With1;
+  description?: Description7
+  spec?: Spec7
+  defs?: Defs7
+  def?: Def11
+  contribute?: Contribute11
+  parser?: Parser11
+  fallback?: Fallback11
+  role?: Role11
+  start_nanos?: StartNanos11
+  end_nanos?: EndNanos11
+  timezone?: Timezone11
+  context?: Context11
+  id?: Id11
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind11
+  match: unknown
+  with: With1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec7 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2858,40 +2960,40 @@ export interface Defs7 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Repeat the execution of a block until a condition is satisfied.
  */
 export interface RepeatUntilBlock {
-  description?: Description8;
-  spec?: Spec8;
-  defs?: Defs8;
-  def?: Def10;
-  contribute?: Contribute10;
-  parser?: Parser10;
-  fallback?: Fallback10;
-  role?: Role10;
-  start_nanos?: StartNanos10;
-  end_nanos?: EndNanos10;
-  timezone?: Timezone10;
-  context?: Context10;
-  id?: Id10;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind10;
-  repeat: Repeat1;
-  until?: unknown;
-  max_iterations?: unknown;
-  join?: Join1;
-  trace?: Trace2;
+  description?: Description8
+  spec?: Spec8
+  defs?: Defs8
+  def?: Def10
+  contribute?: Contribute10
+  parser?: Parser10
+  fallback?: Fallback10
+  role?: Role10
+  start_nanos?: StartNanos10
+  end_nanos?: EndNanos10
+  timezone?: Timezone10
+  context?: Context10
+  id?: Id10
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind10
+  repeat: Repeat1
+  until?: unknown
+  max_iterations?: unknown
+  join?: Join1
+  trace?: Trace2
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec8 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2921,39 +3023,39 @@ export interface Defs8 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Iteration over arrays.
  */
 export interface ForBlock {
-  description?: Description9;
-  spec?: Spec9;
-  defs?: Defs9;
-  def?: Def9;
-  contribute?: Contribute9;
-  parser?: Parser9;
-  fallback?: Fallback9;
-  role?: Role9;
-  start_nanos?: StartNanos9;
-  end_nanos?: EndNanos9;
-  timezone?: Timezone9;
-  context?: Context9;
-  id?: Id9;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind9;
-  for: For;
-  repeat: Repeat;
-  join?: Join;
-  trace?: Trace1;
+  description?: Description9
+  spec?: Spec9
+  defs?: Defs9
+  def?: Def9
+  contribute?: Contribute9
+  parser?: Parser9
+  fallback?: Fallback9
+  role?: Role9
+  start_nanos?: StartNanos9
+  end_nanos?: EndNanos9
+  timezone?: Timezone9
+  context?: Context9
+  id?: Id9
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind9
+  for: For
+  repeat: Repeat
+  join?: Join
+  trace?: Trace1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec9 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2983,36 +3085,36 @@ export interface Defs9 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
 export interface TextBlock {
-  description?: Description10;
-  spec?: Spec10;
-  defs?: Defs10;
-  def?: Def8;
-  contribute?: Contribute8;
-  parser?: Parser8;
-  fallback?: Fallback8;
-  role?: Role8;
-  start_nanos?: StartNanos8;
-  end_nanos?: EndNanos8;
-  timezone?: Timezone8;
-  context?: Context8;
-  id?: Id8;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind8;
-  text: Text;
+  description?: Description10
+  spec?: Spec10
+  defs?: Defs10
+  def?: Def8
+  contribute?: Contribute8
+  parser?: Parser8
+  fallback?: Fallback8
+  role?: Role8
+  start_nanos?: StartNanos8
+  end_nanos?: EndNanos8
+  timezone?: Timezone8
+  context?: Context8
+  id?: Id8
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind8
+  text: Text
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec10 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3042,36 +3144,36 @@ export interface Defs10 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the value of the last block if the list of blocks.
  */
 export interface LastOfBlock {
-  description?: Description11;
-  spec?: Spec11;
-  defs?: Defs11;
-  def?: Def7;
-  contribute?: Contribute7;
-  parser?: Parser7;
-  fallback?: Fallback7;
-  role?: Role7;
-  start_nanos?: StartNanos7;
-  end_nanos?: EndNanos7;
-  timezone?: Timezone7;
-  context?: Context7;
-  id?: Id7;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind7;
-  lastOf: Lastof;
+  description?: Description11
+  spec?: Spec11
+  defs?: Defs11
+  def?: Def7
+  contribute?: Contribute7
+  parser?: Parser7
+  fallback?: Fallback7
+  role?: Role7
+  start_nanos?: StartNanos7
+  end_nanos?: EndNanos7
+  timezone?: Timezone7
+  context?: Context7
+  id?: Id7
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind7
+  lastOf: Lastof
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec11 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3101,36 +3203,36 @@ export interface Defs11 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the array of values computed by each block of the list of blocks.
  */
 export interface ArrayBlock {
-  description?: Description12;
-  spec?: Spec12;
-  defs?: Defs12;
-  def?: Def6;
-  contribute?: Contribute6;
-  parser?: Parser6;
-  fallback?: Fallback6;
-  role?: Role6;
-  start_nanos?: StartNanos6;
-  end_nanos?: EndNanos6;
-  timezone?: Timezone6;
-  context?: Context6;
-  id?: Id6;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind6;
-  array: Array;
+  description?: Description12
+  spec?: Spec12
+  defs?: Defs12
+  def?: Def6
+  contribute?: Contribute6
+  parser?: Parser6
+  fallback?: Fallback6
+  role?: Role6
+  start_nanos?: StartNanos6
+  end_nanos?: EndNanos6
+  timezone?: Timezone6
+  context?: Context6
+  id?: Id6
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind6
+  array: Array
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec12 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3160,36 +3262,36 @@ export interface Defs12 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
 export interface ObjectBlock {
-  description?: Description13;
-  spec?: Spec13;
-  defs?: Defs13;
-  def?: Def5;
-  contribute?: Contribute5;
-  parser?: Parser5;
-  fallback?: Fallback5;
-  role?: Role5;
-  start_nanos?: StartNanos5;
-  end_nanos?: EndNanos5;
-  timezone?: Timezone5;
-  context?: Context5;
-  id?: Id5;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind5;
-  object: Object;
+  description?: Description13
+  spec?: Spec13
+  defs?: Defs13
+  def?: Def5
+  contribute?: Contribute5
+  parser?: Parser5
+  fallback?: Fallback5
+  role?: Role5
+  start_nanos?: StartNanos5
+  end_nanos?: EndNanos5
+  timezone?: Timezone5
+  context?: Context5
+  id?: Id5
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind5
+  object: Object
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec13 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3219,36 +3321,36 @@ export interface Defs13 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Create a message.
  */
 export interface MessageBlock {
-  description?: Description14;
-  spec?: Spec14;
-  defs?: Defs14;
-  def?: Def4;
-  contribute?: Contribute4;
-  parser?: Parser4;
-  fallback?: Fallback4;
-  role: Role4;
-  start_nanos?: StartNanos4;
-  end_nanos?: EndNanos4;
-  timezone?: Timezone4;
-  context?: Context4;
-  id?: Id4;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind4;
-  content: Content;
+  description?: Description14
+  spec?: Spec14
+  defs?: Defs14
+  def?: Def4
+  contribute?: Contribute4
+  parser?: Parser4
+  fallback?: Fallback4
+  role: Role4
+  start_nanos?: StartNanos4
+  end_nanos?: EndNanos4
+  timezone?: Timezone4
+  context?: Context4
+  id?: Id4
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind4
+  content: Content
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec14 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3278,38 +3380,38 @@ export interface Defs14 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Read from a file or standard input.
  */
 export interface ReadBlock {
-  description?: Description15;
-  spec?: Spec15;
-  defs?: Defs15;
-  def?: Def3;
-  contribute?: Contribute3;
-  parser?: Parser3;
-  fallback?: Fallback3;
-  role?: Role3;
-  start_nanos?: StartNanos3;
-  end_nanos?: EndNanos3;
-  timezone?: Timezone3;
-  context?: Context3;
-  id?: Id3;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind3;
-  read: unknown;
-  message?: Message;
-  multiline?: Multiline;
+  description?: Description15
+  spec?: Spec15
+  defs?: Defs15
+  def?: Def3
+  contribute?: Contribute3
+  parser?: Parser3
+  fallback?: Fallback3
+  role?: Role3
+  start_nanos?: StartNanos3
+  end_nanos?: EndNanos3
+  timezone?: Timezone3
+  context?: Context3
+  id?: Id3
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind3
+  read: unknown
+  message?: Message
+  multiline?: Multiline
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec15 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3339,37 +3441,37 @@ export interface Defs15 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Include a PDL file.
  */
 export interface IncludeBlock {
-  description?: Description16;
-  spec?: Spec16;
-  defs?: Defs16;
-  def?: Def2;
-  contribute?: Contribute2;
-  parser?: Parser2;
-  fallback?: Fallback2;
-  role?: Role2;
-  start_nanos?: StartNanos2;
-  end_nanos?: EndNanos2;
-  timezone?: Timezone2;
-  context?: Context2;
-  id?: Id2;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind2;
-  include: Include;
-  trace?: Trace;
+  description?: Description16
+  spec?: Spec16
+  defs?: Defs16
+  def?: Def2
+  contribute?: Contribute2
+  parser?: Parser2
+  fallback?: Fallback2
+  role?: Role2
+  start_nanos?: StartNanos2
+  end_nanos?: EndNanos2
+  timezone?: Timezone2
+  context?: Context2
+  id?: Id2
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind2
+  include: Include
+  trace?: Trace
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec16 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3399,34 +3501,34 @@ export interface Defs16 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 export interface ErrorBlock {
-  description?: Description17;
-  spec?: Spec17;
-  defs?: Defs17;
-  def?: Def1;
-  contribute?: Contribute1;
-  parser?: Parser1;
-  fallback?: Fallback1;
-  role?: Role1;
-  start_nanos?: StartNanos1;
-  end_nanos?: EndNanos1;
-  timezone?: Timezone1;
-  context?: Context1;
-  id?: Id1;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind1;
-  msg: Msg;
-  program: Program1;
+  description?: Description17
+  spec?: Spec17
+  defs?: Defs17
+  def?: Def1
+  contribute?: Contribute1
+  parser?: Parser1
+  fallback?: Fallback1
+  role?: Role1
+  start_nanos?: StartNanos1
+  end_nanos?: EndNanos1
+  timezone?: Timezone1
+  context?: Context1
+  id?: Id1
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind1
+  msg: Msg
+  program: Program1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec17 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3456,35 +3558,35 @@ export interface Defs17 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Block without an action. It can contain definitions.
  */
 export interface EmptyBlock {
-  description?: Description18;
-  spec?: Spec18;
-  defs?: Defs18;
-  def?: Def;
-  contribute?: Contribute;
-  parser?: Parser;
-  fallback?: Fallback;
-  role?: Role;
-  start_nanos?: StartNanos;
-  end_nanos?: EndNanos;
-  timezone?: Timezone;
-  context?: Context;
-  id?: Id;
-  result?: unknown;
-  location?: LocationType | null;
-  kind?: Kind;
+  description?: Description18
+  spec?: Spec18
+  defs?: Defs18
+  def?: Def
+  contribute?: Contribute
+  parser?: Parser
+  fallback?: Fallback
+  role?: Role
+  start_nanos?: StartNanos
+  end_nanos?: EndNanos
+  timezone?: Timezone
+  context?: Context
+  id?: Id
+  result?: unknown
+  location?: LocationType | null
+  kind?: Kind
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec18 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3514,71 +3616,79 @@ export interface Defs18 {
     | IncludeBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 export interface ContributeValue {
-  value: Value;
+  value: Value
 }
 export interface PdlParser {
-  description?: Description19;
-  spec?: Spec19;
-  pdl: Pdl;
+  description?: Description19
+  spec?: Spec19
+  pdl: Pdl
 }
 export interface RegexParser {
-  description?: Description20;
-  spec?: Spec20;
-  regex: Regex;
-  mode?: Mode;
+  description?: Description20
+  spec?: Spec20
+  regex: Regex
+  mode?: Mode
 }
 export interface LocationType {
-  path: Path;
-  file: File;
-  table: Table;
+  path: Path
+  file: File
+  table: Table
 }
 export interface Table {
-  [k: string]: number;
+  [k: string]: number
 }
 /**
  * Arrays to iterate over.
  *
  */
 export interface For {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 export interface JoinText {
-  as?: As;
-  with?: With;
+  as?: As
+  with?: With
 }
 export interface JoinArray {
-  as: As1;
+  as: As1
 }
 export interface JoinLastOf {
-  as: As2;
+  as: As2
 }
 /**
  * Case of a match.
  */
 export interface MatchCase {
-  case?: Case;
-  if?: unknown;
-  then: Then;
+  case?: Case
+  if?: unknown
+  then: Then
 }
 export interface OrPattern {
-  def?: Def12;
-  anyOf: Anyof;
+  def?: Def12
+  anyOf: Anyof
 }
 export interface ArrayPattern {
-  def?: Def13;
-  array: Array1;
+  def?: Def13
+  array: Array1
 }
 export interface ObjectPattern {
-  def?: Def14;
-  object: Object1;
+  def?: Def14
+  object: Object1
 }
 export interface Object1 {
-  [k: string]: boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+    | null
 }
 export interface AnyPattern {
-  def?: Def15;
-  any: Any;
+  def?: Def15
+  any: Any
 }
