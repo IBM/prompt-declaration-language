@@ -54,19 +54,19 @@ export default function DrawerContent({ value }: Props) {
   const def = searchParams.get("def")
   const objectType = searchParams.get("type")
 
-  // Remove the search params that lead us here, for onCloseDrawer()
-  searchParams.delete("id")
-  searchParams.delete("def")
-  searchParams.delete("get")
-  searchParams.delete("detail")
-  const s = searchParams.toString()
-
   const navigate = useNavigate()
   const { pathname, hash } = useLocation()
-  const onCloseDrawer = useCallback(
-    () => navigate(pathname + (s ? "?" + s : "") + hash),
-    [hash, pathname, navigate, s],
-  )
+  const onCloseDrawer = useCallback(() => {
+    // Remove the search params that lead us here, for onCloseDrawer()
+    searchParams.delete("id")
+    searchParams.delete("def")
+    searchParams.delete("get")
+    searchParams.delete("type")
+    searchParams.delete("detail")
+    const s = searchParams.toString()
+
+    navigate(pathname + (s ? "?" + s : "") + hash)
+  }, [hash, pathname, navigate, searchParams])
 
   const data = useMemo(
     () =>
@@ -80,6 +80,7 @@ export default function DrawerContent({ value }: Props) {
   useEffect(() => {
     setActiveTab(0)
   }, [id, objectType, value])
+  console.error("!!!!!!", id, block)
 
   const actions = useMemo(
     () => ({
