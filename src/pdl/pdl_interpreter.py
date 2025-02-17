@@ -748,11 +748,7 @@ def process_block_body(
             try:
                 first = True
                 iidx = 0
-                while (
-                    not stop
-                    and not (max_iterations is not None
-                    and iidx >= max_iterations)
-                ):
+                while not stop and (max_iterations is None or iidx < max_iterations):
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
