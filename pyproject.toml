@@ -39,6 +39,9 @@ dev = [
   "pydantic~=2.9"
 ]
 examples = [
+  "pymilvus~=2.5",
+  "langchain~=0.3",
+  "langchain-community~=0.3",
   "wikipedia~=1.0",
   "textdistance~=4.0",
   "datasets>2,<4",

@@ -1,0 +1,21 @@
+# Load PDF document into vector database
+
+description: Load document into vector database
+text:
+- include: rag_library1.pdl
+- call: ${ pdf_parse }
+  args:
+    filename: "docs/assets/pdl_quick_reference.pdf"
+    chunk_size: 400
+    chunk_overlap: 100
+  def: input_data
+  contribute: []
+- call: ${ rag_index }
+  args:
+    inp: ${ input_data }
+    encoder_model: "ollama/mxbai-embed-large"
+    embed_dimension: 1024
+    database_name: "./pdl-rag-demo.db"
+    collection_name: "pdl_rag_collection"  
+  contribute: []
+- "Success!"

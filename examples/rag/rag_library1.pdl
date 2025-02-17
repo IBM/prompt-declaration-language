@@ -1,0 +1,38 @@
+# This module can be included from a PDL program to bring in Python functions.
+
+description: RAG library for PDL
+text:
+- def: pdf_parse
+  function:
+    filename: str
+    chunk_size: int
+    chunk_overlap: int
+  return:
+    lang: python
+    code: |
+        from examples.rag.rag import parse
+        result = parse(filename, chunk_size, chunk_overlap)
+- def: rag_index
+  function:
+    inp: list # This is a list[str], but PDL doesn't allow that type
+    encoder_model: str
+    embed_dimension: int
+    database_name: str # optional, could also be URL?
+    collection_name: str
+  return:
+    lang: python
+    code: |
+        from examples.rag.rag import rag_index
+        result = rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
+- def: rag_retrieve
+  function:
+    inp: str
+    encoder_model: str
+    limit: int
+    collection_name: str
+    database_name: str # optional, could also be URL?
+  return:
+    lang: python
+    code: |
+        from examples.rag.rag import rag_retrieve
+        result = rag_retrieve(inp, encoder_model, limit, database_name, collection_name)
