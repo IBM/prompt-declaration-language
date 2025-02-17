@@ -1,12 +1,17 @@
 description: Code explanation example
 defs:
+  # The variable `CODE` shall be the contents of the parsed YAML file
   CODE:
     read: ./data.yaml
     parser: yaml
+  # The variable `TRUTH` shall be the text of the file
   TRUTH:
     read: ./ground_truth.txt
 text:
+# Print the source code to the console
 - "\n${ CODE.source_code }\n"
+# Use replicate.com to invoke a Granite model with a prompt.  Output AND
+# set the variable `EXPLANATION` to the output.
 - model: replicate/ibm-granite/granite-3.1-8b-instruct
   def: EXPLANATION
   input: |
@@ -20,13 +25,18 @@ text:
       Explain the following code:
       ```
       ${ CODE.source_code }```
+  parameters:
+    # Use no LLM creativity.  (Note that 0 is the default; this line has no effect)
+    temperature: 0
 - |
 
 
   EVALUATION:
   The similarity (Levenshtein) between this answer and the ground truth is:
+# We aren't only defining `EVAL`, we are also executing it.
 - def: EVAL
   lang: python
+  # (Use `pip install textdistance` if needed to install the textdistance package)
   code: |
     import textdistance
     expl = """
@@ -35,4 +45,5 @@ text:
     truth = """
     ${ TRUTH }
     """
+    # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)

@@ -19,7 +19,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = (
   const badgeColor = /Read/.test(label)
     ? "var(--pf-t--global--color--nonstatus--orange--default)"
     : /Code/.test(label)
-      ? "var(--pf-t--global--color--nonstatus--blue--default)"
+      ? "var(--pf-t--global--color--nonstatus--purple--default)"
       : /LLM/.test(label)
         ? "var(--pf-t--global--color--nonstatus--teal--default)"
         : "var(--pf-t--color--white)"
