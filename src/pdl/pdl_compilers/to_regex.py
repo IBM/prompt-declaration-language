@@ -10,7 +10,6 @@ from ..pdl_ast import (
     CodeBlock,
     DataBlock,
     ExpressionType,
-    ForBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -306,10 +305,6 @@ def compile_block(
             )
             regex = ReOr([then_regex, else_regex])
             scope = scope_union(then_scope, else_scope)
-        case ForBlock():
-            body, scope = compile_block(scope, block.repeat)
-            # XXX TODO: join char in text mode XXX
-            regex = ReStar(body)
         case RepeatUntilBlock():
             body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX

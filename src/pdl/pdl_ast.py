@@ -482,27 +482,13 @@ class JoinLastOf(JoinConfig):
 JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
 
 
-class ForBlock(Block):
-    """Iteration over arrays."""
-
-    kind: Literal[BlockKind.FOR] = BlockKind.FOR
-    fors: dict[str, ExpressionType] = Field(alias="for")
-    """Arrays to iterate over.
-    """
-    repeat: "BlockType"
-    """Body of the loop.
-    """
-    join: JoinType = JoinText()
-    """Define how to combine the result of each iteration.
-    """
-    # Field for internal use
-    trace: Optional[list["BlockType"]] = None
-
-
 class RepeatUntilBlock(Block):
-    """Repeat the execution of a block until a condition is satisfied."""
+    """Repeat the execution of a block."""
 
     kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
+    fors: Optional[dict[str, ExpressionType]] = Field(default=None, alias="for")
+    """Arrays to iterate over.
+    """
     repeat: "BlockType"
     """Body of the loop.
     """
@@ -567,7 +553,6 @@ AdvancedBlockType: TypeAlias = (
     | IfBlock
     | MatchBlock
     | RepeatUntilBlock
-    | ForBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
