@@ -31,8 +31,7 @@ line1 = {
     "file": "tests/data/line/hello1.pdl",
     "errors": [
         "",
-        "tests/data/line/hello1.pdl:5 - Missing required field: num_iterations",
-        "tests/data/line/hello1.pdl:7 - Field not allowed: num_iterationss",
+        "tests/data/line/hello1.pdl:7 - Field not allowed: num_iterations",
     ],
 }
 

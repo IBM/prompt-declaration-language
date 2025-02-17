@@ -20,7 +20,7 @@ def repeat_data(n):
                 "This is your first prompt descriptor!\n",
             ]
         },
-        "num_iterations": n,
+        "max_iterations": n,
     }
 
 
@@ -32,7 +32,7 @@ def nested_repeat_data(n):
             "This is your first prompt descriptor!\n",
             {
                 "repeat": "This sentence repeats!\n",
-                "num_iterations": n,
+                "max_iterations": n,
             },
         ],
     }
@@ -109,7 +109,7 @@ repeat_data_error = {
             {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
         ]
     },
-    "num_iterations": 3,
+    "max_iterations": 3,
     "join": {"as": "lastOf"},
 }
 

@@ -399,13 +399,12 @@ The chatbot keeps looping by making a call to a model, asking the user if the ge
 and asking `why not?` if the answer (stored in variable `eval`) is `no`. The loop ends when `eval` becomes `yes`. This is specified with a Jinja expression on line 18.
 
 Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together, then we need the keyword `text` to precede a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastOf` block.
-
-Another form of iteration in PDL is `repeat` followed by `num_iterations`, which repeats the body `num_iterations` times.
+The number of iterations of a loop can be bounded by adding a `max_iterations` field.
 
 The way that the result of each iteration is collated with other iterations can be customized in PDL using
 the `join` feature (see the following section).
 
-## For Loops
+### For Loops
 
 PDL also offers `for` loops over lists.
 The following [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/for.pdl) stringifies and outputs each number.

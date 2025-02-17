@@ -25,7 +25,6 @@ from .pdl_ast import (
     PdlParser,
     ReadBlock,
     RegexParser,
-    RepeatBlock,
     RepeatUntilBlock,
     TextBlock,
 )
@@ -82,11 +81,6 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case MatchBlock():
             for match_case in block.with_:
                 f(match_case.then)
-        case RepeatBlock():
-            f(block.repeat)
-            if block.trace is not None:
-                for trace in block.trace:
-                    f(trace)
         case RepeatUntilBlock():
             f(block.repeat)
             if block.trace is not None:
@@ -179,10 +173,6 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case MatchBlock():
             block.match_ = f.f_expr(block.match_)
             block.with_ = [map_match_case(f, c) for c in block.with_]
-        case RepeatBlock():
-            block.repeat = f.f_block(block.repeat)
-            if block.trace is not None:
-                block.trace = [f.f_block(trace) for trace in block.trace]
         case RepeatUntilBlock():
             block.until = f.f_expr(block.until)
             block.repeat = f.f_block(block.repeat)

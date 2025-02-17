@@ -4,4 +4,4 @@ text:
     - "\n"
     - repeat:
         "This is your first PDL program\n"
-      num_iterationss: 3
+      num_iterations: 3

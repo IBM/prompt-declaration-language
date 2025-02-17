@@ -499,23 +499,6 @@ class ForBlock(Block):
     trace: Optional[list["BlockType"]] = None
 
 
-class RepeatBlock(Block):
-    """Repeat the execution of a block for a fixed number of iterations."""
-
-    kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    repeat: "BlockType"
-    """Body of the loop.
-    """
-    num_iterations: int
-    """Number of iterations to perform.
-    """
-    join: JoinType = JoinText()
-    """Define how to combine the result of each iteration.
-    """
-    # Field for internal use
-    trace: Optional[list["BlockType"]] = None
-
-
 class RepeatUntilBlock(Block):
     """Repeat the execution of a block until a condition is satisfied."""
 
@@ -523,8 +506,11 @@ class RepeatUntilBlock(Block):
     repeat: "BlockType"
     """Body of the loop.
     """
-    until: ExpressionType
+    until: Optional[ExpressionType] = None
     """Condition of the loop.
+    """
+    max_iterations: Optional[ExpressionType] = None
+    """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
@@ -580,7 +566,6 @@ AdvancedBlockType: TypeAlias = (
     | DataBlock
     | IfBlock
     | MatchBlock
-    | RepeatBlock
     | RepeatUntilBlock
     | ForBlock
     | TextBlock

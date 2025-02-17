@@ -20,7 +20,6 @@ from ..pdl_ast import (
     LocalizedExpression,
     ModelBlock,
     ReadBlock,
-    RepeatBlock,
     RepeatUntilBlock,
     TextBlock,
 )
@@ -307,10 +306,6 @@ def compile_block(
             )
             regex = ReOr([then_regex, else_regex])
             scope = scope_union(then_scope, else_scope)
-        case RepeatBlock():
-            body, scope = compile_block(scope, block.repeat)
-            # XXX TODO: join char in text mode XXX
-            regex = ReRepeatN(body, block.num_iterations)
         case ForBlock():
             body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX

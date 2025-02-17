@@ -117,11 +117,6 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
 #             iter_blocks(f, block.then)
 #             if block.elses is not None:
 #                 iter_blocks(f, block.elses)
-#         case RepeatBlock():
-#             iter_blocks(f, block.repeat)
-#             if block.trace is not None:
-#                 for trace in block.trace:
-#                     iter_blocks(f, trace)
 #         case RepeatUntilBlock():
 #             iter_blocks(f, block.repeat)
 #             if block.trace is not None:
