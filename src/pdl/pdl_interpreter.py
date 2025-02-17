@@ -1250,9 +1250,11 @@ def process_expr(  # pylint: disable=too-many-return-statements
         return result
     if isinstance(expr, dict):
         result_dict: dict[str, Any] = {}
-        for k, x in expr.items():
-            r = process_expr(scope, x, append(loc, k))
-            result_dict[k] = r
+        for k, v in expr.items():
+            k_loc = append(loc, k)
+            k_res = process_expr(scope, k, k_loc)
+            v_res = process_expr(scope, v, k_loc)
+            result_dict[k_res] = v_res
         return result_dict
     return expr
 
