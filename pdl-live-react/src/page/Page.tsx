@@ -36,6 +36,9 @@ export default function PDLPage(props: Props) {
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
   const [value, setValue] = useState(initialValue)
+  useEffect(() => {
+    setValue(props.initialValue)
+  }, [props.initialValue])
 
   /** Manage the drawer that slides in from the right */
   const [searchParams] = useSearchParams()
