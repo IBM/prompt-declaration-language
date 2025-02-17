@@ -89,7 +89,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -226,7 +226,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -411,7 +411,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -574,7 +574,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -711,7 +711,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -916,7 +916,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1021,7 +1021,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -1158,7 +1158,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1353,7 +1353,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1482,7 +1482,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -1619,7 +1619,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1849,7 +1849,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -1986,7 +1986,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2196,7 +2196,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -2333,7 +2333,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2521,7 +2521,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2626,7 +2626,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -2763,7 +2763,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2959,7 +2959,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3065,7 +3065,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -3202,7 +3202,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3421,7 +3421,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -3558,7 +3558,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3752,7 +3752,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3827,7 +3827,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3946,7 +3946,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -4083,7 +4083,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4272,7 +4272,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4429,7 +4429,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -4566,7 +4566,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4751,7 +4751,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -4857,7 +4857,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -4994,7 +4994,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5190,7 +5190,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5265,7 +5265,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5857,7 +5857,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -5994,7 +5994,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6253,7 +6253,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6357,7 +6357,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -6494,7 +6494,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6677,7 +6677,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6783,7 +6783,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -6920,7 +6920,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -7107,7 +7107,7 @@
                     "$ref": "#/$defs/MatchBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatUntilBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
@@ -7183,7 +7183,7 @@
                     "$ref": "#/$defs/MatchBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatUntilBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
@@ -7382,7 +7382,7 @@
           "$ref": "#/$defs/MatchBlock"
         },
         {
-          "$ref": "#/$defs/RepeatUntilBlock"
+          "$ref": "#/$defs/RepeatBlock"
         },
         {
           "$ref": "#/$defs/TextBlock"
@@ -7483,7 +7483,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -7564,7 +7564,7 @@
           "$ref": "#/$defs/MatchBlock"
         },
         {
-          "$ref": "#/$defs/RepeatUntilBlock"
+          "$ref": "#/$defs/RepeatBlock"
         },
         {
           "$ref": "#/$defs/TextBlock"
@@ -7662,7 +7662,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -7799,7 +7799,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8033,7 +8033,7 @@
       "title": "RegexParser",
       "type": "object"
     },
-    "RepeatUntilBlock": {
+    "RepeatBlock": {
       "additionalProperties": false,
       "description": "Repeat the execution of a block.",
       "properties": {
@@ -8095,7 +8095,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -8232,7 +8232,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8372,8 +8372,8 @@
           "default": null
         },
         "kind": {
-          "const": "repeat_until",
-          "default": "repeat_until",
+          "const": "repeat",
+          "default": "repeat",
           "title": "Kind",
           "type": "string"
         },
@@ -8437,7 +8437,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8559,7 +8559,7 @@
                     "$ref": "#/$defs/MatchBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatUntilBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
@@ -8606,7 +8606,7 @@
       "required": [
         "repeat"
       ],
-      "title": "RepeatUntilBlock",
+      "title": "RepeatBlock",
       "type": "object"
     },
     "TextBlock": {
@@ -8671,7 +8671,7 @@
                 "$ref": "#/$defs/MatchBlock"
               },
               {
-                "$ref": "#/$defs/RepeatUntilBlock"
+                "$ref": "#/$defs/RepeatBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -8808,7 +8808,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8992,7 +8992,7 @@
               "$ref": "#/$defs/MatchBlock"
             },
             {
-              "$ref": "#/$defs/RepeatUntilBlock"
+              "$ref": "#/$defs/RepeatBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -9061,7 +9061,7 @@
                     "$ref": "#/$defs/MatchBlock"
                   },
                   {
-                    "$ref": "#/$defs/RepeatUntilBlock"
+                    "$ref": "#/$defs/RepeatBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"

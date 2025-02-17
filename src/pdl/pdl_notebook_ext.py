@@ -121,14 +121,6 @@ class PDLMagics(Magics):
       background-color: rgb(251, 201, 86);
     }
 
-    .pdl_repeat_until {
-      background-color: rgb(243, 209, 77);
-    }
-
-    .pdl_for {
-      background-color: rgb(245, 241, 133);
-    }
-
     .pdl_read {
       background-color: rgb(243, 77, 113);
     }

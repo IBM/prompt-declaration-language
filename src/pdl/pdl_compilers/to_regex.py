@@ -19,7 +19,7 @@ from ..pdl_ast import (
     LocalizedExpression,
     ModelBlock,
     ReadBlock,
-    RepeatUntilBlock,
+    RepeatBlock,
     TextBlock,
 )
 
@@ -305,7 +305,7 @@ def compile_block(
             )
             regex = ReOr([then_regex, else_regex])
             scope = scope_union(then_scope, else_scope)
-        case RepeatUntilBlock():
+        case RepeatBlock():
             body, scope = compile_block(scope, block.repeat)
             # XXX TODO: join char in text mode XXX
             regex = ReStar(body)

@@ -76,7 +76,7 @@ from .pdl_ast import (  # noqa: E402
     Program,
     ReadBlock,
     RegexParser,
-    RepeatUntilBlock,
+    RepeatBlock,
     RoleType,
     ScopeType,
     TextBlock,
@@ -638,7 +638,7 @@ def process_block_body(
                 append_log(state, "Match", "no match!")
             block.with_ = cases
             trace = block
-        case RepeatUntilBlock():
+        case RepeatBlock():
             results: list[PdlLazy[Any]] = []
             background = PdlList([])
             iter_trace: list[BlockType] = []

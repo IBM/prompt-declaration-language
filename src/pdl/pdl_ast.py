@@ -35,11 +35,9 @@ class BlockKind(StrEnum):
     IF = "if"
     MATCH = "match"
     REPEAT = "repeat"
-    REPEAT_UNTIL = "repeat_until"
     READ = "read"
     INCLUDE = "include"
     EMPTY = "empty"
-    FOR = "for"
     ERROR = "error"
 
 
@@ -482,10 +480,10 @@ class JoinLastOf(JoinConfig):
 JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
 
 
-class RepeatUntilBlock(Block):
+class RepeatBlock(Block):
     """Repeat the execution of a block."""
 
-    kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
+    kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     fors: Optional[dict[str, ExpressionType]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
@@ -552,7 +550,7 @@ AdvancedBlockType: TypeAlias = (
     | DataBlock
     | IfBlock
     | MatchBlock
-    | RepeatUntilBlock
+    | RepeatBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock

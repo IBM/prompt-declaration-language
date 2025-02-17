@@ -89,9 +89,7 @@
   &[data-kind="read"] {
     background-color: var(--pf-t--global--color--nonstatus--orange--default);
   }
-  &[data-kind="repeat_until"],
   &[data-kind="repeat"],
-  &[data-kind="for"],
   &[data-kind="lastOf"],
   &[data-kind="call"] {
     background-color: var(--pf-t--global--border--color--default);

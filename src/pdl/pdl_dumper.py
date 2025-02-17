@@ -39,7 +39,7 @@ from .pdl_ast import (
     PdlParser,
     ReadBlock,
     RegexParser,
-    RepeatUntilBlock,
+    RepeatBlock,
     TextBlock,
 )
 from .pdl_lazy import PdlLazy
@@ -187,7 +187,7 @@ def block_to_dict(  # noqa: C901
                 }
                 for match_case in block.with_
             ]
-        case RepeatUntilBlock():
+        case RepeatBlock():
             d["for"] = block.fors
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
