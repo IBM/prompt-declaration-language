@@ -739,11 +739,15 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
                         "post_message": "<|end_of_text|>",
                     },
                     "available_tools": {
-                        "pre_message": "<|start_of_role|>available_tools<|end_of_role|>",
+                        "pre_message": "<|start_of_role|>tools<|end_of_role|>",
                         "post_message": "<|end_of_text|>",
                     },
                     "tool_response": {
                         "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "documents": {
+                        "pre_message": "<|start_of_role|>documents<|end_of_role|>",
                         "post_message": "<|end_of_text|>",
                     },
                 },
