@@ -748,7 +748,9 @@ def process_block_body(
             try:
                 first = True
                 iidx = 0
-                while not stop and (max_iterations is None or iidx < max_iterations):
+                while True:
+                    if max_iterations is not None and iidx >= max_iterations:
+                        break
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
@@ -787,6 +789,8 @@ def process_block_body(
                     background = lazy_messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
                     stop = process_condition_of(block, "until", scope, loc)
+                    if stop:
+                        break
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
             except PDLRuntimeError as exc:
