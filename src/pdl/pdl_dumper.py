@@ -40,7 +40,6 @@ from .pdl_ast import (
     PdlParser,
     ReadBlock,
     RegexParser,
-    RepeatBlock,
     RepeatUntilBlock,
     TextBlock,
 )
@@ -189,15 +188,10 @@ def block_to_dict(  # noqa: C901
                 }
                 for match_case in block.with_
             ]
-        case RepeatBlock():
-            d["repeat"] = block_to_dict(block.repeat, json_compatible)
-            d["num_iterations"] = block.num_iterations
-            d["join"] = join_to_dict(block.join)
-            if block.trace is not None:
-                d["trace"] = [block_to_dict(b, json_compatible) for b in block.trace]
         case RepeatUntilBlock():
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
+            d["max_iterations"] = block.max_iterations
             d["join"] = join_to_dict(block.join)
             if block.trace is not None:
                 d["trace"] = [block_to_dict(b, json_compatible) for b in block.trace]

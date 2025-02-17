@@ -102,7 +102,6 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "array" }, (data) => [data.array])
     .with({ kind: "object" }, (data) => [data.object])
     .with({ kind: "message" }, (data) => [data.content])
-    .with({ kind: "repeat" }, (data) => [data.trace ?? data.repeat])
     .with({ kind: "repeat_until" }, (data) => [data.trace ?? data.repeat])
     .with({ kind: "for" }, (data) => [data.trace ?? data.repeat])
     .with({ kind: "empty" }, () => [])

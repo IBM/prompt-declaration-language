@@ -77,7 +77,6 @@ from .pdl_ast import (  # noqa: E402
     Program,
     ReadBlock,
     RegexParser,
-    RepeatBlock,
     RepeatUntilBlock,
     RoleType,
     ScopeType,
@@ -640,72 +639,8 @@ def process_block_body(
                 append_log(state, "Match", "no match!")
             block.with_ = cases
             trace = block
-        case RepeatBlock(num_iterations=n):
-            results: list[PdlLazy[Any]] = []
-            background = PdlList([])
-            iterations_trace: list[BlockType] = []
-            pdl_context_init: LazyMessages = scope_init.data["pdl_context"]
-            iteration_state = state.with_yield_result(
-                state.yield_result and block.join.iteration_type == IterationType.TEXT
-            )
-            repeat_loc = append(loc, "repeat")
-            try:
-                iidx = 0
-                first = True
-                for _ in range(n):
-                    iteration_state = iteration_state.with_iter(iidx)
-                    if first:
-                        first = False
-                    elif block.join.iteration_type == IterationType.TEXT:
-                        join_string = block.join.join_string
-                        results.append(PdlConst(join_string))
-                        if iteration_state.yield_result:
-                            yield_result(join_string, block.kind)
-                        if iteration_state.yield_background:
-                            yield_background(
-                                [
-                                    {
-                                        "role": block.role,
-                                        "content": join_string,
-                                        "defsite": block.id,
-                                    }
-                                ]
-                            )
-                    scope = scope | {
-                        "pdl_context": lazy_messages_concat(
-                            pdl_context_init, background
-                        )
-                    }
-                    (
-                        iteration_result,
-                        iteration_background,
-                        scope,
-                        body_trace,
-                    ) = process_block(
-                        iteration_state,
-                        scope,
-                        block.repeat,
-                        repeat_loc,
-                    )
-                    results.append(iteration_result)
-                    background = lazy_messages_concat(background, iteration_background)
-                    iterations_trace.append(body_trace)
-                    iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
-            except PDLRuntimeError as exc:
-                iterations_trace.append(exc.trace)
-                trace = block.model_copy(update={"trace": iterations_trace})
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or repeat_loc,
-                    trace=trace,
-                ) from exc
-            result = combine_results(block.join.iteration_type, results)
-            if state.yield_result and not iteration_state.yield_result:
-                yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"trace": iterations_trace})
         case ForBlock():
-            results = []
+            results: list[PdlLazy[Any]] = []
             background = PdlList([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
@@ -803,11 +738,19 @@ def process_block_body(
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
+            if block.max_iterations is None:
+                max_iterations = None
+            else:
+                max_iterations, block = process_expr_of(
+                    block, "max_iterations", scope, loc
+                )
             repeat_loc = append(loc, "repeat")
             try:
                 first = True
                 iidx = 0
-                while not stop:
+                while True:
+                    if max_iterations is not None and iidx >= max_iterations:
+                        break
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
@@ -846,6 +789,8 @@ def process_block_body(
                     background = lazy_messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
                     stop = process_condition_of(block, "until", scope, loc)
+                    if stop:
+                        break
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
             except PDLRuntimeError as exc:
