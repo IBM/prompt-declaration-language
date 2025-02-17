@@ -1,21 +1,13 @@
 import pytest
 
-from pdl.pdl import exec_str
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_interpreter import PDLRuntimeError
 
 direct_fallback_data = {"model": "raise an error", "fallback": "The error was caught"}
 
 
 def test_direct_fallback():
-    state = InterpreterState()
-    data = Program.model_validate(direct_fallback_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(direct_fallback_data)
     assert text == "The error was caught"
 
 
@@ -26,9 +18,7 @@ indirect_fallback_data = {
 
 
 def test_indirect_fallback():
-    state = InterpreterState()
-    data = Program.model_validate(indirect_fallback_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(indirect_fallback_data)
     assert text == "The error was caught"
 
 
@@ -39,9 +29,7 @@ error_in_sequence_data = {
 
 
 def test_error_in_sequence():
-    state = InterpreterState()
-    data = Program.model_validate(error_in_sequence_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(error_in_sequence_data)
     assert text == "The error was caught"
 
 
@@ -86,5 +74,5 @@ fallback: "Error"
         _ = exec_str(prog_str)
     assert (
         str(exc.value.message)
-        == "Type errors during spec checking:\nline 0 - Error should be of type <class 'int'>"  # TODO: check line number
+        == "Type errors during spec checking:\nline 4 - Error should be of type <class 'int'>"
     )

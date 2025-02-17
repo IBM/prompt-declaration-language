@@ -9,7 +9,7 @@ from pytest import CaptureFixture, MonkeyPatch
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_dumper import block_to_dict
-from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_lazy import PdlDict
 from pdl.pdl_parser import PDLParseError
 
 UPDATE_RESULTS = False
@@ -94,10 +94,12 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
         pathlib.Path("examples")
         / "granite"
-        / "single_round_chat.pdl": InputsType(scope={"PROMPT": "What is APR?\nyes\n"}),
+        / "single_round_chat.pdl": InputsType(
+            scope=PdlDict({"PROMPT": "What is APR?\nyes\n"})
+        ),
         pathlib.Path("examples")
         / "hello"
-        / "hello-data.pdl": InputsType(scope={"something": "ABC"}),
+        / "hello-data.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
         pathlib.Path("examples")
         / "tutorial"
         / "conditionals_loops.pdl": InputsType(
@@ -154,7 +156,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     actual_runtime_error: set[str] = set()
     wrong_results = {}
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        scope: ScopeType = {}
+        scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue
         if str(pdl_file_name) in TESTS_WITH_INPUT:
@@ -205,9 +207,9 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}
-        except PDLRuntimeError as exc:
+        except Exception as exc:
             if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
-                print(exc)  # unexpected error: breakpoint
+                print(f"{pdl_file_name}: {exc}")  # unexpected error: breakpoint
             actual_runtime_error |= {str(pdl_file_name)}
             print(exc)
     # Parse errors

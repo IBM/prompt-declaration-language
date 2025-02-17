@@ -2,14 +2,8 @@ import json
 
 import pytest
 
-from pdl.pdl import exec_str
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_interpreter import PDLRuntimeError
 
 hello = {
     "description": "Hello world!",
@@ -45,9 +39,7 @@ def nested_repeat_data(n):
 
 
 def test_hello():
-    state = InterpreterState()
-    data = Program.model_validate(hello)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello)
     assert text == "Hello, world!\nThis is your first prompt descriptor!\n"
 
 
@@ -57,9 +49,7 @@ def test_hello_json():
 
 
 def repeat(n):
-    state = InterpreterState()
-    data = Program.model_validate(repeat_data(n))
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_data(n))
     assert_string = []
     for _ in range(0, n):
         assert_string.append("Hello, world!\n")
@@ -88,9 +78,7 @@ def test_repeat3():
 
 
 def repeat_nested(n):
-    state = InterpreterState()
-    data = Program.model_validate(nested_repeat_data(n))
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(nested_repeat_data(n))
     assert_string = ["Hello, world!\n", "This is your first prompt descriptor!\n"]
     for _ in range(0, n):
         assert_string.append("This sentence repeats!\n")
@@ -127,10 +115,8 @@ repeat_data_error = {
 
 
 def test_repeat_error():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_data_error)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(repeat_data_error)
 
 
 def test_program_as_list():

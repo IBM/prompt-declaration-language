@@ -1,5 +1,5 @@
-from pdl.pdl_ast import ContributeTarget, Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import exec_dict
+from pdl.pdl_ast import ContributeTarget
 
 cond_data = {
     "description": "Arithmetic Expressions",
@@ -164,18 +164,14 @@ def cond_data1(show, name):
 
 
 def test_cond1():
-    state = InterpreterState()
-    data = Program.model_validate(cond_data1([], "blah"))
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(cond_data1([], "blah"))
     assert text == ""
 
 
 def test_cond2():
-    state = InterpreterState()
-    data = Program.model_validate(
+    text = exec_dict(
         cond_data1([ContributeTarget.RESULT, ContributeTarget.CONTEXT], "acy")
     )
-    text, _, _, _ = process_prog(state, empty_scope, data)
     assert text == "Tracy, hello there!\n"
 
 
@@ -206,9 +202,7 @@ repeat_until_data = {
 
 
 def test_repeat_until():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_until_data)
     assert text == "".join(
         [
             "0",
@@ -246,9 +240,7 @@ repeat_until_array_data = {
 
 
 def test_repeat_until_array():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_array_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_until_array_data)
     assert text == "".join(["0", "\n", '["1\\n", "2\\n", "3\\n", "4\\n", "5\\n"]'])
 
 
@@ -278,9 +270,7 @@ repeat_until_text_data = {
 
 
 def test_repeat_until_text():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_text_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_until_text_data)
     assert text == "".join(
         [
             "0",
@@ -323,9 +313,7 @@ repeat_until_text_with_data = {
 
 
 def test_repeat_until_text_with():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_text_with_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_until_text_with_data)
     assert text == "\n".join(
         [
             "0",
@@ -366,9 +354,7 @@ repeat_until_str_data = {
 
 
 def test_repeat_until_str():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_str_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(repeat_until_str_data)
     assert text == "".join(
         [
             "0",

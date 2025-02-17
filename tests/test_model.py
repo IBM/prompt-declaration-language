@@ -1,5 +1,4 @@
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import exec_dict
 
 model_data = {
     "description": "Hello world with a variable to call into a model",
@@ -19,9 +18,7 @@ model_data = {
 
 
 def test_model():
-    state = InterpreterState()
-    data = Program.model_validate(model_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(model_data)
     assert text == "Hello, World!\n"
 
 
@@ -68,9 +65,7 @@ model_chain_data = {
 
 
 def test_model_chain():
-    state = InterpreterState()
-    data = Program.model_validate(model_chain_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(model_chain_data)
     assert (
         text
         == 'Hello, World!\nWho is World?\nWorld is a fictional character in the popular science fiction television series "The X-Files\n'
@@ -110,9 +105,7 @@ multi_shot_data = {
 
 
 def test_multi_shot():
-    state = InterpreterState()
-    data = Program.model_validate(multi_shot_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(multi_shot_data)
     assert text == "Armonk"
 
 
@@ -132,9 +125,7 @@ model_data_missing_parameters = {
 
 
 def test_data_missing_parameters():
-    state = InterpreterState()
-    data = Program.model_validate(model_data_missing_parameters)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(model_data_missing_parameters)
     assert (
         text
         == 'Hello,\n\nI have a question about the use of the word "in" in the sentence: "The cake was baked in the oven.'
@@ -155,9 +146,7 @@ model_parameter = {
 
 
 def test_model_parameter():
-    state = InterpreterState()
-    data = Program.model_validate(model_parameter)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(model_parameter)
     assert text == "Hello, World!"
 
 
@@ -175,9 +164,7 @@ model_parameter1 = {
 
 
 def test_model_parameter1():
-    state = InterpreterState()
-    data = Program.model_validate(model_parameter1)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(model_parameter1)
     assert text == "Hello, World!"
 
 
@@ -195,7 +182,5 @@ litellm_mock = {
 
 
 def test_litellm_mock():
-    state = InterpreterState()
-    data = Program.model_validate(litellm_mock)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(litellm_mock)
     assert text == "Hello, World!"

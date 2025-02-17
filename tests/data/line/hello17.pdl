@@ -1,7 +1,6 @@
 description: Hello world showing call out to python code
 text:
 - lang: python
-  contribute: []
   spec: int
   code: |
     import string

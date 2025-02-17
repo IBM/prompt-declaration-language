@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import InterpreterConfig, exec_dict
 
 include_data = {
     "description": "Include test",
@@ -14,9 +13,8 @@ include_data = {
 
 
 def test_include():
-    state = InterpreterState(cwd=Path(__file__).parent)
-    data = Program.model_validate(include_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    config = InterpreterConfig(cwd=Path(__file__).parent)
+    text = exec_dict(include_data, config=config)
     assert (
         text
         == """Start
@@ -44,9 +42,8 @@ biz = {
 
 
 def test_biz():
-    state = InterpreterState(cwd=Path(__file__).parent)
-    data = Program.model_validate(biz)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    config = InterpreterConfig(cwd=Path(__file__).parent)
+    text = exec_dict(biz, config=config)
     assert (
         text
         == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"

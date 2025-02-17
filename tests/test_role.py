@@ -1,13 +1,4 @@
-import yaml
-
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
-
-
-def parse_prog_str(prog_str):
-    prog_yaml = yaml.safe_load(prog_str)
-    prog = Program.model_validate(prog_yaml)
-    return prog
+from pdl.pdl import exec_str
 
 
 def test_role1():
@@ -25,11 +16,10 @@ text:
   role: B
 role: Top
 """
-    prog = parse_prog_str(prog_str)
-    state = InterpreterState()
-    result, output, scope, _ = process_prog(state, empty_scope, prog)
-    assert result == "AHiB"
-    assert output == [
+    result = exec_str(prog_str, output="all")
+    scope = result["scope"]
+    assert result["result"] == "AHiB"
+    assert scope["pdl_context"] == [
         {"role": "A", "content": "A", "defsite": "text.0.text"},
         {"role": "Top", "content": "Hi", "defsite": "text.1"},
         {"role": "B", "content": "B", "defsite": "text.2.text"},

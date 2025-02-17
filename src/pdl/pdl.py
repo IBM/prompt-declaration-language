@@ -20,6 +20,7 @@ from .pdl_ast import (
     get_default_model_parameters,
 )
 from .pdl_interpreter import InterpreterState, process_prog
+from .pdl_lazy import PdlDict
 from .pdl_parser import parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import validate_scope
@@ -51,7 +52,7 @@ class InterpreterConfig(TypedDict, total=False):
 def exec_program(
     prog: Program,
     config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
     loc: Optional[LocationType] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
@@ -70,13 +71,16 @@ def exec_program(
     logging.basicConfig(filename="log.txt", encoding="utf-8", format="", filemode="w")
     config = config or {}
     state = InterpreterState(**config)
-    scope = scope or {}
+    if not isinstance(scope, PdlDict):
+        scope = PdlDict(scope or {})
     loc = loc or empty_block_location
-    result, _, scope, trace = process_prog(state, scope, prog, loc)
+    future_result, _, future_scope, trace = process_prog(state, scope, prog, loc)
+    result = future_result.result()
     match output:
         case "result":
             return result
         case "all":
+            scope = future_scope.result()
             return {"result": result, "scope": scope, "trace": trace}
         case _:
             assert False, 'The `output` variable should be "result" or "all"'
@@ -85,7 +89,7 @@ def exec_program(
 def exec_dict(
     prog: dict[str, Any],
     config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
     loc: Optional[LocationType] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
@@ -109,7 +113,7 @@ def exec_dict(
 def exec_str(
     prog: str,
     config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML string.
@@ -131,7 +135,7 @@ def exec_str(
 def exec_file(
     prog: str | Path,
     config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML file.
@@ -276,7 +280,7 @@ def main():
         pdl_file,
         args.log,
         InterpreterState(**config),
-        initial_scope,
+        PdlDict(initial_scope),
         trace_file,
     )
 

@@ -1,15 +1,15 @@
 import fnmatch
 import json
-from typing import Any, Generator, Generic, Sequence, TypeVar
+from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 
 from .pdl_ast import (
     ContributeTarget,
     ContributeValue,
     FunctionBlock,
-    Message,
-    Messages,
+    LazyMessages,
     get_sampling_defaults,
 )
+from .pdl_lazy import lazy_apply2
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -41,6 +41,13 @@ def step_to_completion(gen: Generator[Any, Any, GeneratorReturnT]) -> GeneratorR
     for _ in w:
         pass
     return w.value
+
+
+ToAsyncT = TypeVar("ToAsyncT")
+
+
+async def to_async(value: ToAsyncT) -> ToAsyncT:
+    return value
 
 
 def stringify(result):
@@ -83,7 +90,9 @@ def get_contribute_value(
     return None
 
 
-def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
+def messages_concat(
+    messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
     if len(messages1) == 0:
         return messages2
     if len(messages2) == 0:
@@ -101,17 +110,23 @@ def messages_concat(messages1: Messages, messages2: Messages) -> Messages:
     return messages1 + messages2
 
 
-def messages_to_str(messages: Messages) -> str:
-    return "\n".join([str(msg) for msg in messages])
+def lazy_messages_concat(
+    messages1: LazyMessages, messages2: LazyMessages
+) -> LazyMessages:
+    return lazy_apply2(messages_concat, messages1, messages2)
 
 
-def simple_message(message: Message) -> bool:
+def messages_to_str(messages: LazyMessages) -> str:
+    return "\n".join([str(msg) for msg in messages.result()])
+
+
+def simple_message(message: Mapping[str, Any]) -> bool:
     if message.keys() == {"role", "content"} and message["content"] is not None:
         return True
     return False
 
 
-def remove_none_values_from_message(message: Any) -> dict[str, Any]:
+def remove_none_values_from_message(message: dict) -> dict[str, Any]:
     ret = {}
     for key, value in message.items():
         if key == "content":

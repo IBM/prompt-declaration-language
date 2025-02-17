@@ -1,10 +1,4 @@
-from pdl.pdl import exec_file
-from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
-from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
-    InterpreterState,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict, exec_file
 
 hello_def = {
     "def": "hello",
@@ -17,16 +11,12 @@ hello_call = {"description": "Call hello", "text": [hello_def, {"call": "${ hell
 
 
 def test_function_def():
-    state = InterpreterState()
-    data = Program.model_validate({"text": [hello_def]})
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict({"text": [hello_def]})
     assert text == ""
 
 
 def test_function_call():
-    state = InterpreterState()
-    data = Program.model_validate(hello_call)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello_call)
     assert text == "Hello world!"
 
 
@@ -45,9 +35,7 @@ hello_params = {
 
 
 def test_function_params():
-    state = InterpreterState()
-    data = Program.model_validate(hello_params)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello_params)
     assert text == "Hello World!"
 
 
@@ -62,9 +50,7 @@ hello_stutter = {
 
 
 def test_function_implicit_context():
-    state = InterpreterState()
-    data = Program.model_validate(hello_stutter)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello_stutter)
     assert text == "Hello World!\nHello World!\n"
 
 
@@ -82,9 +68,7 @@ hello_bye = {
 
 
 def test_function_explicit_context():
-    state = InterpreterState()
-    data = Program.model_validate(hello_bye)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello_bye)
     assert text == "Hello World!\nBye!"
 
 
@@ -105,9 +89,7 @@ hello_call_template = {
 
 
 def test_call_template():
-    state = InterpreterState()
-    data = Program.model_validate(hello_call_template)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello_call_template)
     assert text == "Hello World!"
 
 

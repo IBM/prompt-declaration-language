@@ -1,9 +1,4 @@
-from pdl.pdl_ast import Program  # pylint: disable=no-name-in-module
-from pdl.pdl_interpreter import (  # pylint: disable=no-name-in-module
-    InterpreterState,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict
 
 defs_data = {
     "description": "Hello world with variable use",
@@ -32,9 +27,7 @@ defs_data = {
 
 
 def test_defs():
-    state = InterpreterState()
-    data = Program.model_validate(defs_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(defs_data)
     assert text == "Hello, World!\n"
 
 
@@ -50,9 +43,7 @@ defs_chain_data = {
 
 
 def test_defs_chain():
-    state = InterpreterState()
-    data = Program.model_validate(defs_chain_data)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(defs_chain_data)
     assert text == "ababc"
 
 
@@ -60,7 +51,5 @@ defs_only = {"description": "defs only", "defs": {"var": "hello"}}
 
 
 def test_defs_only():
-    state = InterpreterState()
-    data = Program.model_validate(defs_only)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(defs_only)
     assert text == ""

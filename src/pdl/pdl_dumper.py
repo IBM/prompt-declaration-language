@@ -44,6 +44,7 @@ from .pdl_ast import (
     RepeatUntilBlock,
     TextBlock,
 )
+from .pdl_lazy import PdlLazy
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
 
@@ -81,7 +82,9 @@ def program_to_dict(
     return block_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBlockType:
+def block_to_dict(  # noqa: C901
+    block: pdl_ast.BlockType, json_compatible: bool
+) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
     d: dict[str, Any] = {}
@@ -89,8 +92,13 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
     if block.id is not None:
         d["id"] = block.id
     if block.start_nanos != 0:
-        if block.context is not None and len(block.context) > 0:
-            d["context"] = block.context
+        if block.context is not None:
+            if isinstance(block.context, PdlLazy):
+                context = block.context.result()
+            else:
+                context = block.context
+            if len(context) > 0:
+                d["context"] = context
         d["start_nanos"] = block.start_nanos
         d["end_nanos"] = block.end_nanos
 
@@ -224,9 +232,9 @@ def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBloc
         if isinstance(block.result, FunctionBlock):
             d["result"] = ""
         elif json_compatible:
-            d["result"] = as_json(block.result)
+            d["result"] = as_json(block.result.result())
         else:
-            d["result"] = block.result
+            d["result"] = block.result.result()
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     # if block.location is not None:

@@ -1,10 +1,10 @@
 from pytest import CaptureFixture
 
-from pdl.pdl_interpreter import generate
+from pdl.pdl_interpreter import empty_scope, generate
 
 
 def do_test(t, capsys):
-    generate(t["file"], None, None, {}, None)
+    generate(t["file"], None, None, empty_scope, None)
     captured = capsys.readouterr()
     output_string = captured.out + "\n" + captured.err
     output = output_string.split("\n")
@@ -170,7 +170,7 @@ line14 = {
     "errors": [
         "",
         "tests/data/line/hello14.pdl:25 - Type errors in result of function call to ${ translate }:",
-        "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
+        "tests/data/line/hello14.pdl:25 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
 

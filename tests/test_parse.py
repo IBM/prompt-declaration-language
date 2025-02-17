@@ -1,5 +1,4 @@
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import exec_dict
 
 regex_data = {
     "description": "Parsing using regex",
@@ -12,7 +11,5 @@ regex_data = {
 
 
 def test_model():
-    state = InterpreterState()
-    data = Program.model_validate(regex_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(regex_data)
     assert result == {"first_name": "Malcolm", "last_name": "Reynolds"}

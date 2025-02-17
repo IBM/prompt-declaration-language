@@ -1,13 +1,10 @@
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import InterpreterState, empty_scope, process_prog
+from pdl.pdl import exec_dict
 
 array_data = {"description": "Array", "array": ["1", "2", "3", "4"]}
 
 
 def test_array_data():
-    state = InterpreterState()
-    data = Program.model_validate(array_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(array_data)
     assert result == ["1", "2", "3", "4"]
 
 
@@ -22,9 +19,7 @@ for_data = {
 
 
 def test_for_data():
-    state = InterpreterState()
-    data = Program.model_validate(for_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(for_data)
     assert result == [1, 2, 3, 4]
 
 
@@ -49,7 +44,5 @@ repeat_until_data = {
 
 
 def test_repeat_until():
-    state = InterpreterState()
-    data = Program.model_validate(repeat_until_data)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(repeat_until_data)
     assert result == [1, 2, 3, 4, 5]

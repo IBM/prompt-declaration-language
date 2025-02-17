@@ -2,17 +2,22 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Optional, Sequence, TypeAlias, Union
+from typing import Any, Literal, Mapping, Optional, Sequence, TypeAlias, Union
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
+from pydantic.json_schema import SkipJsonSchema
 
+from .pdl_lazy import PdlDict, PdlLazy
 from .pdl_schema_utils import pdltype_to_jsonschema
 
-ScopeType: TypeAlias = dict[str, Any]
+ScopeType: TypeAlias = PdlDict[str, Any]
 
 
-Message: TypeAlias = dict[str, Any]
-Messages: TypeAlias = list[Message]
+ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
+
+
+LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
+LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
 
 
 class BlockKind(StrEnum):
@@ -180,7 +185,7 @@ class Block(BaseModel):
     timezone: Optional[str] = ""
     """Timezone of start_nanos and end_nanos
     """
-    context: Optional[Messages] = []
+    context: Optional[ModelInput] = []
     """Current context
     """
     id: Optional[str] = ""
@@ -202,7 +207,7 @@ class FunctionBlock(Block):
     """Body of the function
     """
     # Field for internal use
-    scope: Optional[ScopeType] = None
+    scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
 
 class CallBlock(Block):
@@ -616,6 +621,44 @@ class PdlBlock(RootModel):
 class PDLException(Exception):
     def __init__(self, message):
         super().__init__(message)
+        self.message = message
+
+
+class PDLRuntimeError(PDLException):
+    def __init__(
+        self,
+        message: str,
+        loc: Optional[LocationType] = None,
+        trace: Optional[BlockType] = None,
+        fallback: Optional[Any] = None,
+    ):
+        super().__init__(message)
+        self.loc = loc
+        self.trace = trace
+        self.fallback = fallback
+        self.message = message
+
+
+class PDLRuntimeExpressionError(PDLRuntimeError):
+    pass
+
+
+class PDLRuntimeParserError(PDLRuntimeError):
+    pass
+
+
+class PDLRuntimeProcessBlocksError(PDLException):
+    def __init__(
+        self,
+        message: str,
+        blocks: list[BlockType],
+        loc: Optional[LocationType] = None,
+        fallback: Optional[Any] = None,
+    ):
+        super().__init__(message)
+        self.loc = loc
+        self.blocks = blocks
+        self.fallback = fallback
         self.message = message
 
 

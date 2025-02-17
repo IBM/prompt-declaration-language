@@ -1,13 +1,8 @@
 import pytest
 import yaml
 
-from pdl.pdl_ast import Program
-from pdl.pdl_interpreter import (
-    InterpreterState,
-    PDLRuntimeError,
-    empty_scope,
-    process_prog,
-)
+from pdl.pdl import exec_dict
+from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema
 
 _PDLTYPE_TO_JSONSCHEMA_TESTS = [
@@ -167,9 +162,7 @@ function_call = {
 
 
 def test_function_call():
-    state = InterpreterState()
-    data = Program.model_validate(function_call)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call)
     assert text == "Hello Bob!"
 
 
@@ -188,9 +181,7 @@ function_call1 = {
 
 
 def test_function_call1():
-    state = InterpreterState()
-    data = Program.model_validate(function_call1)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call1)
     assert text == "Hello Bob!"
 
 
@@ -209,9 +200,7 @@ function_call2 = {
 
 
 def test_function_call2():
-    state = InterpreterState()
-    data = Program.model_validate(function_call2)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call2)
     assert text == "Hello 42!"
 
 
@@ -230,9 +219,7 @@ function_call3 = {
 
 
 def test_function_call3():
-    state = InterpreterState()
-    data = Program.model_validate(function_call3)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call3)
     assert text == 'Hello ["Bob", "Carrol"]!'
 
 
@@ -251,9 +238,7 @@ function_call4 = {
 
 
 def test_function_call4():
-    state = InterpreterState()
-    data = Program.model_validate(function_call4)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call4)
     assert text == 'Hello {"bob": "caroll"}!'
 
 
@@ -272,9 +257,7 @@ function_call5 = {
 
 
 def test_function_call5():
-    state = InterpreterState()
-    data = Program.model_validate(function_call5)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call5)
     assert text == "Hello true!"
 
 
@@ -293,9 +276,7 @@ function_call6 = {
 
 
 def test_function_call6():
-    state = InterpreterState()
-    data = Program.model_validate(function_call6)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call6)
     assert text == "Hello 6.6!"
 
 
@@ -308,16 +289,14 @@ function_call7 = {
             "function": {"name": "float"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
-        {"call": "${ hello }", "args": {"name": 6.6}},
+        {"call": "${ hello }", "args": {"name": 7.6}},
     ],
 }
 
 
 def test_function_call7():
-    state = InterpreterState()
-    data = Program.model_validate(function_call7)
-    text, _, _, _ = process_prog(state, empty_scope, data)
-    assert text == "Hello 6.6!"
+    text = exec_dict(function_call7)
+    assert text == "Hello 7.6!"
 
 
 function_call8 = {
@@ -335,10 +314,8 @@ function_call8 = {
 
 
 def test_function_call8():
-    state = InterpreterState()
-    data = Program.model_validate(function_call8)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call8)
 
 
 function_call9 = {
@@ -356,9 +333,7 @@ function_call9 = {
 
 
 def test_function_call9():
-    state = InterpreterState()
-    data = Program.model_validate(function_call9)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call9)
     assert text == "Hello 6.6 street!"
 
 
@@ -380,10 +355,8 @@ function_call10 = {
 
 
 def test_function_call10():
-    state = InterpreterState()
-    data = Program.model_validate(function_call10)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call10)
 
 
 function_call11 = {
@@ -404,10 +377,8 @@ function_call11 = {
 
 
 def test_function_call11():
-    state = InterpreterState()
-    data = Program.model_validate(function_call11)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call11)
 
 
 function_call12 = {
@@ -425,10 +396,8 @@ function_call12 = {
 
 
 def test_function_call12():
-    state = InterpreterState()
-    data = Program.model_validate(function_call12)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call12)
 
 
 function_call13 = {
@@ -446,10 +415,8 @@ function_call13 = {
 
 
 def test_function_call13():
-    state = InterpreterState()
-    data = Program.model_validate(function_call13)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call13)
 
 
 function_call14 = {
@@ -467,10 +434,8 @@ function_call14 = {
 
 
 def test_function_call14():
-    state = InterpreterState()
-    data = Program.model_validate(function_call14)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call14)
 
 
 function_call15 = {
@@ -489,9 +454,7 @@ function_call15 = {
 
 
 def test_function_call15():
-    state = InterpreterState()
-    data = Program.model_validate(function_call15)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call15)
     assert text == "Hello 6.6 street!"
 
 
@@ -511,10 +474,8 @@ function_call16 = {
 
 
 def test_function_call16():
-    state = InterpreterState()
-    data = Program.model_validate(function_call16)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call16)
 
 
 function_call17 = {
@@ -533,9 +494,7 @@ function_call17 = {
 
 
 def test_function_call17():
-    state = InterpreterState()
-    data = Program.model_validate(function_call17)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(function_call17)
     assert text == "[1, 2, 3]"
 
 
@@ -555,10 +514,8 @@ function_call18 = {
 
 
 def test_function_call18():
-    state = InterpreterState()
-    data = Program.model_validate(function_call18)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(function_call18)
 
 
 hello = {
@@ -569,9 +526,7 @@ hello = {
 
 
 def test_hello():
-    state = InterpreterState()
-    data = Program.model_validate(hello)
-    text, _, _, _ = process_prog(state, empty_scope, data)
+    text = exec_dict(hello)
     assert text == "Hello, world!"
 
 
@@ -583,9 +538,7 @@ hello1 = {
 
 
 def test_hello1():
-    state = InterpreterState()
-    data = Program.model_validate(hello1)
-    result, _, _, _ = process_prog(state, empty_scope, data)
+    result = exec_dict(hello1)
     assert result == {"a": "Hello", "b": "World"}
 
 
@@ -597,7 +550,5 @@ hello2 = {
 
 
 def test_hello2():
-    state = InterpreterState()
-    data = Program.model_validate(hello2)
     with pytest.raises(PDLRuntimeError):
-        process_prog(state, empty_scope, data)
+        exec_dict(hello2)

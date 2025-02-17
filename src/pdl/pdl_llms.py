@@ -1,11 +1,23 @@
+import asyncio
 import os
-from typing import Any, Generator, Optional
+import threading
+from concurrent.futures import Future
+from typing import Any, Callable, Generator, TypeVar
 
+import httpx
 import litellm
 from dotenv import load_dotenv
-from litellm import completion
+from litellm import acompletion, completion
 
-from .pdl_ast import Message, set_structured_decoding_parameters
+from .pdl_ast import (
+    ErrorBlock,
+    LazyMessage,
+    LitellmModelBlock,
+    ModelInput,
+    PDLRuntimeError,
+    set_structured_decoding_parameters,
+)
+from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
@@ -20,45 +32,93 @@ if os.getenv("OTEL_EXPORTER") and os.getenv("OTEL_ENDPOINT"):
     litellm.callbacks = ["otel"]
 
 
-class LitellmModel:
-    litellm_client: Optional[None] = None
+def _start_background_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
 
+
+_LOOP = asyncio.new_event_loop()
+_LOOP_THREAD = threading.Thread(
+    target=_start_background_loop, args=(_LOOP,), daemon=True
+)
+_LOOP_THREAD.start()
+# _BACKGROUND_TASKS = set()
+
+
+class LitellmModel:
     @staticmethod
-    def get_model() -> None:
-        return None
+    async def async_generate_text(
+        block: LitellmModelBlock,
+        messages: ModelInput,
+        parameters: dict[str, Any],
+    ) -> tuple[dict[str, Any], Any]:
+        try:
+            assert isinstance(block.model, str)
+            model_id = block.model
+            spec = block.spec
+            parameters = set_structured_decoding_parameters(spec, parameters)
+            if parameters.get("mock_response") is not None:
+                litellm.suppress_debug_info = True
+            response = await acompletion(
+                model=model_id, messages=list(messages), stream=False, **parameters
+            )
+            msg = response.choices[0].message  # pyright: ignore
+            if msg.role is None:
+                msg.role = "assistant"
+            return (
+                remove_none_values_from_message(msg.json()),
+                response.json(),  # pyright: ignore
+            )
+        except httpx.RequestError as exc:
+            message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+            loc = block.location
+            raise PDLRuntimeError(
+                message,
+                loc=loc,
+                trace=ErrorBlock(msg=message, location=loc, program=block),
+            ) from exc
+        except Exception as exc:
+            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            loc = block.location
+            raise PDLRuntimeError(
+                message,
+                loc=loc,
+                trace=ErrorBlock(msg=message, location=loc, program=block),
+            ) from exc
 
     @staticmethod
     def generate_text(
-        model_id: str,
-        messages: list[Message],
-        spec: Any,
+        block: LitellmModelBlock,
+        messages: ModelInput,
         parameters: dict[str, Any],
-    ) -> tuple[Message, Any]:
-        parameters = set_structured_decoding_parameters(spec, parameters)
-        if parameters.get("mock_response") is not None:
-            litellm.suppress_debug_info = True
-        response = completion(
-            model=model_id, messages=messages, stream=False, **parameters
+    ) -> tuple[LazyMessage, PdlLazy[Any]]:
+        # global _BACKGROUND_TASKS
+        future = asyncio.run_coroutine_threadsafe(
+            LitellmModel.async_generate_text(
+                block,
+                messages,
+                parameters,
+            ),
+            _LOOP,
         )
-        msg = response.choices[0].message  # pyright: ignore
-        if msg.role is None:
-            msg.role = "assistant"
-        return (
-            remove_none_values_from_message(msg.json()),
-            response.json(),  # pyright: ignore
-        )
+        # _BACKGROUND_TASKS.add(future)
+        # future.add_done_callback(_BACKGROUND_TASKS.discard)
+        pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
+        message = lazy_apply((lambda x: x[0]), pdl_future)
+        response = lazy_apply((lambda x: x[1]), pdl_future)
+        return message, response
 
     @staticmethod
     def generate_text_stream(
         model_id: str,
-        messages: list[Message],
+        messages: ModelInput,
         spec: Any,
         parameters: dict[str, Any],
-    ) -> Generator[Message, Any, Any]:
+    ) -> Generator[dict[str, Any], Any, Any]:
         parameters = set_structured_decoding_parameters(spec, parameters)
         response = completion(
             model=model_id,
-            messages=messages,
+            messages=list(messages),
             stream=True,
             **parameters,
         )
@@ -70,3 +130,19 @@ class LitellmModel:
                 msg.role = "assistant"
             yield remove_none_values_from_message(msg.model_dump())
         return result
+
+
+MapInputT = TypeVar("MapInputT")
+MapOutputT = TypeVar("MapOutputT")
+
+
+def map_future(
+    f: Callable[[MapInputT], MapOutputT], x: Future[MapInputT]
+) -> Future[MapOutputT]:
+    future = asyncio.run_coroutine_threadsafe(_async_call(f, x), _LOOP)
+    return future
+
+
+async def _async_call(f, x):
+    v = x.result()
+    return f(v)
