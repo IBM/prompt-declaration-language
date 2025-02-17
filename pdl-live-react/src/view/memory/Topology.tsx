@@ -17,6 +17,8 @@ import {
 import layoutFactory from "./layout"
 import componentFactory from "./components"
 
+import "./Topology.css"
+
 const NODE_SHAPE = NodeShape.ellipse
 const NODE_DIAMETER = 10
 
