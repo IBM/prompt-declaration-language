@@ -506,7 +506,7 @@ class RepeatUntilBlock(Block):
     repeat: "BlockType"
     """Body of the loop.
     """
-    until: Optional[ExpressionType] = None
+    until: ExpressionType = True
     """Condition of the loop.
     """
     max_iterations: Optional[ExpressionType] = None

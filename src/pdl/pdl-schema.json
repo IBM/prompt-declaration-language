@@ -9172,12 +9172,9 @@
             {},
             {
               "$ref": "#/$defs/LocalizedExpression"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
+          "default": true,
           "description": "Condition of the loop.\n    ",
           "title": "Until"
         },

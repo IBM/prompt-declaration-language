@@ -790,8 +790,7 @@ def process_block_body(
                     results.append(iteration_result)
                     background = lazy_messages_concat(background, iteration_background)
                     iterations_trace.append(body_trace)
-                    if block.until is not None:
-                        stop = process_condition_of(block, "until", scope, loc)
+                    stop = process_condition_of(block, "until", scope, loc)
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
             except PDLRuntimeError as exc:
