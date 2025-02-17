@@ -9174,8 +9174,8 @@
               "$ref": "#/$defs/LocalizedExpression"
             }
           ],
-          "default": true,
-          "description": "Condition of the loop.\n    ",
+          "default": false,
+          "description": "Condition to exit at the end of the loop.\n    ",
           "title": "Until"
         },
         "max_iterations": {
