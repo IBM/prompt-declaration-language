@@ -15,6 +15,7 @@ def test_bool():
     assert isinstance(result, bool)
     assert not result
 
+
 cond_data = {
     "description": "Arithmetic Expressions",
     "text": [

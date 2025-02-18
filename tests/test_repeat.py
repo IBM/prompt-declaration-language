@@ -140,15 +140,18 @@ def _while_prog(n):
       text: {'${i}'}
     """
 
+
 def test_while1():
     prog = _while_prog(-1)
     result = exec_str(prog)
     assert result == ""
 
+
 def test_while2():
     prog = _while_prog(3)
     result = exec_str(prog)
     assert result == "123"
+
 
 def _for_max_iterations_prog(n):
     return f"""
@@ -218,4 +221,3 @@ def test_for_until_max_iterations3():
     prog = _for_until_max_iterations_prog(4, 2)
     result = exec_str(prog)
     assert result == "01"
-
