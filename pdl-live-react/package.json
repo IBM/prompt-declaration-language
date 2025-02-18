@@ -1,9 +1,12 @@
 {
   "name": "PDL",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
+    "prod:mac:1": "npm run tauri build -- --no-bundle --target=universal-apple-darwin",
+    "prod:mac:2": "npm run tauri bundle -- --bundles dmg --target universal-apple-darwin",
+    "prod:mac": "npm run prod:mac:1 && npm run prod:mac:2",
     "dev": "vite",
     "build": "tsc && vite build",
     "build:app": "npm run prep_interpreter && npm run tauri build",
