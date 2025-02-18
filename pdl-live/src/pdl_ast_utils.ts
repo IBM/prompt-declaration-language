@@ -87,11 +87,7 @@ export function map_block_children(
       });
       return {...block, with: with_};
     })
-    .with({kind: 'repeat_until'}, block => {
-      const repeat = f(block.repeat);
-      return {...block, repeat: repeat};
-    })
-    .with({kind: 'for'}, block => {
+    .with({kind: 'repeat'}, block => {
       const repeat = f(block.repeat);
       return {...block, repeat: repeat};
     })
@@ -181,10 +177,7 @@ export function iter_block_children(
         f(match_case.then);
       });
     })
-    .with({kind: 'repeat_until'}, block => {
-      f(block.repeat);
-    })
-    .with({kind: 'for'}, block => {
+    .with({kind: 'repeat'}, block => {
       f(block.repeat);
     })
     .with({kind: 'error'}, block => f(block.program))

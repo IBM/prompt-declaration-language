@@ -46,7 +46,6 @@ from .pdl_ast import (  # noqa: E402
     DataBlock,
     EmptyBlock,
     ErrorBlock,
-    ForBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -77,7 +76,7 @@ from .pdl_ast import (  # noqa: E402
     Program,
     ReadBlock,
     RegexParser,
-    RepeatUntilBlock,
+    RepeatBlock,
     RoleType,
     ScopeType,
     TextBlock,
@@ -639,43 +638,60 @@ def process_block_body(
                 append_log(state, "Match", "no match!")
             block.with_ = cases
             trace = block
-        case ForBlock():
+        case RepeatBlock():
             results: list[PdlLazy[Any]] = []
             background = PdlList([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
-            items, block = process_expr_of(block, "fors", scope, loc, "for")
-            lengths = []
-            for idx, lst in items.items():
-                if not isinstance(lst, list):
-                    msg = "Values inside the For block must be lists."
-                    lst_loc = append(
-                        append(block.location or empty_block_location, "for"), idx
-                    )
+            if block.fors is None:
+                items = None
+                lengths = None
+            else:
+                items, block = process_expr_of(block, "fors", scope, loc, "for")
+                lengths = []
+                for idx, lst in items.items():
+                    if not isinstance(lst, list):
+                        msg = "Values inside the For block must be lists."
+                        lst_loc = append(
+                            append(block.location or empty_block_location, "for"), idx
+                        )
+                        raise PDLRuntimeError(
+                            message=msg,
+                            loc=lst_loc,
+                            trace=ErrorBlock(msg=msg, location=lst_loc, program=block),
+                            fallback=[],
+                        )
+                    lengths.append(len(lst))
+                if len(set(lengths)) != 1:  # Not all the lists are of the same length
+                    msg = "Lists inside the For block must be of the same length."
+                    for_loc = append(block.location or empty_block_location, "for")
                     raise PDLRuntimeError(
-                        message=msg,
-                        loc=lst_loc,
-                        trace=ErrorBlock(msg=msg, location=lst_loc, program=block),
+                        msg,
+                        loc=for_loc,
+                        trace=ErrorBlock(msg=msg, location=for_loc, program=block),
                         fallback=[],
                     )
-                lengths.append(len(lst))
-            if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                msg = "Lists inside the For block must be of the same length."
-                for_loc = append(block.location or empty_block_location, "for")
-                raise PDLRuntimeError(
-                    msg,
-                    loc=for_loc,
-                    trace=ErrorBlock(msg=msg, location=for_loc, program=block),
-                    fallback=[],
-                )
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
+            if block.max_iterations is None:
+                max_iterations = None
+            else:
+                max_iterations, block = process_expr_of(
+                    block, "max_iterations", scope, loc
+                )
             repeat_loc = append(loc, "repeat")
             iidx = 0
             try:
                 first = True
-                for i in range(lengths[0]):
+                while True:
+                    if max_iterations is not None and iidx >= max_iterations:
+                        break
+                    if lengths is not None and iidx >= lengths[0]:
+                        break
+                    stay = process_condition_of(block, "while_", scope, loc, "while")
+                    if not stay:
+                        break
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
@@ -699,8 +715,9 @@ def process_block_body(
                             pdl_context_init, background
                         )
                     }
-                    for k in items.keys():
-                        scope = scope | {k: items[k][i]}
+                    if items is not None:
+                        for k in items.keys():
+                            scope = scope | {k: items[k][iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -717,6 +734,9 @@ def process_block_body(
                     iter_trace.append(body_trace)
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
+                    stop = process_condition_of(block, "until", scope, loc)
+                    if stop:
+                        break
             except PDLRuntimeError as exc:
                 iter_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iter_trace})
@@ -729,82 +749,6 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"trace": iter_trace})
-        case RepeatUntilBlock():
-            results = []
-            stop = False
-            background = PdlList([])
-            iterations_trace = []
-            pdl_context_init = scope_init.data["pdl_context"]
-            iteration_state = state.with_yield_result(
-                state.yield_result and block.join.iteration_type == IterationType.TEXT
-            )
-            if block.max_iterations is None:
-                max_iterations = None
-            else:
-                max_iterations, block = process_expr_of(
-                    block, "max_iterations", scope, loc
-                )
-            repeat_loc = append(loc, "repeat")
-            try:
-                first = True
-                iidx = 0
-                while True:
-                    if max_iterations is not None and iidx >= max_iterations:
-                        break
-                    iteration_state = iteration_state.with_iter(iidx)
-                    if first:
-                        first = False
-                    elif block.join.iteration_type == IterationType.TEXT:
-                        join_string = block.join.join_string
-                        results.append(PdlConst(join_string))
-                        if iteration_state.yield_result:
-                            yield_result(join_string, block.kind)
-                        if iteration_state.yield_background:
-                            yield_background(
-                                [
-                                    {
-                                        "role": block.role,
-                                        "content": join_string,
-                                        "defsite": block.id,
-                                    }
-                                ]
-                            )
-                    scope = scope | {
-                        "pdl_context": lazy_messages_concat(
-                            pdl_context_init, background
-                        )
-                    }
-                    (
-                        iteration_result,
-                        iteration_background,
-                        scope,
-                        body_trace,
-                    ) = process_block(
-                        iteration_state,
-                        scope,
-                        block.repeat,
-                        repeat_loc,
-                    )
-                    results.append(iteration_result)
-                    background = lazy_messages_concat(background, iteration_background)
-                    iterations_trace.append(body_trace)
-                    stop = process_condition_of(block, "until", scope, loc)
-                    if stop:
-                        break
-                    iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
-            except PDLRuntimeError as exc:
-                iterations_trace.append(exc.trace)
-                trace = block.model_copy(update={"trace": iterations_trace})
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or repeat_loc,
-                    trace=trace,
-                ) from exc
-            result = combine_results(block.join.iteration_type, results)
-            if state.yield_result and not iteration_state.yield_result:
-                yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
