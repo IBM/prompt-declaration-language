@@ -4,8 +4,6 @@ use std::process::exit;
 use serde_json::Value;
 use urlencoding::encode;
 
-use tauri::path::BaseDirectory;
-use tauri::Manager;
 use tauri_plugin_cli::CliExt;
 
 use crate::cli::run;
@@ -24,13 +22,9 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                 "run" => {
                     if let Some(source) = subcommand_matches.matches.args.get("source") {
                         if let Value::String(source_file_path) = &source.value {
-                            let interpreter_path = app
-                                .path()
-                                .resolve("interpreter/", BaseDirectory::Resource)?;
-
                             run::run_pdl_program(
                                 source_file_path.clone(),
-                                interpreter_path,
+                                app.handle().clone(),
                                 false,
                             )?;
                             exit(0)
