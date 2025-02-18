@@ -159,19 +159,22 @@ def test_none():
     result = exec_str(prog)
     assert result is None
 
+
 def _for_max_iterations_prog(n):
     return f"""
     for:
       i: [0, 1, 2, 3, 4, 5]
-    repeat: {'${i}' }
+    repeat: {'${i}'}
     max_iterations: {'${'}{n}{'}'}
     """
+
 
 def test_for_max_iterations1():
     prog = _for_max_iterations_prog(10)
     result = exec_str(prog)
     assert result == "012345"
-    
+
+
 def test_for_max_iterations2():
     prog = _for_max_iterations_prog(3)
     result = exec_str(prog)
@@ -182,15 +185,17 @@ def _for_until_prog(n):
     return f"""
     for:
       i: [0, 1, 2, 3, 4, 5]
-    repeat: {'${i}' }
+    repeat: {'${i}'}
     until: {'${ i == '}{n}{'}'}
     """
+
 
 def test_for_until1():
     prog = _for_until_prog(10)
     result = exec_str(prog)
     assert result == "012345"
-    
+
+
 def test_for_until2():
     prog = _for_until_prog(4)
     result = exec_str(prog)
@@ -201,20 +206,23 @@ def _for_until_max_iterations_prog(n, m):
     return f"""
     for:
       i: [0, 1, 2, 3, 4, 5]
-    repeat: {'${i}' }
+    repeat: {'${i}'}
     until: {'${ i == '}{n}{'}'}
     max_iterations: {'${'}{m}{'}'}
     """
+
 
 def test_for_until_max_iterations1():
     prog = _for_until_max_iterations_prog(10, 10)
     result = exec_str(prog)
     assert result == "012345"
-    
+
+
 def test_for_until_max_iterations2():
     prog = _for_until_max_iterations_prog(2, 3)
     result = exec_str(prog)
     assert result == "012"
+
 
 def test_for_until_max_iterations3():
     prog = _for_until_max_iterations_prog(4, 2)
