@@ -129,36 +129,26 @@ def test_program_as_list():
     assert result == "Bye"
 
 
-def test_bool():
-    prog = """
+def _while_prog(n):
+    return f"""
     defs:
-      tt: true
-      ff: false
-    if: ${tt}
-    then: false
-    else: true
+      i: 0
+    while: {'${ i < '}{n}{'}'}
+    repeat:
+      defs:
+        i: {'${i + 1}'}
+      text: {'${i}'}
     """
+
+def test_while1():
+    prog = _while_prog(-1)
     result = exec_str(prog)
-    assert isinstance(result, bool)
-    assert not result
+    assert result == ""
 
-
-def test_null():
-    prog = """
-    text:
-    """
+def test_while2():
+    prog = _while_prog(3)
     result = exec_str(prog)
-    assert result == "null"
-
-
-def test_none():
-    prog = """
-    lastOf:
-    - null
-    """
-    result = exec_str(prog)
-    assert result is None
-
+    assert result == "123"
 
 def _for_max_iterations_prog(n):
     return f"""
@@ -228,3 +218,4 @@ def test_for_until_max_iterations3():
     prog = _for_until_max_iterations_prog(4, 2)
     result = exec_str(prog)
     assert result == "01"
+

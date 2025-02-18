@@ -689,6 +689,9 @@ def process_block_body(
                         break
                     if lengths is not None and iidx >= lengths[0]:
                         break
+                    stay = process_condition_of(block, "while_", scope, loc, "while")
+                    if not stay:
+                        break
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False

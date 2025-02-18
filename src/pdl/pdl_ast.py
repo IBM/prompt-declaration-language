@@ -487,6 +487,9 @@ class RepeatBlock(Block):
     fors: Optional[dict[str, ExpressionType]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
+    while_: ExpressionType = Field(default=True, alias="while")
+    """Condition to stay at the beginning of the loop.
+    """
     repeat: "BlockType"
     """Body of the loop.
     """

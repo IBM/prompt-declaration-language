@@ -170,8 +170,9 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case RepeatBlock():
             if block.fors is not None:
                 block.fors = {x: f.f_expr(blocks) for x, blocks in block.fors.items()}
-            block.until = f.f_expr(block.until)
+            block.while_ = f.f_expr(block.while_)
             block.repeat = f.f_block(block.repeat)
+            block.until = f.f_expr(block.until)
             if block.trace is not None:
                 block.trace = [f.f_block(trace) for trace in block.trace]
         case ErrorBlock():

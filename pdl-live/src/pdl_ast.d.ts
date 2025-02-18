@@ -2693,6 +2693,7 @@ export interface RepeatBlock {
   location?: LocationType | null;
   kind?: Kind9;
   for?: For;
+  while?: unknown;
   repeat: Repeat;
   until?: unknown;
   max_iterations?: unknown;

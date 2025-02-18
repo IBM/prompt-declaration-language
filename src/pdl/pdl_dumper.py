@@ -189,6 +189,7 @@ def block_to_dict(  # noqa: C901
             ]
         case RepeatBlock():
             d["for"] = block.fors
+            d["while"] = block.while_
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
             d["max_iterations"] = block.max_iterations

@@ -8398,6 +8398,17 @@
           "description": "Arrays to iterate over.\n    ",
           "title": "For"
         },
+        "while": {
+          "anyOf": [
+            {},
+            {
+              "$ref": "#/$defs/LocalizedExpression"
+            }
+          ],
+          "default": true,
+          "description": "Condition to stay at the beginning of the loop.\n    ",
+          "title": "While"
+        },
         "repeat": {
           "anyOf": [
             {
