@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --base /prompt-declaration-language/viewer",
     "build:app": "npm run prep_interpreter && npm run tauri build",
     "lint": "eslint .",
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}' && (cd src-tauri && cargo fmt)",

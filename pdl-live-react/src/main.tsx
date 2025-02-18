@@ -5,7 +5,7 @@ import App from "./App.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/prompt-declaration-language/viewer">
       <App />
     </BrowserRouter>
   </StrictMode>,

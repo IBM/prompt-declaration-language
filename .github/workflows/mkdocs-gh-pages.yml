@@ -9,7 +9,7 @@ on:
     paths:
       - "mkdocs.yml"
       - "docs/**"
-      - "pdl-live"
+      - "pdl-live-react"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,19 +39,18 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        working-directory: ./pdl-live
-        run: npm install
-      - name: Generate pdl_ast.d.ts
-        working-directory: ./pdl-live
-        run: npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
+        working-directory: ./pdl-live-react
+        run: npm ci
       - name: Build viewer
-        working-directory: ./pdl-live
+        working-directory: ./pdl-live-react
         run: npm run build
       - name: Copy viewer
-        working-directory: ./pdl-live
-        run: cp ./dist/bundle.js ../docs/dist/bundle.js
+        working-directory: ./pdl-live-react
+        run: cp -a ./dist/prompt-declaration-language/viewer ../docs/viewer
       - name: Copy schema
         run: cp ./src/pdl/pdl-schema.json ./docs/dist/pdl-schema.json
+      - name: List directory contents
+        run: find docs
       # Docs
       - name: Setup Pages
         uses: actions/configure-pages@v5
