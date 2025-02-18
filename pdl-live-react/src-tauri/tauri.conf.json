@@ -46,6 +46,9 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "resources": {
+      "../.venv/requirements.txt": "interpreter/requirements.txt"
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
