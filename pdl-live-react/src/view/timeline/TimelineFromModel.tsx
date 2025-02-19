@@ -17,9 +17,9 @@ export default function TimelineFromModel({ model, numbering }: Props) {
     const [minStart, maxEnd] = model.reduce(
       ([minStart, maxEnd], row) => [
         Math.min(minStart, row.block.start_nanos),
-        Math.max(maxEnd, row.block.end_nanos),
+        Math.max(maxEnd, row.block.end_nanos || row.block.start_nanos),
       ],
-      [Number.MAX_VALUE, Number.MIN_VALUE],
+      [Number.MAX_VALUE, -Number.MIN_VALUE],
     )
     return [minStart, maxEnd]
   }, [model])
