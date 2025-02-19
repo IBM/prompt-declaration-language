@@ -1,5 +1,5 @@
-import { Link } from "react-router"
 import { Button, Panel, PanelMain } from "@patternfly/react-core"
+import { Link, useLocation, useSearchParams } from "react-router"
 
 import Tile from "./welcome/Tile"
 import Result from "../view/Result"
@@ -11,7 +11,11 @@ import { hasResult } from "../helpers"
 
 import DemoIcon from "@patternfly/react-icons/dist/esm/icons/sun-icon"
 
-function demoTiles() {
+function DemoTiles() {
+  const { hash } = useLocation()
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString()
+
   return demos.map((demo) => {
     // TODO useMemo()
     const data = JSON.parse(demo.trace)
@@ -33,7 +37,14 @@ function demoTiles() {
         }
       >
         <Button isInline variant="link">
-          <Link to={"/demos/" + encodeURIComponent(demo.name)}>
+          <Link
+            to={
+              "/demos/" +
+              encodeURIComponent(demo.name) +
+              (s ? `?${s}` : "") +
+              hash
+            }
+          >
             Show this Demo
           </Link>
         </Button>
@@ -47,7 +58,7 @@ export default function Demos() {
     <Welcome
       breadcrumb1="Demos"
       intro="Here are some built-in PDL demos"
-      tiles={demoTiles()}
+      tiles={<DemoTiles />}
     />
   )
 }
