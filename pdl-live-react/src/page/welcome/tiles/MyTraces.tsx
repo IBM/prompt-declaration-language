@@ -1,5 +1,5 @@
-import { Link } from "react-router"
 import { Button } from "@patternfly/react-core"
+import { Link, useLocation, useSearchParams } from "react-router"
 
 import Tile from "../Tile"
 import { getMyTraces } from "../../MyTraces"
@@ -7,6 +7,10 @@ import { getMyTraces } from "../../MyTraces"
 import MyIcon from "@patternfly/react-icons/dist/esm/icons/user-icon"
 
 export default function MyTraces() {
+  const { hash } = useLocation()
+  const [searchParams] = useSearchParams()
+  const s = searchParams.toString()
+
   const myTraces = getMyTraces()
 
   return (
@@ -17,7 +21,11 @@ export default function MyTraces() {
     >
       {myTraces.map(({ title, filename }) => (
         <Button key={filename} isInline variant="link">
-          <Link to={"/my/" + encodeURIComponent(title)}>{title}</Link>
+          <Link
+            to={"/my/" + encodeURIComponent(title) + (s ? `?${s}` : "") + hash}
+          >
+            {title}
+          </Link>
         </Button>
       ))}
     </Tile>
