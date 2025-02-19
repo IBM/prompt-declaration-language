@@ -12,9 +12,10 @@ type Props = import("react").PropsWithChildren<{
 
 const col1 = { 10000: 1 }
 const col3 = { 500: 1, 950: 2, 1400: 3 }
+const col6 = { 500: 4, 950: 5, 1400: 6 }
 
 export default function Masonry({ as, sml, model, children }: Props) {
-  const breakpoints = as === "grid" ? col3 : col1
+  const breakpoints = as === "grid" ? (sml === "s" ? col6 : col3) : col1
 
   // gutterBreakpoints={{350: "12px", 750: "16px", 900: "24px"}}
   return (
@@ -23,7 +24,12 @@ export default function Masonry({ as, sml, model, children }: Props) {
         {(!children ? [] : Array.isArray(children) ? children : [children])
           .filter(Boolean)
           .map((child, idx) => (
-            <div key={idx} className="pdl-masonry-tile" data-padding={sml}>
+            <div
+              key={idx}
+              className="pdl-masonry-tile"
+              data-is-non-card
+              data-padding={sml}
+            >
               {child}
             </div>
           ))}

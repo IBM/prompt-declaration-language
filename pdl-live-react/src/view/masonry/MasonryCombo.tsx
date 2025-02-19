@@ -25,7 +25,7 @@ function setAsUserSetting(as: As) {
 
 const smlLocalStorageKey = "pdl-viewer.masonry.sml"
 function getSMLUserSetting(): SML {
-  return (localStorage.getItem(smlLocalStorageKey) as SML) || "l"
+  return (localStorage.getItem(smlLocalStorageKey) as SML) || "m"
 }
 function setSMLUserSetting(sml: SML) {
   localStorage.setItem(smlLocalStorageKey, sml)
@@ -74,7 +74,9 @@ export default function MasonryCombo({ value, setValue }: Props) {
       >
         <Masonry model={masonry} as={as} sml={sml}>
           {sml !== "s" && <Timeline model={base} numbering={numbering} />}
-          {sml === "l" && <Memory block={block} numbering={numbering} />}
+          {(as !== "list" || sml !== "s") && (
+            <Memory block={block} numbering={numbering} sml={sml} />
+          )}
         </Masonry>
       </PageSection>
 
