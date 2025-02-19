@@ -8,20 +8,21 @@
 .pdl-masonry-tile {
   flex: 1;
   border-radius: 0;
-  min-height: 13em;
 
   &:before {
     border: none;
   }
 
-  &[data-padding="l"] > div {
-    margin: 2em;
-  }
-  &[data-padding="m"] > div {
-    margin: 1.5em;
-  }
-  &[data-padding="s"] > div {
-    margin: 1em;
+  &[data-is-non-card] {
+    &[data-padding="l"] > div {
+      margin: 2em;
+    }
+    &[data-padding="m"] > div {
+      margin: 1.5em;
+    }
+    &[data-padding="s"] > div {
+      margin: 1em;
+    }
   }
 }
 
@@ -57,4 +58,29 @@
   background-color: var(--pf-t--global--background--color--inverse--default);
   color: var(--pf-t--global--text--color--inverse);
   padding: 0.5em;
+}
+
+.pdl-masonry-tile {
+  h1 {
+    font-size: 1.25em;
+  }
+  &[data-padding="s"] {
+    max-height: 20em;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    div,
+    span {
+      font-size: 0.6rem !important;
+    }
+  }
+  &[data-padding="m"] {
+    div,
+    span {
+      font-size: 0.875rem !important;
+    }
+  }
 }

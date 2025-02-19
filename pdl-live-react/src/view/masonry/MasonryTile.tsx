@@ -40,7 +40,7 @@ export default function MasonryTile({
 }: Props) {
   const actions = useMemo(
     () =>
-      start_nanos && end_nanos && timezone
+      sml !== "s" && start_nanos && end_nanos && timezone
         ? {
             actions: (
               <Duration
@@ -62,6 +62,7 @@ export default function MasonryTile({
       isCompact={sml === "s"}
       key={id}
       data-kind={kind}
+      data-padding={sml}
       className="pdl-masonry-tile"
     >
       <CardHeader actions={actions}>
