@@ -52,7 +52,7 @@ export default function MasonryTile({
             ),
           }
         : undefined,
-    [start_nanos, end_nanos, timezone, as],
+    [start_nanos, end_nanos, timezone, as, sml],
   )
 
   return (

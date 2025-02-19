@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react"
 import { BackToTop, PageSection } from "@patternfly/react-core"
 
-import Memory from "../memory/Memory"
+import Topology from "../memory/Topology"
+import extractVariables from "../memory/model"
 import Timeline from "../timeline/TimelineFromModel"
 
 import Masonry from "./Masonry"
@@ -50,6 +51,10 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [block],
   )
 
+  // This is the <Topology/> model. We compute this here, so we can
+  // nicely not render anything if we have an empty topology model.
+  const { nodes, edges } = useMemo(() => extractVariables(block), [block])
+
   if (!block) {
     return "Invalid trace content"
   }
@@ -74,8 +79,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
       >
         <Masonry model={masonry} as={as} sml={sml}>
           {sml !== "s" && <Timeline model={base} numbering={numbering} />}
-          {(as !== "list" || sml !== "s") && (
-            <Memory block={block} numbering={numbering} sml={sml} />
+          {(as !== "list" || sml !== "s") && nodes.length > 0 && (
+            <Topology
+              nodes={nodes}
+              edges={edges}
+              numbering={numbering}
+              sml={sml}
+            />
           )}
         </Masonry>
       </PageSection>
