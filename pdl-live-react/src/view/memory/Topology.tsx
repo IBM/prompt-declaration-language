@@ -74,7 +74,7 @@ export default function Topology({ sml, nodes, edges, numbering }: Props) {
     }
 
     controller.fromModel(model, false)
-  }, [sml, nodes, edges, controller])
+  }, [sml, nodes, edges, numbering, controller])
 
   return (
     <div className="pdl-memory-topology">

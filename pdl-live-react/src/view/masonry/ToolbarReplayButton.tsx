@@ -1,9 +1,6 @@
-import { useCallback, useState } from "react"
-import { useLocation, useNavigate } from "react-router"
-
 import { invoke } from "@tauri-apps/api/core"
-
 import { Button, Tooltip } from "@patternfly/react-core"
+import { useCallback, useState } from "react"
 
 type Props = {
   block: import("../../pdl_ast").PdlBlock
@@ -11,8 +8,6 @@ type Props = {
 }
 
 export default function ToolbarReplayButton({ block, setValue }: Props) {
-  const { hash } = useLocation()
-  const navigate = useNavigate()
   const [isReplaying, setIsReplaying] = useState(false)
 
   const handleClickSource = useCallback(async () => {
@@ -28,7 +23,7 @@ export default function ToolbarReplayButton({ block, setValue }: Props) {
     } finally {
       setIsReplaying(false)
     }
-  }, [hash, navigate, setIsReplaying])
+  }, [block, setValue, setIsReplaying])
 
   return (
     <Tooltip content="Re-run this program">
