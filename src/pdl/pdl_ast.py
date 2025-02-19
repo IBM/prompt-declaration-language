@@ -68,7 +68,10 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
     """Expression with location information"""
 
     model_config = ConfigDict(
-        extra="forbid", use_attribute_docstrings=True, arbitrary_types_allowed=True, model_title_generator=(lambda _: "LocalizedExpression")
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+        model_title_generator=(lambda _: "LocalizedExpression"),
     )
     expr: LocalizedExpressionT
     location: Optional[LocationType] = None
