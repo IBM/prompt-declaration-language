@@ -241,6 +241,7 @@ def process_block(
     trace: BlockType
     try:
         if not isinstance(block, Block):
+            start = time.time_ns()
             try:
                 result = PdlConst(process_expr(scope, block, loc))
             except PDLRuntimeExpressionError as exc:
@@ -263,7 +264,13 @@ def process_block(
                     )
                 ]
             )
-            trace = DataBlock(data=block, result=stringified_result)
+            trace = DataBlock(
+                data=block,
+                result=stringified_result,
+                start_nanos=start,
+                end_nanos=time.time_ns(),
+                id=".".join(state.id_stack),
+            )
             if state.yield_background:
                 yield_background(background)
             if state.yield_result:
