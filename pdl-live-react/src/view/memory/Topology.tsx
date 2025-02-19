@@ -35,6 +35,7 @@ export default function Topology({ sml, nodes, edges, numbering }: Props) {
     newController.registerComponentFactory(componentFactory)
 
     newController.addEventListener(SELECTION_EVENT, setSelectedIds)
+    newController.setFitToScreenOnLayout(true, 60)
     return newController
   }, [])
 
