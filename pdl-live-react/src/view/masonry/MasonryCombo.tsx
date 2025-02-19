@@ -1,5 +1,14 @@
-import { useEffect, useMemo, useState } from "react"
-import { BackToTop, PageSection } from "@patternfly/react-core"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { LogViewer } from "@patternfly/react-log-viewer"
+import {
+  Button,
+  BackToTop,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  PageSection,
+} from "@patternfly/react-core"
 
 import Topology from "../memory/Topology"
 import extractVariables from "../memory/model"
@@ -46,6 +55,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
   useEffect(() => setAsUserSetting(as), [as])
   useEffect(() => setSMLUserSetting(sml), [sml])
 
+  const [modalContent, setModalContent] = useState<null | {
+    header: string
+    body: string
+    done?: boolean
+  }>(null)
+  const closeModal = useCallback(() => setModalContent(null), [setModalContent])
+
   const { base, masonry, numbering } = useMemo(
     () => computeModel(block),
     [block],
@@ -69,6 +85,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           setSML={setSML}
           block={block}
           setValue={setValue}
+          setModalContent={setModalContent}
         />
       </PageSection>
       <PageSection
@@ -91,6 +108,29 @@ export default function MasonryCombo({ value, setValue }: Props) {
       </PageSection>
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
+
+      <Modal variant="medium" isOpen={!!modalContent} onClose={closeModal}>
+        <ModalHeader title={modalContent?.header} />
+        <ModalBody tabIndex={0}>
+          <LogViewer
+            hasLineNumbers={false}
+            data={modalContent?.body}
+            theme="dark"
+            scrollToRow={Number.MAX_VALUE}
+          />
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            key="Close"
+            variant="primary"
+            onClick={closeModal}
+            isDisabled={!modalContent?.done}
+          >
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   )
 }

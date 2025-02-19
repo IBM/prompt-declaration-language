@@ -9,7 +9,7 @@
     "prod:mac": "npm run prod:mac:1 && npm run prod:mac:2",
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:app": "npm run prep_interpreter && npm run tauri build",
+    "build:app": "npm run prep-interpreter && npm run tauri build",
     "lint": "eslint .",
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}' && (cd src-tauri && cargo fmt)",
     "tauri": "tauri",
@@ -19,12 +19,14 @@
     "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
     "pdl": "./src-tauri/target/debug/PDL",
     "view": "npm run pdl view",
-    "prep_interpreter": "if [ ! -d .venv ]; then python3.12 -mvenv .venv; source .venv/bin/activate; pip install -e ..; fi",
-    "start": "npm run prep_interpreter && npm run tauri dev"
+    "prep-interpreter": "if [ ! -d .venv ]; then npm run reprep-interpreter; fi",
+    "reprep-interpreter": "source .venv/bin/activate; pip install -e ..",
+    "start": "npm run prep-interpreter && npm run tauri dev"
   },
   "dependencies": {
     "@patternfly/react-code-editor": "^6.1.0",
     "@patternfly/react-core": "^6.1.0",
+    "@patternfly/react-log-viewer": "^6.1.0",
     "@patternfly/react-topology": "^6.1.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-cli": "^2.2.0",

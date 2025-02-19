@@ -7,8 +7,17 @@ use tempfile::NamedTempFile;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
 
+#[derive(Clone, serde::Serialize)]
+pub struct Payload {
+    done: bool,
+    message: String,
+}
+
 #[cfg(desktop)]
-fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::Error> {
+fn pip_install_if_needed(
+    app_handle: tauri::AppHandle,
+    reader: &Option<tauri::ipc::Channel<Payload>>,
+) -> Result<String, tauri::Error> {
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
 
     create_dir_all(&cache_path)?;
@@ -29,7 +38,18 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::
     ); */
 
     if !venv_path.exists() {
-        println!("Creating virtual environment...");
+        match reader {
+            Some(r) => {
+                r.send(Payload {
+                    done: false,
+                    message: "Creating virtual environment...".to_string(),
+                })
+                .unwrap();
+            }
+            None => {
+                println!("Creating virtual environment...");
+            }
+        }
         let venv_path_string = venv_path.into_os_string().into_string().unwrap();
         let output = Command::new("python3.12")
             .args(["-mvenv", venv_path_string.as_str()])
@@ -83,9 +103,10 @@ pub fn run_pdl_program(
     source_file_path: String,
     app_handle: tauri::AppHandle,
     trace: bool,
+    reader: Option<tauri::ipc::Channel<Payload>>,
 ) -> Result<Option<Vec<u8>>, tauri::Error> {
     println!("Running {:?}", source_file_path);
-    let activate = pip_install_if_needed(app_handle)?;
+    let activate = pip_install_if_needed(app_handle, &reader)?;
 
     let (trace_file, trace_arg) = if trace {
         let f = NamedTempFile::new()?;
@@ -118,8 +139,27 @@ pub fn run_pdl_program(
 
     // Stream output.
     let lines = BufReader::new(stdout).lines();
-    for line in lines {
-        println!("{}", line.unwrap());
+    match reader {
+        Some(r) => {
+            for line in lines {
+                r.send(Payload {
+                    done: false,
+                    message: line.unwrap(),
+                })
+                .unwrap();
+            }
+
+            r.send(Payload {
+                done: true,
+                message: "".to_string(),
+            })
+            .unwrap();
+        }
+        None => {
+            for line in lines {
+                println!("{}", line.unwrap());
+            }
+        }
     }
 
     if trace {
