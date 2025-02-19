@@ -17,9 +17,9 @@ const CustomNode: FunctionComponent<CustomNodeProps> = (
   const label = props.element.getLabel()
   const badge = ordinal
   const badgeColor = /Read/.test(label)
-    ? "var(--pf-t--global--color--nonstatus--orange--default)"
+    ? "var(--pf-t--global--color--nonstatus--green--default)"
     : /Code/.test(label)
-      ? "var(--pf-t--global--color--nonstatus--purple--default)"
+      ? "var(--pf-t--global--color--nonstatus--orange--default)"
       : /LLM/.test(label)
         ? "var(--pf-t--global--color--nonstatus--teal--default)"
         : "var(--pf-t--color--white)"

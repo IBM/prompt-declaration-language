@@ -84,10 +84,10 @@
     background-color: var(--pf-t--global--icon--color--disabled);
   }
   &[data-kind="code"] {
-    background-color: var(--pf-t--global--color--nonstatus--purple--default);
+    background-color: var(--pf-t--global--color--nonstatus--orange--default);
   }
   &[data-kind="read"] {
-    background-color: var(--pf-t--global--color--nonstatus--orange--default);
+    background-color: var(--pf-t--global--color--nonstatus--green--default);
   }
   &[data-kind="repeat"],
   &[data-kind="lastOf"],

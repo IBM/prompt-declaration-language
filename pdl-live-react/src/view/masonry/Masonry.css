@@ -46,10 +46,10 @@
     background: #daf2f2;
   }
   &[data-kind="read"] {
-    background: #ffe8cc;
+    background: #e9f7df;
   }
   &[data-kind="code"] {
-    background: #ece6ff;
+    background: #ffe8cc;
   }
 }
 
