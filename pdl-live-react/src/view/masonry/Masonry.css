@@ -78,8 +78,7 @@
     }
   }
   &[data-padding="m"] {
-    div,
-    span {
+    div {
       font-size: 0.875rem !important;
     }
   }
