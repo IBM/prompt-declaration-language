@@ -79,7 +79,7 @@ export default function MasonryTile({
                 id={id}
                 def={def}
                 value={content}
-                maxCrumbs={3}
+                maxCrumbs={sml === "l" ? 3 : 2}
               />
             )}
           </Flex>
