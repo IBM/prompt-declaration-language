@@ -860,7 +860,10 @@
           "anyOf": [
             {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Function to call.\n    ",
@@ -870,7 +873,10 @@
           "anyOf": [
             {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": {},
@@ -1768,7 +1774,10 @@
           "anyOf": [
             {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Value defined.",
@@ -3705,9 +3714,14 @@
         },
         "if": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Condition.\n    ",
@@ -5144,9 +5158,8 @@
             {
               "type": "string"
             },
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "title": "Model"
@@ -5324,9 +5337,14 @@
             {
               "$ref": "#/$defs/LitellmParameters"
             },
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "object"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -5740,9 +5758,8 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression": {
+    "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
-      "description": "Expression with location information",
       "properties": {
         "expr": {
           "title": "Expr"
@@ -5762,7 +5779,7 @@
       "required": [
         "expr"
       ],
-      "title": "LocalizedExpression",
+      "title": "LocalizedExpression[TypeVar]",
       "type": "object"
     },
     "LocationType": {
@@ -6143,7 +6160,10 @@
           "anyOf": [
             {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Matched expression.\n    ",
@@ -6203,9 +6223,14 @@
         },
         "if": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -7946,9 +7971,11 @@
         },
         "read": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -8382,9 +8409,15 @@
             {
               "additionalProperties": {
                 "anyOf": [
-                  {},
                   {
-                    "$ref": "#/$defs/LocalizedExpression"
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   }
                 ]
               },
@@ -8400,9 +8433,14 @@
         },
         "while": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": true,
@@ -8486,9 +8524,14 @@
         },
         "until": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": false,
@@ -8497,9 +8540,14 @@
         },
         "max_iterations": {
           "anyOf": [
-            {},
             {
-              "$ref": "#/$defs/LocalizedExpression"
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"

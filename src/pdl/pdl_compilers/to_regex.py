@@ -270,6 +270,8 @@ def compile_block(
                             parameters = block.parameters.model_dump()
                         elif isinstance(block.parameters, LocalizedExpression):
                             parameters = block.parameters.expr
+                        elif isinstance(block.parameters, str):
+                            parameters = {}
                         else:
                             parameters = block.parameters
                         stop_sequences = parameters.get("stop", [])
