@@ -14,6 +14,19 @@ export default defineConfig(async () => ({
     }),
   ],
 
+  base: "/prompt-declaration-language/viewer",
+  build: {
+    rollupOptions: {
+      output: {
+        dir: 'dist/prompt-declaration-language/viewer',
+        entryFileNames: 'pdl.js',
+        assetFileNames: 'pdl.css',
+        chunkFileNames: "chunk.js",
+        manualChunks: undefined,
+      }
+    }
+ },
+
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent vite from obscuring rust errors

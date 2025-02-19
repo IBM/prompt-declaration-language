@@ -74,7 +74,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run tauri dev',
     timeout: 100*1000,
-    url: 'http://localhost:1420',
+    url: 'http://localhost:1420/prompt-declaration-language/viewer',
     reuseExistingServer: !process.env.CI,
    },
 });

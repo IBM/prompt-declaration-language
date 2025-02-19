@@ -8,7 +8,7 @@
     "prod:mac:2": "npm run tauri bundle -- --bundles dmg --target universal-apple-darwin",
     "prod:mac": "npm run prod:mac:1 && npm run prod:mac:2",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --base /prompt-declaration-language/viewer",
     "build:app": "npm run prep_interpreter && npm run tauri build",
     "lint": "eslint .",
     "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}' && (cd src-tauri && cargo fmt)",

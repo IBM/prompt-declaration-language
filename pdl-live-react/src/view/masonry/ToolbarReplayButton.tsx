@@ -33,6 +33,7 @@ export default function ToolbarReplayButton({ block, setValue }: Props) {
   return (
     <Tooltip content="Re-run this program">
       <Button
+        className="pdl-replay-button"
         spinnerAriaLabel="Replaying program"
         spinnerAriaValueText="Replaying"
         isLoading={isReplaying}
