@@ -26,6 +26,7 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                                 source_file_path.clone(),
                                 app.handle().clone(),
                                 false,
+                                None,
                             )?;
                             exit(0)
                         }

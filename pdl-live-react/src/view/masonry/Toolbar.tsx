@@ -19,6 +19,10 @@ export type Props = {
 
   sml: SML
   setSML(sml: SML): void
+
+  setModalContent: import("react").Dispatch<
+    import("react").SetStateAction<{ header: string; body: string } | null>
+  >
 }
 
 export default function MasonryToolbar({
@@ -28,12 +32,17 @@ export default function MasonryToolbar({
   setSML,
   block,
   setValue,
+  setModalContent,
 }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          <ToolbarReplayButton block={block} setValue={setValue} />
+          <ToolbarReplayButton
+            block={block}
+            setValue={setValue}
+            setModalContent={setModalContent}
+          />
           <ToolbarShowSourceButton />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
