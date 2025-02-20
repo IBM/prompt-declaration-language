@@ -13,10 +13,14 @@ import "./PreviewLight.css"
 type Props = {
   value: string
   language: SupportedLanguage
+  showLineNumbers?: boolean
 }
 
-export default function PreviewLight({ language, value }: Props) {
-  console.error("!!!!!!!!", language)
+export default function PreviewLight({
+  language,
+  value,
+  showLineNumbers = false,
+}: Props) {
   useEffect(() => {
     SyntaxHighlighter.registerLanguage("json", json)
     SyntaxHighlighter.registerLanguage("yaml", yaml)
@@ -30,6 +34,7 @@ export default function PreviewLight({ language, value }: Props) {
       wrapLongLines
       useInlineStyles={false}
       language={language}
+      showLineNumbers={showLineNumbers}
     >
       {value}
     </SyntaxHighlighter>

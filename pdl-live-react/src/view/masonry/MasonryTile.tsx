@@ -86,12 +86,7 @@ export default function MasonryTile({
       <CardBody className="pdl-masonry-tile-body">
         <Stack>
           {message && <i>{message}</i>}
-          <Result
-            term=""
-            result={content}
-            lang={lang}
-            isWidthConstrained={sml !== "xl"}
-          />
+          <Result term="" result={content} lang={lang} />
         </Stack>
       </CardBody>
     </Card>

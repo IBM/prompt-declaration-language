@@ -16,7 +16,6 @@ type Props = {
   lang?: SupportedLanguage
   term?: string
   limitHeight?: boolean
-  isWidthConstrained?: boolean
 }
 
 export default function Result({
@@ -24,16 +23,11 @@ export default function Result({
   lang,
   term = "Result",
   limitHeight = false,
-  isWidthConstrained = false,
 }: Props) {
   const isCode = lang && result
 
   const innerContent = isCode ? (
-    <Code
-      block={result}
-      language={lang}
-      isWidthConstrained={isWidthConstrained}
-    />
+    <Code block={result} language={lang} />
   ) : (
     <Value>{result}</Value>
   )
