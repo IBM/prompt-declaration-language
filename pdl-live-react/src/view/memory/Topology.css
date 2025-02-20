@@ -24,13 +24,13 @@
   .pdl-fill-code rect {
     fill: #223565 !important;
   }
-}
-.pdl-fill-model text {
-  fill: white !important;
-}
-.pdl-fill-read text {
-  fill: white !important;
-}
-.pdl-fill-code text {
-  fill: white !important;
+  .pdl-fill-model text {
+    fill: white !important;
+  }
+  .pdl-fill-read text {
+    fill: white !important;
+  }
+  .pdl-fill-code text {
+    fill: white !important;
+  }
 }
