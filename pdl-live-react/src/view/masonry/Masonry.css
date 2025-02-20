@@ -29,13 +29,13 @@
 .pf-v6-theme-dark {
   .pdl-masonry-tile {
     &[data-kind="model"] {
-      background: #63bdbd;
+      background: #428cb8;
     }
     &[data-kind="read"] {
-      background: #f5921b;
+      background: #415780;
     }
     &[data-kind="code"] {
-      background: #876fd4;
+      background: #223565;
     }
   }
 }

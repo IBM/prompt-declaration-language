@@ -106,3 +106,17 @@
     }
   }
 }
+
+.pf-v6-theme-dark {
+  .pdl-timeline-bar {
+    &[data-kind="model"] {
+      background: #428cb8;
+    }
+    &[data-kind="read"] {
+      background: #415780;
+    }
+    &[data-kind="code"] {
+      background: #223565;
+    }
+  }
+}
