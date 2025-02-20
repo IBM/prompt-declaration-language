@@ -24,7 +24,7 @@ export default function Result({
   term = "Result",
   limitHeight = false,
 }: Props) {
-  const isCode = lang && result
+  const isCode = !!lang && lang !== "plaintext" && !!result
 
   const innerContent = isCode ? (
     <Code block={result} language={lang} />
