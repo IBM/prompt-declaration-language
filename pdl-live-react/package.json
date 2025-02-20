@@ -24,7 +24,6 @@
     "start": "npm run prep-interpreter && npm run tauri dev"
   },
   "dependencies": {
-    "@patternfly/react-code-editor": "^6.1.0",
     "@patternfly/react-core": "^6.1.0",
     "@patternfly/react-log-viewer": "^6.1.0",
     "@patternfly/react-topology": "^6.1.0",
@@ -59,7 +58,6 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "json-schema-to-typescript": "^15.0.4",
-    "monaco-editor": "^0.52.2",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.22.0",

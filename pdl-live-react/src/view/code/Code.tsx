@@ -6,9 +6,7 @@ import { match, P } from "ts-pattern"
 import { type PdlBlock } from "../../pdl_ast"
 import { map_block_children } from "../../pdl_ast_utils"
 
-const Preview = lazy(() => import("./Preview"))
 const PreviewLight = lazy(() => import("./PreviewLight"))
-//import { type SupportedLanguage } from "./Preview"
 
 export type SupportedLanguage =
   | "yaml"
@@ -23,18 +21,13 @@ type Props = {
   showLineNumbers?: boolean
   limitHeight?: boolean
   raw?: boolean
-  remount?: boolean
-  isWidthConstrained?: boolean
 }
 
 export default function Code({
   block,
   language = "yaml",
   showLineNumbers = false,
-  limitHeight = true,
   raw = false,
-  remount = false,
-  isWidthConstrained = false,
 }: Props) {
   const value =
     typeof block === "string"
@@ -43,18 +36,11 @@ export default function Code({
 
   return (
     <Suspense fallback={<div />}>
-      {isWidthConstrained ? (
-        <PreviewLight value={value} language={language || "yaml"} />
-      ) : (
-        <Preview
-          limitHeight={limitHeight}
-          showLineNumbers={showLineNumbers ?? false}
-          language={language || "yaml"}
-          remount={remount}
-          isWidthConstrained={isWidthConstrained}
-          value={value}
-        />
-      )}
+      <PreviewLight
+        value={value}
+        language={language || "yaml"}
+        showLineNumbers={showLineNumbers ?? false}
+      />
     </Suspense>
   )
 }
