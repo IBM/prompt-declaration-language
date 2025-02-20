@@ -1,21 +1,16 @@
 import { Toolbar, ToolbarGroup, ToolbarContent } from "@patternfly/react-core"
 
-import ToolbarAsToggle from "./ToolbarAsToggle"
 import ToolbarSMLToggle from "./ToolbarSMLToggle"
 import ToolbarReplayButton from "./ToolbarReplayButton"
 import ToolbarShowSourceButton from "./ToolbarShowSourceButton"
 
 const alignEnd = { default: "alignEnd" as const }
 
-export type As = "grid" | "list"
-export type SML = "s" | "m" | "l"
+export type SML = "s" | "m" | "l" | "xl"
 
 export type Props = {
   block: import("../../pdl_ast").PdlBlock
   setValue(value: string): void
-
-  as: As
-  setAs(as: As): void
 
   sml: SML
   setSML(sml: SML): void
@@ -26,8 +21,6 @@ export type Props = {
 }
 
 export default function MasonryToolbar({
-  as,
-  setAs,
   sml,
   setSML,
   block,
@@ -47,7 +40,6 @@ export default function MasonryToolbar({
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
-          <ToolbarAsToggle as={as} setAs={setAs} />
         </ToolbarGroup>
       </ToolbarContent>
     </Toolbar>

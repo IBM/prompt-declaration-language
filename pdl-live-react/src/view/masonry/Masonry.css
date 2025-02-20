@@ -1,27 +1,38 @@
 .pdl-masonry-view {
-  &,
-  & > div {
-    gap: 0.375em !important;
+  &[data-padding="s"] {
+    columns: 200px;
+    column-gap: 0.5em;
+  }
+  &[data-padding="m"] {
+    columns: 300px;
+  }
+  &[data-padding="l"] {
+    columns: 400px;
+  }
+  &[data-padding="xl"] {
+    columns: 100%;
   }
 }
 
 .pdl-masonry-tile {
-  flex: 1;
   border-radius: 0;
+  margin-bottom: 1em;
+  break-inside: avoid;
 
   &:before {
     border: none;
   }
 
+  &[data-padding="s"] {
+    margin-bottom: 0.5em;
+  }
+
   &[data-is-non-card] {
-    &[data-padding="l"] > div {
-      margin: 2em;
-    }
-    &[data-padding="m"] > div {
-      margin: 1.5em;
-    }
-    &[data-padding="s"] > div {
-      margin: 1em;
+    padding: 1em;
+    &[data-padding="s"],
+    &[data-padding="m"],
+    &[data-padding="l"] {
+      column-span: all;
     }
   }
 }
@@ -60,7 +71,7 @@
   padding: 0.5em;
 }
 
-.pdl-masonry-tile {
+.pdl-masonry-tile:not([data-is-non-card]) {
   h1 {
     font-size: 1.25em;
   }
@@ -80,5 +91,8 @@
   &[data-padding="m"] {
     max-height: 30em;
     font-size: 0.875rem !important;
+  }
+  &[data-padding="l"] {
+    max-height: 40em;
   }
 }

@@ -1,10 +1,21 @@
+import { lazy, Suspense } from "react"
+
 import { stringify } from "yaml"
 import { match, P } from "ts-pattern"
 
 import { type PdlBlock } from "../../pdl_ast"
 import { map_block_children } from "../../pdl_ast_utils"
 
-import Preview, { type SupportedLanguage } from "./Preview"
+const Preview = lazy(() => import("./Preview"))
+const PreviewLight = lazy(() => import("./PreviewLight"))
+//import { type SupportedLanguage } from "./Preview"
+
+export type SupportedLanguage =
+  | "yaml"
+  | "json"
+  | "javascript"
+  | "python"
+  | "plaintext"
 
 type Props = {
   block: PdlBlock
@@ -13,6 +24,7 @@ type Props = {
   limitHeight?: boolean
   raw?: boolean
   remount?: boolean
+  isWidthConstrained?: boolean
 }
 
 export default function Code({
@@ -22,19 +34,28 @@ export default function Code({
   limitHeight = true,
   raw = false,
   remount = false,
+  isWidthConstrained = false,
 }: Props) {
+  const value =
+    typeof block === "string"
+      ? block
+      : stringify(raw ? block : block_code_cleanup(block))
+
   return (
-    <Preview
-      limitHeight={limitHeight}
-      showLineNumbers={showLineNumbers ?? false}
-      language={language || "yaml"}
-      remount={remount}
-      value={
-        typeof block === "string"
-          ? block
-          : stringify(raw ? block : block_code_cleanup(block))
-      }
-    />
+    <Suspense fallback={<div />}>
+      {isWidthConstrained ? (
+        <PreviewLight value={value} language={language || "yaml"} />
+      ) : (
+        <Preview
+          limitHeight={limitHeight}
+          showLineNumbers={showLineNumbers ?? false}
+          language={language || "yaml"}
+          remount={remount}
+          isWidthConstrained={isWidthConstrained}
+          value={value}
+        />
+      )}
+    </Suspense>
   )
 }
 

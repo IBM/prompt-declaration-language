@@ -14,7 +14,7 @@ import "./Duration.css"
 type Props = Pick<
   Required<import("../../helpers").PdlBlockWithTiming>,
   "start_nanos" | "end_nanos" | "timezone"
-> & { as: import("./Toolbar").As }
+> & { sml: import("./Toolbar").SML }
 
 const gapSm = { default: "gapSm" as const }
 const nowrap = { default: "nowrap" as const }
@@ -67,13 +67,13 @@ export default function Duration(block: Props) {
       >
         <FlexItem>
           <strong>
-            {block.as === "list" && format(block.start_nanos, block.timezone)}
+            {block.sml === "xl" && format(block.start_nanos, block.timezone)}
           </strong>
         </FlexItem>
         <FlexItem>
-          {block.as === "list" ? "(" : ""}
+          {block.sml === "xl" ? "(" : ""}
           {dur}
-          {block.as === "list" ? ")" : ""}
+          {block.sml === "xl" ? ")" : ""}
         </FlexItem>
       </Flex>
     </Tooltip>

@@ -15,7 +15,6 @@ import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 
 type Props = import("./Tile").default & {
   idx: number
-  as: import("./Toolbar").As
   sml: import("./Toolbar").SML
 }
 
@@ -24,7 +23,6 @@ const nowrap = { default: "nowrap" as const }
 const center = { default: "alignItemsCenter" as const }
 
 export default function MasonryTile({
-  as,
   sml,
   id,
   def,
@@ -44,7 +42,7 @@ export default function MasonryTile({
         ? {
             actions: (
               <Duration
-                as={as}
+                sml={sml}
                 start_nanos={start_nanos}
                 end_nanos={end_nanos}
                 timezone={timezone}
@@ -52,13 +50,12 @@ export default function MasonryTile({
             ),
           }
         : undefined,
-    [start_nanos, end_nanos, timezone, as, sml],
+    [start_nanos, end_nanos, timezone, sml],
   )
 
   return (
     <Card
       isPlain
-      isLarge={sml === "l"}
       isCompact={sml === "s"}
       key={id}
       data-kind={kind}
@@ -79,7 +76,7 @@ export default function MasonryTile({
                 id={id}
                 def={def}
                 value={content}
-                maxCrumbs={sml === "l" ? 3 : 2}
+                maxCrumbs={sml === "xl" ? 4 : sml === "l" ? 3 : 2}
               />
             )}
           </Flex>
@@ -89,7 +86,12 @@ export default function MasonryTile({
       <CardBody className="pdl-masonry-tile-body">
         <Stack>
           {message && <i>{message}</i>}
-          <Result term="" result={content} lang={lang} />
+          <Result
+            term=""
+            result={content}
+            lang={lang}
+            isWidthConstrained={sml !== "xl"}
+          />
         </Stack>
       </CardBody>
     </Card>
