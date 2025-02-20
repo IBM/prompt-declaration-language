@@ -1,20 +1,4 @@
 .pdl-preview-light {
-  padding: 1em;
-
-  &.hljs {
-    font-size: 0.875em;
-    background: #292929;
-    color: var(--pf-t--color--white);
-
-    .hljs-attr {
-      color: #3dc9b0;
-    }
-    .hljs-string,
-    .hljs-comment {
-      color: #ce9178;
-    }
-    .hljs-number {
-      color: #b5cea8;
-    }
-  }
+  padding: 1em !important;
+  font-size: 0.875em;
 }
