@@ -6,7 +6,7 @@ type Tile = {
   end_nanos?: number
   timezone?: string
   content: string
-  lang?: import("../code/Preview").SupportedLanguage
+  lang?: import("../code/Code").SupportedLanguage
   crumb?: boolean
   kind?: string
   boundedHeight?: boolean

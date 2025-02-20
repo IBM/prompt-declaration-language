@@ -10,27 +10,19 @@ import {
   PageSection,
 } from "@patternfly/react-core"
 
-import Topology from "../memory/Topology"
-import extractVariables from "../memory/model"
+//import Topology from "../memory/Topology"
+//import extractVariables from "../memory/model"
 import Timeline from "../timeline/TimelineFromModel"
 
 import Masonry from "./Masonry"
 import computeModel from "./model"
-import Toolbar, { type As, type SML } from "./Toolbar"
+import Toolbar, { type SML } from "./Toolbar"
 
 import "./Masonry.css"
 
 type Props = {
   value: string
   setValue(value: string): void
-}
-
-const asLocalStorageKey = "pdl-viewer.masonry.as"
-function getAsUserSetting(): As {
-  return (localStorage.getItem(asLocalStorageKey) as As) || "grid"
-}
-function setAsUserSetting(as: As) {
-  localStorage.setItem(asLocalStorageKey, as)
 }
 
 const smlLocalStorageKey = "pdl-viewer.masonry.sml"
@@ -49,10 +41,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [value],
   )
 
-  const [as, setAs] = useState<As>(getAsUserSetting())
   const [sml, setSML] = useState<SML>(getSMLUserSetting())
-
-  useEffect(() => setAsUserSetting(as), [as])
   useEffect(() => setSMLUserSetting(sml), [sml])
 
   const [modalContent, setModalContent] = useState<null | {
@@ -69,7 +58,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
   // This is the <Topology/> model. We compute this here, so we can
   // nicely not render anything if we have an empty topology model.
-  const { nodes, edges } = useMemo(() => extractVariables(block), [block])
+  // const { nodes, edges } = useMemo(() => extractVariables(block), [block])
 
   if (!block) {
     return "Invalid trace content"
@@ -79,8 +68,6 @@ export default function MasonryCombo({ value, setValue }: Props) {
     <>
       <PageSection type="subnav">
         <Toolbar
-          as={as}
-          setAs={setAs}
           sml={sml}
           setSML={setSML}
           block={block}
@@ -94,16 +81,16 @@ export default function MasonryCombo({ value, setValue }: Props) {
         className="pdl-content-section pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Masonry model={masonry} as={as} sml={sml}>
-          {sml !== "s" && <Timeline model={base} numbering={numbering} />}
-          {(as !== "list" || sml !== "s") && nodes.length > 0 && (
+        <Masonry model={masonry} sml={sml}>
+          <Timeline model={base} numbering={numbering} />
+          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
             <Topology
               nodes={nodes}
               edges={edges}
               numbering={numbering}
               sml={sml}
             />
-          )}
+          )*/}
         </Masonry>
       </PageSection>
 

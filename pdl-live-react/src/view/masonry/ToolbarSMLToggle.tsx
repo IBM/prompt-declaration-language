@@ -14,6 +14,9 @@ export default function ToolbarAsToggler({
   const handleClickL = useCallback(() => {
     setSML("l")
   }, [setSML])
+  const handleClickXL = useCallback(() => {
+    setSML("xl")
+  }, [setSML])
 
   return (
     <ToggleGroup aria-label="masonry small-medium-large toggle" isCompact>
@@ -34,6 +37,12 @@ export default function ToolbarAsToggler({
         aria-label="masonry comfy layout"
         isSelected={sml === "l"}
         onChange={handleClickL}
+      />
+      <ToggleGroupItem
+        icon="XL"
+        aria-label="masonry extra-comfy layout"
+        isSelected={sml === "xl"}
+        onChange={handleClickXL}
       />
     </ToggleGroup>
   )

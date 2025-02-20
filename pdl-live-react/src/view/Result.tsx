@@ -9,13 +9,14 @@ import {
 import Code from "./code/Code"
 import Value from "./Value"
 
-import { type SupportedLanguage } from "./code/Preview"
+import { type SupportedLanguage } from "./code/Code"
 
 type Props = {
   result: number | string | unknown
   lang?: SupportedLanguage
   term?: string
   limitHeight?: boolean
+  isWidthConstrained?: boolean
 }
 
 export default function Result({
@@ -23,11 +24,16 @@ export default function Result({
   lang,
   term = "Result",
   limitHeight = false,
+  isWidthConstrained = false,
 }: Props) {
   const isCode = lang && result
 
   const innerContent = isCode ? (
-    <Code block={result} language={lang} remount />
+    <Code
+      block={result}
+      language={lang}
+      isWidthConstrained={isWidthConstrained}
+    />
   ) : (
     <Value>{result}</Value>
   )

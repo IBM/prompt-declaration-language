@@ -21,6 +21,7 @@ type Props = {
   showLineNumbers?: boolean
   limitHeight?: boolean
   remount?: boolean
+  isWidthConstrained?: boolean
 }
 
 const options: Required<CodeEditorProps>["options"] = {
@@ -30,14 +31,20 @@ const options: Required<CodeEditorProps>["options"] = {
   scrollbar: { alwaysConsumeMouseWheel: false },
 }
 
+const optionsWidthConstrained: Required<CodeEditorProps>["options"] =
+  Object.assign({}, options, {
+    folding: false,
+  })
+
 type Editor = Parameters<Required<CodeEditorProps>["onEditorDidMount"]>[0]
 
 export default function Preview({
   language,
   value,
-  showLineNumbers,
-  limitHeight,
-  remount,
+  showLineNumbers = false,
+  limitHeight = false,
+  remount = false,
+  isWidthConstrained = false,
 }: Props) {
   const { hash } = useLocation()
   const onEditorDidMount = useCallback((editor: Editor) => {
@@ -50,10 +57,10 @@ export default function Preview({
         key={remount ? hash + value : undefined}
         code={value}
         isDarkTheme
-        isCopyEnabled
-        isDownloadEnabled
-        isLanguageLabelVisible
-        options={options}
+        isCopyEnabled={!isWidthConstrained}
+        isDownloadEnabled={!isWidthConstrained}
+        isLanguageLabelVisible={!isWidthConstrained}
+        options={isWidthConstrained ? optionsWidthConstrained : options}
         onEditorDidMount={onEditorDidMount}
         language={Language[language || "yaml"]}
         isLineNumbersVisible={showLineNumbers}
