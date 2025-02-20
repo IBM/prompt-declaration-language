@@ -1,3 +1,4 @@
+import { stringify } from "yaml"
 import { computeModel as computeBaseModel } from "../timeline/model"
 
 import {
@@ -5,8 +6,6 @@ import {
   hasParser,
   hasScalarResult,
   hasTimingInformation,
-  isNonScalarPdlBlock,
-  isTextBlock,
   type NonScalarPdlBlock,
 } from "../../helpers"
 
@@ -17,53 +16,28 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
   const masonry: Tile[] = base
     .filter(({ block }) => block.kind !== "if")
     .flatMap(({ id, block, children }) => {
-      if (isTextBlock(block)) {
-        if (!Array.isArray(block.text)) {
-          if (isNonScalarPdlBlock(block.text)) {
-            const content = String(block.text).trim()
-            if (content.length > 0) {
-              return [{ id, content }]
-            }
-          }
-        } else {
-          return withDefs(
-            block,
-            block.text.flatMap((child, idx) => {
-              if (
-                !isNonScalarPdlBlock(child) &&
-                (typeof child !== "string" || child.trim().length > 0)
-              ) {
-                return [
-                  {
-                    id: `${id}.${idx}`,
-                    content: String(child).trim(),
-                  },
-                ]
-              }
-              return []
-            }),
-          )
-        }
-      } else if (
-        children.length === 0 &&
-        hasScalarResult(block) &&
-        hasTimingInformation(block)
-      ) {
+      if (children.length === 0 && hasTimingInformation(block)) {
         return withDefs(block, [
           {
             id,
             def: block.def,
             kind: block.kind,
             message: hasMessage(block) ? block.message : undefined,
-            content: String(block.result),
+            content:
+              typeof block.result === "object"
+                ? stringify(block.result)
+                : String(block.result),
             start_nanos: block.start_nanos,
             end_nanos: block.end_nanos,
             timezone: block.timezone,
-            lang: hasParser(block)
-              ? block.parser === "jsonl"
-                ? "json"
-                : block.parser
-              : undefined,
+            lang:
+              typeof block.result === "object"
+                ? "yaml"
+                : hasParser(block)
+                  ? block.parser === "jsonl"
+                    ? "json"
+                    : block.parser
+                  : undefined,
             crumb: true,
           },
         ])
