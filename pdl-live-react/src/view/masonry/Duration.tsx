@@ -12,8 +12,8 @@ import {
 import "./Duration.css"
 
 type Props = Pick<
-  Required<import("../../helpers").PdlBlockWithTiming>,
-  "pdl__timing"
+  Required<import("../../helpers").WithTiming>,
+  "start_nanos" | "end_nanos" | "timezone"
 > & { sml: import("./Toolbar").SML }
 
 const gapSm = { default: "gapSm" as const }
@@ -21,8 +21,8 @@ const nowrap = { default: "nowrap" as const }
 const center = { default: "alignItemsCenter" as const }
 
 /** Duration of block execution */
-function duration(block: Props) {
-  return block.pdl__timing.end_nanos - block.pdl__timing.start_nanos
+function duration(timing: Props) {
+  return timing.end_nanos - timing.start_nanos
 }
 
 function format(nanos: number, timezone: string) {
@@ -31,8 +31,8 @@ function format(nanos: number, timezone: string) {
   })
 }
 
-export default function Duration(block: Props) {
-  const dur = prettyMs(duration(block) / 1000000)
+export default function Duration(timing: Props) {
+  const dur = prettyMs(duration(timing) / 1000000)
 
   const tip = (
     <DescriptionList isCompact isHorizontal isFluid>
@@ -44,14 +44,14 @@ export default function Duration(block: Props) {
       <DescriptionListGroup>
         <DescriptionListTerm>Start Time</DescriptionListTerm>
         <DescriptionListDescription>
-          {format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
+          {format(timing.start_nanos, timing.timezone)}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
       <DescriptionListGroup>
         <DescriptionListTerm>End Time</DescriptionListTerm>
         <DescriptionListDescription>
-          {format(block.pdl__timing.end_nanos, block.pdl__timing.timezone)}
+          {format(timing.end_nanos, timing.timezone)}
         </DescriptionListDescription>
       </DescriptionListGroup>
     </DescriptionList>
@@ -67,14 +67,13 @@ export default function Duration(block: Props) {
       >
         <FlexItem>
           <strong>
-            {block.sml === "xl" &&
-              format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
+            {timing.sml === "xl" && format(timing.start_nanos, timing.timezone)}
           </strong>
         </FlexItem>
         <FlexItem>
-          {block.sml === "xl" ? "(" : ""}
+          {timing.sml === "xl" ? "(" : ""}
           {dur}
-          {block.sml === "xl" ? ")" : ""}
+          {timing.sml === "xl" ? ")" : ""}
         </FlexItem>
       </Flex>
     </Tooltip>

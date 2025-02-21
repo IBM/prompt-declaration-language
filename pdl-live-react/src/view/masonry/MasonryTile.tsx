@@ -39,19 +39,18 @@ export default function MasonryTile({
 }: Props) {
   const actions = useMemo(
     () =>
-      // sml !== "s" && start_nanos && end_nanos && timezone
-      //   ? {
-      //       actions: (
-      //         <Duration
-      //           sml={sml}
-      //           start_nanos={start_nanos}
-      //           end_nanos={end_nanos}
-      //           timezone={timezone}
-      //         />
-      //       ),
-      //     }
-      //   : undefined,
-      undefined,
+      sml !== "s" && start_nanos && end_nanos && timezone
+        ? {
+            actions: (
+              <Duration
+                sml={sml}
+                start_nanos={start_nanos}
+                end_nanos={end_nanos}
+                timezone={timezone}
+              />
+            ),
+          }
+        : undefined,
     [start_nanos, end_nanos, timezone, sml],
   )
 
