@@ -66,9 +66,9 @@
 }
 
 .pdl-timeline-bar {
-  height: var(--pdl-t-h);
+  height: calc(0.825 * var(--pdl-t-h));
   position: absolute;
-  min-width: 1px;
+  min-width: 0.25em;
 
   a {
     /* This is the link that allows drilldown clicks from the bar */
