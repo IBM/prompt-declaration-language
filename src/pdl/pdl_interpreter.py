@@ -82,6 +82,7 @@ from .pdl_ast import (  # noqa: E402
     RoleType,
     ScopeType,
     TextBlock,
+    Timing,
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
@@ -269,8 +270,7 @@ def process_block(
             trace = DataBlock(
                 data=block,
                 result=stringified_result,
-                start_nanos=start,
-                end_nanos=time.time_ns(),
+                pdl__timing=Timing(start_nanos=start, end_nanos=time.time_ns()),
                 id=".".join(state.id_stack),
             )
             if state.yield_background:
@@ -316,19 +316,17 @@ def process_advanced_block_timed(
     state = state.with_id(str(block.kind))
     if state.id_stack is not None:
         block.id = ".".join(state.id_stack)
-    block.start_nanos = time.time_ns()
+    block.pdl__timing = Timing()
+    block.pdl__timing.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
-    end_nanos = time.time_ns()
+    block.pdl__timing.end_nanos = time.time_ns()
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
                 update={
-                    "end_nanos": end_nanos,
                     "context": lazy_apply(lambda s: s["pdl_context"], scope),
                 }
             )
-        case Block():
-            trace = trace.model_copy(update={"end_nanos": end_nanos})
     return result, background, scope, trace
 
 
