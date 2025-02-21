@@ -1,5 +1,5 @@
 .pdl-timeline {
-  --pdl-t-h: 1em;
+  --pdl-t-h: 1.125em;
   display: table;
   border-collapse: collapse;
 
@@ -18,8 +18,6 @@
     height: var(--pdl-t-h);
     line-height: var(--pdl-t-h);
     .pdl-mono {
-      line-height: 1em;
-      font-size: 1.125em; /* eliminate vertical gaps in tree spine characters */
       white-space: pre;
     }
   }
