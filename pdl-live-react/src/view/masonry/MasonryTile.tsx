@@ -51,7 +51,7 @@ export default function MasonryTile({
       //       ),
       //     }
       //   : undefined,
-    undefined,
+      undefined,
     [start_nanos, end_nanos, timezone, sml],
   )
 

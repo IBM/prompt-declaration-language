@@ -226,6 +226,7 @@ export type Path = string[];
 export type File = string;
 export type StartNanos = number | null;
 export type EndNanos = number | null;
+export type FirstUseNanos = number | null;
 export type Timezone = string | null;
 export type Kind = "empty";
 /**
@@ -3062,6 +3063,7 @@ export interface Table {
 export interface Timing {
   start_nanos?: StartNanos;
   end_nanos?: EndNanos;
+  first_use_nanos?: FirstUseNanos;
   timezone?: Timezone;
 }
 export interface LocalizedExpression {

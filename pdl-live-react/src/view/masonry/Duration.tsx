@@ -67,7 +67,8 @@ export default function Duration(block: Props) {
       >
         <FlexItem>
           <strong>
-            {block.sml === "xl" && format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
+            {block.sml === "xl" &&
+              format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
           </strong>
         </FlexItem>
         <FlexItem>

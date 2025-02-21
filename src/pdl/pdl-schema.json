@@ -8693,6 +8693,18 @@
           "default": 0,
           "title": "End Nanos"
         },
+        "first_use_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "First Use Nanos"
+        },
         "timezone": {
           "anyOf": [
             {

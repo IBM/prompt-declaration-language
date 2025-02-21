@@ -13,7 +13,10 @@ export default function TimelineBar({
   const style = useMemo(
     () => ({
       left: (100 * (pdl__timing.start_nanos - min)) / (max - min) + "%",
-      width: (100 * (pdl__timing.end_nanos - pdl__timing.start_nanos)) / (max - min) + "%",
+      width:
+        (100 * (pdl__timing.end_nanos - pdl__timing.start_nanos)) /
+          (max - min) +
+        "%",
     }),
     [pdl__timing.start_nanos, pdl__timing.end_nanos, min, max],
   )
