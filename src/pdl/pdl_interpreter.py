@@ -43,9 +43,11 @@ from .pdl_ast import (  # noqa: E402
     CallBlock,
     CodeBlock,
     ContributeTarget,
+    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    ExpressionType,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -603,7 +605,7 @@ def process_block_body(
                 else:
                     new_scope = scope
                 b = True
-                if "if_" in match_case.model_fields_set:
+                if "if_" in match_case.model_fields_set and match_case.if_ is not None:
                     loc_if = append(loc_i, "if")
                     try:
                         b = process_expr(new_scope, match_case.if_, loc_if)
@@ -1005,18 +1007,18 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     return result
 
 
-BlockTypeTVarProcessExprOf = TypeVar(
-    "BlockTypeTVarProcessExprOf", bound=AdvancedBlockType
+BlockTypeTVarProcessContribute = TypeVar(
+    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
 )
 
 
 def process_contribute(
-    block: BlockTypeTVarProcessExprOf, scope: ScopeType, loc: LocationType
-) -> tuple[Any, BlockTypeTVarProcessExprOf]:
+    block: BlockTypeTVarProcessContribute, scope: ScopeType, loc: LocationType
+) -> tuple[Any, BlockTypeTVarProcessContribute]:
     value = get_contribute_value(block.contribute)
     loc = append(loc, "contribute")
     try:
-        result = process_expr(scope, value, loc)
+        result: ContributeValue = process_expr(scope, value, loc)  # pyright: ignore
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1026,6 +1028,11 @@ def process_contribute(
     replace = replace_contribute_value(block.contribute, result)
     trace = block.model_copy(update={"contribute": replace})
     return result, trace
+
+
+BlockTypeTVarProcessExprOf = TypeVar(
+    "BlockTypeTVarProcessExprOf", bound=AdvancedBlockType
+)
 
 
 def process_expr_of(
@@ -1038,7 +1045,7 @@ def process_expr_of(
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result = process_expr(scope, expr, loc)
+        result: Any = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1059,7 +1066,7 @@ def process_condition_of(
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result = process_expr(scope, expr, loc)
+        result: bool = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1072,11 +1079,13 @@ def process_condition_of(
 EXPR_START_STRING = "${"
 EXPR_END_STRING = "}"
 
+ProcessExprT = TypeVar("ProcessExprT")
+
 
 def process_expr(  # pylint: disable=too-many-return-statements
-    scope: ScopeType, expr: Any, loc: LocationType
-) -> Any:
-    result: Any
+    scope: ScopeType, expr: ExpressionType[ProcessExprT], loc: LocationType
+) -> ProcessExprT:
+    result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
         return process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
@@ -1102,7 +1111,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 ):
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
                     free_vars = meta.find_undeclared_variables(expr_ast)
-                    result = env.compile_expression(
+                    result = env.compile_expression(  # pyright: ignore
                         expr[2:-1], undefined_to_none=False
                     )({x: scope[x] for x in free_vars if x in scope})
                     if isinstance(result, Undefined):
@@ -1110,7 +1119,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
                     return result
                 if isinstance(expr_ast_nodes[0], TemplateData):
                     # `expr` is a string that do not include jinja expression
-                    return expr
+                    return expr  # type: ignore
             # `expr` is not a single jinja expression
             template = Template(
                 expr,
@@ -1125,7 +1134,9 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 undefined=StrictUndefined,
             )
             free_vars = meta.find_undeclared_variables(expr_ast)
-            result = template.render({x: scope[x] for x in free_vars if x in scope})
+            result = template.render(
+                {x: scope[x] for x in free_vars if x in scope}
+            )  # pyright: ignore
             return result
         except PDLRuntimeError as exc:
             raise exc from exc
@@ -1139,19 +1150,19 @@ def process_expr(  # pylint: disable=too-many-return-statements
             ) from exc
 
     if isinstance(expr, list):
-        result = []
+        result_list: list[Any] = []
         for index, x in enumerate(expr):
-            res = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
-            result.append(res)
-        return result
+            res: Any = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
+            result_list.append(res)
+        return result_list  # type: ignore
     if isinstance(expr, dict):
         result_dict: dict[str, Any] = {}
         for k, v in expr.items():
             k_loc = append(loc, k)
-            k_res = process_expr(scope, k, k_loc)
-            v_res = process_expr(scope, v, k_loc)
+            k_res: str = process_expr(scope, k, k_loc)
+            v_res: Any = process_expr(scope, v, k_loc)
             result_dict[k_res] = v_res
-        return result_dict
+        return result_dict  # type: ignore
     return expr
 
 
