@@ -52,9 +52,11 @@
 }
 
 .pdl-masonry-tile {
-  background: var(--pf-t--global--background--color--secondary--default);
+  &:not([data-is-non-card]) {
+    background: var(--pf-t--global--background--color--secondary--default);
+  }
   &[data-kind="model"] {
-    background: #daf2f2;
+    background: #e0f0ff;
   }
   &[data-kind="read"] {
     background: #e9f7df;
