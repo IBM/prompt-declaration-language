@@ -26,11 +26,16 @@ function MyTiles() {
             key={filename}
             title={title}
             icon={<MyIcon />}
+            className="pdl-masonry-tile"
             body={
               hasResult(data) ? (
-                <Panel isScrollable>
-                  <PanelMain maxHeight="200px">
-                    <Result result={data.result} />
+                <Panel
+                  isScrollable
+                  variant="raised"
+                  className="pdl-masonry-tile-panel"
+                >
+                  <PanelMain maxHeight="300px">
+                    <Result result={data.result} term="" />
                   </PanelMain>
                 </Panel>
               ) : (

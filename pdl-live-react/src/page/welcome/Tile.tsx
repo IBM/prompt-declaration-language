@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core"
 
 type Props = PropsWithChildren<{
+  className?: string
   title: ReactNode
   body: ReactNode
   icon?: ReactNode
@@ -18,9 +19,15 @@ type Props = PropsWithChildren<{
 const gapSm = { default: "gapSm" as const }
 const center = { default: "alignItemsCenter" as const }
 
-export default function Tile({ title, body, children, icon }: Props) {
+export default function Tile({
+  className,
+  title,
+  body,
+  children,
+  icon,
+}: Props) {
   return (
-    <Card isLarge>
+    <Card isLarge variant="secondary" className={className}>
       <CardHeader>
         <CardTitle>
           <Flex gap={gapSm} alignItems={center}>
