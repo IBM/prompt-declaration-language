@@ -20,7 +20,7 @@
     "pdl": "./src-tauri/target/debug/PDL",
     "view": "npm run pdl view",
     "prep-interpreter": "if [ ! -d .venv ]; then npm run reprep-interpreter; fi",
-    "reprep-interpreter": "source .venv/bin/activate; pip install -e ..",
+    "reprep-interpreter": "python3.12 -mvenv .venv && source .venv/bin/activate && pip install -e ..",
     "start": "npm run prep-interpreter && npm run tauri dev"
   },
   "dependencies": {
