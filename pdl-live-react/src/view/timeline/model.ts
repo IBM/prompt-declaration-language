@@ -111,7 +111,13 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .filter(nonNullable)
 }
 
-function positionOf(row: TimelineRow, idx: number, A: TimelineRow[]): Position {
+function positionOf(row: TimelineRow): Position {
+  if (!row.parent) {
+    return "push"
+  }
+
+  const A = row.parent.children
+  const idx = A.findIndex((c) => c === row)
   return idx === A.length - 1 || A[idx + 1].depth < row.depth
     ? "pop"
     : idx === 0 || A[idx - 1].depth < row.depth
@@ -161,7 +167,7 @@ export function pushPopsFor(model: TimelineRow[]): PushPop[] {
     const root = model[rootIdx]
     const mine = {
       prefix: prefix.slice(0),
-      position: positionOf(root, rootIdx, model),
+      position: positionOf(root),
     }
     result.push(mine)
 
