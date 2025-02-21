@@ -7,15 +7,21 @@ type MyTrace = {
   value: string
 }
 export function getMyTraces(): MyTrace[] {
-  return JSON.parse(
-    localStorage.getItem(mytracesLocalStorageKey) || "[]",
-  ) as MyTrace[]
+  return (
+    JSON.parse(
+      localStorage.getItem(mytracesLocalStorageKey) || "[]",
+    ) as MyTrace[]
+  ).map((trace) =>
+    Object.assign(trace, {
+      title: trace.title.replace(/(\.trace)?.json$/, ""),
+    }),
+  )
 }
 
 export function addMyTrace(filename: string, value: string): MyTrace {
   let traces = getMyTraces()
   const trace = {
-    title: filename.replace(/\.trace.json$/, ""),
+    title: filename.replace(/(\.trace)?.json$/, ""),
     timestamp: Date.now(),
     filename,
     value,

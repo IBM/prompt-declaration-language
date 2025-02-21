@@ -1,7 +1,7 @@
+use duct::cmd;
 use file_diff::diff;
 use std::fs::{copy, create_dir_all, read};
 use std::io::{BufRead, BufReader};
-use std::process::{Command, Stdio};
 use tempfile::NamedTempFile;
 
 use tauri::path::BaseDirectory;
@@ -51,11 +51,27 @@ fn pip_install_if_needed(
             }
         }
         let venv_path_string = venv_path.into_os_string().into_string().unwrap();
-        let output = Command::new("python3.12")
-            .args(["-mvenv", venv_path_string.as_str()])
-            .output()
-            .expect("Failed to execute venv creation");
-        println!("{:?}", output);
+        let stdout = cmd!("python3.12", "-mvenv", venv_path_string.as_str())
+            .stderr_to_stdout()
+            .reader()?;
+        // Stream output.
+        let lines = BufReader::new(stdout).lines();
+        match reader {
+            Some(r) => {
+                for line in lines {
+                    r.send(Payload {
+                        done: false,
+                        message: line.unwrap(),
+                    })
+                    .unwrap();
+                }
+            }
+            None => {
+                for line in lines {
+                    println!("{}", line.unwrap());
+                }
+            }
+        }
     }
 
     let requirements_path = app_handle
@@ -70,26 +86,35 @@ fn pip_install_if_needed(
         cached_requirements_path.as_str(),
     ) {
         println!("Running pip install...");
-        let mut child = Command::new("sh")
-            .args([
-                "-c",
-                format!(
-                    "source {activate} && pip install -r {requirements}",
-                    activate = activate_path,
-                    requirements = requirements_path
-                )
-                .as_str(),
-            ])
-            .stdout(Stdio::piped())
-            .spawn()
-            .unwrap();
-
-        let stdout = child.stdout.take().unwrap();
-
+        let stdout = cmd!(
+            "sh",
+            "-c",
+            format!(
+                "source {activate} && pip install -r {requirements}",
+                activate = activate_path,
+                requirements = requirements_path
+            )
+            .as_str(),
+        )
+        .stderr_to_stdout()
+        .reader()?;
         // Stream output.
         let lines = BufReader::new(stdout).lines();
-        for line in lines {
-            println!("{}", line.unwrap());
+        match reader {
+            Some(r) => {
+                for line in lines {
+                    r.send(Payload {
+                        done: false,
+                        message: line.unwrap(),
+                    })
+                    .unwrap();
+                }
+            }
+            None => {
+                for line in lines {
+                    println!("{}", line.unwrap());
+                }
+            }
         }
 
         copy(requirements_path, cached_requirements_path)?;
@@ -119,24 +144,21 @@ pub fn run_pdl_program(
         (None, "".to_owned())
     };
 
-    let mut child = Command::new("sh")
-        .args([
-            "-c",
-            &[
-                "source",
-                activate.as_str(),
-                "; pdl",
-                trace_arg.as_str(),
-                source_file_path.as_str(),
-            ]
-            .join(" "),
-        ])
-        .stdout(Stdio::piped())
-        .spawn()
-        .unwrap();
-
-    let stdout = child.stdout.take().unwrap();
-
+    let stdout = cmd!(
+        "sh",
+        "-c",
+        &[
+            "source",
+            activate.as_str(),
+            "; pdl",
+            trace_arg.as_str(),
+            source_file_path.as_str(),
+        ]
+        .join(" "),
+    )
+    .env("FORCE_COLOR", "1")
+    .stderr_to_stdout()
+    .reader()?;
     // Stream output.
     let lines = BufReader::new(stdout).lines();
     match reader {
