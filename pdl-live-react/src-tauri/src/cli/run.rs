@@ -51,11 +51,30 @@ fn pip_install_if_needed(
             }
         }
         let venv_path_string = venv_path.into_os_string().into_string().unwrap();
-        let output = Command::new("python3.12")
+        let mut child = Command::new("python3.12")
             .args(["-mvenv", venv_path_string.as_str()])
-            .output()
-            .expect("Failed to execute venv creation");
-        println!("{:?}", output);
+            .stdout(Stdio::piped())
+            .spawn()
+            .unwrap();
+        // Stream output.
+        let stdout = child.stdout.take().unwrap();
+        let lines = BufReader::new(stdout).lines();
+        match reader {
+            Some(r) => {
+                for line in lines {
+                    r.send(Payload {
+                        done: false,
+                        message: line.unwrap(),
+                    })
+                    .unwrap();
+                }
+            }
+            None => {
+                for line in lines {
+                    println!("{}", line.unwrap());
+                }
+            }
+        }
     }
 
     let requirements_path = app_handle
@@ -83,13 +102,24 @@ fn pip_install_if_needed(
             .stdout(Stdio::piped())
             .spawn()
             .unwrap();
-
-        let stdout = child.stdout.take().unwrap();
-
         // Stream output.
+        let stdout = child.stdout.take().unwrap();
         let lines = BufReader::new(stdout).lines();
-        for line in lines {
-            println!("{}", line.unwrap());
+        match reader {
+            Some(r) => {
+                for line in lines {
+                    r.send(Payload {
+                        done: false,
+                        message: line.unwrap(),
+                    })
+                    .unwrap();
+                }
+            }
+            None => {
+                for line in lines {
+                    println!("{}", line.unwrap());
+                }
+            }
         }
 
         copy(requirements_path, cached_requirements_path)?;
@@ -131,13 +161,12 @@ pub fn run_pdl_program(
             ]
             .join(" "),
         ])
+        .env("FORCE_COLOR", "1")
         .stdout(Stdio::piped())
         .spawn()
         .unwrap();
-
-    let stdout = child.stdout.take().unwrap();
-
     // Stream output.
+    let stdout = child.stdout.take().unwrap();
     let lines = BufReader::new(stdout).lines();
     match reader {
         Some(r) => {

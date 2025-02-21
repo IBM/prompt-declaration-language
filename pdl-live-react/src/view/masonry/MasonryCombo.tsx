@@ -113,7 +113,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
 
       {modalContent && (
-        <Modal variant="medium" isOpen={!!modalContent} onClose={closeModal}>
+        <Modal variant="large" isOpen={!!modalContent} onClose={closeModal}>
           <ModalHeader title={modalContent?.header} />
           <ModalBody tabIndex={0}>
             <Suspense fallback={<div />}>
