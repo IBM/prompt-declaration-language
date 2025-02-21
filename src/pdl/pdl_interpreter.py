@@ -330,6 +330,15 @@ def process_advanced_block_timed(
     return result, background, scope, trace
 
 
+def id_with_set_first_use_nanos(timing):
+    def identity(result):
+        if timing.first_use_nanos is None:
+            timing.first_use_nanos = time.time_ns()
+        return result
+
+    return identity
+
+
 def process_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
@@ -350,6 +359,10 @@ def process_advanced_block(
     try:
         result, background, new_scope, trace = process_block_body(
             state, scope, block, loc
+        )
+        result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
+        background = lazy_apply(
+            id_with_set_first_use_nanos(block.pdl__timing), background
         )
         trace = trace.model_copy(update={"result": result})
         if block.parser is not None:

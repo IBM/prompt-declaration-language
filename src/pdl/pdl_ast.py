@@ -155,6 +155,9 @@ class Timing(BaseModel):
     end_nanos: Optional[int] = 0
     """Time at which block execution ended
     """
+    first_use_nanos: Optional[int] = 0
+    """Time at which the value of the block was needed for the first time
+    """
     timezone: Optional[str] = ""
     """Timezone of start_nanos and end_nanos
     """
