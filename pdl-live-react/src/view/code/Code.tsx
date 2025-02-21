@@ -19,6 +19,7 @@ type Props = {
   block: PdlBlock
   language?: SupportedLanguage
   showLineNumbers?: boolean
+  wrap?: boolean
   limitHeight?: boolean
   raw?: boolean
 }
@@ -26,12 +27,15 @@ type Props = {
 export default function Code({
   block,
   language = "yaml",
-  showLineNumbers = false,
+  showLineNumbers,
+  wrap,
   raw = false,
 }: Props) {
   const value =
     typeof block === "string"
-      ? block
+      ? language === "json"
+        ? JSON.stringify(JSON.parse(block), undefined, 2)
+        : block
       : stringify(raw ? block : block_code_cleanup(block))
 
   return (
@@ -39,7 +43,8 @@ export default function Code({
       <PreviewLight
         value={value}
         language={language || "yaml"}
-        showLineNumbers={showLineNumbers ?? false}
+        wrap={wrap}
+        showLineNumbers={showLineNumbers}
       />
     </Suspense>
   )

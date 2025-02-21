@@ -6,7 +6,8 @@ import {
   CardTitle,
   CardBody,
   Flex,
-  Stack,
+  Panel,
+  PanelMain,
 } from "@patternfly/react-core"
 
 import Result from "../Result"
@@ -53,11 +54,20 @@ export default function MasonryTile({
     [start_nanos, end_nanos, timezone, sml],
   )
 
+  const maxHeight =
+    sml === "s"
+      ? "20em"
+      : sml === "m"
+        ? "30em"
+        : sml === "l"
+          ? "40em"
+          : undefined
+
   return (
     <Card
       isPlain
       isLarge={sml === "xl"}
-      isCompact={sml === "s" || sml === "m"}
+      isCompact={sml === "s"}
       key={id}
       data-kind={kind}
       data-padding={sml}
@@ -85,10 +95,19 @@ export default function MasonryTile({
       </CardHeader>
 
       <CardBody className="pdl-masonry-tile-body">
-        <Stack>
-          {message && <i>{message}</i>}
-          <Result term="" result={content} lang={lang} />
-        </Stack>
+        <Panel
+          isScrollable={sml !== "xl"}
+          variant="raised"
+          className="pdl-masonry-tile-panel"
+        >
+          <PanelMain maxHeight={maxHeight}>
+            <Result
+              term=""
+              result={message ? `*${message.trim()}*\n\n${content}` : content}
+              lang={lang}
+            />
+          </PanelMain>
+        </Panel>
       </CardBody>
     </Card>
   )

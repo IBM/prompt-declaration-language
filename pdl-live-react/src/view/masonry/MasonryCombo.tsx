@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { LogViewer } from "@patternfly/react-log-viewer"
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from "react"
 import {
   Button,
   BackToTop,
@@ -10,6 +16,12 @@ import {
   PageSection,
   Stack,
 } from "@patternfly/react-core"
+
+const LogViewer = lazy(() =>
+  import("@patternfly/react-log-viewer").then((m) => ({
+    default: m.LogViewer,
+  })),
+)
 
 //import Topology from "../memory/Topology"
 //import extractVariables from "../memory/model"
@@ -100,28 +112,32 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
 
-      <Modal variant="medium" isOpen={!!modalContent} onClose={closeModal}>
-        <ModalHeader title={modalContent?.header} />
-        <ModalBody tabIndex={0}>
-          <LogViewer
-            hasLineNumbers={false}
-            data={modalContent?.body}
-            theme="dark"
-            scrollToRow={Number.MAX_VALUE}
-          />
-        </ModalBody>
+      {modalContent && (
+        <Modal variant="medium" isOpen={!!modalContent} onClose={closeModal}>
+          <ModalHeader title={modalContent?.header} />
+          <ModalBody tabIndex={0}>
+            <Suspense fallback={<div />}>
+              <LogViewer
+                hasLineNumbers={false}
+                data={modalContent?.body}
+                theme="dark"
+                scrollToRow={Number.MAX_VALUE}
+              />
+            </Suspense>
+          </ModalBody>
 
-        <ModalFooter>
-          <Button
-            key="Close"
-            variant="primary"
-            onClick={closeModal}
-            isDisabled={!modalContent?.done}
-          >
-            Close
-          </Button>
-        </ModalFooter>
-      </Modal>
+          <ModalFooter>
+            <Button
+              key="Close"
+              variant="primary"
+              onClick={closeModal}
+              isDisabled={!modalContent?.done}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
     </>
   )
 }

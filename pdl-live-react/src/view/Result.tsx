@@ -27,7 +27,7 @@ export default function Result({
   const isCode = !!lang && lang !== "plaintext" && !!result
 
   const innerContent = isCode ? (
-    <Code block={result} language={lang} />
+    <Code block={result} language={lang} wrap={false} />
   ) : (
     <Value>{result}</Value>
   )
