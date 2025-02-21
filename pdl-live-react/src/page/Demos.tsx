@@ -9,7 +9,7 @@ import demos from "../demos/demos"
 
 import { hasResult } from "../helpers"
 
-import DemoIcon from "@patternfly/react-icons/dist/esm/icons/sun-icon"
+import DemoIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon"
 
 function DemoTiles() {
   const { hash } = useLocation()
@@ -24,11 +24,16 @@ function DemoTiles() {
         key={demo.name}
         title={demo.name}
         icon={<DemoIcon />}
+        className="pdl-masonry-tile"
         body={
           hasResult(data) ? (
-            <Panel isScrollable>
-              <PanelMain maxHeight="200px">
-                <Result result={data.result} />
+            <Panel
+              isScrollable
+              variant="raised"
+              className="pdl-masonry-tile-panel"
+            >
+              <PanelMain maxHeight="300px">
+                <Result result={data.result} term="" />
               </PanelMain>
             </Panel>
           ) : (

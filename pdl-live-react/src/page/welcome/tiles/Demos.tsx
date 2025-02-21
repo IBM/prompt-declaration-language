@@ -4,7 +4,7 @@ import { Link, useLocation, useSearchParams } from "react-router"
 import Tile from "../Tile"
 import demos from "../../../demos/demos"
 
-import DemoIcon from "@patternfly/react-icons/dist/esm/icons/sun-icon"
+import DemoIcon from "@patternfly/react-icons/dist/esm/icons/file-code-icon"
 
 export default function Demos() {
   const { hash } = useLocation()
