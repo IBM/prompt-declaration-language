@@ -15,6 +15,11 @@ export default function Sidebar() {
   const { hash, pathname: activeItem } = useLocation()
 
   const [searchParams] = useSearchParams()
+  searchParams.delete("id")
+  searchParams.delete("def")
+  searchParams.delete("get")
+  searchParams.delete("type")
+  searchParams.delete("detail")
   const s = searchParams.toString()
   const search = (s.length > 0 ? "?" + s : "") + hash
 
