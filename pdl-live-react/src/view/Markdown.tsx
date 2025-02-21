@@ -1,5 +1,9 @@
 import { Content } from "@patternfly/react-core"
-import RMD, { type Options as MarkdownProps } from "react-markdown"
+import rehypeStarryNight from "rehype-starry-night"
+import {
+  MarkdownHooks as RMD,
+  type Options as MarkdownProps,
+} from "react-markdown"
 
 import "./Markdown.css"
 
@@ -7,7 +11,7 @@ import "./Markdown.css"
 export default function Markdown(props: MarkdownProps) {
   return (
     <Content className="pdl-markdown">
-      <RMD {...props} />
+      <RMD {...props} rehypePlugins={[rehypeStarryNight]} />
     </Content>
   )
 }
