@@ -5,17 +5,20 @@ type Props = import("./model").TimelineRowWithExtrema
 
 export default function TimelineBar({
   id,
-  block: { kind, start_nanos, end_nanos },
+  block: { kind, pdl__timing },
   min,
   max,
 }: Props) {
   const { hash } = useLocation()
   const style = useMemo(
     () => ({
-      left: (100 * (start_nanos - min)) / (max - min) + "%",
-      width: (100 * (end_nanos - start_nanos)) / (max - min) + "%",
+      left: (100 * (pdl__timing.start_nanos - min)) / (max - min) + "%",
+      width:
+        (100 * (pdl__timing.end_nanos - pdl__timing.start_nanos)) /
+          (max - min) +
+        "%",
     }),
-    [start_nanos, end_nanos, min, max],
+    [pdl__timing.start_nanos, pdl__timing.end_nanos, min, max],
   )
 
   return (

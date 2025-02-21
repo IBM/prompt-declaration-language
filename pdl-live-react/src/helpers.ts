@@ -13,11 +13,13 @@ export type PdlBlockWithResult = NonScalarPdlBlock & {
   result: NonNullable<PdlBlock>
 }
 
-export type PdlBlockWithTiming = NonScalarPdlBlock & {
+export type WithTiming = {
   start_nanos: number
   end_nanos: number
   timezone: string
 }
+
+export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
 export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
   context: { role: string; content: string; defsite?: string }[]
@@ -143,9 +145,10 @@ export function hasTimingInformation(
 ): block is PdlBlockWithTiming {
   return (
     isNonScalarPdlBlock(block) &&
-    typeof block.start_nanos === "number" &&
-    typeof block.end_nanos === "number" &&
-    typeof block.timezone === "string"
+    block.pdl__timing != null &&
+    typeof block.pdl__timing.start_nanos === "number" &&
+    typeof block.pdl__timing.end_nanos === "number" &&
+    typeof block.pdl__timing.timezone === "string"
   )
 }
 

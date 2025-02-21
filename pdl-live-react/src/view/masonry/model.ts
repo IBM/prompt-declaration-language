@@ -27,9 +27,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               typeof block.result === "object"
                 ? stringify(block.result)
                 : String(block.result),
-            start_nanos: block.start_nanos,
-            end_nanos: block.end_nanos,
-            timezone: block.timezone,
+            start_nanos: block.pdl__timing.start_nanos,
+            end_nanos: block.pdl__timing.end_nanos,
+            timezone: block.pdl__timing.timezone,
             lang:
               typeof block.result === "object"
                 ? "yaml"

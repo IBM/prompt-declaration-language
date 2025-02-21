@@ -41,6 +41,7 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     TextBlock,
+    Timing,
 )
 from .pdl_lazy import PdlLazy
 
@@ -89,25 +90,15 @@ def block_to_dict(  # noqa: C901
     d["kind"] = str(block.kind)
     if block.id is not None:
         d["id"] = block.id
-    if block.start_nanos != 0:
-        if block.context is not None:
-            if isinstance(block.context, PdlLazy):
-                context = block.context.result()
-            else:
-                context = block.context
-            if len(context) > 0:
-                d["context"] = context
-        d["start_nanos"] = block.start_nanos
-        d["end_nanos"] = block.end_nanos
-
-        now = datetime.datetime.now()
-        local_now = now.astimezone()
-        local_tz = local_now.tzinfo
-        if local_tz is not None:
-            local_tzname = local_tz.tzname(local_now)
+    if block.context is not None:
+        if isinstance(block.context, PdlLazy):
+            context = block.context.result()
         else:
-            local_tzname = "UTC"
-        d["timezone"] = local_tzname
+            context = block.context
+        if len(context) > 0:
+            d["context"] = context
+    if block.pdl__timing is not None:
+        d["pdl__timing"] = timing_to_dict(block.pdl__timing)
     if block.description is not None:
         d["description"] = block.description
     if block.role is not None:
@@ -230,6 +221,22 @@ def block_to_dict(  # noqa: C901
     #     d["location"] = location_to_dict(block.location)
     if block.fallback is not None:
         d["fallback"] = block_to_dict(block.fallback, json_compatible)
+    return d
+
+
+def timing_to_dict(timing: Timing) -> dict:
+    d: dict = {}
+    if timing.start_nanos != 0:
+        d["start_nanos"] = timing.start_nanos
+        d["end_nanos"] = timing.end_nanos
+        now = datetime.datetime.now()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        if local_tz is not None:
+            local_tzname = local_tz.tzname(local_now)
+        else:
+            local_tzname = "UTC"
+        d["timezone"] = local_tzname
     return d
 
 
