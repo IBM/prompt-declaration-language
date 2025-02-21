@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   PageSection,
+  Stack,
 } from "@patternfly/react-core"
 
 //import Topology from "../memory/Topology"
@@ -81,9 +82,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
         className="pdl-content-section pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Masonry model={masonry} sml={sml}>
-          <Timeline model={base} numbering={numbering} />
-          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
+        <Stack hasGutter>
+          {sml !== "s" && <Timeline model={base} numbering={numbering} />}
+          <Masonry model={masonry} sml={sml}>
+            {sml === "s" && <Timeline model={base} numbering={numbering} />}
+            {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
             <Topology
               nodes={nodes}
               edges={edges}
@@ -91,7 +94,8 @@ export default function MasonryCombo({ value, setValue }: Props) {
               sml={sml}
             />
           )*/}
-        </Masonry>
+          </Masonry>
+        </Stack>
       </PageSection>
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />

@@ -56,7 +56,8 @@ export default function MasonryTile({
   return (
     <Card
       isPlain
-      isCompact={sml === "s"}
+      isLarge={sml === "xl"}
+      isCompact={sml === "s" || sml === "m"}
       key={id}
       data-kind={kind}
       data-padding={sml}
