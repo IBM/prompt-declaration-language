@@ -6,7 +6,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Divider,
   Flex,
 } from "@patternfly/react-core"
 
@@ -30,7 +29,6 @@ export default function Tile({ title, body, children, icon }: Props) {
           </Flex>
         </CardTitle>
       </CardHeader>
-      <Divider />
       <CardBody>{body}</CardBody>
       <CardFooter>
         <Flex>{children}</Flex>
