@@ -15,7 +15,6 @@
 }
 
 .pdl-masonry-tile {
-  border-radius: 0;
   margin-bottom: 1em;
   break-inside: avoid;
 
@@ -91,4 +90,13 @@
   &[data-padding="m"] {
     font-size: 0.875rem !important;
   }
+}
+
+.pf-v6-theme-dark {
+  .pdl-masonry-tile-panel {
+    background: rgba(41, 41, 41, 0.5);
+  }
+}
+.pdl-masonry-tile-panel {
+  background: rgba(255, 255, 255, 0.95);
 }
