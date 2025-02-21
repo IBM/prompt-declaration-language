@@ -1,4 +1,5 @@
 .pdl-timeline {
+  --pdl-t-h: 1em;
   display: table;
   border-collapse: collapse;
 
@@ -14,9 +15,11 @@
   vertical-align: middle;
 
   &[data-cell="kind"] {
-    height: 1.25em;
-    line-height: 1.25em;
+    height: var(--pdl-t-h);
+    line-height: var(--pdl-t-h);
     .pdl-mono {
+      line-height: 1em;
+      font-size: 1.125em; /* eliminate vertical gaps in tree spine characters */
       white-space: pre;
     }
   }
@@ -37,6 +40,12 @@
   }
 }
 
+.pdl-timeline-bar-outer,
+.pdl-timeline-cell[data-cell="duration"] {
+  height: var(--pdl-t-h);
+  line-height: var(--pdl-t-h);
+}
+
 /* Link hover effects */
 .pdl-timeline-row:hover {
   .pdl-timeline-kind a {
@@ -44,16 +53,22 @@
   }
 }
 
+/** Hide timeline bar and duration cells in S mode */
+.pdl-masonry-tile[data-padding="s"] {
+  .pdl-timeline-bar-outer,
+  .pdl-timeline-cell[data-cell="duration"] {
+    display: none;
+  }
+}
+
 .pdl-timeline-bar-outer {
   width: 100%;
   position: relative;
   display: block;
-  height: 1.25em;
-  line-height: 1.25em;
 }
 
 .pdl-timeline-bar {
-  height: 1em;
+  height: var(--pdl-t-h);
   position: absolute;
   min-width: 1px;
 
