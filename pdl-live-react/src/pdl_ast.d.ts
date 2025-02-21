@@ -213,21 +213,6 @@ export type Fallback =
  */
 export type Role = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone = string | null
-/**
  * Current context
  *
  */
@@ -243,6 +228,9 @@ export type Context =
 export type Id = string | null
 export type Path = string[]
 export type File = string
+export type StartNanos = number | null
+export type EndNanos = number | null
+export type Timezone = string | null
 export type Kind = "empty"
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -299,21 +287,6 @@ export type Fallback1 =
  *
  */
 export type Role1 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos1 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos1 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone1 = string | null
 /**
  * Current context
  *
@@ -408,21 +381,6 @@ export type Fallback2 =
  *
  */
 export type Role2 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos2 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos2 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone2 = string | null
 /**
  * Current context
  *
@@ -522,21 +480,6 @@ export type Fallback3 =
  */
 export type Role3 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos3 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos3 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone3 = string | null
-/**
  * Current context
  *
  */
@@ -551,6 +494,11 @@ export type Context3 =
  */
 export type Id3 = string | null
 export type Kind3 = "read"
+/**
+ * Name of the file to read. If `None`, read the standard input.
+ *
+ */
+export type Read = string | LocalizedExpression | null
 /**
  * Message to prompt the user to enter a value.
  *
@@ -615,21 +563,6 @@ export type Fallback4 =
  * Role of associated to the message.
  */
 export type Role4 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos4 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos4 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone4 = string | null
 /**
  * Current context
  *
@@ -726,21 +659,6 @@ export type Fallback5 =
  *
  */
 export type Role5 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos5 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos5 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone5 = string | null
 /**
  * Current context
  *
@@ -862,21 +780,6 @@ export type Fallback6 =
  */
 export type Role6 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos6 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos6 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone6 = string | null
-/**
  * Current context
  *
  */
@@ -971,21 +874,6 @@ export type Fallback7 =
  */
 export type Role7 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos7 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos7 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone7 = string | null
-/**
  * Current context
  *
  */
@@ -1079,21 +967,6 @@ export type Fallback8 =
  *
  */
 export type Role8 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos8 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos8 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone8 = string | null
 /**
  * Current context
  *
@@ -1216,21 +1089,6 @@ export type Fallback9 =
  */
 export type Role9 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos9 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos9 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone9 = string | null
-/**
  * Current context
  *
  */
@@ -1250,8 +1108,13 @@ export type Kind9 = "repeat"
  *
  */
 export type For = {
-  [k: string]: unknown
+  [k: string]: unknown[] | string | LocalizedExpression
 } | null
+/**
+ * Condition to stay at the beginning of the loop.
+ *
+ */
+export type While = boolean | string | LocalizedExpression
 /**
  * Body of the loop.
  *
@@ -1279,6 +1142,16 @@ export type Repeat =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Condition to exit at the end of the loop.
+ *
+ */
+export type Until = boolean | string | LocalizedExpression
+/**
+ * Maximal number of iterations to perform.
+ *
+ */
+export type MaxIterations = number | string | LocalizedExpression | null
 /**
  * Define how to combine the result of each iteration.
  *
@@ -1386,21 +1259,6 @@ export type Fallback10 =
  */
 export type Role10 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos10 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos10 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone10 = string | null
-/**
  * Current context
  *
  */
@@ -1449,6 +1307,7 @@ export type Anyof = (
   | AnyPattern
   | null
 )[]
+export type If = boolean | string | LocalizedExpression | null
 export type Then =
   | boolean
   | number
@@ -1529,21 +1388,6 @@ export type Fallback11 =
  */
 export type Role11 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos11 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos11 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone11 = string | null
-/**
  * Current context
  *
  */
@@ -1558,6 +1402,11 @@ export type Context11 =
  */
 export type Id11 = string | null
 export type Kind11 = "if"
+/**
+ * Condition.
+ *
+ */
+export type If1 = boolean | string | LocalizedExpression
 /**
  * Branch to exectute if the condition is true.
  *
@@ -1669,21 +1518,6 @@ export type Fallback12 =
  */
 export type Role12 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos12 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos12 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone12 = string | null
-/**
  * Current context
  *
  */
@@ -1758,21 +1592,6 @@ export type Fallback13 =
  */
 export type Role13 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos13 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos13 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone13 = string | null
-/**
  * Current context
  *
  */
@@ -1846,21 +1665,6 @@ export type Fallback14 =
  *
  */
 export type Role14 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos14 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos14 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone14 = string | null
 /**
  * Current context
  *
@@ -1964,21 +1768,6 @@ export type Fallback15 =
  */
 export type Role15 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos15 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos15 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone15 = string | null
-/**
  * Current context
  *
  */
@@ -1993,6 +1782,7 @@ export type Context15 =
  */
 export type Id15 = string | null
 export type Kind15 = "model"
+export type Model = string | LocalizedExpression
 export type Input =
   | boolean
   | number
@@ -2041,6 +1831,61 @@ export type Trace2 =
   | null
 export type Modelresponse = string | null
 export type Platform = "litellm"
+export type Parameters =
+  | LitellmParameters
+  | {
+      [k: string]: unknown
+    }
+  | string
+  | LocalizedExpression
+  | null
+export type Timeout = number | string | null
+export type Temperature = number | string | null
+export type TopP = number | string | null
+export type N = number | string | null
+export type Stop = string | string[] | null
+export type MaxTokens = number | string | null
+export type PresencePenalty = number | string | null
+export type FrequencyPenalty = number | string | null
+export type LogitBias =
+  | {
+      [k: string]: unknown
+    }
+  | string
+  | null
+export type User = string | null
+export type ResponseFormat =
+  | {
+      [k: string]: unknown
+    }
+  | string
+  | null
+export type Seed = number | string | null
+export type Tools = unknown[] | string | null
+export type ToolChoice =
+  | string
+  | {
+      [k: string]: unknown
+    }
+  | null
+export type Logprobs = boolean | string | null
+export type TopLogprobs = number | string | null
+export type ParallelToolCalls = boolean | string | null
+export type ExtraHeaders =
+  | {
+      [k: string]: unknown
+    }
+  | string
+  | null
+export type Functions = unknown[] | string | null
+export type FunctionCall = string | null
+export type BaseUrl = string | null
+export type ApiVersion = string | null
+export type ApiKey = string | null
+export type ModelList = unknown[] | string | null
+export type MockResponse = string | null
+export type CustomLlmProvider = string | null
+export type MaxRetries = number | string | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2096,21 +1941,6 @@ export type Fallback16 =
  *
  */
 export type Role16 = string | null
-/**
- * Time at which block execution began
- *
- */
-export type StartNanos16 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos16 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone16 = string | null
 /**
  * Current context
  *
@@ -2205,21 +2035,6 @@ export type Fallback17 =
  */
 export type Role17 = string | null
 /**
- * Time at which block execution began
- *
- */
-export type StartNanos17 = number | null
-/**
- * Time at which block execution ended
- *
- */
-export type EndNanos17 = number | null
-/**
- * Timezone of start_nanos and end_nanos
- *
- */
-export type Timezone17 = string | null
-/**
  * Current context
  *
  */
@@ -2304,13 +2119,11 @@ export interface FunctionBlock {
   parser?: Parser17
   fallback?: Fallback17
   role?: Role17
-  start_nanos?: StartNanos17
-  end_nanos?: EndNanos17
-  timezone?: Timezone17
   context?: Context17
   id?: Id17
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind17
   function: Function
   return: Return
@@ -2363,13 +2176,11 @@ export interface CallBlock {
   parser?: Parser16
   fallback?: Fallback16
   role?: Role16
-  start_nanos?: StartNanos16
-  end_nanos?: EndNanos16
-  timezone?: Timezone16
   context?: Context16
   id?: Id16
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind16
   call: unknown
   args?: unknown
@@ -2423,20 +2234,18 @@ export interface LitellmModelBlock {
   parser?: Parser15
   fallback?: Fallback15
   role?: Role15
-  start_nanos?: StartNanos15
-  end_nanos?: EndNanos15
-  timezone?: Timezone15
   context?: Context15
   id?: Id15
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind15
-  model: unknown
+  model: Model
   input?: Input
   trace?: Trace2
   modelResponse?: Modelresponse
   platform?: Platform
-  parameters?: unknown
+  parameters?: Parameters
 }
 /**
  * Type specification of the result of the block.
@@ -2486,13 +2295,11 @@ export interface CodeBlock {
   parser?: Parser14
   fallback?: Fallback14
   role?: Role14
-  start_nanos?: StartNanos14
-  end_nanos?: EndNanos14
-  timezone?: Timezone14
   context?: Context14
   id?: Id14
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind14
   lang: Lang
   code: Code
@@ -2545,13 +2352,11 @@ export interface GetBlock {
   parser?: Parser13
   fallback?: Fallback13
   role?: Role13
-  start_nanos?: StartNanos13
-  end_nanos?: EndNanos13
-  timezone?: Timezone13
   context?: Context13
   id?: Id13
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind13
   get: Get
 }
@@ -2603,13 +2408,11 @@ export interface DataBlock {
   parser?: Parser12
   fallback?: Fallback12
   role?: Role12
-  start_nanos?: StartNanos12
-  end_nanos?: EndNanos12
-  timezone?: Timezone12
   context?: Context12
   id?: Id12
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind12
   data: unknown
   raw?: Raw
@@ -2662,15 +2465,13 @@ export interface IfBlock {
   parser?: Parser11
   fallback?: Fallback11
   role?: Role11
-  start_nanos?: StartNanos11
-  end_nanos?: EndNanos11
-  timezone?: Timezone11
   context?: Context11
   id?: Id11
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind11
-  if: unknown
+  if: If1
   then: Then1
   else?: Else
   if_result?: IfResult
@@ -2723,13 +2524,11 @@ export interface MatchBlock {
   parser?: Parser10
   fallback?: Fallback10
   role?: Role10
-  start_nanos?: StartNanos10
-  end_nanos?: EndNanos10
-  timezone?: Timezone10
   context?: Context10
   id?: Id10
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind10
   match: unknown
   with: With1
@@ -2782,19 +2581,17 @@ export interface RepeatBlock {
   parser?: Parser9
   fallback?: Fallback9
   role?: Role9
-  start_nanos?: StartNanos9
-  end_nanos?: EndNanos9
-  timezone?: Timezone9
   context?: Context9
   id?: Id9
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind9
   for?: For
-  while?: unknown
+  while?: While
   repeat: Repeat
-  until?: unknown
-  max_iterations?: unknown
+  until?: Until
+  max_iterations?: MaxIterations
   join?: Join
   trace?: Trace1
 }
@@ -2846,13 +2643,11 @@ export interface TextBlock {
   parser?: Parser8
   fallback?: Fallback8
   role?: Role8
-  start_nanos?: StartNanos8
-  end_nanos?: EndNanos8
-  timezone?: Timezone8
   context?: Context8
   id?: Id8
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind8
   text: Text
 }
@@ -2904,13 +2699,11 @@ export interface LastOfBlock {
   parser?: Parser7
   fallback?: Fallback7
   role?: Role7
-  start_nanos?: StartNanos7
-  end_nanos?: EndNanos7
-  timezone?: Timezone7
   context?: Context7
   id?: Id7
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind7
   lastOf: Lastof
 }
@@ -2962,13 +2755,11 @@ export interface ArrayBlock {
   parser?: Parser6
   fallback?: Fallback6
   role?: Role6
-  start_nanos?: StartNanos6
-  end_nanos?: EndNanos6
-  timezone?: Timezone6
   context?: Context6
   id?: Id6
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind6
   array: Array
 }
@@ -3020,13 +2811,11 @@ export interface ObjectBlock {
   parser?: Parser5
   fallback?: Fallback5
   role?: Role5
-  start_nanos?: StartNanos5
-  end_nanos?: EndNanos5
-  timezone?: Timezone5
   context?: Context5
   id?: Id5
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind5
   object: Object
 }
@@ -3078,13 +2867,11 @@ export interface MessageBlock {
   parser?: Parser4
   fallback?: Fallback4
   role: Role4
-  start_nanos?: StartNanos4
-  end_nanos?: EndNanos4
-  timezone?: Timezone4
   context?: Context4
   id?: Id4
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind4
   content: Content
 }
@@ -3136,15 +2923,13 @@ export interface ReadBlock {
   parser?: Parser3
   fallback?: Fallback3
   role?: Role3
-  start_nanos?: StartNanos3
-  end_nanos?: EndNanos3
-  timezone?: Timezone3
   context?: Context3
   id?: Id3
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind3
-  read: unknown
+  read: Read
   message?: Message
   multiline?: Multiline
 }
@@ -3196,13 +2981,11 @@ export interface IncludeBlock {
   parser?: Parser2
   fallback?: Fallback2
   role?: Role2
-  start_nanos?: StartNanos2
-  end_nanos?: EndNanos2
-  timezone?: Timezone2
   context?: Context2
   id?: Id2
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind2
   include: Include
   trace?: Trace
@@ -3252,13 +3035,11 @@ export interface ErrorBlock {
   parser?: Parser1
   fallback?: Fallback1
   role?: Role1
-  start_nanos?: StartNanos1
-  end_nanos?: EndNanos1
-  timezone?: Timezone1
   context?: Context1
   id?: Id1
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind1
   msg: Msg
   program: Program1
@@ -3311,13 +3092,11 @@ export interface EmptyBlock {
   parser?: Parser
   fallback?: Fallback
   role?: Role
-  start_nanos?: StartNanos
-  end_nanos?: EndNanos
-  timezone?: Timezone
   context?: Context
   id?: Id
   result?: unknown
   location?: LocationType | null
+  pdl__timing?: Timing | null
   kind?: Kind
 }
 /**
@@ -3378,6 +3157,18 @@ export interface LocationType {
 export interface Table {
   [k: string]: number
 }
+export interface Timing {
+  start_nanos?: StartNanos
+  end_nanos?: EndNanos
+  timezone?: Timezone
+}
+export interface LocalizedExpression {
+  expr: Expr
+  location?: LocationType | null
+}
+export interface Expr {
+  [k: string]: unknown
+}
 export interface JoinText {
   as?: As
   with?: With
@@ -3393,7 +3184,7 @@ export interface JoinLastOf {
  */
 export interface MatchCase {
   case?: Case
-  if?: unknown
+  if?: If
   then: Then
 }
 export interface OrPattern {
@@ -3422,4 +3213,37 @@ export interface Object1 {
 export interface AnyPattern {
   def?: Def14
   any: Any
+}
+/**
+ * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+ */
+export interface LitellmParameters {
+  timeout?: Timeout
+  temperature?: Temperature
+  top_p?: TopP
+  n?: N
+  stop?: Stop
+  max_tokens?: MaxTokens
+  presence_penalty?: PresencePenalty
+  frequency_penalty?: FrequencyPenalty
+  logit_bias?: LogitBias
+  user?: User
+  response_format?: ResponseFormat
+  seed?: Seed
+  tools?: Tools
+  tool_choice?: ToolChoice
+  logprobs?: Logprobs
+  top_logprobs?: TopLogprobs
+  parallel_tool_calls?: ParallelToolCalls
+  extra_headers?: ExtraHeaders
+  functions?: Functions
+  function_call?: FunctionCall
+  base_url?: BaseUrl
+  api_version?: ApiVersion
+  api_key?: ApiKey
+  model_list?: ModelList
+  mock_response?: MockResponse
+  custom_llm_provider?: CustomLlmProvider
+  max_retries?: MaxRetries
+  [k: string]: unknown
 }

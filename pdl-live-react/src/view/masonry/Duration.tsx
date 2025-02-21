@@ -13,7 +13,7 @@ import "./Duration.css"
 
 type Props = Pick<
   Required<import("../../helpers").PdlBlockWithTiming>,
-  "start_nanos" | "end_nanos" | "timezone"
+  "pdl__timing"
 > & { sml: import("./Toolbar").SML }
 
 const gapSm = { default: "gapSm" as const }
@@ -22,7 +22,7 @@ const center = { default: "alignItemsCenter" as const }
 
 /** Duration of block execution */
 function duration(block: Props) {
-  return block.end_nanos - block.start_nanos
+  return block.pdl__timing.end_nanos - block.pdl__timing.start_nanos
 }
 
 function format(nanos: number, timezone: string) {
@@ -44,14 +44,14 @@ export default function Duration(block: Props) {
       <DescriptionListGroup>
         <DescriptionListTerm>Start Time</DescriptionListTerm>
         <DescriptionListDescription>
-          {format(block.start_nanos, block.timezone)}
+          {format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
       <DescriptionListGroup>
         <DescriptionListTerm>End Time</DescriptionListTerm>
         <DescriptionListDescription>
-          {format(block.end_nanos, block.timezone)}
+          {format(block.pdl__timing.end_nanos, block.pdl__timing.timezone)}
         </DescriptionListDescription>
       </DescriptionListGroup>
     </DescriptionList>
@@ -67,7 +67,7 @@ export default function Duration(block: Props) {
       >
         <FlexItem>
           <strong>
-            {block.sml === "xl" && format(block.start_nanos, block.timezone)}
+            {block.sml === "xl" && format(block.pdl__timing.start_nanos, block.pdl__timing.timezone)}
           </strong>
         </FlexItem>
         <FlexItem>

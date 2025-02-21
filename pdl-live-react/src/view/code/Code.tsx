@@ -67,10 +67,7 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   })
   // remove other trace artifacts
   delete new_data.id
-  delete new_data.start_nanos
-  delete new_data.end_nanos
-  delete new_data.timezone
-  delete new_data.context
+  delete new_data.pdl__timing
   // remove contribute: ["result", context]
   if (
     new_data?.contribute?.includes("result") &&

@@ -44,7 +44,7 @@ function ignore(_block: PdlBlockWithTiming) {
 
 export function computeModel(block: unknown | PdlBlock): TimelineModel {
   const model = computeModelIter(block).sort(
-    (a, b) => a.block.start_nanos - b.block.start_nanos,
+    (a, b) => a.block.pdl__timing.start_nanos - b.block.pdl__timing.start_nanos,
   )
 
   model.forEach((node) => {
