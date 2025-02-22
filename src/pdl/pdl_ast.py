@@ -147,6 +147,22 @@ class ContributeValue(BaseModel):
     value: list[Any]
 
 
+class Timing(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    start_nanos: Optional[int] = 0
+    """Time at which block execution began
+    """
+    end_nanos: Optional[int] = 0
+    """Time at which block execution ended
+    """
+    first_use_nanos: Optional[int] = 0
+    """Time at which the value of the block was needed for the first time
+    """
+    timezone: Optional[str] = ""
+    """Timezone of start_nanos and end_nanos
+    """
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -182,15 +198,6 @@ class Block(BaseModel):
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     """
-    start_nanos: Optional[int] = 0
-    """Time at which block execution began
-    """
-    end_nanos: Optional[int] = 0
-    """Time at which block execution ended
-    """
-    timezone: Optional[str] = ""
-    """Timezone of start_nanos and end_nanos
-    """
     context: Optional[ModelInput] = []
     """Current context
     """
@@ -200,6 +207,7 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
+    pdl__timing: Optional[Timing] = None
 
 
 class FunctionBlock(Block):
