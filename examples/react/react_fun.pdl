@@ -122,9 +122,7 @@ defs:
 
         call: ${ react_inner }
         args:
-          pdl_context: []
+          #pdl_context: []
           examples: ${ examples }
           question: ${ question }
           model: ${ model }
-
-
