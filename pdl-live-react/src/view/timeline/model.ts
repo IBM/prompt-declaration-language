@@ -95,6 +95,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "match" }, (data) => [data.with]) // TODO
     .with({ kind: "read" }, (data) => [data.result])
     .with({ kind: "include" }, (data) => [data.trace ?? data.result])
+    .with({ kind: "import" }, (data) => [data.trace ?? data.result])
     .with({ kind: "function" }, () => [])
     .with({ kind: "call" }, (data) => [data.trace ?? data.result])
     .with({ kind: "text" }, (data) => [data.text])
