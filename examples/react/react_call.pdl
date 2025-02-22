@@ -1,7 +1,9 @@
 description: Wikipedia example using the react_fun function definition
+defs:
+  lib:
+    import: react_fun
 text:
-  - include: ./react_fun.pdl
-  - call: ${ react }
+  - call: ${ lib.react }
     args:
       question: How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025.
       model: replicate/ibm-granite/granite-3.1-8b-instruct
