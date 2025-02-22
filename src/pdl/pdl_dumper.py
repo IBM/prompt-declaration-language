@@ -20,6 +20,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
+    ImportBlock,
     IncludeBlock,
     JoinArray,
     JoinLastOf,
@@ -168,6 +169,10 @@ def block_to_dict(  # noqa: C901
             d["multiline"] = block.multiline
         case IncludeBlock():
             d["include"] = block.include
+            if block.trace:
+                d["trace"] = block_to_dict(block.trace, json_compatible)
+        case ImportBlock():
+            d["Import"] = block.imports
             if block.trace:
                 d["trace"] = block_to_dict(block.trace, json_compatible)
         case IfBlock():
