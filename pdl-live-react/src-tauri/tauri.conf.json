@@ -27,6 +27,14 @@
               "name": "source",
               "index": 1,
               "takesValue": true
+            },
+            {
+              "name": "stream",
+              "takesValue": true
+            },
+            {
+              "name": "trace",
+              "takesValue": true
             }
           ]
         },

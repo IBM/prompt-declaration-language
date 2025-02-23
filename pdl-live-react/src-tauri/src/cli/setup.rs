@@ -25,8 +25,8 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                             run::run_pdl_program(
                                 source_file_path.clone(),
                                 app.handle().clone(),
-                                false,
-                                None,
+                                subcommand_matches.matches.args.get("trace"),
+                                subcommand_matches.matches.args.get("stream"),
                             )?;
                             exit(0)
                         }
