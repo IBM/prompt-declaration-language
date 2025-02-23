@@ -6,6 +6,7 @@
   "permissions": [
     "core:default",
     "core:webview:allow-set-webview-zoom",
+    "pty:default",
     "opener:default"
   ]
 }

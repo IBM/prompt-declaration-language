@@ -1,4 +1,5 @@
 use std::env::args_os;
+use tauri_plugin_pty;
 
 mod cli;
 mod commands;
@@ -19,9 +20,10 @@ pub fn run() {
         })
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_pty::init())
         .invoke_handler(tauri::generate_handler![
             commands::read_trace::read_trace,
-            commands::replay::replay
+            commands::replay_prep::replay_prep,
         ])
         .run(tauri::generate_context!())
         .expect("error while running PDL");

@@ -16,7 +16,12 @@ export type Props = {
   setSML(sml: SML): void
 
   setModalContent: import("react").Dispatch<
-    import("react").SetStateAction<{ header: string; body: string } | null>
+    import("react").SetStateAction<{
+      header: string
+      cmd: string
+      args?: string[]
+      onExit?: (exitCode: number) => void
+    } | null>
   >
 }
 
