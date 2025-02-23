@@ -8,7 +8,7 @@ type Props = {
   tiles?: ReactNode | ReactNode[]
 }
 
-const minWidths = { default: "300px" }
+const minWidths = { default: "400px" }
 
 export default function Tiles(props: Props) {
   return (
