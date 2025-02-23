@@ -65,10 +65,15 @@
 }
 
 .pdl-masonry-index {
+  /** These 5 rules give us a circle with text in the center */
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  text-align: center;
   border-radius: 50%;
+
   background-color: var(--pf-t--global--background--color--inverse--default);
   color: var(--pf-t--global--text--color--inverse);
-  padding: 0.5em;
 }
 
 .pdl-masonry-tile:not([data-is-non-card]) {
