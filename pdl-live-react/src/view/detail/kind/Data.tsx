@@ -7,6 +7,10 @@ export default function ModelItems({
   block: import("../../../pdl_ast").DataBlock
 }) {
   return (
-    <Result result={stringify(result)} lang="yaml" term={def ?? "Struct"} />
+    <Result
+      result={typeof result === "string" ? result.trim() : stringify(result)}
+      lang={typeof result === "string" ? undefined : "yaml"}
+      term={def ?? "Struct"}
+    />
   )
 }
