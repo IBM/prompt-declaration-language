@@ -46,7 +46,6 @@ nav:
   - Tutorial: tutorial.md
   - API Reference: api_reference.md
   - Contribute: contrib.md
-  - Viewer: viewer.md
 
 # Define some IBM colors
 extra_css:
