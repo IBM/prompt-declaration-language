@@ -151,6 +151,9 @@ pdl-live/package-lock.json
 *_result.yaml
 *_trace.json
 
+# Demo files
+pdl-rag-demo.db
+
 # Built docs
 _site
 

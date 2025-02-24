@@ -1402,7 +1402,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Python Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(
                         update={"code": code_s, "defsite": block.id}
@@ -1420,7 +1420,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Shell Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
@@ -1440,7 +1440,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Jinja Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
@@ -1453,7 +1453,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"PDL Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
