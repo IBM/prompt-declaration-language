@@ -47,6 +47,7 @@ class BlockKind(StrEnum):
     REPEAT = "repeat"
     READ = "read"
     INCLUDE = "include"
+    IMPORT = "import"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -548,6 +549,19 @@ class IncludeBlock(Block):
     trace: Optional["BlockType"] = None
 
 
+class ImportBlock(Block):
+    """Import a PDL file."""
+
+    kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
+    imports: str = Field(alias="import")
+    """Name of the file to import.
+    """
+    # Field for internal use
+    trace: Optional["BlockType"] = None
+
+
+
+
 class ErrorBlock(Block):
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
@@ -577,6 +591,7 @@ AdvancedBlockType: TypeAlias = (
     | MessageBlock
     | ReadBlock
     | IncludeBlock
+    | ImportBlock
     | ErrorBlock
     | EmptyBlock
 )

@@ -14,6 +14,7 @@ from ..pdl_ast import (
     GetBlock,
     IfBlock,
     IncludeBlock,
+    ImportBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -314,6 +315,8 @@ def compile_block(
         case ReadBlock():
             regex = ReStar(ReAnyChar())
         case IncludeBlock():
+            regex = ReStar(ReAnyChar())  # XXX TODO XXX
+        case ImportBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case FunctionBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX

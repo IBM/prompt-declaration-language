@@ -42,6 +42,8 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.INCLUDE:
             color = None
+        case BlockKind.IMPORT:
+            color = None
         case BlockKind.EMPTY:
             color = None
         case BlockKind.ERROR:
