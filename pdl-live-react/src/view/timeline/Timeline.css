@@ -27,7 +27,7 @@
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 400px) {
   .pdl-timeline-cell {
     &[data-cell="bar"] {
       padding-right: 0;
