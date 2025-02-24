@@ -129,6 +129,10 @@ class PDLMagics(Magics):
       background-color: rgb(245, 18, 67);
     }
 
+    .pdl_import {
+      background-color: rgb(245, 18, 67);
+    }
+
     .pdl_function {
       background-color: rgb(77, 243, 132);
     }

@@ -1,0 +1,16 @@
+
+defs: 
+  b: 
+    function:
+      arg: str 
+    return:
+      ${ arg }
+
+  a: 
+    function:
+      arg: str 
+    return:
+      call: ${ b }
+      args:
+        pdl_context: []
+        arg: ${ arg }

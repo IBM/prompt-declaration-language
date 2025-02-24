@@ -33,23 +33,18 @@ export default function BreadcrumbBarForBlockId({
   const [searchParams] = useSearchParams()
   const s = searchParams.toString().length === 0 ? "" : "&" + searchParams
   const onClick = useCallback(
-    () =>
-      navigate(
-        `?detail&type=block&id=${id.replace(/\.Output of Program$/, "")}${s}${hash}`,
-      ),
+    () => navigate(`?detail&type=block&id=${id}${s}${hash}`),
     [id, hash, s, navigate],
   )
 
   // Notes:
-  // 1) in "compact" mode, don't show Text.3.If.1; instead show Text.If
-  // 2) also always strip of initial Text.
-  // 3) always simplify the presentation of the final output
-  const crumbs = (
-    isCompact
-      ? id.replace(/(text|empty|if)\.\d+/g, "$1").replace(/^text\./, "")
-      : id
-  )
-    .replace(/^.*(Output of Program)$/, "$1")
+  // 1) in compact mode, don't show "Text.3.If.1"; instead show "Text.If"
+  // 2) also in compact mode, always strip of initial "Text."
+  // 3) replace ids within dots (i.e. roots) with "Output of Program"
+  const crumbs = id
+    .replace(/^[^.]+$/, "Output of Program")
+    .replace(/(text|empty|if)\.\d+/g, (p0, p1) => (isCompact ? p1 : p0))
+    .replace(/^text\./, (p0) => (isCompact ? "" : p0))
     .split(/\./)
 
   if (def) {

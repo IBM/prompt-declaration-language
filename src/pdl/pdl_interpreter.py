@@ -51,6 +51,7 @@ from .pdl_ast import (  # noqa: E402
     FunctionBlock,
     GetBlock,
     IfBlock,
+    ImportBlock,
     IncludeBlock,
     IterationType,
     LastOfBlock,
@@ -771,6 +772,9 @@ def process_block_body(
         case IncludeBlock():
             result, background, scope, trace = process_include(state, scope, block, loc)
 
+        case ImportBlock():
+            result, background, scope, trace = process_import(state, scope, block, loc)
+
         case FunctionBlock():
             closure = block.model_copy()
             if block.assign is not None:
@@ -1398,7 +1402,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Python Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(
                         update={"code": code_s, "defsite": block.id}
@@ -1416,7 +1420,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Shell Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
@@ -1436,7 +1440,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"Jinja Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
@@ -1449,7 +1453,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Code error: {repr(exc)}",
+                    f"PDL Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
@@ -1635,6 +1639,42 @@ def process_include(
         return result, background, scope, include_trace
     except PDLParseError as exc:
         message = f"Attempting to include invalid yaml: {str(file)}\n{exc.message}"
+        raise PDLRuntimeError(
+            message,
+            loc=loc,
+            trace=ErrorBlock(msg=message, program=block.model_copy()),
+        ) from exc
+    except PDLRuntimeProcessBlocksError as exc:
+        trace = block.model_copy(update={"trace": exc.blocks})
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=trace,
+        ) from exc
+
+
+def process_import(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: ImportBlock,
+    loc: LocationType,
+) -> tuple[Any, LazyMessages, ScopeType, ImportBlock]:
+    path = block.imports
+    if not path.endswith(".pdl"):
+        path += ".pdl"
+    file = state.cwd / path
+    try:
+        prog, new_loc = parse_file(file)
+        _, _, new_scope, trace = process_block(
+            state.with_yield_background(False).with_yield_result(False),
+            empty_scope,
+            prog.root,
+            new_loc,
+        )
+        import_trace = block.model_copy(update={"trace": trace})
+        return new_scope, PdlConst([]), scope, import_trace
+    except PDLParseError as exc:
+        message = f"Attempting to import invalid yaml: {str(file)}\n{exc.message}"
         raise PDLRuntimeError(
             message,
             loc=loc,

@@ -33,25 +33,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Viewer
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies
-        working-directory: ./pdl-live
-        run: npm install
-      - name: Generate pdl_ast.d.ts
-        working-directory: ./pdl-live
-        run: npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
-      - name: Build viewer
-        working-directory: ./pdl-live
-        run: npm run build
-      - name: Copy viewer
-        working-directory: ./pdl-live
-        run: cp ./dist/bundle.js ../docs/dist/bundle.js
-      - name: Copy schema
-        run: cp ./src/pdl/pdl-schema.json ./docs/dist/pdl-schema.json
       # Docs
       - name: Setup Pages
         uses: actions/configure-pages@v5
