@@ -12,24 +12,35 @@ import {
 
 import type Tile from "./Tile"
 
+/** The final result of the block */
+function result(block: import("../../pdl_ast").PdlBlock) {
+  if (hasResult(block) && hasTimingInformation(block)) {
+    return [
+      {
+        id: block.id + ".Output of Program",
+        depth: 0,
+        parent: null,
+        block,
+        children: [],
+      },
+    ]
+  }
+
+  return []
+}
+
+/** Remove objects from the Masonry model that aren't helpful to display */
+function removeFluff({ kind }: { kind?: string }) {
+  // re: empty, these house only defs, which are spliced in below via
+  // `withDefs()`
+  return kind !== "if" && kind !== "empty"
+}
+
 export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
   const base = computeBaseModel(block)
 
   const masonry: Tile[] = base
-    .concat(
-      hasResult(block) && hasTimingInformation(block)
-        ? [
-            {
-              id: block.id + ".Output of Program",
-              depth: 0,
-              parent: null,
-              block,
-              children: [],
-            },
-          ]
-        : [],
-    )
-    .filter(({ block }) => block.kind !== "if")
+    .concat(result(block))
     .flatMap(({ id, block, children }) => {
       if (children.length === 0 && hasTimingInformation(block)) {
         return withDefs(block, [
@@ -60,7 +71,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
 
       return []
     })
+    .filter(removeFluff)
     .sort((a, b) => a.id.localeCompare(b.id))
+  console.error("!!!!!!", masonry)
 
   const numbering = masonry.reduce(
     (N, node, idx) => {
@@ -82,7 +95,8 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
             ? []
             : {
                 crumb: true,
-                id: block.id ?? "",
+                id: (block.id ?? "").replace(/\.?empty/g, ""),
+                kind: "",
                 def,
                 lang: hasParser(v)
                   ? v.parser === "jsonl"
