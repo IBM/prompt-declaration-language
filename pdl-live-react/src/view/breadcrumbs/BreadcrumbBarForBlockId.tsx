@@ -12,6 +12,7 @@ type Props = {
   def?: string | null | undefined
   value?: import("../../pdl_ast").PdlBlock
   maxCrumbs?: number
+  isCompact?: boolean
 }
 
 function asIter(part: string) {
@@ -25,6 +26,7 @@ export default function BreadcrumbBarForBlockId({
   def,
   value,
   maxCrumbs = 5,
+  isCompact = false,
 }: Props) {
   const { hash } = useLocation()
   const navigate = useNavigate()
@@ -35,7 +37,14 @@ export default function BreadcrumbBarForBlockId({
     [id, hash, s, navigate],
   )
 
-  const crumbs = id.replace(/text\.\d+\./g, "").split(/\./)
+  // Notes:
+  // 1) in "compact" mode, don't show Text.3.If.1; instead show Text.If
+  // 2) always strip of initial text.
+  // 3) always simplify the presentation of the final output
+  const crumbs = (isCompact ? id.replace(/(text|empty|if)\.\d+/g, "$1") : id)
+    .replace(/^text\./, "")
+    .replace(/^.*(Output of Program)$/, "$1")
+    .split(/\./)
 
   if (def) {
     // We'll add one crumb for the def

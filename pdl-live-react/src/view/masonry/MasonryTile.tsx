@@ -77,6 +77,7 @@ export default function MasonryTile({
               id={id}
               def={def}
               value={content}
+              isCompact
               maxCrumbs={sml === "xl" ? 4 : sml === "l" ? 3 : 2}
             />
           )}
