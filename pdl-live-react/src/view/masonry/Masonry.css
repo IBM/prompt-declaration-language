@@ -33,10 +33,13 @@
       background: #0066cc;
     }
     &[data-kind="read"] {
-      background: #63993d30;
+      background: #b9841230;
     }
     &[data-kind="code"] {
       background: #ca6c0f30;
+    }
+    &[data-kind="output-of-program"] {
+      background: #63993d30;
     }
   }
 }
@@ -49,10 +52,13 @@
     background: #e0f0ff;
   }
   &[data-kind="read"] {
-    background: #e9f7df;
+    background: #fff4cc;
   }
   &[data-kind="code"] {
     background: #ffe8cc;
+  }
+  &[data-kind="output-of-program"] {
+    background: #e9f7df;
   }
 }
 

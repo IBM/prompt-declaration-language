@@ -87,7 +87,11 @@ export default function MasonryTile({
   )
 
   return (
-    <MasonryTileWrapper sml={sml} kind={kind} header={header}>
+    <MasonryTileWrapper
+      sml={sml}
+      kind={/^[^.]+$/.test(id) ? "output-of-program" : kind}
+      header={header}
+    >
       <Panel isScrollable={sml !== "xl"} className="pdl-masonry-tile-panel">
         <PanelMain maxHeight={maxHeight}>
           <Result
