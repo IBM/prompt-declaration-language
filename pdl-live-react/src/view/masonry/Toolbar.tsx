@@ -1,5 +1,6 @@
 import { Toolbar, ToolbarGroup, ToolbarContent } from "@patternfly/react-core"
 
+import DarkModeToggle from "../../page/DarkModeToggle"
 import ToolbarSMLToggle from "./ToolbarSMLToggle"
 import ToolbarReplayButton from "./ToolbarReplayButton"
 import ToolbarShowSourceButton from "./ToolbarShowSourceButton"
@@ -45,6 +46,7 @@ export default function MasonryToolbar({
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
+          <DarkModeToggle />
         </ToolbarGroup>
       </ToolbarContent>
     </Toolbar>
