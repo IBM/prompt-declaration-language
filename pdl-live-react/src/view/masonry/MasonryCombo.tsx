@@ -121,8 +121,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
               edges={edges}
               numbering={numbering}
               sml={sml}
-            />
-          )*/}
+            />)*/}
           </Masonry>
         </Stack>
       </PageSection>
