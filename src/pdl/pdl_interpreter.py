@@ -164,18 +164,10 @@ def generate(
         prog, loc = parse_file(pdl_file)
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
-        future_result, background, _, trace = process_prog(
-            state, initial_scope, prog, loc
-        )
-        _ = future_result.result()
-        if not state.yield_background:
-            print(background)
-            # if state.yield_background:
-            #     print("\n----------------")
-            # if result is None:
-            #     print()
-            # else:
-            #     print(stringify(result))
+        future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
+        result = future_result.result()
+        if not state.yield_background and not state.yield_result:
+            print(stringify(result))
         else:
             print()
         if trace_file:
