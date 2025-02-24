@@ -13,6 +13,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     IfBlock,
+    ImportBlock,
     IncludeBlock,
     LastOfBlock,
     LitellmModelBlock,
@@ -90,6 +91,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case ReadBlock():
             pass
         case IncludeBlock():
+            if block.trace is not None:
+                f(block.trace)
+        case ImportBlock():
             if block.trace is not None:
                 f(block.trace)
         case EmptyBlock():
@@ -180,6 +184,9 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case ReadBlock():
             block.read = f.f_expr(block.read)
         case IncludeBlock():
+            if block.trace is not None:
+                block.trace = f.f_block(block.trace)
+        case ImportBlock():
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
         case EmptyBlock():
