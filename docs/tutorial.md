@@ -36,7 +36,7 @@ Hello, world!
 --8<-- "./examples/tutorial/calling_llm.pdl"
 ```
 
-In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`replicate/ibm-granite/granite-3.1-8b-instruct`) with this as input prompt. 
+In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`replicate/ibm-granite/granite-3.1-8b-instruct`) with this as input prompt.
 The model is passed a parameter `stop_sequences`.
 
 A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
@@ -81,7 +81,7 @@ When using Granite models, we use the following defaults for model parameters (e
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
   - `repetition_penalty`: 1.05
-  
+
   Also if the `decoding_method` is `sample`, then the following defaults are used:
   - `temperature`: 0.7
   - `top_p`: 0.85
@@ -199,7 +199,7 @@ Here are its possible values:
 
 ## Specifying Data
 
-In PDL, the user specifies step by step the shape of data they wish to generate. A `text` block takes a list of blocks, stringifies the result of each block, 
+In PDL, the user specifies step by step the shape of data they wish to generate. A `text` block takes a list of blocks, stringifies the result of each block,
 and concatenates them.
 
 An `array` takes a list of blocks and creates an array of the results of each block:
@@ -253,7 +253,7 @@ Notice that block types that require lists (`repeat`, `for`, `if-then-else`) hav
 on this see [this section](#conditionals-and-loops).
 
 The PDL interpreter will raise a warning for a list item inside a `lastOf` block that is not capturing the result in a variable definition meaning that the result is being implicitly ignored.
-If this is intended because the block is contributing to the context or doing a side effect for example, the warning can be turned off by including `contribute: [context]` or `contribute: []`. 
+If this is intended because the block is contributing to the context or doing a side effect for example, the warning can be turned off by including `contribute: [context]` or `contribute: []`.
 On the other hand, if this was a mistake, then capture the result of the block using a variable definition by adding `def`.
 You could also turn the list into a text or an array by surrounding it with a `text` or `array` block so that no result is lost.
 
@@ -387,15 +387,15 @@ PDL supports conditionals and loops as illustrated in the following example ([fi
 
 The first block prompts the user for a query, and this is contributed to the background context. The next
 block is a `repeat-until`, which repeats the contained `text` block until the condition in the `until` becomes
-true. The field `repeat` can contain a string, or a block, or a list. If it contains a list, then the list is 
-interpreted to be a `lastOf` block. This means that all the blocks in the list are executed and the result of the body is that of the last block. 
+true. The field `repeat` can contain a string, or a block, or a list. If it contains a list, then the list is
+interpreted to be a `lastOf` block. This means that all the blocks in the list are executed and the result of the body is that of the last block.
 
 The example also shows the use of an `if-then-else` block. The `if` field contains a condition, the `then` field
-can also contain either a string, or a block, or a list (and similarly for `else`). If it contains a list, 
+can also contain either a string, or a block, or a list (and similarly for `else`). If it contains a list,
 the list is interpreted to be a `lastOf` block. So again the blocks in the list are executed and the result is that
 of the last block.
 
-The chatbot keeps looping by making a call to a model, asking the user if the generated text is a good answer, 
+The chatbot keeps looping by making a call to a model, asking the user if the generated text is a good answer,
 and asking `why not?` if the answer (stored in variable `eval`) is `no`. The loop ends when `eval` becomes `yes`. This is specified with a Jinja expression on line 18.
 
 Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together, then we need the keyword `text` to precede a list. If this is omitted then the list is treated as a programmatic sequence where all the blocks are executed in sequence but result of the overall list is the result of the {\em last} block in the sequence. This behavior can be marked explicitly with a `lastOf` block.
@@ -477,7 +477,7 @@ join:
 ```
 
 meaning that result of each iteration is stringified and concatenated with that of other iterations. When using `with`,
-`as: text` can be elided. 
+`as: text` can be elided.
 
 Note that `join` can be added to any looping construct (`repeat`) not just `for` loops.
 
@@ -651,7 +651,7 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 ## Using Ollama models
 
 1. Install Ollama e.g., `brew install --cask ollama`
-2. Run a model e.g., `ollama run granite-code:34b-instruct-q5_K_M`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
+2. Run a model e.g., `ollama run granite-code:8b`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
 3. An OpenAI style server is running locally at [http://localhost:11434/](http://localhost:11434/), see [the Ollama blog](https://ollama.com/blog/openai-compatibility) for more details.
 
 
@@ -660,7 +660,7 @@ Example:
 ```
 text:
 - Hello,
-- model: ollama_chat/granite-code:34b-instruct-q5_K_M
+- model: ollama_chat/granite-code:8b
   parameters:
     stop:
     - '!'

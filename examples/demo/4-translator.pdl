@@ -1,7 +1,7 @@
 description: PDL program
 text:
 - "What is APR?\n"
-- model: replicate/ibm-granite/granite-3.1-8b-instruct
+- model: ollama/granite-code:8b
 - repeat:
     text:
     - read:
@@ -11,5 +11,5 @@ text:
       then:
         text:
         - "\n\nTranslate the above to ${ language }\n"
-        - model: replicate/ibm-granite/granite-3.1-8b-instruct
+        - model: ollama/granite-code:8b
   until: ${ language == 'stop' }

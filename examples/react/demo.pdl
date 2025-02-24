@@ -2,25 +2,25 @@ defs:
   tools:
     data:
     - type: function
-      function: 
+      function:
         name: Calc
         description: Calculator function
         parameters:
           type: object
           properties:
-            expr: 
+            expr:
               type: string
               description: Arithmetic expression to calculate
           required:
           - expr
     - type: function
-      function: 
+      function:
         name: Search
         description: Wikipedia search
         parameters:
           type: object
           properties:
-            topic: 
+            topic:
               type: string
               description: Topic to search
           required:
@@ -36,26 +36,26 @@ text:
     |
     What profession does Nicholas Ray and Elia Kazan have in common?
     Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
-    Action: 
+    Action:
     <tool_call>[{"name": "Search", "arguments": {"topic": "Nicholas Ray"}}]
     Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
     Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
-    Action: 
+    Action:
     <tool_call>[{"name": "Search", "arguments": {"topic": "Elia Kazan"}}]
     Observation: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
     Thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-    Action: 
+    Action:
     <tool_call>[{"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}]
 
 
     What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
     Thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
-    Action: 
+    Action:
     <tool_call>[{"name": "Search", "arguments": {"topic": "Colorado orogeny"}}]
     Observation: The Colorado orogeny was an episode of mountain building (an orogeny) ...
     Thought: It does not mention the eastern sector. So I need to look up eastern sector.
     Thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
-    Action: 
+    Action:
     <tool_call>[{"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}]
   contribute: [context]
 
@@ -63,19 +63,19 @@ text:
 - repeat:
     text:
     - def: thought
-      model: replicate/ibm-granite/granite-3.1-8b-instruct
+      model: ollama/granite-code:8b
       parameters:
         stop_sequences: "Action:"
     - "Action:\n"
     - def: action
-      model: replicate/ibm-granite/granite-3.1-8b-instruct
+      model: ollama/granite-code:8b
       parameters:
         stop_sequences: "\n"
       parser: json
-    - match: ${ action[0].name } 
+    - match: ${ action[0].name }
       with:
         - case: 'Search'
-          then: 
+          then:
             text:
             - "\nObservation: "
             - lang: python
@@ -87,7 +87,7 @@ text:
                 except wikipedia.WikipediaException as e:
                   result = str(e)
         - case: 'Calc'
-          then: 
+          then:
             text:
             - "\nObservation: "
             - lang: python

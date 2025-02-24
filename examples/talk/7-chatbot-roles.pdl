@@ -10,7 +10,7 @@ text:
       message: ">>> "
       def: query
       contribute: [context]
-    - model: replicate/ibm-granite/granite-3.1-8b-instruct
+    - model: ollama/granite-code:8b
     - "\n\n"
   until: ${ query == 'quit'}
   join:

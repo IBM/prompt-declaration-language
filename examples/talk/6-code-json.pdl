@@ -6,13 +6,13 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- model: replicate/ibm-granite/granite-3.1-8b-instruct
+- model: ollama/granite-code:8b
   def: EXPLANATION
   contribute: []
   input:
      |
       Here is some info about the location of the function in the repo.
-      repo: 
+      repo:
       ${ CODE.repo_info.repo }
       path: ${ CODE.repo_info.path }
       Function_name: ${ CODE.repo_info.function_name }
@@ -37,7 +37,7 @@ text:
     """
     # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- data: 
+- data:
     input: ${ CODE }
     output: ${ EXPLANATION }
     metric: ${ EVAL }

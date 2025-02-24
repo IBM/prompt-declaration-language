@@ -11,7 +11,7 @@ text:
   return:
     lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-    - model: replicate/ibm-granite/granite-3.1-8b-instruct
+    - model: ollama/granite-code:8b
       parameters:
         stop_sequences: "\n"
 - call: ${ translate }
