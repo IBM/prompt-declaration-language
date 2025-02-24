@@ -1,8 +1,8 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from litellm import embedding
+from litellm.exceptions import APIConnectionError
 from pymilvus import MilvusClient
-from pymilvus.exceptions import MilvusException
 
 
 def parse(filename: str, chunk_size: int, chunk_overlap: int) -> list[str]:
@@ -95,12 +95,15 @@ def rag_retrieve(
             model=encoder_model,
             input=[inp],
         )
-    except MilvusException:  # This is usually a APIConnectionError
+    except APIConnectionError:
         # Retry because of https://github.com/BerriAI/litellm/issues/7667
         response = embedding(
             model=encoder_model,
             input=[inp],
         )
+    except BaseException as be:
+        # Typically litellm.exceptions.APIConnectionError
+        return f"Unexpected {type(be)}: be={be}"
 
     data = response.data[0]["embedding"]
 
