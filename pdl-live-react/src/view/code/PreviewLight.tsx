@@ -6,7 +6,7 @@ import json from "react-syntax-highlighter/dist/esm/languages/hljs/json"
 import yaml from "react-syntax-highlighter/dist/esm/languages/hljs/yaml"
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python"
 
-import style from "react-syntax-highlighter/dist/esm/styles/hljs/atom-one-dark"
+import style from "react-syntax-highlighter/dist/esm/styles/hljs/night-owl"
 
 import { type SupportedLanguage } from "./Code"
 
