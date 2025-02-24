@@ -33,7 +33,6 @@ def rag_index(
     database_name: str,
     collection_name: str,
 ):
-
     # Have LiteLLM embed the passages
     response = embedding(
         model=encoder_model,
@@ -52,7 +51,7 @@ def rag_index(
 
     mid = 0  # There is also an auto-id feature in Milvus, which we are not using
     for text in inp:
-        vector = response.data[id]["embedding"]  # type: ignore
+        vector = response.data[mid]["embedding"]  # type: ignore
         client.insert(
             collection_name=collection_name,
             data=[
