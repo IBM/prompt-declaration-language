@@ -21,11 +21,12 @@ const RunTerminal = lazy(() => import("../term/RunTerminal"))
 
 //import Topology from "../memory/Topology"
 //import extractVariables from "../memory/model"
-import Timeline from "../timeline/TimelineFromModel"
-
 import Masonry from "./Masonry"
-import computeModel from "./model"
+import Timeline from "../timeline/TimelineFromModel"
+import MasonryTileWrapper from "./MasonryTileWrapper"
 import Toolbar, { type SML } from "./Toolbar"
+
+import computeModel from "./model"
 
 import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
@@ -112,7 +113,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
         aria-label="PDL Viewer main section"
       >
         <Stack hasGutter>
-          {sml !== "s" && <Timeline model={base} numbering={numbering} />}
+          {sml !== "s" && (
+            <MasonryTileWrapper sml={sml} variant="plain">
+              <Timeline model={base} numbering={numbering} />
+            </MasonryTileWrapper>
+          )}
           <Masonry model={masonry} sml={sml}>
             {sml === "s" && <Timeline model={base} numbering={numbering} />}
             {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (

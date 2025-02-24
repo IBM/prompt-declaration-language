@@ -28,7 +28,7 @@ export default function DarkModeToggle({ setDarkMode }: DarkModeProps) {
   }, [setDarkMode])
 
   return (
-    <ToggleGroup aria-label="light-dark mode toggle">
+    <ToggleGroup aria-label="light-dark mode toggle" isCompact>
       <ToggleGroupItem
         icon={<SunIcon />}
         aria-label="light mode"
