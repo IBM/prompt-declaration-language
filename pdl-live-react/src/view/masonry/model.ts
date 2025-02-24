@@ -4,6 +4,7 @@ import { computeModel as computeBaseModel } from "../timeline/model"
 import {
   hasMessage,
   hasParser,
+  hasResult,
   hasScalarResult,
   hasTimingInformation,
   type NonScalarPdlBlock,
@@ -13,7 +14,21 @@ import type Tile from "./Tile"
 
 export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
   const base = computeBaseModel(block)
+
   const masonry: Tile[] = base
+    .concat(
+      hasResult(block) && hasTimingInformation(block)
+        ? [
+            {
+              id: block.id + ".Output of Program",
+              depth: 0,
+              parent: null,
+              block,
+              children: [],
+            },
+          ]
+        : [],
+    )
     .filter(({ block }) => block.kind !== "if")
     .flatMap(({ id, block, children }) => {
       if (children.length === 0 && hasTimingInformation(block)) {
