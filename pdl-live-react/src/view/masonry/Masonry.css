@@ -18,7 +18,7 @@
   margin-bottom: 1em;
   break-inside: avoid;
 
-  &:before {
+  &[data-variant="default"]:before {
     border: none;
   }
 
@@ -26,8 +26,7 @@
     margin-bottom: 0.5em;
   }
 
-  &[data-is-non-card] {
-    padding: 1em;
+  &[data-variant="plain"] {
     &[data-padding="m"],
     &[data-padding="l"] {
       column-span: all;
@@ -50,7 +49,7 @@
 }
 
 .pdl-masonry-tile {
-  &:not([data-is-non-card]) {
+  &[data-variant="default"] {
     background: var(--pf-t--global--background--color--secondary--default);
   }
   &[data-kind="model"] {
