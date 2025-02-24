@@ -71,6 +71,7 @@
   line-height: 2em;
   text-align: center;
   border-radius: 50%;
+  font-size: 0.75em;
 
   background-color: var(--pf-t--global--background--color--inverse--default);
   color: var(--pf-t--global--text--color--inverse);
