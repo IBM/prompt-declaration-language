@@ -12,13 +12,14 @@
 
 .pdl-timeline-cell {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: bottom;
 
   &[data-cell="kind"] {
     height: var(--pdl-t-h);
     line-height: var(--pdl-t-h);
     .pdl-mono {
       white-space: pre;
+      font-size: 1.3em; /* oof, the masonry-index (below) needs a bit more height */
     }
   }
   &[data-cell="bar"] {
