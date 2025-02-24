@@ -109,7 +109,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
       <PageSection
         isFilled
         hasOverflowScroll
-        className="pdl-content-section pdl-masonry-page-section"
+        className="pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
         <Stack hasGutter>

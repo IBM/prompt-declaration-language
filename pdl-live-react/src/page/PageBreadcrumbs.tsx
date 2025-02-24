@@ -31,16 +31,22 @@ export default function PageBreadcrumbs({
     [breadcrumb1],
   )
 
+  const homeIsLink = !!breadcrumb1 || !!breadcrumb2
+
   return (
     <Breadcrumb>
       <BreadcrumbItem>PDL</BreadcrumbItem>
-      <BreadcrumbItem render={renderHome} />
+      {homeIsLink ? (
+        <BreadcrumbItem render={renderHome} />
+      ) : (
+        <BreadcrumbItem isActive>Home</BreadcrumbItem>
+      )}
       {breadcrumb1 && !breadcrumb2 ? (
         <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>
       ) : (
-        <BreadcrumbItem render={renderFirst} />
+        breadcrumb1 && <BreadcrumbItem render={renderFirst} />
       )}
-      {breadcrumb2 && <BreadcrumbItem>{breadcrumb2}</BreadcrumbItem>}
+      {breadcrumb2 && <BreadcrumbItem isActive>{breadcrumb2}</BreadcrumbItem>}
     </Breadcrumb>
   )
 }
