@@ -103,7 +103,9 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "object" }, (data) => [data.object])
     .with({ kind: "message" }, (data) => [data.content])
     .with({ kind: "repeat" }, (data) => [data.trace ?? data.repeat])
-    .with({ kind: "empty" }, () => [])
+    .with({ kind: "empty" }, (data) =>
+      data.defs ? Object.values(data.defs) : [],
+    )
     .with({ kind: "error" }, () => []) // TODO show errors in trace
     .with({ kind: undefined }, () => [])
     .exhaustive()

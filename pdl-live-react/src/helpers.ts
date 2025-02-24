@@ -164,9 +164,14 @@ export function hasContextInformation(
 }
 
 export function capitalizeAndUnSnakeCase(s: string) {
-  return s === "model"
-    ? "LLM"
-    : s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
+  switch (s) {
+    case "model":
+      return "LLM"
+    case "empty":
+      return "(defs)"
+    default:
+      return s[0].toUpperCase() + s.slice(1).replace(/[-_]/, " ")
+  }
 }
 
 type MessageBearing = Omit<import("./pdl_ast").ReadBlock, "message"> & {
