@@ -19,6 +19,7 @@
     line-height: var(--pdl-t-h);
     .pdl-mono {
       white-space: pre;
+      color: var(--pf-t--global--text--color--subtle);
       font-size: 1.3em; /* oof, the masonry-index (below) needs a bit more height */
     }
   }
