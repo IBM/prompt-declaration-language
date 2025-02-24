@@ -73,7 +73,6 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
     })
     .filter(removeFluff)
     .sort((a, b) => a.id.localeCompare(b.id))
-  console.error("!!!!!!", masonry)
 
   const numbering = masonry.reduce(
     (N, node, idx) => {
