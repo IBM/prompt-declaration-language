@@ -17,7 +17,7 @@ function result(block: import("../../pdl_ast").PdlBlock) {
   if (hasResult(block) && hasTimingInformation(block)) {
     return [
       {
-        id: block.id + ".Output of Program",
+        id: block.id ?? "",
         depth: 0,
         parent: null,
         block,
@@ -72,7 +72,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
       return []
     })
     .filter(removeFluff)
-    .sort((a, b) => a.id.localeCompare(b.id))
+    .sort((a, b) => (!/\./.test(a.id) ? 1 : a.id.localeCompare(b.id)))
+  // ^^^ re: the regexp test, we want to place the "final output"
+  // (i.e. blocks without a "." in their id) at the end
 
   const numbering = masonry.reduce(
     (N, node, idx) => {
