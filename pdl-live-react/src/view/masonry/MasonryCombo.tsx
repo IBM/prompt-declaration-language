@@ -14,7 +14,6 @@ import {
   ModalFooter,
   ModalHeader,
   PageSection,
-  Stack,
 } from "@patternfly/react-core"
 
 const RunTerminal = lazy(() => import("../term/RunTerminal"))
@@ -112,25 +111,22 @@ export default function MasonryCombo({ value, setValue }: Props) {
         className="pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Stack hasGutter>
-          {sml !== "s" && (
-            <MasonryTileWrapper sml={sml} variant="plain">
-              <Timeline model={base} numbering={numbering} />
-            </MasonryTileWrapper>
-          )}
-          <Masonry model={masonry} sml={sml}>
-            {sml === "s" && <Timeline model={base} numbering={numbering} />}
-            {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
+        <Masonry model={masonry} sml={sml}>
+          <MasonryTileWrapper sml={sml} variant="plain">
+            <Timeline model={base} numbering={numbering} />
+          </MasonryTileWrapper>
+          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
             <Topology
               nodes={nodes}
               edges={edges}
               numbering={numbering}
               sml={sml}
             />)*/}
-          </Masonry>
-        </Stack>
+        </Masonry>
       </PageSection>
+
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
+
       <Modal variant="large" isOpen={!!modalContent} onClose={closeModal}>
         <ModalHeader
           title={modalContent?.header}

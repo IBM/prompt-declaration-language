@@ -123,3 +123,17 @@
     }
   }
 }
+
+.pdl-timeline .pdl-masonry-index {
+  font-size: 0.5rem;
+  display: inline-block;
+  margin-right: 0.375em;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+}
+
+.pdl-timeline-kind {
+  display: inline-flex;
+  align-items: center;
+}

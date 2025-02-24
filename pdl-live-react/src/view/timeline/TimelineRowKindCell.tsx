@@ -25,7 +25,7 @@ export default function TimelineRowKindCell({ row, ordinal }: Props) {
 
   return (
     <span className="pdl-timeline-kind">
-      {ordinal ? <strong>{ordinal}. </strong> : ""}
+      {ordinal && <span className="pdl-masonry-index">{ordinal}</span>}
       <Button variant="link" isInline component={link}>
         <span>{capitalizeAndUnSnakeCase(row.block.kind ?? "unknown")}</span>
       </Button>
