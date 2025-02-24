@@ -4,14 +4,13 @@ import { useEffect, useState } from "react"
 import { Page, PageSection } from "@patternfly/react-core"
 
 import Sidebar from "./Sidebar"
-import Masthead from "./Masthead"
 import MasonryCombo from "../view/masonry/MasonryCombo"
 import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
 
-import DarkModeContext, {
-  setDarkModeForSession,
+import {
   getDarkModeUserSetting,
+  setDarkModeForSession,
 } from "./DarkModeContext"
 
 import "./Page.css"
@@ -32,7 +31,6 @@ type Props = import("react").PropsWithChildren<
 export default function PDLPage(props: Props) {
   const { padding = true, initialValue, children } = props
 
-  const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
   useEffect(() => setDarkModeForSession(getDarkModeUserSetting()), [])
 
   const [value, setValue] = useState(initialValue)
@@ -54,11 +52,6 @@ export default function PDLPage(props: Props) {
       }
       isContentFilled
       sidebar={<Sidebar />}
-      masthead={
-        <DarkModeContext.Provider value={darkMode}>
-          <Masthead setDarkMode={setDarkMode} />
-        </DarkModeContext.Provider>
-      }
       breadcrumb={
         <PageBreadcrumbs
           breadcrumb1={props.breadcrumb1}

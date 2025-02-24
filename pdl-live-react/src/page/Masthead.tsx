@@ -86,14 +86,14 @@ function Main() {
   )
 }
 
-function Content(props: import("./DarkModeToggle").DarkModeProps) {
+function Content() {
   return (
     <MastheadContent>
       <Toolbar isStatic>
         <ToolbarContent>
           <ToolbarGroup align={alignRight}>
             <ToolbarItem align={alignRight}>
-              <DarkModeToggle {...props} />
+              <DarkModeToggle />
             </ToolbarItem>
           </ToolbarGroup>
         </ToolbarContent>
@@ -102,13 +102,11 @@ function Content(props: import("./DarkModeToggle").DarkModeProps) {
   )
 }
 
-export default function PDLMasthead(
-  props: import("./DarkModeToggle").DarkModeProps,
-) {
+export default function PDLMasthead() {
   return (
     <Masthead>
       <Main />
-      <Content {...props} />
+      <Content />
     </Masthead>
   )
 }
