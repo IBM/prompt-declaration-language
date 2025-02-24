@@ -1,6 +1,6 @@
 # Contributing to PDL
 
-You can report issues or open a pull request (PR) to suggest changes. 
+You can report issues or open a pull request (PR) to suggest changes.
 
 ## Reporting an issue
 
@@ -27,3 +27,50 @@ Also, please make sure that your changes pass static checks such as code styles 
 ```
 pre-commit run --all-files
 ```
+
+## Development environment
+
+### PDL development
+
+Follow the following instructions to set up a dev environment to get started with contributing to PDL.
+
+1. Create a fork of https://github.com/IBM/prompt-declaration-language
+2. Clone your fork
+3. Set up a python virtual environment and install dependencies
+
+    ```
+    cd prompt-declaration-language
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -e .
+    ```
+
+4. Test that you can run an editable version of PDL
+
+    ```
+    pdl examples/hello/hello.pdl
+
+    Hello
+    Hello! How can I help you today?
+    ```
+
+You are all set!
+
+### Documentation updates
+
+When you make changes to PDL, ensure to document any new features in the docs section. You can serve the docs locally to preview changes.
+
+Install the required dependencies for documentation.
+
+```
+pip install mkdocs-get-deps
+pip install $(mkdocs-get-deps)
+```
+
+Then serve the docs to load a preview.
+
+```
+mkdocs serve
+```
+
+You are all set!

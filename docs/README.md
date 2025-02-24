@@ -5,11 +5,12 @@ hide:
 --- -->
 # Prompt Declaration Language
 
-LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snippets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems. 
+LLMs will continue to change the way we build software systems. They are not only useful as coding assistants, providing snippets of code, explanations, and code transformations, but they can also help replace components that could only previously be achieved with rule-based systems. Whether LLMs are used as coding assistants or software components, reliability remains an important concern. LLMs have a textual interface and the structure of useful prompts is not captured formally. Programming frameworks do not enforce or validate such structures since they are not specified in a machine-consumable way. The purpose of the Prompt Declaration Language (PDL) is to allow developers to specify the structure of prompts and to enforce it, while providing a unified programming framework for composing LLMs with rule-based systems.
 
 PDL is based on the premise that interactions between users, LLMs and rule-based systems form a *document*. Consider for example the interactions between a user and a chatbot. At each interaction, the exchanges form a document that gets longer and longer. Similarly, chaining models together or using tools for specific tasks result in outputs that together form a document. PDL allows users to specify the shape of data in such documents in a declarative way (in YAML), and is agnostic of any programming language. Because of its document-oriented nature, it can be used to easily express a variety of data generation tasks (inference, data synthesis, data generation for model training, etc...).
 
 PDL provides the following features:
+
 - Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx)
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call
 - Control structures: variable definitions and use, conditionals, loops, functions
@@ -20,7 +21,7 @@ PDL provides the following features:
 - Support for chat APIs and chat templates
 - Live Document visualization
 
-The PDL interpreter takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...). 
+The PDL interpreter takes a PDL program as input and renders it into a document by execution its instructions (calling out to models, code, etc...).
 
 See below for a quick reference, followed by [installation notes](#interpreter_installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
@@ -51,9 +52,11 @@ pip install 'prompt-declaration-language[examples]'
 Most examples in this repository use IBM Granite models on [Replicate](https://replicate.com/).
 In order to run these examples, you need to create a free account
 on Replicate, get an API key and store it in the environment variable:
-- `REPLICATE_API_TOKEN`
+
+- `REPLICATE_API_KEY`
 
 In order to use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a watsonx account (a free plan is available) and set up the following environment variables:
+
 - `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
 - `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
@@ -84,7 +87,7 @@ The PDL repository has been configured so that every `*.pdl` file is associated 
 
 The interpreter executes Python code specified in PDL code blocks. To sandbox the interpreter for safe execution,
 you can use the `--sandbox` flag which runs the interpreter in a Docker-compatible container. Without this flag, the interpreter
-and all code is executed locally. To use the `--sandbox` flag, you need to have a Docker daemon running, such as 
+and all code is executed locally. To use the `--sandbox` flag, you need to have a Docker daemon running, such as
 [Rancher Desktop](https://rancherdesktop.io).
 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
@@ -111,7 +114,7 @@ pdl --data-file <JSON-or-YAML-file> <my-example>
 The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
 
 ```
-pdl --trace <file.json> <my-example> 
+pdl --trace <file.json> <my-example>
 ```
 
 For more information:
@@ -181,19 +184,19 @@ containing the source code and some information regarding the repository where i
 
 For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.yaml):
 ```yaml
-source_code: 
+source_code:
   |
   @SuppressWarnings("unchecked")
   public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
     Map<String, String> offsetMap;
-    if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-      offsetMap = new HashMap<>();  
+    if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+      offsetMap = new HashMap<>();
     } else {
-      offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+      offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
     }
     return offsetMap;
   }
-repo_info: 
+repo_info:
   repo: streamsets/datacollector
   path: stagesupport/src/main/java/com/.../OffsetUtil.java
   function_name: OffsetUtil.deserializeOffsetMap
@@ -203,7 +206,7 @@ we would like to express the following prompt and submit it to an LLM:
 
 ```
 Here is some info about the location of the function in the repo.
-repo: 
+repo:
 streamsets/datacollector
 path: stagesupport/src/main/java/com/.../OffsetUtil.java
 Function_name: OffsetUtil.deserializeOffsetMap
@@ -237,7 +240,7 @@ text:
   input:
       - |
         Here is some info about the location of the function in the repo.
-        repo: 
+        repo:
         ${ CODE.repo_info.repo }
         path: ${ CODE.repo_info.path }
         Function_name: ${ CODE.repo_info.function_name }
@@ -263,10 +266,10 @@ When we execute this program with the PDL interpreter, we obtain the following t
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }
@@ -302,7 +305,7 @@ text:
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
-      repo: 
+      repo:
       ${ CODE.repo_info.repo }
       path: ${ CODE.repo_info.path }
       Function_name: ${ CODE.repo_info.function_name }
@@ -340,10 +343,10 @@ When we execute this new program, we obtain the following:
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }
@@ -386,7 +389,7 @@ text:
   input:
      |
       Here is some info about the location of the function in the repo.
-      repo: 
+      repo:
       ${ CODE.repo_info.repo }
       path: ${ CODE.repo_info.path }
       Function_name: ${ CODE.repo_info.function_name }
@@ -409,7 +412,7 @@ text:
     """
     # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
-- data: 
+- data:
     input: ${ CODE }
     output: ${ EXPLANATION }
     metric: ${ EVAL }
@@ -432,46 +435,51 @@ PDL has a Live Document visualizer to help in program understanding given an exe
 To produce an execution trace consumable by the Live Document, you can run the interpreter with the `--trace` argument:
 
 ```
-pdl --trace <file.json> <my-example> 
+pdl --trace <file.json> <my-example>
 ```
 
-This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part 
-in the right pane. 
+This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Document](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. Clicking on different parts of the Live Document will show the PDL code that produced that part
+in the right pane.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Document, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
 ## Best Practices
 
 1. **Template Organization**:
-   - Keep templates modular and reusable
-   - Use variables for dynamic content
-   - Document template purpose and requirements
+    - Keep templates modular and reusable
+    - Use variables for dynamic content
+    - Document template purpose and requirements
 
 2. **Error Handling**:
-   - Validate model inputs/outputs
-   - Include fallback logic
-   - Log intermediate results
+
+     - Validate model inputs/outputs
+     - Include fallback logic
+     - Log intermediate results
 
 3. **Performance**:
-   - Cache frequent LLM calls
-   - Use appropriate temperature settings
-   - Implement retry logic for API calls
+
+     - Cache frequent LLM calls
+     - Use appropriate temperature settings
+     - Implement retry logic for API calls
 
 4. **Security**:
-   - Enabling sandbox mode for untrusted code
-   - Validate all inputs
-   - Follow API key best practices
+
+     - Enabling sandbox mode for untrusted code
+     - Validate all inputs
+     - Follow API key best practices
 
 
 ## Additional Notes
 
 When using Granite models, we use the following defaults for model parameters (except `granite-20b-code-instruct-r1.1`):
+
   - `decoding_method`: `greedy`, (`temperature`: 0)
   - `max_new_tokens`: 1024
   - `min_new_tokens`: 1
   - `repetition_penalty`: 1.05
-  
+
   Also if the `decoding_method` is `sample`, then the following defaults are used:
+
   - `temperature`: 0.7
   - `top_p`: 0.85
   - `top_k`: 50
