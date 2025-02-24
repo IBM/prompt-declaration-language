@@ -4,6 +4,8 @@ import {
   DescriptionListGroup,
   DescriptionListDescription,
   Divider,
+  Panel,
+  PanelMain,
 } from "@patternfly/react-core"
 
 import Result from "../Result"
@@ -22,7 +24,11 @@ export default function ContextTabContent({ block }: Props) {
             {c.role[0].toUpperCase() + c.role.slice(1)}
           </DescriptionListTerm>
           <DescriptionListDescription>
-            <Result result={c.content} term="" />
+            <Panel isScrollable>
+              <PanelMain>
+                <Result result={c.content} term="" />
+              </PanelMain>
+            </Panel>
           </DescriptionListDescription>
         </DescriptionListGroup>,
 
@@ -31,7 +37,11 @@ export default function ContextTabContent({ block }: Props) {
             Where was this value defined?
           </DescriptionListTerm>
           <DescriptionListDescription>
-            {c.defsite && <BreadcrumbBarForBlockId id={c.defsite} />}
+            {c.defsite ? (
+              <BreadcrumbBarForBlockId id={c.defsite} />
+            ) : (
+              "The origin of this data is not known"
+            )}
           </DescriptionListDescription>
         </DescriptionListGroup>,
 
