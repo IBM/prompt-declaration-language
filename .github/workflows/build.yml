@@ -50,22 +50,3 @@ jobs:
       run: py.test -v --capture=tee-sys --ignore=tests/test_examples_run.py tests
       if: matrix.python-version != '3.11'
 
-  viewer:
-    name: Build PDL live viewer
-    runs-on: ubuntu-latest
-    needs: tests
-    defaults:
-      run:
-        working-directory: ./pdl-live
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies
-        run: npm install
-      - name: Generate pdl_ast.d.ts
-        run: npx json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions
-      - name: Build viewer
-        run: npm run build
