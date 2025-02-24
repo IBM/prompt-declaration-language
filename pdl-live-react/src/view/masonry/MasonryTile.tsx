@@ -87,11 +87,7 @@ export default function MasonryTile({
 
   return (
     <MasonryTileWrapper sml={sml} kind={kind} header={header}>
-      <Panel
-        isScrollable={sml !== "xl"}
-        variant="raised"
-        className="pdl-masonry-tile-panel"
-      >
+      <Panel isScrollable={sml !== "xl"} className="pdl-masonry-tile-panel">
         <PanelMain maxHeight={maxHeight}>
           <Result
             term=""

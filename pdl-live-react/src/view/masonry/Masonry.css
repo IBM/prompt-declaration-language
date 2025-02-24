@@ -4,10 +4,10 @@
     column-gap: 0.5em;
   }
   &[data-padding="m"] {
-    columns: 300px;
+    columns: 350px;
   }
   &[data-padding="l"] {
-    columns: 400px;
+    columns: 500px;
   }
   &[data-padding="xl"] {
     columns: 100%;
@@ -24,13 +24,6 @@
 
   &[data-padding="s"] {
     margin-bottom: 0.5em;
-  }
-
-  &[data-variant="plain"] {
-    &[data-padding="m"],
-    &[data-padding="l"] {
-      column-span: all;
-    }
   }
 }
 
