@@ -51,8 +51,8 @@ from .pdl_ast import (  # noqa: E402
     FunctionBlock,
     GetBlock,
     IfBlock,
-    IncludeBlock,
     ImportBlock,
+    IncludeBlock,
     IterationType,
     LastOfBlock,
     LazyMessage,
@@ -1687,7 +1687,6 @@ def process_import(
             loc=exc.loc or loc,
             trace=trace,
         ) from exc
-
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None

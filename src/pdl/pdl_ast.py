@@ -560,8 +560,6 @@ class ImportBlock(Block):
     trace: Optional["BlockType"] = None
 
 
-
-
 class ErrorBlock(Block):
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
