@@ -80,7 +80,6 @@ export default function DrawerContent({ value }: Props) {
   useEffect(() => {
     setActiveTab(0)
   }, [id, objectType, value])
-  console.error("!!!!!!", id, block)
 
   const actions = useMemo(
     () => ({

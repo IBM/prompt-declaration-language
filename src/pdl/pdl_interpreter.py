@@ -43,10 +43,11 @@ from .pdl_ast import (  # noqa: E402
     CallBlock,
     CodeBlock,
     ContributeTarget,
+    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
-    ForBlock,
+    ExpressionType,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -77,10 +78,11 @@ from .pdl_ast import (  # noqa: E402
     Program,
     ReadBlock,
     RegexParser,
-    RepeatUntilBlock,
+    RepeatBlock,
     RoleType,
     ScopeType,
     TextBlock,
+    Timing,
     empty_block_location,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
@@ -162,18 +164,10 @@ def generate(
         prog, loc = parse_file(pdl_file)
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
-        future_result, background, _, trace = process_prog(
-            state, initial_scope, prog, loc
-        )
-        _ = future_result.result()
-        if not state.yield_background:
-            print(background)
-            # if state.yield_background:
-            #     print("\n----------------")
-            # if result is None:
-            #     print()
-            # else:
-            #     print(stringify(result))
+        future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
+        result = future_result.result()
+        if not state.yield_background and not state.yield_result:
+            print(stringify(result))
         else:
             print()
         if trace_file:
@@ -242,6 +236,7 @@ def process_block(
     trace: BlockType
     try:
         if not isinstance(block, Block):
+            start = time.time_ns()
             try:
                 result = PdlConst(process_expr(scope, block, loc))
             except PDLRuntimeExpressionError as exc:
@@ -264,7 +259,12 @@ def process_block(
                     )
                 ]
             )
-            trace = DataBlock(data=block, result=stringified_result)
+            trace = DataBlock(
+                data=block,
+                result=stringified_result,
+                pdl__timing=Timing(start_nanos=start, end_nanos=time.time_ns()),
+                id=".".join(state.id_stack),
+            )
             if state.yield_background:
                 yield_background(background)
             if state.yield_result:
@@ -308,20 +308,27 @@ def process_advanced_block_timed(
     state = state.with_id(str(block.kind))
     if state.id_stack is not None:
         block.id = ".".join(state.id_stack)
-    block.start_nanos = time.time_ns()
+    block.pdl__timing = Timing()
+    block.pdl__timing.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
-    end_nanos = time.time_ns()
+    block.pdl__timing.end_nanos = time.time_ns()
     match trace:
         case LitellmModelBlock():
             trace = trace.model_copy(
                 update={
-                    "end_nanos": end_nanos,
                     "context": lazy_apply(lambda s: s["pdl_context"], scope),
                 }
             )
-        case Block():
-            trace = trace.model_copy(update={"end_nanos": end_nanos})
     return result, background, scope, trace
+
+
+def id_with_set_first_use_nanos(timing):
+    def identity(result):
+        if timing.first_use_nanos is None:
+            timing.first_use_nanos = time.time_ns()
+        return result
+
+    return identity
 
 
 def process_advanced_block(
@@ -344,6 +351,10 @@ def process_advanced_block(
     try:
         result, background, new_scope, trace = process_block_body(
             state, scope, block, loc
+        )
+        result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
+        background = lazy_apply(
+            id_with_set_first_use_nanos(block.pdl__timing), background
         )
         trace = trace.model_copy(update={"result": result})
         if block.parser is not None:
@@ -597,7 +608,7 @@ def process_block_body(
                 else:
                     new_scope = scope
                 b = True
-                if "if_" in match_case.model_fields_set:
+                if "if_" in match_case.model_fields_set and match_case.if_ is not None:
                     loc_if = append(loc_i, "if")
                     try:
                         b = process_expr(new_scope, match_case.if_, loc_if)
@@ -639,43 +650,60 @@ def process_block_body(
                 append_log(state, "Match", "no match!")
             block.with_ = cases
             trace = block
-        case ForBlock():
+        case RepeatBlock():
             results: list[PdlLazy[Any]] = []
             background = PdlList([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
-            items, block = process_expr_of(block, "fors", scope, loc, "for")
-            lengths = []
-            for idx, lst in items.items():
-                if not isinstance(lst, list):
-                    msg = "Values inside the For block must be lists."
-                    lst_loc = append(
-                        append(block.location or empty_block_location, "for"), idx
-                    )
+            if block.fors is None:
+                items = None
+                lengths = None
+            else:
+                items, block = process_expr_of(block, "fors", scope, loc, "for")
+                lengths = []
+                for idx, lst in items.items():
+                    if not isinstance(lst, list):
+                        msg = "Values inside the For block must be lists."
+                        lst_loc = append(
+                            append(block.location or empty_block_location, "for"), idx
+                        )
+                        raise PDLRuntimeError(
+                            message=msg,
+                            loc=lst_loc,
+                            trace=ErrorBlock(msg=msg, location=lst_loc, program=block),
+                            fallback=[],
+                        )
+                    lengths.append(len(lst))
+                if len(set(lengths)) != 1:  # Not all the lists are of the same length
+                    msg = "Lists inside the For block must be of the same length."
+                    for_loc = append(block.location or empty_block_location, "for")
                     raise PDLRuntimeError(
-                        message=msg,
-                        loc=lst_loc,
-                        trace=ErrorBlock(msg=msg, location=lst_loc, program=block),
+                        msg,
+                        loc=for_loc,
+                        trace=ErrorBlock(msg=msg, location=for_loc, program=block),
                         fallback=[],
                     )
-                lengths.append(len(lst))
-            if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                msg = "Lists inside the For block must be of the same length."
-                for_loc = append(block.location or empty_block_location, "for")
-                raise PDLRuntimeError(
-                    msg,
-                    loc=for_loc,
-                    trace=ErrorBlock(msg=msg, location=for_loc, program=block),
-                    fallback=[],
-                )
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.iteration_type == IterationType.TEXT
             )
+            if block.max_iterations is None:
+                max_iterations = None
+            else:
+                max_iterations, block = process_expr_of(
+                    block, "max_iterations", scope, loc
+                )
             repeat_loc = append(loc, "repeat")
             iidx = 0
             try:
                 first = True
-                for i in range(lengths[0]):
+                while True:
+                    if max_iterations is not None and iidx >= max_iterations:
+                        break
+                    if lengths is not None and iidx >= lengths[0]:
+                        break
+                    stay = process_condition_of(block, "while_", scope, loc, "while")
+                    if not stay:
+                        break
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
@@ -699,8 +727,9 @@ def process_block_body(
                             pdl_context_init, background
                         )
                     }
-                    for k in items.keys():
-                        scope = scope | {k: items[k][i]}
+                    if items is not None:
+                        for k in items.keys():
+                            scope = scope | {k: items[k][iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -717,6 +746,9 @@ def process_block_body(
                     iter_trace.append(body_trace)
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
+                    stop = process_condition_of(block, "until", scope, loc)
+                    if stop:
+                        break
             except PDLRuntimeError as exc:
                 iter_trace.append(exc.trace)
                 trace = block.model_copy(update={"trace": iter_trace})
@@ -729,82 +761,6 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"trace": iter_trace})
-        case RepeatUntilBlock():
-            results = []
-            stop = False
-            background = PdlList([])
-            iterations_trace = []
-            pdl_context_init = scope_init.data["pdl_context"]
-            iteration_state = state.with_yield_result(
-                state.yield_result and block.join.iteration_type == IterationType.TEXT
-            )
-            if block.max_iterations is None:
-                max_iterations = None
-            else:
-                max_iterations, block = process_expr_of(
-                    block, "max_iterations", scope, loc
-                )
-            repeat_loc = append(loc, "repeat")
-            try:
-                first = True
-                iidx = 0
-                while True:
-                    if max_iterations is not None and iidx >= max_iterations:
-                        break
-                    iteration_state = iteration_state.with_iter(iidx)
-                    if first:
-                        first = False
-                    elif block.join.iteration_type == IterationType.TEXT:
-                        join_string = block.join.join_string
-                        results.append(PdlConst(join_string))
-                        if iteration_state.yield_result:
-                            yield_result(join_string, block.kind)
-                        if iteration_state.yield_background:
-                            yield_background(
-                                [
-                                    {
-                                        "role": block.role,
-                                        "content": join_string,
-                                        "defsite": block.id,
-                                    }
-                                ]
-                            )
-                    scope = scope | {
-                        "pdl_context": lazy_messages_concat(
-                            pdl_context_init, background
-                        )
-                    }
-                    (
-                        iteration_result,
-                        iteration_background,
-                        scope,
-                        body_trace,
-                    ) = process_block(
-                        iteration_state,
-                        scope,
-                        block.repeat,
-                        repeat_loc,
-                    )
-                    results.append(iteration_result)
-                    background = lazy_messages_concat(background, iteration_background)
-                    iterations_trace.append(body_trace)
-                    stop = process_condition_of(block, "until", scope, loc)
-                    if stop:
-                        break
-                    iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
-            except PDLRuntimeError as exc:
-                iterations_trace.append(exc.trace)
-                trace = block.model_copy(update={"trace": iterations_trace})
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or repeat_loc,
-                    trace=trace,
-                ) from exc
-            result = combine_results(block.join.iteration_type, results)
-            if state.yield_result and not iteration_state.yield_result:
-                yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"trace": iterations_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
@@ -1054,18 +1010,18 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     return result
 
 
-BlockTypeTVarProcessExprOf = TypeVar(
-    "BlockTypeTVarProcessExprOf", bound=AdvancedBlockType
+BlockTypeTVarProcessContribute = TypeVar(
+    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
 )
 
 
 def process_contribute(
-    block: BlockTypeTVarProcessExprOf, scope: ScopeType, loc: LocationType
-) -> tuple[Any, BlockTypeTVarProcessExprOf]:
+    block: BlockTypeTVarProcessContribute, scope: ScopeType, loc: LocationType
+) -> tuple[Any, BlockTypeTVarProcessContribute]:
     value = get_contribute_value(block.contribute)
     loc = append(loc, "contribute")
     try:
-        result = process_expr(scope, value, loc)
+        result: ContributeValue = process_expr(scope, value, loc)  # pyright: ignore
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1075,6 +1031,11 @@ def process_contribute(
     replace = replace_contribute_value(block.contribute, result)
     trace = block.model_copy(update={"contribute": replace})
     return result, trace
+
+
+BlockTypeTVarProcessExprOf = TypeVar(
+    "BlockTypeTVarProcessExprOf", bound=AdvancedBlockType
+)
 
 
 def process_expr_of(
@@ -1087,7 +1048,7 @@ def process_expr_of(
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result = process_expr(scope, expr, loc)
+        result: Any = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1108,7 +1069,7 @@ def process_condition_of(
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result = process_expr(scope, expr, loc)
+        result: bool = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1121,11 +1082,13 @@ def process_condition_of(
 EXPR_START_STRING = "${"
 EXPR_END_STRING = "}"
 
+ProcessExprT = TypeVar("ProcessExprT")
+
 
 def process_expr(  # pylint: disable=too-many-return-statements
-    scope: ScopeType, expr: Any, loc: LocationType
-) -> Any:
-    result: Any
+    scope: ScopeType, expr: ExpressionType[ProcessExprT], loc: LocationType
+) -> ProcessExprT:
+    result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
         return process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
@@ -1151,7 +1114,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 ):
                     # `expr` has the shape `${ ... }`: it is a single jinja expression
                     free_vars = meta.find_undeclared_variables(expr_ast)
-                    result = env.compile_expression(
+                    result = env.compile_expression(  # pyright: ignore
                         expr[2:-1], undefined_to_none=False
                     )({x: scope[x] for x in free_vars if x in scope})
                     if isinstance(result, Undefined):
@@ -1159,7 +1122,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
                     return result
                 if isinstance(expr_ast_nodes[0], TemplateData):
                     # `expr` is a string that do not include jinja expression
-                    return expr
+                    return expr  # type: ignore
             # `expr` is not a single jinja expression
             template = Template(
                 expr,
@@ -1174,7 +1137,9 @@ def process_expr(  # pylint: disable=too-many-return-statements
                 undefined=StrictUndefined,
             )
             free_vars = meta.find_undeclared_variables(expr_ast)
-            result = template.render({x: scope[x] for x in free_vars if x in scope})
+            result = template.render(
+                {x: scope[x] for x in free_vars if x in scope}
+            )  # pyright: ignore
             return result
         except PDLRuntimeError as exc:
             raise exc from exc
@@ -1188,19 +1153,19 @@ def process_expr(  # pylint: disable=too-many-return-statements
             ) from exc
 
     if isinstance(expr, list):
-        result = []
+        result_list: list[Any] = []
         for index, x in enumerate(expr):
-            res = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
-            result.append(res)
-        return result
+            res: Any = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
+            result_list.append(res)
+        return result_list  # type: ignore
     if isinstance(expr, dict):
         result_dict: dict[str, Any] = {}
         for k, v in expr.items():
             k_loc = append(loc, k)
-            k_res = process_expr(scope, k, k_loc)
-            v_res = process_expr(scope, v, k_loc)
+            k_res: str = process_expr(scope, k, k_loc)
+            v_res: Any = process_expr(scope, v, k_loc)
             result_dict[k_res] = v_res
-        return result_dict
+        return result_dict  # type: ignore
     return expr
 
 

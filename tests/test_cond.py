@@ -1,5 +1,20 @@
-from pdl.pdl import exec_dict
+from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_ast import ContributeTarget
+
+
+def test_bool():
+    prog = """
+    defs:
+      tt: true
+      ff: false
+    if: ${tt}
+    then: false
+    else: true
+    """
+    result = exec_str(prog)
+    assert isinstance(result, bool)
+    assert not result
+
 
 cond_data = {
     "description": "Arithmetic Expressions",

@@ -129,32 +129,95 @@ def test_program_as_list():
     assert result == "Bye"
 
 
-def test_bool():
-    prog = """
+def _while_prog(n):
+    return f"""
     defs:
-      tt: true
-      ff: false
-    if: ${tt}
-    then: false
-    else: true
+      i: 0
+    while: {'${ i < '}{n}{'}'}
+    repeat:
+      defs:
+        i: {'${i + 1}'}
+      text: {'${i}'}
     """
+
+
+def test_while1():
+    prog = _while_prog(-1)
     result = exec_str(prog)
-    assert isinstance(result, bool)
-    assert not result
+    assert result == ""
 
 
-def test_null():
-    prog = """
-    text:
+def test_while2():
+    prog = _while_prog(3)
+    result = exec_str(prog)
+    assert result == "123"
+
+
+def _for_max_iterations_prog(n):
+    return f"""
+    for:
+      i: [0, 1, 2, 3, 4, 5]
+    repeat: {'${i}'}
+    max_iterations: {'${'}{n}{'}'}
     """
+
+
+def test_for_max_iterations1():
+    prog = _for_max_iterations_prog(10)
     result = exec_str(prog)
-    assert result == "null"
+    assert result == "012345"
 
 
-def test_none():
-    prog = """
-    lastOf:
-    - null
+def test_for_max_iterations2():
+    prog = _for_max_iterations_prog(3)
+    result = exec_str(prog)
+    assert result == "012"
+
+
+def _for_until_prog(n):
+    return f"""
+    for:
+      i: [0, 1, 2, 3, 4, 5]
+    repeat: {'${i}'}
+    until: {'${ i == '}{n}{'}'}
     """
+
+
+def test_for_until1():
+    prog = _for_until_prog(10)
     result = exec_str(prog)
-    assert result is None
+    assert result == "012345"
+
+
+def test_for_until2():
+    prog = _for_until_prog(4)
+    result = exec_str(prog)
+    assert result == "01234"
+
+
+def _for_until_max_iterations_prog(n, m):
+    return f"""
+    for:
+      i: [0, 1, 2, 3, 4, 5]
+    repeat: {'${i}'}
+    until: {'${ i == '}{n}{'}'}
+    max_iterations: {'${'}{m}{'}'}
+    """
+
+
+def test_for_until_max_iterations1():
+    prog = _for_until_max_iterations_prog(10, 10)
+    result = exec_str(prog)
+    assert result == "012345"
+
+
+def test_for_until_max_iterations2():
+    prog = _for_until_max_iterations_prog(2, 3)
+    result = exec_str(prog)
+    assert result == "012"
+
+
+def test_for_until_max_iterations3():
+    prog = _for_until_max_iterations_prog(4, 2)
+    result = exec_str(prog)
+    assert result == "01"

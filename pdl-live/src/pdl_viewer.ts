@@ -250,16 +250,8 @@ export function show_block(data: PdlBlock): HTMLDivElement {
       const doc_child = show_block(data.content);
       body.appendChild(doc_child);
     })
-    .with({kind: 'repeat_until'}, data => {
-      body.classList.add('pdl_repeat_until');
-      const loop_body = show_loop_trace(
-        data?.trace ?? [data.repeat],
-        data.join
-      );
-      body.appendChild(loop_body);
-    })
-    .with({kind: 'for'}, data => {
-      body.classList.add('pdl_for');
+    .with({kind: 'repeat'}, data => {
+      body.classList.add('pdl_repeat');
       const loop_body = show_loop_trace(
         data?.trace ?? [data.repeat],
         data.join

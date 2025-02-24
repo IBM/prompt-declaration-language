@@ -44,7 +44,7 @@ function ignore(_block: PdlBlockWithTiming) {
 
 export function computeModel(block: unknown | PdlBlock): TimelineModel {
   const model = computeModelIter(block).sort(
-    (a, b) => a.block.start_nanos - b.block.start_nanos,
+    (a, b) => a.block.pdl__timing.start_nanos - b.block.pdl__timing.start_nanos,
   )
 
   model.forEach((node) => {
@@ -102,9 +102,10 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "array" }, (data) => [data.array])
     .with({ kind: "object" }, (data) => [data.object])
     .with({ kind: "message" }, (data) => [data.content])
-    .with({ kind: "repeat_until" }, (data) => [data.trace ?? data.repeat])
-    .with({ kind: "for" }, (data) => [data.trace ?? data.repeat])
-    .with({ kind: "empty" }, () => [])
+    .with({ kind: "repeat" }, (data) => [data.trace ?? data.repeat])
+    .with({ kind: "empty" }, (data) =>
+      data.defs ? Object.values(data.defs) : [],
+    )
     .with({ kind: "error" }, () => []) // TODO show errors in trace
     .with({ kind: undefined }, () => [])
     .exhaustive()
@@ -112,7 +113,13 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .filter(nonNullable)
 }
 
-function positionOf(row: TimelineRow, idx: number, A: TimelineRow[]): Position {
+function positionOf(row: TimelineRow): Position {
+  if (!row.parent) {
+    return "push"
+  }
+
+  const A = row.parent.children
+  const idx = A.findIndex((c) => c === row)
   return idx === A.length - 1 || A[idx + 1].depth < row.depth
     ? "pop"
     : idx === 0 || A[idx - 1].depth < row.depth
@@ -162,7 +169,7 @@ export function pushPopsFor(model: TimelineRow[]): PushPop[] {
     const root = model[rootIdx]
     const mine = {
       prefix: prefix.slice(0),
-      position: positionOf(root, rootIdx, model),
+      position: positionOf(root),
     }
     result.push(mine)
 

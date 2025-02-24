@@ -19,16 +19,14 @@ import componentFactory from "./components"
 
 import "./Topology.css"
 
-const NODE_SHAPE = NodeShape.ellipse
-const NODE_DIAMETER = 10
-
 type Props = {
+  sml: import("../masonry/Toolbar").SML
   nodes: import("./model").Node[]
   edges: import("./model").Edge[]
   numbering: Record<string, number>
 }
 
-export default function Topology({ nodes, edges, numbering }: Props) {
+export default function Topology({ sml, nodes, edges, numbering }: Props) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const controller = useMemo(() => {
@@ -37,13 +35,17 @@ export default function Topology({ nodes, edges, numbering }: Props) {
     newController.registerComponentFactory(componentFactory)
 
     newController.addEventListener(SELECTION_EVENT, setSelectedIds)
+    newController.setFitToScreenOnLayout(true, 60)
     return newController
   }, [])
 
   useEffect(() => {
+    const NODE_SHAPE = NodeShape.ellipse
+    const NODE_DIAMETER = 10
+
     const myNodes: NodeModel[] = nodes.map(({ id, label }) => ({
       id,
-      label,
+      label: sml === "s" && /Text/.test(label) ? "" : label,
       type: "node",
       width: NODE_DIAMETER,
       height: NODE_DIAMETER,
@@ -68,11 +70,12 @@ export default function Topology({ nodes, edges, numbering }: Props) {
         id: "g1",
         type: "graph",
         layout: "Cola",
+        scale: sml === "s" ? 0.65 : sml === "m" ? 0.75 : 0.85,
       },
     }
 
     controller.fromModel(model, false)
-  }, [nodes, edges, controller])
+  }, [sml, nodes, edges, numbering, controller])
 
   return (
     <div className="pdl-memory-topology">

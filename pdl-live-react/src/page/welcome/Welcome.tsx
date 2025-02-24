@@ -1,19 +1,15 @@
 import { type ReactNode } from "react"
-import {
-  Content,
-  Panel,
-  PanelFooter,
-  PanelHeader,
-  PanelMain,
-  PanelMainBody,
-} from "@patternfly/react-core"
+import { Flex, FlexItem, PageSection, Title } from "@patternfly/react-core"
 
 import Page from "../Page"
 import Intro from "./Intro"
 import Links from "./Links"
 import Tiles from "./Tiles"
+import Toolbar from "./Toolbar"
 
 import "./Welcome.css"
+
+const flex1 = { default: "flex_1" as const }
 
 type Props = {
   breadcrumb1?: string
@@ -23,23 +19,24 @@ type Props = {
 
 export default function Welcome(props: Props) {
   return (
-    <Page breadcrumb1={props.breadcrumb1 ?? "Welcome"} padding={false}>
-      <Panel>
-        <PanelHeader>
-          <Content component="h1">Prompt Declaration Language (PDL)</Content>
-          {props.intro ?? <Intro />}
-        </PanelHeader>
+    <Page breadcrumb1={props.breadcrumb1}>
+      <PageSection>
+        <Flex>
+          <Title headingLevel="h1">Prompt Declaration Language (PDL)</Title>{" "}
+          <FlexItem flex={flex1}>
+            <Toolbar />
+          </FlexItem>
+        </Flex>
+        {props.intro ?? <Intro />}
+      </PageSection>
 
-        <PanelMain className="pdl-welcome-content">
-          <PanelMainBody>
-            <Tiles tiles={props.tiles} />
-          </PanelMainBody>
-        </PanelMain>
+      <PageSection isFilled hasOverflowScroll>
+        <Tiles tiles={props.tiles} />
+      </PageSection>
 
-        <PanelFooter>
-          <Links />
-        </PanelFooter>
-      </Panel>
+      <PageSection>
+        <Links />
+      </PageSection>
     </Page>
   )
 }

@@ -1,5 +1,5 @@
 .pdl-timeline {
-  margin: 1em 0;
+  --pdl-t-h: 1.125em;
   display: table;
   border-collapse: collapse;
 
@@ -15,8 +15,8 @@
   vertical-align: middle;
 
   &[data-cell="kind"] {
-    height: 0.875em;
-    line-height: 0.875em;
+    height: var(--pdl-t-h);
+    line-height: var(--pdl-t-h);
     .pdl-mono {
       white-space: pre;
     }
@@ -27,7 +27,7 @@
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 400px) {
   .pdl-timeline-cell {
     &[data-cell="bar"] {
       padding-right: 0;
@@ -38,6 +38,12 @@
   }
 }
 
+.pdl-timeline-bar-outer,
+.pdl-timeline-cell[data-cell="duration"] {
+  height: var(--pdl-t-h);
+  line-height: var(--pdl-t-h);
+}
+
 /* Link hover effects */
 .pdl-timeline-row:hover {
   .pdl-timeline-kind a {
@@ -45,26 +51,24 @@
   }
 }
 
-.pdl-timeline-kind {
-  font-size: 0.875em;
+/** Hide timeline bar and duration cells in S mode */
+.pdl-masonry-tile[data-padding="s"] {
+  .pdl-timeline-bar-outer,
+  .pdl-timeline-cell[data-cell="duration"] {
+    display: none;
+  }
 }
 
 .pdl-timeline-bar-outer {
   width: 100%;
   position: relative;
   display: block;
-  height: 0.875em;
-  line-height: 0.875em;
-
-  border-radius: 2px / 4px;
-  background-color: var(--pf-t--global--background--color--control--read-only);
-  transition: background-color var(--pf-t--global--motion--delay--short)
-    var(--pf-t--global--motion--timing-function--default);
 }
 
 .pdl-timeline-bar {
+  height: calc(0.825 * var(--pdl-t-h));
   position: absolute;
-  min-width: 1px;
+  min-width: 0.25em;
 
   a {
     /* This is the link that allows drilldown clicks from the bar */
@@ -72,7 +76,6 @@
     text-decoration: none; /* so the &nbsp; doesn't show up as a small underline */
   }
 
-  border-radius: 2px / 4px;
   background-color: var(--pf-t--global--background--color--inverse--default);
   &:hover {
     background-color: var(--pf-t--global--background--color--inverse--hover);
@@ -84,14 +87,12 @@
     background-color: var(--pf-t--global--icon--color--disabled);
   }
   &[data-kind="code"] {
-    background-color: var(--pf-t--global--color--nonstatus--purple--default);
-  }
-  &[data-kind="read"] {
     background-color: var(--pf-t--global--color--nonstatus--orange--default);
   }
-  &[data-kind="repeat_until"],
+  &[data-kind="read"] {
+    background-color: var(--pf-t--global--color--nonstatus--green--default);
+  }
   &[data-kind="repeat"],
-  &[data-kind="for"],
   &[data-kind="lastOf"],
   &[data-kind="call"] {
     background-color: var(--pf-t--global--border--color--default);
@@ -102,9 +103,37 @@
     }
   }
   &[data-kind="model"] {
-    background-color: #37a3a3; /*var(--pf-t--global--border--color--nonstatus--teal--default);*/
+    background-color: #4394e5; /*var(--pf-t--global--border--color--nonstatus--teal--default);*/
     &:hover {
       background-color: var(--pf-t--global--color--brand--hover);
     }
   }
+}
+
+.pf-v6-theme-dark {
+  .pdl-timeline-bar {
+    &[data-kind="model"] {
+      background: #0066cc;
+    }
+    &[data-kind="read"] {
+      background: #63993d30;
+    }
+    &[data-kind="code"] {
+      background: #ca6c0f30;
+    }
+  }
+}
+
+.pdl-timeline .pdl-masonry-index {
+  font-size: 0.5rem;
+  display: inline-block;
+  margin-right: 0.375em;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+}
+
+.pdl-timeline-kind {
+  display: inline-flex;
+  align-items: center;
 }

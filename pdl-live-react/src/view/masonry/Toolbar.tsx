@@ -1,44 +1,52 @@
 import { Toolbar, ToolbarGroup, ToolbarContent } from "@patternfly/react-core"
 
-import ToolbarAsToggle from "./ToolbarAsToggle"
+import DarkModeToggle from "../../page/DarkModeToggle"
 import ToolbarSMLToggle from "./ToolbarSMLToggle"
-// import ToolbarReplayButton from "./ToolbarReplayButton"
+import ToolbarReplayButton from "./ToolbarReplayButton"
 import ToolbarShowSourceButton from "./ToolbarShowSourceButton"
 
 const alignEnd = { default: "alignEnd" as const }
 
-export type As = "grid" | "list"
-export type SML = "s" | "m" | "l"
+export type SML = "s" | "m" | "l" | "xl"
 
 export type Props = {
   block: import("../../pdl_ast").PdlBlock
   setValue(value: string): void
 
-  as: As
-  setAs(as: As): void
-
   sml: SML
   setSML(sml: SML): void
+
+  setModalContent: import("react").Dispatch<
+    import("react").SetStateAction<{
+      header: string
+      cmd: string
+      args?: string[]
+      onExit?: (exitCode: number) => void
+    } | null>
+  >
 }
 
 export default function MasonryToolbar({
-  as,
-  setAs,
   sml,
   setSML,
-  // block,
-  // setValue,
+  block,
+  setValue,
+  setModalContent,
 }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          {/*<ToolbarReplayButton block={block} setValue={setValue} />*/}
+          <ToolbarReplayButton
+            block={block}
+            setValue={setValue}
+            setModalContent={setModalContent}
+          />
           <ToolbarShowSourceButton />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
-          <ToolbarAsToggle as={as} setAs={setAs} />
+          <DarkModeToggle />
         </ToolbarGroup>
       </ToolbarContent>
     </Toolbar>

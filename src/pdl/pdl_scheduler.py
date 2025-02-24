@@ -38,15 +38,11 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.REPEAT:
             color = None
-        case BlockKind.REPEAT_UNTIL:
-            color = None
         case BlockKind.READ:
             color = None
         case BlockKind.INCLUDE:
             color = None
         case BlockKind.EMPTY:
-            color = None
-        case BlockKind.FOR:
             color = None
         case BlockKind.ERROR:
             color = "red"

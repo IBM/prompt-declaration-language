@@ -62,3 +62,20 @@ raw: true
 """
     result = exec_str(prog_str)
     assert result == {"text": "Hello", "model": ["${ x }", "${ y }"]}
+
+
+def test_null():
+    prog = """
+    text:
+    """
+    result = exec_str(prog)
+    assert result == "null"
+
+
+def test_none():
+    prog = """
+    lastOf:
+    - null
+    """
+    result = exec_str(prog)
+    assert result is None

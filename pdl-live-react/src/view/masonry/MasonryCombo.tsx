@@ -1,12 +1,33 @@
-import { useEffect, useMemo, useState } from "react"
-import { BackToTop, PageSection } from "@patternfly/react-core"
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from "react"
+import {
+  Button,
+  BackToTop,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  PageSection,
+} from "@patternfly/react-core"
 
-import Memory from "../memory/Memory"
-import Timeline from "../timeline/TimelineFromModel"
+const RunTerminal = lazy(() => import("../term/RunTerminal"))
 
+//import Topology from "../memory/Topology"
+//import extractVariables from "../memory/model"
 import Masonry from "./Masonry"
+import Timeline from "../timeline/TimelineFromModel"
+import MasonryTileWrapper from "./MasonryTileWrapper"
+import Toolbar, { type SML } from "./Toolbar"
+
 import computeModel from "./model"
-import Toolbar, { type As, type SML } from "./Toolbar"
+
+import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
 
@@ -15,17 +36,9 @@ type Props = {
   setValue(value: string): void
 }
 
-const asLocalStorageKey = "pdl-viewer.masonry.as"
-function getAsUserSetting(): As {
-  return (localStorage.getItem(asLocalStorageKey) as As) || "grid"
-}
-function setAsUserSetting(as: As) {
-  localStorage.setItem(asLocalStorageKey, as)
-}
-
 const smlLocalStorageKey = "pdl-viewer.masonry.sml"
 function getSMLUserSetting(): SML {
-  return (localStorage.getItem(smlLocalStorageKey) as SML) || "l"
+  return (localStorage.getItem(smlLocalStorageKey) as SML) || "m"
 }
 function setSMLUserSetting(sml: SML) {
   localStorage.setItem(smlLocalStorageKey, sml)
@@ -33,22 +46,49 @@ function setSMLUserSetting(sml: SML) {
 
 /** Combines <Masonry/>, <Timeline/>, ... */
 export default function MasonryCombo({ value, setValue }: Props) {
-  const block = useMemo(
-    () =>
-      value ? (JSON.parse(value) as import("../../pdl_ast").PdlBlock) : null,
-    [value],
-  )
+  const block = useMemo(() => {
+    if (value) {
+      try {
+        return JSON.parse(value) as import("../../pdl_ast").PdlBlock
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    return null
+  }, [value])
 
-  const [as, setAs] = useState<As>(getAsUserSetting())
   const [sml, setSML] = useState<SML>(getSMLUserSetting())
-
-  useEffect(() => setAsUserSetting(as), [as])
   useEffect(() => setSMLUserSetting(sml), [sml])
+
+  const [modalIsDone, setModalIsDone] = useState(-1)
+  const [modalContent, setModalContent] = useState<null | {
+    header: string
+    cmd: string
+    args?: string[]
+    onExit?: (exitCode: number) => void
+  }>(null)
+  const closeModal = useCallback(() => {
+    setModalContent(null)
+    setModalIsDone(-1)
+  }, [setModalContent, setModalIsDone])
+  const onExit = useCallback(
+    (exitCode: number) => {
+      setModalIsDone(exitCode)
+      if (modalContent?.onExit) {
+        modalContent.onExit(exitCode)
+      }
+    },
+    [setModalIsDone, modalContent],
+  )
 
   const { base, masonry, numbering } = useMemo(
     () => computeModel(block),
     [block],
   )
+
+  // This is the <Topology/> model. We compute this here, so we can
+  // nicely not render anything if we have an empty topology model.
+  // const { nodes, edges } = useMemo(() => extractVariables(block), [block])
 
   if (!block) {
     return "Invalid trace content"
@@ -58,27 +98,67 @@ export default function MasonryCombo({ value, setValue }: Props) {
     <>
       <PageSection type="subnav">
         <Toolbar
-          as={as}
-          setAs={setAs}
           sml={sml}
           setSML={setSML}
           block={block}
           setValue={setValue}
+          setModalContent={setModalContent}
         />
       </PageSection>
       <PageSection
         isFilled
         hasOverflowScroll
-        className="pdl-content-section pdl-masonry-page-section"
+        className="pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Masonry model={masonry} as={as} sml={sml}>
-          {sml !== "s" && <Timeline model={base} numbering={numbering} />}
-          {sml === "l" && <Memory block={block} numbering={numbering} />}
+        <Masonry model={masonry} sml={sml}>
+          <MasonryTileWrapper sml={sml} variant="plain">
+            <Timeline model={base} numbering={numbering} />
+          </MasonryTileWrapper>
+          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
+            <Topology
+              nodes={nodes}
+              edges={edges}
+              numbering={numbering}
+              sml={sml}
+            />)*/}
         </Masonry>
       </PageSection>
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
+
+      <Modal variant="large" isOpen={!!modalContent} onClose={closeModal}>
+        <ModalHeader
+          title={modalContent?.header}
+          titleIconVariant={
+            modalIsDone === -1
+              ? RunningIcon
+              : modalIsDone === 0
+                ? "success"
+                : "danger"
+          }
+        />
+        <ModalBody tabIndex={0}>
+          <Suspense fallback={<div />}>
+            <RunTerminal
+              cmd={modalContent?.cmd ?? ""}
+              args={modalContent?.args}
+              onExit={onExit}
+            />
+          </Suspense>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            key="Close"
+            variant={modalIsDone > 0 ? "danger" : "primary"}
+            onClick={closeModal}
+            isDisabled={modalIsDone === -1}
+          >
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   )
 }

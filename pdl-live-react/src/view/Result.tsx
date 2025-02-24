@@ -9,7 +9,7 @@ import {
 import Code from "./code/Code"
 import Value from "./Value"
 
-import { type SupportedLanguage } from "./code/Preview"
+import { type SupportedLanguage } from "./code/Code"
 
 type Props = {
   result: number | string | unknown
@@ -24,10 +24,10 @@ export default function Result({
   term = "Result",
   limitHeight = false,
 }: Props) {
-  const isCode = lang && result
+  const isCode = !!lang && lang !== "plaintext" && !!result
 
   const innerContent = isCode ? (
-    <Code block={result} language={lang} remount />
+    <Code block={result} language={lang} />
   ) : (
     <Value>{result}</Value>
   )

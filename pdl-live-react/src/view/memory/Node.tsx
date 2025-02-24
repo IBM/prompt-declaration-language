@@ -16,33 +16,19 @@ const CustomNode: FunctionComponent<CustomNodeProps> = (
   const { ordinal } = props.element.getData()
   const label = props.element.getLabel()
   const badge = ordinal
-  const badgeColor = /Read/.test(label)
-    ? "var(--pf-t--global--color--nonstatus--orange--default)"
+  const labelClassSuffix = /Read/.test(label)
+    ? "read"
     : /Code/.test(label)
-      ? "var(--pf-t--global--color--nonstatus--purple--default)"
+      ? "code"
       : /LLM/.test(label)
-        ? "var(--pf-t--global--color--nonstatus--teal--default)"
-        : "var(--pf-t--color--white)"
-  /*const content =
-    data && "content" in data && typeof data.content === "string"
-      ? data.content
-      : null*/
-
-  /*      badge={(ordinal !== undefined ? `[${ordinal}] ` : "") + variant}
-      badgeColor={
-        variant === "Final Result"
-          ? "var(--pf-t--global--icon--color--status--success--default)"
-          : "var(--pf-t--global--color--brand--default)"
-      }
-      badgeTextColor="var(--pf-t--global--background--color--primary--default)"
-      badgeBorderColor="transparent"
-*/
+        ? "model"
+        : "other"
 
   return (
     <DefaultNode
+      badgeClassName={"pdl-topology-node-badge pdl-fill-" + labelClassSuffix}
       {...props}
       badge={badge}
-      badgeColor={badgeColor}
       badgeTextColor="var(--pf-t--color--black)"
       badgeLocation={BadgeLocation.below}
     >

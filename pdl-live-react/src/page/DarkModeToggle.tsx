@@ -1,8 +1,8 @@
-import { useCallback, useContext } from "react"
-
+import { useCallback, useState } from "react"
 import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core"
 
-import DarkModeContext, {
+import {
+  getDarkModeUserSetting,
   setDarkModeForSession,
   setDarkModeUserSetting,
 } from "./DarkModeContext"
@@ -10,11 +10,9 @@ import DarkModeContext, {
 import SunIcon from "@patternfly/react-icons/dist/esm/icons/sun-icon"
 import MoonIcon from "@patternfly/react-icons/dist/esm/icons/moon-icon"
 
-export type DarkModeProps = { setDarkMode: (value: boolean) => void }
-
 /** Replicating the dark mode toggler from the masthead of https://patternfly.org */
-export default function DarkModeToggle({ setDarkMode }: DarkModeProps) {
-  const darkMode = useContext(DarkModeContext)
+export default function DarkModeToggle() {
+  const [darkMode, setDarkMode] = useState(getDarkModeUserSetting())
 
   const handleClickSun = useCallback(() => {
     setDarkMode(false)
@@ -28,7 +26,7 @@ export default function DarkModeToggle({ setDarkMode }: DarkModeProps) {
   }, [setDarkMode])
 
   return (
-    <ToggleGroup aria-label="light-dark mode toggle">
+    <ToggleGroup aria-label="light-dark mode toggle" isCompact>
       <ToggleGroupItem
         icon={<SunIcon />}
         aria-label="light mode"

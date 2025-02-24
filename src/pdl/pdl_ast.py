@@ -2,7 +2,17 @@
 """
 
 from enum import StrEnum
-from typing import Any, Literal, Mapping, Optional, Sequence, TypeAlias, Union
+from typing import (
+    Any,
+    Generic,
+    Literal,
+    Mapping,
+    Optional,
+    Sequence,
+    TypeAlias,
+    TypeVar,
+    Union,
+)
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 from pydantic.json_schema import SkipJsonSchema
@@ -35,11 +45,9 @@ class BlockKind(StrEnum):
     IF = "if"
     MATCH = "match"
     REPEAT = "repeat"
-    REPEAT_UNTIL = "repeat_until"
     READ = "read"
     INCLUDE = "include"
     EMPTY = "empty"
-    FOR = "for"
     ERROR = "error"
 
 
@@ -53,26 +61,24 @@ class LocationType(BaseModel):
 empty_block_location = LocationType(file="", path=[], table={})
 
 
-class LocalizedExpression(BaseModel):
+LocalizedExpressionT = TypeVar("LocalizedExpressionT")
+
+
+class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
     """Expression with location information"""
 
     model_config = ConfigDict(
-        extra="forbid", use_attribute_docstrings=True, arbitrary_types_allowed=True
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+        model_title_generator=(lambda _: "LocalizedExpression"),
     )
-    expr: Any
+    expr: LocalizedExpressionT
     location: Optional[LocationType] = None
 
 
-ExpressionType: TypeAlias = Any | LocalizedExpression
-# (
-#     str
-#     | int
-#     | float
-#     | bool
-#     | None
-#     | list["ExpressionType"]
-#     | dict[str, "ExpressionType"]
-# )
+ExpressionTypeT = TypeVar("ExpressionTypeT")
+ExpressionType: TypeAlias = ExpressionTypeT | str | LocalizedExpression[ExpressionTypeT]
 
 
 class Pattern(BaseModel):
@@ -141,6 +147,22 @@ class ContributeValue(BaseModel):
     value: list[Any]
 
 
+class Timing(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    start_nanos: Optional[int] = 0
+    """Time at which block execution began
+    """
+    end_nanos: Optional[int] = 0
+    """Time at which block execution ended
+    """
+    first_use_nanos: Optional[int] = 0
+    """Time at which the value of the block was needed for the first time
+    """
+    timezone: Optional[str] = ""
+    """Timezone of start_nanos and end_nanos
+    """
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -176,15 +198,6 @@ class Block(BaseModel):
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     """
-    start_nanos: Optional[int] = 0
-    """Time at which block execution began
-    """
-    end_nanos: Optional[int] = 0
-    """Time at which block execution ended
-    """
-    timezone: Optional[str] = ""
-    """Timezone of start_nanos and end_nanos
-    """
     context: Optional[ModelInput] = []
     """Current context
     """
@@ -194,6 +207,7 @@ class Block(BaseModel):
     # Fields for internal use
     result: Optional[Any] = None
     location: Optional[LocationType] = None
+    pdl__timing: Optional[Timing] = None
 
 
 class FunctionBlock(Block):
@@ -318,7 +332,7 @@ class ModelPlatform(StrEnum):
 
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: str | ExpressionType
+    model: ExpressionType[str]
     input: Optional["BlockType"] = None
     trace: Optional["BlockType"] = None
     modelResponse: Optional[str] = None
@@ -328,7 +342,7 @@ class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
-    parameters: Optional[LitellmParameters | ExpressionType] = None
+    parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
 
 
 class CodeBlock(Block):
@@ -355,7 +369,7 @@ class DataBlock(Block):
     """Arbitrary JSON value."""
 
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
-    data: ExpressionType
+    data: ExpressionType[Any]
     """Value defined."""
     raw: bool = False
     """Do not evaluate expressions inside strings."""
@@ -405,7 +419,7 @@ class IfBlock(Block):
     """Conditional control structure."""
 
     kind: Literal[BlockKind.IF] = BlockKind.IF
-    condition: ExpressionType = Field(alias="if")
+    condition: ExpressionType[bool] = Field(alias="if")
     """Condition.
     """
     then: "BlockType"
@@ -425,7 +439,7 @@ class MatchCase(BaseModel):
     case: Optional[PatternType] = None
     """Value to match.
     """
-    if_: Optional[ExpressionType] = Field(default=None, alias="if")
+    if_: Optional[ExpressionType[bool]] = Field(default=None, alias="if")
     """Boolean condition to satisfy.
     """
     then: "BlockType"
@@ -437,7 +451,7 @@ class MatchBlock(Block):
     """Match control structure."""
 
     kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
-    match_: ExpressionType = Field(alias="match")
+    match_: ExpressionType[Any] = Field(alias="match")
     """Matched expression.
     """
     with_: list[MatchCase] = Field(alias="with")
@@ -482,34 +496,23 @@ class JoinLastOf(JoinConfig):
 JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
 
 
-class ForBlock(Block):
-    """Iteration over arrays."""
+class RepeatBlock(Block):
+    """Repeat the execution of a block."""
 
-    kind: Literal[BlockKind.FOR] = BlockKind.FOR
-    fors: dict[str, ExpressionType] = Field(alias="for")
+    kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
+    fors: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
+    while_: ExpressionType[bool] = Field(default=True, alias="while")
+    """Condition to stay at the beginning of the loop.
+    """
     repeat: "BlockType"
     """Body of the loop.
     """
-    join: JoinType = JoinText()
-    """Define how to combine the result of each iteration.
-    """
-    # Field for internal use
-    trace: Optional[list["BlockType"]] = None
-
-
-class RepeatUntilBlock(Block):
-    """Repeat the execution of a block until a condition is satisfied."""
-
-    kind: Literal[BlockKind.REPEAT_UNTIL] = BlockKind.REPEAT_UNTIL
-    repeat: "BlockType"
-    """Body of the loop.
-    """
-    until: ExpressionType = False
+    until: ExpressionType[bool] = False
     """Condition to exit at the end of the loop.
     """
-    max_iterations: Optional[ExpressionType] = None
+    max_iterations: Optional[ExpressionType[int]] = None
     """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()
@@ -523,7 +526,7 @@ class ReadBlock(Block):
     """Read from a file or standard input."""
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: ExpressionType | None
+    read: ExpressionType[str] | None
     """Name of the file to read. If `None`, read the standard input.
     """
     message: Optional[str] = None
@@ -566,8 +569,7 @@ AdvancedBlockType: TypeAlias = (
     | DataBlock
     | IfBlock
     | MatchBlock
-    | RepeatUntilBlock
-    | ForBlock
+    | RepeatBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock

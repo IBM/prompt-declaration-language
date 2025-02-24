@@ -1,69 +1,69 @@
+import { stringify } from "yaml"
 import { computeModel as computeBaseModel } from "../timeline/model"
 
 import {
   hasMessage,
   hasParser,
+  hasResult,
   hasScalarResult,
   hasTimingInformation,
-  isNonScalarPdlBlock,
-  isTextBlock,
   type NonScalarPdlBlock,
 } from "../../helpers"
 
 import type Tile from "./Tile"
 
+/** The final result of the block */
+function result(block: import("../../pdl_ast").PdlBlock) {
+  if (hasResult(block) && hasTimingInformation(block)) {
+    return [
+      {
+        id: block.id + ".Output of Program",
+        depth: 0,
+        parent: null,
+        block,
+        children: [],
+      },
+    ]
+  }
+
+  return []
+}
+
+/** Remove objects from the Masonry model that aren't helpful to display */
+function removeFluff({ kind }: { kind?: string }) {
+  // re: empty, these house only defs, which are spliced in below via
+  // `withDefs()`
+  return kind !== "if" && kind !== "empty"
+}
+
 export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
   const base = computeBaseModel(block)
+
   const masonry: Tile[] = base
-    .filter(({ block }) => block.kind !== "if")
+    .concat(result(block))
     .flatMap(({ id, block, children }) => {
-      if (isTextBlock(block)) {
-        if (!Array.isArray(block.text)) {
-          if (isNonScalarPdlBlock(block.text)) {
-            const content = String(block.text).trim()
-            if (content.length > 0) {
-              return [{ id, content }]
-            }
-          }
-        } else {
-          return withDefs(
-            block,
-            block.text.flatMap((child, idx) => {
-              if (
-                !isNonScalarPdlBlock(child) &&
-                (typeof child !== "string" || child.trim().length > 0)
-              ) {
-                return [
-                  {
-                    id: `${id}.${idx}`,
-                    content: String(child).trim(),
-                  },
-                ]
-              }
-              return []
-            }),
-          )
-        }
-      } else if (
-        children.length === 0 &&
-        hasScalarResult(block) &&
-        hasTimingInformation(block)
-      ) {
+      if (children.length === 0 && hasTimingInformation(block)) {
         return withDefs(block, [
           {
             id,
             def: block.def,
             kind: block.kind,
             message: hasMessage(block) ? block.message : undefined,
-            content: String(block.result),
-            start_nanos: block.start_nanos,
-            end_nanos: block.end_nanos,
-            timezone: block.timezone,
-            lang: hasParser(block)
-              ? block.parser === "jsonl"
-                ? "json"
-                : block.parser
-              : undefined,
+            content:
+              typeof block.result === "object"
+                ? stringify(block.result)
+                : String(block.result),
+            start_nanos: block.pdl__timing.start_nanos,
+            end_nanos: block.pdl__timing.end_nanos,
+            timezone: block.pdl__timing.timezone,
+            lang:
+              typeof block.result === "object"
+                ? "yaml"
+                : hasParser(block)
+                  ? block.parser === "jsonl"
+                    ? "json"
+                    : block.parser
+                  : undefined,
             crumb: true,
           },
         ])
@@ -71,6 +71,7 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
 
       return []
     })
+    .filter(removeFluff)
     .sort((a, b) => a.id.localeCompare(b.id))
 
   const numbering = masonry.reduce(
@@ -93,7 +94,8 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
             ? []
             : {
                 crumb: true,
-                id: block.id ?? "",
+                id: (block.id ?? "").replace(/\.?empty/g, ""),
+                kind: "",
                 def,
                 lang: hasParser(v)
                   ? v.parser === "jsonl"

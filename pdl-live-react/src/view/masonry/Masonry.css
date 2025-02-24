@@ -1,60 +1,100 @@
 .pdl-masonry-view {
-  &,
-  & > div {
-    gap: 0.375em !important;
+  &[data-padding="s"] {
+    columns: 200px;
+    column-gap: 0.5em;
+  }
+  &[data-padding="m"] {
+    columns: 350px;
+  }
+  &[data-padding="l"] {
+    columns: 500px;
+  }
+  &[data-padding="xl"] {
+    columns: 100%;
   }
 }
 
 .pdl-masonry-tile {
-  flex: 1;
-  border-radius: 0;
-  min-height: 13em;
+  margin-bottom: 1em;
+  break-inside: avoid;
 
-  &:before {
+  &[data-variant="default"]:before {
     border: none;
   }
 
-  &[data-padding="l"] > div {
-    margin: 2em;
-  }
-  &[data-padding="m"] > div {
-    margin: 1.5em;
-  }
-  &[data-padding="s"] > div {
-    margin: 1em;
+  &[data-padding="s"] {
+    margin-bottom: 0.5em;
   }
 }
 
 .pf-v6-theme-dark {
   .pdl-masonry-tile {
     &[data-kind="model"] {
-      background: #63bdbd;
+      background: #0066cc;
     }
     &[data-kind="read"] {
-      background: #f5921b;
+      background: #63993d30;
     }
     &[data-kind="code"] {
-      background: #876fd4;
+      background: #ca6c0f30;
     }
   }
 }
 
 .pdl-masonry-tile {
-  background: var(--pf-t--global--background--color--secondary--default);
+  &[data-variant="default"] {
+    background: var(--pf-t--global--background--color--secondary--default);
+  }
   &[data-kind="model"] {
-    background: #daf2f2;
+    background: #e0f0ff;
   }
   &[data-kind="read"] {
-    background: #ffe8cc;
+    background: #e9f7df;
   }
   &[data-kind="code"] {
-    background: #ece6ff;
+    background: #ffe8cc;
   }
 }
 
 .pdl-masonry-index {
+  /** These 5 rules give us a circle with text in the center */
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  text-align: center;
   border-radius: 50%;
+  font-size: 0.75em;
+
   background-color: var(--pf-t--global--background--color--inverse--default);
   color: var(--pf-t--global--text--color--inverse);
-  padding: 0.5em;
+}
+
+.pdl-masonry-tile:not([data-is-non-card]) {
+  h1 {
+    font-size: 1.25em;
+  }
+  &[data-padding="s"] {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    div,
+    span {
+      font-size: 0.6rem !important;
+    }
+  }
+  &[data-padding="m"] {
+    font-size: 0.875rem !important;
+  }
+}
+
+.pf-v6-theme-dark {
+  .pdl-masonry-tile-panel {
+    background: rgba(41, 41, 41, 0.5);
+  }
+}
+.pdl-masonry-tile-panel {
+  background: rgba(255, 255, 255, 0.95);
 }

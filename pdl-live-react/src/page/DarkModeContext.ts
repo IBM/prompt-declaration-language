@@ -1,5 +1,3 @@
-import { createContext } from "react"
-
 const darkModeLocalStorageKey = "pdl-viewer.dark-mode"
 
 export function getDarkModeUserSetting(): boolean {
@@ -17,5 +15,3 @@ export function setDarkModeForSession(darkMode: boolean) {
     document.querySelector("html")?.classList.remove("pf-v6-theme-dark")
   }
 }
-
-export default createContext(getDarkModeUserSetting())

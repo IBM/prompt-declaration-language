@@ -1,34 +1,63 @@
-import { useCallback, useState } from "react"
-import { useLocation, useNavigate } from "react-router"
-
 import { invoke } from "@tauri-apps/api/core"
-
 import { Button, Tooltip } from "@patternfly/react-core"
+import { useCallback, useState } from "react"
+
+import { isNonScalarPdlBlock } from "../../helpers"
 
 type Props = {
   block: import("../../pdl_ast").PdlBlock
   setValue(value: string): void
+  setModalContent: import("react").Dispatch<
+    import("react").SetStateAction<{
+      header: string
+      cmd: string
+      args?: string[]
+      onExit?: (exitCode: number) => void
+    } | null>
+  >
 }
 
-export default function ToolbarReplayButton({ block, setValue }: Props) {
-  const { hash } = useLocation()
-  const navigate = useNavigate()
+export default function ToolbarReplayButton({
+  block,
+  setValue,
+  setModalContent,
+}: Props) {
   const [isReplaying, setIsReplaying] = useState(false)
 
-  const handleClickSource = useCallback(async () => {
-    setIsReplaying(true)
-    try {
-      const newTrace = (await invoke("replay", {
+  const handleClickReplay = useCallback(async () => {
+    if (isNonScalarPdlBlock(block)) {
+      setIsReplaying(true)
+
+      const [cmd, input, output] = (await invoke("replay_prep", {
         trace: JSON.stringify(block),
-      })) as string
-      console.log("new trace", newTrace)
-      setValue(newTrace)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setIsReplaying(false)
+        name: block.description?.slice(0, 20).replace(/\s/g, "-") ?? "trace",
+      })) as [string, string, string]
+      console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
+
+      setModalContent({
+        header: "Running Program",
+        cmd,
+        args: ["run", "--trace", output, input],
+        onExit: async () => {
+          setIsReplaying(false)
+          try {
+            const buf = await invoke<ArrayBuffer>("read_trace", {
+              traceFile: output,
+            }).catch(console.error)
+            if (buf) {
+              const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
+              const newTrace = decoder.decode(new Uint8Array(buf))
+              if (newTrace) {
+                setValue(newTrace)
+              }
+            }
+          } catch (err) {
+            console.error(err)
+          }
+        },
+      })
     }
-  }, [hash, navigate, setIsReplaying])
+  }, [block, setIsReplaying, setModalContent, setValue])
 
   return (
     <Tooltip content="Re-run this program">
@@ -36,7 +65,8 @@ export default function ToolbarReplayButton({ block, setValue }: Props) {
         spinnerAriaLabel="Replaying program"
         spinnerAriaValueText="Replaying"
         isLoading={isReplaying}
-        onClick={handleClickSource}
+        isDisabled={!block}
+        onClick={handleClickReplay}
       >
         Run
       </Button>

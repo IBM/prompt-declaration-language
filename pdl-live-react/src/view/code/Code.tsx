@@ -1,40 +1,52 @@
+import { lazy, Suspense } from "react"
+
 import { stringify } from "yaml"
 import { match, P } from "ts-pattern"
 
 import { type PdlBlock } from "../../pdl_ast"
 import { map_block_children } from "../../pdl_ast_utils"
 
-import Preview, { type SupportedLanguage } from "./Preview"
+const PreviewLight = lazy(() => import("./PreviewLight"))
+
+export type SupportedLanguage =
+  | "yaml"
+  | "json"
+  | "javascript"
+  | "python"
+  | "plaintext"
 
 type Props = {
   block: PdlBlock
   language?: SupportedLanguage
   showLineNumbers?: boolean
+  wrap?: boolean
   limitHeight?: boolean
   raw?: boolean
-  remount?: boolean
 }
 
 export default function Code({
   block,
   language = "yaml",
-  showLineNumbers = false,
-  limitHeight = true,
+  showLineNumbers,
+  wrap,
   raw = false,
-  remount = false,
 }: Props) {
+  const value =
+    typeof block === "string"
+      ? language === "json"
+        ? JSON.stringify(JSON.parse(block), undefined, 2)
+        : block
+      : stringify(raw ? block : block_code_cleanup(block))
+
   return (
-    <Preview
-      limitHeight={limitHeight}
-      showLineNumbers={showLineNumbers ?? false}
-      language={language || "yaml"}
-      remount={remount}
-      value={
-        typeof block === "string"
-          ? block
-          : stringify(raw ? block : block_code_cleanup(block))
-      }
-    />
+    <Suspense fallback={<div />}>
+      <PreviewLight
+        value={value}
+        language={language || "yaml"}
+        wrap={wrap}
+        showLineNumbers={showLineNumbers}
+      />
+    </Suspense>
   )
 }
 
@@ -55,10 +67,7 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   })
   // remove other trace artifacts
   delete new_data.id
-  delete new_data.start_nanos
-  delete new_data.end_nanos
-  delete new_data.timezone
-  delete new_data.context
+  delete new_data.pdl__timing
   // remove contribute: ["result", context]
   if (
     new_data?.contribute?.includes("result") &&

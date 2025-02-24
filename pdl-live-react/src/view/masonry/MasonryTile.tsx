@@ -1,21 +1,20 @@
 import { useMemo } from "react"
 
 import {
-  Card,
   CardHeader,
   CardTitle,
-  CardBody,
   Flex,
-  Stack,
+  Panel,
+  PanelMain,
 } from "@patternfly/react-core"
 
 import Result from "../Result"
 import Duration from "./Duration"
+import MasonryTileWrapper from "./MasonryTileWrapper"
 import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
 
 type Props = import("./Tile").default & {
   idx: number
-  as: import("./Toolbar").As
   sml: import("./Toolbar").SML
 }
 
@@ -24,7 +23,6 @@ const nowrap = { default: "nowrap" as const }
 const center = { default: "alignItemsCenter" as const }
 
 export default function MasonryTile({
-  as,
   sml,
   id,
   def,
@@ -40,11 +38,11 @@ export default function MasonryTile({
 }: Props) {
   const actions = useMemo(
     () =>
-      start_nanos && end_nanos && timezone
+      sml !== "s" && start_nanos && end_nanos && timezone
         ? {
             actions: (
               <Duration
-                as={as}
+                sml={sml}
                 start_nanos={start_nanos}
                 end_nanos={end_nanos}
                 timezone={timezone}
@@ -52,45 +50,53 @@ export default function MasonryTile({
             ),
           }
         : undefined,
-    [start_nanos, end_nanos, timezone, as],
+    [start_nanos, end_nanos, timezone, sml],
+  )
+
+  const maxHeight =
+    sml === "s"
+      ? "20em"
+      : sml === "m"
+        ? "30em"
+        : sml === "l"
+          ? "40em"
+          : undefined
+
+  const header = (
+    <CardHeader actions={actions}>
+      <CardTitle>
+        <Flex
+          gap={gapSm}
+          alignItems={center}
+          flexWrap={nowrap}
+          className="pdl-masonry-tile-header"
+        >
+          <div className="pdl-masonry-index">{idx}</div>
+          {crumb && (
+            <BreadcrumbBarForBlockId
+              id={id}
+              def={def}
+              value={content}
+              isCompact
+              maxCrumbs={sml === "xl" ? 4 : sml === "l" ? 3 : 2}
+            />
+          )}
+        </Flex>
+      </CardTitle>
+    </CardHeader>
   )
 
   return (
-    <Card
-      isPlain
-      isLarge={sml === "l"}
-      isCompact={sml === "s"}
-      key={id}
-      data-kind={kind}
-      className="pdl-masonry-tile"
-    >
-      <CardHeader actions={actions}>
-        <CardTitle>
-          <Flex
-            gap={gapSm}
-            alignItems={center}
-            flexWrap={nowrap}
-            className="pdl-masonry-tile-header"
-          >
-            <div className="pdl-masonry-index">{idx}</div>
-            {crumb && (
-              <BreadcrumbBarForBlockId
-                id={id}
-                def={def}
-                value={content}
-                maxCrumbs={3}
-              />
-            )}
-          </Flex>
-        </CardTitle>
-      </CardHeader>
-
-      <CardBody className="pdl-masonry-tile-body">
-        <Stack>
-          {message && <i>{message}</i>}
-          <Result term="" result={content} lang={lang} />
-        </Stack>
-      </CardBody>
-    </Card>
+    <MasonryTileWrapper sml={sml} kind={kind} header={header}>
+      <Panel isScrollable={sml !== "xl"} className="pdl-masonry-tile-panel">
+        <PanelMain maxHeight={maxHeight}>
+          <Result
+            term=""
+            result={message ? `*${message.trim()}*\n\n${content}` : content}
+            lang={lang}
+          />
+        </PanelMain>
+      </Panel>
+    </MasonryTileWrapper>
   )
 }

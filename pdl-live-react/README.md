@@ -50,7 +50,17 @@ npm run build
 
 To build production double-clickable applications:
 ```shell
-npm run build:app
+npm run prod:mac
 ```
 
+If you run with the
 The built applications will be found under `src-tauri/target/release/bundle`.
+
+#### Signing and Notarization on MacOS
+
+If you run `npm run prod:mac` with the following environment variables, you will get a signed and notarized application bundle:
+- APPLE_ID=<your apple developer account email address>
+- APPLE_PASSWORD=<your app-specific password>
+- APPLE_TEAM_ID=<your apple team id>
+- APPLE_SIGNING_<also your apple team id>
+
