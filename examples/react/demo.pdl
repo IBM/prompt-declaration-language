@@ -63,12 +63,12 @@ text:
 - repeat:
     text:
     - def: thought
-      model: ollama/granite-code:8b
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "Action:"
     - "Action:\n"
     - def: action
-      model: ollama/granite-code:8b
+      model: replicate/ibm-granite/granite-3.1-8b-instruct
       parameters:
         stop_sequences: "\n"
       parser: json
