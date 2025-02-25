@@ -86,7 +86,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
       return []
     })
     .filter(removeFluff)
-    .sort((a, b) => (!/\./.test(a.id) ? 1 : a.id.localeCompare(b.id)))
+    .sort((a, b) =>
+      !/\./.test(a.id) ? 1 : !/\./.test(b.id) ? -1 : a.id.localeCompare(b.id),
+    )
   // ^^^ re: the regexp test, we want to place the "final output"
   // (i.e. blocks without a "." in their id) at the end
 
