@@ -46,20 +46,6 @@ jobs:
         run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
         env:
           CI: true
-      # Viewer
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies
-        working-directory: ./pdl-live-react
-        run: npm ci
-      - name: Build viewer
-        working-directory: ./pdl-live-react
-        run: npm run build
-      - name: Copy viewer
-        working-directory: ./pdl-live-react
-        run: cp -a ./dist ../viewer
       # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
