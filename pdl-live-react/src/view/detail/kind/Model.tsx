@@ -2,6 +2,7 @@ import { stringify } from "yaml"
 
 import Group from "../Group"
 import Result from "../../Result"
+import { capitalizeAndUnSnakeCase } from "../../../helpers"
 
 function tryJson(s: unknown) {
   if (typeof s === "string") {
@@ -19,6 +20,8 @@ export default function ModelItems({
 }: {
   block: import("../../../pdl_ast").LitellmModelBlock
 }) {
+  // All of this JSON stuff is to handle structured responses from the
+  // model
   const json = tryJson(result)
   const resultForDisplay = Array.isArray(json)
     ? json.map(({ sentence }) => sentence).join("\n")
@@ -37,7 +40,7 @@ export default function ModelItems({
         Object.entries(meta).map(([k, v]) => (
           <Result
             key={k + "." + idx}
-            term={k}
+            term={capitalizeAndUnSnakeCase(k)}
             result={typeof v === "object" ? stringify(v) : v}
             lang={typeof v === "object" ? "yaml" : undefined}
           />
