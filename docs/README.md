@@ -111,7 +111,7 @@ This can also be done by passing a JSON or YAML file:
 pdl --data-file <JSON-or-YAML-file> <my-example>
 ```
 
-The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live_document)):
+The interpreter can also output a trace file that is used by the Live Document visualization tool (see [Live Document](#live-document-visualizer)):
 
 ```
 pdl --trace <file.json> <my-example>
