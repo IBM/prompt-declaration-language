@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
-import checker from "vite-plugin-checker"
+import checker from "vite-plugin-checker";
 import react from "@vitejs/plugin-react";
+import { createHtmlPlugin } from "vite-plugin-html";
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -12,6 +13,13 @@ export default defineConfig(async () => ({
     checker({
       // e.g. use TypeScript check
       typescript: true,
+    }),
+    createHtmlPlugin({
+      inject: {
+        data: {
+          htmlClassName: process.env.TAURI_ENV_FAMILY ? "tauri" : "web"
+        }
+      }
     }),
   ],
 

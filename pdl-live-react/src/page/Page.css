@@ -1,3 +1,7 @@
+html.web {
+  font-size: 20px;
+}
+
 .pdl-wrap {
   &,
   & p {
