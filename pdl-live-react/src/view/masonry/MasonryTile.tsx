@@ -3,6 +3,10 @@ import { useMemo } from "react"
 import {
   CardHeader,
   CardTitle,
+  DescriptionList,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  DescriptionListDescription,
   Flex,
   Panel,
   PanelMain,
@@ -32,9 +36,10 @@ export default function MasonryTile({
   message,
   content,
   lang,
-  crumb,
   kind,
   idx,
+  footer1Key,
+  footer1Value,
 }: Props) {
   const actions = useMemo(
     () =>
@@ -72,18 +77,25 @@ export default function MasonryTile({
           className="pdl-masonry-tile-header"
         >
           <div className="pdl-masonry-index">{idx}</div>
-          {crumb && (
-            <BreadcrumbBarForBlockId
-              id={id}
-              def={def}
-              value={content}
-              isCompact
-              maxCrumbs={sml === "xl" ? 4 : sml === "l" ? 3 : 2}
-            />
-          )}
+          <BreadcrumbBarForBlockId
+            id={id}
+            def={def}
+            value={content}
+            isCompact
+            maxCrumbs={sml === "xl" ? 4 : sml === "l" ? 3 : 2}
+          />
         </Flex>
       </CardTitle>
     </CardHeader>
+  )
+
+  const footer = footer1Key && footer1Value && (
+    <DescriptionList isCompact isHorizontal isFluid>
+      <DescriptionListGroup>
+        <DescriptionListTerm>{footer1Key}</DescriptionListTerm>
+        <DescriptionListDescription>{footer1Value}</DescriptionListDescription>
+      </DescriptionListGroup>
+    </DescriptionList>
   )
 
   return (
@@ -91,6 +103,7 @@ export default function MasonryTile({
       sml={sml}
       kind={/^[^.]+$/.test(id) ? "output-of-program" : kind}
       header={header}
+      footer={footer}
     >
       <Panel isScrollable={sml !== "xl"} className="pdl-masonry-tile-panel">
         <PanelMain maxHeight={maxHeight}>
