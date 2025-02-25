@@ -35,16 +35,30 @@ export default function ModelItems({
         ? "yaml"
         : "plaintext"
 
+  // Ugh, some of this logic may be specific to Granite LLM
   const meta = Array.isArray(json)
     ? json.flatMap(({ meta }, idx) =>
-        Object.entries(meta).map(([k, v]) => (
-          <Result
-            key={k + "." + idx}
-            term={capitalizeAndUnSnakeCase(k)}
-            result={typeof v === "object" ? stringify(v) : v}
-            lang={typeof v === "object" ? "yaml" : undefined}
-          />
-        )),
+        Object.entries(meta)
+          .map(([k, v]) => {
+            if (
+              k === "citation" &&
+              v &&
+              typeof v === "object" &&
+              "snippet" in v
+            ) {
+              return [k, v.snippet]
+            } else {
+              return [k, v]
+            }
+          })
+          .map(([k, v]) => (
+            <Result
+              key={k + "." + idx}
+              term={capitalizeAndUnSnakeCase(String(k))}
+              result={typeof v === "object" ? stringify(v) : v}
+              lang={typeof v === "object" ? "yaml" : undefined}
+            />
+          )),
       )
     : undefined
 
