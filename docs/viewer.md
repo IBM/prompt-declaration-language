@@ -21,4 +21,4 @@ iframe {
 }
 </style>
 
-<iframe src="https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/" frameborder="0" height="100%"></iframe>
+<iframe src="https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/#?iframe" frameborder="0" height="100%"></iframe>
