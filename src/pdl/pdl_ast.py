@@ -329,11 +329,12 @@ class LitellmParameters(BaseModel):
 
 class ModelPlatform(StrEnum):
     LITELLM = "litellm"
+    GRANITEIO = "granite-io"
 
 
 class ModelBlock(Block):
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: ExpressionType[str]
+    model: ExpressionType
     input: Optional["BlockType"] = None
     trace: Optional["BlockType"] = None
     modelResponse: Optional[str] = None
@@ -342,8 +343,41 @@ class ModelBlock(Block):
 class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
+    model: ExpressionType[str]
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
+
+
+class GraniteioIntrinsic(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class GraniteioIntrinsicHallucinations(GraniteioIntrinsic):
+    hallucinations: bool = True
+
+
+class GraniteioIntrinsicCitations(GraniteioIntrinsic):
+    citations: bool = True
+
+
+class GraniteioIntrinsicDocuments(GraniteioIntrinsic):
+    documents: list
+
+
+GraniteioIntrinsicType: TypeAlias = (
+    Literal["hallucinations", "citations"]
+    | GraniteioIntrinsicHallucinations
+    | GraniteioIntrinsicCitations
+    | GraniteioIntrinsicDocuments
+)
+
+
+class GraniteioModelBlock(ModelBlock):
+    """Call a LLM through the granite-io API."""
+
+    model: ExpressionType[object]
+    platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
+    intrinsics: ExpressionType[list[GraniteioIntrinsicType]] = []
 
 
 class CodeBlock(Block):
@@ -576,6 +610,7 @@ AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | LitellmModelBlock
+    | GraniteioModelBlock
     | CodeBlock
     | GetBlock
     | DataBlock

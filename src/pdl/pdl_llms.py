@@ -11,6 +11,8 @@ from litellm import acompletion, completion
 
 from .pdl_ast import (
     ErrorBlock,
+    GraniteioIntrinsicType,
+    GraniteioModelBlock,
     LazyMessage,
     LitellmModelBlock,
     ModelInput,
@@ -130,6 +132,66 @@ class LitellmModel:
                 msg.role = "assistant"
             yield remove_none_values_from_message(msg.model_dump())
         return result
+
+
+class GraniteioModel:
+    @staticmethod
+    async def async_generate_text(
+        block: GraniteioModelBlock,
+        messages: ModelInput,
+    ) -> tuple[dict[str, Any], Any]:
+        try:
+            outputs = block.model.process(messages)  # type: ignore # TODO
+            return outputs.response, outputs
+        except Exception as exc:
+            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            loc = block.location
+            raise PDLRuntimeError(
+                message,
+                loc=loc,
+                trace=ErrorBlock(msg=message, location=loc, program=block),
+            ) from exc
+
+    @staticmethod
+    def generate_text(
+        block: GraniteioModelBlock,
+        messages: ModelInput,
+        intrinsics: list[GraniteioIntrinsicType],
+    ) -> tuple[LazyMessage, PdlLazy[Any]]:
+        future = asyncio.run_coroutine_threadsafe(
+            GraniteioModel.async_generate_text(
+                block,
+                messages,
+            ),
+            _LOOP,
+        )
+        pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
+        message = lazy_apply((lambda x: x[0]), pdl_future)
+        response = lazy_apply((lambda x: x[1]), pdl_future)
+        return message, response
+
+    # @staticmethod
+    # def generate_text_stream(
+    #     model_id: str,
+    #     messages: ModelInput,
+    #     spec: Any,
+    #     parameters: dict[str, Any],
+    # ) -> Generator[dict[str, Any], Any, Any]:
+    #     parameters = set_structured_decoding_parameters(spec, parameters)
+    #     response = completion(
+    #         model=model_id,
+    #         messages=list(messages),
+    #         stream=True,
+    #         **parameters,
+    #     )
+    #     result = []
+    #     for chunk in response:
+    #         result.append(chunk.json())  # pyright: ignore
+    #         msg = chunk.choices[0].delta  # pyright: ignore
+    #         if msg.role is None:
+    #             msg.role = "assistant"
+    #         yield remove_none_values_from_message(msg.model_dump())
+    #     return result
 
 
 MapInputT = TypeVar("MapInputT")

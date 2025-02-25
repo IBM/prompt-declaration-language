@@ -19,6 +19,7 @@ from .pdl_ast import (
     ErrorBlock,
     FunctionBlock,
     GetBlock,
+    GraniteioModelBlock,
     IfBlock,
     ImportBlock,
     IncludeBlock,
@@ -123,6 +124,20 @@ def block_to_dict(  # noqa: C901
                     )
                 else:
                     d["parameters"] = block.parameters
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
+        case GraniteioModelBlock():
+            d["platform"] = str(block.platform)
+            d["model"] = block.model
+            if block.input is not None:
+                d["input"] = block_to_dict(block.input, json_compatible)
+            if block.intrinsics is not None:
+                if isinstance(block.intrinsics, GraniteioModelBlock):
+                    d["intrinsics"] = block.intrinsics.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
+                else:
+                    d["intrinsics"] = block.intrinsics
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
         case CodeBlock():
