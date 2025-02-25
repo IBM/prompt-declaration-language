@@ -36,7 +36,7 @@ text:
 - "write a hello world example\n"
 - model: ollama/granite-code:8b
   parameters:
-    stop_sequences: '!'
+    stop: ['!']
     temperature: 0
 ```
 
