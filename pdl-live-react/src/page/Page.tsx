@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router"
 import { useEffect, useState } from "react"
 
 import Sidebar from "./Sidebar"
+import Masthead from "./Masthead"
 import MasonryCombo from "../view/masonry/MasonryCombo"
 import DrawerContent from "../view/detail/DrawerContent"
 import PageBreadcrumbs, { type PageBreadcrumbProps } from "./PageBreadcrumbs"
@@ -45,6 +46,7 @@ export default function PDLPage(props: Props) {
       }
       isContentFilled
       sidebar={<Sidebar />}
+      masthead={!window.__TAURI_INTERNALS__ && <Masthead />}
       breadcrumb={
         <PageBreadcrumbs
           breadcrumb1={props.breadcrumb1}
