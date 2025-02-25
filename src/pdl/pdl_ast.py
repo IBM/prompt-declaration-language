@@ -769,6 +769,12 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
                 "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
             }
         },
+        # models on Ollama (e.g. granite-code, granite3-dense, granite3.1-dense)
+        {
+            "ollama/granite*": {
+                "temperature": 0,
+            },
+        },
     ]
 
 
