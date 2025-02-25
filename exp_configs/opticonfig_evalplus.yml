@@ -1,0 +1,22 @@
+benchmark: evalplus
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 3
+max_test_set_size: 20
+num_candidates: 3
+num_demonstrations: 3
+parallelism: 5
+shuffle_test: true
+validation_set_name: validation
+test_set_name: test
+timeout: 60
+train_set_name: train
+variables:
+  model:
+  - watsonx/ibm/granite-34b-code-instruct
+  # - watsonx/meta-llama/llama-3-1-70b-instruct
+  # - watsonx/ibm/granite-20b-code-instruct
+  prompt_pattern:
+  # - cot
+  - react

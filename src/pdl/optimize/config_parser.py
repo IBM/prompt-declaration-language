@@ -11,6 +11,7 @@ class OptimizationConfig(BaseModel):
         "gsm8k",
         "gsm8k-baseline",
         "gsm8k-bench",
+        "gsmhard",
         "fever",
         "evalplus",
     ] = Field()
@@ -25,7 +26,7 @@ class OptimizationConfig(BaseModel):
     parallelism: int = Field(default=4)
     train_set_name: str = Field(default="train")
     test_set_name: str = Field(default="test")
-    validation_set_name: str = Field(default="test")
+    validation_set_name: str = Field(default="validation")
     demonstrations_variable_name: str = Field(default="demonstrations")
     variables: dict[str, list] = Field(default={})
     experiment_prefix: str = Field(default="")

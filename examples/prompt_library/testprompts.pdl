@@ -1,0 +1,39 @@
+defs:
+  model: watsonx/ibm/granite-3-8b-instruct
+  system_prompt: granite_tools
+  # llama3
+  # granite_llama
+  math_tools:
+    data:
+      - display_name: Calc
+        pdl_function: Calculator
+        description: Evaluates expressions using Python
+        parameters:
+          - name: expr
+            type: string
+            description: The mathematical expression to evaluate with a Python interpreter.
+        examples: []
+  question: "Jane is making a costume for her role in a play. She needs to buy 4 pairs of shoes that are $x per pair, 2 ties that are $15.00 each, and 1 jacket that is $30.00. If she spends $100.00 total, how much does the jacket cost?"
+
+text:
+- include: tools.pdl
+- include: ReAct.pdl
+- call: ${ react }
+  def: ANSWER
+  args:
+    task: "Question: ${ question|trim }"
+    model: "${ model }"
+    tools: "${ tools }"
+    trajectories: []
+- "\nThe answer is ${ ANSWER.answer|trim }"
+# - role: system
+#   content: "test"
+# - ${ granite_prompt_messages }
+# - ${ granite_function_llama_cross }
+# - ${ llama_tool_messages }
+# - role: system
+#   text: You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+#   contribute: [context]
+# - how are you?
+# - model: watsonx/ibm/granite-3-8b-instruct
+

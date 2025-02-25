@@ -1,0 +1,51 @@
+description: Demo of template
+text:
+  # CoT
+  - if: "${ prompt_pattern == 'cot' }"
+    then:
+      text:
+      - include: ../../CoT.pdl
+      - "Answer the questions to the best of your abilities.\n\n"
+      - call: ${ chain_of_thought }
+        args:
+          examples: "${ demonstrations }"
+          question: "${ question|trim }"
+          model: "${ model }"
+      - "\nThe final answer as a float in a valid JSON object: {\"answer\": "
+      - model: ${ model }
+        parameters:
+          temperature: 0
+          stop:
+            - "}"
+          include_stop_sequence: true
+
+  # ReAct
+  - if: "${ prompt_pattern == 'react' }"
+    then:
+      text:
+      - include: ../../tools.pdl
+      - include: ../../ReAct.pdl
+      - call: ${ react }
+        def: ANSWER
+        args:
+          task: "Question: ${ question|trim }"
+          model: "${ model }"
+          tools: ${ tools }
+          trajectories: ${ demonstrations }
+      - "\nThe answer is ${ ANSWER.answer|trim }"
+
+  # ReWOO
+  - if: "${ prompt_pattern == 'rewoo' }"
+    then:
+      text:
+      - include: ../../tools.pdl
+      - include: ../../ReWoo.pdl
+      - call: ${ rewoo }
+        def: ANSWER
+        args:
+          task: "Task: ${ question }"
+          model: "${ model }"
+          tools: ${ tools }
+          trajectories: ${ demonstrations }
+          show_plans: false
+      - "\nThe answer is ${ ANSWER.answer|trim }"

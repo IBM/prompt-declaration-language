@@ -34,300 +34,176 @@ defs:
           def similar_elements(test_tup1, test_tup2):
             res = tuple(set(test_tup1) & set(test_tup2))
             return res
-  model: watsonx/ibm/granite-20b-code-instruct
+  model: watsonx_text/ibm/granite-13b-instruct-v2
   prompt_pattern: react
   demonstrations:
     data:
     - - task: |-
-          The input is defined as two lists of the same length. Write a function to count indices where the lists have the same values.
-          assert count_same_pair([1, 2, 3, 4, 5, 6, 7, 8],[2, 2, 3, 1, 2, 6, 7, 9])==4
+          Write a python function to find even numbers from a mixed list.
+          assert Split([1,2,3,4,5]) == [2,4]
+      - thought: I should run a solution on the test case before proposing a solution.
+      - action: "def Split(list): \n    ev_li = [] \n    for i in list: \n        if (i % 2 == 0): \n            ev_li.append(i)  \n    return ev_li\nres = Split([1,2,3,4,5])\nassert res == [2,4], \"Expected [2,4] but got {}\".format(res)"
+      - observation: '[Executed Successfully with No Output]'
+      - thought: There is no AssertionError. I can now submit the solution.
+      - solution: "def Split(list): \n    ev_li = [] \n    for i in list: \n        if (i % 2 == 0): \n            ev_li.append(i)  \n    return ev_li"
+    - - task: |-
+          Write a function to count the frequency of consecutive duplicate elements in a given list of numbers.
+          assert count_duplic([1,2,2,2,4,4,4,5,5,5,5])==([1, 2, 4, 5], [1, 3, 3, 4])
       - thought: I should run a solution on the test case before proposing a solution.
       - action: |-
-          from operator import eq
-          def count_same_pair(nums1, nums2):
-              result = sum(map(eq, nums1, nums2))
-              return result
-          res = count_same_pair([1, 2, 3, 4, 5, 6, 7, 8],[2, 2, 3, 1, 2, 6, 7, 9])
-          assert res == 4, "Expected 4 but got {}".format(res)
+          def count_duplic(lists):
+              element = []
+              frequency = []
+              if not lists:
+                  return element
+              running_count = 1
+              for i in range(len(lists)-1):
+                  if lists[i] == lists[i+1]:
+                      running_count += 1
+                  else:
+                      frequency.append(running_count)
+                      element.append(lists[i])
+                      running_count = 1
+              frequency.append(running_count)
+              element.append(lists[i+1])
+              return element,frequency
+          res = count_duplic([1,2,2,2,4,4,4,5,5,5,5])
+          assert res == ([1, 2, 4, 5], [1, 3, 3, 4]), "Expected ([1, 2, 4, 5], [1, 3, 3, 4]) but got {}".format(res)
       - observation: '[Executed Successfully with No Output]'
       - thought: There is no AssertionError. I can now submit the solution.
       - solution: |-
-          from operator import eq
-          def count_same_pair(nums1, nums2):
-              result = sum(map(eq, nums1, nums2))
-              return result
+          def count_duplic(lists):
+              element = []
+              frequency = []
+              if not lists:
+                  return element
+              running_count = 1
+              for i in range(len(lists)-1):
+                  if lists[i] == lists[i+1]:
+                      running_count += 1
+                  else:
+                      frequency.append(running_count)
+                      element.append(lists[i])
+                      running_count = 1
+              frequency.append(running_count)
+              element.append(lists[i+1])
+              return element,frequency
     - - task: |-
-          Write a function that takes base and power as arguments and calculate the sum of all digits of the base to the specified power.
-          assert power_base_sum(2,100)==115
+          Write a function to increment the numeric values in the given strings by k.
+          assert increment_numerics(["MSM", "234", "is", "98", "123", "best", "4"] , 6) == ['MSM', '240', 'is', '104', '129', 'best', '10']
       - thought: I should run a solution on the test case before proposing a solution.
       - action: |-
-          def power_base_sum(base, power):
-              return sum([int(i) for i in str(pow(base, power))])
-          res = power_base_sum(2,100)
-          assert res == 115, "Expected 115 but got {}".format(res)
+          def increment_numerics(test_list, K):
+            res = [str(int(ele) + K) if ele.isdigit() else ele for ele in test_list]
+            return res
+          res = increment_numerics(["MSM", "234", "is", "98", "123", "best", "4"] , 6)
+          assert res == ['MSM', '240', 'is', '104', '129', 'best', '10'], "Expected ['MSM', '240', 'is', '104', '129', 'best', '10'] but got {}".format(res)
       - observation: '[Executed Successfully with No Output]'
       - thought: There is no AssertionError. I can now submit the solution.
       - solution: |-
-          def power_base_sum(base, power):
-              return sum([int(i) for i in str(pow(base, power))])
-    - - task: |-
-          Write a function to get all lucid numbers smaller than or equal to a given integer.
-          assert get_ludic(10) == [1, 2, 3, 5, 7]
-      - thought: I should run a solution on the test case before proposing a solution.
-      - action: "def get_ludic(n):\n\tludics = []\n\tfor i in range(1, n + 1):\n\t\tludics.append(i)\n\tindex = 1\n\twhile(index != len(ludics)):\n\t\tfirst_ludic = ludics[index]\n\t\tremove_index = index + first_ludic\n\t\twhile(remove_index < len(ludics)):\n\t\t\tludics.remove(ludics[remove_index])\n\t\t\tremove_index = remove_index + first_ludic - 1\n\t\tindex += 1\n\treturn ludics\nres = get_ludic(10)\nassert res == [1, 2, 3, 5, 7], \"Expected [1, 2, 3, 5, 7] but got {}\".format(res)"
-      - observation: '[Executed Successfully with No Output]'
-      - thought: There is no AssertionError. I can now submit the solution.
-      - solution: "def get_ludic(n):\n\tludics = []\n\tfor i in range(1, n + 1):\n\t\tludics.append(i)\n\tindex = 1\n\twhile(index != len(ludics)):\n\t\tfirst_ludic = ludics[index]\n\t\tremove_index = index + first_ludic\n\t\twhile(remove_index < len(ludics)):\n\t\t\tludics.remove(ludics[remove_index])\n\t\t\tremove_index = remove_index + first_ludic - 1\n\t\tindex += 1\n\treturn ludics"
-    - - task: |-
-          Write a python function to check whether a list of numbers contains only one distinct element or not.
-          assert unique_Element([1,1,1]) == True
-      - thought: I should run a solution on the test case before proposing a solution.
-      - action: |-
-          def unique_Element(arr,n):
-              s = set(arr)
-              if (len(s) == 1):
-                  return ('YES')
-              else:
-                  return ('NO')
-          res = unique_Element([1,1,1],3)
-          assert res == 'YES', "Expected 'YES' but got {}".format(res)
-      - observation: '[Executed Successfully with No Output]'
-      - thought: There is no AssertionError. I can now submit the solution.
-      - solution: |-
-          def unique_Element(arr,n):
-              s = set(arr)
-              if (len(s) == 1):
-                  return ('YES')
-              else:
-                  return ('NO')
-    - - task: |-
-          Write a function to find the nth jacobsthal number. https://www.geeksforgeeks.org/jacobsthal-and-jacobsthal-lucas-numbers/ 0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, ...
-          assert jacobsthal_num(5) == 11
-      - thought: I should run a solution on the test case before proposing a solution.
-      - action: "def jacobsthal_num(n): \n\tdp = [0] * (n + 1) \n\tdp[0] = 0\n\tdp[1] = 1\n\tfor i in range(2, n+1): \n\t\tdp[i] = dp[i - 1] + 2 * dp[i - 2] \n\treturn dp[n]\nres = jacobsthal_num(5)\nassert res == 11, \"Expected 11 but got {}\".format(res)"
-      - observation: '[Executed Successfully with No Output]'
-      - thought: There is no AssertionError. I can now submit the solution.
-      - solution: "def jacobsthal_num(n): \n\tdp = [0] * (n + 1) \n\tdp[0] = 0\n\tdp[1] = 1\n\tfor i in range(2, n+1): \n\t\tdp[i] = dp[i - 1] + 2 * dp[i - 2] \n\treturn dp[n]"
+          def increment_numerics(test_list, K):
+            res = [str(int(ele) + K) if ele.isdigit() else ele for ele in test_list]
+            return res
 text:
 - if: ${ prompt_pattern == 'cot' }
   then:
-  - for:
-      example: ${ demonstrations }
-    repeat:
-      text: |+
-        Task: ${ example.question }
-        Solution:
-        ${ example.answer }
+    text:
+    - for:
+        example: ${ demonstrations }
+      repeat:
+        text: |+
+          Task: ${ example.question }
+          Solution:
+          ${ example.answer }
 
-  - |
-    Task: ${ prompt }
-    Solution:
-  - model: ${ model }
-    parameters:
-      stop:
-      - <|endoftext|>
-      max_tokens: 512
-      include_stop_sequence: false
-      final_prompt_value: ''
-      roles:
-        system:
-          pre_message: ''
-          post_message: ''
-        user:
-          pre_message: ''
-          post_message: ''
-        assistant:
-          pre_message: ''
-          post_message: ''
+    - |
+      Task: ${ prompt }
+      Solution:
+    - model: ${ model }
+      parameters:
+        temperature: 0.0
+        stop:
+        - <|endoftext|>
+        max_tokens: 512
+        include_stop_sequence: false
 - if: ${ prompt_pattern == 'react' }
   then:
-  - include: ../../ReAct.pdl
-  - for:
-      traj: ${ demonstrations }
-    repeat:
-    - call: react_code_block
-      args:
-        trajectory: ${ traj }
-    - |2+
+    text:
+    - include: ../../ReAct.pdl
+    - for:
+        traj: ${ demonstrations }
+      repeat:
+        text:
+        - call: ${ react_code_block }
+          args:
+            trajectory: ${ traj }
+        - |2+
 
-  - for:
-      traj: ${ react_demos }
-    repeat:
-    - call: react_code_block
-      args:
-        trajectory: ${ traj }
-    - |2+
+    - for:
+        traj: ${ react_demos }
+      repeat:
+        text:
+        - call: ${ react_code_block }
+          args:
+            trajectory: ${ traj }
+    - |
+      Task:
+      ${ prompt|trim }
 
-  - |
-    Task:
-    ${ prompt|trim }
-
-    Assistant:
-    <thought>
-  - defs:
-      temperature: 0.7
-      decoding_method: sample
-      SOLUTION: ''
-      iterations: 0
-      max_iterations: 5
-  - repeat:
+      Assistant:
+      <thought>
+    - defs:
+        temperature: 0.7
+        SOLUTION: ''
+        iterations: 0
+        max_iterations: 5
     - repeat:
-      - defs:
-          iterations: ${ iterations+1 }
-      - def: THOUGHT
-        model: ${ model }
-        parameters:
-          temperature: ${ temperature }
-          stop:
-          - </execute>
-          - </solution>
-          - <|endoftext|>
-          max_tokens: 1024
-          truncate_input_tokens: 8191
-          repetition_penalty: 1.05
-          decoding_method: ${ decoding_method }
-          include_stop_sequence: true
-      - if: ${ THOUGHT is none }
-        then:
-        - def: THOUGHT
-          text: ''
-      until: ${ THOUGHT.endswith('</execute>') or THOUGHT.endswith('</solution>') or iterations>max_iterations }
-    - if: ${ THOUGHT.endswith('</execute>') }
-      then:
-      - |2
+        text:
+        - repeat:
+            text:
+            - defs:
+                iterations: ${ iterations+1 }
+            - def: THOUGHT
+              model: ${ model }
+              parameters:
+                temperature: ${ temperature }
+                stop:
+                - </execute>
+                - </solution>
+                - <|endoftext|>
+                max_tokens: 1024
+                include_stop_sequence: true
+            - if: ${ THOUGHT is none }
+              then:
+                def: THOUGHT
+                text: ''
+          until: ${ THOUGHT.endswith('</execute>') or THOUGHT.endswith('</solution>') or iterations>max_iterations }
+        - if: ${ THOUGHT.endswith('</execute>') }
+          then:
+            text:
+            - |2
 
 
-        Observation ${ iterations}:
-      - def: observation
-        contribute: []
-        lang: ipython
-        code: |
-          ${ THOUGHT.split('<execute>')[-1].strip('</execute>') or THOUGHT }
-      - ${ (observation|trim|trim('\n')) if observation is not none else '[Executed Successfully with No Output]' }
-      - |2-
+              Observation ${ iterations}:
+            - def: observation
+              contribute: []
+              lang: ipython
+              code: |
+                ${ THOUGHT.split('<execute>')[-1].strip('</execute>') or THOUGHT }
+            - ${ (observation|trim|trim('\n')) if observation is not none else '[Executed Successfully with No Output]' }
+            - |2-
 
 
-        Assistant ${ iterations}:
-        <thought>
-    - if: ${ THOUGHT.endswith('</solution>') }
-      then:
-      - defs:
-          SOLUTION: ${ THOUGHT.split('<solution>')[-1].strip('</solution>') or THOUGHT }
-    until: ${ SOLUTION != '' or iterations>max_iterations }
-  - if: ${ iterations>max_iterations }
-    then: '[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>'
-  - |2-
+              Assistant ${ iterations}:
+              <thought>
+        - if: ${ THOUGHT.endswith('</solution>') }
+          then:
+            defs:
+              SOLUTION: ${ THOUGHT.split('<solution>')[-1].strip('</solution>') or THOUGHT }
+      until: ${ SOLUTION != '' or iterations>max_iterations }
+    - if: ${ iterations>max_iterations }
+      then: '[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>'
+    - |2-
 
-    Solution:
-    ${ SOLUTION|trim }
-- if: ${ false }
-  then:
-  - |
-    Task:
-    Write a function to find the similar elements from the given two tuple lists.
-    assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
-
-    Assistant:
-    <thought> The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution. </thought>
-    <execute>
-    def similar_elements(test_tup1, test_tup2):
-        res = tuple(set(test_tup1) | set(test_tup2))
-        return res
-    res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
-    assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
-    </execute>
-
-    Observation:
-    ---------------------------------------------------------------------------
-    AssertionError                            Traceback (most recent call last)
-    Cell In[4], line 5
-          3     return res
-          4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
-    ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
-
-    AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
-
-    Assistant:
-    <thought> To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator. </thought>
-    <execute>
-    def similar_elements(test_tup1, test_tup2):
-        res = tuple(set(test_tup1) & set(test_tup2))
-        return res
-    res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
-    assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
-    </execute>
-
-    Observation:
-    [Executed Successfully with No Output]
-
-    Assistant:
-    <thought> There is no more AssertionError. I can now submit the solution. </thought>
-    <solution>
-    def similar_elements(test_tup1, test_tup2):
-        res = tuple(set(test_tup1) & set(test_tup2))
-        return res
-    </solution>
-  - |2+
-
-  - |
-    Task:
-    ${ prompt|trim }
-
-    Assistant:
-    <thought>
-  - defs:
-      temperature: 0.7
-      decoding_method: sample
-      SOLUTION: ''
-      iterations: 0
-      max_iterations: 5
-  - repeat:
-    - repeat:
-      - defs:
-          iterations: ${ iterations+1 }
-      - def: THOUGHT
-        model: ${ model }
-        parameters:
-          temperature: ${ temperature }
-          stop:
-          - </execute>
-          - </solution>
-          - <|endoftext|>
-          truncate_input_tokens: 8191
-          repetition_penalty: 1.05
-          decoding_method: ${ decoding_method }
-          include_stop_sequence: true
-      - if: ${ THOUGHT is none }
-        then:
-        - def: THOUGHT
-          text: ''
-      until: ${ THOUGHT.endswith('</execute>') or THOUGHT.endswith('</solution>') or iterations>max_iterations }
-    - if: ${ THOUGHT.endswith('</execute>') }
-      then:
-      - |2
-
-
-        Observation ${ iterations}:
-      - def: observation
-        lang: ipython
-        code: |
-          print("EXECUTING CODE!!")
-          ${ THOUGHT.split('<execute>')[-1].strip('</execute>') or THOUGHT }
-          print("EXECUTED CODE!!!")
-      - ${ (observation|trim|trim('\n')) if observation is not none else '' }
-      - |2-
-
-
-        Assistant ${ iterations}:
-        <thought>
-    - if: ${ THOUGHT.endswith('</solution>') }
-      then:
-      - defs:
-          SOLUTION: ${ THOUGHT.split('<solution>')[-1].strip('</solution>') or THOUGHT }
-    until: ${ SOLUTION != '' or iterations>max_iterations }
-  - if: ${ iterations>max_iterations }
-    then: '[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>'
-  - |2-
-
-    Solution:
-    ${ SOLUTION|trim }
+      Solution:
+      ${ SOLUTION|trim }

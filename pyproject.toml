@@ -13,7 +13,7 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm>=1.49,<1.51",
+  "litellm>=1.59",
   "termcolor~=2.0",
   "ipython~=8.0",
 ]
@@ -50,7 +50,12 @@ docs = [
   "mkdocs-material~=9.0",
   "pymdown-extensions~=10.0"
 ]
-optim = [ "rich", "duration-parser", "evalplus", "funcy", "hf_transfer"]
+optim = [ "rich",
+"duration-parser",
+"evalplus",
+"funcy",
+"hf_transfer",
+"humanize"]
 all = [ "prompt-declaration-language[dev,examples,docs,optim]" ]
 
 [project.urls]
@@ -71,3 +76,9 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 pdl = ["pdl-schema.json"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  "ignore::DeprecationWarning", # PydanticDeprecatedSince20
+  "ignore::tqdm.std.TqdmExperimentalWarning::",
+]

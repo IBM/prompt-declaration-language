@@ -1,0 +1,89 @@
+description: Demo of template
+defs:
+  model: watsonx/ibm/granite-3-8b-instruct
+  prompt_pattern: cot
+  demonstrations:
+    data:
+    - question: Tricia is a third of Amilia's age and Amilia is a quarter of Yorick's age. Yorick is twice Eugene's age and Khloe is a third of Eugene's age. Rupert is 10 years older than Khloe but 2 years younger than Vincent who is 22 years old. How old, in years, is Tricia?
+      reasoning: |-
+        Rupert is younger than Vincent by 2 years, so he is 22 years old – 2 years = <<22-2=20>>20 years old.
+        Khloe is 10 years younger than Rupert so she is 20 years old – 10 years = 10 years old.
+        Eugene is 3 times older than Khloe so he is 10 years old * 3 = <<10*3=30>>30 years old.
+        Yorick is twice Eugene's age so he is 30 years old * 2 = <<30*2=60>>60 years old.
+        Amilia is a quarter of Yorick's age so she is 60 years old / 4 = <<60/4=15>>15 years old.
+        Tricia is a third of Amilia's age so she is 15 years old / 3 = <<15/3=5>>5 years old.
+      answer: '5'
+    - question: Emmalyn decided to paint fences in her neighborhood for twenty cents per meter. If there were 50 fences in the neighborhood that she had to paint and each fence was 500 meters long, calculate the total amount she earned from painting the fences.
+      reasoning: |-
+        The total length for the fifty fences is 50*500 = <<50*500=25000>>25000 meters.
+        If Emmalyn charged twenty cents to paint a meter of a fence, the total income she got from painting the fences is $0.20*25000 =$5000
+      answer: '5000'
+    - question: Cody was reading through his favorite book series. The series was 54 books in total. If Cody read 6 books the first week, and 3 books the second week and then 9 books every week after that. How many weeks did it take Cody to read his series?
+      reasoning: |-
+        Cody needs to read 54 books - 6 books - 3 books = <<54-6-3=45>>45 books.
+        Cody read 9 books each week after = 45 books / 9 books per week = <<45/9=5>>5 weeks.
+        Cody read for 1 week + 1 week + 5 weeks = <<1+1+5=7>>7 weeks total.
+      answer: '7'
+    - question: Jess and her family play Jenga, a game made up of 54 stacked blocks in which each player removes one block in turns until the stack falls. The 5 players, including Jess, play 5 rounds in which each player removes one block. In the sixth round, Jess's father goes first. He removes a block, causing the tower to almost fall. Next, Jess tries to remove another block knocking down the tower. How many blocks did the tower have before Jess's turn?
+      reasoning: |-
+        In each round, the 5 players removed a total of 5 * 1 = <<5*1=5>>5 blocks.
+        In the 5 rounds played, the players removed a total of 5 * 5 = <<5*5=25>>25 blocks.
+        Adding the block removed by Jess's father in the sixth round, a total of 25 + 1 = <<25+1=26>>26 blocks were removed.
+        Before the tower fell, there were 54 - 26 = <<54-26=28>>28 blocks.
+      answer: '28'
+    - question: Amalia can read 4 pages of her book in 2 minutes. How many minutes will it take her to read 18 pages of her book?
+      reasoning: |-
+        Amalia can read 1 page in 2/4 = 0.5 minutes.
+        Hence, she can read 18 pages in 18 x 0.5 minutes = <<18*0.5=9>>9 minutes.
+      answer: '9'
+text:
+- if: ${ prompt_pattern == 'cot' }
+  then:
+    text:
+    - include: ../../CoT.pdl
+    - |+
+      Answer the questions to the best of your abilities.
+
+    - call: ${ chain_of_thought }
+      args:
+        examples: ${ demonstrations }
+        question: ${ question|trim }
+        model: ${ model }
+    - "\nThe final answer as a float in a valid JSON object: {\"answer\": "
+    - model: ${ model }
+      parameters:
+        temperature: 0.0
+        stop:
+        - '}'
+        include_stop_sequence: true
+- if: ${ prompt_pattern == 'react' }
+  then:
+    text:
+    - include: ../../tools.pdl
+    - include: ../../ReAct.pdl
+    - def: ANSWER
+      call: ${ react }
+      args:
+        task: 'Question: ${ question|trim }'
+        model: ${ model }
+        tools: ${ tools }
+        trajectories: ${ demonstrations }
+    - |2-
+
+      The answer is ${ ANSWER.answer|trim }
+- if: ${ prompt_pattern == 'rewoo' }
+  then:
+    text:
+    - include: ../../tools.pdl
+    - include: ../../ReWoo.pdl
+    - def: ANSWER
+      call: ${ rewoo }
+      args:
+        task: 'Task: ${ question }'
+        model: ${ model }
+        tools: ${ tools }
+        trajectories: ${ demonstrations }
+        show_plans: false
+    - |2-
+
+      The answer is ${ ANSWER.answer|trim }

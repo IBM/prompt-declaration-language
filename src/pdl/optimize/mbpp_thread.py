@@ -1,10 +1,11 @@
 import ast
 from pprint import pprint
+import re
 from typing import Any
 
 from evalplus.evaluate import check_correctness
 
-from pdl.optimize.util import PDLThread
+from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
 
@@ -24,10 +25,10 @@ class MBPPTrialThread(PDLThread):
         scope["prompt_pattern"] = self.candidate["prompt_pattern"]
         match self.candidate["prompt_pattern"]:
             case "cot":
-                scope["prompt"] = self.example["prompt"]#.strip('"""').strip().strip('"""').strip()
+                scope["prompt"] = self.example["react_prompt"]#.strip('"""').strip().strip('"""').strip()
                 scope["demonstrations"] = [
                     {
-                        "question": q["prompt"],
+                        "question": q["react_prompt"],
                         "answer": str(q[self.answer_key]),
                     }
                     for q in self.candidate["demonstrations"]
@@ -61,19 +62,37 @@ class MBPPTrialThread(PDLThread):
         return solution
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
+        # print("ENTERING ANSWER CODE", answer)
         if answer is None or not isinstance(answer, str):
             return False
 
+        retry_parse = False
         try:
             ast.parse(answer)
         except Exception as e:
-            print(e)
-            return False
+            # print(e)
+            print(f"Failed to parse ```\n{answer}\n```. Exception {e}")
+            # return False
+            retry_parse = True
+
+        if retry_parse:
+            pattern = r"```(?:python)?\n(.*?)\n```"
+            match = re.search(pattern, answer, re.DOTALL)
+            if match:
+                answer = match.group(1)
+                try:
+                    ast.parse(answer)
+                except Exception as e:
+                    print(e)
+                    return False
+            else:
+                return False
 
         task_id = self.example["task_id"]
 
         solution = self.example["prompt"] + answer
 
+        # print("SOLUTION")
         result = check_correctness(
             dataset="mbpp",
             completion_id=self.index,

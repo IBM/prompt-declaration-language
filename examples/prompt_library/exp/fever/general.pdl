@@ -66,6 +66,21 @@ defs:
   #   a Claim, or if there is NOT ENOUGH INFORMATION.
 
   #   Claim: {{ claim }}
+  search_tools:
+    data:
+      - type: function
+        function:
+          name: Search
+          description: Search Wikipedia for a summary
+          parameters:
+            type: object
+            properties:
+              topic:
+                type: string
+                description: The topic of interest
+            required:
+              - topic
+
   task: |-
     Task: On June 2017, the following claim was made: ${ claim }
     Q: Was this claim true or false?
@@ -75,8 +90,9 @@ text:
   # CoT
   - if: ${ prompt_pattern == 'cot' }
     then:
+      text:
       - include: ../../CoT.pdl
-      - call: chain_of_thought_claim
+      - call: ${ chain_of_thought_claim }
         args:
           examples: ${ demonstrations }
           question: ${ task }
@@ -85,24 +101,26 @@ text:
   # ReAct
   - if: ${ prompt_pattern == 'react' }
     then:
+      text:
       - include: ../../ReAct.pdl
-      - call: react
+      - call: ${ react }
         def: ANSWER
         args:
           task: ${ task }
           model: ${ model }
-          tools: ${ search_tools_react }
+          tools: ${ search_tools }
           trajectories: ${ demonstrations }
 
   # ReWOO
   - if: ${ prompt_pattern == 'rewoo' }
     then:
+      text:
       - include: ../../ReWoo.pdl
-      - call: rewoo
+      - call: ${ rewoo }
         def: ANSWER
         args:
           task: ${ task }
           model: ${ model }
-          tools: ${ search_tools_rewoo }
+          tools: ${ search_tools }
           trajectories: ${ demonstrations }
           show_plans: false

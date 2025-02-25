@@ -1,0 +1,19 @@
+benchmark: gsmhard
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 1
+max_test_set_size: 1024
+num_candidates: 1
+num_demonstrations: 0
+parallelism: 5
+shuffle_test: false
+test_set_name: test
+timeout: 120
+train_set_name: train
+experiment_prefix: granite_3_8b_instruct_gsmhard_zero_shot_
+variables:
+  model:
+  - watsonx/ibm/granite-3-8b-instruct
+  prompt_pattern:
+  - cot

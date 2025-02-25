@@ -1,0 +1,72 @@
+benchmark: gsm8k
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 2
+max_test_set_size: 10
+num_candidates: 6
+num_demonstrations: 5
+parallelism: 1
+shuffle_test: false
+test_set_name: test
+timeout: 60
+train_set_name: train
+variables:
+  model:
+  # - watsonx/meta-llama/llama-3-1-8b-instruct
+  - watsonx/ibm/granite-34b-code-instruct
+  prompt_pattern:
+  - cot
+  # - react
+  # - rewoo
+
+# 65.43, 15hrs
+# "model": self.sample_random_index(
+#     [
+#         # "ibm/granite-13b-instruct-v2",
+#         # "ibm/granite-13b-chat-v2",
+#         # "meta-llama/llama-3-1-70b-instruct",
+#         # "meta-llama/llama-3-405b-instruct",
+#         "ibm/granite-20b-multilingual",
+#         # "ibm/granite-20b-multilang-lab-rc",
+#         # "ibm/granite-7b-lab",
+#         # "meta-llama/llama-3-70b-instruct"
+#         # str(Models.granite_34b_code_instruct),
+#     ],
+# ),
+
+# 128 * 16
+# [13:24:56]                             PDL Optimizer                                                                                                                       pdl_optimizer.py:261
+#            ┌────────────────────────┬───────────────────────────────────────────┐
+#            │ Max candidates         │ 128                                       │
+#            │ Num. candidates        │ 128                                       │
+#            │ Starting test set size │ 16                                        │
+#            │ Max test set size      │ 1,000                                     │
+#            │ Num. iterations        │ 7                                         │
+#            │ Total evaluations      │ 12,288                                    │
+#            │ Num. threads           │ 5                                         │
+#            │ Test set multiplier    │ 2                                         │
+#            │ Shuffle test set       │ True                                      │
+#            │ Budget policy          │ None                                      │
+#            ├────────────────────────┼───────────────────────────────────────────┤
+#            │ model                  │ ['watsonx/ibm/granite-34b-code-instruct'] │
+#            │ prompt_pattern         │ ['react']                                 │
+#            └────────────────────────┴───────────────────────────────────────────┘
+
+# 100 * 10
+# [13:26:00]                             PDL Optimizer                                                                                                                       pdl_optimizer.py:261
+#            ┌────────────────────────┬───────────────────────────────────────────┐
+#            │ Max candidates         │ 100                                       │
+#            │ Num. candidates        │ 100                                       │
+#            │ Starting test set size │ 10                                        │
+#            │ Max test set size      │ 1,000                                     │
+#            │ Num. iterations        │ 7                                         │
+#            │ Total evaluations      │ 6,000                                     │
+#            │ Num. threads           │ 5                                         │
+#            │ Test set multiplier    │ 2                                         │
+#            │ Shuffle test set       │ True                                      │
+#            │ Budget policy          │ None                                      │
+#            ├────────────────────────┼───────────────────────────────────────────┤
+#            │ model                  │ ['watsonx/ibm/granite-34b-code-instruct'] │
+#            │ prompt_pattern         │ ['react']                                 │
+#            └────────────────────────┴───────────────────────────────────────────┘

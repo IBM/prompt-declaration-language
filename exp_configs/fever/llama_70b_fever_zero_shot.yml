@@ -1,0 +1,19 @@
+benchmark: fever
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 1
+max_test_set_size: 1024
+num_candidates: 1
+num_demonstrations: 0
+parallelism: 5
+shuffle_test: false
+test_set_name: test
+timeout: 60
+train_set_name: train
+experiment_prefix: llama_70b_fever_zero_shot_
+variables:
+  model:
+  - watsonx/meta-llama/llama-3-1-70b-instruct
+  prompt_pattern:
+  - cot

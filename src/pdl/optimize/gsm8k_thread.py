@@ -1,7 +1,7 @@
 from typing import Any
 
 from pdl.optimize.parse_number import extract_math_answer
-from pdl.optimize.util import PDLThread
+from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
 
@@ -67,4 +67,9 @@ class Gsm8kTrialThread(PDLThread):
         return extract_math_answer(document)
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
-        return answer == truth or document.endswith(f" {truth}")
+        correct = answer == truth or document.endswith(f" {truth}")
+
+        if not correct:
+            print(document)
+            # print("!!!!!! ANSWER:", answer)
+        return correct

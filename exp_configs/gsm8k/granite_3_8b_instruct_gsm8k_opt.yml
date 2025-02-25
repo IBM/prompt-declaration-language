@@ -1,0 +1,27 @@
+benchmark: gsm8k
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 8
+max_test_set_size: 1000
+num_candidates: 50
+parallelism: 5
+shuffle_test: false
+test_set_name: test
+timeout: 60
+train_set_name: train
+experiment_prefix: granite_3_8b_instruct_gsm8k_opt_
+variables:
+  model:
+  - watsonx/ibm/granite-3-8b-instruct
+  prompt_pattern:
+  - cot
+  - react
+  - rewoo
+  num_demonstrations:
+  - 0
+  - 5
+  system_prompt:
+  - granite_tools
+  - llama3
+  - granite_llama

@@ -1,0 +1,29 @@
+benchmark: fever
+budget: null
+budget_growth: double
+demonstrations_variable_name: demonstrations
+initial_test_set_size: 16
+max_test_set_size: 1000
+num_candidates: 100
+num_demonstrations: 5
+parallelism: 5
+shuffle_test: false
+test_set_name: test
+timeout: 60
+train_set_name: train
+experiment_prefix: granite_34b_code_instruct_fever_opt_
+variables:
+  model:
+  - watsonx/ibm/granite-34b-code-instruct
+  prompt_pattern:
+  - cot
+  - react
+  - rewoo
+  system_prompt:
+  - granite_tools
+  - llama3
+  - granite_llama
+  num_demonstrations:
+  - 0
+  - 3
+  - 5

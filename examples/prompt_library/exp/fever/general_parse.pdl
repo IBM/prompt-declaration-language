@@ -1,0 +1,133 @@
+description: Demo of ReAct template fever
+defs:
+  search_tools_react:
+    data:
+      - name: Search ReAct
+        display_name: Search
+        pdl_function: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: topic
+            type: string
+            description: The topic of interest
+        examples: []
+          # - - task: |
+          #       On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+          #       Q: Was this claim true or false?
+          #   - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+          #   - action: "Search[Colorado orogeny]"
+          #   - observation: "[Document]\nThe Colorado orogeny was an episode of mountain building (an orogeny) ...\n[End]"
+          #   - thought: "High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft."
+          #   - thought: "The claim is True."
+          #   - action: "Finish[True]"
+          # - - task: |
+          #       On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+          #       Q: Was this claim true or false?
+          #   - thought: "I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+          #   - action: "Search[Nicholas Ray]"
+          #   - observation: "[Document]\nNicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.\n[End]"
+          #   - thought: "Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions."
+          #   - action: "Search[Elia Kazan]"
+          #   - observation: "[Document]\nElia Kazan was an American film and theatre director, producer, screenwriter and actor.\n[End]"
+          #   - thought: "Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor."
+          #   - thought: "The claim is True."
+          #   - action: "Finish[True]"
+  search_tools_rewoo:
+    data:
+      - name: Search ReWOO
+        display_name: Search
+        pdl_function: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: topic
+            type: string
+            description: The topic of interest
+        examples: []
+          # - - task: |
+          #       On June 2017, the following claim was made: The elevation range for the area that the eastern sector of the Colorado orogeny extends into is 1,800 to 7,000 ft.
+          #       Q: Was this claim true or false?
+          #   - thought: "I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ..."
+          #   - action: "Search[Colorado orogeny]"
+          #   - observation: "[Document]\nThe Colorado orogeny was an episode of mountain building (an orogeny) ...\n[End]"
+          # - - task: |
+          #       On June 2017, the following claim was made: Professions Nicholas Ray and Elia Kazan have in common are director, screenwriter, and actor.
+          #       Q: Was this claim true or false?
+          #   - thought: "Search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common."
+          #   - action: "Search[Nicholas Ray]"
+          #   - observation: "[Document]\nNicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.\n[End]"
+          #   - thought: "Search Elia Kazan."
+          #   - action: "Search[Elia Kazan]"
+          #   - observation: "[Document]\nElia Kazan was an American film and theatre director, producer, screenwriter and actor.\n[End]"
+  # model: "meta-llama/llama-3-70b-instruct"
+  # prompt_pattern: "react"
+  # claim: "Fox 2000 Pictures released the film Soul Food."
+  # task: >
+  #   Task: Determine if there is Observation that SUPPORTS or REFUTES
+  #   a Claim, or if there is NOT ENOUGH INFORMATION.
+
+  #   Claim: {{ claim }}
+  search_tools:
+    data:
+      - type: function
+        function:
+          name: Search
+          description: Search Wikipedia for a summary
+          parameters:
+            type: object
+            properties:
+              topic:
+                type: string
+                description: The topic of interest
+            required:
+              - topic
+
+  task: |-
+    Task: On June 2017, the following claim was made: ${ claim }
+    Q: Was this claim true or false?
+text:
+  - include: ../../tools.pdl
+
+  # CoT
+  - if: ${ prompt_pattern == 'cot' }
+    then:
+      text:
+      - include: ../../CoT.pdl
+      - call: ${ chain_of_thought_claim }
+        args:
+          examples: ${ demonstrations }
+          question: ${ task }
+          model: ${ model }
+      - "\nThe final answer as a boolean in a valid JSON object: {\"answer\": "
+      - model: ${ model }
+        parameters:
+          temperature: 0
+          stop:
+            - "}"
+          include_stop_sequence: true
+
+  # ReAct
+  - if: ${ prompt_pattern == 'react' }
+    then:
+      text:
+      - include: ../../ReAct.pdl
+      - call: ${ react }
+        def: ANSWER
+        args:
+          task: ${ task }
+          model: ${ model }
+          tools: ${ search_tools }
+          trajectories: ${ demonstrations }
+
+  # ReWOO
+  - if: ${ prompt_pattern == 'rewoo' }
+    then:
+      text:
+      - include: ../../ReWoo.pdl
+      - call: ${ rewoo }
+        def: ANSWER
+        args:
+          task: ${ task }
+          model: ${ model }
+          tools: ${ search_tools }
+          trajectories: ${ demonstrations }
+          show_plans: false

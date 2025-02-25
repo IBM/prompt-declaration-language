@@ -1,7 +1,7 @@
 description: Demo of CoT template
 text:
   - include: ../../CoT.pdl
-  - call: chain_of_thought
+  - call: ${ chain_of_thought }
     args:
       examples:
         - question: |-
@@ -29,4 +29,4 @@ text:
             Therefore he sold << 180*3= 540 >> this month.
           answer: $540
       question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
-      model: "watsonx/ibm/granite-34b-code-instruct"
+      model: "watsonx/ibm/granite-3-8b-instruct"

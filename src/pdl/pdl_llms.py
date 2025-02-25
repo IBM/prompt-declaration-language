@@ -185,7 +185,10 @@ class LitellmModel:
         if parameters.get("mock_response") is not None:
             litellm.suppress_debug_info = True
         response = completion(
-            model=model_id, messages=messages, stream=False, **parameters
+            model=model_id,
+            messages=messages,
+            stream=False,
+            **parameters,
         )
         msg = response.choices[0].message  # pyright: ignore
         if msg.role is None:

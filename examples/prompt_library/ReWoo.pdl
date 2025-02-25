@@ -14,6 +14,7 @@ defs:
       - for:
           trajectory: ${ trajectory }
         repeat:
+          text:
           - defs:
               type:
                 text: ${ trajectory.keys()|first }
@@ -28,6 +29,7 @@ defs:
               Plan: ${ content|trim }
           - if: ${ type == 'action'}
             then:
+              text:
               - " #E${ i } = ${ content|trim }"
               - defs:
                   i:
@@ -46,314 +48,137 @@ defs:
       trajectories: { list: list }
       show_plans: bool
     return:
-      - defs:
-          TOOL_INFO:
-            call: list_tools
-            args:
-              tools: ${ tools }
-      - |
-        For the following task, make plans that can solve the problem step by step. For each plan, indicate which external tool together with tool input to retrieve evidence. You can store the evidence into a variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
+      lastOf:
+        - |
+          For the following task, make plans that can solve the problem step by step. For each plan, indicate which external tool together with tool input to retrieve evidence. You can store the evidence into a variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
 
-        Tools can be one of the following:
-      - for:
-          i: ${ range(1, (tools|length)+1)|list }
-          name: ${ TOOL_INFO.display_names }
-          sig: ${ TOOL_INFO.signatures }
-          desc: ${ TOOL_INFO.descriptions }
-        repeat: "(${i}) ${ sig }: ${ desc }\n"
-      # # - "\n"
-      - for:
-          tool: ${ tools }
-        repeat:
-          text:
-          - for:
-              example: ${ tool.examples }
-            repeat:
-              call: rewoo_block
+          Tools can be one of the following:
+          ${ tools }
+        # - for:
+        #     tool: ${ tools }
+        #   repeat:
+        #     text:
+        #     - for:
+        #         example: ${ tool.examples }
+        #       repeat:
+        #         call: ${ rewoo_block }
+        #         args:
+        #           trajectory: ${ example }
+        #     - "\n"
+        - for:
+            traj: ${ trajectories }
+          repeat:
+            text:
+            - call: ${ rewoo_block }
               args:
-                trajectory: ${ example }
-          - "\n"
-      - for:
-          traj: ${ trajectories }
-        repeat:
-          text:
-          - call: rewoo_block
-            args:
-              trajectory: ${ traj }
-          - "\n"
-      - |
-        Begin!
-        Describe your plans with rich details. Each Plan should be followed by only one #E.
+                trajectory: ${ traj }
+            - "\n"
+        - |
+          Begin!
+          Describe your plans with rich details. Each Plan should be followed by only one #E.
 
-        ${ task }
-      - def: PLANS
-        model: ${ model }
-        parser: # plan, step_name, tool, tool_input
-          regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<act>\{.+\})'
-          mode: findall
-        parameters:
-          timeout: 30
-          time_limit: 30000
-          decoding_method: greedy
-          stop:
-            - "<|endoftext|>"
-            - "\n\n"
-            - "Task:"
-          include_stop_sequence: false
-          max_tokens: 1024
-          final_prompt_value: ""
-          roles:
-            system:
-              pre_message: ""
-              post_message: ""
-            user:
-              pre_message: ""
-              post_message: ""
-            assistant:
-              pre_message: ""
-              post_message: ""
-      - if: ${ show_plans }
-        then:
-          - "\n\n--- Raw plans ---\n"
-          - ${ PLANS }
-          - "\n\n--- Extracted Blueprint ---\n"
-          - for:
-              plan: ${ PLANS }
-            repeat:
-              - "Plan: ${ plan[0] }\n"
-              - "${ plan[1] } = ${ plan[2] }\n"
-          - "----------------------------\n\n"
-      - defs:
-          output:
-            data: {}
-          plans:
-            for:
-              plan: ${ PLANS }
-            repeat:
-              # text:
-              - defs:
-                  PLAN: ${ plan[0] }
-                  ID: ${ plan[1] }
-                  ACTION_RAW: ${ plan[2] }
-                  ACTION:
-                    parser: json
-                    # spec: { name: str, arguments: obj }
-                    # fallback:
-                    #   data:
-                    #     name: "Invalid"
-                    #     arguments:
-                    #       expr: ""
-                    lang: python
-                    code: |-
-                      for k,v in output.items():
-                        if k in ACTION_RAW:
-                          ACTION_RAW = ACTION_RAW.replace(k, v)
-                      result = ACTION_RAW
-                  tool_output:
-                    if: ${ ACTION.name in TOOL_INFO.display_names }
-                    then:
-                      call: ${ TOOL_INFO.name_map[ACTION.name] }
-                      args:
-                        arguments: ${ ACTION.arguments }
-                    else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') }"
-              - def: output
-                lang: python
-                contribute: []
-                code: |
-                  output[ID] = str(tool_output)
-                  result = output
-              - |
-                Plan: ${ PLAN }
-                Evidence: ${ tool_output }
-      - if: ${ plans is not none and plans|length > 0 }
-        then:
-          - def: solution_input
-            text: |-
-              Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+          ${ task }
+        - def: PLANS
+          model: ${ model }
+          parser: # plan, step_name, tool, tool_input
+            regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<act>\{.+\})'
+            mode: findall
+          parameters:
+            # timeout: 30
+            # time_limit: 30000
+            # decoding_method: greedy
+            temperature: 0
+            stop:
+              - "<|endoftext|>"
+              - "\n\n"
+              - "Task:"
+            include_stop_sequence: false
+            max_tokens: 1024
+        - if: ${ show_plans }
+          then:
+            text:
+            - "\n\n--- Raw plans ---\n"
+            - ${ PLANS }
+            - "\n\n--- Extracted Blueprint ---\n"
+            - for:
+                plan: ${ PLANS }
+              repeat:
+                text:
+                - "Plan: ${ plan[0] }\n"
+                - "${ plan[1] } = ${ plan[2] }\n"
+            - "----------------------------\n\n"
+        - defs:
+            output:
+              data: {}
+            plans:
+              for:
+                plan: ${ PLANS }
+              repeat:
+                lastOf:
+                - defs:
+                    PLAN: ${ plan[0] }
+                    ID: ${ plan[1] }
+                    ACTION_RAW: ${ plan[2] }
+                    ACTION:
+                      parser: json
+                      # spec: { name: str, arguments: obj }
+                      # fallback:
+                      #   data:
+                      #     name: "Invalid"
+                      #     arguments:
+                      #       expr: ""
+                      lang: python
+                      code: |-
+                        for k,v in output.items():
+                          if k in ACTION_RAW:
+                            ACTION_RAW = ACTION_RAW.replace(k, v)
+                        result = ACTION_RAW
+                    tool_output:
+                      if: ${ ACTION.name.lower() in pdl_tools }
+                      then:
+                        call: ${ pdl_tools[ACTION.name.lower()] }
+                        args:
+                          arguments: ${ ACTION.arguments }
+                      else: "Invalid action. Valid actions are ${ pdl_tools.keys() }"
+                - def: output
+                  lang: python
+                  contribute: []
+                  code: |
+                    output[ID] = str(tool_output)
+                    result = output
+                - |
+                  Plan: ${ PLAN }
+                  Evidence: ${ tool_output }
+        - if: ${ plans is not none and plans|length > 0 }
+          then:
+            lastOf:
+            - def: solution_input
+              text: |-
+                Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
 
-              ${ plans|join }
-              Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+                ${ plans|join }
+                Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
 
-              ${ task }
-              Response:
-          - def: SOLUTION
-            model: ${ model }
-            parameters:
-              timeout: 30
-              time_limit: 30000
-              decoding_method: greedy
-              stop:
-                - "<|endoftext|>"
-              include_stop_sequence: false
-              max_tokens: 1024
-              final_prompt_value: ""
-              roles:
-                system:
-                  pre_message: ""
-                  post_message: ""
-                user:
-                  pre_message: ""
-                  post_message: ""
-                assistant:
-                  pre_message: ""
-                  post_message: ""
-            input:
-              text: ${ solution_input }
-        else:
-          - def: SOLUTION
-            text: "No plans found."
-      - data:
-          answer: ${ SOLUTION }
-
-  # rewoo_old:
-  #   function:
-  #     task: str
-  #     model: str
-  #     tools: { list: obj }
-  #     trajectories: { list: list }
-  #     show_plans: bool
-  #   return:
-  #     - defs:
-  #         TOOL_INFO:
-  #           call: list_tools
-  #           args:
-  #             tools: ${ tools }
-  #     - |
-  #       For the following task, make plans that can solve the problem step by step. For each plan, indicate
-  #       which external tool together with tool input to retrieve evidence. You can store the evidence into a
-  #       variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
-
-  #       Tools can be one of the following:
-  #     - for:
-  #         i: ${ range(1, (tools|length)+1)|list }
-  #         name: ${ TOOL_INFO.display_names }
-  #         sig: ${ TOOL_INFO.signatures }
-  #         desc: ${ TOOL_INFO.descriptions }
-  #       repeat: |
-  #         (${i}) ${ sig }: ${ desc }
-  #     # - "\n"
-  #     - for:
-  #         tool: ${ tools }
-  #       repeat:
-  #         - for:
-  #             example: ${ tool.examples }
-  #           repeat:
-  #             call: rewoo_block
-  #             args:
-  #               trajectory: ${ example }
-  #         - "\n"
-  #     - for:
-  #         traj: ${ trajectories }
-  #       repeat:
-  #         - call: rewoo_block
-  #           args:
-  #             trajectory: ${ traj }
-  #         - "\n"
-  #     # - "\n"
-  #     - |
-  #       Begin!
-  #       Describe your plans with rich details. Each Plan should be followed by only one #E.
-
-  #       ${ task }
-  #     - def: PLANS
-  #       model: ${ model }
-  #       parser: # plan, step_name, tool, tool_input
-  #         regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<tool>\w+)\s*\[(?P<tool_input>[^\]]+)\]'
-  #         mode: findall
-  #       parameters:
-  #         decoding_method: greedy
-  #         stop:
-  #           - "<|endoftext|>"
-  #           - "\n\n"
-  #           - "Task:"
-  #         include_stop_sequence: false
-  #         max_tokens: 1024
-  #         final_prompt_value: ""
-  #         roles:
-  #           system:
-  #             pre_message: ""
-  #             post_message: ""
-  #           user:
-  #             pre_message: ""
-  #             post_message: ""
-  #           assistant:
-  #             pre_message: ""
-  #             post_message: ""
-  #     - if: ${ show_plans }
-  #       then:
-  #         - "\n\n--- Extracted Blueprint ---\n"
-  #         - for:
-  #             plan: ${ PLANS }
-  #           repeat:
-  #             - "Plan: ${ plan[0] }\n"
-  #             - "${ plan[1] } = ${ plan[2] }[${ plan[3] }]\n"
-  #         - "----------------------------\n\n"
-  #     - defs:
-  #         output:
-  #           data: {}
-  #         plans:
-  #           for:
-  #             plan: ${ PLANS }
-  #           repeat:
-  #             text:
-  #             - defs:
-  #                 PLAN: ${ plan[0] }
-  #                 ID: ${ plan[1] }
-  #                 ACTION: ${ plan[2] }
-  #                 SUBJECT: ${ plan[3] }
-  #                 SUBJECT_REPLACED:
-  #                   lang: python
-  #                   code: |-
-  #                     for k,v in output.items():
-  #                       if k in SUBJECT:
-  #                         SUBJECT = SUBJECT.replace(k, v)
-  #                     result = SUBJECT
-  #                 raw_tool_output:
-  #                   if: ${ ACTION in TOOL_INFO.display_names }
-  #                   then:
-  #                     call: ${ TOOL_INFO.name_map[ACTION] }
-  #                     args:
-  #                       subject: ${ SUBJECT_REPLACED }
-  #                   else: "Invalid action. Valid actions are ${ TOOL_INFO.signatures|join(', ') }"
-  #                 tool_output: ${ raw_tool_output }
-  #             - def: output
-  #               lang: python
-  #               contribute: []
-  #               code: |
-  #                 output[ID] = str(tool_output)
-  #                 result = output
-  #             - |
-  #               Plan: ${ PLAN }
-  #               Evidence: ${ tool_output }
-  #     - def: solution_input
-  #       text: |-
-  #         Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
-
-  #         ${ plans|join }
-  #         Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
-
-  #         ${ task }
-  #         Response:
-  #     - def: SOLUTION
-  #       model: ${ model }
-  #       parameters:
-  #         decoding_method: greedy
-  #         stop:
-  #           - "<|endoftext|>"
-  #         include_stop_sequence: false
-  #         max_tokens: 1024
-  #         final_prompt_value: ""
-  #         roles:
-  #           system:
-  #             pre_message: ""
-  #             post_message: ""
-  #           user:
-  #             pre_message: ""
-  #             post_message: ""
-  #           assistant:
-  #             pre_message: ""
-  #             post_message: ""
-  #       input:
-  #         text: ${ solution_input }
-  #     - data:
-  #         answer: ${ SOLUTION }
+                ${ task }
+                Response:
+            - def: SOLUTION
+              model: ${ model }
+              parameters:
+                timeout: 30
+                time_limit: 30000
+                # decoding_method: greedy
+                temperature: 0
+                stop:
+                  - "<|endoftext|>"
+                include_stop_sequence: false
+                max_tokens: 1024
+              input:
+                text: ${ solution_input }
+            - data:
+                answer: ${ SOLUTION }
+          else:
+            lastOf:
+            - def: SOLUTION
+              text: "No plans found."
+            - data:
+                answer: ${ SOLUTION }

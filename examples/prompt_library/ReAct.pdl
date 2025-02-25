@@ -196,6 +196,31 @@ defs:
 
   #   Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}. Do not use variables.
 
+# - if: ${ model == "watsonx/meta-llama/llama-3-1-70b-instruct"}
+#           then:
+#             text:
+#               - role: system
+#                 text: You are a helpful assistant with tool calling capabilities. When you receive a tool call response, use the output to format an answer to the orginal use question.
+#                 contribute: [context]
+#               - role: user
+#                 text: |
+#                   Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+#                   Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+#                   ${ tools }
+#                 contribute: [context]
+#           else:
+#             text:
+#               - role: system
+#                 text: |
+#                   You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+
+#                   Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+#                   ${ tools }
+#                 contribute: [context]
+
   react:
     function:
       task: str
@@ -204,9 +229,17 @@ defs:
       trajectories: { list: list }
     return:
       lastOf:
-        - if: ${ model == "watsonx/meta-llama/llama-3-1-70b-instruct"}
+        - if: ${ system_prompt == "llama3"}
           then:
             text:
+              - role: system
+                contribute: [context]
+                text:
+                  - "Cutting Knowledge Date: December 2023\nToday Date: "
+                  - lang: python
+                    code: |
+                      from datetime import datetime
+                      result = datetime.today().strftime('%d %B %Y\n\n')
               - role: system
                 text: You are a helpful assistant with tool calling capabilities. When you receive a tool call response, use the output to format an answer to the orginal use question.
                 contribute: [context]
@@ -218,7 +251,8 @@ defs:
 
                   ${ tools }
                 contribute: [context]
-          else:
+        - if: ${ system_prompt  == "granite_llama" }
+          then:
             text:
               - role: system
                 text: |
@@ -228,6 +262,24 @@ defs:
 
                   ${ tools }
                 contribute: [context]
+        - if: ${ system_prompt == "granite_tools" }
+          then:
+            text:
+            - role: system
+              contribute: [context]
+              text:
+                - "Knowledge Cutoff Date: April 2024.\nToday's Date: "
+                - lang: python
+                  code: |
+                    from datetime import datetime
+                    result = datetime.today().strftime('%B %d, %Y.\n')
+                - |
+                  You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with a JSON object of the tool to use. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
+
+                  ${ tools }
+            # - role: tools
+            #   contribute: [context]
+            #   text: ${ tools }
         - "\n"
         - for:
             traj: ${ trajectories }
@@ -246,7 +298,7 @@ defs:
           data: False
         - repeat:
             text:
-              - "Tho: " # Factor 2: enforcing Tho/Act sections
+              - "\nTho: " # Factor 2: enforcing Tho/Act sections
               - def: thought
                 model: "${ model }"
                 parameters:
@@ -275,7 +327,7 @@ defs:
                           call: ${ pdl_tools[action.name.lower()] }
                           args:
                             arguments: ${ action.arguments }
-                        else: "Invalid action. Valid actions are ${ pdl_tools.keys() }." # ${ TOOL_INFO.signatures[:-1]|join(', ') }, and ${ TOOL_INFO.signatures[-1] }."
+                        else: "Invalid action. Valid actions are ${ (pdl_tools.keys()|list)[:-1]|join(', ') }, and ${ (pdl_tools.keys()|list)[-1] }."
                       - "\n" # Factor 2 #Tho:"
                 else:
                   def: exit

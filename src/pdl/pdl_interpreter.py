@@ -94,6 +94,7 @@ from .pdl_utils import (
     replace_contribute_value,
     stringify,
 )
+import json_repair
 
 logger = logging.getLogger(__name__)
 
@@ -1164,7 +1165,7 @@ def step_call_model(
             trace=ErrorBlock(msg=message, location=loc, program=concrete_block),
         ) from exc
     except Exception as exc:
-        message = f"Error during '{block.model}' model call: {repr(exc)}"
+        message = f"Error during '{block.model}' model call: {repr(exc)}"#, model_input[1]: {model_input[1]}"
         raise PDLRuntimeError(
             message,
             loc=loc,
@@ -1291,7 +1292,6 @@ def generate_client_response_single(
                 messages=model_input,
                 spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
-                state=state,
             )
     if state.yield_result:
         yield YieldResultMessage("" if msg["content"] is None else msg["content"])
@@ -1592,10 +1592,12 @@ def parse_result(parser: ParserType, text: str) -> Optional[dict[str, Any] | lis
     match parser:
         case "json":
             try:
-                result = json.loads(text)
+                # result = json.loads(text.strip())
+                result = json_repair.repair_json(text.strip(), return_objects=True)
+                # result = {k.strip(): (v if not isinstance(v, dict) else {k2.strip(): v2 for k2, v2 in v.items()}) for k, v in result.items()}
             except Exception as exc:
                 raise PDLRuntimeParserError(
-                    f"Attempted to parse ill-formed JSON: {repr(exc)}"
+                    f"Attempted to parse ill-formed JSON: {repr(exc)}, original: {text.strip()}"
                 ) from exc
         case "jsonl":
             result = []
