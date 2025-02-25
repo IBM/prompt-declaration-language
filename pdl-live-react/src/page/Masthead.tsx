@@ -11,20 +11,13 @@ import {
   MastheadContent,
   PageToggleButton,
   Title,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem,
 } from "@patternfly/react-core"
-
-import DarkModeToggle from "./DarkModeToggle"
 
 import PDLIcon from "../assets/ai-governance--prompt.svg"
 import BarsIcon from "@patternfly/react-icons/dist/esm/icons/bars-icon"
 
 import "./Masthead.css"
 
-const alignRight = { default: "alignEnd" as const }
 const alignCenter = { default: "alignItemsCenter" as const }
 
 function Toggle() {
@@ -87,19 +80,7 @@ function Main() {
 }
 
 function Content() {
-  return (
-    <MastheadContent>
-      <Toolbar isStatic>
-        <ToolbarContent>
-          <ToolbarGroup align={alignRight}>
-            <ToolbarItem align={alignRight}>
-              <DarkModeToggle />
-            </ToolbarItem>
-          </ToolbarGroup>
-        </ToolbarContent>
-      </Toolbar>
-    </MastheadContent>
-  )
+  return <MastheadContent></MastheadContent>
 }
 
 export default function PDLMasthead() {
