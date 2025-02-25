@@ -1,5 +1,4 @@
-import { type ReactElement } from "react"
-
+import { stringify } from "yaml"
 import type { LitellmModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
 
 /** Re-export for convenience */
@@ -36,7 +35,7 @@ export function hasResult(block: unknown): block is PdlBlockWithResult {
 }
 
 export function isPdlBlock(
-  o: unknown | ReactElement | PdlBlock,
+  o: unknown | import("react").ReactElement | PdlBlock,
 ): o is PdlBlock {
   const obj = o as PdlBlock
   return (
@@ -179,4 +178,56 @@ type MessageBearing = Omit<import("./pdl_ast").ReadBlock, "message"> & {
 }
 export function hasMessage(block: PdlBlock): block is MessageBearing {
   return typeof (block as MessageBearing).message === "string"
+}
+
+function tryJson(s: unknown) {
+  if (typeof s === "string") {
+    try {
+      return JSON.parse(s)
+    } catch (_err) {
+      // intentional fall-through
+    }
+  }
+  return s
+}
+
+export function extractStructuredModelResponse({
+  result,
+  parser,
+}: LitellmModelBlock) {
+  const json = tryJson(result)
+  const resultForDisplay: string = Array.isArray(json)
+    ? json.map(({ sentence }) => String(sentence)).join("\n")
+    : typeof result === "object"
+      ? stringify(result)
+      : String(result)
+
+  const lang: import("./view/code/Code").SupportedLanguage | undefined =
+    Array.isArray(json)
+      ? undefined
+      : parser === "jsonl" || parser === "json"
+        ? "json"
+        : parser === "yaml"
+          ? "yaml"
+          : "plaintext"
+
+  // Ugh, some of this logic may be specific to Granite LLM
+  const meta = !Array.isArray(json)
+    ? undefined
+    : json.flatMap(({ meta }) =>
+        Object.entries(meta).map(([k, v]) => {
+          if (
+            k === "citation" &&
+            v &&
+            typeof v === "object" &&
+            "snippet" in v
+          ) {
+            return [k, v.snippet]
+          } else {
+            return [k, v]
+          }
+        }),
+      )
+
+  return { resultForDisplay, lang, meta }
 }

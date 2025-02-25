@@ -1,15 +1,18 @@
 type Tile = {
   id: string
   def?: string | null
+  kind?: string
   message?: string
+
   start_nanos?: number
   end_nanos?: number
   timezone?: string
-  content: string
+
   lang?: import("../code/Code").SupportedLanguage
-  crumb?: boolean
-  kind?: string
-  boundedHeight?: boolean
+  content: string
+
+  footer1Key?: string
+  footer1Value?: string | number | boolean
 }
 
 export default Tile

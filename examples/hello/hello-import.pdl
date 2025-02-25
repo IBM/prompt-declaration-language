@@ -1,0 +1,8 @@
+defs:
+  lib: 
+    import: hello-import-lib
+text:
+- call: ${ lib.a }
+  args: 
+    arg: Bye!
+

@@ -1,9 +1,0 @@
-html,body {
-    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
-    background: var(--cds-background, #ffffff);
-}
-
-#mainview {
-    margin-top: 4rem;
-    height: calc(100% - 4rem);
-}

@@ -1,15 +1,17 @@
-import { Card, CardBody } from "@patternfly/react-core"
+import { Card, CardBody, CardFooter, Divider } from "@patternfly/react-core"
 
 type Props = import("react").PropsWithChildren<{
   kind?: string
   variant?: "plain" | "default"
   sml: import("./Toolbar").SML
   header?: import("react").ReactNode
+  footer?: import("react").ReactNode
 }>
 
 export default function MasonryTileWrapper({
   sml,
   header,
+  footer,
   kind,
   variant = "default",
   children,
@@ -25,6 +27,12 @@ export default function MasonryTileWrapper({
     >
       {header}
       <CardBody className="pdl-masonry-tile-body">{children}</CardBody>
+      {footer && (
+        <>
+          <Divider />
+          <CardFooter>{footer}</CardFooter>
+        </>
+      )}
     </Card>
   )
 }
