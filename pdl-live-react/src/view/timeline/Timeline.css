@@ -47,6 +47,9 @@
 }
 
 /* Link hover effects */
+.pdl-timeline-kind a {
+  text-decoration: none;
+}
 .pdl-timeline-row:hover {
   .pdl-timeline-kind a {
     text-decoration: underline;
