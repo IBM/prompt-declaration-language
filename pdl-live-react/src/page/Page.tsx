@@ -35,6 +35,7 @@ export default function PDLPage(props: Props) {
   /** Manage the drawer that slides in from the right */
   const [searchParams] = useSearchParams()
   const showingDetail = searchParams.has("detail") && !!value
+  const hideMasthead = searchParams.has("iframe")
 
   return (
     <Page
@@ -46,7 +47,7 @@ export default function PDLPage(props: Props) {
       }
       isContentFilled
       sidebar={<Sidebar />}
-      masthead={!window.__TAURI_INTERNALS__ && <Masthead />}
+      masthead={!window.__TAURI_INTERNALS__ && !hideMasthead && <Masthead />}
       breadcrumb={
         <PageBreadcrumbs
           breadcrumb1={props.breadcrumb1}
