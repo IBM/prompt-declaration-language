@@ -59,7 +59,7 @@ jobs:
         run: npm run build
       - name: Copy viewer
         working-directory: ./pdl-live-react
-        run: cp -a ./dist ../docs/viewer        
+        run: cp -a ./dist ../viewer
       # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
