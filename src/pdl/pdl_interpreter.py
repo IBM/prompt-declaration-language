@@ -1536,6 +1536,8 @@ def process_call(
             loc=args_loc,
             trace=block.model_copy(),
         )
+    if "pdl_context" in args:
+        args["pdl_context"] = PdlList(args["pdl_context"])
     f_body = closure.returns
     f_scope = (
         (closure.scope or PdlDict({}))
