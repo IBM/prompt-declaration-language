@@ -23,7 +23,12 @@ export default function Masonry({ sml, model, children }: Props) {
           </div>
         ))}
       {model.map((props, idx) => (
-        <MasonryTile key={props.id} {...props} idx={idx + 1} sml={sml} />
+        <MasonryTile
+          key={props.id + "." + idx}
+          {...props}
+          idx={idx + 1}
+          sml={sml}
+        />
       ))}
     </div>
   )
