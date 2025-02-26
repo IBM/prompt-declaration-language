@@ -1218,6 +1218,8 @@ def process_call_model(
             _, concrete_block = process_expr_of(
                 concrete_block, "intrinsics", scope, loc
             )
+            _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
+            _, concrete_block = process_expr_of(concrete_block, "processor", scope, loc)
         case _:
             assert False
     # evaluate input

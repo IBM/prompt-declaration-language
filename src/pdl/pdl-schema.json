@@ -3878,6 +3878,21 @@
             }
           ],
           "title": "Backend"
+        },
+        "processor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Processor"
         }
       },
       "required": [

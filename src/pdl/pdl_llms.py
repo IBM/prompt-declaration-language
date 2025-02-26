@@ -144,25 +144,11 @@ class GraniteioModel:
         match block.backend:
             case {"transformers": device}:
                 assert isinstance(block.backend, dict)
-                model_name = block.backend.get("model")
-                if model_name is None:
-                    model_name = block.model
                 backend = make_backend(
                     "transformers",
                     {
-                        "model_name": model_name,
+                        "model_name": block.model,
                         "device": device,
-                    },
-                )
-            case {"openai": device}:
-                assert isinstance(block.backend, dict)
-                model_name = block.backend.get("model")
-                if model_name is None:
-                    model_name = block.model
-                backend = make_backend(
-                    "openai",
-                    {
-                        "model_name": model_name,
                     },
                 )
             case backend_name if isinstance(backend_name, str):
@@ -174,7 +160,11 @@ class GraniteioModel:
                 )
             case _:
                 assert False
-        io_processor = make_io_processor(block.model, backend=backend)
+        assert isinstance(block.processor, str)
+        processor_name = block.processor
+        if processor_name is None:
+            processor_name = block.model
+        io_processor = make_io_processor(processor_name, backend=backend)
         return io_processor
 
     @staticmethod
