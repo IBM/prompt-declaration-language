@@ -1,7 +1,10 @@
 # Granite.runtime Intrinsics Demo with PDL
+
 # Provide document(s) to Granite3-rag model with hallucination_tag 
-# Granite3-rag model: Base model granite3-dense:8b setup with Granite RAG LoRA adapter on ollama
+# Granite3-rag model: Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on ollama
+
 # The model responds to a query providing a hallucination score
+
 text:
 - role: system
   contribute: [context]
@@ -56,10 +59,16 @@ text:
           citations: true
 
 # User Query
+# (This query produces a hallucination "low" with citation)
 - Did Faith Hill take a break from recording after releasing her second album, It Matters to Me?
+# (This query produces a hallucination "unanswerable" with no citation)
+# - Is the Academy of Country Music in Brooklyn, New York?
+# (This query produces a hallucination "high" with a citation)
+# - Where was Faith Hill born?
 
-# Base model granite3-dense:8b setup with Granite RAG LoRA adapter on ollama
+# Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on ollama.
 - defs:
+    # Store the results of making the LLM invocation in a JSON variable named 'out'
     out:
       model: ollama/granite3-rag:8b
       parameters:
@@ -71,11 +80,13 @@ text:
   The answer is: ${ out[0].sentence }
 
 - if: ${ out[0].meta.hallucination_level == "low" }
-  then: 
+  then:  |
     I am not hallucinating, promise!
-  else:
+  # (The level may be "high" or "unanswerable")
+  else: |
     Totally hallucinating, sorry!
-- |
-  
-
-  The citation is: ${ out[0].meta.citation.snippet }
+- if: ${ out[0].meta.citation }
+  then: |
+    The citation is: ${ out[0].meta.citation.snippet }
+  else: |
+    No citation matched the user query.
