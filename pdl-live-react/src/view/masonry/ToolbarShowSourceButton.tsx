@@ -21,7 +21,7 @@ export default function ToolbarShowSourceButton() {
 
   return (
     <Tooltip content="Show program source">
-      <Button variant="secondary" icon={<Icon />} onClick={onClick} />
+      <Button size="sm" variant="secondary" icon={<Icon />} onClick={onClick} />
     </Tooltip>
   )
 }
