@@ -36,7 +36,7 @@ Follow the following instructions to set up a dev environment to get started wit
 
 1. Create a fork of https://github.com/IBM/prompt-declaration-language
 2. Clone your fork
-3. Set up a python virtual environment and install dependencies
+3. Set up a Python virtual environment and install dependencies
 
     ```
     cd prompt-declaration-language
