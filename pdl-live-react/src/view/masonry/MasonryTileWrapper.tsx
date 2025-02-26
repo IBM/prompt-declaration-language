@@ -19,7 +19,7 @@ export default function MasonryTileWrapper({
   return (
     <Card
       isLarge={sml === "xl"}
-      isCompact={sml === "s"}
+      isCompact={sml === "s" || variant === "plain"}
       data-kind={kind}
       data-padding={sml}
       data-variant={variant}
