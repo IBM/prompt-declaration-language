@@ -139,8 +139,8 @@ class LitellmModel:
 class GraniteioModel:
     @staticmethod
     def processor_of_block(block: GraniteioModelBlock):
-        assert isinstance(block.model, str)
-        assert isinstance(block.backend, (dict, str))
+        assert isinstance(block.model, str), f"The model should be a string: {block.model}"
+        assert isinstance(block.backend, (dict, str)), f"The backend should be a string or a dictionnary: {block.backend}"
         match block.backend:
             case {"transformers": device}:
                 assert isinstance(block.backend, dict)
@@ -159,11 +159,11 @@ class GraniteioModel:
                     },
                 )
             case _:
-                assert False
-        assert isinstance(block.processor, str)
+                assert False, f"Unexpected backend: {block.backend}"
         processor_name = block.processor
         if processor_name is None:
             processor_name = block.model
+        assert isinstance(processor_name, str), f"The processor should be a string: {processor_name}"
         io_processor = make_io_processor(processor_name, backend=backend)
         return io_processor
 

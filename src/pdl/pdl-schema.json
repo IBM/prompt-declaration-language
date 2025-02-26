@@ -837,7 +837,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Function to call.\n    ",
@@ -850,7 +850,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": {},
@@ -1731,7 +1731,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Value defined.",
@@ -3644,7 +3644,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "title": "Model"
@@ -3859,7 +3859,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": [],
@@ -3874,7 +3874,7 @@
               "type": "object"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "title": "Backend"
@@ -3885,7 +3885,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -4239,7 +4239,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Condition.\n    ",
@@ -6074,7 +6074,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "title": "Model"
@@ -6271,7 +6271,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -6685,7 +6685,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression__ExpressionTypeT_": {
+    "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
       "properties": {
         "expr": {
@@ -7074,7 +7074,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Matched expression.\n    ",
@@ -7141,7 +7141,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -8880,7 +8880,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -9306,7 +9306,7 @@
                     "type": "string"
                   },
                   {
-                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   }
                 ]
               },
@@ -9329,7 +9329,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": true,
@@ -9426,7 +9426,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": false,
@@ -9442,7 +9442,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
