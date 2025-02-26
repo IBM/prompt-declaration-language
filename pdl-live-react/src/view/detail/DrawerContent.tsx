@@ -99,7 +99,7 @@ export default function DrawerContent({ value }: Props) {
   }
 
   return (
-    <Card isPlain isLarge isFullHeight className="pdl-drawer-content">
+    <Card isPlain isLarge className="pdl-drawer-content">
       <CardHeader actions={actions}>
         <CardTitle>{header(objectType)}</CardTitle>
         {block && description(block)}

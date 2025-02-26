@@ -19,7 +19,12 @@ type Props = {
   wrap?: boolean
 }
 
-export default function PreviewLight({ language, value, wrap = true }: Props) {
+export default function PreviewLight({
+  language,
+  value,
+  showLineNumbers = false,
+  wrap = true,
+}: Props) {
   useEffect(() => {
     SyntaxHighlighter.registerLanguage("json", json)
     SyntaxHighlighter.registerLanguage("yaml", yaml)
@@ -33,6 +38,7 @@ export default function PreviewLight({ language, value, wrap = true }: Props) {
       style={style}
       language={language}
       wrapLongLines={wrap}
+      showLineNumbers={showLineNumbers}
     >
       {value}
     </SyntaxHighlighter>
