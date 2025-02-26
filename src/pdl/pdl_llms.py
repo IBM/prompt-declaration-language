@@ -146,6 +146,7 @@ class GraniteioModel:
         messages: ModelInput,
     ) -> tuple[dict[str, Any], Any]:
         try:
+            assert isinstance(block.backend, dict)
             if "transformers" in block.backend:
                 input_json_str = json.dumps({"messages": messages})
                 inputs = ChatCompletionInputs.model_validate_json(input_json_str)
@@ -165,6 +166,7 @@ class GraniteioModel:
                     result.next_message.model_dump(),
                     result.next_message.model_dump(),
                 )
+            assert False  # TODO
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"
             loc = block.location
