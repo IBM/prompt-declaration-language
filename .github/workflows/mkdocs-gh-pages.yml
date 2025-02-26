@@ -9,7 +9,7 @@ on:
     paths:
       - "mkdocs.yml"
       - "docs/**"
-      - "pdl-live"
+      - "pdl-live-react"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

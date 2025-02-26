@@ -6,4 +6,23 @@
       margin-left: 1em;
     }
   }
+
+  .pf-v6-c-card__body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .pf-v6-c-tab-content {
+    flex: 1;
+    overflow: auto;
+
+    & > pre {
+      overflow-x: unset !important;
+
+      & > code {
+        white-space: pre-wrap !important;
+      }
+    }
+  }
 }

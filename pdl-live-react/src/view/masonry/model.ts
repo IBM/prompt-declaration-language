@@ -2,11 +2,14 @@ import { stringify } from "yaml"
 import { computeModel as computeBaseModel } from "../timeline/model"
 
 import {
+  isLLMBlock,
   hasMessage,
   hasParser,
   hasResult,
   hasScalarResult,
   hasTimingInformation,
+  capitalizeAndUnSnakeCase,
+  extractStructuredModelResponse,
   type NonScalarPdlBlock,
 } from "../../helpers"
 
@@ -43,28 +46,39 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
     .concat(result(block))
     .flatMap(({ id, block, children }) => {
       if (children.length === 0 && hasTimingInformation(block)) {
+        const { resultForDisplay, meta, lang } = isLLMBlock(block)
+          ? extractStructuredModelResponse(block)
+          : {
+              resultForDisplay:
+                typeof block.result === "object"
+                  ? stringify(block.result)
+                  : String(block.result),
+              meta: undefined,
+              lang:
+                typeof block.result === "object"
+                  ? "yaml"
+                  : hasParser(block)
+                    ? block.parser === "jsonl"
+                      ? "json"
+                      : block.parser
+                    : undefined,
+            }
+
         return withDefs(block, [
           {
             id,
             def: block.def,
             kind: block.kind,
+            lang,
             message: hasMessage(block) ? block.message : undefined,
-            content:
-              typeof block.result === "object"
-                ? stringify(block.result)
-                : String(block.result),
+            footer1Key: meta?.[0]?.[0]
+              ? capitalizeAndUnSnakeCase(String(meta[0][0]))
+              : undefined,
+            footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
+            content: resultForDisplay,
             start_nanos: block.pdl__timing.start_nanos,
             end_nanos: block.pdl__timing.end_nanos,
             timezone: block.pdl__timing.timezone,
-            lang:
-              typeof block.result === "object"
-                ? "yaml"
-                : hasParser(block)
-                  ? block.parser === "jsonl"
-                    ? "json"
-                    : block.parser
-                  : undefined,
-            crumb: true,
           },
         ])
       }
@@ -72,7 +86,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
       return []
     })
     .filter(removeFluff)
-    .sort((a, b) => (!/\./.test(a.id) ? 1 : a.id.localeCompare(b.id)))
+    .sort((a, b) =>
+      !/\./.test(a.id) ? 1 : !/\./.test(b.id) ? -1 : a.id.localeCompare(b.id),
+    )
   // ^^^ re: the regexp test, we want to place the "final output"
   // (i.e. blocks without a "." in their id) at the end
 
@@ -95,7 +111,6 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
           !v
             ? []
             : {
-                crumb: true,
                 id: (block.id ?? "").replace(/\.?empty/g, ""),
                 kind: "",
                 def,

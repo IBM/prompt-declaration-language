@@ -41,5 +41,5 @@ text:
 - |-
 
     Q: ${ TEST_PROMPT }
-    A: 
-- model: replicate/ibm-granite/granite-3.1-8b-instruct
+    A:
+- model: ollama/granite-code:8b

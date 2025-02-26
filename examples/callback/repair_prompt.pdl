@@ -9,7 +9,7 @@ lastOf:
   Please repair the code!
 
 - def: raw_output
-  model: replicate/ibm-granite/granite-3.1-8b-instruct
+  model: ollama/granite-code:8b
   parameters:
     #stop_sequences: "\n\n"
     temperature: 0

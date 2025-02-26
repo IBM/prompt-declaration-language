@@ -1,0 +1,47 @@
+# Query vector database for relevant passages; use passages to query LLM.
+
+defs:
+  QUESTIONS:
+    data: [
+      "Does PDL have a contribute keyword?",
+      "Is Paris the capital of France?"
+    ]
+lastOf:
+  - include: rag_library1.pdl
+  - defs:
+      CONCLUSIONS:
+        for:
+          question: ${ QUESTIONS }
+        repeat:
+            # Define MATCHING_PASSAGES as the text retrieved from the vector DB
+          defs:
+            MATCHING_PASSAGES:
+              call: ${ rag_retrieve }
+              args:
+                # I am passing the client in implicitly.  NOT WHAT I WANT
+                inp: ${ question }
+                encoder_model: "ollama/mxbai-embed-large"
+                limit: 3
+                collection_name: "pdl_rag_collection"  
+                database_name: "./pdl-rag-demo.db"
+            # debug:
+            #   lang: python
+            #   code: |
+            #      print(f"MATCHING_PASSAGES='{MATCHING_PASSAGES}'")
+            #      result = None
+            CONCLUSION:
+              model: ollama/granite-code:8b
+              input: >
+                Here is some information:
+                ${ MATCHING_PASSAGES }
+                Question: ${ question }
+                Answer:
+              parameters:
+                # Uncomment if you only want Yes or No
+                # stop: [',', ':', '.']
+                temperature: 0
+          data:
+            ${question}: ${CONCLUSION}
+        join:
+          as: array
+    text: "${ CONCLUSIONS | tojson }\n"

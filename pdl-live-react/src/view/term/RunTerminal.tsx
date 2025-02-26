@@ -4,7 +4,7 @@ import { spawn } from "tauri-pty"
 import { Terminal } from "xterm"
 import { FitAddon } from "xterm-addon-fit"
 
-import "xterm/css/xterm.css"
+import "./RunTerminal.css"
 
 type Props = {
   cmd: string
@@ -77,5 +77,7 @@ export default function RunTerminal({ cmd, args = [], onExit }: Props) {
     }
   }, [term, ref, exitCode, args, cmd, onExit2])
 
-  return <div ref={ref} style={{ height: "600px" }} />
+  return (
+    <div className="pdl-run-terminal" ref={ref} style={{ height: "600px" }} />
+  )
 }

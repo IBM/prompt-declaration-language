@@ -1,13 +1,15 @@
-import { useSearchParams, Link } from "react-router"
 import { useCallback } from "react"
+import { useSearchParams, Link } from "react-router"
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core"
+
+import "./PageBreadcrumbs.css"
 
 export type PageBreadcrumbProps = {
   /** The first breadcrumb to be displayed at the top of the page */
-  breadcrumb1?: string
+  breadcrumb1?: import("react").ReactNode
 
   /** The second breadcrumb to be displayed at the top of the page */
-  breadcrumb2?: string
+  breadcrumb2?: import("react").ReactNode
 }
 
 export default function PageBreadcrumbs({
@@ -23,11 +25,12 @@ export default function PageBreadcrumbs({
   )
 
   const renderFirst = useCallback(
-    () => (
-      <Link to={"/" + breadcrumb1?.split(/\s+/)[0].toLowerCase()}>
-        {breadcrumb1}
-      </Link>
-    ),
+    () =>
+      typeof breadcrumb1 === "string" && (
+        <Link to={"/" + breadcrumb1?.split(/\s+/)[0].toLowerCase()}>
+          {breadcrumb1}
+        </Link>
+      ),
     [breadcrumb1],
   )
 
@@ -41,8 +44,10 @@ export default function PageBreadcrumbs({
       ) : (
         <BreadcrumbItem isActive>Home</BreadcrumbItem>
       )}
-      {breadcrumb1 && !breadcrumb2 ? (
-        <BreadcrumbItem>{breadcrumb1}</BreadcrumbItem>
+      {(breadcrumb1 && !breadcrumb2) || typeof breadcrumb1 !== "string" ? (
+        <BreadcrumbItem isDropdown={typeof breadcrumb1 !== "string"}>
+          {breadcrumb1}
+        </BreadcrumbItem>
       ) : (
         breadcrumb1 && <BreadcrumbItem render={renderFirst} />
       )}

@@ -750,7 +750,7 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         },
         # Note that Replicate may no longer support granite 3.0
         {
-            "replicate*granite-3.0*": {
+            "*granite-3.0*": {
                 "temperature": 0,
                 "roles": {
                     "system": {
@@ -794,7 +794,7 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
                         "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
                         "post_message": "<|end_of_text|>",
                     },
-                    "available_tools": {
+                    "tools": {
                         "pre_message": "<|start_of_role|>tools<|end_of_role|>",
                         "post_message": "<|end_of_text|>",
                     },
@@ -809,6 +809,76 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
                 },
                 "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
             }
+        },
+        {
+            "*granite-3.2*": {
+                "temperature": 0,
+                "roles": {
+                    "system": {
+                        "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "user": {
+                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "assistant": {
+                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tools": {
+                        "pre_message": "<|start_of_role|>tools<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tool_response": {
+                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "documents": {
+                        "pre_message": "<|start_of_role|>documents<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                },
+                "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
+            }
+        },
+        {
+            "*granite3*": {
+                "temperature": 0,
+                "roles": {
+                    "system": {
+                        "pre_message": "<|start_of_role|>system<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "user": {
+                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "assistant": {
+                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tools": {
+                        "pre_message": "<|start_of_role|>tools<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "tool_response": {
+                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                    "documents": {
+                        "pre_message": "<|start_of_role|>documents<|end_of_role|>",
+                        "post_message": "<|end_of_text|>",
+                    },
+                },
+                "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
+            }
+        },
+        # models on Ollama (e.g. granite-code, granite3-dense, granite3.1-dense)
+        {
+            "ollama/granite*": {
+                "temperature": 0,
+            },
         },
     ]
 

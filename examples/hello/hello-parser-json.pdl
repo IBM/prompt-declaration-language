@@ -6,25 +6,24 @@ defs:
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 text:
-  - model: replicate/ibm-granite/granite-3.1-8b-instruct
+  - model: ollama/granite-code:8b
     def: model_output
     spec: {name: str, age: int}
     input:
       array:
       - role: user
-        content: 
+        content:
           text:
-          - for: 
+          - for:
               question: ${ data.questions }
               answer: ${ data.answers }
             repeat: |
               ${ question }
               ${ answer }
-          - > 
+          - >
             Question: Generate only a JSON object with fields 'name' and 'age' and set them appropriately. Write the age all in letters. Only generate a single JSON object and nothing else.
     parser: yaml
     parameters:
       stop_sequences: "Question"
       temperature: 0
 
- 

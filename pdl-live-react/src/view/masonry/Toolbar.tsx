@@ -37,14 +37,16 @@ export default function MasonryToolbar({
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          <ToolbarReplayButton
-            block={block}
-            setValue={setValue}
-            setModalContent={setModalContent}
-          />
-          <ToolbarShowSourceButton />
+          {window.__TAURI_INTERNALS__ && (
+            <ToolbarReplayButton
+              block={block}
+              setValue={setValue}
+              setModalContent={setModalContent}
+            />
+          )}
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
+          <ToolbarShowSourceButton />
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
           <DarkModeToggle />
         </ToolbarGroup>

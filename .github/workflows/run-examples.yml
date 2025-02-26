@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    name: Exeution tests
+    name: Execution tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

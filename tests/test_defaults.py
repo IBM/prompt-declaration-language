@@ -89,7 +89,7 @@ def test_default_model_params():
                 "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
                 "post_message": "<|end_of_text|>",
             },
-            "available_tools": {
+            "tools": {
                 "pre_message": "<|start_of_role|>tools<|end_of_role|>",
                 "post_message": "<|end_of_text|>",
             },

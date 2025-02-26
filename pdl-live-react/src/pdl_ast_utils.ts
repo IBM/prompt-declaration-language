@@ -36,7 +36,15 @@ export function map_block_children(
         const input = f(block.input)
         block = { ...block, input: input }
       }
-      return block
+      // Remove `defsite` from context:
+      return {
+        ...block,
+        context: JSON.parse(
+          JSON.stringify(block.context, (k, v) =>
+            k === "defsite" ? undefined : v,
+          ),
+        ),
+      }
     })
     .with({ kind: "code" }, (block) => {
       const code = f(block.code)
