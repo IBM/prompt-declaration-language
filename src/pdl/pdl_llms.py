@@ -185,8 +185,7 @@ class GraniteioModel:
     ) -> tuple[dict[str, Any], Any]:
         try:
             io_processor = GraniteioModel.processor_of_block(block)
-            input_json_str = json.dumps({"messages": messages})
-            inputs = ChatCompletionInputs.model_validate_json(input_json_str)
+            inputs = ChatCompletionInputs.model_validate({"messages": messages})
             result = io_processor.create_chat_completion(inputs)  # pyright: ignore
             return (
                 result.next_message.model_dump(),
