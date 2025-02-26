@@ -1,5 +1,4 @@
 import asyncio
-import json
 import os
 import threading
 from concurrent.futures import Future

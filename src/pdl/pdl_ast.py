@@ -363,6 +363,7 @@ class GraniteioIntrinsicCitations(GraniteioIntrinsic):
 class GraniteioIntrinsicThinking(GraniteioIntrinsic):
     thinking: bool = True
 
+
 class GraniteioIntrinsicDocuments(GraniteioIntrinsic):
     documents: list
 
