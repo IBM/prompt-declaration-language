@@ -1,0 +1,22 @@
+@import "xterm/css/xterm.css";
+
+.pdl-run-terminal .xterm-rows {
+  .xterm-fg-1 {
+    color: var(--pf-t--global--color--nonstatus--red--default);
+  }
+  .xterm-fg-2 {
+    color: var(--pf-t--global--color--nonstatus--green--default);
+  }
+  .xterm-fg-3 {
+    color: var(--pf-t--global--color--nonstatus--yellow--default);
+  }
+  .xterm-fg-4 {
+    color: var(--pf-t--global--color--nonstatus--blue--default);
+  }
+  .xterm-fg-5 {
+    color: var(--pf-t--global--color--nonstatus--purple--default);
+  }
+  .xterm-fg-6 {
+    color: var(--pf-t--global--color--nonstatus--teal--default);
+  }
+}
