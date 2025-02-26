@@ -3837,7 +3837,8 @@
                   {
                     "enum": [
                       "hallucinations",
-                      "citations"
+                      "citations",
+                      "thinking"
                     ],
                     "type": "string"
                   },

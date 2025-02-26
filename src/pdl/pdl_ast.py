@@ -360,12 +360,15 @@ class GraniteioIntrinsicCitations(GraniteioIntrinsic):
     citations: bool = True
 
 
+class GraniteioIntrinsicThinking(GraniteioIntrinsic):
+    thinking: bool = True
+
 class GraniteioIntrinsicDocuments(GraniteioIntrinsic):
     documents: list
 
 
 GraniteioIntrinsicType: TypeAlias = (
-    Literal["hallucinations", "citations"]
+    Literal["hallucinations", "citations", "thinking"]
     | GraniteioIntrinsicHallucinations
     | GraniteioIntrinsicCitations
     | GraniteioIntrinsicDocuments
