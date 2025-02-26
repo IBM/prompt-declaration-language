@@ -1,0 +1,6 @@
+.pf-v6-c-breadcrumb__dropdown {
+  margin: 0;
+}
+.pdl-breadcrumb-menu-toggle {
+  font-size: var(--pf-v6-c-breadcrumb__item--FontSize);
+}
