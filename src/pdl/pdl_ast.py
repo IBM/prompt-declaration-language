@@ -687,7 +687,11 @@ def set_structured_decoding_parameters(
 
         parameters["guided_decoding_backend"] = "lm-format-enforcer"
         parameters["guided_json"] = schema
-        # parameters["response_format"] = { "type": "json_schema", "json_schema": schema , "strict": True }
+        parameters["response_format"] = {
+            "type": "json_schema",
+            "json_schema": schema,
+            "strict": True,
+        }
     return parameters
 
 
@@ -771,38 +775,6 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         },
         {
             "*granite-3.2*": {
-                "temperature": 0,
-                "roles": {
-                    "system": {
-                        "pre_message": "<|start_of_role|>system<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                    "user": {
-                        "pre_message": "<|start_of_role|>user<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                    "assistant": {
-                        "pre_message": "<|start_of_role|>assistant<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                    "tools": {
-                        "pre_message": "<|start_of_role|>tools<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                    "tool_response": {
-                        "pre_message": "<|start_of_role|>tool_response<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                    "documents": {
-                        "pre_message": "<|start_of_role|>documents<|end_of_role|>",
-                        "post_message": "<|end_of_text|>",
-                    },
-                },
-                "final_prompt_value": "<|start_of_role|>assistant<|end_of_role|>",
-            }
-        },
-        {
-            "*granite3*": {
                 "temperature": 0,
                 "roles": {
                     "system": {
