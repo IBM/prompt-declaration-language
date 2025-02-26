@@ -1,6 +1,8 @@
 import asyncio
 import os
 import threading
+import json
+import aconfig
 from concurrent.futures import Future
 from typing import Any, Callable, Generator, TypeVar
 
@@ -8,6 +10,11 @@ import httpx
 import litellm
 from dotenv import load_dotenv
 from litellm import acompletion, completion
+
+from granite_io.io.granite_3_2 import Granite3Point2InputOutputProcessor
+from granite_io.backend.transformers import TransformersBackend
+from granite_io.io.base import ChatCompletionInputs
+
 
 from .pdl_ast import (
     ErrorBlock,
@@ -141,8 +148,15 @@ class GraniteioModel:
         messages: ModelInput,
     ) -> tuple[dict[str, Any], Any]:
         try:
-            outputs = block.model.process(messages)  # type: ignore # TODO
-            return outputs.response, outputs
+            if "transformers" in block.backend:    
+                input_json_str = json.dumps({"messages": messages})
+                inputs = ChatCompletionInputs.model_validate_json(input_json_str)
+                io_processor = Granite3Point2InputOutputProcessor(
+                    TransformersBackend(aconfig.Config({"model_name":block.model, "device":block.backend["transformers"]})),
+                )
+
+                result = io_processor.create_chat_completion(inputs)
+                return result.next_message.model_dump(), result.next_message.model_dump()
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"
             loc = block.location
