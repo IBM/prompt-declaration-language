@@ -6,7 +6,7 @@
  * It’s based on what GitHub uses on their site.
  * See <https://github.com/wooorm/starry-night> for more info. */
 .pdl-markdown {
-  --color-prettylights-syntax-comment: #59636e;
+  --color-prettylights-syntax-comment: var(--pf-t--global--text--color--subtle);
   --color-prettylights-syntax-constant: var(
     --pf-t--global--color--brand--default
   );
@@ -21,7 +21,9 @@
   --color-prettylights-syntax-keyword: var(
     --pf-t--global--text--color--status--danger--default
   );
-  --color-prettylights-syntax-string: #0a3069;
+  --color-prettylights-syntax-string: var(
+    --pf-t--global--text--color--brand--default
+  );
   --color-prettylights-syntax-variable: #953800;
   --color-prettylights-syntax-brackethighlighter-unmatched: #82071e;
   --color-prettylights-syntax-brackethighlighter-angle: #59636e;
