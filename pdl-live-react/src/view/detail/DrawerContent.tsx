@@ -30,7 +30,7 @@ function header(objectType: string) {
   switch (objectType) {
     case "source":
     case "rawtrace":
-      return "Code"
+      return "Application Code"
     case "def":
       return "Variable Definition"
     default:
