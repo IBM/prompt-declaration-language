@@ -1,5 +1,7 @@
-import { PdlBlock } from "./pdl_ast"
 import { match, P } from "ts-pattern"
+
+import { PdlBlock } from "./pdl_ast"
+import { hasContextInformation } from "./helpers"
 
 export function map_block_children(
   f: (block: PdlBlock) => PdlBlock,
@@ -39,11 +41,13 @@ export function map_block_children(
       // Remove `defsite` from context:
       return {
         ...block,
-        context: JSON.parse(
-          JSON.stringify(block.context, (k, v) =>
-            k === "defsite" ? undefined : v,
-          ),
-        ),
+        context: !hasContextInformation(block)
+          ? undefined
+          : JSON.parse(
+              JSON.stringify(block.context, (k, v) =>
+                k === "defsite" ? undefined : v,
+              ),
+            ),
       }
     })
     .with({ kind: "code" }, (block) => {
