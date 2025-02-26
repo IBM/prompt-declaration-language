@@ -16,12 +16,12 @@ import {
 
 function sourceBody(value: string) {
   return [
-    <Tab eventKey={0} title={<TabTitleText>Source</TabTitleText>}>
+    <Tab key={0} eventKey={0} title={<TabTitleText>Source</TabTitleText>}>
       <Suspense>
         <SourceTabContent block={JSON.parse(value)} />
       </Suspense>
     </Tab>,
-    <Tab eventKey={1} title={<TabTitleText>Raw Trace</TabTitleText>}>
+    <Tab key={1} eventKey={1} title={<TabTitleText>Raw Trace</TabTitleText>}>
       <Suspense>
         <RawTraceTabContent block={JSON.parse(value)} />
       </Suspense>
