@@ -1,8 +1,8 @@
 description: Hello world with variable use
 text:
 - "Hello\n"
-# Define GEN to be the result of a Granite LLM using replicate.com
-- model: replicate/ibm-granite/granite-3.1-8b-instruct
+# Define GEN to be the result of a Granite LLM using ollama
+- model: ollama/granite-code:8b
   parameters:
     # "greedy" sampling tells the LLM to use the most likely token at each step
     decoding_method: greedy

@@ -653,7 +653,7 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 ## Using Ollama models
 
 1. Install Ollama e.g., `brew install --cask ollama`
-2. Run a model e.g., `ollama run granite-code:34b-instruct-q5_K_M`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
+2. Run a model e.g., `ollama run granite-code:8b`. See [the Ollama library for more models](https://ollama.com/library/granite-code/tags)
 3. An OpenAI style server is running locally at [http://localhost:11434/](http://localhost:11434/), see [the Ollama blog](https://ollama.com/blog/openai-compatibility) for more details.
 
 
@@ -662,7 +662,7 @@ Example:
 ```
 text:
 - Hello,
-- model: ollama_chat/granite-code:34b-instruct-q5_K_M
+- model: ollama_chat/granite-code:8b
   parameters:
     stop:
     - '!'

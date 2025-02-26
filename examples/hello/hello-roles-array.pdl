@@ -7,6 +7,6 @@ text:
   - role: user
     content: Write a Python function that implement merge sort.
   contribute: []
-- model: replicate/ibm-granite/granite-3.1-8b-instruct
+- model: ollama/granite-code:8b
   input: ${ prompt }
 
