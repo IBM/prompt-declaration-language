@@ -378,7 +378,7 @@ class GraniteioModelBlock(ModelBlock):
     model: ExpressionType[object]
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
     intrinsics: ExpressionType[list[GraniteioIntrinsicType]] = []
-    backend: ExpressionType[dict[str, Any]]
+    backend: ExpressionType[str | dict[str, Any]]
 
 
 class CodeBlock(Block):

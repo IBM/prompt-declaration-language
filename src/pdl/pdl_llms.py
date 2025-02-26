@@ -5,13 +5,11 @@ import threading
 from concurrent.futures import Future
 from typing import Any, Callable, Generator, TypeVar
 
-import aconfig
 import httpx
 import litellm
 from dotenv import load_dotenv
-from granite_io.backend.transformers import TransformersBackend
-from granite_io.io.base import ChatCompletionInputs
-from granite_io.io.granite_3_2 import Granite3Point2InputOutputProcessor
+from granite_io import make_backend, make_io_processor
+from granite_io.types import ChatCompletionInputs
 from litellm import acompletion, completion
 
 from .pdl_ast import (
@@ -141,32 +139,54 @@ class LitellmModel:
 
 class GraniteioModel:
     @staticmethod
+    def processor_of_block(block: GraniteioModelBlock):
+        assert isinstance(block.model, str)
+        assert isinstance(block.backend, (dict, str))
+        match block.backend:
+            case {"transformers": device}:
+                assert isinstance(block.backend, dict)
+                model_name = block.backend.get("model")
+                if model_name is None:
+                    model_name = block.model
+                backend = make_backend(
+                    "transformers",
+                    {
+                        "model_name": model_name,
+                        "device": device,
+                    },
+                )
+            case {"openai": device}:
+                assert isinstance(block.backend, dict)
+                model_name = block.backend.get("model")
+                if model_name is None:
+                    model_name = block.model
+                backend = make_backend(
+                    "openai",
+                    {
+                        "model_name": model_name,
+                    },
+                )
+            case backend_name if isinstance(backend_name, str):
+                backend = make_backend(backend_name)
+            case _:
+                assert False
+        io_processor = make_io_processor(block.model, backend=backend)
+        return io_processor
+
+    @staticmethod
     async def async_generate_text(
         block: GraniteioModelBlock,
         messages: ModelInput,
     ) -> tuple[dict[str, Any], Any]:
         try:
-            assert isinstance(block.backend, dict)
-            if "transformers" in block.backend:
-                input_json_str = json.dumps({"messages": messages})
-                inputs = ChatCompletionInputs.model_validate_json(input_json_str)
-                io_processor = Granite3Point2InputOutputProcessor(
-                    TransformersBackend(
-                        aconfig.Config(
-                            {
-                                "model_name": block.model,
-                                "device": block.backend["transformers"],
-                            }
-                        )
-                    ),
-                )
-
-                result = io_processor.create_chat_completion(inputs)
-                return (
-                    result.next_message.model_dump(),
-                    result.next_message.model_dump(),
-                )
-            assert False  # TODO
+            io_processor = GraniteioModel.processor_of_block(block)
+            input_json_str = json.dumps({"messages": messages})
+            inputs = ChatCompletionInputs.model_validate_json(input_json_str)
+            result = io_processor.create_chat_completion(inputs)  # pyright: ignore
+            return (
+                result.next_message.model_dump(),
+                result.next_message.model_dump(),
+            )
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"
             loc = block.location

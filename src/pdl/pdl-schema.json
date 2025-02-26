@@ -3867,10 +3867,10 @@
         "backend": {
           "anyOf": [
             {
-              "type": "object"
+              "type": "string"
             },
             {
-              "type": "string"
+              "type": "object"
             },
             {
               "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
