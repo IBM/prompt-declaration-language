@@ -7,7 +7,7 @@ import demo6 from "./demo6.json"
 import demo7 from "./demo7.json"
 import demo8 from "./demo8.json"
 
-type Demo = {
+export type Demo = {
   name: string
   trace: string
 }
