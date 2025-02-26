@@ -44,9 +44,9 @@ export default function MasonryToolbar({
               setModalContent={setModalContent}
             />
           )}
-          <ToolbarShowSourceButton />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
+          <ToolbarShowSourceButton />
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
           <DarkModeToggle />
         </ToolbarGroup>
