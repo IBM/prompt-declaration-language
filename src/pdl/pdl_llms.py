@@ -167,7 +167,12 @@ class GraniteioModel:
                     },
                 )
             case backend_name if isinstance(backend_name, str):
-                backend = make_backend(backend_name)
+                backend = make_backend(
+                    backend_name,
+                    {
+                        "model_name": block.model,
+                    },
+                )
             case _:
                 assert False
         io_processor = make_io_processor(block.model, backend=backend)
