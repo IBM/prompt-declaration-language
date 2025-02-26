@@ -59,13 +59,14 @@ export default function ToolbarReplayButton({
     }
   }, [block, setIsReplaying, setModalContent, setValue])
 
+  const notLocal = !window.__TAURI_INTERNALS__
   return (
     <Tooltip content="Re-run this program">
       <Button
         spinnerAriaLabel="Replaying program"
         spinnerAriaValueText="Replaying"
         isLoading={isReplaying}
-        isDisabled={!block}
+        isDisabled={!block || notLocal}
         onClick={handleClickReplay}
       >
         Run
