@@ -195,6 +195,9 @@ def block_to_dict(  # noqa: C901
                     "case": pattern_to_dict(match_case.case),
                     "if": match_case.if_,
                     "then": block_to_dict(match_case.then, json_compatible),
+                    "pdl__case_result": match_case.pdl__case_result,
+                    "pdl__if_result": match_case.pdl__if_result,
+                    "pdl__matched": match_case.pdl__matched,
                 }
                 for match_case in block.with_
             ]

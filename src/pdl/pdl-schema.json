@@ -7264,6 +7264,42 @@
             }
           ],
           "title": "Then"
+        },
+        "pdl__case_result": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Case Result"
+        },
+        "pdl__if_result": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  If Result"
+        },
+        "pdl__matched": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Matched"
         }
       },
       "required": [
