@@ -79,6 +79,7 @@ export default function MasonryTile({
                   icon={<RunIcon />}
                   variant="plain"
                   size="sm"
+                  isDisabled={!window.__TAURI_INTERNALS__}
                   onClick={myRun}
                 />
               )
