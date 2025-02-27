@@ -34,6 +34,5 @@ def test_dump() -> None:
             assert json1 == json2, yaml_file_name
         except PDLParseError:
             pass
-        except Exception:
-            pass
-            # assert False, f"{yaml_file_name}: {repr(exc)}\n{s}"
+        except Exception as exc:
+            assert False, f"{yaml_file_name}: {repr(exc)}\n{s}"

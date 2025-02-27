@@ -127,8 +127,10 @@ def block_to_dict(  # noqa: C901
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
         case GraniteioModelBlock():
-            d["platform"] = str(block.platform)
             d["model"] = block.model
+            d["platform"] = str(block.platform)
+            d["backend"] = block.backend
+            d["processor"] = block.processor
             if block.input is not None:
                 d["input"] = block_to_dict(block.input, json_compatible)
             if block.parameters is not None:
@@ -173,7 +175,7 @@ def block_to_dict(  # noqa: C901
             if block.trace:
                 d["trace"] = block_to_dict(block.trace, json_compatible)
         case ImportBlock():
-            d["imports"] = block.imports
+            d["import"] = block.imports
             if block.trace:
                 d["trace"] = block_to_dict(block.trace, json_compatible)
         case IfBlock():
