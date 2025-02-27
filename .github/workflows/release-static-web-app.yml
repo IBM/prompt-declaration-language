@@ -1,0 +1,53 @@
+name: 'Publish pdl-live-react to GitHub release'
+
+on:
+  push:
+    branches:
+      - release
+
+# This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
+
+jobs:
+  publish-static-web-app:
+    strategy:
+      fail-fast: false
+
+    runs-on: 'ubuntu-22.04'
+    defaults:
+      run:
+        working-directory: ./pdl-live-react
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: install dependencies (ubuntu only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+          sudo mv mc /usr/local/bin/mc
+      - name: configure minio client
+        run: |
+          mc alias set pdl $PDL_WEBSITE_S3_ENDPOINT $PDL_WEBSITE_S3_ACCESS_KEY $PDL_WEBSITE_S3_SECRET_KEY --api s3v4
+
+      - name: install frontend dependencies
+        run: npm ci # change this to npm, pnpm or bun depending on which one you use.
+
+      - name: build web site
+        run: npm run build
+
+      - name: upload web site
+        run: |
+          cd dist
+          mc cp -r * pdl/$PDL_WEBSITE_S3_PATH
