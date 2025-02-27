@@ -7,6 +7,7 @@ from IPython.display import HTML, display_html
 
 from .pdl import InterpreterConfig, exec_str
 from .pdl_dumper import block_to_dict
+from .pdl_lazy import PdlDict, PdlList
 
 
 @magics_class
@@ -31,7 +32,7 @@ class PDLMagics(Magics):
         line = line.strip()
         args = parse_argstring(self.pdl, line)
         if args.reset_context:
-            scope = local_ns | {"pdl_context": []}
+            scope = local_ns | {"pdl_context": PdlList([])}
         else:
             scope = local_ns
         try:
@@ -40,12 +41,15 @@ class PDLMagics(Magics):
                 config=InterpreterConfig(
                     yield_result=True, yield_background=False, batch=0
                 ),
-                scope=scope,
+                scope=PdlDict(scope),
                 output="all",
             )
         except Exception as err:
+            # Uncomment to show PDL tracebacks during Juypter cell execution
+            # print(traceback.format_exc())
             print(err)
             return
+
         for x, v in pdl_output["scope"].items():
             local_ns[x] = v
         if args.viewer:
