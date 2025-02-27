@@ -607,8 +607,14 @@ def process_block_body(
                 if "case" in match_case.model_fields_set:
                     new_scope = is_matching(match_v, match_case.case, scope)
                     if new_scope is None:
+                        match_case = match_case.model_copy(
+                            update={"pdl__case_result": False, "pdl__matched": False}
+                        )
                         cases.append(match_case)
                         continue
+                    match_case = match_case.model_copy(
+                        update={"pdl__case_result": True}
+                    )
                 else:
                     new_scope = scope
                 b = True
@@ -627,8 +633,12 @@ def process_block_body(
                             ),
                         ) from exc
                 if not b:
+                    match_case.pdl__if_result = False
+                    match_case.pdl__matched = False
                     cases.append(match_case)
                     continue
+                match_case.pdl__if_result = True
+                match_case.pdl__matched = True
                 matched = True
                 try:
                     result, background, scope, then_trace = process_block(

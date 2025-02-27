@@ -498,6 +498,10 @@ class MatchCase(BaseModel):
     then: "BlockType"
     """Branch to execute if the value is matched and the condition is satisfied.
     """
+    # Field for internal use
+    pdl__case_result: Optional[bool] = None
+    pdl__if_result: Optional[bool] = None
+    pdl__matched: Optional[bool] = None
 
 
 class MatchBlock(Block):
