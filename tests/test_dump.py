@@ -35,4 +35,4 @@ def test_dump() -> None:
         except PDLParseError:
             pass
         except Exception as exc:
-            assert False, f"{yaml_file_name}: {repr(exc)}"            
+            assert False, f"{yaml_file_name}: {repr(exc)}"
