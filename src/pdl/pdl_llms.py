@@ -194,7 +194,6 @@ class GraniteioModel:
             result = io_processor.create_chat_completion(inputs)  # pyright: ignore
             message = result.next_message.model_dump()
             raw_result = result.model_dump()
-            print(f"XXXX {raw_result}")
             return (
                 message,
                 raw_result,
