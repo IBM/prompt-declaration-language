@@ -631,16 +631,14 @@ def process_block_body(
                     continue
                 matched = True
                 try:
-                    result, background, scope, return_trace = process_block(
+                    result, background, scope, then_trace = process_block(
                         state,
                         new_scope,
                         match_case.then,
-                        append(loc_i, "return"),
+                        append(loc_i, "then"),
                     )
                 except PDLRuntimeError as exc:
-                    match_case_trace = match_case.model_copy(
-                        update={"return_": exc.trace}
-                    )
+                    match_case_trace = match_case.model_copy(update={"then": exc.trace})
                     cases.append(match_case_trace)
                     block.with_ = cases
                     raise PDLRuntimeError(
@@ -648,7 +646,7 @@ def process_block_body(
                         loc=exc.loc or loc,
                         trace=block,
                     ) from exc
-                match_case_trace = block.model_copy(update={"return_": return_trace})
+                match_case_trace = match_case.model_copy(update={"then": then_trace})
                 cases.append(match_case_trace)
             if not matched:
                 append_log(state, "Match", "no match!")
