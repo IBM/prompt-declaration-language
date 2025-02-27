@@ -35,7 +35,7 @@ class PDLMagics(Magics):
             scope = local_ns | {"pdl_context": PdlList([])}
         else:
             # local_ns won't be lazy; make it lazy again
-            scope = local_ns | {"pdl_context": PdlList(local_ns.get('pdl_context', []))}
+            scope = local_ns | {"pdl_context": PdlList(local_ns.get("pdl_context", []))}
         try:
             pdl_output = exec_str(
                 cell,
