@@ -38,11 +38,12 @@ defs:
         "it [doesn't] feel like anybody else was really watching."
 
 text:
-- "Hello!\n"
+- Did Faith Hill take a break from recording after releasing her second album, It Matters to Me?
 - model: "granite3.2:2b"
   backend: openai
-  intrinsics: 
-  - documents:
+  parameters:
+    documents:
     - ${ doc }
-  - hallucinations
-  - citations
+    controls:
+      hallucinations: true
+      citations: true
