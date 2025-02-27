@@ -3270,73 +3270,6 @@
       "title": "GetBlock",
       "type": "object"
     },
-    "GraniteioIntrinsicCitations": {
-      "additionalProperties": false,
-      "properties": {
-        "citations": {
-          "default": true,
-          "title": "Citations",
-          "type": "boolean"
-        }
-      },
-      "title": "GraniteioIntrinsicCitations",
-      "type": "object"
-    },
-    "GraniteioIntrinsicDocuments": {
-      "additionalProperties": false,
-      "properties": {
-        "documents": {
-          "items": {},
-          "title": "Documents",
-          "type": "array"
-        }
-      },
-      "required": [
-        "documents"
-      ],
-      "title": "GraniteioIntrinsicDocuments",
-      "type": "object"
-    },
-    "GraniteioIntrinsicHallucinations": {
-      "additionalProperties": false,
-      "properties": {
-        "hallucinations": {
-          "default": true,
-          "title": "Hallucinations",
-          "type": "boolean"
-        }
-      },
-      "title": "GraniteioIntrinsicHallucinations",
-      "type": "object"
-    },
-    "GraniteioIntrinsicLength": {
-      "additionalProperties": false,
-      "properties": {
-        "length": {
-          "title": "Length",
-          "type": "string"
-        }
-      },
-      "required": [
-        "length"
-      ],
-      "title": "GraniteioIntrinsicLength",
-      "type": "object"
-    },
-    "GraniteioIntrinsicOriginality": {
-      "additionalProperties": false,
-      "properties": {
-        "originality": {
-          "title": "Originality",
-          "type": "string"
-        }
-      },
-      "required": [
-        "originality"
-      ],
-      "title": "GraniteioIntrinsicOriginality",
-      "type": "object"
-    },
     "GraniteioModelBlock": {
       "additionalProperties": false,
       "description": "Call a LLM through the granite-io API.",
@@ -3857,49 +3790,6 @@
           "title": "Platform",
           "type": "string"
         },
-        "intrinsics": {
-          "anyOf": [
-            {},
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "items": {
-                "anyOf": [
-                  {
-                    "enum": [
-                      "hallucinations",
-                      "citations",
-                      "thinking"
-                    ],
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/GraniteioIntrinsicHallucinations"
-                  },
-                  {
-                    "$ref": "#/$defs/GraniteioIntrinsicCitations"
-                  },
-                  {
-                    "$ref": "#/$defs/GraniteioIntrinsicLength"
-                  },
-                  {
-                    "$ref": "#/$defs/GraniteioIntrinsicOriginality"
-                  },
-                  {
-                    "$ref": "#/$defs/GraniteioIntrinsicDocuments"
-                  }
-                ]
-              },
-              "type": "array"
-            }
-          ],
-          "default": [],
-          "title": "Intrinsics"
-        },
         "backend": {
           "anyOf": [
             {
@@ -3928,6 +3818,24 @@
           ],
           "default": null,
           "title": "Processor"
+        },
+        "parameters": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameters"
         }
       },
       "required": [
