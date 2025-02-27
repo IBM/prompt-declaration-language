@@ -1,4 +1,4 @@
-description: for loop
+description: for loop creating a string
 for:
   i: [1, 2, 3, 4]
 repeat: 

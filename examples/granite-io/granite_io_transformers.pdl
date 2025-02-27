@@ -3,5 +3,4 @@ text:
 - model: ibm-granite/granite-3.2-8b-instruct-preview
   backend:
     transformers: cpu
-    model: 
   processor: granite3.2

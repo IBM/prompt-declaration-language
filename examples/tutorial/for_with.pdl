@@ -1,4 +1,4 @@
-description: for loop
+description: for loop with new lines between iterations
 for:
   i: [1, 2, 3, 4]
 repeat: 

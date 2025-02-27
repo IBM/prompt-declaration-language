@@ -5337,6 +5337,22 @@
       "title": "JoinLastOf",
       "type": "object"
     },
+    "JoinObject": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "object",
+          "description": "Return the union of the objects created at each iteration.\n    ",
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as"
+      ],
+      "title": "JoinObject",
+      "type": "object"
+    },
     "JoinText": {
       "additionalProperties": false,
       "properties": {
@@ -9530,6 +9546,9 @@
             },
             {
               "$ref": "#/$defs/JoinArray"
+            },
+            {
+              "$ref": "#/$defs/JoinObject"
             },
             {
               "$ref": "#/$defs/JoinLastOf"

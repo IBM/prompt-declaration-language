@@ -1,0 +1,7 @@
+description: loop where the result is the result of the last iteration
+for:
+  i: [1, 2, 3, 4]
+repeat:
+  ${ i }
+join:
+  as: lastOf

@@ -421,14 +421,8 @@ This program outputs:
 ```
 
 To output a number of each line, we can specify which string to use to join the results.
-```
-description: for loop
-for:
-  i: [1, 2, 3, 4]
-repeat:
-  ${ i }
-join:
-  with: "\n"
+```yaml
+--8<-- "./examples/tutorial/for_with.pdl"
 ```
 
 ```
@@ -440,14 +434,8 @@ join:
 
 
 To creates an array as a result of iteration, we would write:
-```
-description: for loop
-for:
-  i: [1, 2, 3, 4]
-repeat:
-  - ${ i }
-join:
-  as: array
+```yaml
+--8<-- "./examples/tutorial/for_array.pdl"
 ```
 
 which outputs the following list:
@@ -456,14 +444,8 @@ which outputs the following list:
 ```
 
 To retain only the result of the last iteration of the loop, we would write:
-```
-description: for loop
-for:
-  i: [1, 2, 3, 4]
-repeat:
-  - ${ i }
-join:
-  as: lastOf
+```yaml
+--8<-- "./examples/tutorial/for_lastOf.pdl"
 ```
 
 which outputs:
@@ -484,20 +466,10 @@ meaning that result of each iteration is stringified and concatenated with that 
 Note that `join` can be added to any looping construct (`repeat`) not just `for` loops.
 
 
-The `for` loop constructs also allows iterating over 2 or more lists of the same length simultaneously:
+The `for` loop construct also allows iterating over 2 or more lists of the same length simultaneously:
 
-```
-description: for loop
-defs:
-  numbers:
-    data: [1, 2, 3, 4]
-  names:
-    data: ["Bob", "Carol", "David", "Ernest"]
-for:
-  number: ${ numbers }
-  name: ${ names }
-repeat:
-  "${ name }'s number is ${ number }\n"
+```yaml
+--8<-- "./examples/tutorial/for_multiple_lists.pdl"
 ```
 
 This results in the following output:
@@ -508,6 +480,18 @@ Carol's number is 2
 David's number is 3
 Ernest's number is 4
 ```
+
+The loop constructs also allow to build an object:
+```yaml
+--8<-- "./examples/tutorial/for_object.pdl"
+```
+
+This results in the following output:
+
+```
+{"Bob": 1, "Carol": 2, "David": 3, "Ernest": 4}
+```
+
 
 ## Roles and Chat Templates
 

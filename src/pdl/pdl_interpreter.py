@@ -546,17 +546,14 @@ def process_block_body(
                 object_trace = dict(zip(block.object.keys(), values_trace))
                 trace = block.model_copy(update={"object": object_trace})
             else:
-                objects, background, scope, trace = process_blocks_of(
+                result, background, scope, trace = process_blocks_of(
                     block,
                     "object",
-                    IterationType.ARRAY,
+                    IterationType.OBJECT,
                     iteration_state,
                     scope,
                     loc,
                 )
-                result = PdlDict({})
-                for d in objects.data:
-                    result = result | d
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
         case MessageBlock():
@@ -961,7 +958,8 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
         iteration_state = state.with_yield_result(
-            state.yield_result and iteration_type != IterationType.ARRAY
+            state.yield_result
+            and (iteration_type in (IterationType.LASTOF, IterationType.TEXT))
         )
         new_loc = None
         background = PdlList([])
@@ -1010,6 +1008,10 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     match iteration_type:
         case IterationType.ARRAY:
             result = PdlList(results)
+        case IterationType.OBJECT:
+            result = PdlDict({})
+            for d in results:
+                result = result | d
         case IterationType.LASTOF:
             if len(results) > 0:
                 result = results[-1]
