@@ -26,6 +26,7 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                                 source_file_path.clone(),
                                 app.handle().clone(),
                                 subcommand_matches.matches.args.get("trace"),
+                                subcommand_matches.matches.args.get("data"),
                                 subcommand_matches.matches.args.get("stream"),
                             )?;
                             exit(0)

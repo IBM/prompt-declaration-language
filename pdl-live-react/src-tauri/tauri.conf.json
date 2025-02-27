@@ -33,6 +33,10 @@
               "takesValue": true
             },
             {
+              "name": "data",
+              "takesValue": true
+            },
+            {
               "name": "trace",
               "takesValue": true
             }

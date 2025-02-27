@@ -13,6 +13,9 @@ type Tile = {
 
   footer1Key?: string
   footer1Value?: string | number | boolean
+
+  block?: import("../../helpers").NonScalarPdlBlock
+  actions?: "run"[]
 }
 
 export default Tile

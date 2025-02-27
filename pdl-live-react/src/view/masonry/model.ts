@@ -80,6 +80,8 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
+            block,
+            actions: isLLMBlock(block) ? ["run"] : [],
             content: resultForDisplay,
             start_nanos: block.pdl__timing.start_nanos,
             end_nanos: block.pdl__timing.end_nanos,
