@@ -34,7 +34,8 @@ class PDLMagics(Magics):
         if args.reset_context:
             scope = local_ns | {"pdl_context": PdlList([])}
         else:
-            scope = local_ns
+            # local_ns won't be lazy; make it lazy again
+            scope = local_ns | {"pdl_context": PdlList(local_ns.get('pdl_context', []))}
         try:
             pdl_output = exec_str(
                 cell,
@@ -45,7 +46,8 @@ class PDLMagics(Magics):
                 output="all",
             )
         except Exception as err:
-            # Uncomment to show PDL tracebacks during Juypter cell execution
+            # Uncomment to show PDL tracebacks during Jupyter cell execution
+            # import traceback
             # print(traceback.format_exc())
             print(err)
             return
