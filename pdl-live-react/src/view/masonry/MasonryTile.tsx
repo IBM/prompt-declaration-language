@@ -109,7 +109,11 @@ export default function MasonryTile({
         <PanelMain maxHeight={maxHeight}>
           <Result
             term=""
-            result={message ? `*${message.trim()}*\n\n${content}` : content}
+            result={
+              message
+                ? `> ${message.trim().replace(/\n/g, "\n> ")}\n\n${content}`
+                : content
+            }
             lang={lang}
           />
         </PanelMain>
