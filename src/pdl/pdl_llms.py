@@ -13,6 +13,12 @@ from litellm import acompletion, completion
 
 from .pdl_ast import (
     ErrorBlock,
+    GraniteioIntrinsicCitations,
+    GraniteioIntrinsicDocuments,
+    GraniteioIntrinsicHallucinations,
+    GraniteioIntrinsicLength,
+    GraniteioIntrinsicOriginality,
+    GraniteioIntrinsicThinking,
     GraniteioIntrinsicType,
     GraniteioModelBlock,
     LazyMessage,
@@ -139,8 +145,12 @@ class LitellmModel:
 class GraniteioModel:
     @staticmethod
     def processor_of_block(block: GraniteioModelBlock):
-        assert isinstance(block.model, str), f"The model should be a string: {block.model}"
-        assert isinstance(block.backend, (dict, str)), f"The backend should be a string or a dictionnary: {block.backend}"
+        assert isinstance(
+            block.model, str
+        ), f"The model should be a string: {block.model}"
+        assert isinstance(
+            block.backend, (dict, str)
+        ), f"The backend should be a string or a dictionnary: {block.backend}"
         match block.backend:
             case {"transformers": device}:
                 assert isinstance(block.backend, dict)
@@ -163,9 +173,42 @@ class GraniteioModel:
         processor_name = block.processor
         if processor_name is None:
             processor_name = block.model
-        assert isinstance(processor_name, str), f"The processor should be a string: {processor_name}"
+        assert isinstance(
+            processor_name, str
+        ), f"The processor should be a string: {processor_name}"
         io_processor = make_io_processor(processor_name, backend=backend)
         return io_processor
+
+    @staticmethod
+    def build_message(
+        messages: ModelInput,
+        intrinsics: list[GraniteioIntrinsicType],
+    ) -> ChatCompletionInputs:
+        controls: dict[str, Any] = dict({})
+        inputs: dict[str, Any] = dict({"messages": messages, "controls": controls})
+        for intrinsic in intrinsics:
+            match intrinsic:
+                case "hallucinations":
+                    controls["hallucinations"] = True
+                case GraniteioIntrinsicHallucinations():
+                    controls["hallucinations"] = intrinsic.hallucinations
+                case "citations":
+                    controls["citations"] = True
+                case GraniteioIntrinsicCitations():
+                    controls["citations"] = intrinsic.citations
+                case GraniteioIntrinsicLength():
+                    controls["length"] = intrinsic.length
+                case GraniteioIntrinsicOriginality():
+                    controls["originality"] = intrinsic.originality
+                case "thinking":
+                    inputs["thinking"] = True
+                case GraniteioIntrinsicThinking():
+                    inputs["thinking"] = intrinsic.thinking
+                case GraniteioIntrinsicDocuments():
+                    inputs["documents"] = intrinsic.documents
+                case _:
+                    assert False, f"Unexpected intrinsic: {intrinsic}"
+        return ChatCompletionInputs.model_validate(inputs)
 
     @staticmethod
     async def async_generate_text(
@@ -174,11 +217,15 @@ class GraniteioModel:
     ) -> tuple[dict[str, Any], Any]:
         try:
             io_processor = GraniteioModel.processor_of_block(block)
-            inputs = ChatCompletionInputs.model_validate({"messages": messages})
+            inputs = GraniteioModel.build_message(
+                messages, block.intrinsics  # type: ignore
+            )
             result = io_processor.create_chat_completion(inputs)  # pyright: ignore
+            message = result.next_message.model_dump()
+            raw_result = result.model_dump()
             return (
-                result.next_message.model_dump(),
-                result.next_message.model_dump(),
+                message,
+                raw_result,
             )
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"

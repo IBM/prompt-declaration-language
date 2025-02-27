@@ -87,6 +87,7 @@ from .pdl_ast import (  # noqa: E402
     TextBlock,
     Timing,
     empty_block_location,
+    graniteio_intrinsic_type_adapter,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
@@ -1218,6 +1219,10 @@ def process_call_model(
             _, concrete_block = process_expr_of(
                 concrete_block, "intrinsics", scope, loc
             )
+            concrete_block.intrinsics = [
+                graniteio_intrinsic_type_adapter.validate_python(i)
+                for i in concrete_block.intrinsics
+            ]
             _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
             _, concrete_block = process_expr_of(concrete_block, "processor", scope, loc)
         case _:

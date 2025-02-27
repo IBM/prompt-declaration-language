@@ -3309,6 +3309,34 @@
       "title": "GraniteioIntrinsicHallucinations",
       "type": "object"
     },
+    "GraniteioIntrinsicLength": {
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "title": "Length",
+          "type": "string"
+        }
+      },
+      "required": [
+        "length"
+      ],
+      "title": "GraniteioIntrinsicLength",
+      "type": "object"
+    },
+    "GraniteioIntrinsicOriginality": {
+      "additionalProperties": false,
+      "properties": {
+        "originality": {
+          "title": "Originality",
+          "type": "string"
+        }
+      },
+      "required": [
+        "originality"
+      ],
+      "title": "GraniteioIntrinsicOriginality",
+      "type": "object"
+    },
     "GraniteioModelBlock": {
       "additionalProperties": false,
       "description": "Call a LLM through the granite-io API.",
@@ -3831,6 +3859,13 @@
         },
         "intrinsics": {
           "anyOf": [
+            {},
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {
               "items": {
                 "anyOf": [
@@ -3849,17 +3884,17 @@
                     "$ref": "#/$defs/GraniteioIntrinsicCitations"
                   },
                   {
+                    "$ref": "#/$defs/GraniteioIntrinsicLength"
+                  },
+                  {
+                    "$ref": "#/$defs/GraniteioIntrinsicOriginality"
+                  },
+                  {
                     "$ref": "#/$defs/GraniteioIntrinsicDocuments"
                   }
                 ]
               },
               "type": "array"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": [],

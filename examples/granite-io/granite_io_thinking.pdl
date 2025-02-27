@@ -1,0 +1,6 @@
+text:
+- "Hello!\n"
+- model: "granite3.2:2b"
+  backend: openai
+  intrinsics: 
+  - thinking

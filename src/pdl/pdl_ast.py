@@ -14,7 +14,7 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, ConfigDict, Field, RootModel
+from pydantic import BaseModel, ConfigDict, Field, RootModel, TypeAdapter
 from pydantic.json_schema import SkipJsonSchema
 
 from .pdl_lazy import PdlDict, PdlLazy
@@ -360,6 +360,14 @@ class GraniteioIntrinsicCitations(GraniteioIntrinsic):
     citations: bool = True
 
 
+class GraniteioIntrinsicLength(GraniteioIntrinsic):
+    length: str
+
+
+class GraniteioIntrinsicOriginality(GraniteioIntrinsic):
+    originality: str
+
+
 class GraniteioIntrinsicThinking(GraniteioIntrinsic):
     thinking: bool = True
 
@@ -372,8 +380,12 @@ GraniteioIntrinsicType: TypeAlias = (
     Literal["hallucinations", "citations", "thinking"]
     | GraniteioIntrinsicHallucinations
     | GraniteioIntrinsicCitations
+    | GraniteioIntrinsicLength
+    | GraniteioIntrinsicOriginality
     | GraniteioIntrinsicDocuments
 )
+
+graniteio_intrinsic_type_adapter = TypeAdapter(GraniteioIntrinsicType)
 
 
 class GraniteioModelBlock(ModelBlock):
@@ -381,7 +393,7 @@ class GraniteioModelBlock(ModelBlock):
 
     model: ExpressionType[object]
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
-    intrinsics: ExpressionType[list[GraniteioIntrinsicType]] = []
+    intrinsics: ExpressionType | list[GraniteioIntrinsicType] = []
     backend: ExpressionType[str | dict[str, Any]]
     processor: Optional[ExpressionType[str]] = None
 
