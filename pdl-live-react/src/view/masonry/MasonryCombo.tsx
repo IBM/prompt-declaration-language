@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core"
 import {
   useCallback,
   useEffect,
@@ -30,6 +31,11 @@ import computeModel from "./model"
 import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
+
+export type Runner = (
+  block: import("../../helpers").NonScalarPdlBlock,
+  onExit: () => void,
+) => void
 
 type Props = {
   value: string
@@ -81,6 +87,41 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [setModalIsDone, modalContent],
   )
 
+  // special form of setModalContent for running a PDL program
+  const run = useCallback<Runner>(
+    async (block, onExit) => {
+      const [cmd, input, output] = (await invoke("replay_prep", {
+        trace: JSON.stringify(block),
+        name: block.description?.slice(0, 20).replace(/\s/g, "-") ?? "trace",
+      })) as [string, string, string]
+      console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
+
+      setModalContent({
+        header: "Running Program",
+        cmd,
+        args: ["run", "--trace", output, input],
+        onExit: async () => {
+          onExit()
+          try {
+            const buf = await invoke<ArrayBuffer>("read_trace", {
+              traceFile: output,
+            }).catch(console.error)
+            if (buf) {
+              const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
+              const newTrace = decoder.decode(new Uint8Array(buf))
+              if (newTrace) {
+                setValue(newTrace)
+              }
+            }
+          } catch (err) {
+            console.error(err)
+          }
+        },
+      })
+    },
+    [setValue, setModalContent],
+  )
+
   const { base, masonry, numbering } = useMemo(
     () => computeModel(block),
     [block],
@@ -97,13 +138,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
   return (
     <>
       <PageSection type="subnav">
-        <Toolbar
-          sml={sml}
-          setSML={setSML}
-          block={block}
-          setValue={setValue}
-          setModalContent={setModalContent}
-        />
+        <Toolbar sml={sml} setSML={setSML} run={run} block={block} />
       </PageSection>
       <PageSection
         isFilled
