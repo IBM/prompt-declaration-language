@@ -95,7 +95,7 @@
     background-color: var(--pf-t--global--color--nonstatus--orange--default);
   }
   &[data-kind="read"] {
-    background-color: var(--pf-t--global--color--nonstatus--green--default);
+    background-color: var(--pf-t--global--color--nonstatus--yellow--default);
   }
   &[data-kind="repeat"],
   &[data-kind="lastOf"],
