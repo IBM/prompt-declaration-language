@@ -3,6 +3,7 @@ import { computeModel as computeBaseModel } from "../timeline/model"
 
 import {
   isLLMBlock,
+  hasInput,
   hasMessage,
   hasParser,
   hasResult,
@@ -70,7 +71,11 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
             def: block.def,
             kind: block.kind,
             lang,
-            message: hasMessage(block) ? block.message : undefined,
+            message: hasInput(block)
+              ? block.input
+              : hasMessage(block)
+                ? block.message
+                : undefined,
             footer1Key: meta?.[0]?.[0]
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
@@ -111,7 +116,7 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
           !v
             ? []
             : {
-                id: (block.id ?? "").replace(/\.?empty/g, ""),
+                id: (block.id ?? "").replace(/\.?empty/g, "") + ".0.define",
                 kind: "",
                 def,
                 lang: hasParser(v)

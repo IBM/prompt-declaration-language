@@ -180,6 +180,12 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
   return typeof (block as MessageBearing).message === "string"
 }
 
+export function hasInput(
+  block: PdlBlock,
+): block is Omit<LitellmModelBlock, "input"> & { input: string } {
+  return typeof (block as LitellmModelBlock).input === "string"
+}
+
 function tryJson(s: unknown) {
   if (typeof s === "string") {
     try {
