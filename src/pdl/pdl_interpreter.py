@@ -50,6 +50,8 @@ from .pdl_ast import (  # noqa: E402
     ExpressionType,
     FunctionBlock,
     GetBlock,
+    GraniteioIntrinsicType,
+    GraniteioModelBlock,
     IfBlock,
     ImportBlock,
     IncludeBlock,
@@ -85,10 +87,11 @@ from .pdl_ast import (  # noqa: E402
     TextBlock,
     Timing,
     empty_block_location,
+    graniteio_intrinsic_type_adapter,
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
-from .pdl_llms import LitellmModel  # noqa: E402
+from .pdl_llms import GraniteioModel, LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
@@ -314,7 +317,7 @@ def process_advanced_block_timed(
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     block.pdl__timing.end_nanos = time.time_ns()
     match trace:
-        case LitellmModelBlock():
+        case ModelBlock():
             trace = trace.model_copy(
                 update={
                     "context": lazy_apply(lambda s: s["pdl_context"], scope),
@@ -1173,19 +1176,24 @@ def process_expr(  # pylint: disable=too-many-return-statements
     return expr
 
 
+BlockTypeTVarProcessCallModel = TypeVar(
+    "BlockTypeTVarProcessCallModel", bound=ModelBlock
+)
+
+
 def process_call_model(
     state: InterpreterState,
     scope: ScopeType,
-    block: LitellmModelBlock,
+    block: BlockTypeTVarProcessCallModel,
     loc: LocationType,
 ) -> tuple[
     Any,
     LazyMessages,
     ScopeType,
-    LitellmModelBlock,
+    BlockTypeTVarProcessCallModel,
 ]:
     # evaluate model name
-    _, concrete_block = process_expr_of(block, "model", scope, loc)
+    _, concrete_block = process_expr_of(block, "model", scope, loc)  # pyright: ignore
     # evaluate model params
     match concrete_block:
         case LitellmModelBlock():
@@ -1207,6 +1215,16 @@ def process_call_model(
                     concrete_block.parameters or {},
                     scope.get("pdl_model_default_parameters", []),
                 )
+        case GraniteioModelBlock():
+            _, concrete_block = process_expr_of(
+                concrete_block, "intrinsics", scope, loc
+            )
+            concrete_block.intrinsics = [
+                graniteio_intrinsic_type_adapter.validate_python(i)
+                for i in concrete_block.intrinsics
+            ]
+            _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
+            _, concrete_block = process_expr_of(concrete_block, "processor", scope, loc)
         case _:
             assert False
     # evaluate input
@@ -1276,7 +1294,7 @@ def process_call_model(
 
 def generate_client_response(
     state: InterpreterState,
-    block: LitellmModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
     match state.batch:
@@ -1295,22 +1313,25 @@ def generate_client_response(
 
 def generate_client_response_streaming(
     state: InterpreterState,
-    block: LitellmModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
     msg_stream: Generator[dict[str, Any], Any, Any]
-    assert isinstance(block.model, str)  # block is a "concrete block"
-    assert block.parameters is None or isinstance(
-        block.parameters, dict
-    )  # block is a "concrete block"
     match block:
         case LitellmModelBlock():
+            assert isinstance(block.model, str)  # block is a "concrete block"
+            assert block.parameters is None or isinstance(
+                block.parameters, dict
+            )  # block is a "concrete block"
             msg_stream = LitellmModel.generate_text_stream(
                 model_id=block.model,
                 messages=model_input,
                 spec=block.spec,
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
+        case GraniteioModelBlock():
+            # TODO: curently fallback to the non-streaming interface
+            return generate_client_response_single(state, block, model_input)
         case _:
             assert False
     complete_msg: Optional[dict[str, Any]] = None
@@ -1353,21 +1374,34 @@ def litellm_parameters_to_dict(
     return parameters_dict
 
 
+def granite_intrinsics_to_list(
+    intrinsics: ExpressionType[list[GraniteioIntrinsicType]],
+) -> list[GraniteioIntrinsicType]:
+    assert isinstance(intrinsics, list)  # block is a "concrete block"
+    return intrinsics
+
+
 def generate_client_response_single(
     state: InterpreterState,
-    block: LitellmModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
-    assert isinstance(block.model, str)  # block is a "concrete block"
-    assert block.parameters is None or isinstance(
-        block.parameters, dict
-    )  # block is a "concrete block"
     match block:
         case LitellmModelBlock():
+            assert isinstance(block.model, str)  # block is a "concrete block"
+            assert block.parameters is None or isinstance(
+                block.parameters, dict
+            )  # block is a "concrete block"
             message, response = LitellmModel.generate_text(
                 block=block,
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(block.parameters),
+            )
+        case GraniteioModelBlock():
+            message, response = GraniteioModel.generate_text(
+                block=block,
+                messages=model_input,
+                intrinsics=granite_intrinsics_to_list(block.intrinsics),
             )
         case _:
             assert False

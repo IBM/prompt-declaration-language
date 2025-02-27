@@ -16,6 +16,7 @@ dependencies = [
   "termcolor~=2.0",
   "ipython~=8.0",
   "json-repair~=0.35",
+  "granite-io@git+https://github.com/ibm-granite/granite-io",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
