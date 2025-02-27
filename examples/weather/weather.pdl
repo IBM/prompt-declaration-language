@@ -13,7 +13,7 @@ text:
       Answer: Lagos
       Question: ${ QUERY }
   parameters:
-    stop_sequences: "Question,What,!,\n"
+    stop: ["Question", "What", "!", "\n"]
   def: LOCATION
   contribute: []
 - lang: python

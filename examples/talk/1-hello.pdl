@@ -3,6 +3,6 @@ text:
 - "Hello\n"
 - model: ollama/granite-code:8b
   parameters:
-    stop_sequences: "!"
-    include_stop_sequence: true
+    stop: ["!"]
+    # include_stop_sequence: true
 

@@ -15,6 +15,6 @@ text:
       ${ prompt }
     - model: ollama/granite-code:8b
       parameters:
-        decoding_method: sample
-        max_new_tokens: 512
+        # decoding_method: sample
+        num_predict: 512
 role: user

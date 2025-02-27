@@ -4,12 +4,12 @@ text:
 - model: ollama/granite-code:8b
   parameters:
     # "greedy" sampling tells the LLM to use the most likely token at each step
-    decoding_method: greedy
+    # decoding_method: greedy # Not used by Ollama
     # Tell the LLM to stop after generating an exclamation point.
-    stop_sequences: '!'
+    stop: ['!']
   def: GEN
 - "\nDid you say ${ GEN }?\n"
 - model: ollama/granite-code:8b
   parameters:
-    decoding_method: greedy
-    stop_sequences: '.'
+    # decoding_method: greedy
+    stop: ['.']

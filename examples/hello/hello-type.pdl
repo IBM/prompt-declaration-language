@@ -13,7 +13,7 @@ text:
     - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
     - model: ollama/granite-code:8b
       parameters:
-        stop_sequences: "\n"
+        stop: ["\n"]
 - call: ${ translate }
   spec: str
   args:

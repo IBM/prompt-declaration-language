@@ -4,5 +4,5 @@ text:
 - model: ollama/granite-code:8b
   def: GEN
   parameters:
-    stop_sequences: '!'
+    stop: ['!']
 - "\nGEN is equal to: ${ GEN }"
