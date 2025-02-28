@@ -12,41 +12,60 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/9672/badge)](https://bestpractices.coreinfrastructure.org/projects/9672)
 
-## Overview
-
 PDL is a declarative language designed for developers to create reliable, composable LLM prompts and integrate them into software systems. It provides a structured way to specify prompt templates, enforce validation, and compose LLM calls with traditional rule-based systems.
 
-<img src="docs/assets/animated_chatbot.gif" width=750px alt="Animated GIF of PDL chatbot."/>
+[**Quick Start**](#quick-start) **|** [**Example**](#example-program-a-basic-llm-call) **|** [**GUI**](#graphical-experience) **|** [**Key Features**](#key-features) **|** [**Documentation**](#documentation) **|** [**Documentation**](#documentation) **|** [**API Cheat Sheet**](#api-cheat-sheet)
 
-### Basic LLM Call
+## Quick Start
 
-Minimum installation.
+A PDL program is written *declaratively*, in YAML. The `pdl` command
+line tool interprets this program, accumulating messages and sending
+them to the models as specified by your program. PDL supports both
+hosted and local models. See
+[here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models)
+for instructions on how to install an Ollama model locally.
+
+To install the `pdl` command line tool:
 
 ```bash
 pip install prompt-declaration-language
 ```
-See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
-instructions on how to install an Ollama model locally.
 
-You can create a PDL file (YAML format):
+## Example Program: A Basic LLM Call
+
+<img src="docs/assets/pdl-ui-3.png" width="500" align="right" alt="PDL GUI"/>
+
+The following program accumulates a single message `write a hello
+world example…` and sends it to the `ollama/granite-3.2:8b` model:
 
 ```yaml
-description: Simple LLM interaction
 text:
-- "write a hello world example\n"
-- model: ollama/granite-code:8b
-  parameters:
-    stop: ['!']
-    temperature: 0
+- "write a hello world example, and explain how to run it"
+- model: ollama/granite-3.2:8b
 ```
 
-and run it:
+To run this program:
 
 ```bash
 pdl <path/to/example.pdl>
 ```
 
-For more information on the `pdl` CLI see [here](https://ibm.github.io/prompt-declaration-language/).
+For more information on the `pdl` CLI see
+[here](https://ibm.github.io/prompt-declaration-language/). To try the
+screenshot on the right live, click
+[here](https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/#/demos/Simple%20LLM%20interaction).
+
+## Graphical Experience
+
+The screenshot on the right (above) shows PDL's graphical user
+interface. This GUI allows for interactive debugging and live
+programming. You may install this via `brew install pdl` on MacOS. For
+other platforms, downloads are available
+[here](https://github.com/IBM/prompt-declaration-language/releases/latest). You
+may also kick the tires with a web version of the GUI
+[here](https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/).
+
+<img src="docs/assets/ui.gif" alt="PDL GUI"/>
 
 ## Key Features
 
@@ -71,16 +90,14 @@ For more information on the `pdl` CLI see [here](https://ibm.github.io/prompt-de
 - [API References](https://ibm.github.io/prompt-declaration-language/api_reference/)
 
 
-### Quick Reference
+### API Cheat Sheet
 
 <img src="docs/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
 
 
-## Quick Start Guide
+## Installation Details
 
-### Installation
-
-Requires Python 3.11+ (Windows users should use WSL)
+PDL requires Python 3.11+ (Windows users should use WSL).
 
 ```bash
 # Basic installation
@@ -187,7 +204,7 @@ text:
 pdl --trace <file.json> <my-example.pdl> 
 ```
 
-Upload trace files to the [Live Document Viewer](https://ibm.github.io/prompt-declaration-language/viewer/) for visual debugging, trace exploration, and live programming.
+Then, you can either download the GUI, or upload trace files to the [Live Document Viewer](https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/) for visual debugging, trace exploration, and live programming.
 
 
 ## Contributing
