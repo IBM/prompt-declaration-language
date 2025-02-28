@@ -113,3 +113,9 @@ def test_default_not_granite_20b_code_instruct_r1_1():
         "replicate/ibm-granite/granite-20b-code-instruct-r1.1", {}, model_defaults
     )
     assert {} == params
+
+
+def test_default_granite_3_2():
+    model_defaults = get_default_model_parameters()
+    params = apply_defaults("ollama/granite3.2", {}, model_defaults)
+    assert {"temperature": 0} == params

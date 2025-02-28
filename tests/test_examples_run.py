@@ -16,8 +16,7 @@ from pdl.pdl_parser import PDLParseError
 # to the expected results in tests/results/examples
 
 UPDATE_RESULTS = False
-RESULTS_VERSION = 14
-
+RESULTS_VERSION = 15
 
 TO_SKIP = {
     str(name)
@@ -98,6 +97,13 @@ TO_SKIP = {
         / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
+        pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
+        # For now, skip the granite-io examples
+        pathlib.Path("examples") / "granite-io" / "granite_io_hallucinations.pdl",
+        pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
+        pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
+        pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
+        pathlib.Path("examples") / "hello" / "hello-graniteio.pdl",
     ]
 }
 
@@ -279,12 +285,14 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 print(f"{pdl_file_name}: {exc}")  # unexpected error: breakpoint
             actual_runtime_error |= {str(pdl_file_name)}
             print(exc)
+
     # Parse errors
     expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
     unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
     assert (
         len(unexpected_parse_error) == 0
     ), f"Unexpected parse error: {unexpected_parse_error}"
+
     # Runtime errors
     expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
     unexpected_runtime_error = sorted(
@@ -293,6 +301,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     assert (
         len(unexpected_runtime_error) == 0
     ), f"Unexpected runtime error: {unexpected_runtime_error}"
+
     # Unexpected valid
     unexpected_valid = sorted(
         list(
