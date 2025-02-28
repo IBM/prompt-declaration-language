@@ -1,5 +1,4 @@
 import json
-import logging
 import re
 import shlex
 import subprocess  # nosec
@@ -103,9 +102,6 @@ from .pdl_utils import (  # noqa: E402
     stringify,
 )
 
-logger = logging.getLogger(__name__)
-
-
 empty_scope: ScopeType = PdlDict({"pdl_context": PdlList([])})
 
 
@@ -145,7 +141,6 @@ class InterpreterState(BaseModel):
 
 def generate(
     pdl_file: str | Path,
-    log_file: Optional[str | Path],
     state: Optional[InterpreterState],
     initial_scope: ScopeType,
     trace_file: Optional[str | Path],
@@ -154,14 +149,10 @@ def generate(
 
     Args:
         pdl_file: Program to execute.
-        log_file: File where the log is written. If `None`, use `log.txt`.
         initial_scope: Environment defining the variables in scope to execute the program.
         state: Initial state of the interpreter.
         trace_file: Indicate if the execution trace must be produced and the file to save it.
     """
-    if log_file is None:
-        log_file = "log.txt"
-    logging.basicConfig(filename=log_file, encoding="utf-8", format="", filemode="w")
     try:
         prog, loc = parse_file(pdl_file)
         if state is None:
@@ -271,7 +262,6 @@ def process_block(
                 yield_background(background)
             if state.yield_result:
                 yield_result(result.result(), BlockKind.DATA)
-            append_log(state, "pdl_context", background)
         else:
             result, background, scope, trace = process_advanced_block_timed(
                 state, scope, block, loc
@@ -653,8 +643,6 @@ def process_block_body(
                     ) from exc
                 match_case_trace = match_case.model_copy(update={"then": then_trace})
                 cases.append(match_case_trace)
-            if not matched:
-                append_log(state, "Match", "no match!")
             block.with_ = cases
             trace = block
         case RepeatBlock():
@@ -1264,18 +1252,12 @@ def process_call_model(
             litellm_params = params_to_model
 
         litellm.input_callback = [get_transformed_inputs]
-        # append_log(state, "Model Input", messages_to_str(model_input))
 
         msg, raw_result = generate_client_response(state, concrete_block, model_input)
-        # if "input" in litellm_params:
-        append_log(state, "Model Input", litellm_params)
-        # else:
-        #    append_log(state, "Model Input", messages_to_str(model_input))
         background: LazyMessages = PdlList([lazy_apply(lambda msg: msg | {"defsite": block.id}, msg)])  # type: ignore
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
-        append_log(state, "Model Output", result)
         trace = block.model_copy(update={"result": result, "trace": concrete_block})
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
@@ -1423,7 +1405,6 @@ def process_call_code(
         loc,
     )
     code_s = code_.result()
-    append_log(state, "Code Input", code_s)
     match block.lang:
         case "python":
             try:
@@ -1495,7 +1476,6 @@ def process_call_code(
                 loc=loc,
                 trace=block.model_copy(),
             )
-    append_log(state, "Code Output", result)
     trace = block.model_copy(update={"result": result})
     return result, background, scope, trace
 
@@ -1615,7 +1595,6 @@ def process_input(
         try:
             with open(file, encoding="utf-8") as f:
                 s = f.read()
-                append_log(state, "Input from File: " + str(file), s)
         except Exception as exc:
             if isinstance(exc, FileNotFoundError):
                 msg = f"file {str(file)} not found"
@@ -1637,7 +1616,6 @@ def process_input(
             message = "Enter/Paste your content. Ctrl-D to save it."
         if block.multiline is False:
             s = input(message)
-            append_log(state, "Input from stdin: ", s)
         else:  # multiline
             print(message)
             contents = []
@@ -1648,7 +1626,6 @@ def process_input(
                     break
                 contents.append(line + "\n")
             s = "".join(contents)
-            append_log(state, "Input from stdin: ", s)
     trace = block.model_copy(update={"result": s})
     background: LazyMessages = PdlList(
         [PdlDict({"role": state.role, "content": s, "defsite": block.id})]  # type: ignore
@@ -1802,8 +1779,3 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 
 def get_var(var: str, scope: ScopeType, loc: LocationType) -> Any:
     return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
-
-
-def append_log(state: InterpreterState, title, somestring):
-    logger.warning("**********  %s  **********", title)
-    # logger.warning(str(somestring)) # XXX TODO: Logging without forcing lazy values

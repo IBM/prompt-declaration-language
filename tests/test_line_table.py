@@ -4,7 +4,7 @@ from pdl.pdl_interpreter import empty_scope, generate
 
 
 def do_test(t, capsys):
-    generate(t["file"], None, None, empty_scope, None)
+    generate(t["file"], None, empty_scope, None)
     captured = capsys.readouterr()
     output_string = captured.out + "\n" + captured.err
     output = output_string.split("\n")

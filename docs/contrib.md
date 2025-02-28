@@ -54,8 +54,6 @@ Follow the following instructions to set up a dev environment to get started wit
     Hello! How can I help you today?
     ```
 
-You are all set!
-
 ### Documentation updates
 
 When you make changes to PDL, ensure to document any new features in the docs section. You can serve the docs locally to preview changes.
