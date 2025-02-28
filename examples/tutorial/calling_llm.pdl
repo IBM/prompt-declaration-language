@@ -3,4 +3,4 @@ text:
 - "Hello\n"
 - model: ollama/granite-code:8b
   parameters:
-    stop_sequences: '!'
+    stop: ['!']

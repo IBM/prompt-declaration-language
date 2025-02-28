@@ -4,10 +4,10 @@ text:
 - model: ollama/granite-code:8b
   def: name
   parameters:
-    stop_sequences: "!"
+    stop: ["!"]
 - "\n"
 - model: ollama/granite-code:8b
   input: "Translate the word ${ name | trim } to French\n"
   parameters:
-    stop_sequences: "\n"
+    stop: ["\n"]
     temperature: 0

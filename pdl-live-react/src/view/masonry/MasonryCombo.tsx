@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core"
 import {
   useCallback,
   useEffect,
@@ -10,6 +11,7 @@ import {
   Button,
   BackToTop,
   Modal,
+  type ModalProps,
   ModalBody,
   ModalFooter,
   ModalHeader,
@@ -26,10 +28,22 @@ import MasonryTileWrapper from "./MasonryTileWrapper"
 import Toolbar, { type SML } from "./Toolbar"
 
 import computeModel from "./model"
+import {
+  hasContextInformation,
+  hasTimingInformation,
+  isNonScalarPdlBlock,
+  type NonScalarPdlBlock,
+} from "../../helpers"
 
 import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
+
+export type Runner = (
+  block: NonScalarPdlBlock,
+  onExit: () => void,
+  modalVariant?: ModalProps["variant"],
+) => void
 
 type Props = {
   value: string
@@ -46,6 +60,9 @@ function setSMLUserSetting(sml: SML) {
 
 /** Combines <Masonry/>, <Timeline/>, ... */
 export default function MasonryCombo({ value, setValue }: Props) {
+  const [modalVariant, setModalVariant] =
+    useState<ModalProps["variant"]>("large")
+
   const block = useMemo(() => {
     if (value) {
       try {
@@ -81,6 +98,66 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [setModalIsDone, modalContent],
   )
 
+  // special form of setModalContent for running a PDL program
+  const run = useCallback<Runner>(
+    async (runThisBlock, onExit, modalVariant) => {
+      if (!isNonScalarPdlBlock(block)) {
+        onExit()
+        return
+      }
+
+      if (modalVariant) {
+        setModalVariant(modalVariant)
+      }
+
+      const [cmd, input, output] = (await invoke("replay_prep", {
+        trace: JSON.stringify(runThisBlock),
+        name:
+          runThisBlock.description?.slice(0, 20).replace(/\s/g, "-") ?? "trace",
+      })) as [string, string, string]
+      console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
+
+      // We need to pass tothe re-execution the original input context
+      const data = hasContextInformation(runThisBlock)
+        ? { pdl_context: runThisBlock.context }
+        : undefined
+
+      setModalContent({
+        header: "Running Program",
+        cmd,
+        args: [
+          "run",
+          "--trace",
+          output,
+          ...(!data ? [] : ["--data", JSON.stringify(data)]),
+          input,
+        ],
+        onExit: async () => {
+          onExit()
+          try {
+            const buf = await invoke<ArrayBuffer>("read_trace", {
+              traceFile: output,
+            }).catch(console.error)
+            if (buf) {
+              const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
+              const newTrace = decoder.decode(new Uint8Array(buf))
+              if (newTrace) {
+                setValue(
+                  JSON.stringify(
+                    spliceSubtree(block, runThisBlock, JSON.parse(newTrace)),
+                  ),
+                )
+              }
+            }
+          } catch (err) {
+            console.error(err)
+          }
+        },
+      })
+    },
+    [block, setValue, setModalContent],
+  )
+
   const { base, masonry, numbering } = useMemo(
     () => computeModel(block),
     [block],
@@ -97,13 +174,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
   return (
     <>
       <PageSection type="subnav">
-        <Toolbar
-          sml={sml}
-          setSML={setSML}
-          block={block}
-          setValue={setValue}
-          setModalContent={setModalContent}
-        />
+        <Toolbar sml={sml} setSML={setSML} run={run} block={block} />
       </PageSection>
       <PageSection
         isFilled
@@ -111,7 +182,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
         className="pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Masonry model={masonry} sml={sml}>
+        <Masonry model={masonry} sml={sml} run={run}>
           <MasonryTileWrapper sml={sml} variant="plain">
             <Timeline model={base} numbering={numbering} />
           </MasonryTileWrapper>
@@ -127,7 +198,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
 
-      <Modal variant="large" isOpen={!!modalContent} onClose={closeModal}>
+      <Modal
+        variant={modalVariant}
+        isOpen={!!modalContent}
+        onClose={closeModal}
+      >
         <ModalHeader
           title={modalContent?.header}
           titleIconVariant={
@@ -160,5 +235,75 @@ export default function MasonryCombo({ value, setValue }: Props) {
         </ModalFooter>
       </Modal>
     </>
+  )
+}
+
+/**
+ * We have received an updated subtree model. Splice it
+ * (destructively) into `tree` at the same place `oldSubtree` is
+ * located.
+ */
+function spliceSubtree(
+  tree: NonScalarPdlBlock,
+  oldSubtree: NonScalarPdlBlock,
+  newSubtree: NonScalarPdlBlock,
+): NonScalarPdlBlock {
+  let key: keyof NonScalarPdlBlock
+  for (key in tree) {
+    const value = tree[key]
+    if (Array.isArray(value)) {
+      for (let idx = 0; idx < value.length; idx++) {
+        const v = value[idx]
+        if (isNonScalarPdlBlock(v)) {
+          if (v.id === oldSubtree.id) {
+            value[idx] = updateIds(
+              newSubtree,
+              oldSubtree.id?.replace(new RegExp(newSubtree.id + "$"), "") ?? "",
+              hasTimingInformation(oldSubtree) &&
+                hasTimingInformation(newSubtree)
+                ? oldSubtree.pdl__timing.start_nanos -
+                    newSubtree.pdl__timing.start_nanos
+                : 0,
+            )
+          } else {
+            spliceSubtree(v, oldSubtree, newSubtree)
+          }
+        }
+      }
+    } else if (isNonScalarPdlBlock(value)) {
+      if (value.id === oldSubtree.id) {
+        Object.assign(tree, { [key]: newSubtree })
+      } else {
+        spliceSubtree(value, oldSubtree, newSubtree)
+      }
+    }
+  }
+
+  return tree
+}
+
+/**
+ * We need to add the id prefix from the enclosing tree, and also
+ * update the timestamps so that the timeline view stays consistent.
+ * TODO: re: timestamp updates, we still need to update all subsequent
+ * children as well; this only updates the new subtree...
+ */
+function updateIds(
+  tree: NonScalarPdlBlock,
+  idPrefix: string,
+  timeDelta: number,
+) {
+  return JSON.parse(
+    JSON.stringify(tree, (k, v) => {
+      switch (k) {
+        case "id":
+          return idPrefix + v
+        case "start_nanos":
+        case "end_nanos":
+          return v + timeDelta
+        default:
+          return v
+      }
+    }),
   )
 }

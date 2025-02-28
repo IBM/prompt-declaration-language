@@ -10,7 +10,7 @@ defs:
         contribute: [context]
       - model: ollama/granite-code:8b
         parameters:
-          stop_sequences: "\n"
+          stop: ["\n"]
 text:
 - call: ${ translate }
   contribute: []

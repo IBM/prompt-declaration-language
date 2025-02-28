@@ -1,6 +1,12 @@
 text:
-- "Hello!\n"
+- |
+  Find the fastest way for a seller to visit all the cities in their region
+  >> Response:
 - model: "granite3.2:2b"
   backend: openai
-  intrinsics: 
-  - thinking
+  parameters: 
+    thinking: true
+  modelResponse: outputs
+- |
+  >> Thoughts:
+  ${ outputs.reasoning_content }

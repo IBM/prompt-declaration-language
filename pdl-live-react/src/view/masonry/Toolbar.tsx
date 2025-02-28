@@ -10,38 +10,19 @@ const alignEnd = { default: "alignEnd" as const }
 export type SML = "s" | "m" | "l" | "xl"
 
 export type Props = {
+  run: import("./MasonryCombo").Runner
   block: import("../../pdl_ast").PdlBlock
-  setValue(value: string): void
 
   sml: SML
   setSML(sml: SML): void
-
-  setModalContent: import("react").Dispatch<
-    import("react").SetStateAction<{
-      header: string
-      cmd: string
-      args?: string[]
-      onExit?: (exitCode: number) => void
-    } | null>
-  >
 }
 
-export default function MasonryToolbar({
-  sml,
-  setSML,
-  block,
-  setValue,
-  setModalContent,
-}: Props) {
+export default function MasonryToolbar({ block, run, sml, setSML }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          <ToolbarReplayButton
-            block={block}
-            setValue={setValue}
-            setModalContent={setModalContent}
-          />
+          <ToolbarReplayButton block={block} run={run} />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarShowSourceButton />

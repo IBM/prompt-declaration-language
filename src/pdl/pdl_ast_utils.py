@@ -139,7 +139,7 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.input = f.f_block(block.input)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
-            if isinstance(block.parameters, dict):
+            if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
         case GraniteioModelBlock():
             block.model = f.f_expr(block.model)
@@ -147,8 +147,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.input = f.f_block(block.input)
             if block.trace is not None:
                 block.trace = f.f_block(block.trace)
-            if isinstance(block.intrinsics, dict):
-                block.intrinsics = f.f_expr(block.intrinsics)
+            if block.parameters is not None:
+                block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
             block.code = f.f_block(block.code)
         case GetBlock():

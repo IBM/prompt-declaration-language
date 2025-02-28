@@ -67,6 +67,7 @@ pub fn run_pdl_program(
     source_file_path: String,
     app_handle: tauri::AppHandle,
     trace_file: Option<&tauri_plugin_cli::ArgData>,
+    data: Option<&tauri_plugin_cli::ArgData>,
     stream: Option<&tauri_plugin_cli::ArgData>,
 ) -> Result<(), tauri::Error> {
     println!("Running {:?}", source_file_path);
@@ -74,6 +75,16 @@ pub fn run_pdl_program(
     let trace_arg = if let Some(arg) = trace_file {
         if let serde_json::Value::String(f) = &arg.value {
             "--trace ".to_owned() + f
+        } else {
+            "".to_owned()
+        }
+    } else {
+        "".to_owned()
+    };
+
+    let data_arg = if let Some(arg) = data {
+        if let serde_json::Value::String(s) = &arg.value {
+            format!("--data '{}'", s)
         } else {
             "".to_owned()
         }
@@ -99,6 +110,7 @@ pub fn run_pdl_program(
             activate.as_str(),
             "; pdl",
             trace_arg.as_str(),
+            data_arg.as_str(),
             stream_arg.as_str(),
             source_file_path.as_str(),
         ]
