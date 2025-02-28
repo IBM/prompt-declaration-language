@@ -39,7 +39,7 @@ your PDL program
 
 ```bash
 export OTEL_EXPORTER="otlp_http"
-export OTEL_ENDPOINT="http://localhost:4318"
+export OTEL_ENDPOINT="http://localhost:4318/v1/traces"
 export OTEL_SERVICE_NAME=calling_llm
 export OTEL_ENVIRONMENT_NAME=dev
 pdl ./examples/tutorial/calling_llm.pdl
