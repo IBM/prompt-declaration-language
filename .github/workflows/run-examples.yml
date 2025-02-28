@@ -1,13 +1,11 @@
 ---
 name: Run examples
 
-# on:
-#   schedule:
-#     - cron:  '0 1 * * *'
-#   workflow_dispatch:
+on:
+  schedule:
+    - cron:  '0 1 * * *'
+  workflow_dispatch:
 
-## TODO: for now
-on: [push, pull_request]
 
 jobs:
   tests:
