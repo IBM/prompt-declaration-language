@@ -49,16 +49,19 @@ To install the dependencies for development of PDL and execute all the example, 
 pip install 'prompt-declaration-language[examples]'
 ```
 
-Most examples in this repository use IBM Granite models on [Replicate](https://replicate.com/).
-In order to run these examples, you need to create a free account
+You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
+See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+instructions on how to install an Ollama model locally.
+
+Most examples in this repository use IBM Granite models on [Ollama](https://ollama.com) and some are on [Replicate](https://replicate.com/). In order to run these examples, you need to create a free account
 on Replicate, get an API key and store it in the environment variable:
 
-- `REPLICATE_API_KEY`
+- `REPLICATE_API_TOKEN`
 
 In order to use foundation models hosted on [watsonx](https://www.ibm.com/watsonx) via LiteLLM, you need a watsonx account (a free plan is available) and set up the following environment variables:
 
-- `WATSONX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
-- `WATSONX_APIKEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
+- `WX_URL`, the API url (set to `https://{region}.ml.cloud.ibm.com`) of your watsonx instance. The region can be found by clicking in the upper right corner of the watsonx dashboard (for example a valid region is `us-south` ot `eu-gb`).
+- `WX_API_KEY`, the API key (see information on [key creation](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key))
 - `WATSONX_PROJECT_ID`, the project hosting the resources (see information about [project creation](https://www.ibm.com/docs/en/watsonx/saas?topic=projects-creating-project) and [finding project ID](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/fm-project-id.html?context=wx)).
 
 For more information, see [documentation](https://docs.litellm.ai/docs/providers/watsonx).
@@ -93,13 +96,8 @@ and all code is executed locally. To use the `--sandbox` flag, you need to have 
 The interpreter prints out a log by default in the file `log.txt`. This log contains the details of inputs and outputs to every block in the program. It is useful to examine this file when the program is behaving differently than expected. The log displays the exact prompts submitted to models by LiteLLM (after applying chat templates), which can be
 useful for debugging.
 
-To change the log filename, you can pass it to the interpreter as follows:
 
-```
-pdl --log <my-logfile> <my-example>
-```
-
-We can also pass initial data to the interpreter to populate variables used in a PDL program, as follows:
+We can pass initial data to the interpreter to populate variables used in a PDL program, as follows:
 
 ```
 pdl --data <JSON-or-YAML-data> <my-example>
