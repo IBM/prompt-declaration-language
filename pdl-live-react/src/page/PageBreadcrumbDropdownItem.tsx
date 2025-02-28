@@ -19,7 +19,7 @@ export default function PageBreadcrumbDropdownItem({
 
   const onClick = useCallback(
     () => navigate("/" + url + "/" + name + search + hash),
-    [name],
+    [name, url, hash, search, navigate],
   )
   return (
     <DropdownItem onClick={onClick} isDisabled={name === current}>

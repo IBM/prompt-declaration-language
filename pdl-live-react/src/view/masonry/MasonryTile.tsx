@@ -90,7 +90,7 @@ export default function MasonryTile({
         </>
       ),
     }),
-    [myRun, start_nanos, end_nanos, timezone, sml],
+    [isRunning, tileActions, myRun, start_nanos, end_nanos, timezone, sml],
   )
 
   const maxHeight =
