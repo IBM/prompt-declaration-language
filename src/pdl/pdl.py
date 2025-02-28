@@ -1,6 +1,5 @@
 import argparse
 import json
-import logging
 import sys
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
@@ -24,8 +23,6 @@ from .pdl_lazy import PdlDict
 from .pdl_parser import parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import validate_scope
-
-logger = logging.getLogger(__name__)
 
 
 class InterpreterConfig(TypedDict, total=False):
@@ -68,7 +65,6 @@ def exec_program(
     Returns:
         Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
     """
-    logging.basicConfig(filename="log.txt", encoding="utf-8", format="", filemode="w")
     config = config or {}
     state = InterpreterState(**config)
     if not isinstance(scope, PdlDict):
@@ -190,11 +186,6 @@ def main():
         help="output trace for live document and optionally specify the file name",
     )
     parser.add_argument(
-        "-l",
-        "--log",
-        help="specify a name for the log file",
-    )
-    parser.add_argument(
         "--schema",
         action="store_true",
         help="generate PDL JSON Schema and exit",
@@ -278,7 +269,6 @@ def main():
     )
     pdl_interpreter.generate(
         pdl_file,
-        args.log,
         InterpreterState(**config),
         PdlDict(initial_scope),
         trace_file,
