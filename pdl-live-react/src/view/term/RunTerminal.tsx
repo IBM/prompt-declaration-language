@@ -1,8 +1,8 @@
 import { createRef, useCallback, useEffect, useState } from "react"
 
 import { spawn } from "tauri-pty"
-import { Terminal } from "xterm"
-import { FitAddon } from "xterm-addon-fit"
+import { Terminal } from "@xterm/xterm"
+import { FitAddon } from "@xterm/addon-fit"
 
 import "./RunTerminal.css"
 

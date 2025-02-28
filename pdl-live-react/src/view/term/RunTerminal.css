@@ -1,4 +1,4 @@
-@import "xterm/css/xterm.css";
+@import "@xterm/xterm/css/xterm.css";
 
 .pdl-run-terminal .xterm-rows {
   .xterm-fg-1 {
