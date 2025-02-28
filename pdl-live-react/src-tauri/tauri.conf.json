@@ -1,7 +1,5 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "PDL",
-  "version": "0.3.0",
   "identifier": "com.ibm.prompt-declaration-language.app",
   "build": {
     "beforeDevCommand": "npm run dev",
