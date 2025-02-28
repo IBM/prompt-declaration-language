@@ -50,4 +50,4 @@ jobs:
       - name: upload web site
         run: |
           cd dist
-          mc cp -r * pdl/$PDL_WEBSITE_S3_PATH
+          mc mirror --remove . pdl/$PDL_WEBSITE_S3_PATH
