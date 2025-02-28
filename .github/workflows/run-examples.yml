@@ -29,6 +29,7 @@ jobs:
         ollama pull granite-code:8b
         ollama pull granite3-dense:8b
         ollama pull granite3.1-dense
+        ollama pull granite3.2:2b
         ollama pull granite3.2
         ollama pull granite3.2:8b
         ollama pull mxbai-embed-large
@@ -37,7 +38,7 @@ jobs:
     - name: Check that all required models are available
       shell: bash
       run: |
-        models=("granite-code" "granite3-dense" "granite3.1-dense" "mxbai-embed-large" "granite3.2" "granite3.2:8b")
+        models=("granite-code" "granite3-dense" "granite3.1-dense" "mxbai-embed-large" "granite3.2:2b" "granite3.2" "granite3.2:8b")
         missing=0
         for model in "${models[@]}"; do
           if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
