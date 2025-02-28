@@ -461,6 +461,8 @@ be used for debugging or performance analysis, and to see the shape of prompts s
 
 For more information see [here](https://github.com/IBM/prompt-declaration-language/blob/main/docs/telemetry.md).
 
+<img src="https://ibm.github.io/prompt-declaration-language/assets/telemetry.png" alt="Trace Telemetry"/>
+
 ## Best Practices
 
 1. **Template Organization**:
