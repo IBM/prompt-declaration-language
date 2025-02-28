@@ -78,15 +78,13 @@ text:
 
 
   The answer is: ${ out[0].sentence }
-
-- if: ${ out[0].meta.hallucination_level == "low" }
-  then:  |
-    I am not hallucinating, promise!
-  # (The level may be "high" or "unanswerable")
-  else: |
-    Totally hallucinating, sorry!
-- if: ${ out[0].meta.citation }
-  then: |
-    The citation is: ${ out[0].meta.citation.snippet }
-  else: |
-    No citation matched the user query.
+- match: ${out[0].meta.hallucination_level}
+  with:
+  - case: "high"
+    then: Totally hallucinating, sorry!
+  - case: "low"
+    if: ${ out[0].meta.citation }
+    then: |
+      I am not hallucinating, promise!
+      The citation is: ${ out[0].meta.citation.snippet }
+  - then: Not sure if I am hallucinating...

@@ -19,9 +19,9 @@ jobs:
           - platform: 'macos-latest' # for Arm based macs (M1 and above).
             args: '--target universal-apple-darwin'
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: '--target aarch64-unknown-linux-musl'
+            args: '--target aarch64-unknown-linux-glibc'
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: '--target x86_64-unknown-linux-musl'
+            args: '--target x86_64-unknown-linux-glibc'
           #- platform: 'windows-latest'
           #  args: ''
 
@@ -31,6 +31,11 @@ jobs:
         working-directory: ./pdl-live-react
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -46,10 +51,16 @@ jobs:
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
+          rustup target add aarch64-apple-darwin
+          rustup target add x86_64-apple-darwin
+          
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+        run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-          rustup target add aarch64-unknown-linux-musl
-          rustup target add x86_64-unknown-linux-musl
+          rustup target add aarch64-unknown-linux-glibc
+          rustup target add x86_64-unknown-linux-glibc
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
