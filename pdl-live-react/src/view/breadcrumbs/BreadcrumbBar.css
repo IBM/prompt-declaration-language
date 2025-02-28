@@ -6,6 +6,13 @@
   }
 }
 
+.pdl-masonry-tile[data-padding="s"] .pdl-breadcrumb-bar {
+  --pdl-bb: 0.5;
+}
+.pdl-masonry-tile[data-padding="m"] .pdl-breadcrumb-bar {
+  --pdl-bb: 0.6875;
+}
+
 .pdl-breadcrumb-bar {
   /** Size factor relative to 1em */
   --pdl-bb: 0.75;

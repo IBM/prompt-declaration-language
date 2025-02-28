@@ -94,6 +94,10 @@
   &[data-padding="m"] {
     font-size: 0.875rem !important;
   }
+  blockquote {
+    padding: 1em;
+    margin-block-end: 1em;
+  }
 }
 
 .pf-v6-theme-dark {
