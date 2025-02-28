@@ -502,9 +502,9 @@ class JoinConfig(BaseModel):
 
 
 class JoinText(JoinConfig):
-    iteration_type: Annotated[
-        Literal[IterationType.TEXT], BeforeValidator(_ensure_lower)
-    ] = Field(alias="as", default=IterationType.TEXT)
+    iteration_type: Literal[IterationType.TEXT] = Field(
+        alias="as", default=IterationType.TEXT
+    )
     """String concatenation of the result of each iteration.
     """
 
@@ -514,25 +514,19 @@ class JoinText(JoinConfig):
 
 
 class JoinArray(JoinConfig):
-    iteration_type: Annotated[
-        Literal[IterationType.ARRAY], BeforeValidator(_ensure_lower)
-    ] = Field(alias="as")
+    iteration_type: Literal[IterationType.ARRAY] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinObject(JoinConfig):
-    iteration_type: Annotated[
-        Literal[IterationType.OBJECT], BeforeValidator(_ensure_lower)
-    ] = Field(alias="as")
+    iteration_type: Literal[IterationType.OBJECT] = Field(alias="as")
     """Return the union of the objects created at each iteration.
     """
 
 
 class JoinLastOf(JoinConfig):
-    iteration_type: Annotated[
-        Literal[IterationType.LASTOF], BeforeValidator(_ensure_lower)
-    ] = Field(alias="as")
+    iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
