@@ -18,7 +18,7 @@ jobs:
         include:
           - platform: 'macos-latest' # for Arm based macs (M1 and above).
             args: '--target universal-apple-darwin'
-          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
+          - platform: 'ubuntu-22.04-arm' # for Tauri v1 you could replace this with ubuntu-20.04.
             args: '--target aarch64-unknown-linux-gnu'
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
             args: '--target x86_64-unknown-linux-gnu'
@@ -93,5 +93,5 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaserName: 'Version __VERSION__ (ui build test)'
+          releaseName: 'Version __VERSION__ (ui build test)'
           args: ${{ matrix.args }}
