@@ -33,7 +33,7 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
         defs = schema["$defs"]
         errors = analyze_errors(defs, defs["Program"], prog_yaml, loc)
         if errors == []:
-            errors = ["The file do not respect the schema."]
+            errors = [f"The file PDL {file_name} does not respect the schema."]
         raise PDLParseError(errors) from exc
     return prog, loc
 
