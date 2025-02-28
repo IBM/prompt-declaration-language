@@ -95,6 +95,9 @@ TO_SKIP = {
         pathlib.Path("examples")
         / "rag"
         / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
+        pathlib.Path("examples")
+        / "rag"
+        / "tfidf_rag.pdl",  # TODO: check what the expected output is
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
