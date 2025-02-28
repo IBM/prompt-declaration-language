@@ -1,4 +1,4 @@
-name: 'Publish pdl-live-react to GitHub release'
+name: 'Publish ui to GitHub release'
 
 on:
   push:
