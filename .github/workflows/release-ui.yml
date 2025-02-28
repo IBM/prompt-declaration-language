@@ -54,7 +54,14 @@ jobs:
       - name: install frontend dependencies
         run: npm ci # change this to npm, pnpm or bun depending on which one you use.
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: download tauri-action
+        run: |
+          mkdir tauri-action && cd tauri-action
+          wget https://raw.githubusercontent.com/tauri-apps/tauri-action/refs/heads/dev/dist/index.js
+          wget https://raw.githubusercontent.com/tauri-apps/tauri-action/refs/heads/dev/dist/package.json
+          
+#      - uses: tauri-apps/tauri-action@v0
+      - name: run tauri-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
@@ -63,7 +70,10 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        with:
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'Version __VERSION__ (ui build test)'
-          args: ${{ matrix.args }}
+#        with:
+# re: INPUT_, see https://github.com/actions/toolkit/blob/main/packages/core/src/core.ts
+          INPUT_tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          INPUT_releaseName: 'Version __VERSION__ (ui build test)'
+          INPUT_args: ${{ matrix.args }}
+        run:
+          node ./tauri-action/index.js $(pwd)
