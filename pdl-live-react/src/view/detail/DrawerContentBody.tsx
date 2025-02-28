@@ -14,21 +14,6 @@ import {
   type NonScalarPdlBlock as Model,
 } from "../../helpers"
 
-function sourceBody(value: string) {
-  return [
-    <Tab key={0} eventKey={0} title={<TabTitleText>Source</TabTitleText>}>
-      <Suspense>
-        <SourceTabContent block={JSON.parse(value)} />
-      </Suspense>
-    </Tab>,
-    <Tab key={1} eventKey={1} title={<TabTitleText>Raw Trace</TabTitleText>}>
-      <Suspense>
-        <RawTraceTabContent block={JSON.parse(value)} />
-      </Suspense>
-    </Tab>,
-  ]
-}
-
 function defBody(_def: string | null, block: Model) {
   const value = hasResult(block) ? block.result : undefined
   return (
@@ -88,9 +73,6 @@ export default function DrawerContentBody({
   model,
 }: Props) {
   switch (objectType) {
-    case "source":
-    case "rawtrace":
-      return sourceBody(value)
     case "def":
       if (!model) {
         return (

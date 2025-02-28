@@ -28,9 +28,6 @@ type Props = {
 
 function header(objectType: string) {
   switch (objectType) {
-    case "source":
-    case "rawtrace":
-      return "Application Code"
     case "def":
       return "Variable Definition"
     default:

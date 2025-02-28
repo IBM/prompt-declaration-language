@@ -6,7 +6,6 @@ import {
   hasInput,
   hasMessage,
   hasParser,
-  hasResult,
   hasScalarResult,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
@@ -17,7 +16,7 @@ import {
 import type Tile from "./Tile"
 
 /** The final result of the block */
-function result(block: import("../../pdl_ast").PdlBlock) {
+/* function result(block: import("../../pdl_ast").PdlBlock) {
   if (hasResult(block) && hasTimingInformation(block)) {
     return [
       {
@@ -31,7 +30,7 @@ function result(block: import("../../pdl_ast").PdlBlock) {
   }
 
   return []
-}
+} */
 
 /** Remove objects from the Masonry model that aren't helpful to display */
 function removeFluff({ kind }: { kind?: string }) {
@@ -44,7 +43,7 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
   const base = computeBaseModel(block)
 
   const masonry: Tile[] = base
-    .concat(result(block))
+    // .concat(result(block))
     .flatMap(({ id, block, children }) => {
       if (children.length === 0 && hasTimingInformation(block)) {
         const { resultForDisplay, meta, lang } = isLLMBlock(block)
