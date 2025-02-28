@@ -1,4 +1,4 @@
 description: Simple LLM interaction
 text:
-- "write a hello world example\n"
-- model: ollama/llama3.1:8b
+- "write a hello world example, and explain to me how to run it"
+- model: ollama/granite3.2:8b
