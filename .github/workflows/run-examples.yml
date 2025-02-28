@@ -17,6 +17,13 @@ jobs:
         python-version: ['3.11', '3.12', '3.13']
 
     steps:
+
+      # Free up some disk space
+    - name: Remove unnecessary files
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       # Set up Ollama
     - name: Install Ollama and start server
       shell: bash
