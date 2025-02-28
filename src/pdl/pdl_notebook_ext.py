@@ -6,6 +6,7 @@ from IPython.core.magic_arguments import argument, magic_arguments, parse_argstr
 from IPython.display import HTML, display_html
 
 from .pdl import InterpreterConfig, exec_str
+from .pdl_ast import get_default_model_parameters
 from .pdl_dumper import block_to_dict
 from .pdl_lazy import PdlDict, PdlList
 
@@ -36,6 +37,10 @@ class PDLMagics(Magics):
         else:
             # local_ns won't be lazy; make it lazy again
             scope = local_ns | {"pdl_context": PdlList(local_ns.get("pdl_context", []))}
+
+        if "pdl_model_default_parameters" not in scope:
+            scope["pdl_model_default_parameters"] = get_default_model_parameters()
+
         try:
             pdl_output = exec_str(
                 cell,
@@ -52,8 +57,10 @@ class PDLMagics(Magics):
             print(err)
             return
 
+        # (Note that this resolves the lazy pdl_context)
         for x, v in pdl_output["scope"].items():
             local_ns[x] = v
+
         if args.viewer:
             display_html(
                 self.pdl_viewer(
