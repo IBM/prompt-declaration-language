@@ -31,7 +31,7 @@ def test_dump() -> None:
             ast2, _ = parse_str(s)
             json1 = ast1.model_dump_json()
             json2 = ast2.model_dump_json()
-            assert json1 == json2, yaml_file_name
+            assert json1 == json2, f"{yaml_file_name}:\n{s}"
         except PDLParseError:
             pass
         except Exception as exc:

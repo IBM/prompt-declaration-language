@@ -1,4 +1,4 @@
-description: for loop over multiple lists
+description: for loop creating an object
 defs:
   numbers:
     data: [1, 2, 3, 4]
@@ -8,4 +8,7 @@ for:
   number: ${ numbers }
   name: ${ names }
 repeat:
-  "${ name }'s number is ${ number }\n"
+  data:
+    ${ name }: ${ number }
+join:
+  as: object

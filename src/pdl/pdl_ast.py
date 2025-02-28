@@ -477,6 +477,7 @@ class MatchBlock(Block):
 class IterationType(StrEnum):
     LASTOF = "lastOf"
     ARRAY = "array"
+    OBJECT = "object"
     TEXT = "text"
 
 
@@ -504,13 +505,19 @@ class JoinArray(JoinConfig):
     """
 
 
+class JoinObject(JoinConfig):
+    iteration_type: Literal[IterationType.OBJECT] = Field(alias="as")
+    """Return the union of the objects created at each iteration.
+    """
+
+
 class JoinLastOf(JoinConfig):
     iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
 
-JoinType: TypeAlias = JoinText | JoinArray | JoinLastOf
+JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
 
 
 class RepeatBlock(Block):

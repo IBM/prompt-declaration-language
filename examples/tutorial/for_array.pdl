@@ -1,4 +1,4 @@
-description: for loop
+description: array comprehension
 for:
   i: [1, 2, 3, 4]
 repeat:

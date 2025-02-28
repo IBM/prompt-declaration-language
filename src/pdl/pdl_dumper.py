@@ -23,8 +23,6 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
-    JoinArray,
-    JoinLastOf,
     JoinText,
     JoinType,
     LastOfBlock,
@@ -287,7 +285,7 @@ def join_to_dict(join: JoinType) -> dict[str, Any]:
     match join:
         case JoinText():
             d["with"] = join.join_string
-        case JoinArray() | JoinLastOf():
+        case _:
             d["as"] = str(join.iteration_type)
     return d
 
