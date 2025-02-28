@@ -65,6 +65,12 @@ other platforms, downloads are available
 may also kick the tires with a web version of the GUI
 [here](https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/).
 
+To generate a trace for use in the GUI:
+```bash
+pdl --trace <file.json> <my-example.pdl> 
+```
+
+
 <img src="docs/assets/ui.gif" alt="PDL GUI"/>
 
 ## Key Features
@@ -198,13 +204,15 @@ text:
 ```
 
 
-## Trace Generation and Live Document Visualization
+## Trace Telemetry
 
-```bash
-pdl --trace <file.json> <my-example.pdl> 
-```
+PDL includes experimental support for gathering trace telemetry.  This can
+be used for debugging or performance analysis, and to see the shape of prompts sent by LiteLLM to models.
 
-Then, you can either download the GUI, or upload trace files to the [Live Document Viewer](https://pdl.s3-web.us-east.cloud-object-storage.appdomain.cloud/) for visual debugging, trace exploration, and live programming.
+For more information see [here](https://github.com/IBM/prompt-declaration-language/blob/main/docs/telemetry.md).
+
+<img src="https://ibm.github.io/prompt-declaration-language/assets/telemetry.png" alt="Trace Telemetry"/>
+
 
 
 ## Contributing
