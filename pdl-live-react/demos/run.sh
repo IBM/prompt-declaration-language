@@ -5,8 +5,8 @@ UI="$SCRIPTDIR"/.. # top of react UI
 TOP="$UI"/.. # top of repo
 T="$UI"/src/demos # place to store traces
 
-pdl --trace "$T"/demo1.json <(cat "$UI"/demos/demo1.pdl | sed -E 's#(model: )(.+)#\1ollama/llama3.1:8b#g')
-pdl --trace "$T"/demo2.json <(cat "$TOP"/examples/tutorial/model_chaining.pdl | sed -E 's#(model: )(.+)#\1ollama/llama3.1:8b#g')
+pdl --trace "$T"/demo1.json "$UI"/demos/demo1.pdl
+pdl --trace "$T"/demo2.json "$UI"/demos/demo2.pdl
 pdl --trace "$T"/demo3.json <(cat "$TOP"/examples/fibonacci/fib.pdl | sed -E 's#(model: )(.+)#\1ollama/llama3.1:8b#g')
 pdl --trace "$T"/demo4.json <(cat "$TOP"/examples/chatbot/chatbot.pdl  | sed -E 's#(model: )(.+)#\1ollama/llama3.1:8b#g') <<EOF
 what is the fastest animal?
