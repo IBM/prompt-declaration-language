@@ -173,3 +173,12 @@ code: |
 """
     result = exec_str(prog_str)
     assert result == print  # pylint: disable=comparison-with-callable
+
+
+def test_lang_casing():
+    prog_str = """
+lang: Python
+code: result = "Hello World!"
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"

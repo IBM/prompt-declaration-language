@@ -127,3 +127,48 @@ def test_jsonl_parser():
     """
     result = exec_str(jsonl_parser)
     assert result == [{"a": 1, "b": 2}, {"a": "hello"}, {"b": "bye"}]
+
+
+def test_regex_findall():
+    prog = """
+    text: |
+        (1,2,3,4)
+    parser:
+        regex: '[0-9]+'
+        mode: findall
+    """
+    result = exec_str(prog)
+    assert result == ["1", "2", "3", "4"]
+
+
+def test_regex_split():
+    prog = """
+    text: (1,2,3,4)
+    parser:
+        regex: '[0-9]+'
+        mode: split
+    """
+    result = exec_str(prog)
+    assert result == ["(", ",", ",", ",", ")"]
+
+
+def test_parser_case1():
+    jsonl_parser = """
+    text: |
+        { "a": 1, "b": 2}
+    parser: JSON
+    """
+    result = exec_str(jsonl_parser)
+    assert result == {"a": 1, "b": 2}
+
+
+def test_parser_case2():
+    prog = """
+    text: |
+        (1,2,3,4)
+    parser:
+        regex: '[0-9]+'
+        mode: findAll
+    """
+    result = exec_str(prog)
+    assert result == ["1", "2", "3", "4"]
