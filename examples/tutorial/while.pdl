@@ -1,0 +1,7 @@
+defs:
+  i: 0
+while: ${ i < 3 }
+repeat:
+  defs:
+    i: ${i + 1}
+  text: ${i}

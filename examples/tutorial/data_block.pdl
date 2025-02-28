@@ -6,7 +6,7 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 lastOf:
-- model: ollama/granite-code:8b
+- model: ollama/granite3.2:2b
   def: EXPLANATION
   input:
      |

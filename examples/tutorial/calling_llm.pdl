@@ -1,6 +1,6 @@
 description: Hello world calling a model
 text:
 - "Hello\n"
-- model: ollama/granite-code:8b
+- model: ollama/granite3.2:2b
   parameters:
     stop: ['!']

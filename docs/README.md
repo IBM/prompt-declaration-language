@@ -11,7 +11,7 @@ PDL is based on the premise that interactions with an LLM are mainly for the pur
 
 PDL provides the following features:
 
-- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx)
+- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx), as well as the [Granite IO Processor](https://github.com/ibm-granite/granite-io) framework
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files and stdin, including JSON data
@@ -32,7 +32,6 @@ See below for a quick reference, followed by [installation notes](#interpreter_i
 
 (See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).)
 
-<b>Pro Tip</b>: When writing loops and conditionals with `repeat`, `for`, and `if-then-else`, start the body of the loop or conditional (`then`/`else`) with `text` in order to see the results of every block in the body. See for example this [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/conditionals_loops.pdl).
 
 ## Interpreter Installation
 

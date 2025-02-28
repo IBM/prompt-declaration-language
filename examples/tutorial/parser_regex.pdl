@@ -1,0 +1,12 @@
+description: Hello world with parser using regex
+text:
+- model: ollama/granite-code:8b
+  input: "Hello,"
+  parameters:
+    # Tell the LLM to stop after generating an exclamation point.
+    stop: ['!']
+  spec: {"name": str}
+  parser:
+    spec:
+      name: str
+    regex: '\s*(?P<name>.*)\s*'

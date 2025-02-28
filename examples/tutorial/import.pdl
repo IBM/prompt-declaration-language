@@ -1,0 +1,7 @@
+defs:
+  lib: 
+    import: import_lib
+text:
+- call: ${ lib.a }
+  args: 
+    arg: Bye!
