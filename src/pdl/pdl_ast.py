@@ -3,6 +3,7 @@
 
 from enum import StrEnum
 from typing import (
+    Annotated,
     Any,
     Generic,
     Literal,
@@ -14,11 +15,18 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, ConfigDict, Field, RootModel
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, RootModel
 from pydantic.json_schema import SkipJsonSchema
 
 from .pdl_lazy import PdlDict, PdlLazy
 from .pdl_schema_utils import pdltype_to_jsonschema
+
+
+def _ensure_lower(value):
+    if isinstance(value, str):
+        return value.lower()
+    return value
+
 
 ScopeType: TypeAlias = PdlDict[str, Any]
 
@@ -131,7 +139,10 @@ class PdlParser(Parser):
 
 class RegexParser(Parser):
     regex: str
-    mode: Literal["search", "match", "fullmatch", "split", "findall"] = "fullmatch"
+    mode: Annotated[
+        Literal["search", "match", "fullmatch", "split", "findall"],
+        BeforeValidator(_ensure_lower),
+    ] = "fullmatch"
 
 
 ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
@@ -191,7 +202,7 @@ class Block(BaseModel):
     ]
     """Indicate if the block contributes to the result and background context.
     """
-    parser: Optional[ParserType] = None
+    parser: Annotated[Optional[ParserType], BeforeValidator(_ensure_lower)] = None
     """Parser to use to construct a value out of a string result."""
     fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
@@ -362,7 +373,10 @@ class CodeBlock(Block):
     """Execute a piece of code."""
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
-    lang: Literal["python", "command", "jinja", "pdl"]
+    lang: Annotated[
+        Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
+    ]
+
     """Programming language of the code.
     """
     code: "BlockType"
