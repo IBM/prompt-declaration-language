@@ -1,0 +1,6 @@
+description: Model chaining
+text:
+- "write a hello world example"
+- model: ollama/llama3.1:8b
+- "how about in Rust?"
+- model: ollama/llama3.1:8b
