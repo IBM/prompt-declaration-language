@@ -46,6 +46,8 @@ and run it:
 pdl <path/to/example.pdl>
 ```
 
+For more information on the `pdl` CLI see [here](https://ibm.github.io/prompt-declaration-language/).
+
 ## Key Features
 
 - **LLM Integration**: Compatible with any LLM, including IBM watsonx
@@ -65,8 +67,9 @@ pdl <path/to/example.pdl>
 ## Documentation
 
 - [Documentation](https://ibm.github.io/prompt-declaration-language/)
-- [API References](https://ibm.github.io/prompt-declaration-language/api_reference/)
 - [Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial/)
+- [API References](https://ibm.github.io/prompt-declaration-language/api_reference/)
+
 
 ### Quick Reference
 
@@ -90,11 +93,13 @@ pip install 'prompt-declaration-language[examples]'
 ### Environment Setup
 
 You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
+See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+instructions on how to install an Ollama model locally.
 
 If you use watsonx:
 ```bash
-export WATSONX_URL="https://{region}.ml.cloud.ibm.com"
-export WATSONX_APIKEY="your-api-key"
+export WX_URL="https://{region}.ml.cloud.ibm.com"
+export WX_API_KEY="your-api-key"
 export WATSONX_PROJECT_ID="your-project-id"
 ```
 
@@ -105,6 +110,7 @@ export REPLICATE_API_TOKEN="your-token"
 
 ### IDE Configuration 
 
+Install the `YAML Language Support by Red Hat` extension in VSCode.
 VSCode setup for syntax highlighting and validation:
 
 ```json
@@ -128,13 +134,13 @@ In this example we use external content _data.yaml_ and watsonx as an LLM provid
 ```yaml
 description: Template with variables
 defs:
-  USER_INPUT:
-    read: ../examples/code/data.yaml
+  user_input:
+    read: ../code/data.yaml
     parser: yaml
 text:
 - model: watsonx/ibm/granite-34b-code-instruct
   input: |
-    Process this input: ${USER_INPUT}
+    Process this input: ${user_input}
     Format the output as JSON.
 ```
 
@@ -174,20 +180,14 @@ text:
   until: ${ user_input == '/bye'}
 ```
 
-## Debugging Tools
 
-### Log Inspection
-```bash
-pdl --log <my-logfile> <my-example.pdl>
-```
-
-### Trace Generation and Live Document Visualization
+## Trace Generation and Live Document Visualization
 
 ```bash
 pdl --trace <file.json> <my-example.pdl> 
 ```
 
-Upload trace files to the [Live Document Viewer](https://ibm.github.io/prompt-declaration-language/viewer/) for visual debugging.
+Upload trace files to the [Live Document Viewer](https://ibm.github.io/prompt-declaration-language/viewer/) for visual debugging, trace exploration, and live programming.
 
 
 ## Contributing
