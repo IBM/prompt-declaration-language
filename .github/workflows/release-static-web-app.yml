@@ -25,12 +25,6 @@ jobs:
         with:
           node-version: lts/*
 
-#      - name: install Rust stable
-#        uses: dtolnay/rust-toolchain@stable
-#        with:
-#          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-#          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-
       - name: install dependencies (ubuntu only)
         run: |
           sudo apt-get update
@@ -39,8 +33,12 @@ jobs:
           chmod +x mc
           sudo mv mc /usr/local/bin/mc
       - name: configure minio client
+        env:
+          PDL_WEBSITE_S3_ENDPOINT: ${{ secrets.PDL_WEBSITE_S3_ENDPOINT }}
+          PDL_WEBSITE_S3_ACCESS_KEY: ${{ secrets.PDL_WEBSITE_S3_ACCESS_KEY }}
+          PDL_WEBSITE_S3_SECRET_KEY: ${{ secrets.PDL_WEBSITE_S3_SECRET_KEY }}
         run: |
-          mc alias set pdl $PDL_WEBSITE_S3_ENDPOINT $PDL_WEBSITE_S3_ACCESS_KEY $PDL_WEBSITE_S3_SECRET_KEY --api s3v4
+          mc alias set pdl {{$PDL_WEBSITE_S3_ENDPOINT $PDL_WEBSITE_S3_ACCESS_KEY $PDL_WEBSITE_S3_SECRET_KEY --api s3v4
 
       - name: install frontend dependencies
         run: npm ci # change this to npm, pnpm or bun depending on which one you use.
