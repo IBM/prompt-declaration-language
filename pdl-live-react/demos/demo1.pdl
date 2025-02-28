@@ -2,6 +2,3 @@ description: Simple LLM interaction
 text:
 - "write a hello world example\n"
 - model: ollama/llama3.1:8b
-  parameters:
-    stop: ['!']
-    temperature: 0
