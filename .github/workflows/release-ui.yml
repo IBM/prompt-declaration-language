@@ -22,8 +22,8 @@ jobs:
           #  args: '--target aarch64-unknown-linux-gnu' # <-- The system library `gdk-3.0` required by crate `gdk-sys` was not found.
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
             args: '--target x86_64-unknown-linux-gnu'
-          - platform: 'windows-latest'
-            args: ''
+          #- platform: 'windows-latest'
+          #  args: ''
 
     runs-on: ${{ matrix.platform }}
     defaults:
