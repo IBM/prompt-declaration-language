@@ -12,7 +12,6 @@ text:
       contribute: []
     - if: ${ eval == 'no' }
       then:
-        text:
-        - read:
-          message: "Why not?\n"
+        read:
+        message: "Why not?\n"
   until: ${ eval == 'yes'}
