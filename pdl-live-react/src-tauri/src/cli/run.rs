@@ -48,7 +48,7 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::
             "sh",
             "-c",
             format!(
-                "source {activate} && pip install -r {requirements}",
+                "source '{activate}' && pip install -r '{requirements}'",
                 activate = activate_path,
                 requirements = requirements_path
             )
