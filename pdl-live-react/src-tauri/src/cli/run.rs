@@ -11,11 +11,12 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::
 
     create_dir_all(&cache_path)?;
     let venv_path = cache_path.join("interpreter-python");
-    let activate_path = venv_path
-        .join("bin/activate")
-        .into_os_string()
-        .into_string()
-        .unwrap();
+    let activate_path0 = if cfg!(windows) {
+        venv_path.join("Scripts").join("Activate.ps1")
+    } else {
+        venv_path.join("bin/activate")
+    };
+    let activate_path = activate_path0.into_os_string().into_string().unwrap();
     let cached_requirements_path = venv_path
         .join("requirements.txt")
         .into_os_string()
@@ -29,7 +30,12 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::
     if !venv_path.exists() {
         println!("Creating virtual environment...");
         let venv_path_string = venv_path.into_os_string().into_string().unwrap();
-        cmd!("python3.12", "-mvenv", venv_path_string.as_str()).run()?;
+        let python = if cfg!(target_os = "macos") {
+            "python3.12"
+        } else {
+            "python3"
+        };
+        cmd!(python, "-mvenv", venv_path_string.as_str()).run()?;
     }
 
     let requirements_path = app_handle
@@ -43,15 +49,43 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<String, tauri::
         requirements_path.as_str(),
         cached_requirements_path.as_str(),
     ) {
-        println!("Running pip install...");
+        println!(
+            "Running pip install... {:?}",
+            if cfg!(windows) {
+                format!(
+                    "{activate} ; pip install -r '{requirements}'",
+                    activate = activate_path,
+                    requirements = requirements_path
+                )
+            } else {
+                format!(
+                    "source '{activate}' && pip install -r '{requirements}'",
+                    activate = activate_path,
+                    requirements = requirements_path
+                )
+            }
+            .as_str(),
+        );
         cmd!(
-            "sh",
-            "-c",
-            format!(
-                "source '{activate}' && pip install -r '{requirements}'",
-                activate = activate_path,
-                requirements = requirements_path
-            )
+            if cfg!(windows) { "powershell" } else { "sh" },
+            if cfg!(windows) {
+                "invoke-expression"
+            } else {
+                "-c"
+            },
+            if cfg!(windows) {
+                format!(
+                    "{activate} ; pip install -r '{requirements}'",
+                    activate = activate_path,
+                    requirements = requirements_path
+                )
+            } else {
+                format!(
+                    "source '{activate}' && pip install -r '{requirements}'",
+                    activate = activate_path,
+                    requirements = requirements_path
+                )
+            }
             .as_str(),
         )
         .run()?;
@@ -103,8 +137,12 @@ pub fn run_pdl_program(
     };
 
     cmd!(
-        "sh",
-        "-c",
+        if cfg!(windows) { "powershell" } else { "sh" },
+        if cfg!(windows) {
+            "invoke-expression"
+        } else {
+            "-c"
+        },
         &[
             "source",
             activate.as_str(),
