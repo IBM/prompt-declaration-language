@@ -1,5 +1,5 @@
 [package]
-name = "PDL"
+name = "pdl"
 version = "0.4.1"
 description = "Prompt Declaration Language"
 authors = ["nickm@us.ibm.com"]
