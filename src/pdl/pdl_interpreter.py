@@ -334,8 +334,11 @@ def process_advanced_block(
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(state, scope, block.defs, loc)
         block = block.model_copy(update={"defs": defs_trace})
+    init_state = state
     state = state.with_yield_result(
-        state.yield_result and ContributeTarget.RESULT in block.contribute
+        state.yield_result
+        and ContributeTarget.RESULT in block.contribute
+        and block.parser is None
     )
     state = state.with_yield_background(
         state.yield_background and context_in_contribute(block)
@@ -352,6 +355,8 @@ def process_advanced_block(
         if block.parser is not None:
             parser = block.parser
             result = lazy_apply(lambda r: parse_result(parser, r), result)
+            if init_state.yield_result and ContributeTarget.RESULT:
+                yield_result(result, block.kind)
         if block.spec is not None and not isinstance(block, FunctionBlock):
             result = lazy_apply(
                 lambda r: result_with_type_checking(
