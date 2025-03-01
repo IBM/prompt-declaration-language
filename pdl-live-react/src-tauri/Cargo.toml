@@ -1,6 +1,6 @@
 [package]
 name = "PDL"
-version = "0.3.0"
+version = "0.4.1"
 description = "Prompt Declaration Language"
 authors = ["nickm@us.ibm.com"]
 edition = "2021"

@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "PDL"
-version = "0.3.0"
+version = "0.4.1"
 dependencies = [
  "duct",
  "file_diff",
