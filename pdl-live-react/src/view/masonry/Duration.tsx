@@ -25,10 +25,10 @@ function duration(timing: Props) {
   return timing.end_nanos - timing.start_nanos
 }
 
-function format(nanos: number, timezone: string) {
-  return new Date(nanos / 1000000).toLocaleTimeString(navigator.language, {
+function format(nanos: number, _timezone: string) {
+  return new Date(nanos / 1000000).toTimeString(/*navigator.language, {
     timeZone: timezone,
-  })
+  }*/)
 }
 
 export default function Duration(timing: Props) {
