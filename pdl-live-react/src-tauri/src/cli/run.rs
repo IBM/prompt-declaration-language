@@ -144,7 +144,7 @@ pub fn run_pdl_program(
             "-c"
         },
         &[
-            "source",
+            if cfg!(windows) { "" } else { "source" },
             activate.as_str(),
             "; pdl",
             trace_arg.as_str(),
