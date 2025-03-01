@@ -25,7 +25,7 @@
     "prep-interpreter-from-scratch": "python3.12 -mvenv .venv && npm run reprep-interpreter",
     "prep-interpreter-from-scratch-windows": "python -mvenv .venv && npm run reprep-interpreter-windows",
     "reprep-interpreter": ". .venv/bin/activate && pip install -e .. && pip freeze > .venv/requirements.txt",
-    "reprep-interpreter-windows": ".venv/bin/Activate.ps1 && pip install -e .. && pip freeze > .venv/requirements.txt",
+    "reprep-interpreter-windows": ".\\.venv\\Scripts\\Activate.ps1 ; pip install -e .. ; pip freeze > .venv\\requirements.txt",
     "start": "npm run prep-interpreter && npm run tauri dev"
   },
   "dependencies": {
