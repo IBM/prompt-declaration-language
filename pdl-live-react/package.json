@@ -6,10 +6,7 @@
   "scripts": {
     "prod:mac:1": "npm run tauri build -- --no-bundle --target=universal-apple-darwin",
     "prod:mac:2": "npm run tauri bundle -- --bundles dmg --target universal-apple-darwin",
-    "prod:linux:1": "npm run tauri build -- --no-bundle --target=x86_64-unknown-linux-gnu",
-    "prod:linux:2": "npm run tauri bundle -- --bundles deb --target x86_64-unknown-linux-gnu",
-    "prod:mac": "npm run prep-interpreter && npm run prod:mac:1 && npm run prod:mac:2",
-    "prod:linux": "npm run prep-interpreter && npm run prod:linux:1 && npm run prod:linux:2",
+    "prod:mac": "npm run prod:mac:1 && npm run prod:mac:2",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint .",
@@ -21,12 +18,8 @@
     "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
     "pdl": "./src-tauri/target/debug/PDL",
     "view": "npm run pdl view",
-    "prep-interpreter": "if [ ! -d .venv ]; then npm run prep-interpreter-from-scratch; fi",
-    "prep-interpreter-from-scratch": "python3.12 -mvenv .venv && npm run reprep-interpreter",
-    "prep-interpreter-from-scratch-windows": "python -mvenv .venv && npm run reprep-interpreter-windows",
-    "reprep-interpreter": ". .venv/bin/activate && pip install -e .. && pip freeze > .venv/requirements.txt",
-    "reprep-interpreter-windows": ".\\.venv\\Scripts\\Activate.ps1 ; pip install -e .. ; pip freeze > .venv\\requirements.txt",
-    "start": "npm run prep-interpreter && npm run tauri dev"
+    "prep-interpreter": "python3.12 -mvenv .venv && . .venv/bin/activate && pip install -e .. && pip freeze > requirements.txt",
+    "start": "npm run tauri dev"
   },
   "dependencies": {
     "@patternfly/react-core": "^6.1.0",

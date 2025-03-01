@@ -32,11 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-
       - name: setup node
         uses: actions/setup-node@v4
         with:
@@ -67,13 +62,6 @@ jobs:
 
       - name: install frontend dependencies
         run: npm ci # change this to npm, pnpm or bun depending on which one you use.
-
-      - name: prep interpreter
-        if: matrix.platform != 'windows-latest'
-        run: npm run prep-interpreter-from-scratch
-      - name: prep interpreter for windows
-        if: matrix.platform == 'windows-latest'
-        run: npm run prep-interpreter-from-scratch-windows
 
       - name: Install wget for Windows
         if: matrix.platform == 'windows-latest'

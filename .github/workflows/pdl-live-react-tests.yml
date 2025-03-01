@@ -35,12 +35,12 @@ jobs:
       - name: Test pdl-live viewer
         run: npm test
       - name: Test production build
-        run: npm run prod:linux
+        run: npm run tauri build
       - name: Setup xvfb for screen 0
         run: Xvfb :1 -screen 0 1600x1200x24 &      
       - name: Run production build
         env:
           DISPLAY: :1
-        run: ./src-tauri/target/x86_64-unknown-linux-gnu/release/PDL notacommand || true
+        run: ./src-tauri/target/release/pdl run | grep Usage
       - name: Tear down xvfb
         run: killall Xvfb  
