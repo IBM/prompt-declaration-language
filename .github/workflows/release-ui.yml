@@ -18,12 +18,12 @@ jobs:
         include:
           - platform: 'macos-latest' # for Arm based macs (M1 and above).
             args: '--target universal-apple-darwin'
-          - platform: 'ubuntu-22.04-arm' # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: '--target aarch64-unknown-linux-gnu'
+          #- platform: 'ubuntu-22.04-arm' # for Tauri v1 you could replace this with ubuntu-20.04.
+          #  args: '--target aarch64-unknown-linux-gnu' # <-- The system library `gdk-3.0` required by crate `gdk-sys` was not found.
           - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
             args: '--target x86_64-unknown-linux-gnu'
-          #- platform: 'windows-latest'
-          #  args: ''
+          - platform: 'windows-latest'
+            args: ''
 
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -69,6 +69,10 @@ jobs:
 
       - name: prep interpreter
         run: npm run prep-interpreter
+
+      - name: Install wget for Windows
+        if: matrix.os == 'windows-latest'
+        run: choco install wget --no-progress
 
       - name: download tauri-action
         run: |
