@@ -440,20 +440,20 @@ See [PDL Language Tutorial](https://ibm.github.io/prompt-declaration-language/tu
 
 ## Debugging Tools
 
-## Live Explorer
+### Live Explorer
 
 PDL has a Live Explorer to help in program understanding given an execution trace.
 To produce an execution trace consumable by the Live Explorer, you can run the interpreter with the `--trace` argument:
 
 ```
-pdl --trace <file.json> <my-example>
+pdl <my-example> --trace <my-example_trace.json>
 ```
 
 This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Explorer](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. The Live Explorer shows a timeline of execution and a tile for every block. By clicking on a tile, the user can discover more information such as input/context/output for LLM calls. It also provides the ability to re-run a block for eventual live programming.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Explorer, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
-## Trace Telemetry
+### Trace Telemetry
 
 PDL includes experimental support for gathering trace telemetry.  This can
 be used for debugging or performance analysis, and to see the shape of prompts sent by LiteLLM to models.
