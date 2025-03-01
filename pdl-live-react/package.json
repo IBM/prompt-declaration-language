@@ -21,7 +21,8 @@
     "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
     "pdl": "./src-tauri/target/debug/PDL",
     "view": "npm run pdl view",
-    "prep-interpreter": "if [ ! -d .venv ]; then python3.12 -mvenv .venv && npm run reprep-interpreter; fi",
+    "prep-interpreter": "if [ ! -d .venv ]; then npm run prep-interpreter-from-scratch; fi",
+    "prep-interpreter-from-scratch": "python3.12 -mvenv .venv && npm run reprep-interpreter",
     "reprep-interpreter": ". .venv/bin/activate && pip install -e .. && pip freeze > .venv/requirements.txt",
     "start": "npm run prep-interpreter && npm run tauri dev"
   },
