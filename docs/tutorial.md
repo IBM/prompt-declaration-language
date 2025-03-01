@@ -325,7 +325,7 @@ We support the following operations with the`regex` parser (indicated with the `
   
 - `findall`
 
-Here is an example that is using `findall`:
+Here is an example using the `findall` mode that returns the list `['1', '2', '3', '4']`:
 ```yaml
 --8<-- "./examples/tutorial/parser_findall.pdl"
 ```
