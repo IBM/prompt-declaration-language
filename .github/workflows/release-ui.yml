@@ -76,7 +76,6 @@ jobs:
           cd ..
           wget https://raw.githubusercontent.com/tauri-apps/tauri-action/refs/heads/dev/action.yml
           cd ..
-          find tauri-action
           
 #      - uses: tauri-apps/tauri-action@v0
       - uses: ./pdl-live-react/tauri-action
