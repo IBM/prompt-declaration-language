@@ -1,4 +1,4 @@
-text: "1 -- 2 -- 3 -- 4"
+data: "1 -- 2 -- 3 -- 4"
 parser:
   regex: '[0-9]+'
   mode: findall
