@@ -1,6 +1,8 @@
 description: Hello world with parser using regex
 text:
 - model: ollama/granite-code:8b
+  parameters:
+    temperature: 0
   input: "Hello,"
   parameters:
     # Tell the LLM to stop after generating an exclamation point.

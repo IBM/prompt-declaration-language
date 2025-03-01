@@ -4,5 +4,6 @@ code: |
   description: Hello world
   text:
   - "Hello\n"
-  - model: replicate/ibm-granite/granite-3.1-8b-instruct
-  
+  - model: ollama/granite-code:8b
+    parameters:
+      temperature: 0

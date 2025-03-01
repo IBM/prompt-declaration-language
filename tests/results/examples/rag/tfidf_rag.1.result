@@ -1,0 +1,69 @@
+Given the text after "Q:", generate a Python function after "A:".
+
+Here are some examples, complete the last one:
+
+Q: Write a python function to find the first repeated character in a given string.
+A: ```def first_repeated_char(str1):
+  for index,c in enumerate(str1):
+    if str1[:index+1].count(c) > 1:
+      return c```
+
+Q: Write a python function to interchange the first and last element in a given list.
+A: ```def swap_List(newList): 
+    size = len(newList) 
+    temp = newList[0] 
+    newList[0] = newList[size - 1] 
+    newList[size - 1] = temp   
+    return newList ```
+
+Q: Write a function to find the index of the first occurrence of a given number in a sorted array.
+A: ```def find_first_occurrence(A, x):
+    (left, right) = (0, len(A) - 1)
+    result = -1
+    while left <= right:
+        mid = (left + right) // 2
+        if x == A[mid]:
+            result = mid
+            right = mid - 1
+        elif x < A[mid]:
+            right = mid - 1
+        else:
+            left = mid + 1
+    return result```
+
+Q: Write a function to remove tuples from the given tuple.
+A: ```def remove_nested(test_tup):
+  res = tuple()
+  for count, ele in enumerate(test_tup):
+    if not isinstance(ele, tuple):
+      res = res + (ele, )
+  return (res) ```
+
+Q: Write a function to remove all whitespaces from a string.
+A: ```import re
+def remove_all_spaces(text):
+ return (re.sub(r'\s+', '',text))```
+
+Q: Write a python function to remove first and last occurrence of a given character from the string.
+A:Here's the Python function that removes the first and last occurrence of a given character from a string:
+
+```python
+def remove_first_last(s, char):
+    new_string = list(s)  # convert string to list for mutable operations
+    stack = []
+
+    # Collect characters before the first occurrence of 'char'
+    while char not in new_string:
+        if new_string:
+            stack.append(new_string.pop(0))
+    
+    # Collect characters after the last occurrence of 'char'
+    last_occurrence = s.rfind(char)
+    for i in range(last_occurrence + 1, len(s)):
+        if s[i] != char:
+            stack.append(new_string.pop())
+
+    return ''.join(stack)
+```
+
+This function works by first creating a mutable version of the string (as strings are immutable in Python). It then iterates through the list to collect characters before and after each occurrence of the given character, using a stack to store these characters. Finally, it rebuilds the string from this stack and returns it.
