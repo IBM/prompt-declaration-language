@@ -37,7 +37,8 @@ openai==1.65.2
 packaging==24.2
 parso==0.8.4
 pexpect==4.9.0
--e git+ssh://git@github.com/IBM/prompt-declaration-language.git@v0.4.1#egg=prompt_declaration_language
+#-e git+ssh://git@github.com/IBM/prompt-declaration-language.git@v0.4.1#egg=prompt_declaration_language
+prompt-declaration-language==0.4.1
 prompt_toolkit==3.0.50
 propcache==0.3.0
 ptyprocess==0.7.0
