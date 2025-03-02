@@ -3,6 +3,7 @@ import { createRef, useCallback, useEffect, useState } from "react"
 import { spawn } from "tauri-pty"
 import { Terminal } from "@xterm/xterm"
 import { FitAddon } from "@xterm/addon-fit"
+import { ClipboardAddon } from "@xterm/addon-clipboard"
 
 import "./RunTerminal.css"
 
@@ -50,6 +51,8 @@ export default function RunTerminal({ cmd, args = [], onExit }: Props) {
     if (term && ref.current && exitCode === -1) {
       const fitAddon = new FitAddon()
       term.loadAddon(fitAddon)
+      const clipboardAddon = new ClipboardAddon()
+      term.loadAddon(clipboardAddon)
 
       term.open(ref.current)
       fitAddon.fit()
