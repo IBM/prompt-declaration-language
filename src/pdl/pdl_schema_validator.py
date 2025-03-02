@@ -1,6 +1,5 @@
+# pylint: disable=import-outside-toplevel
 from typing import Any, Optional
-
-from jsonschema import ValidationError, validate
 
 from .pdl_location_utils import get_loc_string
 from .pdl_schema_error_analyzer import analyze_errors
@@ -40,6 +39,8 @@ def type_check_spec(result: Any, spec: str | dict[str, Any] | list, loc) -> list
 
 
 def type_check(result: Any, schema: dict[str, Any], loc) -> list[str]:
+    from jsonschema import ValidationError, validate
+
     try:
         validate(instance=result, schema=schema)
     except ValidationError as e:

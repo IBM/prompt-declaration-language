@@ -1,3 +1,4 @@
+# pylint: disable=import-outside-toplevel
 import json
 import re
 import shlex
@@ -8,6 +9,7 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
@@ -17,7 +19,6 @@ from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
-import litellm  # noqa: E402
 import yaml  # noqa: E402
 from jinja2 import (  # noqa: E402
     Environment,
@@ -88,7 +89,7 @@ from .pdl_ast import (  # noqa: E402
 )
 from .pdl_dumper import block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
-from .pdl_llms import GraniteioModel, LitellmModel  # noqa: E402
+from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
@@ -1256,7 +1257,17 @@ def process_call_model(
             nonlocal litellm_params
             litellm_params = params_to_model
 
+        import litellm
+
         litellm.input_callback = [get_transformed_inputs]
+
+        # If the environment has a configured OpenTelemetry exporter, tell LiteLLM
+        # to do OpenTelemetry callbacks for that exporter.  Note that this may
+        # require optional OpenTelemetry Python libraries that are not pyproject.toml,
+        # typically opentelemetry-api, opentelemetry-sdk,
+        # opentelemetry-exporter-otlp-proto-http, and opentelemetry-exporter-otlp-proto-grpc
+        if getenv("OTEL_EXPORTER") and getenv("OTEL_ENDPOINT"):
+            litellm.callbacks = ["otel"]
 
         msg, raw_result = generate_client_response(state, concrete_block, model_input)
         background: LazyMessages = PdlList([lazy_apply(lambda msg: msg | {"defsite": block.id}, msg)])  # type: ignore
@@ -1383,6 +1394,8 @@ def generate_client_response_single(
                 parameters=litellm_parameters_to_dict(block.parameters),
             )
         case GraniteioModelBlock():
+            from .pdl_granite_io import GraniteioModel
+
             message, response = GraniteioModel.generate_text(
                 block=block,
                 messages=model_input,
