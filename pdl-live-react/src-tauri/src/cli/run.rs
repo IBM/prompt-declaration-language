@@ -17,11 +17,6 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri:
     } else {
         venv_path.join("bin/activate")
     };
-    let activate_path_str = activate_path
-        .clone()
-        .into_os_string()
-        .into_string()
-        .unwrap();
     let cached_requirements_path = venv_path
         .join("requirements.txt")
         .into_os_string()
@@ -34,13 +29,12 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri:
 
     if !venv_path.exists() {
         println!("Creating virtual environment...");
-        let venv_path_string = venv_path.into_os_string().into_string().unwrap();
         let python = if cfg!(target_os = "macos") {
             "python3.12"
         } else {
             "python3"
         };
-        cmd!(python, "-mvenv", venv_path_string.as_str()).run()?;
+        cmd!(python, "-mvenv", &venv_path).run()?;
     }
 
     let requirements_path = app_handle
@@ -54,44 +48,14 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri:
         requirements_path.as_str(),
         cached_requirements_path.as_str(),
     ) {
-        println!(
-            "Running pip install... {:?}",
-            if cfg!(windows) {
-                format!(
-                    "{activate} ; pip install -r '{requirements}'",
-                    activate = activate_path_str,
-                    requirements = requirements_path
-                )
-            } else {
-                format!(
-                    "source '{activate}' && pip install -r '{requirements}'",
-                    activate = activate_path_str,
-                    requirements = requirements_path
-                )
-            }
-            .as_str(),
-        );
         cmd!(
-            if cfg!(windows) { "powershell" } else { "sh" },
-            if cfg!(windows) {
-                "invoke-expression"
-            } else {
-                "-c"
-            },
-            if cfg!(windows) {
-                format!(
-                    "{activate} ; pip install -r '{requirements}'",
-                    activate = activate_path_str,
-                    requirements = requirements_path
-                )
-            } else {
-                format!(
-                    "source '{activate}' && pip install -r '{requirements}'",
-                    activate = activate_path_str,
-                    requirements = requirements_path
-                )
-            }
-            .as_str(),
+            venv_path
+                .clone()
+                .join(if cfg!(windows) { "Scripts" } else { "bin" })
+                .join("pip"),
+            "install",
+            "-r",
+            &requirements_path,
         )
         .run()?;
 
