@@ -154,7 +154,6 @@ pub fn run_pdl_program(
         ]
         .join(" "),
     )
-    .env("FORCE_COLOR", "1")
     .run()?;
 
     Ok(())
