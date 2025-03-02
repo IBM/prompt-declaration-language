@@ -72,7 +72,7 @@ export default function MasonryTile({
           {tileActions.map((action) =>
             action === "run" ? (
               isRunning ? (
-                <Spinner key={action} />
+                <Spinner key={action} size="sm" />
               ) : (
                 <Button
                   key={action}
