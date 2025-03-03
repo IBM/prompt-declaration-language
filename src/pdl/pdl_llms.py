@@ -74,19 +74,19 @@ class LitellmModel:
             )
         except httpx.RequestError as exc:
             message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
-            loc = block.location
+            loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
                 loc=loc,
-                trace=ErrorBlock(msg=message, location=loc, program=block),
+                trace=ErrorBlock(msg=message, pdl__location=loc, program=block),
             ) from exc
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"
-            loc = block.location
+            loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
                 loc=loc,
-                trace=ErrorBlock(msg=message, location=loc, program=block),
+                trace=ErrorBlock(msg=message, pdl__location=loc, program=block),
             ) from exc
 
     @staticmethod
@@ -200,11 +200,11 @@ class GraniteioModel:
             )
         except Exception as exc:
             message = f"Error during '{block.model}' model call: {repr(exc)}"
-            loc = block.location
+            loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
                 loc=loc,
-                trace=ErrorBlock(msg=message, location=loc, program=block),
+                trace=ErrorBlock(msg=message, pdl__location=loc, program=block),
             ) from exc
 
     @staticmethod

@@ -1,10 +1,10 @@
 import re
 
-from .pdl_ast import LocationType
+from .pdl_ast import PdlLocationType
 
 
-def append(loc: LocationType, seg: str) -> LocationType:
-    return LocationType(file=loc.file, path=loc.path + [seg], table=loc.table)
+def append(loc: PdlLocationType, seg: str) -> PdlLocationType:
+    return PdlLocationType(file=loc.file, path=loc.path + [seg], table=loc.table)
 
 
 def normalize(indentation: list[int], is_array_item: list[bool]) -> list[int]:
@@ -91,7 +91,7 @@ def get_line_map(prog: str) -> dict[str, int]:
     return paths
 
 
-def get_loc_string(loc: LocationType) -> str:
+def get_loc_string(loc: PdlLocationType) -> str:
     if loc.file == "":
         msg = "line " + str(get_line(loc.table, loc.path)) + " - "
     else:
