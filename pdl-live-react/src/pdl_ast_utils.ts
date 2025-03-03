@@ -55,6 +55,10 @@ export function map_block_children(
       return { ...block, code: code }
     })
     .with({ kind: "get" }, (block) => block)
+    .with(
+      { kind: "data", data: P.union(P.number, P.boolean, P.string) },
+      ({ data }) => data, // { kind: "data", data: "hello" } -> "hello"
+    )
     .with({ kind: "data" }, (block) => block)
     .with({ kind: "text" }, (block) => {
       let text
