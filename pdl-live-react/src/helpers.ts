@@ -4,6 +4,8 @@ import type { LitellmModelBlock, GraniteioModelBlock, PdlBlock, TextBlock } from
 /** Re-export for convenience */
 export { type PdlBlock } from "./pdl_ast"
 
+export type ModelBlock = Extract<PdlBlock, LitellmModelBlock | GraniteioModelBlock>
+
 export type NonScalarPdlBlock = Exclude<
   PdlBlock,
   null | string | boolean | number
@@ -104,8 +106,8 @@ export function isTextBlockWithArrayContent(
 }
 
 /** Does the given block represent an LLM interaction? */
-export function isLLMBlock(data: PdlBlock): data is (LitellmModelBlock | GraniteioModelBlock) {
-  return (data as LitellmModelBlock).kind === "model"
+export function isLLMBlock(data: PdlBlock): data is ModelBlock {
+  return (data as ModelBlock).kind === "model"
 }
 
 /** Does the given block have a `pdl__result` field? of type string */
@@ -182,8 +184,8 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
 
 export function hasInput(
   block: PdlBlock,
-): block is Omit<LitellmModelBlock, "input"> & { input: string } {
-  return typeof (block as LitellmModelBlock).input === "string"
+): block is (Omit<GraniteioModelBlock, "input"> & { input: string } | Omit<LitellmModelBlock, "input"> & { input: string }) {
+  return typeof (block as ModelBlock).input === "string"
 }
 
 function tryJson(s: unknown) {
@@ -200,7 +202,7 @@ function tryJson(s: unknown) {
 export function extractStructuredModelResponse({
   pdl__result,
   parser,
-}: LitellmModelBlock) {
+}: ModelBlock) {
   const json = tryJson(pdl__result)
   const resultForDisplay: string = Array.isArray(json)
     ? json.map(({ sentence }) => String(sentence)).join("\n")
