@@ -9,7 +9,7 @@ export type NonScalarPdlBlock = Exclude<
   null | string | boolean | number
 >
 export type PdlBlockWithResult = NonScalarPdlBlock & {
-  result: NonNullable<PdlBlock>
+  pdl__result: NonNullable<PdlBlock>
 }
 
 export type WithTiming = {
@@ -24,13 +24,13 @@ export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
   context: { role: string; content: string; defsite?: string }[]
 }
 
-/** Does the given block have a `result` field? */
+/** Does the given block have a `pdl__result` field? */
 export function hasResult(block: unknown): block is PdlBlockWithResult {
   return (
     block != null &&
     typeof block === "object" &&
-    "result" in block &&
-    (typeof block.result !== "string" || block.result.length > 0)
+    "pdl__result" in block &&
+    (typeof block.pdl__result !== "string" || block.pdl__result.length > 0)
   )
 }
 
@@ -108,17 +108,17 @@ export function isLLMBlock(data: PdlBlock): data is LitellmModelBlock {
   return (data as LitellmModelBlock).kind === "model"
 }
 
-/** Does the given block have a `result` field? of type string */
+/** Does the given block have a `pdl__result` field? of type string */
 export function hasScalarResult(
   block: PdlBlock,
-): block is NonScalarPdlBlock & { result: string | boolean | number } {
+): block is NonScalarPdlBlock & { pdl__result: string | boolean | number } {
   return (
     block != null &&
     typeof block === "object" &&
-    "result" in block &&
-    (typeof block.result === "string" ||
-      typeof block.result === "number" ||
-      typeof block.result === "boolean")
+    "pdl__result" in block &&
+    (typeof block.pdl__result === "string" ||
+      typeof block.pdl__result === "number" ||
+      typeof block.pdl__result === "boolean")
   )
 }
 
@@ -198,15 +198,15 @@ function tryJson(s: unknown) {
 }
 
 export function extractStructuredModelResponse({
-  result,
+  pdl__result,
   parser,
 }: LitellmModelBlock) {
-  const json = tryJson(result)
+  const json = tryJson(pdl__result)
   const resultForDisplay: string = Array.isArray(json)
     ? json.map(({ sentence }) => String(sentence)).join("\n")
-    : typeof result === "object"
-      ? stringify(result)
-      : String(result)
+    : typeof pdl__result === "object"
+      ? stringify(pdl__result)
+      : String(pdl__result)
 
   const lang: import("./view/code/Code").SupportedLanguage | undefined =
     Array.isArray(json)

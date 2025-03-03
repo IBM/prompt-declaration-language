@@ -59,14 +59,14 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   ) {
     return data
   }
-  // remove result
-  const new_data = { ...data, result: undefined }
+  // remove pdl__result
+  const new_data = { ...data, pdl__result: undefined }
   // remove trace
-  match(new_data).with({ trace: P._ }, (data) => {
-    delete data.trace
+  match(new_data).with({ pdl__trace: P._ }, (data) => {
+    delete data.pdl__trace
   })
   // remove other trace artifacts
-  delete new_data.id
+  delete new_data.pdl__id
   delete new_data.pdl__timing
   // remove contribute: ["result", context]
   if (
@@ -80,7 +80,7 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     delete new_data.defs
   }
   // remove location info
-  delete new_data.location
+  delete new_data.pdl__location
   // recursive cleanup
   return map_block_children(block_code_cleanup, new_data)
 }

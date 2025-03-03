@@ -20,7 +20,7 @@ import type Tile from "./Tile"
   if (hasResult(block) && hasTimingInformation(block)) {
     return [
       {
-        id: block.id ?? "",
+        id: block.pdl__id ?? "",
         depth: 0,
         parent: null,
         block,
@@ -50,12 +50,12 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
           ? extractStructuredModelResponse(block)
           : {
               resultForDisplay:
-                typeof block.result === "object"
-                  ? stringify(block.result)
-                  : String(block.result),
+                typeof block.pdl__result === "object"
+                  ? stringify(block.pdl__result)
+                  : String(block.pdl__result),
               meta: undefined,
               lang:
-                typeof block.result === "object"
+                typeof block.pdl__result === "object"
                   ? "yaml"
                   : hasParser(block)
                     ? block.parser === "jsonl"
@@ -117,7 +117,8 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
           !v
             ? []
             : {
-                id: (block.id ?? "").replace(/\.?empty/g, "") + ".0.define",
+                id:
+                  (block.pdl__id ?? "").replace(/\.?empty/g, "") + ".0.define",
                 kind: "",
                 def,
                 lang: hasParser(v)
@@ -125,7 +126,7 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
                     ? "json"
                     : (v.parser as Tile["lang"])
                   : undefined,
-                content: hasScalarResult(v) ? String(v.result) : "",
+                content: hasScalarResult(v) ? String(v.pdl__result) : "",
               },
         )),
     ...tiles,
