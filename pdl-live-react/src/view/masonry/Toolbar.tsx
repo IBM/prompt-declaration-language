@@ -13,18 +13,25 @@ export type SML = "s" | "m" | "l" | "xl"
 
 export type Props = {
   run: import("./MasonryCombo").Runner
+  isRunning: boolean
   block: import("../../pdl_ast").PdlBlock
 
   sml: SML
   setSML(sml: SML): void
 }
 
-export default function MasonryToolbar({ block, run, sml, setSML }: Props) {
+export default function MasonryToolbar({
+  block,
+  run,
+  isRunning,
+  sml,
+  setSML,
+}: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          <ToolbarReplayButton block={block} run={run} />
+          <ToolbarReplayButton run={run} isRunning={isRunning} />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           {isNonScalarPdlBlock(block) && (
