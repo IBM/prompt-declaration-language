@@ -14,7 +14,7 @@ dependencies = [
   "jsonschema~=4.0",
   "litellm>=1.57.3,!=1.59.9",
   "termcolor~=2.0",
-  "ipython~=8.0",
+  "ipython>=8,<10",
   "json-repair~=0.35",
   "granite-io~=0.1",
 ]
