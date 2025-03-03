@@ -8,16 +8,25 @@ import { ClipboardAddon } from "@xterm/addon-clipboard"
 import "./RunTerminal.css"
 
 type Props = {
+  /** The cmd part of `cmd ...args` */
   cmd: string
+
+  /** The args part of `cmd ...args */
   args?: string[]
+
+  /** A callback provided by caller to be invoked upon pty completion */
   onExit?: (exitCode: number) => void
+
+  /** A condition variable used by caller to request pty cancellation */
+  cancel?: import("../masonry/condvar").default
 }
 
-export default function RunTerminal({ cmd, args = [], onExit }: Props) {
+export default function RunTerminal({ cmd, args = [], onExit, cancel }: Props) {
   const ref = createRef<HTMLDivElement>()
   const [term, setTerm] = useState<null | Terminal>(null)
   const [exitCode, setExitCode] = useState(-1)
 
+  /** Schema adapter from our props.onExit to that of tauri-pty */
   const onExit2 = useCallback(
     ({ exitCode }: { exitCode: number }) => {
       setExitCode(exitCode)
@@ -28,7 +37,8 @@ export default function RunTerminal({ cmd, args = [], onExit }: Props) {
     [onExit, setExitCode],
   )
 
-  useEffect(() => setExitCode(-1), [cmd, args, onExit])
+  /** Re-initialization of exit code if props change */
+  useEffect(() => setExitCode(-1), [cmd, args, onExit, cancel])
 
   // Why a two-stage useEffect? Otherwise: cannot read properties of
   // undefined (reading 'dimensions')
@@ -64,6 +74,11 @@ export default function RunTerminal({ cmd, args = [], onExit }: Props) {
         rows: term.rows,
       })
 
+      /** Respond to cancellation request by killing the pty */
+      cancel?.wait().then(() => {
+        pty.kill()
+      })
+
       pty.onData((data) => term.write(data))
       term.onData((data) => pty.write(data))
 
@@ -78,7 +93,7 @@ export default function RunTerminal({ cmd, args = [], onExit }: Props) {
         }
       }
     }
-  }, [term, ref, exitCode, args, cmd, onExit2])
+  }, [term, ref, exitCode, cmd, args, cancel, onExit2])
 
   return (
     <div className="pdl-run-terminal" ref={ref} style={{ height: "600px" }} />

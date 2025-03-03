@@ -11,7 +11,6 @@ import {
   Button,
   BackToTop,
   Modal,
-  type ModalProps,
   ModalBody,
   ModalFooter,
   ModalHeader,
@@ -28,6 +27,7 @@ import MasonryTileWrapper from "./MasonryTileWrapper"
 import Toolbar, { type SML } from "./Toolbar"
 
 import computeModel from "./model"
+import ConditionVariable from "./condvar"
 import {
   hasContextInformation,
   hasTimingInformation,
@@ -39,11 +39,7 @@ import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
 
-export type Runner = (
-  block: NonScalarPdlBlock,
-  onExit: () => void,
-  modalVariant?: ModalProps["variant"],
-) => void
+export type Runner = (block: NonScalarPdlBlock, onExit: () => void) => void
 
 type Props = {
   value: string
@@ -60,9 +56,6 @@ function setSMLUserSetting(sml: SML) {
 
 /** Combines <Masonry/>, <Timeline/>, ... */
 export default function MasonryCombo({ value, setValue }: Props) {
-  const [modalVariant, setModalVariant] =
-    useState<ModalProps["variant"]>("large")
-
   const block = useMemo(() => {
     if (value) {
       try {
@@ -83,11 +76,17 @@ export default function MasonryCombo({ value, setValue }: Props) {
     cmd: string
     args?: string[]
     onExit?: (exitCode: number) => void
+    cancelCondVar?: ConditionVariable
   }>(null)
+  const cancelModal = useCallback(
+    () => modalContent?.cancelCondVar?.signal(),
+    [modalContent?.cancelCondVar],
+  )
   const closeModal = useCallback(() => {
+    modalContent?.cancelCondVar?.signal()
     setModalContent(null)
     setModalIsDone(-1)
-  }, [setModalContent, setModalIsDone])
+  }, [modalContent?.cancelCondVar, setModalContent, setModalIsDone])
   const onExit = useCallback(
     (exitCode: number) => {
       setModalIsDone(exitCode)
@@ -97,17 +96,14 @@ export default function MasonryCombo({ value, setValue }: Props) {
     },
     [setModalIsDone, modalContent],
   )
+  useEffect(() => setModalIsDone(-2), [modalContent])
 
   // special form of setModalContent for running a PDL program
   const run = useCallback<Runner>(
-    async (runThisBlock, onExit, modalVariant) => {
+    async (runThisBlock, onExit) => {
       if (!isNonScalarPdlBlock(block)) {
         onExit()
         return
-      }
-
-      if (modalVariant) {
-        setModalVariant(modalVariant)
       }
 
       const [cmd, input, output] = (await invoke("replay_prep", {
@@ -132,6 +128,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           ...(!data ? [] : ["--data", JSON.stringify(data)]),
           input,
         ],
+        cancelCondVar: new ConditionVariable(),
         onExit: async () => {
           onExit()
           try {
@@ -198,15 +195,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
       <BackToTop scrollableSelector=".pdl-masonry-page-section" />
 
-      <Modal
-        variant={modalVariant}
-        isOpen={!!modalContent}
-        onClose={closeModal}
-      >
+      <Modal variant="large" isOpen={!!modalContent} onClose={closeModal}>
         <ModalHeader
           title={modalContent?.header}
           titleIconVariant={
-            modalIsDone === -1
+            modalIsDone < 0
               ? RunningIcon
               : modalIsDone === 0
                 ? "success"
@@ -218,6 +211,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
             <RunTerminal
               cmd={modalContent?.cmd ?? ""}
               args={modalContent?.args}
+              cancel={modalContent?.cancelCondVar}
               onExit={onExit}
             />
           </Suspense>
@@ -228,9 +222,17 @@ export default function MasonryCombo({ value, setValue }: Props) {
             key="Close"
             variant={modalIsDone > 0 ? "danger" : "primary"}
             onClick={closeModal}
-            isDisabled={modalIsDone === -1}
+            isDisabled={modalIsDone < 0}
           >
             Close
+          </Button>
+          <Button
+            key="Cancel"
+            variant="secondary"
+            onClick={cancelModal}
+            isDisabled={modalIsDone !== -2}
+          >
+            Cancel
           </Button>
         </ModalFooter>
       </Modal>
