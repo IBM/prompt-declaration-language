@@ -1,10 +1,18 @@
 import { stringify } from "yaml"
-import type { LitellmModelBlock, GraniteioModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
+import type {
+  LitellmModelBlock,
+  GraniteioModelBlock,
+  PdlBlock,
+  TextBlock,
+} from "./pdl_ast"
 
 /** Re-export for convenience */
 export { type PdlBlock } from "./pdl_ast"
 
-export type ModelBlock = Extract<PdlBlock, LitellmModelBlock | GraniteioModelBlock>
+export type ModelBlock = Extract<
+  PdlBlock,
+  LitellmModelBlock | GraniteioModelBlock
+>
 
 export type NonScalarPdlBlock = Exclude<
   PdlBlock,
@@ -184,7 +192,9 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
 
 export function hasInput(
   block: PdlBlock,
-): block is (Omit<GraniteioModelBlock, "input"> & { input: string } | Omit<LitellmModelBlock, "input"> & { input: string }) {
+): block is
+  | (Omit<GraniteioModelBlock, "input"> & { input: string })
+  | (Omit<LitellmModelBlock, "input"> & { input: string }) {
   return typeof (block as ModelBlock).input === "string"
 }
 
