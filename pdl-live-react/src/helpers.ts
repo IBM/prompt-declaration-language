@@ -1,5 +1,5 @@
 import { stringify } from "yaml"
-import type { LitellmModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
+import type { LitellmModelBlock, GraniteioModelBlock, PdlBlock, TextBlock } from "./pdl_ast"
 
 /** Re-export for convenience */
 export { type PdlBlock } from "./pdl_ast"
@@ -104,7 +104,7 @@ export function isTextBlockWithArrayContent(
 }
 
 /** Does the given block represent an LLM interaction? */
-export function isLLMBlock(data: PdlBlock): data is LitellmModelBlock {
+export function isLLMBlock(data: PdlBlock): data is (LitellmModelBlock | GraniteioModelBlock) {
   return (data as LitellmModelBlock).kind === "model"
 }
 
