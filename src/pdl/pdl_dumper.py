@@ -230,11 +230,11 @@ def block_to_dict(  # noqa: C901
         d["contribute"] = contribute_to_list(block.contribute)
     if block.pdl__result is not None:
         if isinstance(block.pdl__result, FunctionBlock):
-            d["result"] = ""
+            d["pdl__result"] = ""
         elif json_compatible:
-            d["result"] = as_json(block.pdl__result.result())
+            d["pdl__result"] = as_json(block.pdl__result.result())
         else:
-            d["result"] = block.pdl__result.result()
+            d["pdl__result"] = block.pdl__result.result()
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
     # if block.pdl__location is not None:

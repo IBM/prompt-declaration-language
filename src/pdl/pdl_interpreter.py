@@ -354,7 +354,7 @@ def process_advanced_block(
         background = lazy_apply(
             id_with_set_first_use_nanos(block.pdl__timing), background
         )
-        trace = trace.model_copy(update={"result": result})
+        trace = trace.model_copy(update={"pdl__result": result})
         if block.parser is not None:
             parser = block.parser
             result = lazy_apply(lambda r: parse_result(parser, r), result)
@@ -1286,7 +1286,7 @@ def process_call_model(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
         trace = block.model_copy(
-            update={"result": result, "pdl__trace": concrete_block}
+            update={"pdl__result": result, "pdl__trace": concrete_block}
         )
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
@@ -1511,7 +1511,7 @@ def process_call_code(
                 loc=loc,
                 trace=block.model_copy(),
             )
-    trace = block.model_copy(update={"result": result})
+    trace = block.model_copy(update={"pdl__result": result})
     return result, background, scope, trace
 
 
@@ -1661,7 +1661,7 @@ def process_input(
                     break
                 contents.append(line + "\n")
             s = "".join(contents)
-    trace = block.model_copy(update={"result": s})
+    trace = block.model_copy(update={"pdl__result": s})
     background: LazyMessages = PdlList(
         [PdlDict({"role": state.role, "content": s, "defsite": block.pdl__id})]  # type: ignore
     )
