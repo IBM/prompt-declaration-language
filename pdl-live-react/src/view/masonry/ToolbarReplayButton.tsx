@@ -1,22 +1,13 @@
+import { useCallback } from "react"
 import { Button, Tooltip } from "@patternfly/react-core"
-import { useCallback, useState } from "react"
-
-import { isNonScalarPdlBlock } from "../../helpers"
 
 type Props = {
   run: import("./MasonryCombo").Runner
-  block: import("../../pdl_ast").PdlBlock
+  isRunning: boolean
 }
 
-export default function ToolbarReplayButton({ run, block }: Props) {
-  const [isReplaying, setIsReplaying] = useState(false)
-
-  const handleClickReplay = useCallback(() => {
-    if (isNonScalarPdlBlock(block)) {
-      setIsReplaying(true)
-      run(block, () => setIsReplaying(false))
-    }
-  }, [run, block, setIsReplaying])
+export default function ToolbarReplayButton({ run, isRunning }: Props) {
+  const handleClickReplay = useCallback(() => run(), [run])
 
   const notLocal = !window.__TAURI_INTERNALS__
   return (
@@ -24,8 +15,9 @@ export default function ToolbarReplayButton({ run, block }: Props) {
       <Button
         spinnerAriaLabel="Replaying program"
         spinnerAriaValueText="Replaying"
-        isLoading={isReplaying}
-        isDisabled={!block || notLocal}
+        isLoading={isRunning}
+        isDisabled={notLocal}
+        variant={isRunning ? "warning" : undefined}
         onClick={handleClickReplay}
       >
         Run

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo } from "react"
 
 import {
   Button,
@@ -11,7 +11,6 @@ import {
   Flex,
   Panel,
   PanelMain,
-  Spinner,
 } from "@patternfly/react-core"
 
 import Result from "../Result"
@@ -49,13 +48,11 @@ export default function MasonryTile({
   block,
   run,
 }: Props) {
-  const [isRunning, setIsRunning] = useState(false)
   const myRun = useCallback(() => {
     if (block && run) {
-      setIsRunning(true)
-      run(block, () => setIsRunning(false))
+      run(block)
     }
-  }, [block, run, setIsRunning])
+  }, [block, run])
 
   const actions = useMemo(
     () => ({
@@ -71,18 +68,14 @@ export default function MasonryTile({
           )}
           {tileActions.map((action) =>
             action === "run" ? (
-              isRunning ? (
-                <Spinner key={action} size="sm" />
-              ) : (
-                <Button
-                  key={action}
-                  icon={<RunIcon />}
-                  variant="plain"
-                  size="sm"
-                  isDisabled={!window.__TAURI_INTERNALS__}
-                  onClick={myRun}
-                />
-              )
+              <Button
+                key={action}
+                icon={<RunIcon />}
+                variant="plain"
+                size="sm"
+                isDisabled={!window.__TAURI_INTERNALS__}
+                onClick={myRun}
+              />
             ) : (
               <></>
             ),
@@ -90,7 +83,7 @@ export default function MasonryTile({
         </>
       ),
     }),
-    [isRunning, tileActions, myRun, start_nanos, end_nanos, timezone, sml],
+    [tileActions, myRun, start_nanos, end_nanos, timezone, sml],
   )
 
   const maxHeight =

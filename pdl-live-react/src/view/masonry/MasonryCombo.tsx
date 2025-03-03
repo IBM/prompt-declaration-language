@@ -39,7 +39,7 @@ import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
 
-export type Runner = (block: NonScalarPdlBlock, onExit: () => void) => void
+export type Runner = (block?: import("../../pdl_ast").PdlBlock) => Promise<void>
 
 type Props = {
   value: string
@@ -96,13 +96,15 @@ export default function MasonryCombo({ value, setValue }: Props) {
     },
     [setModalIsDone, modalContent],
   )
-  useEffect(() => setModalIsDone(-2), [modalContent])
+  useEffect(
+    () => setModalIsDone(modalContent === null ? -1 : -2),
+    [modalContent],
+  )
 
   // special form of setModalContent for running a PDL program
   const run = useCallback<Runner>(
-    async (runThisBlock, onExit) => {
-      if (!isNonScalarPdlBlock(block)) {
-        onExit()
+    async (runThisBlock = block) => {
+      if (!isNonScalarPdlBlock(block) || !isNonScalarPdlBlock(runThisBlock)) {
         return
       }
 
@@ -118,38 +120,44 @@ export default function MasonryCombo({ value, setValue }: Props) {
         ? { pdl_context: runThisBlock.context }
         : undefined
 
-      setModalContent({
-        header: "Running Program",
-        cmd,
-        args: [
-          "run",
-          "--trace",
-          output,
-          ...(!data ? [] : ["--data", JSON.stringify(data)]),
-          input,
-        ],
-        cancelCondVar: new ConditionVariable(),
-        onExit: async () => {
-          onExit()
-          try {
-            const buf = await invoke<ArrayBuffer>("read_trace", {
-              traceFile: output,
-            }).catch(console.error)
-            if (buf) {
-              const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
-              const newTrace = decoder.decode(new Uint8Array(buf))
-              if (newTrace) {
-                setValue(
-                  JSON.stringify(
-                    spliceSubtree(block, runThisBlock, JSON.parse(newTrace)),
-                  ),
-                )
-              }
+      return new Promise<void>((resolve) => {
+        setModalContent({
+          header: "Running Program",
+          cmd,
+          args: [
+            "run",
+            "--trace",
+            output,
+            ...(!data ? [] : ["--data", JSON.stringify(data)]),
+            input,
+          ],
+          cancelCondVar: new ConditionVariable(),
+          onExit: async (exitCode: number) => {
+            resolve()
+            if (exitCode !== 0) {
+              return
             }
-          } catch (err) {
-            console.error(err)
-          }
-        },
+
+            try {
+              const buf = await invoke<ArrayBuffer>("read_trace", {
+                traceFile: output,
+              }).catch(console.error)
+              if (buf) {
+                const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
+                const newTrace = decoder.decode(new Uint8Array(buf))
+                if (newTrace) {
+                  setValue(
+                    JSON.stringify(
+                      spliceSubtree(block, runThisBlock, JSON.parse(newTrace)),
+                    ),
+                  )
+                }
+              }
+            } catch (err) {
+              console.error(err)
+            }
+          },
+        })
       })
     },
     [block, setValue, setModalContent],
@@ -171,7 +179,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
   return (
     <>
       <PageSection type="subnav">
-        <Toolbar sml={sml} setSML={setSML} run={run} block={block} />
+        <Toolbar
+          sml={sml}
+          setSML={setSML}
+          run={run}
+          isRunning={modalIsDone === -2}
+          block={block}
+        />
       </PageSection>
       <PageSection
         isFilled
@@ -228,7 +242,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           </Button>
           <Button
             key="Cancel"
-            variant="secondary"
+            variant="danger"
             onClick={cancelModal}
             isDisabled={modalIsDone !== -2}
           >
