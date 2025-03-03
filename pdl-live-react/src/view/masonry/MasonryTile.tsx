@@ -53,7 +53,7 @@ export default function MasonryTile({
   const myRun = useCallback(() => {
     if (block && run) {
       setIsRunning(true)
-      run(block, () => setIsRunning(false), "medium")
+      run(block, () => setIsRunning(false))
     }
   }, [block, run, setIsRunning])
 
