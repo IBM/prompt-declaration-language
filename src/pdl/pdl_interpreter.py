@@ -666,7 +666,7 @@ def process_block_body(
                 items = None
                 lengths = None
             else:
-                items, block = process_expr_of(block, "fors", scope, loc, "for")
+                items, block = process_expr_of(block, "for_", scope, loc, "for")
                 lengths = []
                 for idx, lst in items.items():
                     if not isinstance(lst, list):
