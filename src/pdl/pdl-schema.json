@@ -4726,7 +4726,7 @@
           "title": "Import",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -4805,7 +4805,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -5148,7 +5148,7 @@
           "title": "Include",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -5227,7 +5227,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -9563,7 +9563,7 @@
           "description": "Define how to combine the result of each iteration.\n    ",
           "title": "Join"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "items": {
@@ -9652,7 +9652,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [

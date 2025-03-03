@@ -119,16 +119,16 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, PdlLocationTy
 #                 iter_blocks(f, block.else_)
 #         case RepeatBlock():
 #             iter_blocks(f, block.repeat)
-#             if block.trace is not None:
-#                 for trace in block.trace:
+#             if block.pdl__trace is not None:
+#                 for trace in block.pdl__trace:
 #                     iter_blocks(f, trace)
 #         case ErrorBlock():
 #             iter_blocks(f, block.program)
 #         case ReadBlock():
 #             pass
 #         case IncludeBlock():
-#             if block.trace is not None:
-#                 iter_blocks(f, block.trace)
+#             if block.pdl__trace is not None:
+#                 iter_blocks(f, block.pdl__trace)
 #         case EmptyBlock():
 #             pass
 #         case _:

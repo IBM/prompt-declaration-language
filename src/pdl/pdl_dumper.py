@@ -170,12 +170,12 @@ def block_to_dict(  # noqa: C901
             d["multiline"] = block.multiline
         case IncludeBlock():
             d["include"] = block.include
-            if block.trace:
-                d["trace"] = block_to_dict(block.trace, json_compatible)
+            if block.pdl__trace:
+                d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case ImportBlock():
             d["import"] = block.import_
-            if block.trace:
-                d["trace"] = block_to_dict(block.trace, json_compatible)
+            if block.pdl__trace:
+                d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case IfBlock():
             d["if"] = block.condition
             d["then"] = block_to_dict(block.then, json_compatible)
@@ -203,8 +203,10 @@ def block_to_dict(  # noqa: C901
             d["until"] = block.until
             d["max_iterations"] = block.max_iterations
             d["join"] = join_to_dict(block.join)
-            if block.trace is not None:
-                d["trace"] = [block_to_dict(b, json_compatible) for b in block.trace]
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = [
+                    block_to_dict(b, json_compatible) for b in block.pdl__trace
+                ]
         case FunctionBlock():
             d["function"] = block.function
             d["return"] = block_to_dict(block.returns, json_compatible)
@@ -214,7 +216,7 @@ def block_to_dict(  # noqa: C901
             d["call"] = block.call
             d["args"] = block.args
             if block.pdl__trace is not None:
-                d["trace"] = block_to_dict(
+                d["pdl__trace"] = block_to_dict(
                     block.pdl__trace, json_compatible
                 )  # pyright: ignore
         case EmptyBlock():

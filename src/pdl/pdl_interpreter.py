@@ -174,8 +174,8 @@ def generate(
         else:
             message = get_loc_string(exc.loc) + exc.message
         print(message, file=sys.stderr)
-        if trace_file and exc.trace is not None:
-            write_trace(trace_file, exc.trace)
+        if trace_file and exc.pdl__trace is not None:
+            write_trace(trace_file, exc.pdl__trace)
 
 
 def write_trace(
@@ -645,7 +645,9 @@ def process_block_body(
                         append(loc_i, "then"),
                     )
                 except PDLRuntimeError as exc:
-                    match_case_trace = match_case.model_copy(update={"then": exc.trace})
+                    match_case_trace = match_case.model_copy(
+                        update={"then": exc.pdl__trace}
+                    )
                     cases.append(match_case_trace)
                     block.with_ = cases
                     raise PDLRuntimeError(
@@ -760,8 +762,8 @@ def process_block_body(
                     if stop:
                         break
             except PDLRuntimeError as exc:
-                iter_trace.append(exc.trace)
-                trace = block.model_copy(update={"trace": iter_trace})
+                iter_trace.append(exc.pdl__trace)
+                trace = block.model_copy(update={"pdl__trace": iter_trace})
                 raise PDLRuntimeError(
                     exc.message,
                     loc=exc.loc or repeat_loc,
@@ -770,7 +772,7 @@ def process_block_body(
             result = combine_results(block.join.as_, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"trace": iter_trace})
+            trace = block.model_copy(update={"pdl__trace": iter_trace})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
@@ -900,7 +902,7 @@ def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional
             append(loc, field_alias or field),
         )
     except PDLRuntimeError as exc:
-        trace = block.model_copy(update={field: exc.trace})
+        trace = block.model_copy(update={field: exc.pdl__trace})
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,
@@ -986,7 +988,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 trace.append(t)  # type: ignore
                 iteration_state = iteration_state.with_pop()
         except PDLRuntimeError as exc:
-            trace.append(exc.trace)  # type: ignore
+            trace.append(exc.pdl__trace)  # type: ignore
             raise PDLRuntimeProcessBlocksError(
                 message=exc.message, blocks=trace, loc=exc.loc or new_loc
             ) from exc
@@ -1283,7 +1285,9 @@ def process_call_model(
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
-        trace = block.model_copy(update={"result": result, "trace": concrete_block})
+        trace = block.model_copy(
+            update={"result": result, "pdl__trace": concrete_block}
+        )
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
@@ -1600,9 +1604,9 @@ def process_call(
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or fun_loc,
-            trace=block.model_copy(update={"trace": exc.trace}),
+            trace=block.model_copy(update={"pdl__trace": exc.pdl__trace}),
         ) from exc
-    trace = block.model_copy(update={"trace": f_trace})
+    trace = block.model_copy(update={"pdl__trace": f_trace})
     if closure.spec is not None:
         result = lazy_apply(
             lambda r: result_with_type_checking(
@@ -1676,7 +1680,7 @@ def process_include(
         result, background, scope, trace = process_block(
             state, scope, prog.root, new_loc
         )
-        include_trace = block.model_copy(update={"trace": trace})
+        include_trace = block.model_copy(update={"pdl__trace": trace})
         return result, background, scope, include_trace
     except PDLParseError as exc:
         message = f"Attempting to include invalid yaml: {str(file)}\n{exc.message}"
@@ -1686,7 +1690,7 @@ def process_include(
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
     except PDLRuntimeProcessBlocksError as exc:
-        trace = block.model_copy(update={"trace": exc.blocks})
+        trace = block.model_copy(update={"pdl__trace": exc.blocks})
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,
@@ -1712,7 +1716,7 @@ def process_import(
             prog.root,
             new_loc,
         )
-        import_trace = block.model_copy(update={"trace": trace})
+        import_trace = block.model_copy(update={"pdl__trace": trace})
         return new_scope, PdlConst([]), scope, import_trace
     except PDLParseError as exc:
         message = f"Attempting to import invalid yaml: {str(file)}\n{exc.message}"
@@ -1722,7 +1726,7 @@ def process_import(
             trace=ErrorBlock(msg=message, program=block.model_copy()),
         ) from exc
     except PDLRuntimeProcessBlocksError as exc:
-        trace = block.model_copy(update={"trace": exc.blocks})
+        trace = block.model_copy(update={"pdl__trace": exc.blocks})
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,

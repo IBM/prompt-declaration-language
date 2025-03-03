@@ -604,7 +604,7 @@ class RepeatBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlockType"]] = None
+    pdl__trace: Optional[list["BlockType"]] = None
 
 
 class ReadBlock(Block):
@@ -630,7 +630,7 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    pdl__trace: Optional["BlockType"] = None
 
 
 class ImportBlock(Block):
@@ -641,7 +641,7 @@ class ImportBlock(Block):
     """Name of the file to import.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    pdl__trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
@@ -725,7 +725,7 @@ class PDLRuntimeError(PDLException):
     ):
         super().__init__(message)
         self.loc = loc
-        self.trace = trace
+        self.pdl__trace = trace
         self.fallback = fallback
         self.message = message
 

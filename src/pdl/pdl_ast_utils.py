@@ -84,19 +84,19 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 f(match_case.then)
         case RepeatBlock():
             f(block.repeat)
-            if block.trace is not None:
-                for trace in block.trace:
+            if block.pdl__trace is not None:
+                for trace in block.pdl__trace:
                     f(trace)
         case ErrorBlock():
             f(block.program)
         case ReadBlock():
             pass
         case IncludeBlock():
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case ImportBlock():
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case EmptyBlock():
             pass
         case _:
@@ -186,18 +186,18 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.while_ = f.f_expr(block.while_)
             block.repeat = f.f_block(block.repeat)
             block.until = f.f_expr(block.until)
-            if block.trace is not None:
-                block.trace = [f.f_block(trace) for trace in block.trace]
+            if block.pdl__trace is not None:
+                block.pdl__trace = [f.f_block(trace) for trace in block.pdl__trace]
         case ErrorBlock():
             block.program = f.f_block(block.program)
         case ReadBlock():
             block.read = f.f_expr(block.read)
         case IncludeBlock():
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
         case ImportBlock():
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
         case EmptyBlock():
             pass
         case _:
