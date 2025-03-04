@@ -1,3 +1,5 @@
+import { compressToUTF16, decompressFromUTF16 } from "lz-string"
+
 const mytracesLocalStorageKey = "pdl.sidebar-nav-mytraces.list"
 
 type MyTrace = {
@@ -5,7 +7,9 @@ type MyTrace = {
   timestamp: number
   filename: string
   value: string
+  isCompressed?: boolean
 }
+
 export function getMyTraces(): MyTrace[] {
   return (
     JSON.parse(
@@ -14,6 +18,9 @@ export function getMyTraces(): MyTrace[] {
   ).map((trace) =>
     Object.assign(trace, {
       title: trace.title.replace(/(\.trace)?.json$/, ""),
+      value: trace.isCompressed
+        ? decompressFromUTF16(trace.value)
+        : trace.value,
     }),
   )
 }
@@ -24,7 +31,8 @@ export function addMyTrace(filename: string, value: string): MyTrace {
     title: filename.replace(/(\.trace)?.json$/, ""),
     timestamp: Date.now(),
     filename,
-    value,
+    isCompressed: true,
+    value: compressToUTF16(value),
   }
 
   const alreadyIdx = traces.findIndex((_) => _.filename === filename)
