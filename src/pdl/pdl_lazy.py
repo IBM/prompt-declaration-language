@@ -208,8 +208,14 @@ class PdlApply2(PdlLazy[Apply2OutputT]):
     def result(self) -> Apply2OutputT:
         if self._done:
             return self._data
-        v1 = self.x1.result()
-        v2 = self.x2.result()
+        if isinstance(self.x1, PdlLazy):
+            v1 = self.x1.result()
+        else:
+            v1 = self.x1
+        if isinstance(self.x2, PdlLazy):
+            v2 = self.x2.result()
+        else:
+            v2 = self.x2
         self._data = self.f(v1, v2)
         self._done = True
         return self._data
