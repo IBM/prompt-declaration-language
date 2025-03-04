@@ -8,7 +8,7 @@ use tempfile::Builder;
 #[tauri::command]
 pub async fn replay_prep(trace: String, name: String) -> Result<(String, String, String), String> {
     let mut input = Builder::new()
-        .prefix(&name)
+        .prefix(&format!("{}-", name))
         .suffix(".pdl")
         .tempfile()
         .map_err(|e| e.to_string())?;
