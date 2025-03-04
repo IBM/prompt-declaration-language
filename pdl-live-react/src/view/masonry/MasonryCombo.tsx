@@ -270,10 +270,13 @@ function spliceSubtree(
       for (let idx = 0; idx < value.length; idx++) {
         const v = value[idx]
         if (isNonScalarPdlBlock(v)) {
-          if (v.id === oldSubtree.id) {
+          if (v.pdl__id === oldSubtree.pdl__id) {
             value[idx] = updateIds(
               newSubtree,
-              oldSubtree.id?.replace(new RegExp(newSubtree.id + "$"), "") ?? "",
+              oldSubtree.pdl__id?.replace(
+                new RegExp(newSubtree.pdl__id + "$"),
+                "",
+              ) ?? "",
               hasTimingInformation(oldSubtree) &&
                 hasTimingInformation(newSubtree)
                 ? oldSubtree.pdl__timing.start_nanos -
@@ -286,7 +289,7 @@ function spliceSubtree(
         }
       }
     } else if (isNonScalarPdlBlock(value)) {
-      if (value.id === oldSubtree.id) {
+      if (value.pdl__id === oldSubtree.pdl__id) {
         Object.assign(tree, { [key]: newSubtree })
       } else {
         spliceSubtree(value, oldSubtree, newSubtree)

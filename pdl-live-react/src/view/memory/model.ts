@@ -59,7 +59,7 @@ function extractVariablesIter(block: PdlBlock): Edge[] {
         .map(({ role, defsite }) => ({
           label: String(role),
           source: String(defsite),
-          target: block.id ?? "",
+          target: block.pdl__id ?? "",
         }))
         .filter((edge) => !!edge.source && !!edge.target)
 

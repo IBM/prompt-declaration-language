@@ -35,7 +35,7 @@ function MyTiles() {
                   className="pdl-masonry-tile-panel"
                 >
                   <PanelMain maxHeight="300px">
-                    <Result result={data.result} term="" />
+                    <Result result={data.pdl__result} term="" />
                   </PanelMain>
                 </Panel>
               ) : (

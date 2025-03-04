@@ -15,7 +15,7 @@ import {
 } from "../../helpers"
 
 function defBody(_def: string | null, block: Model) {
-  const value = hasResult(block) ? block.result : undefined
+  const value = hasResult(block) ? block.pdl__result : undefined
   return (
     <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
       {!value ? "Value not found" : <DefContent value={value} />}
@@ -77,7 +77,7 @@ export default function DrawerContentBody({
       if (!model) {
         return (
           <Suspense>
-            <BlockNotFound id={id} value={value} />
+            <BlockNotFound pdl__id={id} value={value} />
           </Suspense>
         )
       }
@@ -86,7 +86,7 @@ export default function DrawerContentBody({
       if (!model) {
         return (
           <Suspense>
-            <BlockNotFound id={id} value={value} />
+            <BlockNotFound pdl__id={id} value={value} />
           </Suspense>
         )
       }

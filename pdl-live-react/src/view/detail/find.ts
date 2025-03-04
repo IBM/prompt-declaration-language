@@ -16,7 +16,7 @@ export default function find(
 ): null | Block {
   if (!isNonScalarPdlBlock(block)) {
     return null
-  } else if (block.id === id) {
+  } else if (block.pdl__id === id) {
     return block
   } else {
     return (

@@ -28,7 +28,6 @@ from .pdl_ast import (
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
-    LocationType,
     MatchBlock,
     MessageBlock,
     ObjectBlock,
@@ -36,12 +35,13 @@ from .pdl_ast import (
     OrPattern,
     ParserType,
     PatternType,
+    PdlLocationType,
     PdlParser,
+    PdlTiming,
     ReadBlock,
     RegexParser,
     RepeatBlock,
     TextBlock,
-    Timing,
 )
 from .pdl_lazy import PdlLazy
 
@@ -88,8 +88,8 @@ def block_to_dict(  # noqa: C901
         return block
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
-    if block.id is not None:
-        d["id"] = block.id
+    if block.pdl__id is not None:
+        d["pdl__id"] = block.pdl__id
     if block.context is not None:
         if isinstance(block.context, PdlLazy):
             context = block.context.result()
@@ -168,17 +168,17 @@ def block_to_dict(  # noqa: C901
             d["multiline"] = block.multiline
         case IncludeBlock():
             d["include"] = block.include
-            if block.trace:
-                d["trace"] = block_to_dict(block.trace, json_compatible)
+            if block.pdl__trace:
+                d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case ImportBlock():
-            d["import"] = block.imports
-            if block.trace:
-                d["trace"] = block_to_dict(block.trace, json_compatible)
+            d["import"] = block.import_
+            if block.pdl__trace:
+                d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case IfBlock():
             d["if"] = block.condition
             d["then"] = block_to_dict(block.then, json_compatible)
-            if block.elses is not None:
-                d["else"] = block_to_dict(block.elses, json_compatible)
+            if block.else_ is not None:
+                d["else"] = block_to_dict(block.else_, json_compatible)
             if block.if_result is not None:
                 d["if_result"] = block.if_result
         case MatchBlock():
@@ -195,14 +195,16 @@ def block_to_dict(  # noqa: C901
                 for match_case in block.with_
             ]
         case RepeatBlock():
-            d["for"] = block.fors
+            d["for"] = block.for_
             d["while"] = block.while_
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             d["until"] = block.until
             d["max_iterations"] = block.max_iterations
             d["join"] = join_to_dict(block.join)
-            if block.trace is not None:
-                d["trace"] = [block_to_dict(b, json_compatible) for b in block.trace]
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = [
+                    block_to_dict(b, json_compatible) for b in block.pdl__trace
+                ]
         case FunctionBlock():
             d["function"] = block.function
             d["return"] = block_to_dict(block.returns, json_compatible)
@@ -211,30 +213,30 @@ def block_to_dict(  # noqa: C901
         case CallBlock():
             d["call"] = block.call
             d["args"] = block.args
-            if block.trace is not None:
-                d["trace"] = block_to_dict(
-                    block.trace, json_compatible
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = block_to_dict(
+                    block.pdl__trace, json_compatible
                 )  # pyright: ignore
         case EmptyBlock():
             pass
         case ErrorBlock():
             d["program"] = block_to_dict(block.program, json_compatible)
             d["msg"] = block.msg
-    if block.assign is not None:
-        d["def"] = block.assign
+    if block.def_ is not None:
+        d["def"] = block.def_
     if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
         d["contribute"] = contribute_to_list(block.contribute)
-    if block.result is not None:
-        if isinstance(block.result, FunctionBlock):
-            d["result"] = ""
+    if block.pdl__result is not None:
+        if isinstance(block.pdl__result, FunctionBlock):
+            d["pdl__result"] = ""
         elif json_compatible:
-            d["result"] = as_json(block.result.result())
+            d["pdl__result"] = as_json(block.pdl__result.result())
         else:
-            d["result"] = block.result.result()
+            d["pdl__result"] = block.pdl__result.result()
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
-    # if block.location is not None:
-    #     d["location"] = location_to_dict(block.location)
+    # if block.pdl__location is not None:
+    #     d["pdl__location"] = location_to_dict(block.pdl__location)
     if block.fallback is not None:
         d["fallback"] = block_to_dict(block.fallback, json_compatible)
     # Warning: remember to update timing here at the end! this ensures
@@ -246,7 +248,7 @@ def block_to_dict(  # noqa: C901
     return d
 
 
-def timing_to_dict(timing: Timing) -> dict:
+def timing_to_dict(timing: PdlTiming) -> dict:
     d: dict = {}
     if timing.start_nanos != 0:
         d["start_nanos"] = timing.start_nanos
@@ -279,8 +281,8 @@ def pattern_to_dict(pattern: PatternType):
             result = {"any": None}
         case _:
             assert False
-    if pattern.assign is not None:
-        result["def"] = pattern.assign
+    if pattern.def_ is not None:
+        result["def"] = pattern.def_
     return result
 
 
@@ -288,9 +290,9 @@ def join_to_dict(join: JoinType) -> dict[str, Any]:
     d = {}
     match join:
         case JoinText():
-            d["with"] = join.join_string
+            d["with"] = join.with_
         case _:
-            d["as"] = str(join.iteration_type)
+            d["as"] = str(join.as_)
     return d
 
 
@@ -324,7 +326,7 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
     return p
 
 
-def location_to_dict(location: LocationType) -> dict[str, Any]:
+def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
     return {"path": location.path, "file": location.file, "table": location.table}
 
 

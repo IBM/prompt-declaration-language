@@ -68,7 +68,7 @@ function computeModelIter(
   const root = ignoreRoot
     ? parent
     : {
-        id: block.id ?? block.kind ?? "",
+        id: block.pdl__id ?? block.kind ?? "",
         depth: !parent ? 0 : parent.depth + 1,
         parent: parent || null,
         children: [], // filled in at the end
@@ -98,24 +98,25 @@ function computeModelIter(
 
 export function childrenOf(block: NonScalarPdlBlock) {
   return match(block)
-    .with({ kind: "model" }, (data) => [data.input, data.result])
-    .with({ kind: "code" }, (data) => [data.result])
-    .with({ kind: "get" }, (data) => [data.result])
-    .with({ kind: "data" }, (data) => [data.result])
+    .with({ kind: "model" }, (data) => [data.input, data.pdl__result])
+    .with({ kind: "code" }, (data) => [data.pdl__result])
+    .with({ kind: "get" }, (data) => [data.pdl__result])
+    .with({ kind: "data" }, (data) => [data.pdl__result])
     .with({ kind: "if" }, (data) =>
       data.if_result ? [data.then] : [data.else],
     )
     .with({ kind: "match" }, (data) => [data.with]) // TODO
-    .with({ kind: "read" }, (data) => [data.result])
-    .with({ kind: "include" }, (data) => [data.trace ?? data.result])
+    .with({ kind: "read" }, (data) => [data.pdl__result])
+    .with({ kind: "include" }, (data) => [data.pdl__trace ?? data.pdl__result])
+    .with({ kind: "import" }, (data) => [data.pdl__trace ?? data.pdl__result])
     .with({ kind: "function" }, () => [])
-    .with({ kind: "call" }, (data) => [data.trace ?? data.result])
+    .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
     .with({ kind: "text" }, (data) => [data.text])
     .with({ kind: "lastOf" }, (data) => [data.lastOf])
     .with({ kind: "array" }, (data) => [data.array])
     .with({ kind: "object" }, (data) => [data.object])
     .with({ kind: "message" }, (data) => [data.content])
-    .with({ kind: "repeat" }, (data) => [data.trace ?? data.repeat])
+    .with({ kind: "repeat" }, (data) => [data.pdl__trace ?? data.repeat])
     .with({ kind: "empty" }, (data) =>
       data.defs ? Object.values(data.defs) : [],
     )

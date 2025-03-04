@@ -4,7 +4,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from .pdl_ast import LocationType, PDLException, Program
+from .pdl_ast import PDLException, PdlLocationType, Program
 from .pdl_location_utils import get_line_map
 from .pdl_schema_error_analyzer import analyze_errors
 
@@ -13,16 +13,16 @@ class PDLParseError(PDLException):
     pass
 
 
-def parse_file(pdl_file: str | Path) -> tuple[Program, LocationType]:
+def parse_file(pdl_file: str | Path) -> tuple[Program, PdlLocationType]:
     with open(pdl_file, "r", encoding="utf-8") as pdl_fp:
         prog_str = pdl_fp.read()
     return parse_str(prog_str, file_name=str(pdl_file))
 
 
-def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]:
+def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, PdlLocationType]:
     prog_yaml = yaml.safe_load(pdl_str)
     line_table = get_line_map(pdl_str)
-    loc = LocationType(path=[], file=file_name, table=line_table)
+    loc = PdlLocationType(path=[], file=file_name, table=line_table)
     try:
         prog = Program.model_validate(prog_yaml)
         # set_program_location(prog, pdl_str)
@@ -115,20 +115,20 @@ def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, LocationType]
 #             iter_blocks(f, block.content)
 #         case IfBlock():
 #             iter_blocks(f, block.then)
-#             if block.elses is not None:
-#                 iter_blocks(f, block.elses)
+#             if block.else_ is not None:
+#                 iter_blocks(f, block.else_)
 #         case RepeatBlock():
 #             iter_blocks(f, block.repeat)
-#             if block.trace is not None:
-#                 for trace in block.trace:
+#             if block.pdl__trace is not None:
+#                 for trace in block.pdl__trace:
 #                     iter_blocks(f, trace)
 #         case ErrorBlock():
 #             iter_blocks(f, block.program)
 #         case ReadBlock():
 #             pass
 #         case IncludeBlock():
-#             if block.trace is not None:
-#                 iter_blocks(f, block.trace)
+#             if block.pdl__trace is not None:
+#                 iter_blocks(f, block.pdl__trace)
 #         case EmptyBlock():
 #             pass
 #         case _:

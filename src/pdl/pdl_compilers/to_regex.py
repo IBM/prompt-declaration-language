@@ -302,8 +302,8 @@ def compile_block(
         case IfBlock():
             then_regex, then_scope = compile_block(scope, block.then)
             else_regex, else_scope = (
-                compile_block(scope, block.elses)
-                if block.elses is not None
+                compile_block(scope, block.else_)
+                if block.else_ is not None
                 else (ReEmpty(), scope)
             )
             regex = ReOr([then_regex, else_regex])
