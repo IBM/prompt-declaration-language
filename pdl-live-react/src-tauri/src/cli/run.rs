@@ -1,6 +1,6 @@
 use ::file_diff::diff;
 use ::std::fs::{copy, create_dir_all};
-use ::std::path::PathBuf;
+use ::std::path::{Path, PathBuf};
 use duct::cmd;
 
 use tauri::path::BaseDirectory;
@@ -76,7 +76,10 @@ pub fn run_pdl_program(
     data: Option<&tauri_plugin_cli::ArgData>,
     stream: Option<&tauri_plugin_cli::ArgData>,
 ) -> Result<(), tauri::Error> {
-    println!("Running {:?}", source_file_path);
+    println!(
+        "Running {:#?}",
+        Path::new(&source_file_path).file_name().unwrap()
+    );
     let bin_path = pip_install_if_needed(app_handle)?;
     let trace_arg = if let Some(arg) = trace_file {
         if let serde_json::Value::String(f) = &arg.value {
