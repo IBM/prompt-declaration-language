@@ -1,5 +1,4 @@
 import { defineConfig } from "vite";
-import checker from "vite-plugin-checker";
 import react from "@vitejs/plugin-react";
 import { createHtmlPlugin } from "vite-plugin-html";
 
@@ -10,10 +9,6 @@ export default defineConfig(async () => ({
   base:  "./",
   plugins: [
     react(),
-    checker({
-      // e.g. use TypeScript check
-      typescript: true,
-    }),
     createHtmlPlugin({
       inject: {
         data: {
