@@ -75,12 +75,25 @@ function computeModelIter(
         block,
       }
 
-  return [
-    ...(ignoreRoot ? [] : [root]),
-    ...childrenOf(block)
-      .filter(nonNullable)
-      .flatMap((child) => computeModelIter(child, root)),
-  ].filter(nonNullable)
+  const childrenModel = childrenOf(block)
+    .filter(nonNullable)
+    .flatMap((child) => computeModelIter(child, root))
+
+  // Correct for anomalies in the trace where a child may have an
+  // earlier end timestamp than its children. See
+  // https://github.com/IBM/prompt-declaration-language/pull/683
+  if (root) {
+    const maxEnd = childrenModel.reduce(
+      (maxEnd, child) => Math.max(maxEnd, child.block.pdl__timing.end_nanos),
+      0,
+    )
+    root.block.pdl__timing.end_nanos = Math.max(
+      root.block.pdl__timing.end_nanos,
+      maxEnd,
+    )
+  }
+
+  return [...(ignoreRoot ? [] : [root]), ...childrenModel].filter(nonNullable)
 }
 
 export function childrenOf(block: NonScalarPdlBlock) {

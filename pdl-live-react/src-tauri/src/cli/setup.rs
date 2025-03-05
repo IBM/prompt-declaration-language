@@ -22,14 +22,16 @@ pub fn cli(app: &mut tauri::App) -> Result<(), tauri::Error> {
                 "run" => {
                     if let Some(source) = subcommand_matches.matches.args.get("source") {
                         if let Value::String(source_file_path) = &source.value {
-                            run::run_pdl_program(
+                            match run::run_pdl_program(
                                 source_file_path.clone(),
                                 app.handle().clone(),
                                 subcommand_matches.matches.args.get("trace"),
                                 subcommand_matches.matches.args.get("data"),
                                 subcommand_matches.matches.args.get("stream"),
-                            )?;
-                            exit(0)
+                            ) {
+                                Ok(()) => exit(0),
+                                _ => exit(1),
+                            }
                         }
                     }
                     println!("Usage: run <source.pdl>");

@@ -100,6 +100,16 @@ class LitellmModel:
         pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
         response = lazy_apply((lambda x: x[1]), pdl_future)
+
+        # update the end timestamp when the future is done
+        def update_end_nanos(future):
+            import time
+
+            if block.pdl__timing is not None:
+                block.pdl__timing.end_nanos = time.time_ns()
+
+        future.add_done_callback(update_end_nanos)
+
         return message, response
 
     @staticmethod

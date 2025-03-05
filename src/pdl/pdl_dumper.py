@@ -97,8 +97,6 @@ def block_to_dict(  # noqa: C901
             context = block.context
         if len(context) > 0:
             d["context"] = context
-    if block.pdl__timing is not None:
-        d["pdl__timing"] = timing_to_dict(block.pdl__timing)
     if block.description is not None:
         d["description"] = block.description
     if block.role is not None:
@@ -241,6 +239,12 @@ def block_to_dict(  # noqa: C901
     #     d["pdl__location"] = location_to_dict(block.pdl__location)
     if block.fallback is not None:
         d["fallback"] = block_to_dict(block.fallback, json_compatible)
+    # Warning: remember to update timing here at the end! this ensures
+    # that any logic that updates timestamps when futures
+    # finish... has a chance to do its work before we record the
+    # timestamps to the trace
+    if block.pdl__timing is not None:
+        d["pdl__timing"] = timing_to_dict(block.pdl__timing)
     return d
 
 

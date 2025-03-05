@@ -1,7 +1,6 @@
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
 
 import {
-  Button,
   CardHeader,
   CardTitle,
   DescriptionList,
@@ -14,6 +13,7 @@ import {
 } from "@patternfly/react-core"
 
 import Result from "../Result"
+import RunMenu from "./RunMenu"
 import Duration from "./Duration"
 import MasonryTileWrapper from "./MasonryTileWrapper"
 import BreadcrumbBarForBlockId from "../breadcrumbs/BreadcrumbBarForBlockId"
@@ -27,8 +27,6 @@ type Props = import("./Tile").default & {
 const gapSm = { default: "gapSm" as const }
 const nowrap = { default: "nowrap" as const }
 const center = { default: "alignItemsCenter" as const }
-
-import RunIcon from "@patternfly/react-icons/dist/esm/icons/redo-icon"
 
 export default function MasonryTile({
   sml,
@@ -48,12 +46,6 @@ export default function MasonryTile({
   block,
   run,
 }: Props) {
-  const myRun = useCallback(() => {
-    if (block && run) {
-      run(block)
-    }
-  }, [block, run])
-
   const actions = useMemo(
     () => ({
       actions: (
@@ -68,14 +60,7 @@ export default function MasonryTile({
           )}
           {tileActions.map((action) =>
             action === "run" ? (
-              <Button
-                key={action}
-                icon={<RunIcon />}
-                variant="plain"
-                size="sm"
-                isDisabled={!window.__TAURI_INTERNALS__}
-                onClick={myRun}
-              />
+              <RunMenu key="run" run={run} block={block} />
             ) : (
               <></>
             ),
@@ -83,7 +68,7 @@ export default function MasonryTile({
         </>
       ),
     }),
-    [tileActions, myRun, start_nanos, end_nanos, timezone, sml],
+    [tileActions, run, block, start_nanos, end_nanos, timezone, sml],
   )
 
   const maxHeight =
