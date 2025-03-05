@@ -14,7 +14,7 @@ import {
 } from "../../helpers"
 
 import type Tile from "./Tile"
-import { hasSimilarityMetrics } from "./similarity"
+import { hasStabilityMetrics, type StabilityMetric } from "./stability"
 
 /** The final result of the block */
 /* function result(block: import("../../pdl_ast").PdlBlock) {
@@ -65,6 +65,9 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
                     : undefined,
             }
 
+        const stability = hasStabilityMetrics(block)
+          ? block.pdl__stability
+          : ([] satisfies StabilityMetric[])
         return withDefs(block, [
           {
             id,
@@ -80,16 +83,13 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
-            footer2Key: hasSimilarityMetrics(block) ? "Idempotency" : undefined,
-            footer2Value: hasSimilarityMetrics(block)
-              ? block.pdl__similarity
-              : undefined,
-            footer2DetailHeader: hasSimilarityMetrics(block)
-              ? "Stability across calls with the same input (Idempotency)"
-              : undefined,
-            footer2DetailBody: hasSimilarityMetrics(block)
-              ? block.pdl__results
-              : undefined,
+
+            stability,
+            //footer2Key: stability.map((m) => `T=${m.temperature} Stability`),
+            //footer2Value: stability.map((m) => m.matrix),
+            //footer2DetailHeader: stability.map((m) => `Stability across calls with the same input (temperature=${m.temperature})`),
+            //footer2DetailBody: stability.map((m) => m.results),
+
             block,
             actions: isLLMBlock(block) ? ["run"] : [],
             content: resultForDisplay,
