@@ -60,7 +60,7 @@ export function isPdlBlock(
 export function isNonScalarPdlBlock(
   data: unknown | PdlBlock,
 ): data is NonScalarPdlBlock {
-  return data != null && typeof data === "object" && "id" in data
+  return data != null && typeof data === "object" && "pdl__id" in data
 }
 
 /** Does the given block have a `parser` field? */
