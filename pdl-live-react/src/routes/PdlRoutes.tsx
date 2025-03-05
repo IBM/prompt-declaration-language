@@ -9,6 +9,7 @@ import MyTrace from "../page/MyTrace"
 import Welcome from "../page/welcome/Welcome"
 import Uploader from "../page/Uploader"
 import ErrorBoundary from "../page/ErrorBoundary"
+import ClearMyTraces from "../page/ClearMyTraces"
 
 import demos from "../demos/demos"
 import { getMyTraces } from "../page/MyTraces"
@@ -41,6 +42,7 @@ export default function PdlRoutes() {
           />
         ))}
 
+        <Route path="/clear/my" element={<ClearMyTraces />} />
         <Route path="*" element={<ErrorBoundary />} />
       </Routes>
     </ErrorBoundary>
