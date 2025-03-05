@@ -39,7 +39,13 @@ import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
 
-export type Runner = (block?: import("../../pdl_ast").PdlBlock) => Promise<void>
+export type Runner = (
+  block?: import("../../helpers").NonScalarPdlBlock,
+  async?: boolean,
+  update?: <BB extends import("../../helpers").NonScalarPdlBlock>(
+    outputBlock: BB,
+  ) => import("../../pdl_ast").PdlBlock,
+) => Promise<void | import("../../helpers").NonScalarPdlBlock>
 
 type Props = {
   value: string
@@ -103,13 +109,18 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
   // special form of setModalContent for running a PDL program
   const run = useCallback<Runner>(
-    async (runThisBlock = block) => {
+    async (runThisBlock, async = false, update) => {
       if (!isNonScalarPdlBlock(block) || !isNonScalarPdlBlock(runThisBlock)) {
         return
       }
+      if (!runThisBlock) {
+        runThisBlock = block
+      }
 
       const [cmd, input, output] = (await invoke("replay_prep", {
-        trace: JSON.stringify(runThisBlock),
+        trace: JSON.stringify(runThisBlock, (k, v) =>
+          /^pdl__/.test(k) ? undefined : v,
+        ),
         name: block.description?.slice(0, 30).replace(/\s/g, "-") ?? "trace",
       })) as [string, string, string]
       console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
@@ -119,12 +130,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
         ? { pdl_context: runThisBlock.context }
         : undefined
 
-      return new Promise<void>((resolve) => {
+      return new Promise<void | typeof runThisBlock>((resolve) => {
         setModalContent({
           header: "Running Program",
           cmd,
           args: [
             "run",
+            ...(async ? ["--stream", "none"] : []),
             "--trace",
             output,
             ...(!data ? [] : ["--data", JSON.stringify(data)]),
@@ -132,8 +144,8 @@ export default function MasonryCombo({ value, setValue }: Props) {
           ],
           cancelCondVar: new ConditionVariable(),
           onExit: async (exitCode: number) => {
-            resolve()
             if (exitCode !== 0) {
+              resolve()
               return
             }
 
@@ -143,15 +155,25 @@ export default function MasonryCombo({ value, setValue }: Props) {
               }).catch(console.error)
               if (buf) {
                 const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
-                const newTrace = decoder.decode(new Uint8Array(buf))
-                if (newTrace) {
+                const newTraceBuf = decoder.decode(new Uint8Array(buf))
+                if (newTraceBuf) {
+                  const newTrace = JSON.parse(newTraceBuf)
                   setValue(
                     JSON.stringify(
-                      spliceSubtree(block, runThisBlock, JSON.parse(newTrace)),
+                      spliceSubtree(
+                        block,
+                        runThisBlock,
+                        update ? update(newTrace) : newTrace,
+                      ),
                     ),
                   )
+
+                  resolve(newTrace)
+                  return
                 }
               }
+
+              resolve()
             } catch (err) {
               console.error(err)
             }
@@ -243,6 +265,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
             key="Cancel"
             variant="danger"
             onClick={cancelModal}
+            isLoading={modalIsDone == -2}
             isDisabled={modalIsDone !== -2}
           >
             Cancel

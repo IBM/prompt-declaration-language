@@ -5,12 +5,17 @@ import {
   DropdownItem,
   MenuToggle,
   MenuToggleAction,
+  type MenuToggleElement,
 } from "@patternfly/react-core"
 
 import RunIcon from "@patternfly/react-icons/dist/esm/icons/redo-icon"
 import ModelIcon from "@patternfly/react-icons/dist/esm/icons/theater-masks-icon"
 import IdempotencyIcon from "@patternfly/react-icons/dist/esm/icons/equals-icon"
 import TemperatureIcon from "@patternfly/react-icons/dist/esm/icons/thermometer-half-icon"
+
+const preventOverflow = {
+  preventOverflow: true,
+} satisfies import("@patternfly/react-core").DropdownPopperProps
 
 type Props = Pick<import("./Tile").default, "block"> & {
   run: import("./MasonryCombo").Runner
@@ -27,10 +32,17 @@ export default function RunMenu({ block, run }: Props) {
     }
   }, [block, run])
 
-  const [isRunOpen, setIsRunOpen] = useState(false)
-  const onRunToggle = useCallback(
-    () => setIsRunOpen((open) => !open),
-    [setIsRunOpen],
+  const runIdempotency = useCallback(async () => {
+    if (block && run) {
+      const { runIdempotencyCheck } = await import("./similarity")
+      await runIdempotencyCheck(block, run)
+    }
+  }, [block, run])
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const onMenuToggle = useCallback(
+    () => setIsMenuOpen((open) => !open),
+    [setIsMenuOpen],
   )
 
   const splitButtonItems = useMemo(
@@ -46,21 +58,27 @@ export default function RunMenu({ block, run }: Props) {
     [runOnce],
   )
 
+  const toggle = useCallback(
+    (toggleRef: import("react").RefObject<MenuToggleElement>) => (
+      <MenuToggle
+        size="sm"
+        ref={toggleRef}
+        onClick={onMenuToggle}
+        isExpanded={isMenuOpen}
+        isDisabled={!window.__TAURI_INTERNALS__}
+        splitButtonItems={splitButtonItems}
+      />
+    ),
+    [],
+  )
+
   return (
     <Dropdown
-      isOpen={isRunOpen}
-      onSelect={onRunToggle}
-      onOpenChange={setIsRunOpen}
-      toggle={(toggleRef) => (
-        <MenuToggle
-          size="sm"
-          ref={toggleRef}
-          onClick={onRunToggle}
-          isExpanded={isRunOpen}
-          isDisabled={!window.__TAURI_INTERNALS__}
-          splitButtonItems={splitButtonItems}
-        />
-      )}
+      popperProps={preventOverflow}
+      isOpen={isMenuOpen}
+      onSelect={onMenuToggle}
+      onOpenChange={setIsMenuOpen}
+      toggle={toggle}
     >
       <DropdownList>
         <DropdownItem
@@ -74,8 +92,8 @@ export default function RunMenu({ block, run }: Props) {
         <DropdownItem
           icon={<IdempotencyIcon />}
           description="Run several times to evaluate model stability for a fixed input"
-          onClick={runOnce}
-          isDisabled
+          onClick={runIdempotency}
+          isDisabled={!window.__TAURI_INTERNALS__}
         >
           Analyze Idempotency
         </DropdownItem>

@@ -50,7 +50,6 @@ fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri:
     ) {
         cmd!(
             venv_path
-                .clone()
                 .join(if cfg!(windows) { "Scripts" } else { "bin" })
                 .join("pip"),
             "install",
