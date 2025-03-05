@@ -18,7 +18,7 @@ text:
 
       ${ prompt }
     # Use replicate.com to run the Granite model on the context, outputting the result
-    - model: ollama_chat/granite3.2:8b
+    - model: ollama_chat/granite3.2:2b
       parameters:
         # Use no LLM model creativity (0 is the default)
         temperature: 0

@@ -6,7 +6,7 @@ text:
 - repeat:
     text:
     # Send context to Granite model hosted at replicate.com
-    - model: ollama_chat/granite3.2:8b
+    - model: ollama_chat/granite3.2:2b
     # Allow the user to type 'yes', 'no', or anything else, storing
     # the input into a variable named `eval`.  The input is also implicitly
     # added to the context.

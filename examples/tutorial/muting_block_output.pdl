@@ -1,4 +1,4 @@
-description: function def and call
+description: Function def and call
 defs:
   translate:
     function:
@@ -8,7 +8,7 @@ defs:
       text:
       - text: "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
         contribute: [context]
-      - model: ollama_chat/granite3.2:8b
+      - model: ollama_chat/granite3.2:2b
         parameters:
           stop: ["\n"]
 text:

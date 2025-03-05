@@ -1,4 +1,4 @@
-description: chatbot
+description: Chatbot
 text:
 - read:
   message: "What is your query?\n"

@@ -9,7 +9,7 @@ lastOf:
   Please repair the code!
 
 - def: raw_output
-  model: ollama_chat/granite3.2:8b
+  model: ollama_chat/granite3.2:2b
   parameters:
     #stop_sequences: "\n\n"
     temperature: 0
