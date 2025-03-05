@@ -51,10 +51,7 @@ export default function MasonryTile({
   idx,
   footer1Key,
   footer1Value,
-  footer2Key,
-  footer2Value,
-  footer2DetailHeader,
-  footer2DetailBody,
+  stability,
   actions: tileActions = [],
   block,
   run,
@@ -73,8 +70,8 @@ export default function MasonryTile({
           )}
           {tileActions.map((action) =>
             action === "run" ? (
-              <Suspense fallback={<div />}>
-                <RunMenu key="run" run={run} block={block} />
+              <Suspense key="run" fallback={<div />}>
+                <RunMenu run={run} block={block} />
               </Suspense>
             ) : (
               <></>
@@ -117,9 +114,9 @@ export default function MasonryTile({
     </CardHeader>
   )
 
-  const hasFooter = (footer1Key && footer1Value) || (footer2Key && footer2Value)
+  const hasFooter = (footer1Key && footer1Value) || stability
   const footer = hasFooter && (
-    <DescriptionList isCompact isHorizontal isFluid>
+    <DescriptionList isAutoColumnWidths columnModifier={{ default: "3Col" }}>
       {footer1Key && (
         <DescriptionListGroup>
           <DescriptionListTerm>{footer1Key}</DescriptionListTerm>
@@ -128,14 +125,20 @@ export default function MasonryTile({
           </DescriptionListDescription>
         </DescriptionListGroup>
       )}
-      {footer2Key && (
-        <DescriptionListGroup className="pdl-masonry-tile-footer2-dg">
-          <DescriptionListTerm>{footer2Key}</DescriptionListTerm>
-          <DescriptionListDescription>
-            {renderValue(footer2Value, footer2DetailHeader, footer2DetailBody)}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      )}
+      {stability &&
+        stability.map((m) => (
+          <DescriptionListGroup
+            key={m.temperature}
+            className="pdl-masonry-tile-footer2-dg"
+          >
+            <DescriptionListTerm>
+              T={m.temperature} Stability
+            </DescriptionListTerm>
+            <DescriptionListDescription>
+              {renderValue(m)}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+        ))}
     </DescriptionList>
   )
 
@@ -163,11 +166,15 @@ export default function MasonryTile({
   )
 }
 
-function renderValue(
-  value: Props["footer2Value"],
-  detailHeader?: Props["footer2DetailHeader"],
-  detailBody?: Props["footer2DetailBody"],
-) {
+function renderValue({
+  temperature,
+  matrix,
+  results,
+}: import("./stability").BlockWithStabilityMetrics["pdl__stability"][number]) {
+  const value = matrix
+  const detailHeader = `Stability across calls with the same input (temperature=${temperature})`
+  const detailBody = results
+
   if (Array.isArray(value) && detailBody) {
     const lookup: { i: number; j: number }[] = []
     let k = 0
