@@ -902,6 +902,11 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
                 "temperature": 0,
             },
         },
+        {
+            "ollama_chat/granite*": {
+                "temperature": 0,
+            },
+        },
     ]
 
 
