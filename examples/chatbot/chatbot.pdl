@@ -1,4 +1,4 @@
-description: chatbot
+description: Chatbot
 text:
 # Allow the user to type any question, implicitly adding the question to the context.
 - read:

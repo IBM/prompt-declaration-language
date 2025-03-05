@@ -1,10 +1,10 @@
 description: Model chaining
 text:
 - "write a hello world example, and explain to me how to run it"
-- model: ollama_chat/granite3.2:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     temperature: 0
 - "how about in Rust?"
-- model: ollama_chat/granite3.2:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     temperature: 0
