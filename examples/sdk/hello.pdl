@@ -1,5 +1,5 @@
 text:
 - "Hello\n"
-- model: ollama/granite-code:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     stop: ['!']

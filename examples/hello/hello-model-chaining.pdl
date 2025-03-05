@@ -1,7 +1,7 @@
 description: Hello world showing model chaining
 text:
 - "Hello\n"
-- model: ollama/granite-code:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     # "greedy" sampling tells the LLM to use the most likely token at each step
     # decoding_method: greedy # Not used by Ollama
@@ -9,7 +9,7 @@ text:
     stop: ['!']
   def: GEN
 - "\nDid you say ${ GEN }?\n"
-- model: ollama/granite-code:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     # decoding_method: greedy
     stop: ['.']

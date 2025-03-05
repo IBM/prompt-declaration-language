@@ -5,7 +5,7 @@ text:
   contribute: [context]
 - repeat:
     text:
-    - model: ollama/granite3.2:2b
+    - model: ollama_chat/granite3.2:2b
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"

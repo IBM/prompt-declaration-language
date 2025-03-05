@@ -1,2 +1,2 @@
-def add(a, b):
-    return a + b
+result = add_numbers(5, 3)
+print(result)  # Outputs: 8

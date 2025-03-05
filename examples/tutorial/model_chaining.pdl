@@ -1,10 +1,10 @@
 description: Model chaining
 text:
 - "Hello\n"
-- model: ollama/granite3.2:2b
+- model: ollama_chat/granite3.2:2b
   parameters:
     stop: ["!"]
 - "\nDid you just say Hello?\n"
-- model: ollama/granite3.2:2b
+- model: ollama_chat/granite3.2:2b
   parameters:
     stop: ["!"]

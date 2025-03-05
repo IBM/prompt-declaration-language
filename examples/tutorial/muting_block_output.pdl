@@ -8,7 +8,7 @@ defs:
       text:
       - text: "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
         contribute: [context]
-      - model: ollama/granite3.2:2b
+      - model: ollama_chat/granite3.2:8b
         parameters:
           stop: ["\n"]
 text:

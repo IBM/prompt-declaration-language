@@ -2,7 +2,7 @@ description: Hello world with variable use
 text:
 - "Hello\n"
 # Define GEN to be the result of a Granite LLM using ollama
-- model: ollama/granite-code:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
     # Tell the LLM to stop after generating an exclamation point.
     stop: ['!']

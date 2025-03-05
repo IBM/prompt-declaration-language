@@ -1,7 +1,7 @@
 description: Hello world calling a model
 text:
 - "Hello\n"
-- model: ollama/granite3.2:2b
+- model: ollama_chat/granite3.2:2b
   input:
     array:
     - role: system

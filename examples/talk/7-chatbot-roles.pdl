@@ -10,7 +10,7 @@ text:
       message: ">>> "
       def: query
       contribute: [context]
-    - model: ollama/granite-code:8b
+    - model: ollama_chat/granite3.2:8b
     - "\n\n"
   until: ${ query == 'quit'}
   join:
