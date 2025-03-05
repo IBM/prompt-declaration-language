@@ -10,6 +10,10 @@ type MyTrace = {
   isCompressed?: boolean
 }
 
+export function clear() {
+  localStorage.removeItem(mytracesLocalStorageKey)
+}
+
 export function getMyTraces(): MyTrace[] {
   return (
     JSON.parse(
