@@ -44,7 +44,8 @@ export default function PageBreadcrumbs({
       ) : (
         <BreadcrumbItem isActive>Home</BreadcrumbItem>
       )}
-      {(breadcrumb1 && !breadcrumb2) || typeof breadcrumb1 !== "string" ? (
+      {(breadcrumb1 && !breadcrumb2) ||
+      (breadcrumb1 && typeof breadcrumb1 !== "string") ? (
         <BreadcrumbItem isDropdown={typeof breadcrumb1 !== "string"}>
           {breadcrumb1}
         </BreadcrumbItem>
