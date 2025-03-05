@@ -285,7 +285,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -304,7 +304,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -315,9 +315,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -325,12 +325,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -341,7 +342,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -356,6 +357,7 @@
           "type": "string"
         },
         "array": {
+          "description": "Elements of the array.",
           "items": {
             "anyOf": [
               {
@@ -760,7 +762,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -779,7 +781,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -790,9 +792,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -800,12 +802,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -816,7 +819,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -857,7 +860,7 @@
           "description": "Arguments of the function with their values.\n    ",
           "title": "Args"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -936,7 +939,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -947,7 +950,7 @@
     },
     "CodeBlock": {
       "additionalProperties": false,
-      "description": "Execute a piece of code.",
+      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -1203,7 +1206,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -1222,7 +1225,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -1233,9 +1236,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -1243,12 +1246,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -1259,7 +1263,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -1398,7 +1402,7 @@
     },
     "DataBlock": {
       "additionalProperties": false,
-      "description": "Arbitrary JSON value.",
+      "description": "Arbitrary value, equivalent to JSON.\n\nExample. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:\n```PDL\ndefs:\n  numbers:\n    data: [1, 2, 3, 4]\n```\n\nExample.  Evaluate `${ TEST.answer }` in\n[Jinja](https://jinja.palletsprojects.com/en/stable/), passing\nthe result to a regex parser with capture groups.  Set\n`EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,\na string, containing the value of the capture group.\n```PDL\n- data: ${ TEST.answer }\n  parser:\n    regex: \"(.|\\n)*#### (?P<answer>([0-9])*)\\n*\"\n    spec:\n      answer: str\n  def: EXTRACTED_GROUND_TRUTH\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -1654,7 +1658,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -1673,7 +1677,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -1684,9 +1688,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -1694,12 +1698,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -1710,7 +1715,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2008,7 +2013,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2027,7 +2032,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2038,9 +2043,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2048,12 +2053,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2064,7 +2070,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2084,6 +2090,7 @@
     },
     "ErrorBlock": {
       "additionalProperties": false,
+      "description": "Block representing an error generated at runtime.",
       "properties": {
         "description": {
           "anyOf": [
@@ -2339,7 +2346,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2358,7 +2365,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2369,9 +2376,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2379,12 +2386,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2395,7 +2403,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2410,6 +2418,7 @@
           "type": "string"
         },
         "msg": {
+          "description": "Error message.\n    ",
           "title": "Msg",
           "type": "string"
         },
@@ -2491,6 +2500,7 @@
               "type": "null"
             }
           ],
+          "description": "Block that raised the error.\n    ",
           "title": "Program"
         }
       },
@@ -2759,7 +2769,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2778,7 +2788,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2789,9 +2799,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2799,12 +2809,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2815,7 +2826,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2932,7 +2943,7 @@
     },
     "GetBlock": {
       "additionalProperties": false,
-      "description": "Get the value of a variable.",
+      "description": "Get the value of a variable.\n\nThe GetBlock is deprecated.  Use DataBlock instead.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3188,7 +3199,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -3207,7 +3218,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -3218,9 +3229,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -3228,12 +3239,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -3244,7 +3256,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -3272,7 +3284,7 @@
     },
     "GraniteioModelBlock": {
       "additionalProperties": false,
-      "description": "Call a LLM through the granite-io API.",
+      "description": "Call an LLM through the granite-io API.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3528,7 +3540,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -3547,7 +3559,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -3558,9 +3570,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -3568,12 +3580,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -3584,7 +3597,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -3608,6 +3621,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
+          "description": "Model name used by the backend.\n    ",
           "title": "Model"
         },
         "input": {
@@ -3689,10 +3703,23 @@
             }
           ],
           "default": null,
-          "description": "If specified, the input will be passed to the model\nrather than the pdl_context.",
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
-        "trace": {
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variable where to store the raw response of the model.\n    ",
+          "title": "Modelresponse"
+        },
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -3771,23 +3798,12 @@
             }
           ],
           "default": null,
-          "title": "Trace"
-        },
-        "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Modelresponse"
+          "title": "Pdl  Trace"
         },
         "platform": {
           "const": "granite-io",
           "default": "granite-io",
+          "description": "Optional field to ensure that the block is using granite-io.\n    ",
           "title": "Platform",
           "type": "string"
         },
@@ -3803,6 +3819,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
+          "description": "Backend name and configuration.\n    ",
           "title": "Backend"
         },
         "processor": {
@@ -3818,6 +3835,7 @@
             }
           ],
           "default": null,
+          "description": "IO Processor name.\n    ",
           "title": "Processor"
         },
         "parameters": {
@@ -3836,6 +3854,7 @@
             }
           ],
           "default": null,
+          "description": "Parameters sent to the model.\n    ",
           "title": "Parameters"
         }
       },
@@ -3848,7 +3867,7 @@
     },
     "IfBlock": {
       "additionalProperties": false,
-      "description": "Conditional control structure.",
+      "description": "Conditional control structure.\n\nExample:\n```PDL\n- if: ${ eval == 'no' }\n  then:\n    text:\n    - read:\n      message: \"Why not?\\n\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -4104,7 +4123,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -4123,7 +4142,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -4134,9 +4153,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -4144,12 +4163,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -4160,7 +4180,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -4267,7 +4287,7 @@
               "type": "null"
             }
           ],
-          "description": "Branch to exectute if the condition is true.\n    ",
+          "description": "Branch to execute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -4630,7 +4650,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -4649,7 +4669,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -4660,9 +4680,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -4670,12 +4690,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -4686,7 +4707,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -4705,7 +4726,7 @@
           "title": "Import",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -4784,7 +4805,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -5051,7 +5072,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5070,7 +5091,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5081,9 +5102,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5091,12 +5112,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -5107,7 +5129,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -5126,7 +5148,7 @@
           "title": "Include",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -5205,7 +5227,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -5540,7 +5562,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5559,7 +5581,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5570,9 +5592,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5580,12 +5602,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -5596,7 +5619,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -5611,6 +5634,7 @@
           "type": "string"
         },
         "lastOf": {
+          "description": "Sequence of blocks to execute.",
           "items": {
             "anyOf": [
               {
@@ -5702,7 +5726,7 @@
     },
     "LitellmModelBlock": {
       "additionalProperties": false,
-      "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
+      "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\n- model: ollama/granite-code:8b\n  parameters:\n    stop: ['!']\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -5958,7 +5982,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5977,7 +6001,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5988,9 +6012,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5998,12 +6022,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -6014,7 +6039,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -6037,7 +6062,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
-          "description": "A provider qualified LiteLLM model expression,\nsuch as \"watsonx/meta-llama/llama-3-1-8b-instruct\"",
+          "description": "Name of the model following the LiteLLM convention.\n    ",
           "title": "Model"
         },
         "input": {
@@ -6119,10 +6144,23 @@
             }
           ],
           "default": null,
-          "description": "If specified, the input will be passed to the model\nrather than the pdl_context.",
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
-        "trace": {
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variable where to store the raw response of the model.\n    ",
+          "title": "Modelresponse"
+        },
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -6201,23 +6239,12 @@
             }
           ],
           "default": null,
-          "title": "Trace"
-        },
-        "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Modelresponse"
+          "title": "Pdl  Trace"
         },
         "platform": {
           "const": "litellm",
           "default": "litellm",
+          "description": "Optional field to ensure that the block is using LiteLLM.\n    ",
           "title": "Platform",
           "type": "string"
         },
@@ -6240,7 +6267,7 @@
             }
           ],
           "default": null,
-          "description": "LitellmParameters for this call to LiteLLM.",
+          "description": "Parameters to send to the model.\n    ",
           "title": "Parameters"
         }
       },
@@ -6252,7 +6279,7 @@
     },
     "LitellmParameters": {
       "additionalProperties": true,
-      "description": "Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.",
+      "description": "Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).\n\nNote that not all models and platforms accept all parameters.",
       "properties": {
         "timeout": {
           "anyOf": [
@@ -6654,10 +6681,10 @@
         "expr": {
           "title": "Expr"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -6670,36 +6697,6 @@
         "expr"
       ],
       "title": "LocalizedExpression",
-      "type": "object"
-    },
-    "LocationType": {
-      "additionalProperties": false,
-      "properties": {
-        "path": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Path",
-          "type": "array"
-        },
-        "file": {
-          "title": "File",
-          "type": "string"
-        },
-        "table": {
-          "additionalProperties": {
-            "type": "integer"
-          },
-          "title": "Table",
-          "type": "object"
-        }
-      },
-      "required": [
-        "path",
-        "file",
-        "table"
-      ],
-      "title": "LocationType",
       "type": "object"
     },
     "MatchBlock": {
@@ -6960,7 +6957,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -6979,7 +6976,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -6990,9 +6987,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -7000,12 +6997,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7016,7 +7014,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -7044,6 +7042,7 @@
           "title": "Match"
         },
         "with": {
+          "description": "List of cases to match.\n    ",
           "items": {
             "$ref": "#/$defs/MatchCase"
           },
@@ -7493,7 +7492,7 @@
               "type": "null"
             }
           ],
-          "description": "Role of associated to the message.",
+          "description": "Role of associated to the message.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -7512,7 +7511,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -7523,9 +7522,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -7533,12 +7532,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7549,7 +7549,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -7910,7 +7910,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -7929,7 +7929,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -7940,9 +7940,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -7950,12 +7950,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7966,7 +7967,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -8350,6 +8351,37 @@
       ],
       "title": "PdlBlock"
     },
+    "PdlLocationType": {
+      "additionalProperties": false,
+      "description": "Internal data structure to keep track of the source location information.",
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "table": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Table",
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "file",
+        "table"
+      ],
+      "title": "PdlLocationType",
+      "type": "object"
+    },
     "PdlParser": {
       "additionalProperties": false,
       "properties": {
@@ -8462,6 +8494,62 @@
         "pdl"
       ],
       "title": "PdlParser",
+      "type": "object"
+    },
+    "PdlTiming": {
+      "additionalProperties": false,
+      "description": "Internal data structure to record timing information in the trace.",
+      "properties": {
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "End Nanos"
+        },
+        "first_use_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "First Use Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "title": "Timezone"
+        }
+      },
+      "title": "PdlTiming",
       "type": "object"
     },
     "Program": {
@@ -8803,7 +8891,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -8822,7 +8910,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -8833,9 +8921,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -8843,12 +8931,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -8859,7 +8948,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -8903,7 +8992,7 @@
         },
         "multiline": {
           "default": false,
-          "description": "Indicate if one or multiple lines shoud be read.\n    ",
+          "description": "Indicate if one or multiple lines should be read.\n    ",
           "title": "Multiline",
           "type": "boolean"
         }
@@ -8916,7 +9005,7 @@
     },
     "RegexParser": {
       "additionalProperties": false,
-      "description": "A regular expression parser.",
+      "description": "A regular expression parser",
       "properties": {
         "description": {
           "anyOf": [
@@ -8967,7 +9056,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.",
+      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -9223,7 +9312,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -9242,7 +9331,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -9253,9 +9342,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -9263,12 +9352,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -9279,7 +9369,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -9474,7 +9564,7 @@
           "description": "Define how to combine the result of each iteration.\n    ",
           "title": "Join"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "items": {
@@ -9563,7 +9653,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -9830,7 +9920,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -9849,7 +9939,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -9860,9 +9950,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -9870,12 +9960,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -9886,7 +9977,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -10068,61 +10159,6 @@
         "text"
       ],
       "title": "TextBlock",
-      "type": "object"
-    },
-    "Timing": {
-      "additionalProperties": false,
-      "properties": {
-        "start_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Start Nanos"
-        },
-        "end_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "End Nanos"
-        },
-        "first_use_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "First Use Nanos"
-        },
-        "timezone": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": "",
-          "title": "Timezone"
-        }
-      },
-      "title": "Timing",
       "type": "object"
     }
   },
