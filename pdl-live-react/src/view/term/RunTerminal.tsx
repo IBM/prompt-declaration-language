@@ -68,6 +68,9 @@ export default function RunTerminal({ cmd, args = [], onExit, cancel }: Props) {
       fitAddon.fit()
       term.focus()
 
+      // for debugging:
+      // term.writeln(`Running ${cmd} ${args.join(" ")}`)
+
       // spawn shell
       const pty = spawn(cmd, args, {
         cols: term.cols,

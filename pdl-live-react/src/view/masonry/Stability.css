@@ -1,0 +1,33 @@
+.pdl-masonry-tile-footer2-dg {
+  align-items: center;
+}
+.pdl-masonry-tile-stability-grid {
+  gap: 2px;
+}
+.pdl-masonry-tile-stability-cell {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  border: 3px solid #70707050;
+  border-radius: 1px / 2px;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+
+  &[data-quartile="4"] {
+    background-color: #1a9641;
+  }
+  &[data-quartile="3"] {
+    background-color: #f9e0a2;
+  }
+  &[data-quartile="2"] {
+    background-color: #f0ab00;
+  }
+  &[data-quartile="1"] {
+    background-color: #f4b678;
+  }
+  &[data-quartile="0"] {
+    background-color: #c9190b;
+  }
+}

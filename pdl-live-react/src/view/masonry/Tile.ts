@@ -13,6 +13,10 @@ type Tile = {
 
   footer1Key?: string
   footer1Value?: string | number | boolean
+  footer2Key?: string
+  footer2Value?: string | number | boolean | number[]
+  footer2DetailHeader?: string
+  footer2DetailBody?: string[]
 
   block?: import("../../helpers").NonScalarPdlBlock
   actions?: "run"[]
