@@ -31,3 +31,7 @@
     background-color: #c9190b;
   }
 }
+
+.pdl-masonry-tile-stability-popover-ab-panel {
+  max-width: 300px;
+}
