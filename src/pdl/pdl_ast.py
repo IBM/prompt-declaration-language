@@ -898,12 +898,12 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         },
         # models on Ollama (e.g. granite-code, granite3-dense, granite3.1-dense)
         {
-            "ollama/granite*": {
+            "ollama/*": {
                 "temperature": 0,
             },
         },
         {
-            "ollama_chat/granite*": {
+            "ollama_chat/*": {
                 "temperature": 0,
             },
         },
