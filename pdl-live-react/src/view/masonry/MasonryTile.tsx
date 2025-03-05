@@ -185,9 +185,10 @@ function renderValue(
 
           return (
             <Popover
+              key={idx}
               hasAutoWidth
-              maxWidth="500px"
               triggerAction="hover"
+              className="pdl-masonry-tile-stability-popover"
               headerContent={detailHeader}
               bodyContent={
                 <Stack hasGutter>
@@ -204,7 +205,10 @@ function renderValue(
                     title="A/B Match"
                   />
                   <Split hasGutter>
-                    <Panel isScrollable>
+                    <Panel
+                      isScrollable
+                      className="pdl-masonry-tile-stability-popover-ab-panel"
+                    >
                       <PanelHeader>
                         <Title headingLevel="h4">A</Title>
                       </PanelHeader>
@@ -214,7 +218,10 @@ function renderValue(
                         </PanelMainBody>
                       </PanelMain>
                     </Panel>
-                    <Panel isScrollable>
+                    <Panel
+                      isScrollable
+                      className="pdl-masonry-tile-stability-popover-ab-panel"
+                    >
                       <PanelHeader>
                         <Title headingLevel="h4">B</Title>
                       </PanelHeader>

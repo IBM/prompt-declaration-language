@@ -80,7 +80,7 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
-            footer2Key: hasSimilarityMetrics(block) ? "Stability" : undefined,
+            footer2Key: hasSimilarityMetrics(block) ? "Idempotency" : undefined,
             footer2Value: hasSimilarityMetrics(block)
               ? block.pdl__similarity
               : undefined,
