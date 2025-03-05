@@ -152,6 +152,8 @@ class PdlParser(Parser):
 
 
 class RegexParser(Parser):
+    """A regular expression parser"""
+
     regex: str
     """Regular expression to parse the value."""
     mode: Annotated[
@@ -229,6 +231,8 @@ class Block(BaseModel):
     """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
+    Typical roles are `system`, `user`, and `assistant`,
+    but there may be other roles such as `available_tools`.
     """
     context: Optional[ModelInput] = []
     """Current context
@@ -272,7 +276,10 @@ class CallBlock(Block):
 
 
 class LitellmParameters(BaseModel):
-    """Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input."""
+    """Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).
+
+    Note that not all models and platforms accept all parameters.
+    """
 
     model_config = ConfigDict(extra="allow", protected_namespaces=())
     timeout: Optional[Union[float, str]] | str = None
@@ -382,13 +389,22 @@ class ModelBlock(Block):
 
 
 class LitellmModelBlock(ModelBlock):
-    """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
+    """
+    Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).
+
+    Example:
+    ```PDL
+    - model: ollama/granite-code:8b
+      parameters:
+        stop: ['!']
+    ```
+    """
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     """Optional field to ensure that the block is using LiteLLM.
     """
     model: ExpressionType[str]
-    """Name of he model following the LiteLLM convension.
+    """Name of the model following the LiteLLM convention.
     """
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
     """Parameters to send to the model.
@@ -396,7 +412,7 @@ class LitellmModelBlock(ModelBlock):
 
 
 class GraniteioModelBlock(ModelBlock):
-    """Call a LLM through the granite-io API."""
+    """Call an LLM through the granite-io API."""
 
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
     """Optional field to ensure that the block is using granite-io.
@@ -405,10 +421,10 @@ class GraniteioModelBlock(ModelBlock):
     """Model name used by the backend.
     """
     backend: ExpressionType[str | dict[str, Any]]
-    """Backend name and configuartion.
+    """Backend name and configuration.
     """
     processor: Optional[ExpressionType[str]] = None
-    """IO Processir name.
+    """IO Processor name.
     """
     parameters: Optional[ExpressionType[dict[str, Any]]] = None
     """Parameters sent to the model.
@@ -416,7 +432,19 @@ class GraniteioModelBlock(ModelBlock):
 
 
 class CodeBlock(Block):
-    """Execute a piece of code."""
+    """
+    Execute a piece of code.
+
+    Example:
+    ```PDL
+    - def: N
+      lang: python
+      code: |
+        import random
+        # (In PDL, set `result` to the output you wish for your code block.)
+        result = random.randint(1, 20)
+    ```
+    """
 
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lang: Annotated[
@@ -430,7 +458,11 @@ class CodeBlock(Block):
 
 
 class GetBlock(Block):
-    """Get the value of a variable."""
+    """
+    Get the value of a variable.
+
+    The GetBlock is deprecated.  Use DataBlock instead.
+    """
 
     kind: Literal[BlockKind.GET] = BlockKind.GET
     get: str
@@ -438,7 +470,30 @@ class GetBlock(Block):
 
 
 class DataBlock(Block):
-    """Arbitrary JSON value."""
+    """
+    Arbitrary value, equivalent to JSON.
+
+    Example. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:
+    ```PDL
+    defs:
+      numbers:
+        data: [1, 2, 3, 4]
+    ```
+
+    Example.  Evaluate `${ TEST.answer }` in
+    [Jinja](https://jinja.palletsprojects.com/en/stable/), passing
+    the result to a regex parser with capture groups.  Set
+    `EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,
+    a string, containing the value of the capture group.
+    ```PDL
+    - data: ${ TEST.answer }
+      parser:
+        regex: "(.|\\n)*#### (?P<answer>([0-9])*)\\n*"
+        spec:
+          answer: str
+      def: EXTRACTED_GROUND_TRUTH
+    ```
+    """
 
     kind: Literal[BlockKind.DATA] = BlockKind.DATA
     data: ExpressionType[Any]
@@ -484,20 +539,34 @@ class MessageBlock(Block):
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     role: RoleType  # pyright: ignore
-    """Role of associated to the message."""  # pyright: ignore
+    """Role of associated to the message.
+    Typical roles are `system`, `user`, and `assistant`,
+    but there may be other roles such as `available_tools`.
+    """  # pyright: ignore
     content: "BlockType"
     """Content of the message."""
 
 
 class IfBlock(Block):
-    """Conditional control structure."""
+    """
+    Conditional control structure.
+
+    Example:
+    ```PDL
+    - if: ${ eval == 'no' }
+      then:
+        text:
+        - read:
+          message: "Why not?\\n"
+    ```
+    """
 
     kind: Literal[BlockKind.IF] = BlockKind.IF
     condition: ExpressionType[bool] = Field(alias="if")
     """Condition.
     """
     then: "BlockType"
-    """Branch to exectute if the condition is true.
+    """Branch to execute if the condition is true.
     """
     else_: Optional["BlockType"] = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
@@ -582,7 +651,18 @@ JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
 
 
 class RepeatBlock(Block):
-    """Repeat the execution of a block."""
+    """
+    Repeat the execution of a block.
+
+    For loop example:
+    ```PDL
+    for:
+        number: [1, 2, 3, 4]
+        name: ["Bob", "Carol", "David", "Ernest"]
+    repeat:
+        "${ name }'s number is ${ number }\\n"
+    ```
+    """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
@@ -618,7 +698,7 @@ class ReadBlock(Block):
     """Message to prompt the user to enter a value.
     """
     multiline: bool = False
-    """Indicate if one or multiple lines shoud be read.
+    """Indicate if one or multiple lines should be read.
     """
 
 
