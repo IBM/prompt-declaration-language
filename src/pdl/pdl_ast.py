@@ -60,21 +60,23 @@ class BlockKind(StrEnum):
     ERROR = "error"
 
 
-class LocationType(BaseModel):
+class PdlLocationType(BaseModel):
+    """Internal data structure to keep track of the source location information."""
+
     model_config = ConfigDict(extra="forbid")
     path: list[str]
     file: str
     table: dict[str, int]
 
 
-empty_block_location = LocationType(file="", path=[], table={})
+empty_block_location = PdlLocationType(file="", path=[], table={})
 
 
 LocalizedExpressionT = TypeVar("LocalizedExpressionT")
 
 
 class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
-    """Expression with location information"""
+    """Internal data structure for expressions with location information."""
 
     model_config = ConfigDict(
         extra="forbid",
@@ -83,7 +85,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
     expr: LocalizedExpressionT
-    location: Optional[LocationType] = None
+    pdl__location: Optional[PdlLocationType] = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
@@ -91,27 +93,32 @@ ExpressionType: TypeAlias = ExpressionTypeT | str | LocalizedExpression[Expressi
 
 
 class Pattern(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    """Patterns allowed to match values in a `case` clause."""
 
-    assign: Optional[str] = Field(default=None, alias="def")
+    model_config = ConfigDict(extra="forbid")
+    def_: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the value matched by the pattern.
     """
 
 
 class OrPattern(Pattern):
     anyOf: list["PatternType"]
+    """Match any of the patterns."""
 
 
 class ArrayPattern(Pattern):
     array: list["PatternType"]
+    """Match an array."""
 
 
 class ObjectPattern(Pattern):
     object: dict[str, "PatternType"]
+    """Match an object."""
 
 
 class AnyPattern(Pattern):
     any: Literal[None]
+    """Match any value."""
 
 
 PatternType: TypeAlias = (
@@ -128,24 +135,35 @@ PatternType: TypeAlias = (
 
 
 class Parser(BaseModel):
+    """Common fields for all parsers (`parser` field)."""
+
     model_config = ConfigDict(extra="forbid")
     description: Optional[str] = None
+    """Documentation associated to the parser.
+    """
     spec: Optional[dict[str, Any]] = None
+    """Expected type of the parsed value.
+    """
 
 
 class PdlParser(Parser):
     pdl: "BlockType"
+    """Use a PDL program as a parser specification."""
 
 
 class RegexParser(Parser):
     regex: str
+    """Regular expression to parse the value."""
     mode: Annotated[
         Literal["search", "match", "fullmatch", "split", "findall"],
         BeforeValidator(_ensure_lower),
     ] = "fullmatch"
+    """Function used to parse to value (https://docs.python.org/3/library/re.html)."""
 
 
 ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
+
+
 RoleType: TypeAlias = Optional[str]
 
 
@@ -155,23 +173,25 @@ class ContributeTarget(StrEnum):
 
 
 class ContributeValue(BaseModel):
-    model_config = ConfigDict(extra="forbid")
     value: list[Any]
+    model_config = ConfigDict(extra="forbid")
 
 
-class Timing(BaseModel):
+class PdlTiming(BaseModel):
+    """Internal data structure to record timing information in the trace."""
+
     model_config = ConfigDict(extra="forbid")
     start_nanos: Optional[int] = 0
-    """Time at which block execution began
+    """Time at which block execution began.
     """
     end_nanos: Optional[int] = 0
-    """Time at which block execution ended
+    """Time at which block execution ended.
     """
     first_use_nanos: Optional[int] = 0
-    """Time at which the value of the block was needed for the first time
+    """Time at which the value of the block was needed for the first time.
     """
     timezone: Optional[str] = ""
-    """Timezone of start_nanos and end_nanos
+    """Timezone of start_nanos and end_nanos.
     """
 
 
@@ -193,7 +213,7 @@ class Block(BaseModel):
     defs: dict[str, "BlockType"] = {}
     """Set of definitions executed before the execution of the block.
     """
-    assign: Optional[str] = Field(default=None, alias="def")
+    def_: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
     contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
@@ -213,13 +233,14 @@ class Block(BaseModel):
     context: Optional[ModelInput] = []
     """Current context
     """
-    id: Optional[str] = ""
+    # Fields for internal use
+    pdl__id: Optional[str] = ""
     """Unique identifier for this block
     """
-    # Fields for internal use
-    result: Optional[Any] = None
-    location: Optional[LocationType] = None
-    pdl__timing: Optional[Timing] = None
+    pdl__result: Optional[Any] = None
+    """Result of the execution of the block"""
+    pdl__location: Optional[PdlLocationType] = None
+    pdl__timing: Optional[PdlTiming] = None
 
 
 class FunctionBlock(Block):
@@ -233,7 +254,7 @@ class FunctionBlock(Block):
     """Body of the function
     """
     # Field for internal use
-    scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
+    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
 
 class CallBlock(Block):
@@ -247,7 +268,7 @@ class CallBlock(Block):
     """Arguments of the function with their values.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    pdl__trace: Optional["BlockType"] = None
 
 
 class LitellmParameters(BaseModel):
@@ -344,29 +365,54 @@ class ModelPlatform(StrEnum):
 
 
 class ModelBlock(Block):
+    """Common fields for the `model` blocks."""
+
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
     model: ExpressionType
+    """Model to use.
+    """
     input: Optional["BlockType"] = None
-    trace: Optional["BlockType"] = None
+    """Messages to send to the model.
+    """
     modelResponse: Optional[str] = None
+    """Variable where to store the raw response of the model.
+    """
+    # Field for internal use
+    pdl__trace: Optional["BlockType"] = None
 
 
 class LitellmModelBlock(ModelBlock):
     """Call a LLM through the LiteLLM API: https://docs.litellm.ai/."""
 
-    model: ExpressionType[str]
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
+    """Optional field to ensure that the block is using LiteLLM.
+    """
+    model: ExpressionType[str]
+    """Name of he model following the LiteLLM convension.
+    """
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
+    """Parameters to send to the model.
+    """
 
 
 class GraniteioModelBlock(ModelBlock):
     """Call a LLM through the granite-io API."""
 
-    model: ExpressionType[object]
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
+    """Optional field to ensure that the block is using granite-io.
+    """
+    model: ExpressionType[object]
+    """Model name used by the backend.
+    """
     backend: ExpressionType[str | dict[str, Any]]
+    """Backend name and configuartion.
+    """
     processor: Optional[ExpressionType[str]] = None
+    """IO Processir name.
+    """
     parameters: Optional[ExpressionType[dict[str, Any]]] = None
+    """Parameters sent to the model.
+    """
 
 
 class CodeBlock(Block):
@@ -376,7 +422,6 @@ class CodeBlock(Block):
     lang: Annotated[
         Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
     ]
-
     """Programming language of the code.
     """
     code: "BlockType"
@@ -416,6 +461,7 @@ class LastOfBlock(Block):
 
     kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
     lastOf: list["BlockType"]
+    """Sequence of blocks to execute."""
 
 
 class ArrayBlock(Block):
@@ -423,6 +469,7 @@ class ArrayBlock(Block):
 
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
     array: list["BlockType"]
+    """Elements of the array."""
 
 
 class ObjectBlock(Block):
@@ -452,7 +499,7 @@ class IfBlock(Block):
     then: "BlockType"
     """Branch to exectute if the condition is true.
     """
-    elses: Optional["BlockType"] = Field(default=None, alias="else")
+    else_: Optional["BlockType"] = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
     # Field for internal use
@@ -486,6 +533,8 @@ class MatchBlock(Block):
     """Matched expression.
     """
     with_: list[MatchCase] = Field(alias="with")
+    """List of cases to match.
+    """
 
 
 class IterationType(StrEnum):
@@ -502,31 +551,29 @@ class JoinConfig(BaseModel):
 
 
 class JoinText(JoinConfig):
-    iteration_type: Literal[IterationType.TEXT] = Field(
-        alias="as", default=IterationType.TEXT
-    )
+    as_: Literal[IterationType.TEXT] = Field(alias="as", default=IterationType.TEXT)
     """String concatenation of the result of each iteration.
     """
 
-    join_string: str = Field(alias="with", default="")
+    with_: str = Field(alias="with", default="")
     """String used to concatenate each iteration of the loop.
     """
 
 
 class JoinArray(JoinConfig):
-    iteration_type: Literal[IterationType.ARRAY] = Field(alias="as")
+    as_: Literal[IterationType.ARRAY] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinObject(JoinConfig):
-    iteration_type: Literal[IterationType.OBJECT] = Field(alias="as")
+    as_: Literal[IterationType.OBJECT] = Field(alias="as")
     """Return the union of the objects created at each iteration.
     """
 
 
 class JoinLastOf(JoinConfig):
-    iteration_type: Literal[IterationType.LASTOF] = Field(alias="as")
+    as_: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
@@ -538,7 +585,7 @@ class RepeatBlock(Block):
     """Repeat the execution of a block."""
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    fors: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
     while_: ExpressionType[bool] = Field(default=True, alias="while")
@@ -557,7 +604,7 @@ class RepeatBlock(Block):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    trace: Optional[list["BlockType"]] = None
+    pdl__trace: Optional[list["BlockType"]] = None
 
 
 class ReadBlock(Block):
@@ -583,24 +630,30 @@ class IncludeBlock(Block):
     """Name of the file to include.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    pdl__trace: Optional["BlockType"] = None
 
 
 class ImportBlock(Block):
     """Import a PDL file."""
 
     kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
-    imports: str = Field(alias="import")
+    import_: str = Field(alias="import")
     """Name of the file to import.
     """
     # Field for internal use
-    trace: Optional["BlockType"] = None
+    pdl__trace: Optional["BlockType"] = None
 
 
 class ErrorBlock(Block):
+    """Block representing an error generated at runtime."""
+
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
     msg: str
+    """Error message.
+    """
     program: "BlockType"
+    """Block that raised the error.
+    """
 
 
 class EmptyBlock(Block):
@@ -666,13 +719,13 @@ class PDLRuntimeError(PDLException):
     def __init__(
         self,
         message: str,
-        loc: Optional[LocationType] = None,
+        loc: Optional[PdlLocationType] = None,
         trace: Optional[BlockType] = None,
         fallback: Optional[Any] = None,
     ):
         super().__init__(message)
         self.loc = loc
-        self.trace = trace
+        self.pdl__trace = trace
         self.fallback = fallback
         self.message = message
 
@@ -690,7 +743,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self,
         message: str,
         blocks: list[BlockType],
-        loc: Optional[LocationType] = None,
+        loc: Optional[PdlLocationType] = None,
         fallback: Optional[Any] = None,
     ):
         super().__init__(message)

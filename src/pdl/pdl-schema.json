@@ -304,7 +304,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -315,9 +315,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -325,12 +325,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -341,7 +342,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -356,6 +357,7 @@
           "type": "string"
         },
         "array": {
+          "description": "Elements of the array.",
           "items": {
             "anyOf": [
               {
@@ -779,7 +781,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -790,9 +792,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -800,12 +802,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -816,7 +819,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -857,7 +860,7 @@
           "description": "Arguments of the function with their values.\n    ",
           "title": "Args"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -936,7 +939,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -1222,7 +1225,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -1233,9 +1236,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -1243,12 +1246,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -1259,7 +1263,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -1673,7 +1677,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -1684,9 +1688,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -1694,12 +1698,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -1710,7 +1715,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2027,7 +2032,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2038,9 +2043,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2048,12 +2053,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2064,7 +2070,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2084,6 +2090,7 @@
     },
     "ErrorBlock": {
       "additionalProperties": false,
+      "description": "Block representing an error generated at runtime.",
       "properties": {
         "description": {
           "anyOf": [
@@ -2358,7 +2365,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2369,9 +2376,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2379,12 +2386,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2395,7 +2403,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -2410,6 +2418,7 @@
           "type": "string"
         },
         "msg": {
+          "description": "Error message.\n    ",
           "title": "Msg",
           "type": "string"
         },
@@ -2491,6 +2500,7 @@
               "type": "null"
             }
           ],
+          "description": "Block that raised the error.\n    ",
           "title": "Program"
         }
       },
@@ -2778,7 +2788,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -2789,9 +2799,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -2799,12 +2809,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -2815,7 +2826,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -3207,7 +3218,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -3218,9 +3229,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -3228,12 +3239,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -3244,7 +3256,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -3547,7 +3559,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -3558,9 +3570,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -3568,12 +3580,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -3584,7 +3597,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -3608,6 +3621,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
+          "description": "Model name used by the backend.\n    ",
           "title": "Model"
         },
         "input": {
@@ -3689,9 +3703,23 @@
             }
           ],
           "default": null,
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
-        "trace": {
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variable where to store the raw response of the model.\n    ",
+          "title": "Modelresponse"
+        },
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -3770,23 +3798,12 @@
             }
           ],
           "default": null,
-          "title": "Trace"
-        },
-        "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Modelresponse"
+          "title": "Pdl  Trace"
         },
         "platform": {
           "const": "granite-io",
           "default": "granite-io",
+          "description": "Optional field to ensure that the block is using granite-io.\n    ",
           "title": "Platform",
           "type": "string"
         },
@@ -3802,6 +3819,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
+          "description": "Backend name and configuartion.\n    ",
           "title": "Backend"
         },
         "processor": {
@@ -3817,6 +3835,7 @@
             }
           ],
           "default": null,
+          "description": "IO Processir name.\n    ",
           "title": "Processor"
         },
         "parameters": {
@@ -3835,6 +3854,7 @@
             }
           ],
           "default": null,
+          "description": "Parameters sent to the model.\n    ",
           "title": "Parameters"
         }
       },
@@ -4122,7 +4142,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -4133,9 +4153,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -4143,12 +4163,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -4159,7 +4180,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -4648,7 +4669,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -4659,9 +4680,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -4669,12 +4690,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -4685,7 +4707,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -4704,7 +4726,7 @@
           "title": "Import",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -4783,7 +4805,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -5069,7 +5091,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5080,9 +5102,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5090,12 +5112,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -5106,7 +5129,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -5125,7 +5148,7 @@
           "title": "Include",
           "type": "string"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -5204,7 +5227,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -5558,7 +5581,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5569,9 +5592,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5579,12 +5602,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -5595,7 +5619,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -5610,6 +5634,7 @@
           "type": "string"
         },
         "lastOf": {
+          "description": "Sequence of blocks to execute.",
           "items": {
             "anyOf": [
               {
@@ -5976,7 +6001,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -5987,9 +6012,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -5997,12 +6022,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -6013,7 +6039,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -6036,6 +6062,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
+          "description": "Name of he model following the LiteLLM convension.\n    ",
           "title": "Model"
         },
         "input": {
@@ -6117,9 +6144,23 @@
             }
           ],
           "default": null,
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
-        "trace": {
+        "modelResponse": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variable where to store the raw response of the model.\n    ",
+          "title": "Modelresponse"
+        },
+        "pdl__trace": {
           "anyOf": [
             {
               "type": "boolean"
@@ -6198,23 +6239,12 @@
             }
           ],
           "default": null,
-          "title": "Trace"
-        },
-        "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Modelresponse"
+          "title": "Pdl  Trace"
         },
         "platform": {
           "const": "litellm",
           "default": "litellm",
+          "description": "Optional field to ensure that the block is using LiteLLM.\n    ",
           "title": "Platform",
           "type": "string"
         },
@@ -6237,6 +6267,7 @@
             }
           ],
           "default": null,
+          "description": "Parameters to send to the model.\n    ",
           "title": "Parameters"
         }
       },
@@ -6650,10 +6681,10 @@
         "expr": {
           "title": "Expr"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -6666,36 +6697,6 @@
         "expr"
       ],
       "title": "LocalizedExpression",
-      "type": "object"
-    },
-    "LocationType": {
-      "additionalProperties": false,
-      "properties": {
-        "path": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Path",
-          "type": "array"
-        },
-        "file": {
-          "title": "File",
-          "type": "string"
-        },
-        "table": {
-          "additionalProperties": {
-            "type": "integer"
-          },
-          "title": "Table",
-          "type": "object"
-        }
-      },
-      "required": [
-        "path",
-        "file",
-        "table"
-      ],
-      "title": "LocationType",
       "type": "object"
     },
     "MatchBlock": {
@@ -6975,7 +6976,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -6986,9 +6987,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -6996,12 +6997,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7012,7 +7014,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -7040,6 +7042,7 @@
           "title": "Match"
         },
         "with": {
+          "description": "List of cases to match.\n    ",
           "items": {
             "$ref": "#/$defs/MatchCase"
           },
@@ -7508,7 +7511,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -7519,9 +7522,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -7529,12 +7532,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7545,7 +7549,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -7925,7 +7929,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -7936,9 +7940,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -7946,12 +7950,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -7962,7 +7967,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -8346,6 +8351,37 @@
       ],
       "title": "PdlBlock"
     },
+    "PdlLocationType": {
+      "additionalProperties": false,
+      "description": "Internal data structure to keep track of the source location information.",
+      "properties": {
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "table": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Table",
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "file",
+        "table"
+      ],
+      "title": "PdlLocationType",
+      "type": "object"
+    },
     "PdlParser": {
       "additionalProperties": false,
       "properties": {
@@ -8458,6 +8494,62 @@
         "pdl"
       ],
       "title": "PdlParser",
+      "type": "object"
+    },
+    "PdlTiming": {
+      "additionalProperties": false,
+      "description": "Internal data structure to record timing information in the trace.",
+      "properties": {
+        "start_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Start Nanos"
+        },
+        "end_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "End Nanos"
+        },
+        "first_use_nanos": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "First Use Nanos"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "title": "Timezone"
+        }
+      },
+      "title": "PdlTiming",
       "type": "object"
     },
     "Program": {
@@ -8818,7 +8910,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -8829,9 +8921,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -8839,12 +8931,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -8855,7 +8948,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -9237,7 +9330,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -9248,9 +9341,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -9258,12 +9351,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -9274,7 +9368,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -9469,7 +9563,7 @@
           "description": "Define how to combine the result of each iteration.\n    ",
           "title": "Join"
         },
-        "trace": {
+        "pdl__trace": {
           "anyOf": [
             {
               "items": {
@@ -9558,7 +9652,7 @@
             }
           ],
           "default": null,
-          "title": "Trace"
+          "title": "Pdl  Trace"
         }
       },
       "required": [
@@ -9844,7 +9938,7 @@
           "description": "Current context\n    ",
           "title": "Context"
         },
-        "id": {
+        "pdl__id": {
           "anyOf": [
             {
               "type": "string"
@@ -9855,9 +9949,9 @@
           ],
           "default": "",
           "description": "Unique identifier for this block\n    ",
-          "title": "Id"
+          "title": "Pdl  Id"
         },
-        "result": {
+        "pdl__result": {
           "anyOf": [
             {},
             {
@@ -9865,12 +9959,13 @@
             }
           ],
           "default": null,
-          "title": "Result"
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
         },
-        "location": {
+        "pdl__location": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocationType"
+              "$ref": "#/$defs/PdlLocationType"
             },
             {
               "type": "null"
@@ -9881,7 +9976,7 @@
         "pdl__timing": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Timing"
+              "$ref": "#/$defs/PdlTiming"
             },
             {
               "type": "null"
@@ -10063,61 +10158,6 @@
         "text"
       ],
       "title": "TextBlock",
-      "type": "object"
-    },
-    "Timing": {
-      "additionalProperties": false,
-      "properties": {
-        "start_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Start Nanos"
-        },
-        "end_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "End Nanos"
-        },
-        "first_use_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "First Use Nanos"
-        },
-        "timezone": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": "",
-          "title": "Timezone"
-        }
-      },
-      "title": "Timing",
       "type": "object"
     }
   },

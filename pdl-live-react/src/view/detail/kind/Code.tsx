@@ -4,7 +4,7 @@ import Code from "../../code/Code"
 import Result from "../../Result"
 
 export default function CodeItems({
-  block: { code, lang, result },
+  block: { code, lang, pdl__result },
 }: {
   block: import("../../../pdl_ast").CodeBlock
 }) {
@@ -26,7 +26,7 @@ export default function CodeItems({
           }
         />
       )}
-      <Result result={result} term="Execution Output" />
+      <Result result={pdl__result} term="Execution Output" />
     </>
   )
 }

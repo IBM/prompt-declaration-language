@@ -40,13 +40,13 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case FunctionBlock():
             f(block.returns)
         case CallBlock():
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case ModelBlock():
             if block.input is not None:
                 f(block.input)
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case CodeBlock():
             f(block.code)
         case GetBlock():
@@ -77,26 +77,26 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             f(block.content)
         case IfBlock():
             f(block.then)
-            if block.elses is not None:
-                f(block.elses)
+            if block.else_ is not None:
+                f(block.else_)
         case MatchBlock():
             for match_case in block.with_:
                 f(match_case.then)
         case RepeatBlock():
             f(block.repeat)
-            if block.trace is not None:
-                for trace in block.trace:
+            if block.pdl__trace is not None:
+                for trace in block.pdl__trace:
                     f(trace)
         case ErrorBlock():
             f(block.program)
         case ReadBlock():
             pass
         case IncludeBlock():
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case ImportBlock():
-            if block.trace is not None:
-                f(block.trace)
+            if block.pdl__trace is not None:
+                f(block.pdl__trace)
         case EmptyBlock():
             pass
         case _:
@@ -131,22 +131,22 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case CallBlock():
             block.call = f.f_expr(block.call)
             block.args = f.f_expr(block.args)
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
         case LitellmModelBlock():
             block.model = f.f_expr(block.model)
             if block.input is not None:
                 block.input = f.f_block(block.input)
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
         case GraniteioModelBlock():
             block.model = f.f_expr(block.model)
             if block.input is not None:
                 block.input = f.f_block(block.input)
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
@@ -175,29 +175,29 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case IfBlock():
             block.condition = f.f_expr(block.condition)
             block.then = f.f_block(block.then)
-            if block.elses is not None:
-                block.elses = f.f_block(block.elses)
+            if block.else_ is not None:
+                block.else_ = f.f_block(block.else_)
         case MatchBlock():
             block.match_ = f.f_expr(block.match_)
             block.with_ = [map_match_case(f, c) for c in block.with_]
         case RepeatBlock():
-            if block.fors is not None:
-                block.fors = {x: f.f_expr(blocks) for x, blocks in block.fors.items()}
+            if block.for_ is not None:
+                block.for_ = {x: f.f_expr(blocks) for x, blocks in block.for_.items()}
             block.while_ = f.f_expr(block.while_)
             block.repeat = f.f_block(block.repeat)
             block.until = f.f_expr(block.until)
-            if block.trace is not None:
-                block.trace = [f.f_block(trace) for trace in block.trace]
+            if block.pdl__trace is not None:
+                block.pdl__trace = [f.f_block(trace) for trace in block.pdl__trace]
         case ErrorBlock():
             block.program = f.f_block(block.program)
         case ReadBlock():
             block.read = f.f_expr(block.read)
         case IncludeBlock():
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
         case ImportBlock():
-            if block.trace is not None:
-                block.trace = f.f_block(block.trace)
+            if block.pdl__trace is not None:
+                block.pdl__trace = f.f_block(block.pdl__trace)
         case EmptyBlock():
             pass
         case _:

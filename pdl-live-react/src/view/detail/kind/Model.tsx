@@ -5,13 +5,10 @@ import Result from "../../Result"
 import {
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
+  ModelBlock,
 } from "../../../helpers"
 
-export default function ModelItems({
-  block,
-}: {
-  block: import("../../../pdl_ast").LitellmModelBlock
-}) {
+export default function ModelItems({ block }: { block: ModelBlock }) {
   const { platform, model, input } = block
   const { resultForDisplay, lang, meta } = extractStructuredModelResponse(block)
 

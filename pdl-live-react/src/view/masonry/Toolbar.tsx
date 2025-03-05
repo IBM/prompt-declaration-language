@@ -35,7 +35,7 @@ export default function MasonryToolbar({
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           {isNonScalarPdlBlock(block) && (
-            <ToolbarShowSourceButton root={block.id ?? ""} />
+            <ToolbarShowSourceButton root={block.pdl__id ?? ""} />
           )}
           <ToolbarSMLToggle sml={sml} setSML={setSML} />
           <DarkModeToggle />

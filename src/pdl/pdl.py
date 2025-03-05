@@ -10,8 +10,8 @@ from pydantic.json_schema import models_json_schema
 from . import pdl_interpreter
 from ._version import version
 from .pdl_ast import (
-    LocationType,
     PdlBlock,
+    PdlLocationType,
     Program,
     RoleType,
     ScopeType,
@@ -50,7 +50,7 @@ def exec_program(
     prog: Program,
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[LocationType] = None,
+    loc: Optional[PdlLocationType] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a value of type `pdl.pdl_ast.Program`.
@@ -86,7 +86,7 @@ def exec_dict(
     prog: dict[str, Any],
     config: Optional[InterpreterConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[LocationType] = None,
+    loc: Optional[PdlLocationType] = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a dictionary.

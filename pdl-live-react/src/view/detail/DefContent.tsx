@@ -12,21 +12,21 @@ type Props = {
 export default function DefContent({ value }: Props) {
   return (
     <div className="pdl-variable-definition-content">
-      {hasResult(value) && isPdlBlock(value.result) ? (
+      {hasResult(value) && isPdlBlock(value.pdl__result) ? (
         hasParser(value) &&
         (value.parser === "yaml" ||
           value.parser === "json" ||
           value.parser === "jsonl") ? (
           <Code
-            block={value.result}
+            block={value.pdl__result}
             limitHeight={false}
             language={value.parser === "jsonl" ? "json" : value.parser}
           />
-        ) : typeof value.result === "string" ? (
-          <Value>{value.result}</Value>
+        ) : typeof value.pdl__result === "string" ? (
+          <Value>{value.pdl__result}</Value>
         ) : (
           <Code
-            block={value.result}
+            block={value.pdl__result}
             limitHeight={false}
             raw
             language="plaintext"
