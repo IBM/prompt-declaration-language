@@ -5,8 +5,8 @@ import shlex
 import subprocess  # nosec
 import sys
 import time
-import types
 import traceback
+import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
@@ -1445,10 +1445,8 @@ def process_call_code(
                     [PdlDict({"role": state.role, "content": lazy_apply(str, result), "defsite": block.pdl__id})]  # type: ignore
                 )
             except Exception as exc:
-                tb = traceback.format_exc()
                 raise PDLRuntimeError(
-                    
-                    f"Python Code error: {tb}",
+                    f"Python Code error: {traceback.format_exc()}",
                     loc=loc,
                     trace=block.model_copy(
                         update={"code": code_s, "defsite": block.pdl__id}

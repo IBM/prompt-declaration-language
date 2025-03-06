@@ -864,8 +864,7 @@ def set_structured_decoding_parameters(
                 "name": "schema",
                 "schema": schema,
                 "strict": True,
-            }
-            
+            },
         }
     return parameters
 
