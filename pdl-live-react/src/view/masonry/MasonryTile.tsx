@@ -187,13 +187,15 @@ function renderValue({
     return (
       <Flex className="pdl-masonry-tile-stability-grid">
         {value.map((v, idx) => {
-          const quartile = Math.round(v / 0.25)
+          const quartile =
+            v >= 0.925 ? 4 : v >= 0.7 ? 3 : v >= 0.6 ? 2 : v >= 0.5 ? 1 : 0
           const { i, j } = lookup[idx]
 
           return (
             <Popover
               key={idx}
               hasAutoWidth
+              maxWidth="450px"
               triggerAction="hover"
               className="pdl-masonry-tile-stability-popover"
               headerContent={detailHeader}
