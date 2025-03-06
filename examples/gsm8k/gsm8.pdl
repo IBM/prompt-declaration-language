@@ -17,16 +17,16 @@ defs:
 
   # How many problems to evaluate.  The entire dataset is 1319 problems.
   # MAX_ITERATIONS: 1319
-  # MAX_ITERATIONS: 2
   MAX_ITERATIONS: 50
 
   # PDL variables that hold statistics
   SUCCESSES: 0
   FAILURES: 0
+  TESTS: ${ ALL_TESTS[:MAX_ITERATIONS] }
 text:
 # First phase: ask LLM the Grade School Math questions
 - for:
-    TEST: ${ ALL_TESTS[:MAX_ITERATIONS] }
+    TEST: ${ TESTS }
   repeat:
     # Ask the LLM for the answer
     # - model: ollama/granite-code:8b
@@ -46,25 +46,28 @@ text:
 #      result = "dummy"
 #  contribute: []
 
-# Second phase: Simplify the results, compare with Grade School Math ground truth
+# Second phase: Simplify the results
 - for:
-    TEST: ${ ALL_TESTS[:MAX_ITERATIONS] }
     LLM_FULL_ANSWER: ${ ALL_LLM_FULL_A }
   repeat:
-    defs:
-      Q_AND_A:
-        data:
-          question: "${ TEST.question }"
-          answer: ${ LLM_FULL_ANSWER }
-    lastOf:
-      # Next, get LLM to convert its answer into a single JSON key/value
-      # - model: ollama/granite-code:8b
-      - model: ollama/granite3.2:8b
-        def: SIMPLIFIED_LLM_ANSWER
-        input: | # 'input' is the prompt
-          Generate the final answer from the conclusion of this text as JSON with a single key named answer.
-          ${ Q_AND_A.answer }
+    # Next, get LLM to convert its answer into a single JSON key/value
+    # - model: ollama/granite-code:8b
+    model: ollama/granite3.2:8b
+    input: | # 'input' is the prompt
+      Generate the final answer from the conclusion of this text as JSON with a single key named answer.
+      ${ LLM_FULL_ANSWER }
+  join:
+    as: array
+  contribute: []
+  def: SIMPLIFIED_LLM_ANSWERS
 
+# Third phase: Compare with Grade School Math ground truth
+- for:
+    TEST: ${ TESTS }
+    LLM_FULL_ANSWER: ${ ALL_LLM_FULL_A }
+    SIMPLIFIED_LLM_ANSWER: ${ SIMPLIFIED_LLM_ANSWERS }
+  repeat:
+    lastOf:
       # Convert the JSON string to JSON.  (We do this in a separate step so
       # we have access to the original for debugging.)
       - data: ${ SIMPLIFIED_LLM_ANSWER }
@@ -77,7 +80,7 @@ text:
 
         # Strip off any prefix or suffix off the number (dollar signs, units, etc)
         # and place it in of the JSON format { "answer": ... }
-      - data: ${ JSON_SIMPLIFIED_LLM_ANSWER.answer|string }
+      - data: ${ JSON_SIMPLIFIED_LLM_ANSWER.answer|string if 'answer' in JSON_SIMPLIFIED_LLM_ANSWER else ("MISSING 'answer' in " + LLM_FULL_ANSWER) }
         parser:
           regex: "[^0-9]*(?P<answer>[0-9]+).*$"
           spec:
