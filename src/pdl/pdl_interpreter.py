@@ -5,6 +5,7 @@ import shlex
 import subprocess  # nosec
 import sys
 import time
+import traceback
 import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
@@ -1445,7 +1446,7 @@ def process_call_code(
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
-                    f"Python Code error: {repr(exc)}",
+                    f"Python Code error: {traceback.format_exc()}",
                     loc=loc,
                     trace=block.model_copy(
                         update={"code": code_s, "defsite": block.pdl__id}

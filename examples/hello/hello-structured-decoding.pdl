@@ -1,0 +1,9 @@
+text:
+- role: system
+  text: You are an AI language model developed by IBM Research. You are a cautious assistant. You carefully follow instructions. You are helpful and harmless and you follow ethical guidelines and promote positive behavior.
+  contribute: [context]
+- "\nWhat is the color of the sky?\n"
+- model: ollama_chat/granite3.2:2b
+  #model: watsonx/ibm/granite-34b-code-instruct
+  parser: json
+  spec: { color: str }
