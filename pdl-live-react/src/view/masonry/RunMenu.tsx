@@ -68,7 +68,7 @@ export default function RunMenu({ block, run }: Props) {
         splitButtonItems={splitButtonItems}
       />
     ),
-    [],
+    [isMenuOpen, onMenuToggle, splitButtonItems],
   )
 
   return (
