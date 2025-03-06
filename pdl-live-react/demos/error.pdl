@@ -5,19 +5,19 @@ defs:
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 text:
-  - model: ollama/llama3.1:8b
+  - model: ollama_chat/granite3.2:2b
     def: model_output
     spec: {name: str, age: int}
     input:
       text:
-      - for: 
+      - for:
           question: ${ data.questions }
           answer: ${ data.answers }
         repeat: |
             ${ question }
             ${ answer }
-      - > 
-        Question: Create a JSON object with fields 'name' and 'age' 
+      - >
+        Question: Create a JSON object with fields 'name' and 'age'
         and set them appropriately. Write the age in letters.
     parser: yaml
     parameters:

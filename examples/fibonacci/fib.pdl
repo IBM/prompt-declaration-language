@@ -6,7 +6,7 @@ text:
 # Use IBM Granite to author a program that computes the Nth Fibonacci number,
 # storing the generated program into the variable `CODE`.
 - def: CODE
-  model: ollama/granite-code:8b
+  model: ollama_chat/granite3.2:2b
   input: "Write a Python function to compute the Fibonacci sequence. Do not include a doc string.\n\n"
   parameters:
     # Request no randomness when generating code
@@ -42,4 +42,4 @@ text:
 
 # Invoke the LLM again to explain the PDL context
 - "\n\nExplain what the above code does and what the result means\n\n"
-- model: ollama/granite-code:8b
+- model: ollama_chat/granite3.2:2b

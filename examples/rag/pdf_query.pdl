@@ -22,7 +22,7 @@ lastOf:
                 inp: ${ question }
                 encoder_model: "ollama/mxbai-embed-large"
                 limit: 3
-                collection_name: "pdl_rag_collection"  
+                collection_name: "pdl_rag_collection"
                 database_name: "./pdl-rag-demo.db"
             # debug:
             #   lang: python
@@ -30,7 +30,7 @@ lastOf:
             #      print(f"MATCHING_PASSAGES='{MATCHING_PASSAGES}'")
             #      result = None
             CONCLUSION:
-              model: ollama/granite-code:8b
+              model: ollama_chat/granite3.2:2b
               input: >
                 Here is some information:
                 ${ MATCHING_PASSAGES }

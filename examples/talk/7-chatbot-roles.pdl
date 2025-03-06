@@ -1,4 +1,4 @@
-description: chatbot, control structures, roles, contribute
+description: Chatbot, control structures, roles, contribute
 text:
 - role: system
   contribute: [context]
@@ -10,7 +10,7 @@ text:
       message: ">>> "
       def: query
       contribute: [context]
-    - model: ollama/granite-code:8b
+    - model: ollama_chat/granite3.2:2b
     - "\n\n"
   until: ${ query == 'quit'}
   join:

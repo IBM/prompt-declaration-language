@@ -1,4 +1,4 @@
-description: raw data block
+description: Raw data block
 data:
   name: ${ name }
   phone: ${ phone }

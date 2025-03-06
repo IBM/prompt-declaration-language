@@ -6,7 +6,7 @@ defs:
     parser: yaml
     spec: { questions: [str], answers: [obj] }
 text:
-  - model: ollama/granite-code:8b
+  - model: ollama_chat/granite3.2:2b
     def: model_output
     spec: {name: str, age: int}
     input:

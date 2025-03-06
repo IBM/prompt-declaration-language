@@ -1,11 +1,11 @@
-description: chatbot
+description: Chatbot
 text:
 - read:
   message: "What is your query?\n"
   contribute: [context]
 - repeat:
     text:
-    - model: ollama/granite3.2:2b
+    - model: ollama_chat/granite3.2:2b
     - read:
       def: eval
       message: "\nIs this a good answer[yes/no]?\n"
