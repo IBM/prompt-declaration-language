@@ -2,6 +2,7 @@
 import asyncio
 import threading
 from concurrent.futures import Future
+from sys import stderr
 from typing import Any, Callable, Generator, TypeVar
 
 import httpx
@@ -86,6 +87,7 @@ class LitellmModel:
         messages: ModelInput,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
+        print("Asynchronous model call started", file=stderr)
         # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
@@ -107,6 +109,25 @@ class LitellmModel:
 
             if block.pdl__timing is not None:
                 block.pdl__timing.end_nanos = time.time_ns()
+
+                # report call completion and its duration (and if available queueing time)
+                res = future.result()[1]
+                start = (
+                    block.pdl__timing.start_nanos
+                    if block.pdl__timing.start_nanos is not None
+                    else 0
+                )
+                exec_nanos = block.pdl__timing.end_nanos - start
+                queue_nanos = 0
+                if "created" in res:
+                    queue_nanos = (
+                        res["created"] * 1000000000 - block.pdl__timing.start_nanos
+                    )
+                    exec_nanos = exec_nanos - queue_nanos
+                print(
+                    f"Asynchronous model call to {block.model} completed in {(exec_nanos)/1000000}ms queued for {queue_nanos/1000000}ms",
+                    file=stderr,
+                )
 
         future.add_done_callback(update_end_nanos)
 
