@@ -70,7 +70,7 @@ text:
 - defs:
     # Store the results of making the LLM invocation in a JSON variable named 'out'
     out:
-      model: ollama_chat/granite3.2:2b
+      model: ollama/granite3-rag:8b
       parameters:
         temperature: 0
       parser: json
