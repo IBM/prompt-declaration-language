@@ -114,7 +114,7 @@ export default function MasonryTile({
     </CardHeader>
   )
 
-  const hasFooter = (footer1Key && footer1Value) || stability
+  const hasFooter = (footer1Key && footer1Value) || (stability?.length ?? 0) > 0
   const footer = hasFooter && (
     <DescriptionList isAutoColumnWidths columnModifier={{ default: "3Col" }}>
       {footer1Key && (
