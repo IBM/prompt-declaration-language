@@ -209,6 +209,15 @@ function tryJson(s: unknown) {
   return s
 }
 
+export function tryJsonPrettyPrint(s: string) {
+  try {
+    return JSON.stringify(JSON.parse(s), undefined, 2)
+  } catch (_err) {
+    // intentional fall-through
+  }
+  return s
+}
+
 export function extractStructuredModelResponse({
   pdl__result,
   parser,

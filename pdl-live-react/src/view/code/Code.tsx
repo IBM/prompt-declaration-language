@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react"
 import { stringify } from "yaml"
 import { match, P } from "ts-pattern"
 
+import { tryJsonPrettyPrint } from "../../helpers"
 import { type PdlBlock } from "../../pdl_ast"
 import { map_block_children } from "../../pdl_ast_utils"
 
@@ -34,7 +35,7 @@ export default function Code({
   const value =
     typeof block === "string"
       ? language === "json"
-        ? JSON.stringify(JSON.parse(block), undefined, 2)
+        ? tryJsonPrettyPrint(block)
         : block
       : stringify(raw ? block : block_code_cleanup(block))
 
