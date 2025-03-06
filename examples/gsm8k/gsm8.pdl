@@ -1,0 +1,127 @@
+#!/usr/bin/env pdl
+
+# Grade School Math https://github.com/openai/grade-school-math is an
+# open source AI dataset from 2021.
+# 
+# https://github.com/openai/grade-school-math/blob/master/grade_school_math/data/test.jsonl
+# is a file with 1319 questions and answers.
+#
+#
+
+description: Grade School Math example
+defs:
+  # The Grade School Math Dataset
+  ALL_TESTS:
+    read: ./test.jsonl
+    parser: jsonl
+
+  # How many problems to evaluate.  The entire dataset is 1319 problems.
+  # MAX_ITERATIONS: 1319
+  MAX_ITERATIONS: 50
+
+  # PDL variables that hold statistics
+  SUCCESSES: 0
+  FAILURES: 0
+  TESTS: ${ ALL_TESTS[:MAX_ITERATIONS] }
+text:
+# First phase: ask LLM the Grade School Math questions
+- for:
+    TEST: ${ TESTS }
+  repeat:
+    # Ask the LLM for the answer
+    # - model: ollama/granite-code:8b
+    model: ollama/granite3.2:8b
+      # First, get LLM to answer the question
+    input: |
+      Question: ${ TEST.question }
+      Answer: 
+  join:
+    as: array
+  contribute: []
+  def: ALL_LLM_FULL_A
+# For debugging, print first phase result
+#- lang: python
+#  code: |
+#      print(f"ALL_LLM_FULL_A={ALL_LLM_FULL_A}")
+#      result = "dummy"
+#  contribute: []
+
+# Second phase: Simplify the results
+- for:
+    LLM_FULL_ANSWER: ${ ALL_LLM_FULL_A }
+  repeat:
+    # Next, get LLM to convert its answer into a single JSON key/value
+    # - model: ollama/granite-code:8b
+    model: ollama/granite3.2:8b
+    input: | # 'input' is the prompt
+      Generate the final answer from the conclusion of this text as JSON with a single key named answer.
+      ${ LLM_FULL_ANSWER }
+  join:
+    as: array
+  contribute: []
+  def: SIMPLIFIED_LLM_ANSWERS
+
+# Third phase: Compare with Grade School Math ground truth
+- for:
+    TEST: ${ TESTS }
+    LLM_FULL_ANSWER: ${ ALL_LLM_FULL_A }
+    SIMPLIFIED_LLM_ANSWER: ${ SIMPLIFIED_LLM_ANSWERS }
+  repeat:
+    lastOf:
+      # Convert the JSON string to JSON.  (We do this in a separate step so
+      # we have access to the original for debugging.)
+      - data: ${ SIMPLIFIED_LLM_ANSWER }
+        parser: json
+        def: JSON_SIMPLIFIED_LLM_ANSWER
+      # - lang: python
+      #  code: |
+      #      print(f"JSON_SIMPLIFIED_LLM_ANSWER={JSON_SIMPLIFIED_LLM_ANSWER}")
+      #      result = "dummy"
+
+        # Strip off any prefix or suffix off the number (dollar signs, units, etc)
+        # and place it in of the JSON format { "answer": ... }
+      - data: ${ JSON_SIMPLIFIED_LLM_ANSWER.answer|string if 'answer' in JSON_SIMPLIFIED_LLM_ANSWER else ("MISSING 'answer' in " + LLM_FULL_ANSWER) }
+        parser:
+          regex: "[^0-9]*(?P<answer>[0-9]+).*$"
+          spec:
+             answer: str
+        def: EXTRACTED_SIMPLIFIED_LLM_ANSWER
+      # (In case the simplified answer did not contain digits.)
+      - if: ${ EXTRACTED_SIMPLIFIED_LLM_ANSWER == None }
+        then:
+          def: EXTRACTED_SIMPLIFIED_LLM_ANSWER
+          data:
+             answer: "none"
+      #- lang: python
+      #  code: |
+      #      print(f"EXTRACTED_SIMPLIFIED_LLM_ANSWER={EXTRACTED_SIMPLIFIED_LLM_ANSWER}")
+      #      result = "dummy"
+      #  contribute: []
+
+      # Extract the expected answer, which in this test data always follows "#### "
+      # into { "answer": ... }
+      - data: ${ TEST.answer }
+        parser:
+          regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
+          spec:
+            answer: str
+        def: EXTRACTED_GROUND_TRUTH
+      #- lang: python
+      #  code: |
+      #      print(f"EXTRACTED_GROUND_TRUTH={EXTRACTED_GROUND_TRUTH}")
+      #      result = "dummy"
+      #  contribute: []
+
+        # Did we get the expected answer?
+      - if: ${ EXTRACTED_SIMPLIFIED_LLM_ANSWER.answer == EXTRACTED_GROUND_TRUTH.answer}
+        then:
+          lastOf:
+            - defs:
+                SUCCESSES: ${ SUCCESSES + 1 }
+            - "LLM got right answer for '${ LLM_FULL_ANSWER }' which was simplified to '${ SIMPLIFIED_LLM_ANSWER }' which was extracted to '${ EXTRACTED_SIMPLIFIED_LLM_ANSWER.answer }'\n"
+        else:
+          lastOf:
+            - defs:
+                FAILURES: ${ FAILURES + 1 }
+            - "WRONG! Wanted ${ EXTRACTED_GROUND_TRUTH.answer} } / LLM said '${ LLM_FULL_ANSWER }' which was simplified to '${ SIMPLIFIED_LLM_ANSWER }' which was extracted to '${ EXTRACTED_SIMPLIFIED_LLM_ANSWER.answer }'\n"
+- "Finished, ${ SUCCESSES } successes and ${ FAILURES } failures"

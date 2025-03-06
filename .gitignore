@@ -153,6 +153,7 @@ pdl-live/package-lock.json
 
 # Demo files
 pdl-rag-demo.db
+test.jsonl
 
 # Built docs
 _site
