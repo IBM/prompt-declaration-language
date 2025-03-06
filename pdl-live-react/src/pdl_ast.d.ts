@@ -225,7 +225,8 @@ export type Fallback =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role = string | null
 /**
@@ -303,7 +304,8 @@ export type Fallback1 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role1 = string | null
 /**
@@ -409,7 +411,8 @@ export type Fallback2 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role2 = string | null
 /**
@@ -511,7 +514,8 @@ export type Fallback3 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role3 = string | null
 /**
@@ -613,7 +617,8 @@ export type Fallback4 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role4 = string | null
 /**
@@ -642,7 +647,7 @@ export type Read = string | LocalizedExpression | null
  */
 export type Message = string | null
 /**
- * Indicate if one or multiple lines shoud be read.
+ * Indicate if one or multiple lines should be read.
  *
  */
 export type Multiline = boolean
@@ -700,6 +705,8 @@ export type Fallback5 =
   | null
 /**
  * Role of associated to the message.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role5 = string | null
 /**
@@ -799,7 +806,8 @@ export type Fallback6 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role6 = string | null
 /**
@@ -925,7 +933,8 @@ export type Fallback7 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role7 = string | null
 /**
@@ -1026,7 +1035,8 @@ export type Fallback8 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role8 = string | null
 /**
@@ -1127,7 +1137,8 @@ export type Fallback9 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role9 = string | null
 /**
@@ -1254,7 +1265,8 @@ export type Fallback10 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role10 = string | null
 /**
@@ -1435,7 +1447,8 @@ export type Fallback11 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role11 = string | null
 /**
@@ -1575,7 +1588,8 @@ export type Fallback12 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role12 = string | null
 /**
@@ -1599,7 +1613,7 @@ export type Kind12 = "if"
  */
 export type If1 = boolean | string | LocalizedExpression
 /**
- * Branch to exectute if the condition is true.
+ * Branch to execute if the condition is true.
  *
  */
 export type Then1 =
@@ -1711,7 +1725,8 @@ export type Fallback13 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role13 = string | null
 /**
@@ -1787,7 +1802,8 @@ export type Fallback14 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role14 = string | null
 /**
@@ -1863,7 +1879,8 @@ export type Fallback15 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role15 = string | null
 /**
@@ -1969,7 +1986,8 @@ export type Fallback16 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role16 = string | null
 /**
@@ -2052,7 +2070,7 @@ export type PdlTrace3 =
  */
 export type Platform = "granite-io"
 /**
- * Backend name and configuartion.
+ * Backend name and configuration.
  *
  */
 export type Backend =
@@ -2062,7 +2080,7 @@ export type Backend =
     }
   | LocalizedExpression
 /**
- * IO Processir name.
+ * IO Processor name.
  *
  */
 export type Processor = string | LocalizedExpression | null
@@ -2131,7 +2149,8 @@ export type Fallback17 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role17 = string | null
 /**
@@ -2150,7 +2169,7 @@ export type Context17 =
 export type PdlId17 = string | null
 export type Kind17 = "model"
 /**
- * Name of he model following the LiteLLM convension.
+ * Name of the model following the LiteLLM convention.
  *
  */
 export type Model1 = string | LocalizedExpression
@@ -2331,7 +2350,8 @@ export type Fallback18 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role18 = string | null
 /**
@@ -2428,7 +2448,8 @@ export type Fallback19 =
   | null
 /**
  * Role associated to the block and sub-blocks.
- *
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
  */
 export type Role19 = string | null
 /**
@@ -2628,7 +2649,14 @@ export interface Defs1 {
     | null
 }
 /**
- * Call a LLM through the LiteLLM API: https://docs.litellm.ai/.
+ * Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).
+ *
+ * Example:
+ * ```PDL
+ * - model: ollama/granite-code:8b
+ *   parameters:
+ *     stop: ['!']
+ * ```
  */
 export interface LitellmModelBlock {
   description?: Description2
@@ -2691,7 +2719,7 @@ export interface Defs2 {
     | null
 }
 /**
- * Call a LLM through the granite-io API.
+ * Call an LLM through the granite-io API.
  */
 export interface GraniteioModelBlock {
   description?: Description3
@@ -2757,6 +2785,16 @@ export interface Defs3 {
 }
 /**
  * Execute a piece of code.
+ *
+ * Example:
+ * ```PDL
+ * - def: N
+ *   lang: python
+ *   code: |
+ *     import random
+ *     # (In PDL, set `result` to the output you wish for your code block.)
+ *     result = random.randint(1, 20)
+ * ```
  */
 export interface CodeBlock {
   description?: Description4
@@ -2816,6 +2854,8 @@ export interface Defs4 {
 }
 /**
  * Get the value of a variable.
+ *
+ * The GetBlock is deprecated.  Use DataBlock instead.
  */
 export interface GetBlock {
   description?: Description5
@@ -2873,7 +2913,28 @@ export interface Defs5 {
     | null
 }
 /**
- * Arbitrary JSON value.
+ * Arbitrary value, equivalent to JSON.
+ *
+ * Example. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:
+ * ```PDL
+ * defs:
+ *   numbers:
+ *     data: [1, 2, 3, 4]
+ * ```
+ *
+ * Example.  Evaluate `${ TEST.answer }` in
+ * [Jinja](https://jinja.palletsprojects.com/en/stable/), passing
+ * the result to a regex parser with capture groups.  Set
+ * `EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,
+ * a string, containing the value of the capture group.
+ * ```PDL
+ * - data: ${ TEST.answer }
+ *   parser:
+ *     regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
+ *     spec:
+ *       answer: str
+ *   def: EXTRACTED_GROUND_TRUTH
+ * ```
  */
 export interface DataBlock {
   description?: Description6
@@ -2933,6 +2994,15 @@ export interface Defs6 {
 }
 /**
  * Conditional control structure.
+ *
+ * Example:
+ * ```PDL
+ * - if: ${ eval == 'no' }
+ *   then:
+ *     text:
+ *     - read:
+ *       message: "Why not?\n"
+ * ```
  */
 export interface IfBlock {
   description?: Description7
@@ -3053,6 +3123,15 @@ export interface Defs8 {
 }
 /**
  * Repeat the execution of a block.
+ *
+ * For loop example:
+ * ```PDL
+ * for:
+ *     number: [1, 2, 3, 4]
+ *     name: ["Bob", "Carol", "David", "Ernest"]
+ * repeat:
+ *     "${ name }'s number is ${ number }\n"
+ * ```
  */
 export interface RepeatBlock {
   description?: Description9
@@ -3707,6 +3786,9 @@ export interface PdlParser {
   spec?: Spec20
   pdl: Pdl
 }
+/**
+ * A regular expression parser
+ */
 export interface RegexParser {
   description?: Description21
   spec?: Spec21
@@ -3792,7 +3874,9 @@ export interface AnyPattern {
   any: Any
 }
 /**
- * Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.
+ * Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).
+ *
+ * Note that not all models and platforms accept all parameters.
  */
 export interface LitellmParameters {
   timeout?: Timeout

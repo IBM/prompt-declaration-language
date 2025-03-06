@@ -285,7 +285,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -762,7 +762,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -950,7 +950,7 @@
     },
     "CodeBlock": {
       "additionalProperties": false,
-      "description": "Execute a piece of code.",
+      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -1206,7 +1206,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -1402,7 +1402,7 @@
     },
     "DataBlock": {
       "additionalProperties": false,
-      "description": "Arbitrary JSON value.",
+      "description": "Arbitrary value, equivalent to JSON.\n\nExample. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:\n```PDL\ndefs:\n  numbers:\n    data: [1, 2, 3, 4]\n```\n\nExample.  Evaluate `${ TEST.answer }` in\n[Jinja](https://jinja.palletsprojects.com/en/stable/), passing\nthe result to a regex parser with capture groups.  Set\n`EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,\na string, containing the value of the capture group.\n```PDL\n- data: ${ TEST.answer }\n  parser:\n    regex: \"(.|\\n)*#### (?P<answer>([0-9])*)\\n*\"\n    spec:\n      answer: str\n  def: EXTRACTED_GROUND_TRUTH\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -1658,7 +1658,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2013,7 +2013,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2346,7 +2346,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2769,7 +2769,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -2943,7 +2943,7 @@
     },
     "GetBlock": {
       "additionalProperties": false,
-      "description": "Get the value of a variable.",
+      "description": "Get the value of a variable.\n\nThe GetBlock is deprecated.  Use DataBlock instead.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3199,7 +3199,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -3284,7 +3284,7 @@
     },
     "GraniteioModelBlock": {
       "additionalProperties": false,
-      "description": "Call a LLM through the granite-io API.",
+      "description": "Call an LLM through the granite-io API.",
       "properties": {
         "description": {
           "anyOf": [
@@ -3540,7 +3540,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -3819,7 +3819,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
-          "description": "Backend name and configuartion.\n    ",
+          "description": "Backend name and configuration.\n    ",
           "title": "Backend"
         },
         "processor": {
@@ -3835,7 +3835,7 @@
             }
           ],
           "default": null,
-          "description": "IO Processir name.\n    ",
+          "description": "IO Processor name.\n    ",
           "title": "Processor"
         },
         "parameters": {
@@ -3867,7 +3867,7 @@
     },
     "IfBlock": {
       "additionalProperties": false,
-      "description": "Conditional control structure.",
+      "description": "Conditional control structure.\n\nExample:\n```PDL\n- if: ${ eval == 'no' }\n  then:\n    text:\n    - read:\n      message: \"Why not?\\n\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -4123,7 +4123,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -4287,7 +4287,7 @@
               "type": "null"
             }
           ],
-          "description": "Branch to exectute if the condition is true.\n    ",
+          "description": "Branch to execute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -4650,7 +4650,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5072,7 +5072,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5562,7 +5562,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -5726,7 +5726,7 @@
     },
     "LitellmModelBlock": {
       "additionalProperties": false,
-      "description": "Call a LLM through the LiteLLM API: https://docs.litellm.ai/.",
+      "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\n- model: ollama/granite-code:8b\n  parameters:\n    stop: ['!']\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -5982,7 +5982,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -6062,7 +6062,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
-          "description": "Name of he model following the LiteLLM convension.\n    ",
+          "description": "Name of the model following the LiteLLM convention.\n    ",
           "title": "Model"
         },
         "input": {
@@ -6279,7 +6279,7 @@
     },
     "LitellmParameters": {
       "additionalProperties": true,
-      "description": "Parameters passed to LiteLLM. More details at https://docs.litellm.ai/docs/completion/input.",
+      "description": "Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).\n\nNote that not all models and platforms accept all parameters.",
       "properties": {
         "timeout": {
           "anyOf": [
@@ -6957,7 +6957,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -7492,7 +7492,7 @@
               "type": "null"
             }
           ],
-          "description": "Role of associated to the message.",
+          "description": "Role of associated to the message.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -7910,7 +7910,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -8891,7 +8891,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -8992,7 +8992,7 @@
         },
         "multiline": {
           "default": false,
-          "description": "Indicate if one or multiple lines shoud be read.\n    ",
+          "description": "Indicate if one or multiple lines should be read.\n    ",
           "title": "Multiline",
           "type": "boolean"
         }
@@ -9005,6 +9005,7 @@
     },
     "RegexParser": {
       "additionalProperties": false,
+      "description": "A regular expression parser",
       "properties": {
         "description": {
           "anyOf": [
@@ -9055,7 +9056,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.",
+      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -9311,7 +9312,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -9919,7 +9920,7 @@
             }
           ],
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\n    ",
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
