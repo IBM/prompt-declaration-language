@@ -56,6 +56,7 @@ class BlockKind(StrEnum):
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
+    AGGREGATOR = "aggregator"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -722,6 +723,34 @@ class ImportBlock(Block):
     """
     # Field for internal use
     pdl__trace: Optional["BlockType"] = None
+
+
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: Optional[str] = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregator(AggregatorConfig):
+    file: ExpressionType[str]
+
+
+AggregatorType: TypeAlias = Literal["messages", "stdout", "stderr"] | FileAggregator
+
+
+class AggregatorBlock(Block):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
 
 
 class ErrorBlock(Block):

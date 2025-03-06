@@ -9,6 +9,7 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from abc import ABC, abstractmethod
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
@@ -34,6 +35,7 @@ from pydantic import BaseModel  # noqa: E402
 
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
+    AggregatorBlock,
     AnyPattern,
     ArrayBlock,
     ArrayPattern,
@@ -48,6 +50,7 @@ from .pdl_ast import (  # noqa: E402
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
+    FileAggregator,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -785,6 +788,11 @@ def process_block_body(
 
         case ImportBlock():
             result, background, scope, trace = process_import(state, scope, block, loc)
+
+        case AggregatorBlock():
+            result, background, scope, trace = process_aggregator(
+                state, scope, block, loc
+            )
 
         case FunctionBlock():
             closure = block.model_copy()
@@ -1732,6 +1740,53 @@ def process_import(
             loc=exc.loc or loc,
             trace=trace,
         ) from exc
+
+
+class Aggregator(ABC):
+    @abstractmethod
+    def contribute(
+        self,
+        result: Any,
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ) -> None: ...
+
+    @abstractmethod
+    def snapshot(self) -> Any:
+        """Return a copy of the state of the aggregator."""
+
+
+class MessagesAggregator(Aggregator):
+    def __init__(self):
+        self.messages = PdlList([])
+
+    def contribute(
+        self,
+        result: Any,
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ):
+        block_id = ".".join(block.get("pdl__id", []))
+        msg = PdlList([PdlDict({"role": role, "content": result, "defsite": block_id})])
+        self.messages = lazy_messages_concat(self.messages, msg)
+        return super().contribute(result, role, loc, block)
+
+
+def process_aggregator(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AggregatorBlock,
+    loc: PdlLocationType,
+) -> tuple[Any, LazyMessages, ScopeType, AggregatorBlock]:
+    match block.aggregator:
+        case "messages":
+            pass
+        case "stdout" | "stderr" | FileAggregator():
+            pass
+        case _:
+            assert False, "Unexpected aggregator"
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None
