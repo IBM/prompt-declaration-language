@@ -350,6 +350,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "array",
           "default": "array",
@@ -827,6 +833,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "call",
           "default": "call",
@@ -1270,6 +1282,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "code",
@@ -1723,6 +1741,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "data",
           "default": "data",
@@ -2078,6 +2102,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "empty",
           "default": "empty",
@@ -2410,6 +2440,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "error",
@@ -2833,6 +2869,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "function",
@@ -3264,6 +3306,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "get",
           "default": "get",
@@ -3604,6 +3652,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -4188,6 +4242,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "if",
           "default": "if",
@@ -4715,6 +4775,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "import",
           "default": "import",
@@ -5136,6 +5202,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "include",
@@ -5627,6 +5699,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "lastOf",
           "default": "lastOf",
@@ -6046,6 +6124,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "model",
@@ -7022,6 +7106,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "match",
           "default": "match",
@@ -7557,6 +7647,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "message",
           "default": "message",
@@ -7974,6 +8070,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "object",
@@ -8956,6 +9058,12 @@
           ],
           "default": null
         },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
         "kind": {
           "const": "read",
           "default": "read",
@@ -9376,6 +9484,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "repeat",
@@ -9984,6 +10098,12 @@
             }
           ],
           "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
         },
         "kind": {
           "const": "text",
