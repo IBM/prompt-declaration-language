@@ -28,7 +28,7 @@ export default function ClearMyTraces() {
       aria-labelledby="clear-modal-title"
       aria-describedby="modal-box-body-clear"
     >
-      <ModalHeader title="Small modal" labelId="clear-modal-title" />
+      <ModalHeader title="Confirm Trace Removal" labelId="clear-modal-title" />
       <ModalBody id="modal-box-body-clear">
         Are you sure you wish to remove all stored traces? You currently have{" "}
         {myTraces.length}.
