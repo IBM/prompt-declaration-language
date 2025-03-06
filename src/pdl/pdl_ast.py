@@ -860,8 +860,12 @@ def set_structured_decoding_parameters(
         parameters["guided_json"] = schema
         parameters["response_format"] = {
             "type": "json_schema",
-            "json_schema": schema,
-            "strict": True,
+            "json_schema": {
+                "name": "schema",
+                "schema": schema,
+                "strict": True,
+            }
+            
         }
     return parameters
 
