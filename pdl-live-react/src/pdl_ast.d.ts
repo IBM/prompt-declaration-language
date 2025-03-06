@@ -249,6 +249,7 @@ export type StartNanos = number | null
 export type EndNanos = number | null
 export type FirstUseNanos = number | null
 export type Timezone = string | null
+export type PdlIsLeaf = true
 export type Kind = "empty"
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -322,6 +323,7 @@ export type Context1 =
  *
  */
 export type PdlId1 = string | null
+export type PdlIsLeaf1 = true
 export type Kind1 = "error"
 /**
  * Error message.
@@ -429,6 +431,7 @@ export type Context2 =
  *
  */
 export type PdlId2 = string | null
+export type PdlIsLeaf2 = true
 export type Kind2 = "import"
 /**
  * Name of the file to import.
@@ -532,6 +535,7 @@ export type Context3 =
  *
  */
 export type PdlId3 = string | null
+export type PdlIsLeaf3 = false
 export type Kind3 = "include"
 /**
  * Name of the file to include.
@@ -635,6 +639,7 @@ export type Context4 =
  *
  */
 export type PdlId4 = string | null
+export type PdlIsLeaf4 = true
 export type Kind4 = "read"
 /**
  * Name of the file to read. If `None`, read the standard input.
@@ -723,6 +728,7 @@ export type Context5 =
  *
  */
 export type PdlId5 = string | null
+export type PdlIsLeaf5 = false
 export type Kind5 = "message"
 /**
  * Content of the message.
@@ -824,6 +830,7 @@ export type Context6 =
  *
  */
 export type PdlId6 = string | null
+export type PdlIsLeaf6 = false
 export type Kind6 = "object"
 export type Object =
   | {
@@ -951,6 +958,7 @@ export type Context7 =
  *
  */
 export type PdlId7 = string | null
+export type PdlIsLeaf7 = false
 export type Kind7 = "array"
 /**
  * Elements of the array.
@@ -1053,6 +1061,7 @@ export type Context8 =
  *
  */
 export type PdlId8 = string | null
+export type PdlIsLeaf8 = false
 export type Kind8 = "lastOf"
 /**
  * Sequence of blocks to execute.
@@ -1155,6 +1164,7 @@ export type Context9 =
  *
  */
 export type PdlId9 = string | null
+export type PdlIsLeaf9 = false
 export type Kind9 = "text"
 /**
  * Body of the text.
@@ -1283,6 +1293,7 @@ export type Context10 =
  *
  */
 export type PdlId10 = string | null
+export type PdlIsLeaf10 = false
 export type Kind10 = "repeat"
 /**
  * Arrays to iterate over.
@@ -1465,6 +1476,7 @@ export type Context11 =
  *
  */
 export type PdlId11 = string | null
+export type PdlIsLeaf11 = false
 export type Kind11 = "match"
 export type Case =
   | boolean
@@ -1606,6 +1618,7 @@ export type Context12 =
  *
  */
 export type PdlId12 = string | null
+export type PdlIsLeaf12 = false
 export type Kind12 = "if"
 /**
  * Condition.
@@ -1743,6 +1756,7 @@ export type Context13 =
  *
  */
 export type PdlId13 = string | null
+export type PdlIsLeaf13 = true
 export type Kind13 = "data"
 /**
  * Do not evaluate expressions inside strings.
@@ -1820,6 +1834,7 @@ export type Context14 =
  *
  */
 export type PdlId14 = string | null
+export type PdlIsLeaf14 = true
 export type Kind14 = "get"
 /**
  * Name of the variable to access.
@@ -1897,6 +1912,7 @@ export type Context15 =
  *
  */
 export type PdlId15 = string | null
+export type PdlIsLeaf15 = true
 export type Kind15 = "code"
 /**
  * Programming language of the code.
@@ -2004,6 +2020,7 @@ export type Context16 =
  *
  */
 export type PdlId16 = string | null
+export type PdlIsLeaf16 = true
 export type Kind16 = "model"
 /**
  * Messages to send to the model.
@@ -2167,6 +2184,7 @@ export type Context17 =
  *
  */
 export type PdlId17 = string | null
+export type PdlIsLeaf17 = true
 export type Kind17 = "model"
 /**
  * Name of the model following the LiteLLM convention.
@@ -2368,6 +2386,7 @@ export type Context18 =
  *
  */
 export type PdlId18 = string | null
+export type PdlIsLeaf18 = true
 export type Kind18 = "call"
 export type PdlTrace5 =
   | boolean
@@ -2466,6 +2485,7 @@ export type Context19 =
  *
  */
 export type PdlId19 = string | null
+export type PdlIsLeaf19 = true
 export type Kind19 = "function"
 /**
  * Functions parameters with their types.
@@ -2546,6 +2566,7 @@ export interface FunctionBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf19
   kind?: Kind19
   function: Function
   return: Return
@@ -2605,6 +2626,7 @@ export interface CallBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf18
   kind?: Kind18
   call: unknown
   args?: unknown
@@ -2672,6 +2694,7 @@ export interface LitellmModelBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf17
   kind?: Kind17
   model: Model1
   input?: Input1
@@ -2735,6 +2758,7 @@ export interface GraniteioModelBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
   model: unknown
   input?: Input
@@ -2810,6 +2834,7 @@ export interface CodeBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf15
   kind?: Kind15
   lang: Lang
   code: Code
@@ -2871,6 +2896,7 @@ export interface GetBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf14
   kind?: Kind14
   get: Get
 }
@@ -2950,6 +2976,7 @@ export interface DataBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf13
   kind?: Kind13
   data: unknown
   raw?: Raw
@@ -3018,6 +3045,7 @@ export interface IfBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf12
   kind?: Kind12
   if: If1
   then: Then1
@@ -3079,6 +3107,7 @@ export interface MatchBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf11
   kind?: Kind11
   match: unknown
   with: With1
@@ -3147,6 +3176,7 @@ export interface RepeatBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf10
   kind?: Kind10
   for?: For
   while?: While
@@ -3211,6 +3241,7 @@ export interface TextBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf9
   kind?: Kind9
   text: Text
 }
@@ -3269,6 +3300,7 @@ export interface LastOfBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf8
   kind?: Kind8
   lastOf: Lastof
 }
@@ -3327,6 +3359,7 @@ export interface ArrayBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf7
   kind?: Kind7
   array: Array
 }
@@ -3385,6 +3418,7 @@ export interface ObjectBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf6
   kind?: Kind6
   object: Object
 }
@@ -3443,6 +3477,7 @@ export interface MessageBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf5
   kind?: Kind5
   content: Content
 }
@@ -3501,6 +3536,7 @@ export interface ReadBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf4
   kind?: Kind4
   read: Read
   message?: Message
@@ -3561,6 +3597,7 @@ export interface IncludeBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf3
   kind?: Kind3
   include: Include
   pdl__trace?: PdlTrace1
@@ -3620,6 +3657,7 @@ export interface ImportBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf2
   kind?: Kind2
   import: Import
   pdl__trace?: PdlTrace
@@ -3679,6 +3717,7 @@ export interface ErrorBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf1
   kind?: Kind1
   msg: Msg
   program: Program1
@@ -3738,6 +3777,7 @@ export interface EmptyBlock {
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf
   kind?: Kind
 }
 /**

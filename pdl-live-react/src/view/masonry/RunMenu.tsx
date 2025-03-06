@@ -10,7 +10,6 @@ import {
 
 import RunIcon from "@patternfly/react-icons/dist/esm/icons/redo-icon"
 import ModelIcon from "@patternfly/react-icons/dist/esm/icons/theater-masks-icon"
-import IdempotencyIcon from "@patternfly/react-icons/dist/esm/icons/equals-icon"
 import TemperatureIcon from "@patternfly/react-icons/dist/esm/icons/thermometer-half-icon"
 
 const preventOverflow = {
@@ -32,10 +31,10 @@ export default function RunMenu({ block, run }: Props) {
     }
   }, [block, run])
 
-  const runIdempotency = useCallback(async () => {
+  const runTemperature = useCallback(async () => {
     if (block && run) {
-      const { runIdempotencyCheck } = await import("./similarity")
-      await runIdempotencyCheck(block, run)
+      const { runNTimes } = await import("./stability")
+      await runNTimes(block, run, 4, [0, 0.25, 0.5, 0.75, 1, 2])
     }
   }, [block, run])
 
@@ -69,7 +68,7 @@ export default function RunMenu({ block, run }: Props) {
         splitButtonItems={splitButtonItems}
       />
     ),
-    [],
+    [isMenuOpen, onMenuToggle, splitButtonItems],
   )
 
   return (
@@ -83,33 +82,24 @@ export default function RunMenu({ block, run }: Props) {
       <DropdownList>
         <DropdownItem
           icon={<RunIcon />}
-          description="Re-run with the same inputs and update to reflect the new response"
+          description="Re-run and update the UI to reflect the new response"
           onClick={runOnce}
         >
           Run Once
         </DropdownItem>
 
         <DropdownItem
-          icon={<IdempotencyIcon />}
-          description="Run several times to evaluate model stability for a fixed input"
-          onClick={runIdempotency}
+          icon={<TemperatureIcon />}
+          description="Evaluate model stability across a range of temperatures"
+          onClick={runTemperature}
           isDisabled={!window.__TAURI_INTERNALS__}
         >
-          Analyze Idempotency
-        </DropdownItem>
-
-        <DropdownItem
-          icon={<TemperatureIcon />}
-          description="Run several times to evaluate model stability across varying temperatures"
-          onClick={runOnce}
-          isDisabled
-        >
-          Analyze Temperature Variability
+          Analyze Stability
         </DropdownItem>
 
         <DropdownItem
           icon={<ModelIcon />}
-          description="Run several times to evaluate model stability across varying models"
+          description="Evaluate model stability across varying models"
           onClick={runOnce}
           isDisabled
         >

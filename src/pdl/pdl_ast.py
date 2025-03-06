@@ -248,7 +248,17 @@ class Block(BaseModel):
     pdl__timing: Optional[PdlTiming] = None
 
 
-class FunctionBlock(Block):
+class LeafBlock(Block):
+    # Field for internal use
+    pdl__is_leaf: Literal[True] = True
+
+
+class StructuredBlock(Block):
+    # Field for internal use
+    pdl__is_leaf: Literal[False] = False
+
+
+class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
@@ -262,7 +272,7 @@ class FunctionBlock(Block):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
 
-class CallBlock(Block):
+class CallBlock(LeafBlock):
     """Calling a function."""
 
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
@@ -372,7 +382,7 @@ class ModelPlatform(StrEnum):
     GRANITEIO = "granite-io"
 
 
-class ModelBlock(Block):
+class ModelBlock(LeafBlock):
     """Common fields for the `model` blocks."""
 
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
@@ -432,7 +442,7 @@ class GraniteioModelBlock(ModelBlock):
     """
 
 
-class CodeBlock(Block):
+class CodeBlock(LeafBlock):
     """
     Execute a piece of code.
 
@@ -458,7 +468,7 @@ class CodeBlock(Block):
     """
 
 
-class GetBlock(Block):
+class GetBlock(LeafBlock):
     """
     Get the value of a variable.
 
@@ -470,7 +480,7 @@ class GetBlock(Block):
     """Name of the variable to access."""
 
 
-class DataBlock(Block):
+class DataBlock(LeafBlock):
     """
     Arbitrary value, equivalent to JSON.
 
@@ -503,7 +513,7 @@ class DataBlock(Block):
     """Do not evaluate expressions inside strings."""
 
 
-class TextBlock(Block):
+class TextBlock(StructuredBlock):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
     kind: Literal[BlockKind.TEXT] = BlockKind.TEXT
@@ -512,7 +522,7 @@ class TextBlock(Block):
     """
 
 
-class LastOfBlock(Block):
+class LastOfBlock(StructuredBlock):
     """Return the value of the last block if the list of blocks."""
 
     kind: Literal[BlockKind.LASTOF] = BlockKind.LASTOF
@@ -520,7 +530,7 @@ class LastOfBlock(Block):
     """Sequence of blocks to execute."""
 
 
-class ArrayBlock(Block):
+class ArrayBlock(StructuredBlock):
     """Return the array of values computed by each block of the list of blocks."""
 
     kind: Literal[BlockKind.ARRAY] = BlockKind.ARRAY
@@ -528,14 +538,14 @@ class ArrayBlock(Block):
     """Elements of the array."""
 
 
-class ObjectBlock(Block):
+class ObjectBlock(StructuredBlock):
     """Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array."""
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
     object: dict[str, "BlockType"] | list["BlockType"]
 
 
-class MessageBlock(Block):
+class MessageBlock(StructuredBlock):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
@@ -548,7 +558,7 @@ class MessageBlock(Block):
     """Content of the message."""
 
 
-class IfBlock(Block):
+class IfBlock(StructuredBlock):
     """
     Conditional control structure.
 
@@ -595,7 +605,7 @@ class MatchCase(BaseModel):
     pdl__matched: Optional[bool] = None
 
 
-class MatchBlock(Block):
+class MatchBlock(StructuredBlock):
     """Match control structure."""
 
     kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
@@ -651,7 +661,7 @@ class JoinLastOf(JoinConfig):
 JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
 
 
-class RepeatBlock(Block):
+class RepeatBlock(StructuredBlock):
     """
     Repeat the execution of a block.
 
@@ -688,7 +698,7 @@ class RepeatBlock(Block):
     pdl__trace: Optional[list["BlockType"]] = None
 
 
-class ReadBlock(Block):
+class ReadBlock(LeafBlock):
     """Read from a file or standard input."""
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
@@ -703,7 +713,7 @@ class ReadBlock(Block):
     """
 
 
-class IncludeBlock(Block):
+class IncludeBlock(StructuredBlock):
     """Include a PDL file."""
 
     kind: Literal[BlockKind.INCLUDE] = BlockKind.INCLUDE
@@ -714,7 +724,7 @@ class IncludeBlock(Block):
     pdl__trace: Optional["BlockType"] = None
 
 
-class ImportBlock(Block):
+class ImportBlock(LeafBlock):
     """Import a PDL file."""
 
     kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
@@ -753,7 +763,7 @@ class AggregatorBlock(Block):
     aggregator: AggregatorType
 
 
-class ErrorBlock(Block):
+class ErrorBlock(LeafBlock):
     """Block representing an error generated at runtime."""
 
     kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
@@ -765,7 +775,7 @@ class ErrorBlock(Block):
     """
 
 
-class EmptyBlock(Block):
+class EmptyBlock(LeafBlock):
     """Block without an action. It can contain definitions."""
 
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
@@ -889,8 +899,11 @@ def set_structured_decoding_parameters(
         parameters["guided_json"] = schema
         parameters["response_format"] = {
             "type": "json_schema",
-            "json_schema": schema,
-            "strict": True,
+            "json_schema": {
+                "name": "schema",
+                "schema": schema,
+                "strict": True,
+            },
         }
     return parameters
 

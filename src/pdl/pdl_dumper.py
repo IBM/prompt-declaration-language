@@ -250,6 +250,7 @@ def block_to_dict(  # noqa: C901
     # timestamps to the trace
     if block.pdl__timing is not None:
         d["pdl__timing"] = timing_to_dict(block.pdl__timing)
+    d["pdl__is_leaf"] = block.pdl__is_leaf
     return d
 
 

@@ -39,6 +39,9 @@ import RunningIcon from "@patternfly/react-icons/dist/esm/icons/running-icon"
 
 import "./Masonry.css"
 
+/** Initial number of masonry tiles to show per page */
+const initialPerPage = 20
+
 export type Runner = (
   block?: import("../../helpers").NonScalarPdlBlock,
   async?: boolean,
@@ -76,6 +79,9 @@ export default function MasonryCombo({ value, setValue }: Props) {
   const [sml, setSML] = useState<SML>(getSMLUserSetting())
   useEffect(() => setSMLUserSetting(sml), [sml])
 
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(initialPerPage)
+
   const [modalIsDone, setModalIsDone] = useState(-1)
   const [modalContent, setModalContent] = useState<null | {
     header: string
@@ -102,10 +108,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
     },
     [setModalIsDone, modalContent],
   )
-  useEffect(
-    () => setModalIsDone(modalContent === null ? -1 : -2),
-    [modalContent],
-  )
+  useEffect(() => {
+    setModalIsDone(modalContent === null ? -1 : -2)
+    setPage(1)
+    setPerPage(initialPerPage)
+  }, [modalContent])
 
   // special form of setModalContent for running a PDL program
   const run = useCallback<Runner>(
@@ -206,6 +213,11 @@ export default function MasonryCombo({ value, setValue }: Props) {
           run={run}
           isRunning={modalIsDone === -2}
           block={block}
+          itemCount={masonry.length < initialPerPage ? -1 : masonry.length}
+          page={page}
+          perPage={perPage}
+          setPage={setPage}
+          setPerPage={setPerPage}
         />
       </PageSection>
       <PageSection
@@ -214,7 +226,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
         className="pdl-masonry-page-section"
         aria-label="PDL Viewer main section"
       >
-        <Masonry model={masonry} sml={sml} run={run}>
+        <Masonry
+          model={masonry}
+          sml={sml}
+          run={run}
+          page={page}
+          perPage={perPage}
+        >
           <MasonryTileWrapper sml={sml} variant="plain">
             <Timeline model={base} numbering={numbering} />
           </MasonryTileWrapper>
