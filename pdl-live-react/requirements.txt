@@ -44,7 +44,7 @@ propcache==0.3.0
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pydantic==2.10.6
-pydantic_core==2.27.2
+pydantic_core==2.30.0
 Pygments==2.19.1
 python-dotenv==1.0.1
 PyYAML==6.0.2
