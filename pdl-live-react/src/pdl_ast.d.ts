@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type PDLSchemas = Program | PdlBlock;
+export type PDLSchemas = Program | PdlBlock
 /**
  * Prompt Declaration Language program (PDL)
  */
@@ -33,114 +33,114 @@ export type Program =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description = string | null;
+export type Description = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description1 = string | null;
+export type Description1 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description2 = string | null;
+export type Description2 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description3 = string | null;
+export type Description3 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description4 = string | null;
+export type Description4 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description5 = string | null;
+export type Description5 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description6 = string | null;
+export type Description6 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description7 = string | null;
+export type Description7 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description8 = string | null;
+export type Description8 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description9 = string | null;
+export type Description9 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description10 = string | null;
+export type Description10 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description11 = string | null;
+export type Description11 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description12 = string | null;
+export type Description12 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description13 = string | null;
+export type Description13 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description14 = string | null;
+export type Description14 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description15 = string | null;
+export type Description15 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description16 = string | null;
+export type Description16 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description17 = string | null;
+export type Description17 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description18 = string | null;
+export type Description18 = string | null
 /**
  * Documentation associated to the block.
  *
  */
-export type Description19 = string | null;
+export type Description19 = string | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def = string | null;
-export type ContributeTarget = "result" | "context";
-export type Value = unknown[];
+export type Def = string | null
+export type ContributeTarget = "result" | "context"
+export type Value = unknown[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -148,17 +148,21 @@ export type Value = unknown[];
 export type Contribute = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
-export type Description20 = string | null;
+export type Parser =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+export type Description20 = string | null
 export type Spec20 = {
-  [k: string]: unknown;
-} | null;
+  [k: string]: unknown
+} | null
 export type Pdl =
   | boolean
   | number
@@ -183,13 +187,13 @@ export type Pdl =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type Description21 = string | null;
+  | null
+export type Description21 = string | null
 export type Spec21 = {
-  [k: string]: unknown;
-} | null;
-export type Regex = string;
-export type Mode = "search" | "match" | "fullmatch" | "split" | "findall";
+  [k: string]: unknown
+} | null
+export type Regex = string
+export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
  * Block to execute in case of error.
  *
@@ -218,39 +222,39 @@ export type Fallback =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role = string | null;
+export type Role = string | null
 /**
  * Current context
  *
  */
 export type Context =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId = string | null;
-export type Path = string[];
-export type File = string;
-export type StartNanos = number | null;
-export type EndNanos = number | null;
-export type FirstUseNanos = number | null;
-export type Timezone = string | null;
-export type Kind = "empty";
+export type PdlId = string | null
+export type Path = string[]
+export type File = string
+export type StartNanos = number | null
+export type EndNanos = number | null
+export type FirstUseNanos = number | null
+export type Timezone = string | null
+export type Kind = "empty"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def1 = string | null;
+export type Def1 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -258,13 +262,17 @@ export type Def1 = string | null;
 export type Contribute1 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser1 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser1 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -293,33 +301,33 @@ export type Fallback1 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role1 = string | null;
+export type Role1 = string | null
 /**
  * Current context
  *
  */
 export type Context1 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId1 = string | null;
-export type Kind1 = "error";
+export type PdlId1 = string | null
+export type Kind1 = "error"
 /**
  * Error message.
  *
  */
-export type Msg = string;
+export type Msg = string
 /**
  * Block that raised the error.
  *
@@ -348,12 +356,12 @@ export type Program1 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def2 = string | null;
+export type Def2 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -361,13 +369,17 @@ export type Def2 = string | null;
 export type Contribute2 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser2 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser2 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -396,33 +408,33 @@ export type Fallback2 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role2 = string | null;
+export type Role2 = string | null
 /**
  * Current context
  *
  */
 export type Context2 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId2 = string | null;
-export type Kind2 = "import";
+export type PdlId2 = string | null
+export type Kind2 = "import"
 /**
  * Name of the file to import.
  *
  */
-export type Import = string;
+export type Import = string
 export type PdlTrace =
   | boolean
   | number
@@ -447,12 +459,12 @@ export type PdlTrace =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def3 = string | null;
+export type Def3 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -460,13 +472,17 @@ export type Def3 = string | null;
 export type Contribute3 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser3 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser3 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -495,33 +511,33 @@ export type Fallback3 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role3 = string | null;
+export type Role3 = string | null
 /**
  * Current context
  *
  */
 export type Context3 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId3 = string | null;
-export type Kind3 = "include";
+export type PdlId3 = string | null
+export type Kind3 = "include"
 /**
  * Name of the file to include.
  *
  */
-export type Include = string;
+export type Include = string
 export type PdlTrace1 =
   | boolean
   | number
@@ -546,12 +562,12 @@ export type PdlTrace1 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def4 = string | null;
+export type Def4 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -559,13 +575,17 @@ export type Def4 = string | null;
 export type Contribute4 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser4 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser4 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -594,48 +614,48 @@ export type Fallback4 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role4 = string | null;
+export type Role4 = string | null
 /**
  * Current context
  *
  */
 export type Context4 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId4 = string | null;
-export type Kind4 = "read";
+export type PdlId4 = string | null
+export type Kind4 = "read"
 /**
  * Name of the file to read. If `None`, read the standard input.
  *
  */
-export type Read = string | LocalizedExpression | null;
+export type Read = string | LocalizedExpression | null
 /**
  * Message to prompt the user to enter a value.
  *
  */
-export type Message = string | null;
+export type Message = string | null
 /**
  * Indicate if one or multiple lines should be read.
  *
  */
-export type Multiline = boolean;
+export type Multiline = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def5 = string | null;
+export type Def5 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -643,13 +663,17 @@ export type Def5 = string | null;
 export type Contribute5 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser5 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser5 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -678,28 +702,28 @@ export type Fallback5 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role of associated to the message.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role5 = string | null;
+export type Role5 = string | null
 /**
  * Current context
  *
  */
 export type Context5 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId5 = string | null;
-export type Kind5 = "message";
+export type PdlId5 = string | null
+export type Kind5 = "message"
 /**
  * Content of the message.
  */
@@ -727,12 +751,12 @@ export type Content =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def6 = string | null;
+export type Def6 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -740,13 +764,17 @@ export type Def6 = string | null;
 export type Contribute6 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser6 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser6 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -775,28 +803,28 @@ export type Fallback6 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role6 = string | null;
+export type Role6 = string | null
 /**
  * Current context
  *
  */
 export type Context6 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId6 = string | null;
-export type Kind6 = "object";
+export type PdlId6 = string | null
+export type Kind6 = "object"
 export type Object =
   | {
       [k: string]:
@@ -823,7 +851,7 @@ export type Object =
         | ImportBlock
         | ErrorBlock
         | EmptyBlock
-        | null;
+        | null
     }
   | (
       | boolean
@@ -850,12 +878,12 @@ export type Object =
       | ErrorBlock
       | EmptyBlock
       | null
-    )[];
+    )[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def7 = string | null;
+export type Def7 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -863,13 +891,17 @@ export type Def7 = string | null;
 export type Contribute7 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser7 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser7 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -898,28 +930,28 @@ export type Fallback7 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role7 = string | null;
+export type Role7 = string | null
 /**
  * Current context
  *
  */
 export type Context7 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId7 = string | null;
-export type Kind7 = "array";
+export type PdlId7 = string | null
+export type Kind7 = "array"
 /**
  * Elements of the array.
  */
@@ -948,12 +980,12 @@ export type Array = (
   | ErrorBlock
   | EmptyBlock
   | null
-)[];
+)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def8 = string | null;
+export type Def8 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -961,13 +993,17 @@ export type Def8 = string | null;
 export type Contribute8 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser8 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser8 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -996,28 +1032,28 @@ export type Fallback8 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role8 = string | null;
+export type Role8 = string | null
 /**
  * Current context
  *
  */
 export type Context8 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId8 = string | null;
-export type Kind8 = "lastOf";
+export type PdlId8 = string | null
+export type Kind8 = "lastOf"
 /**
  * Sequence of blocks to execute.
  */
@@ -1046,12 +1082,12 @@ export type Lastof = (
   | ErrorBlock
   | EmptyBlock
   | null
-)[];
+)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def9 = string | null;
+export type Def9 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1059,13 +1095,17 @@ export type Def9 = string | null;
 export type Contribute9 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser9 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser9 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1094,28 +1134,28 @@ export type Fallback9 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role9 = string | null;
+export type Role9 = string | null
 /**
  * Current context
  *
  */
 export type Context9 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId9 = string | null;
-export type Kind9 = "text";
+export type PdlId9 = string | null
+export type Kind9 = "text"
 /**
  * Body of the text.
  *
@@ -1170,12 +1210,12 @@ export type Text =
       | EmptyBlock
       | null
     )[]
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def10 = string | null;
+export type Def10 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1183,13 +1223,17 @@ export type Def10 = string | null;
 export type Contribute10 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser10 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser10 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1218,40 +1262,40 @@ export type Fallback10 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role10 = string | null;
+export type Role10 = string | null
 /**
  * Current context
  *
  */
 export type Context10 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId10 = string | null;
-export type Kind10 = "repeat";
+export type PdlId10 = string | null
+export type Kind10 = "repeat"
 /**
  * Arrays to iterate over.
  *
  */
 export type For = {
-  [k: string]: unknown[] | string | LocalizedExpression;
-} | null;
+  [k: string]: unknown[] | string | LocalizedExpression
+} | null
 /**
  * Condition to stay at the beginning of the loop.
  *
  */
-export type While = boolean | string | LocalizedExpression;
+export type While = boolean | string | LocalizedExpression
 /**
  * Body of the loop.
  *
@@ -1280,47 +1324,47 @@ export type Repeat =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Condition to exit at the end of the loop.
  *
  */
-export type Until = boolean | string | LocalizedExpression;
+export type Until = boolean | string | LocalizedExpression
 /**
  * Maximal number of iterations to perform.
  *
  */
-export type MaxIterations = number | string | LocalizedExpression | null;
+export type MaxIterations = number | string | LocalizedExpression | null
 /**
  * Define how to combine the result of each iteration.
  *
  */
-export type Join = JoinText | JoinArray | JoinObject | JoinLastOf;
+export type Join = JoinText | JoinArray | JoinObject | JoinLastOf
 /**
  * String concatenation of the result of each iteration.
  *
  */
-export type As = "text";
+export type As = "text"
 /**
  * String used to concatenate each iteration of the loop.
  *
  */
-export type With = string;
+export type With = string
 /**
  * Return the result of each iteration as an array.
  *
  */
-export type As1 = "array";
+export type As1 = "array"
 /**
  * Return the union of the objects created at each iteration.
  *
  */
-export type As2 = "object";
+export type As2 = "object"
 /**
  * Return the result of the last iteration.
  *
  */
-export type As3 = "lastOf";
+export type As3 = "lastOf"
 export type PdlTrace2 =
   | (
       | boolean
@@ -1348,12 +1392,12 @@ export type PdlTrace2 =
       | EmptyBlock
       | null
     )[]
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def11 = string | null;
+export type Def11 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1361,13 +1405,17 @@ export type Def11 = string | null;
 export type Contribute11 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser11 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser11 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1396,37 +1444,63 @@ export type Fallback11 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role11 = string | null;
+export type Role11 = string | null
 /**
  * Current context
  *
  */
 export type Context11 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId11 = string | null;
-export type Kind11 = "match";
-export type Case = boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
-export type Def12 = string | null;
-export type Def13 = string | null;
-export type Def14 = string | null;
-export type Def15 = string | null;
-export type Any = null;
-export type Array1 = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
-export type Anyof = (boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null)[];
-export type If = boolean | string | LocalizedExpression | null;
+export type PdlId11 = string | null
+export type Kind11 = "match"
+export type Case =
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+export type Def12 = string | null
+export type Def13 = string | null
+export type Def14 = string | null
+export type Def15 = string | null
+export type Any = null
+export type Array1 = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
+export type Anyof = (
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+)[]
+export type If = boolean | string | LocalizedExpression | null
 export type Then =
   | boolean
   | number
@@ -1451,20 +1525,20 @@ export type Then =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type PdlCaseResult = boolean | null;
-export type PdlIfResult = boolean | null;
-export type PdlMatched = boolean | null;
+  | null
+export type PdlCaseResult = boolean | null
+export type PdlIfResult = boolean | null
+export type PdlMatched = boolean | null
 /**
  * List of cases to match.
  *
  */
-export type With1 = MatchCase[];
+export type With1 = MatchCase[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null;
+export type Def16 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1472,13 +1546,17 @@ export type Def16 = string | null;
 export type Contribute12 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser12 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser12 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1507,33 +1585,33 @@ export type Fallback12 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role12 = string | null;
+export type Role12 = string | null
 /**
  * Current context
  *
  */
 export type Context12 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId12 = string | null;
-export type Kind12 = "if";
+export type PdlId12 = string | null
+export type Kind12 = "if"
 /**
  * Condition.
  *
  */
-export type If1 = boolean | string | LocalizedExpression;
+export type If1 = boolean | string | LocalizedExpression
 /**
  * Branch to execute if the condition is true.
  *
@@ -1562,7 +1640,7 @@ export type Then1 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Branch to execute if the condition is false.
  *
@@ -1591,13 +1669,13 @@ export type Else =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
-export type IfResult = boolean | null;
+  | null
+export type IfResult = boolean | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def17 = string | null;
+export type Def17 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1605,13 +1683,17 @@ export type Def17 = string | null;
 export type Contribute13 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser13 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser13 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1640,37 +1722,37 @@ export type Fallback13 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role13 = string | null;
+export type Role13 = string | null
 /**
  * Current context
  *
  */
 export type Context13 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId13 = string | null;
-export type Kind13 = "data";
+export type PdlId13 = string | null
+export type Kind13 = "data"
 /**
  * Do not evaluate expressions inside strings.
  */
-export type Raw = boolean;
+export type Raw = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def18 = string | null;
+export type Def18 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1678,13 +1760,17 @@ export type Def18 = string | null;
 export type Contribute14 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser14 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser14 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1713,37 +1799,37 @@ export type Fallback14 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role14 = string | null;
+export type Role14 = string | null
 /**
  * Current context
  *
  */
 export type Context14 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId14 = string | null;
-export type Kind14 = "get";
+export type PdlId14 = string | null
+export type Kind14 = "get"
 /**
  * Name of the variable to access.
  */
-export type Get = string;
+export type Get = string
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def19 = string | null;
+export type Def19 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1751,13 +1837,17 @@ export type Def19 = string | null;
 export type Contribute15 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser15 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser15 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1786,33 +1876,33 @@ export type Fallback15 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role15 = string | null;
+export type Role15 = string | null
 /**
  * Current context
  *
  */
 export type Context15 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId15 = string | null;
-export type Kind15 = "code";
+export type PdlId15 = string | null
+export type Kind15 = "code"
 /**
  * Programming language of the code.
  *
  */
-export type Lang = "python" | "command" | "jinja" | "pdl";
+export type Lang = "python" | "command" | "jinja" | "pdl"
 /**
  * Code to execute.
  *
@@ -1841,12 +1931,12 @@ export type Code =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def20 = string | null;
+export type Def20 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -1854,13 +1944,17 @@ export type Def20 = string | null;
 export type Contribute16 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser16 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser16 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -1889,28 +1983,28 @@ export type Fallback16 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role16 = string | null;
+export type Role16 = string | null
 /**
  * Current context
  *
  */
 export type Context16 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId16 = string | null;
-export type Kind16 = "model";
+export type PdlId16 = string | null
+export type Kind16 = "model"
 /**
  * Messages to send to the model.
  *
@@ -1939,12 +2033,12 @@ export type Input =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Variable where to store the raw response of the model.
  *
  */
-export type Modelresponse = string | null;
+export type Modelresponse = string | null
 export type PdlTrace3 =
   | boolean
   | number
@@ -1969,12 +2063,12 @@ export type PdlTrace3 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Optional field to ensure that the block is using granite-io.
  *
  */
-export type Platform = "granite-io";
+export type Platform = "granite-io"
 /**
  * Backend name and configuration.
  *
@@ -1982,30 +2076,30 @@ export type Platform = "granite-io";
 export type Backend =
   | string
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
-  | LocalizedExpression;
+  | LocalizedExpression
 /**
  * IO Processor name.
  *
  */
-export type Processor = string | LocalizedExpression | null;
+export type Processor = string | LocalizedExpression | null
 /**
  * Parameters sent to the model.
  *
  */
 export type Parameters =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
   | string
   | LocalizedExpression
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def21 = string | null;
+export type Def21 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2013,13 +2107,17 @@ export type Def21 = string | null;
 export type Contribute17 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser17 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser17 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2048,33 +2146,33 @@ export type Fallback17 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role17 = string | null;
+export type Role17 = string | null
 /**
  * Current context
  *
  */
 export type Context17 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId17 = string | null;
-export type Kind17 = "model";
+export type PdlId17 = string | null
+export type Kind17 = "model"
 /**
  * Name of the model following the LiteLLM convention.
  *
  */
-export type Model1 = string | LocalizedExpression;
+export type Model1 = string | LocalizedExpression
 /**
  * Messages to send to the model.
  *
@@ -2103,12 +2201,12 @@ export type Input1 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Variable where to store the raw response of the model.
  *
  */
-export type Modelresponse1 = string | null;
+export type Modelresponse1 = string | null
 export type PdlTrace4 =
   | boolean
   | number
@@ -2133,12 +2231,12 @@ export type PdlTrace4 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Optional field to ensure that the block is using LiteLLM.
  *
  */
-export type Platform1 = "litellm";
+export type Platform1 = "litellm"
 /**
  * Parameters to send to the model.
  *
@@ -2146,63 +2244,63 @@ export type Platform1 = "litellm";
 export type Parameters1 =
   | LitellmParameters
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
   | string
   | LocalizedExpression
-  | null;
-export type Timeout = number | string | null;
-export type Temperature = number | string | null;
-export type TopP = number | string | null;
-export type N = number | string | null;
-export type Stop = string | string[] | null;
-export type MaxTokens = number | string | null;
-export type PresencePenalty = number | string | null;
-export type FrequencyPenalty = number | string | null;
+  | null
+export type Timeout = number | string | null
+export type Temperature = number | string | null
+export type TopP = number | string | null
+export type N = number | string | null
+export type Stop = string | string[] | null
+export type MaxTokens = number | string | null
+export type PresencePenalty = number | string | null
+export type FrequencyPenalty = number | string | null
 export type LogitBias =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
   | string
-  | null;
-export type User = string | null;
+  | null
+export type User = string | null
 export type ResponseFormat =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
   | string
-  | null;
-export type Seed = number | string | null;
-export type Tools = unknown[] | string | null;
+  | null
+export type Seed = number | string | null
+export type Tools = unknown[] | string | null
 export type ToolChoice =
   | string
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
-  | null;
-export type Logprobs = boolean | string | null;
-export type TopLogprobs = number | string | null;
-export type ParallelToolCalls = boolean | string | null;
+  | null
+export type Logprobs = boolean | string | null
+export type TopLogprobs = number | string | null
+export type ParallelToolCalls = boolean | string | null
 export type ExtraHeaders =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }
   | string
-  | null;
-export type Functions = unknown[] | string | null;
-export type FunctionCall = string | null;
-export type BaseUrl = string | null;
-export type ApiVersion = string | null;
-export type ApiKey = string | null;
-export type ModelList = unknown[] | string | null;
-export type MockResponse = string | null;
-export type CustomLlmProvider = string | null;
-export type MaxRetries = number | string | null;
+  | null
+export type Functions = unknown[] | string | null
+export type FunctionCall = string | null
+export type BaseUrl = string | null
+export type ApiVersion = string | null
+export type ApiKey = string | null
+export type ModelList = unknown[] | string | null
+export type MockResponse = string | null
+export type CustomLlmProvider = string | null
+export type MaxRetries = number | string | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def22 = string | null;
+export type Def22 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2210,13 +2308,17 @@ export type Def22 = string | null;
 export type Contribute18 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser18 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser18 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2245,28 +2347,28 @@ export type Fallback18 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role18 = string | null;
+export type Role18 = string | null
 /**
  * Current context
  *
  */
 export type Context18 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId18 = string | null;
-export type Kind18 = "call";
+export type PdlId18 = string | null
+export type Kind18 = "call"
 export type PdlTrace5 =
   | boolean
   | number
@@ -2291,12 +2393,12 @@ export type PdlTrace5 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def23 = string | null;
+export type Def23 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -2304,13 +2406,17 @@ export type Def23 = string | null;
 export type Contribute19 = (
   | ContributeTarget
   | {
-      [k: string]: ContributeValue;
+      [k: string]: ContributeValue
     }
-)[];
+)[]
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser19 = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser | null;
+export type Parser19 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
 /**
  * Block to execute in case of error.
  *
@@ -2339,35 +2445,35 @@ export type Fallback19 =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role19 = string | null;
+export type Role19 = string | null
 /**
  * Current context
  *
  */
 export type Context19 =
   | {
-      [k: string]: unknown;
+      [k: string]: unknown
     }[]
-  | null;
+  | null
 /**
  * Unique identifier for this block
  *
  */
-export type PdlId19 = string | null;
-export type Kind19 = "function";
+export type PdlId19 = string | null
+export type Kind19 = "function"
 /**
  * Functions parameters with their types.
  *
  */
 export type Function = {
-  [k: string]: unknown;
-} | null;
+  [k: string]: unknown
+} | null
 /**
  * Body of the function
  *
@@ -2396,7 +2502,7 @@ export type Return =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 export type PdlBlock =
   | boolean
   | number
@@ -2421,35 +2527,35 @@ export type PdlBlock =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
-  | null;
+  | null
 
 /**
  * Function declaration.
  */
 export interface FunctionBlock {
-  description?: Description;
-  spec?: Spec;
-  defs?: Defs;
-  def?: Def23;
-  contribute?: Contribute19;
-  parser?: Parser19;
-  fallback?: Fallback19;
-  role?: Role19;
-  context?: Context19;
-  pdl__id?: PdlId19;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind19;
-  function: Function;
-  return: Return;
+  description?: Description
+  spec?: Spec
+  defs?: Defs
+  def?: Def23
+  contribute?: Contribute19
+  parser?: Parser19
+  fallback?: Fallback19
+  role?: Role19
+  context?: Context19
+  pdl__id?: PdlId19
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind19
+  function: Function
+  return: Return
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2480,36 +2586,36 @@ export interface Defs {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Calling a function.
  */
 export interface CallBlock {
-  description?: Description1;
-  spec?: Spec1;
-  defs?: Defs1;
-  def?: Def22;
-  contribute?: Contribute18;
-  parser?: Parser18;
-  fallback?: Fallback18;
-  role?: Role18;
-  context?: Context18;
-  pdl__id?: PdlId18;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind18;
-  call: unknown;
-  args?: unknown;
-  pdl__trace?: PdlTrace5;
+  description?: Description1
+  spec?: Spec1
+  defs?: Defs1
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  role?: Role18
+  context?: Context18
+  pdl__id?: PdlId18
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind18
+  call: unknown
+  args?: unknown
+  pdl__trace?: PdlTrace5
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec1 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2540,7 +2646,7 @@ export interface Defs1 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).
@@ -2553,33 +2659,33 @@ export interface Defs1 {
  * ```
  */
 export interface LitellmModelBlock {
-  description?: Description2;
-  spec?: Spec2;
-  defs?: Defs2;
-  def?: Def21;
-  contribute?: Contribute17;
-  parser?: Parser17;
-  fallback?: Fallback17;
-  role?: Role17;
-  context?: Context17;
-  pdl__id?: PdlId17;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind17;
-  model: Model1;
-  input?: Input1;
-  modelResponse?: Modelresponse1;
-  pdl__trace?: PdlTrace4;
-  platform?: Platform1;
-  parameters?: Parameters1;
+  description?: Description2
+  spec?: Spec2
+  defs?: Defs2
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  role?: Role17
+  context?: Context17
+  pdl__id?: PdlId17
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind17
+  model: Model1
+  input?: Input1
+  modelResponse?: Modelresponse1
+  pdl__trace?: PdlTrace4
+  platform?: Platform1
+  parameters?: Parameters1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec2 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2610,41 +2716,41 @@ export interface Defs2 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Call an LLM through the granite-io API.
  */
 export interface GraniteioModelBlock {
-  description?: Description3;
-  spec?: Spec3;
-  defs?: Defs3;
-  def?: Def20;
-  contribute?: Contribute16;
-  parser?: Parser16;
-  fallback?: Fallback16;
-  role?: Role16;
-  context?: Context16;
-  pdl__id?: PdlId16;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind16;
-  model: unknown;
-  input?: Input;
-  modelResponse?: Modelresponse;
-  pdl__trace?: PdlTrace3;
-  platform?: Platform;
-  backend: Backend;
-  processor?: Processor;
-  parameters?: Parameters;
+  description?: Description3
+  spec?: Spec3
+  defs?: Defs3
+  def?: Def20
+  contribute?: Contribute16
+  parser?: Parser16
+  fallback?: Fallback16
+  role?: Role16
+  context?: Context16
+  pdl__id?: PdlId16
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind16
+  model: unknown
+  input?: Input
+  modelResponse?: Modelresponse
+  pdl__trace?: PdlTrace3
+  platform?: Platform
+  backend: Backend
+  processor?: Processor
+  parameters?: Parameters
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec3 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2675,7 +2781,7 @@ export interface Defs3 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Execute a piece of code.
@@ -2691,29 +2797,29 @@ export interface Defs3 {
  * ```
  */
 export interface CodeBlock {
-  description?: Description4;
-  spec?: Spec4;
-  defs?: Defs4;
-  def?: Def19;
-  contribute?: Contribute15;
-  parser?: Parser15;
-  fallback?: Fallback15;
-  role?: Role15;
-  context?: Context15;
-  pdl__id?: PdlId15;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind15;
-  lang: Lang;
-  code: Code;
+  description?: Description4
+  spec?: Spec4
+  defs?: Defs4
+  def?: Def19
+  contribute?: Contribute15
+  parser?: Parser15
+  fallback?: Fallback15
+  role?: Role15
+  context?: Context15
+  pdl__id?: PdlId15
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind15
+  lang: Lang
+  code: Code
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec4 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2744,7 +2850,7 @@ export interface Defs4 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Get the value of a variable.
@@ -2752,28 +2858,28 @@ export interface Defs4 {
  * The GetBlock is deprecated.  Use DataBlock instead.
  */
 export interface GetBlock {
-  description?: Description5;
-  spec?: Spec5;
-  defs?: Defs5;
-  def?: Def18;
-  contribute?: Contribute14;
-  parser?: Parser14;
-  fallback?: Fallback14;
-  role?: Role14;
-  context?: Context14;
-  pdl__id?: PdlId14;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind14;
-  get: Get;
+  description?: Description5
+  spec?: Spec5
+  defs?: Defs5
+  def?: Def18
+  contribute?: Contribute14
+  parser?: Parser14
+  fallback?: Fallback14
+  role?: Role14
+  context?: Context14
+  pdl__id?: PdlId14
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind14
+  get: Get
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec5 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2804,7 +2910,7 @@ export interface Defs5 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Arbitrary value, equivalent to JSON.
@@ -2831,29 +2937,29 @@ export interface Defs5 {
  * ```
  */
 export interface DataBlock {
-  description?: Description6;
-  spec?: Spec6;
-  defs?: Defs6;
-  def?: Def17;
-  contribute?: Contribute13;
-  parser?: Parser13;
-  fallback?: Fallback13;
-  role?: Role13;
-  context?: Context13;
-  pdl__id?: PdlId13;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind13;
-  data: unknown;
-  raw?: Raw;
+  description?: Description6
+  spec?: Spec6
+  defs?: Defs6
+  def?: Def17
+  contribute?: Contribute13
+  parser?: Parser13
+  fallback?: Fallback13
+  role?: Role13
+  context?: Context13
+  pdl__id?: PdlId13
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind13
+  data: unknown
+  raw?: Raw
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec6 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2884,7 +2990,7 @@ export interface Defs6 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Conditional control structure.
@@ -2899,31 +3005,31 @@ export interface Defs6 {
  * ```
  */
 export interface IfBlock {
-  description?: Description7;
-  spec?: Spec7;
-  defs?: Defs7;
-  def?: Def16;
-  contribute?: Contribute12;
-  parser?: Parser12;
-  fallback?: Fallback12;
-  role?: Role12;
-  context?: Context12;
-  pdl__id?: PdlId12;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind12;
-  if: If1;
-  then: Then1;
-  else?: Else;
-  if_result?: IfResult;
+  description?: Description7
+  spec?: Spec7
+  defs?: Defs7
+  def?: Def16
+  contribute?: Contribute12
+  parser?: Parser12
+  fallback?: Fallback12
+  role?: Role12
+  context?: Context12
+  pdl__id?: PdlId12
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind12
+  if: If1
+  then: Then1
+  else?: Else
+  if_result?: IfResult
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec7 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2954,35 +3060,35 @@ export interface Defs7 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Match control structure.
  */
 export interface MatchBlock {
-  description?: Description8;
-  spec?: Spec8;
-  defs?: Defs8;
-  def?: Def11;
-  contribute?: Contribute11;
-  parser?: Parser11;
-  fallback?: Fallback11;
-  role?: Role11;
-  context?: Context11;
-  pdl__id?: PdlId11;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind11;
-  match: unknown;
-  with: With1;
+  description?: Description8
+  spec?: Spec8
+  defs?: Defs8
+  def?: Def11
+  contribute?: Contribute11
+  parser?: Parser11
+  fallback?: Fallback11
+  role?: Role11
+  context?: Context11
+  pdl__id?: PdlId11
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind11
+  match: unknown
+  with: With1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec8 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3013,7 +3119,7 @@ export interface Defs8 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Repeat the execution of a block.
@@ -3028,34 +3134,34 @@ export interface Defs8 {
  * ```
  */
 export interface RepeatBlock {
-  description?: Description9;
-  spec?: Spec9;
-  defs?: Defs9;
-  def?: Def10;
-  contribute?: Contribute10;
-  parser?: Parser10;
-  fallback?: Fallback10;
-  role?: Role10;
-  context?: Context10;
-  pdl__id?: PdlId10;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind10;
-  for?: For;
-  while?: While;
-  repeat: Repeat;
-  until?: Until;
-  max_iterations?: MaxIterations;
-  join?: Join;
-  pdl__trace?: PdlTrace2;
+  description?: Description9
+  spec?: Spec9
+  defs?: Defs9
+  def?: Def10
+  contribute?: Contribute10
+  parser?: Parser10
+  fallback?: Fallback10
+  role?: Role10
+  context?: Context10
+  pdl__id?: PdlId10
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind10
+  for?: For
+  while?: While
+  repeat: Repeat
+  until?: Until
+  max_iterations?: MaxIterations
+  join?: Join
+  pdl__trace?: PdlTrace2
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec9 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3086,34 +3192,34 @@ export interface Defs9 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
 export interface TextBlock {
-  description?: Description10;
-  spec?: Spec10;
-  defs?: Defs10;
-  def?: Def9;
-  contribute?: Contribute9;
-  parser?: Parser9;
-  fallback?: Fallback9;
-  role?: Role9;
-  context?: Context9;
-  pdl__id?: PdlId9;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind9;
-  text: Text;
+  description?: Description10
+  spec?: Spec10
+  defs?: Defs10
+  def?: Def9
+  contribute?: Contribute9
+  parser?: Parser9
+  fallback?: Fallback9
+  role?: Role9
+  context?: Context9
+  pdl__id?: PdlId9
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind9
+  text: Text
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec10 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3144,34 +3250,34 @@ export interface Defs10 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the value of the last block if the list of blocks.
  */
 export interface LastOfBlock {
-  description?: Description11;
-  spec?: Spec11;
-  defs?: Defs11;
-  def?: Def8;
-  contribute?: Contribute8;
-  parser?: Parser8;
-  fallback?: Fallback8;
-  role?: Role8;
-  context?: Context8;
-  pdl__id?: PdlId8;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind8;
-  lastOf: Lastof;
+  description?: Description11
+  spec?: Spec11
+  defs?: Defs11
+  def?: Def8
+  contribute?: Contribute8
+  parser?: Parser8
+  fallback?: Fallback8
+  role?: Role8
+  context?: Context8
+  pdl__id?: PdlId8
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind8
+  lastOf: Lastof
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec11 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3202,34 +3308,34 @@ export interface Defs11 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the array of values computed by each block of the list of blocks.
  */
 export interface ArrayBlock {
-  description?: Description12;
-  spec?: Spec12;
-  defs?: Defs12;
-  def?: Def7;
-  contribute?: Contribute7;
-  parser?: Parser7;
-  fallback?: Fallback7;
-  role?: Role7;
-  context?: Context7;
-  pdl__id?: PdlId7;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind7;
-  array: Array;
+  description?: Description12
+  spec?: Spec12
+  defs?: Defs12
+  def?: Def7
+  contribute?: Contribute7
+  parser?: Parser7
+  fallback?: Fallback7
+  role?: Role7
+  context?: Context7
+  pdl__id?: PdlId7
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind7
+  array: Array
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec12 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3260,34 +3366,34 @@ export interface Defs12 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
 export interface ObjectBlock {
-  description?: Description13;
-  spec?: Spec13;
-  defs?: Defs13;
-  def?: Def6;
-  contribute?: Contribute6;
-  parser?: Parser6;
-  fallback?: Fallback6;
-  role?: Role6;
-  context?: Context6;
-  pdl__id?: PdlId6;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind6;
-  object: Object;
+  description?: Description13
+  spec?: Spec13
+  defs?: Defs13
+  def?: Def6
+  contribute?: Contribute6
+  parser?: Parser6
+  fallback?: Fallback6
+  role?: Role6
+  context?: Context6
+  pdl__id?: PdlId6
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind6
+  object: Object
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec13 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3318,34 +3424,34 @@ export interface Defs13 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Create a message.
  */
 export interface MessageBlock {
-  description?: Description14;
-  spec?: Spec14;
-  defs?: Defs14;
-  def?: Def5;
-  contribute?: Contribute5;
-  parser?: Parser5;
-  fallback?: Fallback5;
-  role: Role5;
-  context?: Context5;
-  pdl__id?: PdlId5;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind5;
-  content: Content;
+  description?: Description14
+  spec?: Spec14
+  defs?: Defs14
+  def?: Def5
+  contribute?: Contribute5
+  parser?: Parser5
+  fallback?: Fallback5
+  role: Role5
+  context?: Context5
+  pdl__id?: PdlId5
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind5
+  content: Content
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec14 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3376,36 +3482,36 @@ export interface Defs14 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Read from a file or standard input.
  */
 export interface ReadBlock {
-  description?: Description15;
-  spec?: Spec15;
-  defs?: Defs15;
-  def?: Def4;
-  contribute?: Contribute4;
-  parser?: Parser4;
-  fallback?: Fallback4;
-  role?: Role4;
-  context?: Context4;
-  pdl__id?: PdlId4;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind4;
-  read: Read;
-  message?: Message;
-  multiline?: Multiline;
+  description?: Description15
+  spec?: Spec15
+  defs?: Defs15
+  def?: Def4
+  contribute?: Contribute4
+  parser?: Parser4
+  fallback?: Fallback4
+  role?: Role4
+  context?: Context4
+  pdl__id?: PdlId4
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind4
+  read: Read
+  message?: Message
+  multiline?: Multiline
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec15 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3436,35 +3542,35 @@ export interface Defs15 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Include a PDL file.
  */
 export interface IncludeBlock {
-  description?: Description16;
-  spec?: Spec16;
-  defs?: Defs16;
-  def?: Def3;
-  contribute?: Contribute3;
-  parser?: Parser3;
-  fallback?: Fallback3;
-  role?: Role3;
-  context?: Context3;
-  pdl__id?: PdlId3;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind3;
-  include: Include;
-  pdl__trace?: PdlTrace1;
+  description?: Description16
+  spec?: Spec16
+  defs?: Defs16
+  def?: Def3
+  contribute?: Contribute3
+  parser?: Parser3
+  fallback?: Fallback3
+  role?: Role3
+  context?: Context3
+  pdl__id?: PdlId3
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind3
+  include: Include
+  pdl__trace?: PdlTrace1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec16 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3495,35 +3601,35 @@ export interface Defs16 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Import a PDL file.
  */
 export interface ImportBlock {
-  description?: Description17;
-  spec?: Spec17;
-  defs?: Defs17;
-  def?: Def2;
-  contribute?: Contribute2;
-  parser?: Parser2;
-  fallback?: Fallback2;
-  role?: Role2;
-  context?: Context2;
-  pdl__id?: PdlId2;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind2;
-  import: Import;
-  pdl__trace?: PdlTrace;
+  description?: Description17
+  spec?: Spec17
+  defs?: Defs17
+  def?: Def2
+  contribute?: Contribute2
+  parser?: Parser2
+  fallback?: Fallback2
+  role?: Role2
+  context?: Context2
+  pdl__id?: PdlId2
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind2
+  import: Import
+  pdl__trace?: PdlTrace
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec17 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3554,35 +3660,35 @@ export interface Defs17 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Block representing an error generated at runtime.
  */
 export interface ErrorBlock {
-  description?: Description18;
-  spec?: Spec18;
-  defs?: Defs18;
-  def?: Def1;
-  contribute?: Contribute1;
-  parser?: Parser1;
-  fallback?: Fallback1;
-  role?: Role1;
-  context?: Context1;
-  pdl__id?: PdlId1;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind1;
-  msg: Msg;
-  program: Program1;
+  description?: Description18
+  spec?: Spec18
+  defs?: Defs18
+  def?: Def1
+  contribute?: Contribute1
+  parser?: Parser1
+  fallback?: Fallback1
+  role?: Role1
+  context?: Context1
+  pdl__id?: PdlId1
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind1
+  msg: Msg
+  program: Program1
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec18 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3613,33 +3719,33 @@ export interface Defs18 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 /**
  * Block without an action. It can contain definitions.
  */
 export interface EmptyBlock {
-  description?: Description19;
-  spec?: Spec19;
-  defs?: Defs19;
-  def?: Def;
-  contribute?: Contribute;
-  parser?: Parser;
-  fallback?: Fallback;
-  role?: Role;
-  context?: Context;
-  pdl__id?: PdlId;
-  pdl__result?: unknown;
-  pdl__location?: PdlLocationType | null;
-  pdl__timing?: PdlTiming | null;
-  kind?: Kind;
+  description?: Description19
+  spec?: Spec19
+  defs?: Defs19
+  def?: Def
+  contribute?: Contribute
+  parser?: Parser
+  fallback?: Fallback
+  role?: Role
+  context?: Context
+  pdl__id?: PdlId
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  kind?: Kind
 }
 /**
  * Type specification of the result of the block.
  *
  */
 export interface Spec19 {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3670,94 +3776,102 @@ export interface Defs19 {
     | ImportBlock
     | ErrorBlock
     | EmptyBlock
-    | null;
+    | null
 }
 export interface ContributeValue {
-  value: Value;
+  value: Value
 }
 export interface PdlParser {
-  description?: Description20;
-  spec?: Spec20;
-  pdl: Pdl;
+  description?: Description20
+  spec?: Spec20
+  pdl: Pdl
 }
 /**
  * A regular expression parser
  */
 export interface RegexParser {
-  description?: Description21;
-  spec?: Spec21;
-  regex: Regex;
-  mode?: Mode;
+  description?: Description21
+  spec?: Spec21
+  regex: Regex
+  mode?: Mode
 }
 /**
  * Internal data structure to keep track of the source location information.
  */
 export interface PdlLocationType {
-  path: Path;
-  file: File;
-  table: Table;
+  path: Path
+  file: File
+  table: Table
 }
 export interface Table {
-  [k: string]: number;
+  [k: string]: number
 }
 /**
  * Internal data structure to record timing information in the trace.
  */
 export interface PdlTiming {
-  start_nanos?: StartNanos;
-  end_nanos?: EndNanos;
-  first_use_nanos?: FirstUseNanos;
-  timezone?: Timezone;
+  start_nanos?: StartNanos
+  end_nanos?: EndNanos
+  first_use_nanos?: FirstUseNanos
+  timezone?: Timezone
 }
 export interface LocalizedExpression {
-  expr: Expr;
-  pdl__location?: PdlLocationType | null;
+  expr: Expr
+  pdl__location?: PdlLocationType | null
 }
 export interface Expr {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
 export interface JoinText {
-  as?: As;
-  with?: With;
+  as?: As
+  with?: With
 }
 export interface JoinArray {
-  as: As1;
+  as: As1
 }
 export interface JoinObject {
-  as: As2;
+  as: As2
 }
 export interface JoinLastOf {
-  as: As3;
+  as: As3
 }
 /**
  * Case of a match.
  */
 export interface MatchCase {
-  case?: Case;
-  if?: If;
-  then: Then;
-  pdl__case_result?: PdlCaseResult;
-  pdl__if_result?: PdlIfResult;
-  pdl__matched?: PdlMatched;
+  case?: Case
+  if?: If
+  then: Then
+  pdl__case_result?: PdlCaseResult
+  pdl__if_result?: PdlIfResult
+  pdl__matched?: PdlMatched
 }
 export interface OrPattern {
-  def?: Def12;
-  anyOf: Anyof;
+  def?: Def12
+  anyOf: Anyof
 }
 export interface ArrayPattern {
-  def?: Def13;
-  array: Array1;
+  def?: Def13
+  array: Array1
 }
 export interface ObjectPattern {
-  def?: Def14;
-  object: Object1;
+  def?: Def14
+  object: Object1
 }
 export interface Object1 {
-  [k: string]: boolean | number | string | OrPattern | ArrayPattern | ObjectPattern | AnyPattern | null;
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern
+    | null
 }
 export interface AnyPattern {
-  def?: Def15;
-  any: Any;
+  def?: Def15
+  any: Any
 }
 /**
  * Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).
@@ -3765,32 +3879,32 @@ export interface AnyPattern {
  * Note that not all models and platforms accept all parameters.
  */
 export interface LitellmParameters {
-  timeout?: Timeout;
-  temperature?: Temperature;
-  top_p?: TopP;
-  n?: N;
-  stop?: Stop;
-  max_tokens?: MaxTokens;
-  presence_penalty?: PresencePenalty;
-  frequency_penalty?: FrequencyPenalty;
-  logit_bias?: LogitBias;
-  user?: User;
-  response_format?: ResponseFormat;
-  seed?: Seed;
-  tools?: Tools;
-  tool_choice?: ToolChoice;
-  logprobs?: Logprobs;
-  top_logprobs?: TopLogprobs;
-  parallel_tool_calls?: ParallelToolCalls;
-  extra_headers?: ExtraHeaders;
-  functions?: Functions;
-  function_call?: FunctionCall;
-  base_url?: BaseUrl;
-  api_version?: ApiVersion;
-  api_key?: ApiKey;
-  model_list?: ModelList;
-  mock_response?: MockResponse;
-  custom_llm_provider?: CustomLlmProvider;
-  max_retries?: MaxRetries;
-  [k: string]: unknown;
+  timeout?: Timeout
+  temperature?: Temperature
+  top_p?: TopP
+  n?: N
+  stop?: Stop
+  max_tokens?: MaxTokens
+  presence_penalty?: PresencePenalty
+  frequency_penalty?: FrequencyPenalty
+  logit_bias?: LogitBias
+  user?: User
+  response_format?: ResponseFormat
+  seed?: Seed
+  tools?: Tools
+  tool_choice?: ToolChoice
+  logprobs?: Logprobs
+  top_logprobs?: TopLogprobs
+  parallel_tool_calls?: ParallelToolCalls
+  extra_headers?: ExtraHeaders
+  functions?: Functions
+  function_call?: FunctionCall
+  base_url?: BaseUrl
+  api_version?: ApiVersion
+  api_key?: ApiKey
+  model_list?: ModelList
+  mock_response?: MockResponse
+  custom_llm_provider?: CustomLlmProvider
+  max_retries?: MaxRetries
+  [k: string]: unknown
 }
