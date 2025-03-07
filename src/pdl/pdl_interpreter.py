@@ -88,7 +88,7 @@ from .pdl_ast import (  # noqa: E402
     TextBlock,
     empty_block_location,
 )
-from .pdl_dumper import block_to_dict  # noqa: E402
+from .pdl_dumper import as_json, block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
 from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
@@ -190,8 +190,10 @@ def write_trace(
         trace: Execution trace.
     """
     try:
+        d: Any = block_to_dict(trace, json_compatible=True)
+        d = as_json(d)
         with open(trace_file, "w", encoding="utf-8") as fp:
-            json.dump(block_to_dict(trace, json_compatible=True), fp)
+            json.dump(d, fp)
     except Exception as e:
         print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
 
