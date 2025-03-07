@@ -116,7 +116,7 @@ export default function MasonryTile({
 
   const hasFooter = (footer1Key && footer1Value) || (stability?.length ?? 0) > 0
   const footer = hasFooter && (
-    <DescriptionList isAutoColumnWidths columnModifier={{ default: "3Col" }}>
+    <DescriptionList className="pdl-masonry-tile-footer-dl">
       {footer1Key && (
         <DescriptionListGroup>
           <DescriptionListTerm>{footer1Key}</DescriptionListTerm>

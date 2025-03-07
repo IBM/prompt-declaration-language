@@ -1,6 +1,13 @@
+.pdl-masonry-tile-footer-dl {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
 .pdl-masonry-tile-footer2-dg {
   align-items: center;
 }
+
 .pdl-masonry-tile-stability-grid {
   gap: 2px;
 }

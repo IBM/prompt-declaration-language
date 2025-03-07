@@ -34,7 +34,7 @@ export default function RunMenu({ block, run }: Props) {
   const runTemperature = useCallback(async () => {
     if (block && run) {
       const { runNTimes } = await import("./stability")
-      await runNTimes(block, run, 4, [0, 0.25, 0.5, 0.75, 1, 2])
+      await runNTimes(block, run, 3, [0, 0.33, 0.66, 1])
     }
   }, [block, run])
 
