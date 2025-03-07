@@ -200,7 +200,7 @@ function renderValue({
               className="pdl-masonry-tile-stability-popover"
               headerContent={detailHeader}
               bodyContent={
-                <Stack hasGutter>
+                <Stack>
                   <Progress
                     size="sm"
                     variant={
@@ -211,35 +211,45 @@ function renderValue({
                           : "success"
                     }
                     value={100 * v}
-                    title="A/B Match"
+                    title={
+                      v === 1
+                        ? "Perfect Match!"
+                        : "A/B Comparison of Differences"
+                    }
                   />
-                  <Split hasGutter>
+                  <Split>
                     <Panel
                       isScrollable
                       className="pdl-masonry-tile-stability-popover-ab-panel"
+                      data-perfect-match={v === 1 || undefined}
                     >
-                      <PanelHeader>
-                        <Title headingLevel="h4">A</Title>
-                      </PanelHeader>
-                      <PanelMain maxHeight="400px">
+                      {v < 1 && (
+                        <PanelHeader>
+                          <Title headingLevel="h4">A</Title>
+                        </PanelHeader>
+                      )}
+                      <PanelMain maxHeight="300px">
                         <PanelMainBody>
                           <Result result={detailBody?.[i]} term="" />
                         </PanelMainBody>
                       </PanelMain>
                     </Panel>
-                    <Panel
-                      isScrollable
-                      className="pdl-masonry-tile-stability-popover-ab-panel"
-                    >
-                      <PanelHeader>
-                        <Title headingLevel="h4">B</Title>
-                      </PanelHeader>
-                      <PanelMain maxHeight="400px">
-                        <PanelMainBody>
-                          <Result result={detailBody?.[j]} term="" />
-                        </PanelMainBody>
-                      </PanelMain>
-                    </Panel>
+                    {v < 1 && (
+                      <Panel
+                        isScrollable
+                        variant="secondary"
+                        className="pdl-masonry-tile-stability-popover-ab-panel"
+                      >
+                        <PanelHeader>
+                          <Title headingLevel="h4">B</Title>
+                        </PanelHeader>
+                        <PanelMain maxHeight="300px">
+                          <PanelMainBody>
+                            <Result result={detailBody?.[j]} term="" />
+                          </PanelMainBody>
+                        </PanelMain>
+                      </Panel>
+                    )}
                   </Split>
                 </Stack>
               }
