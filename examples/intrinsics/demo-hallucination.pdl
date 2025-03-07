@@ -1,11 +1,86 @@
 # Granite.runtime Intrinsics Demo with PDL
 
-# Provide document(s) to Granite3-rag model with hallucination_tag
-# Granite3-rag model: Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on ollama
+# Provide document(s) to granite3-rag model with hallucination_tag
+# granite3-rag model: Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on Ollama
 
-# The model responds to a query providing a hallucination score
+# The model responds to a query and provides a hallucination score
 
 text:
+
+# Builds granite3-rag:8b
+- contribute: []
+  lang: python
+  code: |
+    import os
+    import shutil
+    import subprocess
+    import huggingface_hub
+    import ollama
+
+    granite3_rag_model = 'granite3-rag:8b'
+
+    # Check if rag model exists
+    found = False
+    result = ""
+    local_ollama_models = ollama.list().models
+    for model in local_ollama_models:
+        if model.model == granite3_rag_model:
+            found = True
+            result = f"Model {granite3_rag_model} found in Ollama, skipping build"
+            break
+
+    if not found:
+        # Install dependencies
+        # Define the repository and directory
+        llama_cpp_repo = "https://github.com/ggerganov/llama.cpp.git"
+        llama_cpp_dir_name = "llama.cpp"
+
+        # Clone the repository if it doesn't already exist
+        if not os.path.isdir(llama_cpp_dir_name):
+            subprocess.run(["git", "clone", "--depth", "1", llama_cpp_repo], check=True)
+
+        # Install the required packages
+        subprocess.run([
+            "pip", "install",
+            "git+https://github.com/ibm-granite-community/utils.git",
+            "huggingface_hub",
+            "langchain_community",
+            "langchain_ollama",
+            "langchain-milvus",
+            "docling",
+            "-r", f"{llama_cpp_dir_name}/requirements.txt"
+        ], check=True)
+
+        # Ollama pull base model
+        granite3_base_model = 'granite3-dense:8b'
+        ollama.pull(granite3_base_model)
+
+        # HG: download lora adapter
+        lora_folder = huggingface_hub.snapshot_download(repo_id="ibm-granite/granite-rag-3.0-8b-lora")
+        base_folder = huggingface_hub.snapshot_download(repo_id="ibm-granite/granite-3.0-8b-instruct", allow_patterns="*.json")
+        lora_gguf = "granite-rag-3.0-8b-lora-fp16.gguf"
+        subprocess.run(f"python3 llama.cpp/convert_lora_to_gguf.py --outtype f16 --outfile {lora_gguf} --base {base_folder} -- {lora_folder}",
+                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Write Modelfile for granite-rag:8b for Ollama
+        model_file = "Modelfile"
+        with open(model_file, "w") as modelfile:
+            modelfile.write(f"""\
+    FROM {granite3_base_model}
+    ADAPTER {lora_gguf}
+    """)
+
+        # Ideally we should use ollama.create() but there is no option to pass a modelfile
+        subprocess.run(f"ollama create {granite3_rag_model} -f Modelfile",
+                    shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Rm dependencies
+        os.remove(model_file)
+        if os.path.isdir(llama_cpp_dir_name):
+            shutil.rmtree(llama_cpp_dir_name)
+
+        result = f"Model {granite3_rag_model} not found on Ollama. Finished building {granite3_rag_model}"
+
 - role: system
   contribute: [context]
   text:
