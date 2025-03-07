@@ -2,7 +2,7 @@ text:
 - |
   Find the fastest way for a seller to visit all the cities in their region
   >> Response:
-- model: "granite3.2:2b"
+- model: "granite3.2:8b"
   backend: openai
   parameters: 
     thinking: true

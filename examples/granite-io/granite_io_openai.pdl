@@ -1,4 +1,4 @@
 text:
 - "Hello!\n"
-- model: "granite3.2:2b"
+- model: "granite3.2:8b"
   backend: openai

@@ -1,0 +1,100 @@
+defs:
+  lib:
+    import: lib
+
+  market_research_prompt:
+    call: ${ lib.span }
+    args:
+      content: >
+        Write a report on ${ PROSPECT_COMPANY }, detailing the company's needs, interests, and how ${ YOUR_PRODUCT } 
+        (further detailed in ${ PRODUCT_DESCRIPTION }, a new offering from ${ COMPANY }, can provide value to them).
+
+  no_lists_validation_prompt: 
+    object:
+      fn:
+        function: 
+          passage: str
+        return: 
+          call: ${ lib.span }
+          args:
+            content: |
+              Are there numbered lists in the report?
+              Report: ${ passage }
+              Reply Yes or No.
+
+  no_title_validation_prompt:   
+    object:
+      fn:
+        function: 
+          passage: str
+        return: 
+          call: ${ lib.span }
+          args:
+            content: |
+              Does the report have a title?
+              Report: ${ passage }
+              Reply Yes or No
+
+  no_lists_rewrite_prompt:
+    object:
+      fn:
+        function: 
+          passage: str
+        return: 
+          call: ${ lib.span }
+          args: 
+            content: |
+              This report is not properly formatted.  Read the report and then rewrite it so that there are no numbered lists.
+              Report: ${ passage }
+
+  no_title_rewrite_prompt:
+   object:
+      fn:
+        function: 
+          passage: str
+        return: 
+          call: ${ lib.span }
+          args: 
+            content: |
+              This report has a title.
+              Remove the title.
+              Report: ${ passage }
+              
+
+  req_list:
+    array:
+      # no_lists:
+    - call: ${ lib.requirement }
+      args:
+        description: Do not use numbered lists.
+        validation_prompt: ${ no_lists_validation_prompt }
+        validation_answer: "No"
+        rewrite_prompt: ${ no_lists_rewrite_prompt }
+
+      # no_title:
+    - call: ${ lib.requirement }
+      args:
+        description: Do not include a title in the report.
+        validation_prompt: ${ no_title_validation_prompt }
+        validation_answer: "No"
+        rewrite_prompt: ${ no_lists_rewrite_prompt }
+  
+  grounding_context:
+    object:
+      PRODUCT_DESCRIPTION:
+        call: ${ lib.span }
+        args:
+          content: ${ PRODUCT_DESCRIPTION }
+
+  research_instruction:
+    call: ${ lib.instruction }
+    args:
+      description: ${ market_research_prompt }
+      grounding_context: ${ grounding_context }
+      requirements: ${ req_list }
+
+text:
+- call: ${ lib.generate }
+  args:
+    instruction: ${ research_instruction }
+    model: ollama_chat/granite3.2:8b

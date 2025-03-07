@@ -1,0 +1,116 @@
+defs:
+  span:
+    function: 
+      content: str
+    return:
+      data:
+        content: ${ content }
+     
+  instruction:  
+    function:
+      description: obj
+      grounding_context: obj
+      requirements: list
+    return:
+      data:
+        description: ${ description }
+        grounding_context: ${ grounding_context }
+        requirements: ${ requirements }
+
+  requirement:
+    function:
+      description: str
+      validation_prompt: obj
+      validation_answer: str
+      rewrite_prompt: obj
+    return:
+      data:
+        description: ${ description }
+        validation_prompt: ${ validation_prompt }
+        validation_answer: ${ validation_answer }
+        rewrite_prompt: ${ rewrite_prompt }
+
+  validate: 
+    function:
+      validation_function: obj
+      passage: str
+      model: str
+    return:
+      lastOf:
+      - call: ${ validation_function.fn }
+        def: validation_prompt_span
+        #contribute: []
+        args:
+          passage: ${ passage }
+      - model: ${ model }
+        input: ${ validation_prompt_span.content }
+        parameters:
+          temperature: 0
+          stop: [","]
+
+  rewrite: 
+    function:
+      rewrite_function: obj
+      passage: str
+      model: str
+    return:
+      lastOf:
+      - call: ${ rewrite_function.fn }
+        def: rewrite_prompt_span
+        #contribute: []
+        args:
+          passage: ${ passage }
+      - model: ${ model }
+        input: ${ rewrite_prompt_span.content }
+
+  generate:
+    function:
+      instruction: obj
+      model: str
+    return:
+      text:
+      - "\n${ instruction.description.content }\n"
+      - "\nFulfill the following requirements:\n"
+      - for: 
+          requirement: ${ instruction.requirements }
+        repeat:
+          ${ requirement.description }
+        join:
+          with: "\n"
+      - "\n\nUse the following local variables:\n"
+      - for:
+          var: ${ instruction.grounding_context | items | list }
+        repeat:
+          "[${ var[0] }]: ${ var[1].content }"
+      - model: ${ model }
+        parameters:
+          temperature: 0
+        def: passage
+      - for: 
+          requirement: ${ instruction.requirements }
+        repeat:
+          text:
+          - "\n"
+          - call: ${ validate }
+            def: valid
+            args:
+              passage: ${ passage }
+              validation_function: ${ requirement.validation_prompt }
+              model: ${ model }
+          - if: ${ valid != requirement.validation_answer }
+            then:
+              text:
+              - "\nRewriting to satisfy the requirement: ${ requirement.description }\n"
+              - call: ${ rewrite }
+                #contribute: []
+                def: passage
+                args:
+                  passage: ${ passage }
+                  rewrite_function: ${ requirement.rewrite_prompt }
+                  model: ${ model }
+            else: 
+              "\nThe requirement: ${ requirement.description } is satisfied\n"
+
+
+             
+      
