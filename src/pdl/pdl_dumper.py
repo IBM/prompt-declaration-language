@@ -19,7 +19,7 @@ from .pdl_ast import (
     DataBlock,
     EmptyBlock,
     ErrorBlock,
-    FileAggregator,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -352,7 +352,7 @@ def aggregator_to_dict(aggregator: AggregatorType):
     match aggregator:
         case "messages" | "stdout" | "stderr":
             result = aggregator
-        case FileAggregator():
+        case FileAggregatorConfig():
             result = aggregator.model_dump()
         case _:
             assert False, "Unexpected aggregator"

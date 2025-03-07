@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 # from itertools import batched
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+from typing import IO, Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -51,7 +51,7 @@ from .pdl_ast import (  # noqa: E402
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
-    FileAggregator,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -62,6 +62,7 @@ from .pdl_ast import (  # noqa: E402
     LastOfBlock,
     LazyMessage,
     LazyMessages,
+    LeafBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -88,6 +89,7 @@ from .pdl_ast import (  # noqa: E402
     RepeatBlock,
     RoleType,
     ScopeType,
+    StructuredBlock,
     TextBlock,
     empty_block_location,
 )
@@ -1747,32 +1749,85 @@ class Aggregator(ABC):
     @abstractmethod
     def contribute(
         self,
-        result: Any,
+        result: PdlLazy[Any],
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
-    ) -> None: ...
+    ) -> None:
+        """Function executed at the end of each block that contain the aggregator
+
+        Args:
+            result: value computed by the block
+            role: role associated to the block. Defaults to None.
+            loc: source code location of the block. Defaults to None.
+            block: block contributing the value. Defaults to None.
+        """
 
     @abstractmethod
     def snapshot(self) -> Any:
         """Return a copy of the state of the aggregator."""
 
+    @abstractmethod
+    def dup(self) -> "Aggregator":
+        """Return a copy of the state of the aggregator."""
+
 
 class MessagesAggregator(Aggregator):
-    def __init__(self):
-        self.messages = PdlList([])
+    def __init__(self, messages: Optional[LazyMessages] = None):
+        if messages is None:
+            self.messages: LazyMessages = PdlList([])
+        else:
+            self.messages = messages
 
     def contribute(
         self,
-        result: Any,
+        result: PdlLazy[Any],
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
     ):
-        block_id = ".".join(block.get("pdl__id", []))
-        msg = PdlList([PdlDict({"role": role, "content": result, "defsite": block_id})])
-        self.messages = lazy_messages_concat(self.messages, msg)
-        return super().contribute(result, role, loc, block)
+        match block:
+            case None | StructuredBlock():
+                return
+            case LeafBlock():
+                block_id = ".".join(block.pdl__id or [])
+                msg = {"role": role, "content": result, "defsite": block_id}
+            case _:
+                msg = {"role": role, "content": result}
+        self.messages = lazy_messages_concat(self.messages, PdlList([PdlDict(msg)]))
+
+    def snapshot(self) -> LazyMessages:
+        return self.messages
+
+    def dup(self) -> "MessagesAggregator":
+        return MessagesAggregator(self.messages)
+
+
+class FileAggregator(Aggregator):
+    def __init__(
+        self, fp: IO, prefix: str = "", suffix: str = "\n", flush: bool = False
+    ):
+        self.fp = fp
+        self.prefix = prefix
+        self.suffix = suffix
+        self.flush = flush
+
+    def contribute(
+        self,
+        result: PdlLazy[Any],
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ) -> None:
+        print(f"{self.prefix}{result}", file=self.fp, end=self.suffix, flush=self.flush)
+
+    def snapshot(self) -> Any:
+        """Return a copy of the state of the aggregator."""
+        None
+
+    def dup(self) -> "Aggregator":
+        """Return a copy of the state of the aggregator."""
+        return self
 
 
 def process_aggregator(
@@ -1783,11 +1838,20 @@ def process_aggregator(
 ) -> tuple[Any, LazyMessages, ScopeType, AggregatorBlock]:
     match block.aggregator:
         case "messages":
-            pass
-        case "stdout" | "stderr" | FileAggregator():
-            pass
+            aggregator = MessagesAggregator()
+        case "stdout":
+            aggregator = FileAggregator(sys.stdout)
+        case "stderr":
+            aggregator = FileAggregator(sys.stderr)
+        case FileAggregatorConfig():
+            cfg = block.aggregator
+            fp = open(cfg.file, mode=cfg.mode, encoding=cfg.encoding)
+            aggregator = FileAggregator(
+                fp, prefix=cfg.prefix, suffix=cfg.suffix, flush=cfg.flush
+            )
         case _:
             assert False, "Unexpected aggregator"
+    return aggregator
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None

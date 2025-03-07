@@ -749,11 +749,24 @@ class AggregatorConfig(BaseModel):
     """
 
 
-class FileAggregator(AggregatorConfig):
+class FileAggregatorConfig(AggregatorConfig):
     file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: str = "w"
+    """File opening mode."""
+    encoding: Optional[str] = "utf-8"
+    """File encoding."""
+    prefix: str = ""
+    """Prefix to the contributed value."""
+    suffix: str = "\n"
+    """Suffix to the contributed value."""
+    flush: bool = False
+    """Whether to forcibly flush the stream."""
 
 
-AggregatorType: TypeAlias = Literal["messages", "stdout", "stderr"] | FileAggregator
+AggregatorType: TypeAlias = (
+    Literal["messages", "stdout", "stderr"] | FileAggregatorConfig
+)
 
 
 class AggregatorBlock(Block):
