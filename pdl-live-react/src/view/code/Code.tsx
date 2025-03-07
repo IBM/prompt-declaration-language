@@ -61,7 +61,7 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     return data
   }
   // remove pdl__result
-  const new_data = { ...data, pdl__result: undefined }
+  const new_data = { ...data, pdl__result: undefined, pdl__is_leaf: undefined }
   // remove trace
   match(new_data).with({ pdl__trace: P._ }, (data) => {
     delete data.pdl__trace
