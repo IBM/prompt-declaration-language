@@ -19,3 +19,4 @@ cat "$TOP"/examples/talk/6-code-json.pdl | sed -E 's#(model: )(.+)#\1ollama_chat
     && rm "$TOP"/examples/talk/6-code-json.pdl.tmp
 pdl --trace "$T"/demo6.json "$UI"/demos/error.pdl || true
 pdl --trace "$T"/demo7.json <(cat "$TOP"/examples/talk/4-function.pdl | sed -E 's#(model: )(.+)#\1ollama_chat/granite3.2:2b#g')
+pdl --trace "$T"/demo8.json <(cat "$TOP"/examples/intrinsics/demo-hallucination.pdl)

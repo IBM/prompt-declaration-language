@@ -166,3 +166,6 @@ src/pdl/_version.py
 
 # Mac
 .DS_Store
+
+# Model files
+*.gguf
