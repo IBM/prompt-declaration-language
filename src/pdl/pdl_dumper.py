@@ -1,6 +1,6 @@
 import datetime
 import json
-from typing import Any, Sequence, TypeAlias
+from typing import Any, Iterable, Sequence, TypeAlias
 
 import yaml
 
@@ -142,7 +142,7 @@ def block_to_dict(  # noqa: C901
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
-            d["data"] = block.data
+            d["data"] = data_to_dict(block.data, json_compatible)
             if block.raw:
                 d["raw"] = block.raw
         case TextBlock():
@@ -217,7 +217,7 @@ def block_to_dict(  # noqa: C901
             #     d["scope"] = scope_to_dict(block.scope, json_compatible)
         case CallBlock():
             d["call"] = block.call
-            d["args"] = block.args
+            d["args"] = data_to_dict(block.args, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = block_to_dict(
                     block.pdl__trace, json_compatible
@@ -251,6 +251,14 @@ def block_to_dict(  # noqa: C901
     if block.pdl__timing is not None:
         d["pdl__timing"] = timing_to_dict(block.pdl__timing)
     d["pdl__is_leaf"] = block.pdl__is_leaf
+    return d
+
+
+def data_to_dict(data: Any, json_compatible):
+    if json_compatible:
+        d = as_json(data)
+    else:
+        d = data
     return d
 
 
@@ -302,7 +310,9 @@ def join_to_dict(join: JoinType) -> dict[str, Any]:
     return d
 
 
-JsonType: TypeAlias = None | bool | int | float | str | dict[str, "JsonType"]
+JsonType: TypeAlias = (
+    None | bool | int | float | str | list["JsonType"] | dict[str, "JsonType"]
+)
 
 
 def as_json(value: Any) -> JsonType:
@@ -312,6 +322,8 @@ def as_json(value: Any) -> JsonType:
         return value
     if isinstance(value, dict):
         return {str(k): as_json(v) for k, v in value.items()}
+    if isinstance(value, Iterable):
+        return [as_json(v) for v in value]
     return str(value)
 
 

@@ -116,7 +116,7 @@ export default function MasonryTile({
 
   const hasFooter = (footer1Key && footer1Value) || (stability?.length ?? 0) > 0
   const footer = hasFooter && (
-    <DescriptionList isAutoColumnWidths columnModifier={{ default: "3Col" }}>
+    <DescriptionList className="pdl-masonry-tile-footer-dl">
       {footer1Key && (
         <DescriptionListGroup>
           <DescriptionListTerm>{footer1Key}</DescriptionListTerm>
@@ -187,18 +187,20 @@ function renderValue({
     return (
       <Flex className="pdl-masonry-tile-stability-grid">
         {value.map((v, idx) => {
-          const quartile = Math.round(v / 0.25)
+          const quartile =
+            v >= 0.925 ? 4 : v >= 0.7 ? 3 : v >= 0.6 ? 2 : v >= 0.5 ? 1 : 0
           const { i, j } = lookup[idx]
 
           return (
             <Popover
               key={idx}
               hasAutoWidth
+              maxWidth="450px"
               triggerAction="hover"
               className="pdl-masonry-tile-stability-popover"
               headerContent={detailHeader}
               bodyContent={
-                <Stack hasGutter>
+                <Stack>
                   <Progress
                     size="sm"
                     variant={
@@ -209,35 +211,45 @@ function renderValue({
                           : "success"
                     }
                     value={100 * v}
-                    title="A/B Match"
+                    title={
+                      v === 1
+                        ? "Perfect Match!"
+                        : "A/B Comparison of Differences"
+                    }
                   />
-                  <Split hasGutter>
+                  <Split>
                     <Panel
                       isScrollable
                       className="pdl-masonry-tile-stability-popover-ab-panel"
+                      data-perfect-match={v === 1 || undefined}
                     >
-                      <PanelHeader>
-                        <Title headingLevel="h4">A</Title>
-                      </PanelHeader>
-                      <PanelMain maxHeight="400px">
+                      {v < 1 && (
+                        <PanelHeader>
+                          <Title headingLevel="h4">A</Title>
+                        </PanelHeader>
+                      )}
+                      <PanelMain maxHeight="300px">
                         <PanelMainBody>
                           <Result result={detailBody?.[i]} term="" />
                         </PanelMainBody>
                       </PanelMain>
                     </Panel>
-                    <Panel
-                      isScrollable
-                      className="pdl-masonry-tile-stability-popover-ab-panel"
-                    >
-                      <PanelHeader>
-                        <Title headingLevel="h4">B</Title>
-                      </PanelHeader>
-                      <PanelMain maxHeight="400px">
-                        <PanelMainBody>
-                          <Result result={detailBody?.[j]} term="" />
-                        </PanelMainBody>
-                      </PanelMain>
-                    </Panel>
+                    {v < 1 && (
+                      <Panel
+                        isScrollable
+                        variant="secondary"
+                        className="pdl-masonry-tile-stability-popover-ab-panel"
+                      >
+                        <PanelHeader>
+                          <Title headingLevel="h4">B</Title>
+                        </PanelHeader>
+                        <PanelMain maxHeight="300px">
+                          <PanelMainBody>
+                            <Result result={detailBody?.[j]} term="" />
+                          </PanelMainBody>
+                        </PanelMain>
+                      </Panel>
+                    )}
                   </Split>
                 </Stack>
               }

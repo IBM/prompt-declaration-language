@@ -1,8 +1,17 @@
+.pdl-masonry-tile-footer-dl {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
 .pdl-masonry-tile-footer2-dg {
   align-items: center;
 }
+
 .pdl-masonry-tile-stability-grid {
   gap: 2px;
+  height: 1em;
+  align-items: flex-end;
 }
 .pdl-masonry-tile-stability-cell {
   width: 1rem;
@@ -41,5 +50,32 @@
 }
 
 .pdl-masonry-tile-stability-popover-ab-panel {
-  max-width: 300px;
+  .pf-v6-c-panel__main-body {
+    padding-bottom: 0;
+  }
+  &:not([data-perfect-match]) {
+    max-width: 300px;
+  }
+
+  &:first-child {
+    .pf-v6-c-panel__main-body,
+    .pf-v6-c-panel__header {
+      padding-left: 0;
+    }
+  }
+  &:last-child {
+    .pf-v6-c-panel__main-body,
+    .pf-v6-c-panel__header {
+      padding-right: 0;
+    }
+  }
+  &[data-perfect-match] {
+    .pf-v6-c-panel__main-body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+.pdl-masonry-tile-stability-popover-ab-panel-mainbody {
+  margin-left: 0;
 }
