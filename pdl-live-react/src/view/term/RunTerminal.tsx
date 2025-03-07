@@ -47,7 +47,7 @@ export default function RunTerminal({ cmd, args = [], onExit, cancel }: Props) {
     const term = new Terminal({
       fontFamily:
         '"Red Hat Mono", RedHatMono, "Courier New", Courier, monospace',
-      fontSize: 14,
+      fontSize: 12,
     })
     setTerm(term)
     return () => {
