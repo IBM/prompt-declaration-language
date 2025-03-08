@@ -1796,7 +1796,8 @@ class MessagesAggregator(Aggregator):
                 msg = {"role": role, "content": result, "defsite": block_id}
             case _:
                 msg = {"role": role, "content": result}
-        self.messages = lazy_messages_concat(self.messages, PdlList([PdlDict(msg)]))
+        msgs: LazyMessages = PdlList([PdlDict(msg)])  # type: ignore
+        self.messages = lazy_messages_concat(self.messages, msgs)
 
     def snapshot(self) -> LazyMessages:
         return self.messages
@@ -1825,7 +1826,7 @@ class FileAggregator(Aggregator):
 
     def snapshot(self) -> Any:
         """Return a copy of the state of the aggregator."""
-        None
+        return None
 
     def dup(self) -> "Aggregator":
         """Return a copy of the state of the aggregator."""
@@ -1838,6 +1839,7 @@ def process_aggregator(
     block: AggregatorBlock,
     loc: PdlLocationType,
 ) -> tuple[Any, LazyMessages, ScopeType, AggregatorBlock]:
+    aggregator: Aggregator
     match block.aggregator:
         case "messages":
             aggregator = MessagesAggregator()
@@ -1846,14 +1848,39 @@ def process_aggregator(
         case "stderr":
             aggregator = FileAggregator(sys.stderr)
         case FileAggregatorConfig():
-            cfg = block.aggregator
-            fp = open(cfg.file, mode=cfg.mode, encoding=cfg.encoding)
-            aggregator = FileAggregator(
-                fp, prefix=cfg.prefix, suffix=cfg.suffix, flush=cfg.flush
+            try:
+                cfg = block.aggregator
+                file: str = process_expr(scope, cfg.file, loc)
+                mode: str = process_expr(scope, cfg.mode, loc)
+                encoding: Optional[str] = process_expr(scope, cfg.encoding, loc)
+                prefix: str = process_expr(scope, cfg.prefix, loc)
+                suffix: str = process_expr(scope, cfg.suffix, loc)
+                flush: bool = process_expr(scope, cfg.flush, loc)
+                cfg = block.aggregator.model_copy(
+                    update={
+                        "file": file,
+                        "mode": mode,
+                        "encoding": encoding,
+                        "prefix": prefix,
+                        "suffix": suffix,
+                        "flush": flush,
+                    }
+                )
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                ) from exc
+            fp = open(  # pylint: disable=consider-using-with
+                file, mode=mode, encoding=encoding
             )
+            aggregator = FileAggregator(fp, prefix=prefix, suffix=suffix, flush=flush)
         case _:
             assert False, "Unexpected aggregator"
-    return aggregator
+    background: LazyMessages = PdlList([])
+    trace = block.model_copy(update={})
+    return aggregator, background, scope, trace
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None

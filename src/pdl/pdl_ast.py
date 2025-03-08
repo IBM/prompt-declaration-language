@@ -752,15 +752,15 @@ class AggregatorConfig(BaseModel):
 class FileAggregatorConfig(AggregatorConfig):
     file: ExpressionType[str]
     """Name of the file to which contribute."""
-    mode: str = "w"
+    mode: ExpressionType[str] = "w"
     """File opening mode."""
-    encoding: Optional[str] = "utf-8"
+    encoding: ExpressionType[Optional[str]] = "utf-8"
     """File encoding."""
-    prefix: str = ""
+    prefix: ExpressionType[str] = ""
     """Prefix to the contributed value."""
-    suffix: str = "\n"
+    suffix: ExpressionType[str] = "\n"
     """Suffix to the contributed value."""
-    flush: bool = False
+    flush: ExpressionType[bool] = False
     """Whether to forcibly flush the stream."""
 
 
@@ -769,7 +769,7 @@ AggregatorType: TypeAlias = (
 )
 
 
-class AggregatorBlock(Block):
+class AggregatorBlock(LeafBlock):
     """Create a new aggregator that can be use in the `contribute` field."""
 
     kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
@@ -813,6 +813,7 @@ AdvancedBlockType: TypeAlias = (
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
 )
