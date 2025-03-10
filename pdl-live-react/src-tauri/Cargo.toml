@@ -19,7 +19,7 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 #tauri-plugin-pty= { path = "../../../tauri-plugin-pty" }
-tauri-plugin-pty= { git = "https://github.com/starpit/tauri-plugin-pty", branch = "tauri2" }
+tauri-plugin-pty= "0.1"
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
