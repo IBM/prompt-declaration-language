@@ -6,6 +6,8 @@ use duct::cmd;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
 
+use crate::interpreter::load;
+
 #[cfg(desktop)]
 fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri::Error> {
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
@@ -79,6 +81,9 @@ pub fn run_pdl_program(
         "Running {:#?}",
         Path::new(&source_file_path).file_name().unwrap()
     );
+
+    let _ = load::pull_if_needed(&source_file_path);
+
     let bin_path = pip_install_if_needed(app_handle)?;
     let trace_arg = if let Some(arg) = trace_file {
         if let serde_json::Value::String(f) = &arg.value {
