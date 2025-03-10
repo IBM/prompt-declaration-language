@@ -47,12 +47,18 @@ fn extract_models(program: Yaml) -> Vec<String> {
 }
 
 /// Pull models (in parallel) from the PDL program in the given filepath.
-pub fn pull_if_needed(path: &String) -> Result<(), LoadError> {
-    from_path(path)
+pub async fn pull_if_needed(path: &String) -> Result<(), LoadError> {
+    let mut models = from_path(path)
         .unwrap()
         .into_iter()
         .flat_map(extract_models)
-        .collect::<Vec<String>>()
+        .collect::<Vec<String>>();
+
+    // A single program may specify the same model more than once. Dedup!
+    models.sort();
+    models.dedup();
+
+    models
         .into_par_iter()
         .try_for_each(|model| match model {
             m if model.starts_with("ollama/") => ollama_pull(&m[7..]),
