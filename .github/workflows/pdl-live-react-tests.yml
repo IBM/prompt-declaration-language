@@ -35,7 +35,7 @@ jobs:
       - name: Test pdl-live viewer
         run: npm test
       - name: Test production build
-        run: npm run tauri build
+        run: npm run tauri build -- --bundles deb # Skip testing appimage, is this dangerous? It's slow...
       - name: Setup xvfb for screen 0
         run: Xvfb :1 -screen 0 1600x1200x24 &      
       - name: Run production build
