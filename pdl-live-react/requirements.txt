@@ -29,7 +29,7 @@ jiter==0.8.2
 json_repair==0.39.1
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
-litellm==1.61.20
+litellm==1.63.3
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
 multidict==6.1.0
