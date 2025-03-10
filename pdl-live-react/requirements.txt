@@ -33,7 +33,7 @@ litellm==1.63.3
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
 multidict==6.1.0
-openai==1.65.2
+openai==1.65.5
 packaging==24.2
 parso==0.8.4
 pexpect==4.9.0
