@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Optional
 
 import yaml
 from pydantic import ValidationError
@@ -19,7 +20,11 @@ def parse_file(pdl_file: str | Path) -> tuple[Program, PdlLocationType]:
     return parse_str(prog_str, file_name=str(pdl_file))
 
 
-def parse_str(pdl_str: str, file_name: str = "") -> tuple[Program, PdlLocationType]:
+def parse_str(
+    pdl_str: str, file_name: Optional[str] = None
+) -> tuple[Program, PdlLocationType]:
+    if file_name is None:
+        file_name = ""
     prog_yaml = yaml.safe_load(pdl_str)
     line_table = get_line_map(pdl_str)
     loc = PdlLocationType(path=[], file=file_name, table=line_table)
