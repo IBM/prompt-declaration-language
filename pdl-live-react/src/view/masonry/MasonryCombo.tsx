@@ -117,11 +117,13 @@ export default function MasonryCombo({ value, setValue }: Props) {
   // special form of setModalContent for running a PDL program
   const run = useCallback<Runner>(
     async (runThisBlock, async = false, update) => {
-      if (!isNonScalarPdlBlock(block) || !isNonScalarPdlBlock(runThisBlock)) {
+      if (!isNonScalarPdlBlock(block)) {
         return
-      }
-      if (!runThisBlock) {
+      } else if (!runThisBlock) {
         runThisBlock = block
+      }
+      if (!isNonScalarPdlBlock(runThisBlock)) {
+        return
       }
 
       const [cmd, input, output] = (await invoke("replay_prep", {
