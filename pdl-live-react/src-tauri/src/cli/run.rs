@@ -2,6 +2,8 @@ use ::file_diff::diff;
 use ::std::fs::{copy, create_dir_all};
 use ::std::path::{Path, PathBuf};
 use duct::cmd;
+use futures::executor::block_on;
+use yaml_rust2::yaml::LoadError;
 
 use tauri::path::BaseDirectory;
 use tauri::Manager;
@@ -9,7 +11,7 @@ use tauri::Manager;
 use crate::interpreter::load;
 
 #[cfg(desktop)]
-fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri::Error> {
+async fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri::Error> {
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
 
     create_dir_all(&cache_path)?;
@@ -82,9 +84,9 @@ pub fn run_pdl_program(
         Path::new(&source_file_path).file_name().unwrap()
     );
 
-    let _ = load::pull_if_needed(&source_file_path);
+    let pull_future = load::pull_if_needed(&source_file_path);
+    let bin_path_future = pip_install_if_needed(app_handle);
 
-    let bin_path = pip_install_if_needed(app_handle)?;
     let trace_arg = if let Some(arg) = trace_file {
         if let serde_json::Value::String(f) = &arg.value {
             "--trace=".to_owned() + f
@@ -114,6 +116,15 @@ pub fn run_pdl_program(
     } else {
         "".to_owned()
     };
+
+    // wait for any model pulls to finish
+    block_on(pull_future).map_err(|e| match e {
+        LoadError::IO(ee) => tauri::Error::Io(ee),
+        LoadError::Scan(ee) => tauri::Error::Anyhow(ee.into()),
+        _ => tauri::Error::FailedToReceiveMessage,
+    })?;
+
+    let bin_path = block_on(bin_path_future)?;
 
     let mut args = vec![
         source_file_path.as_str(),
