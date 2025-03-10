@@ -78,7 +78,10 @@ class GraniteioModel:
             io_processor = GraniteioModel.processor_of_block(block)
             inputs = GraniteioModel.build_message(messages, block.parameters)
             result = io_processor.create_chat_completion(inputs)  # pyright: ignore
-            message = result.next_message.model_dump()
+            try: # TODO: update when new version of granite-io is released
+                message = result.next_message.model_dump()
+            except AttributeError:
+                message = result.results[0].next_message.model_dump()
             raw_result = result.model_dump()
             return (
                 message,
