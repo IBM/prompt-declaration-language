@@ -1,0 +1,27 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
+enum PdlBlock {
+    LiteLlmModelBLock,
+    TextBlock,
+}
+
+#[derive(Serialize, Deserialize)]
+struct TextBlock {
+  description: Option<str>,
+  defs?: Defs10
+  def?: Def9
+  contribute?: Contribute9
+  parser?: Parser9
+  fallback?: Fallback9
+  role?: Role9
+  context?: Context9
+  pdl__id?: PdlId9
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf9
+  kind?: Kind9
+  text: Text
+    
+}
