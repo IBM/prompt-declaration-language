@@ -135,6 +135,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -524,6 +527,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -1018,6 +1024,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -1475,6 +1484,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -1944,6 +1956,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -2311,6 +2326,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -2654,6 +2672,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -3200,6 +3221,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -3645,6 +3669,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -3996,6 +4023,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -4599,6 +4629,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -5144,6 +5177,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -5579,6 +5615,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -6086,6 +6125,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -6519,6 +6561,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -7514,6 +7559,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -8065,6 +8113,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -8495,6 +8546,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -9505,6 +9559,9 @@
                 "$ref": "#/$defs/ContributeTarget"
               },
               {
+                "type": "string"
+              },
+              {
                 "additionalProperties": {
                   "$ref": "#/$defs/ContributeValue"
                 },
@@ -9936,6 +9993,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -10562,6 +10622,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {

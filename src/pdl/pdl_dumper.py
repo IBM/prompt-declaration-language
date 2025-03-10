@@ -14,8 +14,8 @@ from .pdl_ast import (
     Block,
     CallBlock,
     CodeBlock,
+    ContributeElement,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
@@ -349,7 +349,7 @@ def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
 
 
 def contribute_to_list(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]]
+    contribute: Sequence[ContributeElement],
 ) -> list[str | dict[str, Any]]:
     acc: list[str | dict[str, Any]] = []
     for contrib in contribute:

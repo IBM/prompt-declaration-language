@@ -45,8 +45,8 @@ from .pdl_ast import (  # noqa: E402
     BlockType,
     CallBlock,
     CodeBlock,
+    ContributeElement,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
@@ -407,7 +407,8 @@ def process_advanced_block(
         result = PdlConst("")
     if ContributeTarget.CONTEXT not in block.contribute:
         background = PdlList([])
-    contribute_value, trace = process_contribute(trace, new_scope, loc)
+    contribute_value, trace = process_contribute_old(trace, new_scope, loc)
+    trace = process_contribute(trace, result, new_scope, loc)
     if contribute_value is not None:
         background = contribute_value
 
@@ -1043,18 +1044,18 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     return result
 
 
-BlockTypeTVarProcessContribute = TypeVar(
-    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
+BlockTypeTVarProcessContributeOld = TypeVar(
+    "BlockTypeTVarProcessContributeOld", bound=AdvancedBlockType
 )
 
 
-def process_contribute(
-    block: BlockTypeTVarProcessContribute, scope: ScopeType, loc: PdlLocationType
-) -> tuple[Any, BlockTypeTVarProcessContribute]:
+def process_contribute_old(
+    block: BlockTypeTVarProcessContributeOld, scope: ScopeType, loc: PdlLocationType
+) -> tuple[Any, BlockTypeTVarProcessContributeOld]:
     value = get_contribute_value(block.contribute)
     loc = append(loc, "contribute")
     try:
-        result: ContributeValue = process_expr(scope, value, loc)  # pyright: ignore
+        result: Any = process_expr(scope, value, loc)  # pyright: ignore
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1064,6 +1065,81 @@ def process_contribute(
     replace = replace_contribute_value(block.contribute, result)
     trace = block.model_copy(update={"contribute": replace})
     return result, trace
+
+
+BlockTypeTVarProcessContribute = TypeVar(
+    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
+)
+
+
+def process_contribute(
+    block: BlockTypeTVarProcessContribute,
+    result: Any,
+    scope: ScopeType,
+    loc: PdlLocationType,
+) -> BlockTypeTVarProcessContribute:
+    loc = append(loc, "contribute")
+    contribute = [
+        process_contribution(
+            block, elem, result, scope, append(loc, "[" + str(i) + "]")
+        )
+        for i, elem in enumerate(block.contribute)
+    ]
+    trace = block.model_copy(update={"contribute": contribute})
+    return trace
+
+
+def process_contribution(
+    block: AdvancedBlockType,
+    elem: ContributeElement,
+    result: Any,
+    scope: ScopeType,
+    loc: PdlLocationType,
+) -> ContributeElement:
+    if elem in ContributeTarget:
+        return elem
+    if isinstance(elem, str):
+        aggregator = get_var(elem, scope, loc)
+    elif isinstance(elem, dict):
+        if len(elem) != 1:
+            msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
+            raise PDLRuntimeError(
+                msg,
+                loc=loc,
+                trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+                fallback=[],
+            )
+        target, contribute_value = list(elem.items()).pop()
+        aggregator = get_var(target, scope, loc)
+        try:
+            result = process_expr(scope, contribute_value.value, loc)
+        except PDLRuntimeExpressionError as exc:
+            raise PDLRuntimeError(
+                exc.message,
+                loc=exc.loc or loc,
+                trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            ) from exc
+        elem = {target: result}
+    else:
+        msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
+        raise PDLRuntimeError(
+            msg,
+            loc=loc,
+            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+            fallback=[],
+        )
+    if isinstance(aggregator, PdlLazy):
+        aggregator = aggregator.result()
+    if not isinstance(aggregator, Aggregator):
+        msg = f"An aggregator was expected but got a value of type {type(aggregator)}."
+        raise PDLRuntimeError(
+            msg,
+            loc=loc,
+            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+            fallback=[],
+        )
+    aggregator.contribute(result, block.role, loc, block)
+    return elem
 
 
 BlockTypeTVarProcessExprOf = TypeVar(
@@ -1838,7 +1914,7 @@ def process_aggregator(
     scope: ScopeType,
     block: AggregatorBlock,
     loc: PdlLocationType,
-) -> tuple[Any, LazyMessages, ScopeType, AggregatorBlock]:
+) -> tuple[PdlLazy[Aggregator], LazyMessages, ScopeType, AggregatorBlock]:
     aggregator: Aggregator
     match block.aggregator:
         case "messages":
@@ -1880,7 +1956,7 @@ def process_aggregator(
             assert False, "Unexpected aggregator"
     background: LazyMessages = PdlList([])
     trace = block.model_copy(update={})
-    return aggregator, background, scope, trace
+    return PdlConst(aggregator), background, scope, trace
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None

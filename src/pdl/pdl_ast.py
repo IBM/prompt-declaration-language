@@ -180,6 +180,9 @@ class ContributeValue(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+ContributeElement: TypeAlias = ContributeTarget | str | dict[str, ContributeValue]
+
+
 class PdlTiming(BaseModel):
     """Internal data structure to record timing information in the trace."""
 
@@ -219,7 +222,7 @@ class Block(BaseModel):
     def_: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
+    contribute: Sequence[ContributeElement] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]

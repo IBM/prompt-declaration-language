@@ -3,6 +3,7 @@ import json
 from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 
 from .pdl_ast import (
+    ContributeElement,
     ContributeTarget,
     ContributeValue,
     FunctionBlock,
@@ -63,8 +64,8 @@ def stringify(result):
     return s
 
 
-def replace_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+def replace_contribute_value(  # TODO: remove
+    contribute: Sequence[ContributeElement],
     value: ContributeValue,
 ):
     ret = []
@@ -77,8 +78,8 @@ def replace_contribute_value(
     return ret
 
 
-def get_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None
+def get_contribute_value(  # TODO: remove
+    contribute: Sequence[ContributeElement] | None,
 ):
     if contribute is None:
         return None
