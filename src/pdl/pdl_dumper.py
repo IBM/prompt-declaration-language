@@ -136,6 +136,7 @@ def block_to_dict(  # noqa: C901
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
+            d["requirements"] = block.requirements
         case GetBlock():
             d["get"] = block.get
         case DataBlock():

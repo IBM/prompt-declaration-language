@@ -2,9 +2,18 @@ use ::std::path::Path;
 use duct::cmd;
 use futures::executor::block_on;
 use yaml_rust2::yaml::LoadError;
+use yaml_rust2::{ScanError, Yaml, YamlLoader};
 
-use crate::interpreter::pip::pip_install_interpreter_if_needed;
+use crate::interpreter::pip::{
+    pip_install_code_blocks_if_needed, pip_install_interpreter_if_needed,
+};
 use crate::interpreter::pull::pull_if_needed;
+
+/// Read the given filesystem path and produce a potentially multi-document Yaml
+fn from_path(path: &String) -> Result<Vec<Yaml>, ScanError> {
+    let content = std::fs::read_to_string(path).unwrap();
+    YamlLoader::load_from_str(&content)
+}
 
 #[cfg(desktop)]
 pub fn run_pdl_program(
@@ -20,8 +29,10 @@ pub fn run_pdl_program(
     );
 
     // async the model pull and pip installs
-    let pull_future = pull_if_needed(&source_file_path);
-    let bin_path_future = pip_install_interpreter_if_needed(app_handle);
+    let program = &from_path(&source_file_path).unwrap()[0];
+    let pull_future = pull_if_needed(&program);
+    let reqs_future = pip_install_code_blocks_if_needed(&app_handle, &program);
+    let bin_path_future = pip_install_interpreter_if_needed(&app_handle);
 
     // wait for any model pulls to finish
     block_on(pull_future).map_err(|e| match e {
@@ -32,6 +43,7 @@ pub fn run_pdl_program(
 
     // wait for any pip installs to finish
     let bin_path = block_on(bin_path_future)?;
+    block_on(reqs_future)?;
 
     let mut args = vec![
         source_file_path,

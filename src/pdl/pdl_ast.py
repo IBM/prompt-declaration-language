@@ -15,7 +15,14 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, RootModel
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    RootModel,
+    model_validator,
+)
 from pydantic.json_schema import SkipJsonSchema
 
 from .pdl_lazy import PdlDict, PdlLazy
@@ -462,9 +469,20 @@ class CodeBlock(LeafBlock):
     ]
     """Programming language of the code.
     """
+    requirements: Optional[str | list[str]] = None
+    """Pip requirements.txt
+    """
     code: "BlockType"
     """Code to execute.
     """
+
+    @model_validator(mode="after")
+    def lang_is_python(self):
+        if self.requirements is not None and self.lang != "python":
+            raise ValueError(
+                "CodeBlock requirements field provided for non-python block"
+            )
+        return self
 
 
 class GetBlock(LeafBlock):
