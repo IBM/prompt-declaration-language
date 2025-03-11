@@ -6,6 +6,7 @@ import demo5 from "./demo5.json"
 import demo6 from "./demo6.json"
 import demo7 from "./demo7.json"
 import demo8 from "./demo8.json"
+import demo9 from "./demo9.json"
 
 export type Demo = {
   name: string
@@ -21,6 +22,7 @@ const demos: Demo[] = [
   demo6,
   demo7,
   demo8,
+  demo9,
 ].map((demo) => ({
   name: demo.description,
   trace: JSON.stringify(demo),
