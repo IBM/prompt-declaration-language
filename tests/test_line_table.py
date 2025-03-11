@@ -72,7 +72,6 @@ line7 = {
     "file": "tests/data/line/hello7.pdl",
     "errors": [
         "",
-        "tests/data/line/hello7.pdl:4 - Missing required field: lang",
         "tests/data/line/hello7.pdl:4 - Field not allowed: lans",
     ],
 }

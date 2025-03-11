@@ -9,7 +9,8 @@ export default function CodeItems({
 }: {
   block:
     | import("../../../pdl_ast").ArgsBlock
-    | import("../../../pdl_ast").CodeBlock
+    | import("../../../pdl_ast").PythonCodeBlock
+    | import("../../../pdl_ast").NonPythonCodeBlock
 }) {
   const { lang, pdl__result } = block
   const code = isArgs(block) ? block.args.join(" ") : block.code

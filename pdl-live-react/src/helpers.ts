@@ -5,7 +5,8 @@ import type {
   PdlBlock,
   TextBlock,
   ArgsBlock,
-  CodeBlock,
+  PythonCodeBlock,
+  NonPythonCodeBlock,
 } from "./pdl_ast"
 
 /** Re-export for convenience */
@@ -298,6 +299,8 @@ export function extractStructuredModelResponse({
   return { resultForDisplay, lang, meta }
 }
 
-export function isArgs(block: ArgsBlock | CodeBlock): block is ArgsBlock {
+export function isArgs(
+  block: ArgsBlock | PythonCodeBlock | NonPythonCodeBlock,
+): block is ArgsBlock {
   return Array.isArray((block as ArgsBlock).args)
 }

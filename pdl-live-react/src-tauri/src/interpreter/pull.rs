@@ -1,19 +1,13 @@
 use duct::cmd;
 use rayon::prelude::*;
 use yaml_rust2::yaml::LoadError;
-use yaml_rust2::{ScanError, Yaml, YamlLoader};
+use yaml_rust2::Yaml;
 
 use crate::interpreter::extract;
 
-/// Read the given filesystem path and produce a potentially multi-document Yaml
-fn from_path(path: &String) -> Result<Vec<Yaml>, ScanError> {
-    let content = std::fs::read_to_string(path).unwrap();
-    YamlLoader::load_from_str(&content)
-}
-
 /// Pull models (in parallel) from the PDL program in the given filepath.
-pub async fn pull_if_needed(path: &String) -> Result<(), LoadError> {
-    extract::extract_models(from_path(path).unwrap())
+pub async fn pull_if_needed(program: &Yaml) -> Result<(), LoadError> {
+    extract::extract_models(program)
         .into_par_iter()
         .try_for_each(|model| match model {
             m if model.starts_with("ollama/") => ollama_pull_if_needed(&m[7..]),
