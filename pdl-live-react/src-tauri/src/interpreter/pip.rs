@@ -64,7 +64,7 @@ fn pip_install_if_needed(
 pub async fn pip_install_code_blocks_if_needed(
     app_handle: &tauri::AppHandle,
     program: &Yaml,
-) -> Result<(), tauri::Error> {
+) -> Result<Option<Yaml>, tauri::Error> {
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
 
     // for now, install the requirements in the main interpreter venv
@@ -72,9 +72,9 @@ pub async fn pip_install_code_blocks_if_needed(
         .path()
         .resolve("interpreter/requirements.txt", BaseDirectory::Resource)?;
 
-    extract::extract_requirements(program)
+    let n = extract::extract_requirements(&program)
         .into_par_iter()
-        .try_for_each(|req| -> Result<(), tauri::Error> {
+        .map(|req| -> Result<usize, tauri::Error> {
             let req_path = Builder::new()
                 .prefix("pdl-requirements-")
                 .suffix(".txt")
@@ -85,11 +85,14 @@ pub async fn pip_install_code_blocks_if_needed(
             let hash = shasum::sha256sum(&requirements_path)?;
             write(&req_path, req)?;
             pip_install_if_needed_with_hash(&cache_path, &req_path.path(), hash, true)?;
-            Ok(())
+            Ok(1)
         })
-        .expect("code block requirements installed");
+        .count();
 
-    Ok(())
+    match n {
+        0 => Ok(None),
+        _ => Ok(Some(program.clone())),
+    }
 }
 
 #[cfg(desktop)]

@@ -10,11 +10,6 @@ pub fn extract_requirements(program: &Yaml) -> Vec<String> {
     extract_values(program, "requirements")
 }
 
-/// Extract requirements.txt referenced by the programs
-pub fn extract_requirements(programs: Vec<Yaml>) -> Vec<String> {
-    extract_values(programs, "requirements")
-}
-
 /// Take a list of Yaml fragments and produce a vector of the string-valued entries of the given field
 pub fn extract_values(program: &Yaml, field: &str) -> Vec<String> {
     let mut values = extract_one_values(program, field);

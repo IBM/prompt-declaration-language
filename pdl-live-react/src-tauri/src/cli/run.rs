@@ -1,7 +1,11 @@
+use ::std::fs::{remove_file, write};
 use ::std::path::Path;
+
 use duct::cmd;
 use futures::executor::block_on;
+use tempfile::Builder;
 use yaml_rust2::yaml::LoadError;
+use yaml_rust2::{EmitError, YamlEmitter};
 use yaml_rust2::{ScanError, Yaml, YamlLoader};
 
 use crate::interpreter::pip::{
@@ -43,16 +47,52 @@ pub fn run_pdl_program(
 
     // wait for any pip installs to finish
     let bin_path = block_on(bin_path_future)?;
-    block_on(reqs_future)?;
 
+    // wait for code block requirements to be pulled
+    let updated_source_file_path = match block_on(reqs_future)? {
+        Some(updated_programs) => {
+            // We received back an updated program
+            println!("Updated! {:?}", updated_programs);
+            let mut out_str = String::new();
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            for p in updated_programs {
+                emitter.dump(&p).map_err(|e| match e {
+                    EmitError::FmtError(ee) => tauri::Error::Anyhow(ee.into()),
+                })?;
+            }
+            match Path::new(&source_file_path).parent() {
+                Some(dir) => {
+                    let tmp = Builder::new()
+                        .prefix("pdl-program-")
+                        .suffix(".pdl")
+                        .tempfile_in(&dir)?;
+                    write(&tmp, out_str)?;
+                    let (_, path) = tmp.keep().map_err(|e| tauri::Error::Io(e.error))?;
+                    path.display().to_string()
+                }
+                _ => {
+                    eprintln!("Failed to find target directory for updated program");
+                    source_file_path.clone()
+                }
+            }
+        }
+        _ => source_file_path.clone(),
+    };
+
+    println!("SRC {} -> {}", source_file_path, updated_source_file_path);
     let mut args = vec![
-        source_file_path,
+        updated_source_file_path.clone(),
         dashdash("--trace", trace_file),
         dashdash("--data", data),
         dashdash("--stream", stream),
     ];
     args.retain(|x| x.chars().count() > 0);
     cmd(bin_path.join("pdl"), &args).run()?;
+
+    // TODO how do we do this on all exit paths in rust?
+    if updated_source_file_path != source_file_path {
+        remove_file(updated_source_file_path)?;
+    }
 
     Ok(())
 }
