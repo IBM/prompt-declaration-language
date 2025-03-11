@@ -3,7 +3,7 @@ use duct::cmd;
 use futures::executor::block_on;
 use yaml_rust2::yaml::LoadError;
 
-use crate::interpreter::pip::pip_install_if_needed;
+use crate::interpreter::pip::pip_install_interpreter_if_needed;
 use crate::interpreter::pull::pull_if_needed;
 
 #[cfg(desktop)]
@@ -20,7 +20,7 @@ pub fn run_pdl_program(
     );
 
     let pull_future = pull_if_needed(&source_file_path);
-    let bin_path_future = pip_install_if_needed(app_handle);
+    let bin_path_future = pip_install_interpreter_if_needed(app_handle);
 
     let trace_arg = if let Some(arg) = trace_file {
         if let serde_json::Value::String(f) = &arg.value {

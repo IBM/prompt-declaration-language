@@ -1,31 +1,22 @@
 use ::std::fs::{copy, create_dir_all};
-use ::std::path::PathBuf;
+use ::std::path::{Path, PathBuf};
 
 use duct::cmd;
-use file_diff::diff;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
 
-#[cfg(desktop)]
-pub async fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathBuf, tauri::Error> {
-    let cache_path = app_handle.path().cache_dir()?.join("pdl");
+use crate::interpreter::shasum;
 
+#[cfg(desktop)]
+pub async fn pip_install_if_needed(
+    cache_path: &Path,
+    requirements_path: &Path,
+) -> Result<PathBuf, tauri::Error> {
     create_dir_all(&cache_path)?;
-    let venv_path = cache_path.join("interpreter-python");
-    let activate_path = if cfg!(windows) {
-        venv_path.join("Scripts").join("Activate.ps1")
-    } else {
-        venv_path.join("bin/activate")
-    };
-    let cached_requirements_path = venv_path
-        .join("requirements.txt")
-        .into_os_string()
-        .into_string()
-        .unwrap();
-    /* println!(
-        "RUN PATHS activate={:?} cached_reqs={:?}",
-        activate_path, cached_requirements_path
-    ); */
+
+    let hash = shasum::sha256sum(&requirements_path)?;
+    let venv_path = cache_path.join(hash);
+    let bin_path = venv_path.join(if cfg!(windows) { "Scripts" } else { "bin" });
 
     if !venv_path.exists() {
         println!("Creating virtual environment...");
@@ -35,34 +26,26 @@ pub async fn pip_install_if_needed(app_handle: tauri::AppHandle) -> Result<PathB
             "python3"
         };
         cmd!(python, "-mvenv", &venv_path).run()?;
-    }
 
-    let requirements_path = app_handle
-        .path()
-        .resolve("interpreter/requirements.txt", BaseDirectory::Resource)?
-        .into_os_string()
-        .into_string()
-        .unwrap();
+        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path,).run()?;
 
-    if !diff(
-        requirements_path.as_str(),
-        cached_requirements_path.as_str(),
-    ) {
-        cmd!(
-            venv_path
-                .join(if cfg!(windows) { "Scripts" } else { "bin" })
-                .join("pip"),
-            "install",
-            "-r",
-            &requirements_path,
-        )
-        .run()?;
-
+        let cached_requirements_path = venv_path.join("requirements.txt");
         copy(requirements_path, cached_requirements_path)?;
     }
 
-    match activate_path.parent() {
-        Some(parent) => Ok(parent.to_path_buf()),
-        _ => Err(tauri::Error::UnknownPath),
-    }
+    Ok(bin_path.to_path_buf())
+}
+
+#[cfg(desktop)]
+pub async fn pip_install_interpreter_if_needed(
+    app_handle: tauri::AppHandle,
+) -> Result<PathBuf, tauri::Error> {
+    // the interpreter requirements.txt
+    let requirements_path = app_handle
+        .path()
+        .resolve("interpreter/requirements.txt", BaseDirectory::Resource)?;
+
+    let cache_path = app_handle.path().cache_dir()?.join("pdl");
+
+    pip_install_if_needed(&cache_path, &requirements_path).await
 }
