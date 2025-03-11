@@ -291,7 +291,7 @@ fn python_source_to_json(
         eprintln!("Compiling from Python source");
     }
     let bin_path = block_on(pip_install_internal_if_needed(
-        app_handle,
+        &app_handle,
         &"interpreter/beeai-requirements.txt",
     ))?;
 

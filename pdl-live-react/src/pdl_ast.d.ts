@@ -17,7 +17,8 @@ export type Program =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -141,6 +142,11 @@ export type Description19 = string | null
  */
 export type Description20 = string | null
 /**
+ * Documentation associated to the block.
+ *
+ */
+export type Description21 = string | null
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -167,8 +173,8 @@ export type Parser =
   | PdlParser
   | RegexParser
   | null
-export type Description21 = string | null
-export type Spec21 = {
+export type Description22 = string | null
+export type Spec22 = {
   [k: string]: unknown
 } | null
 export type Pdl =
@@ -179,7 +185,8 @@ export type Pdl =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -197,8 +204,8 @@ export type Pdl =
   | ErrorBlock
   | EmptyBlock
   | null
-export type Description22 = string | null
-export type Spec22 = {
+export type Description23 = string | null
+export type Spec23 = {
   [k: string]: unknown
 } | null
 export type Regex = string
@@ -215,7 +222,8 @@ export type Fallback =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -294,7 +302,8 @@ export type Fallback1 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -351,7 +360,8 @@ export type Program1 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -404,7 +414,8 @@ export type Fallback2 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -457,7 +468,8 @@ export type PdlTrace =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -510,7 +522,8 @@ export type Fallback3 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -563,7 +576,8 @@ export type PdlTrace1 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -616,7 +630,8 @@ export type Fallback4 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -706,7 +721,8 @@ export type Fallback5 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -757,7 +773,8 @@ export type Content =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -818,7 +835,8 @@ export type Fallback6 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -868,7 +886,8 @@ export type Object =
         | CallBlock
         | LitellmModelBlock
         | GraniteioModelBlock
-        | CodeBlock
+        | PythonCodeBlock
+        | NonPythonCodeBlock
         | ArgsBlock
         | GetBlock
         | DataBlock
@@ -895,7 +914,8 @@ export type Object =
       | CallBlock
       | LitellmModelBlock
       | GraniteioModelBlock
-      | CodeBlock
+      | PythonCodeBlock
+      | NonPythonCodeBlock
       | ArgsBlock
       | GetBlock
       | DataBlock
@@ -949,7 +969,8 @@ export type Fallback7 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1000,7 +1021,8 @@ export type Array = (
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1054,7 +1076,8 @@ export type Fallback8 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1105,7 +1128,8 @@ export type Lastof = (
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1159,7 +1183,8 @@ export type Fallback9 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1211,7 +1236,8 @@ export type Text =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1236,7 +1262,8 @@ export type Text =
       | CallBlock
       | LitellmModelBlock
       | GraniteioModelBlock
-      | CodeBlock
+      | PythonCodeBlock
+      | NonPythonCodeBlock
       | ArgsBlock
       | GetBlock
       | DataBlock
@@ -1291,7 +1318,8 @@ export type Fallback10 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1355,7 +1383,8 @@ export type Repeat =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1422,7 +1451,8 @@ export type PdlTrace2 =
       | CallBlock
       | LitellmModelBlock
       | GraniteioModelBlock
-      | CodeBlock
+      | PythonCodeBlock
+      | NonPythonCodeBlock
       | ArgsBlock
       | GetBlock
       | DataBlock
@@ -1477,7 +1507,8 @@ export type Fallback11 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1560,7 +1591,8 @@ export type Then =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1621,7 +1653,8 @@ export type Fallback12 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1678,7 +1711,8 @@ export type Then1 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1708,7 +1742,8 @@ export type Else =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1762,7 +1797,8 @@ export type Fallback13 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1841,7 +1877,8 @@ export type Fallback14 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -1920,7 +1957,8 @@ export type Fallback15 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2001,7 +2039,8 @@ export type Fallback16 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2042,11 +2081,6 @@ export type PdlId16 = string | null
 export type PdlIsLeaf16 = true
 export type Kind16 = "code"
 /**
- * Programming language of the code.
- *
- */
-export type Lang1 = "python" | "command" | "jinja" | "pdl"
-/**
  * Code to execute.
  *
  */
@@ -2058,7 +2092,8 @@ export type Code =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2076,6 +2111,11 @@ export type Code =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Programming language of the code.
+ *
+ */
+export type Lang1 = "command" | "jinja" | "pdl"
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2111,7 +2151,8 @@ export type Fallback17 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2150,7 +2191,124 @@ export type Context17 =
  */
 export type PdlId17 = string | null
 export type PdlIsLeaf17 = true
-export type Kind17 = "model"
+export type Kind17 = "code"
+/**
+ * Code to execute.
+ *
+ */
+export type Code1 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Programming language of the code.
+ *
+ */
+export type Lang2 = "python"
+/**
+ * Pip requirements.txt
+ *
+ */
+export type Requirements = string | string[] | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def22 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute18 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser18 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback18 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role18 = string | null
+/**
+ * Current context
+ *
+ */
+export type Context18 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId18 = string | null
+export type PdlIsLeaf18 = true
+export type Kind18 = "model"
 /**
  * Messages to send to the model.
  *
@@ -2163,7 +2321,8 @@ export type Input =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2228,12 +2387,12 @@ export type Parameters =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def22 = string | null
+export type Def23 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute18 = (
+export type Contribute19 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
@@ -2242,7 +2401,7 @@ export type Contribute18 = (
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser18 =
+export type Parser19 =
   | ("json" | "jsonl" | "yaml")
   | PdlParser
   | RegexParser
@@ -2251,7 +2410,7 @@ export type Parser18 =
  * Block to execute in case of error.
  *
  */
-export type Fallback18 =
+export type Fallback19 =
   | boolean
   | number
   | string
@@ -2259,7 +2418,8 @@ export type Fallback18 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2282,12 +2442,12 @@ export type Fallback18 =
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role18 = string | null
+export type Role19 = string | null
 /**
  * Current context
  *
  */
-export type Context18 =
+export type Context19 =
   | {
       [k: string]: unknown
     }[]
@@ -2296,9 +2456,9 @@ export type Context18 =
  * Unique identifier for this block
  *
  */
-export type PdlId18 = string | null
-export type PdlIsLeaf18 = true
-export type Kind18 = "model"
+export type PdlId19 = string | null
+export type PdlIsLeaf19 = true
+export type Kind19 = "model"
 /**
  * Name of the model following the LiteLLM convention.
  *
@@ -2316,7 +2476,8 @@ export type Input1 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2412,107 +2573,6 @@ export type MaxRetries = number | string | null
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def23 = string | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute19 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser19 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback19 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role19 = string | null
-/**
- * Current context
- *
- */
-export type Context19 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId19 = string | null
-export type PdlIsLeaf19 = true
-export type Kind19 = "call"
-export type PdlTrace3 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def24 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
@@ -2544,7 +2604,8 @@ export type Fallback20 =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2583,7 +2644,110 @@ export type Context20 =
  */
 export type PdlId20 = string | null
 export type PdlIsLeaf20 = true
-export type Kind20 = "function"
+export type Kind20 = "call"
+export type PdlTrace3 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def25 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute21 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser21 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback21 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role21 = string | null
+/**
+ * Current context
+ *
+ */
+export type Context21 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId21 = string | null
+export type PdlIsLeaf21 = true
+export type Kind21 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -2603,7 +2767,8 @@ export type Return =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2629,7 +2794,8 @@ export type PdlBlock =
   | CallBlock
   | LitellmModelBlock
   | GraniteioModelBlock
-  | CodeBlock
+  | PythonCodeBlock
+  | NonPythonCodeBlock
   | ArgsBlock
   | GetBlock
   | DataBlock
@@ -2655,18 +2821,18 @@ export interface FunctionBlock {
   description?: Description
   spec?: Spec
   defs?: Defs
-  def?: Def24
-  contribute?: Contribute20
-  parser?: Parser20
-  fallback?: Fallback20
-  role?: Role20
-  context?: Context20
-  pdl__id?: PdlId20
+  def?: Def25
+  contribute?: Contribute21
+  parser?: Parser21
+  fallback?: Fallback21
+  role?: Role21
+  context?: Context21
+  pdl__id?: PdlId21
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf20
-  kind?: Kind20
+  pdl__is_leaf?: PdlIsLeaf21
+  kind?: Kind21
   function: Function
   return: Return
 }
@@ -2690,7 +2856,8 @@ export interface Defs {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -2716,18 +2883,18 @@ export interface CallBlock {
   description?: Description1
   spec?: Spec1
   defs?: Defs1
-  def?: Def23
-  contribute?: Contribute19
-  parser?: Parser19
-  fallback?: Fallback19
-  role?: Role19
-  context?: Context19
-  pdl__id?: PdlId19
+  def?: Def24
+  contribute?: Contribute20
+  parser?: Parser20
+  fallback?: Fallback20
+  role?: Role20
+  context?: Context20
+  pdl__id?: PdlId20
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf19
-  kind?: Kind19
+  pdl__is_leaf?: PdlIsLeaf20
+  kind?: Kind20
   call: unknown
   args?: unknown
   pdl__trace?: PdlTrace3
@@ -2752,7 +2919,8 @@ export interface Defs1 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -2785,18 +2953,18 @@ export interface LitellmModelBlock {
   description?: Description2
   spec?: Spec2
   defs?: Defs2
-  def?: Def22
-  contribute?: Contribute18
-  parser?: Parser18
-  fallback?: Fallback18
-  role?: Role18
-  context?: Context18
-  pdl__id?: PdlId18
+  def?: Def23
+  contribute?: Contribute19
+  parser?: Parser19
+  fallback?: Fallback19
+  role?: Role19
+  context?: Context19
+  pdl__id?: PdlId19
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf18
-  kind?: Kind18
+  pdl__is_leaf?: PdlIsLeaf19
+  kind?: Kind19
   model: Model1
   input?: Input1
   modelResponse?: Modelresponse1
@@ -2829,7 +2997,8 @@ export interface Defs2 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -2855,18 +3024,18 @@ export interface GraniteioModelBlock {
   description?: Description3
   spec?: Spec3
   defs?: Defs3
-  def?: Def21
-  contribute?: Contribute17
-  parser?: Parser17
-  fallback?: Fallback17
-  role?: Role17
-  context?: Context17
-  pdl__id?: PdlId17
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  role?: Role18
+  context?: Context18
+  pdl__id?: PdlId18
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf17
-  kind?: Kind17
+  pdl__is_leaf?: PdlIsLeaf18
+  kind?: Kind18
   model: unknown
   input?: Input
   modelResponse?: Modelresponse
@@ -2901,7 +3070,81 @@ export interface Defs3 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Execute a piece of Python code.
+ *
+ * Example:
+ * ```PDL
+ * - def: N
+ *   lang: python
+ *   code: |
+ *     import random
+ *     # (In PDL, set `result` to the output you wish for your code block.)
+ *     result = random.randint(1, 20)
+ * ```
+ */
+export interface PythonCodeBlock {
+  description?: Description4
+  spec?: Spec4
+  defs?: Defs4
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  role?: Role17
+  context?: Context17
+  pdl__id?: PdlId17
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf17
+  kind?: Kind17
+  code: Code1
+  lang?: Lang2
+  requirements?: Requirements
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec4 {
+  [k: string]: unknown
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs4 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -2925,17 +3168,15 @@ export interface Defs3 {
  *
  * Example:
  * ```PDL
- * lang: python
- * code: |
- *     import random
- *     # (In PDL, set `result` to the output you wish for your code block.)
- *     result = random.randint(1, 20)
+ * - def: N
+ *   lang: command
+ *   code: echo hi
  * ```
  */
-export interface CodeBlock {
-  description?: Description4
-  spec?: Spec4
-  defs?: Defs4
+export interface NonPythonCodeBlock {
+  description?: Description5
+  spec?: Spec5
+  defs?: Defs5
   def?: Def20
   contribute?: Contribute16
   parser?: Parser16
@@ -2948,21 +3189,21 @@ export interface CodeBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
-  lang: Lang1
   code: Code
+  lang: Lang1
 }
 /**
  * Type specification of the result of the block.
  *
  */
-export interface Spec4 {
+export interface Spec5 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs4 {
+export interface Defs5 {
   [k: string]:
     | boolean
     | number
@@ -2971,7 +3212,8 @@ export interface Defs4 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3002,9 +3244,9 @@ export interface Defs4 {
  * ```
  */
 export interface ArgsBlock {
-  description?: Description5
-  spec?: Spec5
-  defs?: Defs5
+  description?: Description6
+  spec?: Spec6
+  defs?: Defs6
   def?: Def19
   contribute?: Contribute15
   parser?: Parser15
@@ -3024,14 +3266,14 @@ export interface ArgsBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec5 {
+export interface Spec6 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs5 {
+export interface Defs6 {
   [k: string]:
     | boolean
     | number
@@ -3040,7 +3282,8 @@ export interface Defs5 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3065,9 +3308,9 @@ export interface Defs5 {
  * The GetBlock is deprecated.  Use DataBlock instead.
  */
 export interface GetBlock {
-  description?: Description6
-  spec?: Spec6
-  defs?: Defs6
+  description?: Description7
+  spec?: Spec7
+  defs?: Defs7
   def?: Def18
   contribute?: Contribute14
   parser?: Parser14
@@ -3086,14 +3329,14 @@ export interface GetBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec6 {
+export interface Spec7 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs6 {
+export interface Defs7 {
   [k: string]:
     | boolean
     | number
@@ -3102,7 +3345,8 @@ export interface Defs6 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3146,9 +3390,9 @@ export interface Defs6 {
  * ```
  */
 export interface DataBlock {
-  description?: Description7
-  spec?: Spec7
-  defs?: Defs7
+  description?: Description8
+  spec?: Spec8
+  defs?: Defs8
   def?: Def17
   contribute?: Contribute13
   parser?: Parser13
@@ -3168,14 +3412,14 @@ export interface DataBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec7 {
+export interface Spec8 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs7 {
+export interface Defs8 {
   [k: string]:
     | boolean
     | number
@@ -3184,7 +3428,8 @@ export interface Defs7 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3217,9 +3462,9 @@ export interface Defs7 {
  * ```
  */
 export interface IfBlock {
-  description?: Description8
-  spec?: Spec8
-  defs?: Defs8
+  description?: Description9
+  spec?: Spec9
+  defs?: Defs9
   def?: Def16
   contribute?: Contribute12
   parser?: Parser12
@@ -3241,14 +3486,14 @@ export interface IfBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec8 {
+export interface Spec9 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs8 {
+export interface Defs9 {
   [k: string]:
     | boolean
     | number
@@ -3257,7 +3502,8 @@ export interface Defs8 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3297,9 +3543,9 @@ export interface Defs8 {
  * - then: Too low
  */
 export interface MatchBlock {
-  description?: Description9
-  spec?: Spec9
-  defs?: Defs9
+  description?: Description10
+  spec?: Spec10
+  defs?: Defs10
   def?: Def11
   contribute?: Contribute11
   parser?: Parser11
@@ -3319,14 +3565,14 @@ export interface MatchBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec9 {
+export interface Spec10 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs9 {
+export interface Defs10 {
   [k: string]:
     | boolean
     | number
@@ -3335,7 +3581,8 @@ export interface Defs9 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3367,9 +3614,9 @@ export interface Defs9 {
  * ```
  */
 export interface RepeatBlock {
-  description?: Description10
-  spec?: Spec10
-  defs?: Defs10
+  description?: Description11
+  spec?: Spec11
+  defs?: Defs11
   def?: Def10
   contribute?: Contribute10
   parser?: Parser10
@@ -3394,14 +3641,14 @@ export interface RepeatBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec10 {
+export interface Spec11 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs10 {
+export interface Defs11 {
   [k: string]:
     | boolean
     | number
@@ -3410,7 +3657,8 @@ export interface Defs10 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3433,9 +3681,9 @@ export interface Defs10 {
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
 export interface TextBlock {
-  description?: Description11
-  spec?: Spec11
-  defs?: Defs11
+  description?: Description12
+  spec?: Spec12
+  defs?: Defs12
   def?: Def9
   contribute?: Contribute9
   parser?: Parser9
@@ -3454,14 +3702,14 @@ export interface TextBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec11 {
+export interface Spec12 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs11 {
+export interface Defs12 {
   [k: string]:
     | boolean
     | number
@@ -3470,7 +3718,8 @@ export interface Defs11 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3493,9 +3742,9 @@ export interface Defs11 {
  * Return the value of the last block if the list of blocks.
  */
 export interface LastOfBlock {
-  description?: Description12
-  spec?: Spec12
-  defs?: Defs12
+  description?: Description13
+  spec?: Spec13
+  defs?: Defs13
   def?: Def8
   contribute?: Contribute8
   parser?: Parser8
@@ -3514,14 +3763,14 @@ export interface LastOfBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec12 {
+export interface Spec13 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs12 {
+export interface Defs13 {
   [k: string]:
     | boolean
     | number
@@ -3530,7 +3779,8 @@ export interface Defs12 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3553,9 +3803,9 @@ export interface Defs12 {
  * Return the array of values computed by each block of the list of blocks.
  */
 export interface ArrayBlock {
-  description?: Description13
-  spec?: Spec13
-  defs?: Defs13
+  description?: Description14
+  spec?: Spec14
+  defs?: Defs14
   def?: Def7
   contribute?: Contribute7
   parser?: Parser7
@@ -3574,14 +3824,14 @@ export interface ArrayBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec13 {
+export interface Spec14 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs13 {
+export interface Defs14 {
   [k: string]:
     | boolean
     | number
@@ -3590,7 +3840,8 @@ export interface Defs13 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3613,9 +3864,9 @@ export interface Defs13 {
  * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
 export interface ObjectBlock {
-  description?: Description14
-  spec?: Spec14
-  defs?: Defs14
+  description?: Description15
+  spec?: Spec15
+  defs?: Defs15
   def?: Def6
   contribute?: Contribute6
   parser?: Parser6
@@ -3634,14 +3885,14 @@ export interface ObjectBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec14 {
+export interface Spec15 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs14 {
+export interface Defs15 {
   [k: string]:
     | boolean
     | number
@@ -3650,7 +3901,8 @@ export interface Defs14 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3673,9 +3925,9 @@ export interface Defs14 {
  * Create a message.
  */
 export interface MessageBlock {
-  description?: Description15
-  spec?: Spec15
-  defs?: Defs15
+  description?: Description16
+  spec?: Spec16
+  defs?: Defs16
   def?: Def5
   contribute?: Contribute5
   parser?: Parser5
@@ -3696,14 +3948,14 @@ export interface MessageBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec15 {
+export interface Spec16 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs15 {
+export interface Defs16 {
   [k: string]:
     | boolean
     | number
@@ -3712,7 +3964,8 @@ export interface Defs15 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3747,9 +4000,9 @@ export interface Defs15 {
  * ```
  */
 export interface ReadBlock {
-  description?: Description16
-  spec?: Spec16
-  defs?: Defs16
+  description?: Description17
+  spec?: Spec17
+  defs?: Defs17
   def?: Def4
   contribute?: Contribute4
   parser?: Parser4
@@ -3770,14 +4023,14 @@ export interface ReadBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec16 {
+export interface Spec17 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs16 {
+export interface Defs17 {
   [k: string]:
     | boolean
     | number
@@ -3786,7 +4039,8 @@ export interface Defs16 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3809,9 +4063,9 @@ export interface Defs16 {
  * Include a PDL file.
  */
 export interface IncludeBlock {
-  description?: Description17
-  spec?: Spec17
-  defs?: Defs17
+  description?: Description18
+  spec?: Spec18
+  defs?: Defs18
   def?: Def3
   contribute?: Contribute3
   parser?: Parser3
@@ -3831,14 +4085,14 @@ export interface IncludeBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec17 {
+export interface Spec18 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs17 {
+export interface Defs18 {
   [k: string]:
     | boolean
     | number
@@ -3847,7 +4101,8 @@ export interface Defs17 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3870,9 +4125,9 @@ export interface Defs17 {
  * Import a PDL file.
  */
 export interface ImportBlock {
-  description?: Description18
-  spec?: Spec18
-  defs?: Defs18
+  description?: Description19
+  spec?: Spec19
+  defs?: Defs19
   def?: Def2
   contribute?: Contribute2
   parser?: Parser2
@@ -3892,14 +4147,14 @@ export interface ImportBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec18 {
+export interface Spec19 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs18 {
+export interface Defs19 {
   [k: string]:
     | boolean
     | number
@@ -3908,7 +4163,8 @@ export interface Defs18 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3931,9 +4187,9 @@ export interface Defs18 {
  * Block representing an error generated at runtime.
  */
 export interface ErrorBlock {
-  description?: Description19
-  spec?: Spec19
-  defs?: Defs19
+  description?: Description20
+  spec?: Spec20
+  defs?: Defs20
   def?: Def1
   contribute?: Contribute1
   parser?: Parser1
@@ -3953,14 +4209,14 @@ export interface ErrorBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec19 {
+export interface Spec20 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs19 {
+export interface Defs20 {
   [k: string]:
     | boolean
     | number
@@ -3969,7 +4225,8 @@ export interface Defs19 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -3992,9 +4249,9 @@ export interface Defs19 {
  * Block without an action. It can contain definitions.
  */
 export interface EmptyBlock {
-  description?: Description20
-  spec?: Spec20
-  defs?: Defs20
+  description?: Description21
+  spec?: Spec21
+  defs?: Defs21
   def?: Def
   contribute?: Contribute
   parser?: Parser
@@ -4012,14 +4269,14 @@ export interface EmptyBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec20 {
+export interface Spec21 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs20 {
+export interface Defs21 {
   [k: string]:
     | boolean
     | number
@@ -4028,7 +4285,8 @@ export interface Defs20 {
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
@@ -4070,16 +4328,16 @@ export interface Table {
   [k: string]: number
 }
 export interface PdlParser {
-  description?: Description21
-  spec?: Spec21
+  description?: Description22
+  spec?: Spec22
   pdl: Pdl
 }
 /**
  * A regular expression parser
  */
 export interface RegexParser {
-  description?: Description22
-  spec?: Spec22
+  description?: Description23
+  spec?: Spec23
   regex: Regex
   mode?: Mode
 }
