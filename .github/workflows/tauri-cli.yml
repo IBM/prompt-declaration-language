@@ -45,8 +45,14 @@ jobs:
           # 1. `run` subcommand works without any arguments
           pdl run | grep Usage
 
-          # 2. `run` subcommand works with demo1.pdl
+          # 2. `run` subcommand works with UI demos (yaml source)
           pdl run ./demos/demo1.pdl | grep 'write a hello'
+
+          # 3. `run` subcommand works with UI demos (json source)
+          # demo8 uses a private model? not sure
+          for i in ./src/demos/*.json
+          do if [[ $(basename $i) != "demo8.json" ]]; then pdl run $i; fi
+          done
 
       - name: Tear down xvfb
         run: killall Xvfb  
