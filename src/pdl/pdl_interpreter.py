@@ -408,7 +408,7 @@ def process_advanced_block(
     if ContributeTarget.CONTEXT not in block.contribute:
         background = PdlList([])
     contribute_value, trace = process_contribute_old(trace, new_scope, loc)
-    trace = process_contribute(trace, result, new_scope, loc)
+    new_scope, trace = process_contribute(trace, result, new_scope, loc)
     if contribute_value is not None:
         background = contribute_value
 
@@ -1077,16 +1077,16 @@ def process_contribute(
     result: Any,
     scope: ScopeType,
     loc: PdlLocationType,
-) -> BlockTypeTVarProcessContribute:
+) -> tuple[ScopeType, BlockTypeTVarProcessContribute]:
     loc = append(loc, "contribute")
-    contribute = [
-        process_contribution(
+    contribute = []
+    for i, elem in enumerate(block.contribute):
+        scope, elem = process_contribution(
             block, elem, result, scope, append(loc, "[" + str(i) + "]")
         )
-        for i, elem in enumerate(block.contribute)
-    ]
+        contribute.append(elem)
     trace = block.model_copy(update={"contribute": contribute})
-    return trace
+    return scope, trace
 
 
 def process_contribution(
@@ -1095,10 +1095,11 @@ def process_contribution(
     result: Any,
     scope: ScopeType,
     loc: PdlLocationType,
-) -> ContributeElement:
+) -> tuple[ScopeType, ContributeElement]:
     if elem in ContributeTarget:
-        return elem
+        return scope, elem
     if isinstance(elem, str):
+        target = elem
         aggregator = get_var(elem, scope, loc)
     elif isinstance(elem, dict):
         if len(elem) != 1:
@@ -1138,8 +1139,9 @@ def process_contribution(
             trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
             fallback=[],
         )
-    aggregator.contribute(result, block.role, loc, block)
-    return elem
+    aggregator = aggregator.contribute(result, block.role, loc, block)
+    scope = scope | {target: aggregator}
+    return scope, elem
 
 
 BlockTypeTVarProcessExprOf = TypeVar(
@@ -1831,23 +1833,18 @@ class Aggregator(ABC):
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
-    ) -> None:
-        """Function executed at the end of each block that contain the aggregator
+    ) -> "Aggregator":
+        """Function executed at the end of each block that contain the aggregator.
 
         Args:
             result: value computed by the block
             role: role associated to the block. Defaults to None.
             loc: source code location of the block. Defaults to None.
             block: block contributing the value. Defaults to None.
+
+        Returns:
+            Aggregator: new aggregator with the contributed value.
         """
-
-    @abstractmethod
-    def snapshot(self) -> Any:
-        """Return a copy of the state of the aggregator."""
-
-    @abstractmethod
-    def dup(self) -> "Aggregator":
-        """Return a copy of the state of the aggregator."""
 
 
 class MessagesAggregator(Aggregator):
@@ -1863,7 +1860,7 @@ class MessagesAggregator(Aggregator):
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
-    ):
+    ) -> "MessagesAggregator":
         match block:
             case None | StructuredBlock():
                 return
@@ -1872,14 +1869,9 @@ class MessagesAggregator(Aggregator):
                 msg = {"role": role, "content": result, "defsite": block_id}
             case _:
                 msg = {"role": role, "content": result}
-        msgs: LazyMessages = PdlList([PdlDict(msg)])  # type: ignore
-        self.messages = lazy_messages_concat(self.messages, msgs)
-
-    def snapshot(self) -> LazyMessages:
-        return self.messages
-
-    def dup(self) -> "MessagesAggregator":
-        return MessagesAggregator(self.messages)
+        new_messages: LazyMessages = PdlList([PdlDict(msg)])  # type: ignore
+        messages = lazy_messages_concat(self.messages, new_messages)
+        return MessagesAggregator(messages)
 
 
 class FileAggregator(Aggregator):
@@ -1899,13 +1891,6 @@ class FileAggregator(Aggregator):
         block: Optional[BlockType] = None,
     ) -> None:
         print(f"{self.prefix}{result}", file=self.fp, end=self.suffix, flush=self.flush)
-
-    def snapshot(self) -> Any:
-        """Return a copy of the state of the aggregator."""
-        return None
-
-    def dup(self) -> "Aggregator":
-        """Return a copy of the state of the aggregator."""
         return self
 
 
