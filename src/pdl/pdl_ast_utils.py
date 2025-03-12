@@ -48,7 +48,11 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
         case CodeBlock():
-            f(block.code)
+            if isinstance(block.code, list):
+                for b in block.code:
+                    f(b)
+            else:
+                f(block.code)
         case GetBlock():
             pass
         case DataBlock():
@@ -150,7 +154,10 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
-            block.code = f.f_block(block.code)
+            if isinstance(block.code, list):
+                block.code = [f.f_block(b) for b in block.code]
+            else:
+                block.code = f.f_block(block.code)
         case GetBlock():
             pass
         case DataBlock():

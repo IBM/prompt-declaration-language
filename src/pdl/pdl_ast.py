@@ -472,11 +472,8 @@ class CodeBlock(LeafBlock):
     requirements: Optional[str | list[str]] = None
     """Pip requirements.txt
     """
-    code: "BlockType"
+    code: "BlockOrBlocksType"
     """Code to execute.
-    """
-    file: Optional[bool] = None
-    """Code to execute is a file path.
     """
 
     @model_validator(mode="after")
@@ -485,6 +482,8 @@ class CodeBlock(LeafBlock):
             raise ValueError(
                 "CodeBlock requirements field provided for non-python block"
             )
+        if isinstance(self.code, list) and self.lang != "command":
+            raise ValueError("CodeBlock code field is array for non-command block")
         return self
 
 

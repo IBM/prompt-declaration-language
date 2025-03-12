@@ -135,7 +135,10 @@ def block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
         case CodeBlock():
             d["lang"] = block.lang
-            d["code"] = block_to_dict(block.code, json_compatible)
+            if isinstance(block.code, list):
+                d["code"] = [block_to_dict(b, json_compatible) for b in block.code]
+            else:
+                d["code"] = block_to_dict(block.code, json_compatible)
             d["requirements"] = block.requirements
         case GetBlock():
             d["get"] = block.get

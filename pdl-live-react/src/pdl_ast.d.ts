@@ -1952,6 +1952,32 @@ export type Code =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
+  | (
+      | boolean
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | GraniteioModelBlock
+      | CodeBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | MatchBlock
+      | RepeatBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ImportBlock
+      | ErrorBlock
+      | EmptyBlock
+      | null
+    )[]
   | null
 /**
  * Name of the variable used to store the result of the execution of the block.

@@ -1431,14 +1431,24 @@ def process_call_code(
     state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: PdlLocationType
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, CodeBlock]:
     background: LazyMessages
-    code_, _, _, block = process_block_of(
-        block,
-        "code",
-        state.with_yield_result(False).with_yield_background(False),
-        scope,
-        loc,
-    )
-    code_s = code_.result()
+    code_a = None
+    if isinstance(block.code, list):
+        code_s = ""
+        code_a, _, _, _ = process_block(
+            state.with_yield_result(False).with_yield_background(False),
+            scope,
+            ArrayBlock(array=block.code),
+            loc,
+        )
+    else:
+        code_, _, _, block = process_block_of(
+            block,
+            "code",
+            state.with_yield_result(False).with_yield_background(False),
+            scope,
+            loc,
+        )
+        code_s = code_.result()
     match block.lang:
         case "python":
             try:
@@ -1456,7 +1466,7 @@ def process_call_code(
                 ) from exc
         case "command":
             try:
-                result = call_command(code_s, block.file == True)
+                result = call_command(code_s, code_a)
                 background = PdlList(
                     [
                         PdlDict(  # type: ignore
@@ -1530,11 +1540,11 @@ def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
     return PdlConst(result)
 
 
-def call_command(code: str, is_file: bool) -> PdlLazy[str]:
-    if is_file:
-        with open(code, "r") as f:
-            code = f.read()
-    args = shlex.split(code)
+def call_command(code: str, code_a: PdlLazy[list[str]] | None) -> PdlLazy[str]:
+    if code_a is not None and isinstance(code_a.result(), list):
+        args = code_a.result()
+    else:
+        args = shlex.split(code)
     p = subprocess.run(
         args, capture_output=True, text=True, check=False, shell=False
     )  # nosec B603

@@ -27,7 +27,7 @@ pub fn run_pdl_program(
     data: Option<&tauri_plugin_cli::ArgData>,
     stream: Option<&tauri_plugin_cli::ArgData>,
 ) -> Result<(), tauri::Error> {
-    println!(
+    eprintln!(
         "Running {:#?}",
         Path::new(&source_file_path).file_name().unwrap()
     );
@@ -78,7 +78,6 @@ pub fn run_pdl_program(
         _ => source_file_path.clone(),
     };
 
-    println!("SRC {} -> {}", source_file_path, updated_source_file_path);
     let mut args = vec![
         updated_source_file_path.clone(),
         dashdash("--trace", trace_file),
@@ -89,9 +88,9 @@ pub fn run_pdl_program(
     cmd(bin_path.join("pdl"), &args).run()?;
 
     // TODO how do we do this on all exit paths in rust?
-    /*if updated_source_file_path != source_file_path {
+    if updated_source_file_path != source_file_path {
         remove_file(updated_source_file_path)?;
-    }*/
+    }
 
     Ok(())
 }

@@ -1,6 +1,3 @@
-use ::std::fs::write;
-
-use tempfile::Builder;
 use yaml_rust2::Yaml;
 
 use crate::interpreter::shasum;
@@ -42,25 +39,28 @@ pub fn extract_requirements(program: &Yaml) -> (Vec<String>, Yaml) {
                     } else {
                         "".to_string()
                     };
-                    let code_hash = shasum::sha256sum_str(&code_text.as_str()).unwrap();
+                    //let code_hash = shasum::sha256sum_str(&code_text.as_str()).unwrap();
 
-                    let tmp = Builder::new()
+                    /*let tmp = Builder::new()
                         .prefix(&format!("pdl-program-{}", code_hash))
                         .suffix(".pdl")
                         .tempfile()
                         .unwrap(); // TODO tmpfile_in(source dir)
                     write(&tmp, code_text).unwrap();
-                    let (_, tmp_path) = tmp.keep().unwrap();
+                    let (_, tmp_path) = tmp.keep().unwrap();*/
 
                     h.remove(&requirements);
                     h[&lang] = Yaml::String("command".to_string());
-                    h.insert(Yaml::String("file".to_string()), Yaml::Boolean(true));
-                    h[&code] = Yaml::String(format!(
-                        "\"/Users/nickm/Library/Caches/pdl/venvs/{}/{}/python {}\"",
-                        req_hash,
-                        if cfg!(windows) { "Scripts" } else { "bin" },
-                        tmp_path.display(),
-                    ));
+                    //h.insert(&Yaml::String("file".to_string()), Yaml::Boolean(true));
+                    h[&code] = Yaml::Array(vec![
+                        Yaml::String(format!(
+                            "/Users/nickm/Library/Caches/pdl/venvs/{}/{}/python",
+                            req_hash,
+                            if cfg!(windows) { "Scripts" } else { "bin" },
+                        )),
+                        Yaml::String("-c".to_owned()),
+                        Yaml::String(code_text),
+                    ]);
 
                     Yaml::Hash(h.clone())
                 }
