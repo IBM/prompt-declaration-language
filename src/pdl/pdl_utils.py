@@ -85,7 +85,7 @@ def get_contribute_value(  # TODO: remove
         return None
     for item in contribute:
         if isinstance(item, dict) and isinstance(
-            item[ContributeTarget.CONTEXT], ContributeValue
+            item.get(ContributeTarget.CONTEXT), ContributeValue
         ):
             return item[ContributeTarget.CONTEXT].value
     return None

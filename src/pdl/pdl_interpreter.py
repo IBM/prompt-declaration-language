@@ -1863,7 +1863,7 @@ class MessagesAggregator(Aggregator):
     ) -> "MessagesAggregator":
         match block:
             case None | StructuredBlock():
-                return
+                return self
             case LeafBlock():
                 block_id = ".".join(block.pdl__id or [])
                 msg = {"role": role, "content": result, "defsite": block_id}
@@ -1889,7 +1889,7 @@ class FileAggregator(Aggregator):
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
-    ) -> None:
+    ) -> "FileAggregator":
         print(f"{self.prefix}{result}", file=self.fp, end=self.suffix, flush=self.flush)
         return self
 
