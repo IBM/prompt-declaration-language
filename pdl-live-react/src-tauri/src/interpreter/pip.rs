@@ -72,7 +72,8 @@ pub async fn pip_install_code_blocks_if_needed(
         .path()
         .resolve("interpreter/requirements.txt", BaseDirectory::Resource)?;
 
-    let n = extract::extract_requirements(&program)
+    let (reqs, updated_program) = extract::extract_requirements(&program);
+    let n = reqs
         .into_par_iter()
         .map(|req| -> Result<usize, tauri::Error> {
             let req_path = Builder::new()
@@ -90,8 +91,8 @@ pub async fn pip_install_code_blocks_if_needed(
         .count();
 
     match n {
-        0 => Ok(None),
-        _ => Ok(Some(program.clone())),
+        0 => Ok(None), // We did not change the program
+        _ => Ok(Some(updated_program)),
     }
 }
 

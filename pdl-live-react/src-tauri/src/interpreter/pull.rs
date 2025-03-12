@@ -7,7 +7,8 @@ use crate::interpreter::extract;
 
 /// Pull models (in parallel) from the PDL program in the given filepath.
 pub async fn pull_if_needed(program: &Yaml) -> Result<(), LoadError> {
-    extract::extract_models(program)
+    let (models, _) = extract::extract_models(program);
+    models
         .into_par_iter()
         .try_for_each(|model| match model {
             m if model.starts_with("ollama/") => ollama_pull_if_needed(&m[7..]),
