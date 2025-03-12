@@ -38,11 +38,11 @@ pub fn extract_requirements(program: &Yaml) -> (Vec<String>, Yaml) {
 
                     let req_hash = shasum::sha256sum_str(requirements_text.as_str()).unwrap();
                     let code_text = if let Some(c) = h[&code].as_str() {
-                        c
+                        format!("{}\nprint(result)", c)
                     } else {
-                        ""
+                        "".to_string()
                     };
-                    let code_hash = shasum::sha256sum_str(code_text).unwrap();
+                    let code_hash = shasum::sha256sum_str(&code_text.as_str()).unwrap();
 
                     let tmp = Builder::new()
                         .prefix(&format!("pdl-program-{}", code_hash))
@@ -50,13 +50,16 @@ pub fn extract_requirements(program: &Yaml) -> (Vec<String>, Yaml) {
                         .tempfile()
                         .unwrap(); // TODO tmpfile_in(source dir)
                     write(&tmp, code_text).unwrap();
+                    let (_, tmp_path) = tmp.keep().unwrap();
 
                     h.remove(&requirements);
+                    h[&lang] = Yaml::String("command".to_string());
+                    h.insert(Yaml::String("file".to_string()), Yaml::Boolean(true));
                     h[&code] = Yaml::String(format!(
-                        "\"/Users/nickm/Library/Caches/pdl/venvs/{}/{}/python /tmp/{}.pdl\"",
+                        "\"/Users/nickm/Library/Caches/pdl/venvs/{}/{}/python {}\"",
                         req_hash,
                         if cfg!(windows) { "Scripts" } else { "bin" },
-                        code_hash
+                        tmp_path.display(),
                     ));
 
                     Yaml::Hash(h.clone())

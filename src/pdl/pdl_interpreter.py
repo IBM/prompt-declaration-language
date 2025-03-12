@@ -1456,7 +1456,7 @@ def process_call_code(
                 ) from exc
         case "command":
             try:
-                result = call_command(code_s)
+                result = call_command(code_s, block.file == True)
                 background = PdlList(
                     [
                         PdlDict(  # type: ignore
@@ -1530,7 +1530,10 @@ def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
     return PdlConst(result)
 
 
-def call_command(code: str) -> PdlLazy[str]:
+def call_command(code: str, is_file: bool) -> PdlLazy[str]:
+    if is_file:
+        with open(code, "r") as f:
+            code = f.read()
     args = shlex.split(code)
     p = subprocess.run(
         args, capture_output=True, text=True, check=False, shell=False

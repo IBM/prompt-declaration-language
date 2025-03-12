@@ -475,6 +475,9 @@ class CodeBlock(LeafBlock):
     code: "BlockType"
     """Code to execute.
     """
+    file: Optional[bool] = None
+    """Code to execute is a file path.
+    """
 
     @model_validator(mode="after")
     def lang_is_python(self):

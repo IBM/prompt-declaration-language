@@ -55,6 +55,7 @@ pub fn run_pdl_program(
             println!("Updated! {:?}", updated_program);
             let mut out_str = String::new();
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&updated_program).map_err(|e| match e {
                 EmitError::FmtError(ee) => tauri::Error::Anyhow(ee.into()),
             })?;
