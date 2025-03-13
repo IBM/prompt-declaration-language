@@ -18,6 +18,7 @@ export type Program =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -135,6 +136,11 @@ export type Description18 = string | null
  */
 export type Description19 = string | null
 /**
+ * Documentation associated to the block.
+ *
+ */
+export type Description20 = string | null
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -161,8 +167,8 @@ export type Parser =
   | PdlParser
   | RegexParser
   | null
-export type Description20 = string | null
-export type Spec20 = {
+export type Description21 = string | null
+export type Spec21 = {
   [k: string]: unknown
 } | null
 export type Pdl =
@@ -174,6 +180,7 @@ export type Pdl =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -190,8 +197,8 @@ export type Pdl =
   | ErrorBlock
   | EmptyBlock
   | null
-export type Description21 = string | null
-export type Spec21 = {
+export type Description22 = string | null
+export type Spec22 = {
   [k: string]: unknown
 } | null
 export type Regex = string
@@ -209,6 +216,7 @@ export type Fallback =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -287,6 +295,7 @@ export type Fallback1 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -343,6 +352,7 @@ export type Program1 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -395,6 +405,7 @@ export type Fallback2 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -447,6 +458,7 @@ export type PdlTrace =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -499,6 +511,7 @@ export type Fallback3 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -551,6 +564,7 @@ export type PdlTrace1 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -603,6 +617,7 @@ export type Fallback4 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -692,6 +707,7 @@ export type Fallback5 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -742,6 +758,7 @@ export type Content =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -794,6 +811,7 @@ export type Fallback6 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -843,6 +861,7 @@ export type Object =
         | LitellmModelBlock
         | GraniteioModelBlock
         | CodeBlock
+        | ArgsBlock
         | GetBlock
         | DataBlock
         | IfBlock
@@ -869,6 +888,7 @@ export type Object =
       | LitellmModelBlock
       | GraniteioModelBlock
       | CodeBlock
+      | ArgsBlock
       | GetBlock
       | DataBlock
       | IfBlock
@@ -922,6 +942,7 @@ export type Fallback7 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -972,6 +993,7 @@ export type Array = (
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1025,6 +1047,7 @@ export type Fallback8 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1075,6 +1098,7 @@ export type Lastof = (
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1128,6 +1152,7 @@ export type Fallback9 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1179,6 +1204,7 @@ export type Text =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1203,6 +1229,7 @@ export type Text =
       | LitellmModelBlock
       | GraniteioModelBlock
       | CodeBlock
+      | ArgsBlock
       | GetBlock
       | DataBlock
       | IfBlock
@@ -1257,6 +1284,7 @@ export type Fallback10 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1320,6 +1348,7 @@ export type Repeat =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1386,6 +1415,7 @@ export type PdlTrace2 =
       | LitellmModelBlock
       | GraniteioModelBlock
       | CodeBlock
+      | ArgsBlock
       | GetBlock
       | DataBlock
       | IfBlock
@@ -1440,6 +1470,7 @@ export type Fallback11 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1522,6 +1553,7 @@ export type Then =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1582,6 +1614,7 @@ export type Fallback12 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1638,6 +1671,7 @@ export type Then1 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1667,6 +1701,7 @@ export type Else =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1720,6 +1755,7 @@ export type Fallback13 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1798,6 +1834,7 @@ export type Fallback14 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1876,6 +1913,7 @@ export type Fallback15 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -1914,40 +1952,12 @@ export type Context15 =
 export type PdlId15 = string | null
 export type PdlIsLeaf15 = true
 export type Kind15 = "code"
+export type Lang = "command"
 /**
- * Programming language of the code.
+ * The argument vector to spawn.
  *
  */
-export type Lang = "python" | "command" | "jinja" | "pdl"
-/**
- * Code to execute.
- *
- */
-export type Code =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
+export type Args = (string | LocalizedExpression)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1984,6 +1994,7 @@ export type Fallback16 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2021,7 +2032,117 @@ export type Context16 =
  */
 export type PdlId16 = string | null
 export type PdlIsLeaf16 = true
-export type Kind16 = "model"
+export type Kind16 = "code"
+/**
+ * Programming language of the code.
+ *
+ */
+export type Lang1 = "python" | "command" | "jinja" | "pdl"
+/**
+ * Code to execute.
+ *
+ */
+export type Code =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def21 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute17 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser17 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback17 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role17 = string | null
+/**
+ * Current context
+ *
+ */
+export type Context17 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId17 = string | null
+export type PdlIsLeaf17 = true
+export type Kind17 = "model"
 /**
  * Messages to send to the model.
  *
@@ -2035,6 +2156,7 @@ export type Input =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2067,6 +2189,7 @@ export type PdlTrace3 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2118,12 +2241,12 @@ export type Parameters =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def21 = string | null
+export type Def22 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute17 = (
+export type Contribute18 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
@@ -2132,7 +2255,7 @@ export type Contribute17 = (
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser17 =
+export type Parser18 =
   | ("json" | "jsonl" | "yaml")
   | PdlParser
   | RegexParser
@@ -2141,7 +2264,7 @@ export type Parser17 =
  * Block to execute in case of error.
  *
  */
-export type Fallback17 =
+export type Fallback18 =
   | boolean
   | number
   | string
@@ -2150,6 +2273,7 @@ export type Fallback17 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2171,12 +2295,12 @@ export type Fallback17 =
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role17 = string | null
+export type Role18 = string | null
 /**
  * Current context
  *
  */
-export type Context17 =
+export type Context18 =
   | {
       [k: string]: unknown
     }[]
@@ -2185,9 +2309,9 @@ export type Context17 =
  * Unique identifier for this block
  *
  */
-export type PdlId17 = string | null
-export type PdlIsLeaf17 = true
-export type Kind17 = "model"
+export type PdlId18 = string | null
+export type PdlIsLeaf18 = true
+export type Kind18 = "model"
 /**
  * Name of the model following the LiteLLM convention.
  *
@@ -2206,6 +2330,7 @@ export type Input1 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2236,6 +2361,7 @@ export type PdlTrace4 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2320,105 +2446,6 @@ export type MaxRetries = number | string | null
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def22 = string | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute18 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser18 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback18 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role18 = string | null
-/**
- * Current context
- *
- */
-export type Context18 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId18 = string | null
-export type PdlIsLeaf18 = true
-export type Kind18 = "call"
-export type PdlTrace5 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def23 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
@@ -2451,6 +2478,7 @@ export type Fallback19 =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2488,7 +2516,108 @@ export type Context19 =
  */
 export type PdlId19 = string | null
 export type PdlIsLeaf19 = true
-export type Kind19 = "function"
+export type Kind19 = "call"
+export type PdlTrace5 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def24 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute20 = (
+  | ContributeTarget
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser20 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback20 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role20 = string | null
+/**
+ * Current context
+ *
+ */
+export type Context20 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId20 = string | null
+export type PdlIsLeaf20 = true
+export type Kind20 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -2509,6 +2638,7 @@ export type Return =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2534,6 +2664,7 @@ export type PdlBlock =
   | LitellmModelBlock
   | GraniteioModelBlock
   | CodeBlock
+  | ArgsBlock
   | GetBlock
   | DataBlock
   | IfBlock
@@ -2558,18 +2689,18 @@ export interface FunctionBlock {
   description?: Description
   spec?: Spec
   defs?: Defs
-  def?: Def23
-  contribute?: Contribute19
-  parser?: Parser19
-  fallback?: Fallback19
-  role?: Role19
-  context?: Context19
-  pdl__id?: PdlId19
+  def?: Def24
+  contribute?: Contribute20
+  parser?: Parser20
+  fallback?: Fallback20
+  role?: Role20
+  context?: Context20
+  pdl__id?: PdlId20
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf19
-  kind?: Kind19
+  pdl__is_leaf?: PdlIsLeaf20
+  kind?: Kind20
   function: Function
   return: Return
 }
@@ -2594,6 +2725,7 @@ export interface Defs {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2618,18 +2750,18 @@ export interface CallBlock {
   description?: Description1
   spec?: Spec1
   defs?: Defs1
-  def?: Def22
-  contribute?: Contribute18
-  parser?: Parser18
-  fallback?: Fallback18
-  role?: Role18
-  context?: Context18
-  pdl__id?: PdlId18
+  def?: Def23
+  contribute?: Contribute19
+  parser?: Parser19
+  fallback?: Fallback19
+  role?: Role19
+  context?: Context19
+  pdl__id?: PdlId19
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf18
-  kind?: Kind18
+  pdl__is_leaf?: PdlIsLeaf19
+  kind?: Kind19
   call: unknown
   args?: unknown
   pdl__trace?: PdlTrace5
@@ -2655,6 +2787,7 @@ export interface Defs1 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2686,18 +2819,18 @@ export interface LitellmModelBlock {
   description?: Description2
   spec?: Spec2
   defs?: Defs2
-  def?: Def21
-  contribute?: Contribute17
-  parser?: Parser17
-  fallback?: Fallback17
-  role?: Role17
-  context?: Context17
-  pdl__id?: PdlId17
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  role?: Role18
+  context?: Context18
+  pdl__id?: PdlId18
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf17
-  kind?: Kind17
+  pdl__is_leaf?: PdlIsLeaf18
+  kind?: Kind18
   model: Model1
   input?: Input1
   modelResponse?: Modelresponse1
@@ -2731,6 +2864,7 @@ export interface Defs2 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2755,18 +2889,18 @@ export interface GraniteioModelBlock {
   description?: Description3
   spec?: Spec3
   defs?: Defs3
-  def?: Def20
-  contribute?: Contribute16
-  parser?: Parser16
-  fallback?: Fallback16
-  role?: Role16
-  context?: Context16
-  pdl__id?: PdlId16
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  role?: Role17
+  context?: Context17
+  pdl__id?: PdlId17
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf16
-  kind?: Kind16
+  pdl__is_leaf?: PdlIsLeaf17
+  kind?: Kind17
   model: unknown
   input?: Input
   modelResponse?: Modelresponse
@@ -2802,6 +2936,7 @@ export interface Defs3 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2836,19 +2971,19 @@ export interface CodeBlock {
   description?: Description4
   spec?: Spec4
   defs?: Defs4
-  def?: Def19
-  contribute?: Contribute15
-  parser?: Parser15
-  fallback?: Fallback15
-  role?: Role15
-  context?: Context15
-  pdl__id?: PdlId15
+  def?: Def20
+  contribute?: Contribute16
+  parser?: Parser16
+  fallback?: Fallback16
+  role?: Role16
+  context?: Context16
+  pdl__id?: PdlId16
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf15
-  kind?: Kind15
-  lang: Lang
+  pdl__is_leaf?: PdlIsLeaf16
+  kind?: Kind16
+  lang: Lang1
   code: Code
 }
 /**
@@ -2872,6 +3007,76 @@ export interface Defs4 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.
+ *
+ * Example:
+ * ```PDL
+ * args:
+ * - /bin/sh
+ * - "-c"
+ * - "if [[ $x = 1 ]]; then echo y; else echo n; fi"
+ * ```
+ */
+export interface ArgsBlock {
+  description?: Description5
+  spec?: Spec5
+  defs?: Defs5
+  def?: Def19
+  contribute?: Contribute15
+  parser?: Parser15
+  fallback?: Fallback15
+  role?: Role15
+  context?: Context15
+  pdl__id?: PdlId15
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf15
+  kind?: Kind15
+  lang?: Lang
+  args: Args
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec5 {
+  [k: string]: unknown
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs5 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2895,9 +3100,9 @@ export interface Defs4 {
  * The GetBlock is deprecated.  Use DataBlock instead.
  */
 export interface GetBlock {
-  description?: Description5
-  spec?: Spec5
-  defs?: Defs5
+  description?: Description6
+  spec?: Spec6
+  defs?: Defs6
   def?: Def18
   contribute?: Contribute14
   parser?: Parser14
@@ -2916,14 +3121,14 @@ export interface GetBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec5 {
+export interface Spec6 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs5 {
+export interface Defs6 {
   [k: string]:
     | boolean
     | number
@@ -2933,6 +3138,7 @@ export interface Defs5 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -2975,9 +3181,9 @@ export interface Defs5 {
  * ```
  */
 export interface DataBlock {
-  description?: Description6
-  spec?: Spec6
-  defs?: Defs6
+  description?: Description7
+  spec?: Spec7
+  defs?: Defs7
   def?: Def17
   contribute?: Contribute13
   parser?: Parser13
@@ -2997,14 +3203,14 @@ export interface DataBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec6 {
+export interface Spec7 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs6 {
+export interface Defs7 {
   [k: string]:
     | boolean
     | number
@@ -3014,6 +3220,7 @@ export interface Defs6 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3044,9 +3251,9 @@ export interface Defs6 {
  * ```
  */
 export interface IfBlock {
-  description?: Description7
-  spec?: Spec7
-  defs?: Defs7
+  description?: Description8
+  spec?: Spec8
+  defs?: Defs8
   def?: Def16
   contribute?: Contribute12
   parser?: Parser12
@@ -3063,66 +3270,6 @@ export interface IfBlock {
   then: Then1
   else?: Else
   if_result?: IfResult
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec7 {
-  [k: string]: unknown
-}
-/**
- * Set of definitions executed before the execution of the block.
- *
- */
-export interface Defs7 {
-  [k: string]:
-    | boolean
-    | number
-    | string
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | CodeBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | ErrorBlock
-    | EmptyBlock
-    | null
-}
-/**
- * Match control structure.
- */
-export interface MatchBlock {
-  description?: Description8
-  spec?: Spec8
-  defs?: Defs8
-  def?: Def11
-  contribute?: Contribute11
-  parser?: Parser11
-  fallback?: Fallback11
-  role?: Role11
-  context?: Context11
-  pdl__id?: PdlId11
-  pdl__result?: unknown
-  pdl__location?: PdlLocationType | null
-  pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf11
-  kind?: Kind11
-  match: unknown
-  with: With1
 }
 /**
  * Type specification of the result of the block.
@@ -3145,6 +3292,68 @@ export interface Defs8 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Match control structure.
+ */
+export interface MatchBlock {
+  description?: Description9
+  spec?: Spec9
+  defs?: Defs9
+  def?: Def11
+  contribute?: Contribute11
+  parser?: Parser11
+  fallback?: Fallback11
+  role?: Role11
+  context?: Context11
+  pdl__id?: PdlId11
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf11
+  kind?: Kind11
+  match: unknown
+  with: With1
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec9 {
+  [k: string]: unknown
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs9 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3175,9 +3384,9 @@ export interface Defs8 {
  * ```
  */
 export interface RepeatBlock {
-  description?: Description9
-  spec?: Spec9
-  defs?: Defs9
+  description?: Description10
+  spec?: Spec10
+  defs?: Defs10
   def?: Def10
   contribute?: Contribute10
   parser?: Parser10
@@ -3202,14 +3411,14 @@ export interface RepeatBlock {
  * Type specification of the result of the block.
  *
  */
-export interface Spec9 {
+export interface Spec10 {
   [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
-export interface Defs9 {
+export interface Defs10 {
   [k: string]:
     | boolean
     | number
@@ -3219,6 +3428,7 @@ export interface Defs9 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3240,9 +3450,9 @@ export interface Defs9 {
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
 export interface TextBlock {
-  description?: Description10
-  spec?: Spec10
-  defs?: Defs10
+  description?: Description11
+  spec?: Spec11
+  defs?: Defs11
   def?: Def9
   contribute?: Contribute9
   parser?: Parser9
@@ -3256,65 +3466,6 @@ export interface TextBlock {
   pdl__is_leaf?: PdlIsLeaf9
   kind?: Kind9
   text: Text
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec10 {
-  [k: string]: unknown
-}
-/**
- * Set of definitions executed before the execution of the block.
- *
- */
-export interface Defs10 {
-  [k: string]:
-    | boolean
-    | number
-    | string
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | CodeBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | ErrorBlock
-    | EmptyBlock
-    | null
-}
-/**
- * Return the value of the last block if the list of blocks.
- */
-export interface LastOfBlock {
-  description?: Description11
-  spec?: Spec11
-  defs?: Defs11
-  def?: Def8
-  contribute?: Contribute8
-  parser?: Parser8
-  fallback?: Fallback8
-  role?: Role8
-  context?: Context8
-  pdl__id?: PdlId8
-  pdl__result?: unknown
-  pdl__location?: PdlLocationType | null
-  pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf8
-  kind?: Kind8
-  lastOf: Lastof
 }
 /**
  * Type specification of the result of the block.
@@ -3337,6 +3488,7 @@ export interface Defs11 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3355,25 +3507,25 @@ export interface Defs11 {
     | null
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Return the value of the last block if the list of blocks.
  */
-export interface ArrayBlock {
+export interface LastOfBlock {
   description?: Description12
   spec?: Spec12
   defs?: Defs12
-  def?: Def7
-  contribute?: Contribute7
-  parser?: Parser7
-  fallback?: Fallback7
-  role?: Role7
-  context?: Context7
-  pdl__id?: PdlId7
+  def?: Def8
+  contribute?: Contribute8
+  parser?: Parser8
+  fallback?: Fallback8
+  role?: Role8
+  context?: Context8
+  pdl__id?: PdlId8
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf7
-  kind?: Kind7
-  array: Array
+  pdl__is_leaf?: PdlIsLeaf8
+  kind?: Kind8
+  lastOf: Lastof
 }
 /**
  * Type specification of the result of the block.
@@ -3396,6 +3548,7 @@ export interface Defs12 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3414,25 +3567,25 @@ export interface Defs12 {
     | null
 }
 /**
- * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface ObjectBlock {
+export interface ArrayBlock {
   description?: Description13
   spec?: Spec13
   defs?: Defs13
-  def?: Def6
-  contribute?: Contribute6
-  parser?: Parser6
-  fallback?: Fallback6
-  role?: Role6
-  context?: Context6
-  pdl__id?: PdlId6
+  def?: Def7
+  contribute?: Contribute7
+  parser?: Parser7
+  fallback?: Fallback7
+  role?: Role7
+  context?: Context7
+  pdl__id?: PdlId7
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf6
-  kind?: Kind6
-  object: Object
+  pdl__is_leaf?: PdlIsLeaf7
+  kind?: Kind7
+  array: Array
 }
 /**
  * Type specification of the result of the block.
@@ -3455,6 +3608,7 @@ export interface Defs13 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3473,25 +3627,25 @@ export interface Defs13 {
     | null
 }
 /**
- * Create a message.
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface MessageBlock {
+export interface ObjectBlock {
   description?: Description14
   spec?: Spec14
   defs?: Defs14
-  def?: Def5
-  contribute?: Contribute5
-  parser?: Parser5
-  fallback?: Fallback5
-  role: Role5
-  context?: Context5
-  pdl__id?: PdlId5
+  def?: Def6
+  contribute?: Contribute6
+  parser?: Parser6
+  fallback?: Fallback6
+  role?: Role6
+  context?: Context6
+  pdl__id?: PdlId6
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf5
-  kind?: Kind5
-  content: Content
+  pdl__is_leaf?: PdlIsLeaf6
+  kind?: Kind6
+  object: Object
 }
 /**
  * Type specification of the result of the block.
@@ -3514,6 +3668,7 @@ export interface Defs14 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3532,27 +3687,25 @@ export interface Defs14 {
     | null
 }
 /**
- * Read from a file or standard input.
+ * Create a message.
  */
-export interface ReadBlock {
+export interface MessageBlock {
   description?: Description15
   spec?: Spec15
   defs?: Defs15
-  def?: Def4
-  contribute?: Contribute4
-  parser?: Parser4
-  fallback?: Fallback4
-  role?: Role4
-  context?: Context4
-  pdl__id?: PdlId4
+  def?: Def5
+  contribute?: Contribute5
+  parser?: Parser5
+  fallback?: Fallback5
+  role: Role5
+  context?: Context5
+  pdl__id?: PdlId5
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf4
-  kind?: Kind4
-  read: Read
-  message?: Message
-  multiline?: Multiline
+  pdl__is_leaf?: PdlIsLeaf5
+  kind?: Kind5
+  content: Content
 }
 /**
  * Type specification of the result of the block.
@@ -3575,6 +3728,7 @@ export interface Defs15 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3593,26 +3747,27 @@ export interface Defs15 {
     | null
 }
 /**
- * Include a PDL file.
+ * Read from a file or standard input.
  */
-export interface IncludeBlock {
+export interface ReadBlock {
   description?: Description16
   spec?: Spec16
   defs?: Defs16
-  def?: Def3
-  contribute?: Contribute3
-  parser?: Parser3
-  fallback?: Fallback3
-  role?: Role3
-  context?: Context3
-  pdl__id?: PdlId3
+  def?: Def4
+  contribute?: Contribute4
+  parser?: Parser4
+  fallback?: Fallback4
+  role?: Role4
+  context?: Context4
+  pdl__id?: PdlId4
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf3
-  kind?: Kind3
-  include: Include
-  pdl__trace?: PdlTrace1
+  pdl__is_leaf?: PdlIsLeaf4
+  kind?: Kind4
+  read: Read
+  message?: Message
+  multiline?: Multiline
 }
 /**
  * Type specification of the result of the block.
@@ -3635,6 +3790,7 @@ export interface Defs16 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3653,26 +3809,26 @@ export interface Defs16 {
     | null
 }
 /**
- * Import a PDL file.
+ * Include a PDL file.
  */
-export interface ImportBlock {
+export interface IncludeBlock {
   description?: Description17
   spec?: Spec17
   defs?: Defs17
-  def?: Def2
-  contribute?: Contribute2
-  parser?: Parser2
-  fallback?: Fallback2
-  role?: Role2
-  context?: Context2
-  pdl__id?: PdlId2
+  def?: Def3
+  contribute?: Contribute3
+  parser?: Parser3
+  fallback?: Fallback3
+  role?: Role3
+  context?: Context3
+  pdl__id?: PdlId3
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf2
-  kind?: Kind2
-  import: Import
-  pdl__trace?: PdlTrace
+  pdl__is_leaf?: PdlIsLeaf3
+  kind?: Kind3
+  include: Include
+  pdl__trace?: PdlTrace1
 }
 /**
  * Type specification of the result of the block.
@@ -3695,6 +3851,7 @@ export interface Defs17 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3713,26 +3870,26 @@ export interface Defs17 {
     | null
 }
 /**
- * Block representing an error generated at runtime.
+ * Import a PDL file.
  */
-export interface ErrorBlock {
+export interface ImportBlock {
   description?: Description18
   spec?: Spec18
   defs?: Defs18
-  def?: Def1
-  contribute?: Contribute1
-  parser?: Parser1
-  fallback?: Fallback1
-  role?: Role1
-  context?: Context1
-  pdl__id?: PdlId1
+  def?: Def2
+  contribute?: Contribute2
+  parser?: Parser2
+  fallback?: Fallback2
+  role?: Role2
+  context?: Context2
+  pdl__id?: PdlId2
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf1
-  kind?: Kind1
-  msg: Msg
-  program: Program1
+  pdl__is_leaf?: PdlIsLeaf2
+  kind?: Kind2
+  import: Import
+  pdl__trace?: PdlTrace
 }
 /**
  * Type specification of the result of the block.
@@ -3755,6 +3912,7 @@ export interface Defs18 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3773,24 +3931,26 @@ export interface Defs18 {
     | null
 }
 /**
- * Block without an action. It can contain definitions.
+ * Block representing an error generated at runtime.
  */
-export interface EmptyBlock {
+export interface ErrorBlock {
   description?: Description19
   spec?: Spec19
   defs?: Defs19
-  def?: Def
-  contribute?: Contribute
-  parser?: Parser
-  fallback?: Fallback
-  role?: Role
-  context?: Context
-  pdl__id?: PdlId
+  def?: Def1
+  contribute?: Contribute1
+  parser?: Parser1
+  fallback?: Fallback1
+  role?: Role1
+  context?: Context1
+  pdl__id?: PdlId1
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf
-  kind?: Kind
+  pdl__is_leaf?: PdlIsLeaf1
+  kind?: Kind1
+  msg: Msg
+  program: Program1
 }
 /**
  * Type specification of the result of the block.
@@ -3813,6 +3973,66 @@ export interface Defs19 {
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Block without an action. It can contain definitions.
+ */
+export interface EmptyBlock {
+  description?: Description20
+  spec?: Spec20
+  defs?: Defs20
+  def?: Def
+  contribute?: Contribute
+  parser?: Parser
+  fallback?: Fallback
+  role?: Role
+  context?: Context
+  pdl__id?: PdlId
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf
+  kind?: Kind
+}
+/**
+ * Type specification of the result of the block.
+ *
+ */
+export interface Spec20 {
+  [k: string]: unknown
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs20 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock
@@ -3852,16 +4072,16 @@ export interface Table {
   [k: string]: number
 }
 export interface PdlParser {
-  description?: Description20
-  spec?: Spec20
+  description?: Description21
+  spec?: Spec21
   pdl: Pdl
 }
 /**
  * A regular expression parser
  */
 export interface RegexParser {
-  description?: Description21
-  spec?: Spec21
+  description?: Description22
+  spec?: Spec22
   regex: Regex
   mode?: Mode
 }

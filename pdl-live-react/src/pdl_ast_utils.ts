@@ -1,7 +1,7 @@
 import { match, P } from "ts-pattern"
 
 import { PdlBlock } from "./pdl_ast"
-import { hasContextInformation } from "./helpers"
+import { hasContextInformation, isArgs } from "./helpers"
 
 export function map_block_children(
   f: (block: PdlBlock) => PdlBlock,
@@ -51,8 +51,11 @@ export function map_block_children(
       }
     })
     .with({ kind: "code" }, (block) => {
-      const code = f(block.code)
-      return { ...block, code: code }
+      if (isArgs(block)) {
+        return block
+      } else {
+        return { ...block, code: f(block.code) }
+      }
     })
     .with({ kind: "get" }, (block) => block)
     .with(
@@ -155,7 +158,9 @@ export function iter_block_children(
       if (block.input) f(block.input)
     })
     .with({ kind: "code" }, (block) => {
-      f(block.code)
+      if (!isArgs(block)) {
+        f(block.code)
+      }
     })
     .with({ kind: "get" }, () => {})
     .with({ kind: "data" }, () => {})

@@ -7,6 +7,7 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     AnyPattern,
+    ArgsBlock,
     ArrayBlock,
     ArrayPattern,
     Block,
@@ -138,6 +139,8 @@ def block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
             if block.pdl__model_stats is not None:
                 d["pdl__model_stats"] = model_stats_to_dict(block.pdl__model_stats)
+        case ArgsBlock():
+            d["args"] = block.args
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
