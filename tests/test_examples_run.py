@@ -73,9 +73,6 @@ TO_SKIP = {
         pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
         pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
         pathlib.Path("examples")
-        / "intrinsics"
-        / "demo-hallucination.pdl",  # TODO check why
-        pathlib.Path("examples")
         / "hello"
         / "hello-function-empty-context.pdl",  # TODO CREATE RESULTS FILE
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",  # TODO check why
@@ -232,7 +229,12 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     actual_parse_error: set[str] = set()
     actual_runtime_error: set[str] = set()
     wrong_results = {}
+
+    test_files = pathlib.Path(".").glob("**/*.pdl")
+    test_files = pathlib.Path(".").glob("**/demo-halluncination.pdl")
+
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
+    # for pdl_file_name in test_files:
         scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue

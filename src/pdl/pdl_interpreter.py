@@ -1,7 +1,6 @@
 # pylint: disable=import-outside-toplevel
 import json
 import re
-import shlex
 import subprocess  # nosec
 import sys
 import time
@@ -1531,9 +1530,12 @@ def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
 
 
 def call_command(code: str) -> PdlLazy[str]:
-    args = shlex.split(code)
     p = subprocess.run(
-        args, capture_output=True, text=True, check=False, shell=False
+        code,
+        capture_output=True,
+        text=True,
+        check=False,
+        shell=True
     )  # nosec B603
     # [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
     # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
