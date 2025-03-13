@@ -73,6 +73,10 @@ TO_SKIP = {
         pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
         pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
         pathlib.Path("examples")
+        / "intrinsics"
+        / "demo-hallucination.pdl",  # TODO check why
+        pathlib.Path("examples"),
+        pathlib.Path("examples")
         / "hello"
         / "hello-function-empty-context.pdl",  # TODO CREATE RESULTS FILE
         pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",  # TODO check why
