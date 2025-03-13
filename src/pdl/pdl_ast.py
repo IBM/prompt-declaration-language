@@ -388,7 +388,7 @@ class ModelBlock(LeafBlock):
     model: ExpressionType
     """Model to use.
     """
-    input: Optional["BlockType"] = None
+    input: "BlockType" = "${ pdl_context }"
     """Messages to send to the model.
     """
     modelResponse: Optional[str] = None
