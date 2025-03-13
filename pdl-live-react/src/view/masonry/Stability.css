@@ -10,6 +10,8 @@
 
 .pdl-masonry-tile-stability-grid {
   gap: 2px;
+  height: 1em;
+  align-items: flex-end;
 }
 .pdl-masonry-tile-stability-cell {
   width: 1rem;

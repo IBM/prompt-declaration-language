@@ -175,7 +175,7 @@ class ContributeTarget(StrEnum):
 
 
 class ContributeValue(BaseModel):
-    value: list[Any]
+    value: ExpressionType[list[Any]]
     model_config = ConfigDict(extra="forbid")
 
 

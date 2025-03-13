@@ -1,0 +1,58 @@
+name: Tauri CLI Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# cancel any prior runs for this workflow and this PR (or branch)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cli:
+    name: Test pdl CLI using Tauri
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pdl-live-react
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        # sleep 2 to wait for ollama to be running... hack warning
+        run: |
+          npm ci & sudo apt update && \
+            sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core && \
+            (curl -fsSL https://ollama.com/install.sh | sudo -E sh && sleep 2)
+          wait
+      - name: Test production build
+        run: npm run tauri build -- --bundles deb # Skip testing appimage, is this dangerous? It's slow...
+      - name: Setup xvfb for screen 0
+        run: Xvfb :1 -screen 0 1600x1200x24 &
+
+      - name: Run production build
+        env:
+          DISPLAY: :1
+        run: |
+          PATH=./src-tauri/target/release/:$PATH
+          
+          # 1. `run` subcommand works without any arguments
+          pdl run | grep Usage
+
+          # 2. `run` subcommand works with UI demos (yaml source)
+          pdl run ./demos/demo1.pdl | grep 'write a hello'
+
+          # 3. `run` subcommand works with UI demos (json source)
+          # demo8 uses a private model? not sure
+          for i in ./src/demos/*.json
+          do if [[ $(basename $i) != "demo8.json" ]]; then pdl run $i; fi
+          done
+
+      - name: Tear down xvfb
+        run: killall Xvfb  

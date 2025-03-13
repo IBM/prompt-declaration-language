@@ -24,23 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Linux dependencies
-        # only if we ever add a drawer menu libappindicator3-dev
-        # re: at-spi2-core, Warning **: Error retrieving accessibility bus address:
-        run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core
-      - name: Install NodeJs dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: |
+          npm ci & sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core
+          wait
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Test pdl-live viewer
         run: npm test
-      - name: Test production build
-        run: npm run tauri build
-      - name: Setup xvfb for screen 0
-        run: Xvfb :1 -screen 0 1600x1200x24 &      
-      - name: Run production build
-        env:
-          DISPLAY: :1
-        run: ./src-tauri/target/release/pdl run | grep Usage
-      - name: Tear down xvfb
-        run: killall Xvfb  

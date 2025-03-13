@@ -4,6 +4,7 @@ use tauri_plugin_pty;
 mod cli;
 mod commands;
 mod gui;
+mod interpreter;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
