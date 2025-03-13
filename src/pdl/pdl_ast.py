@@ -441,7 +441,11 @@ class GraniteioModelBlock(ModelBlock):
     """
 
 
-class CodeBlock(LeafBlock):
+class BaseCodeBlock(LeafBlock):
+    kind: Literal[BlockKind.CODE] = BlockKind.CODE
+
+
+class CodeBlock(BaseCodeBlock):
     """
     Execute a piece of code.
 
@@ -456,7 +460,6 @@ class CodeBlock(LeafBlock):
     ```
     """
 
-    kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lang: Annotated[
         Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
     ]
@@ -464,6 +467,25 @@ class CodeBlock(LeafBlock):
     """
     code: "BlockType"
     """Code to execute.
+    """
+
+
+class ArgsBlock(BaseCodeBlock):
+    """
+    Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.
+
+    Example:
+    ```PDL
+    args:
+    - /bin/sh
+    - "-c"
+    - "if [[ $x = 1 ]]; then echo y; else echo n; fi"
+    ```
+    """
+
+    lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
+    args: list[ExpressionType[str]]
+    """The argument vector to spawn.
     """
 
 
@@ -758,6 +780,7 @@ AdvancedBlockType: TypeAlias = (
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock

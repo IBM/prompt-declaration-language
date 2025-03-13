@@ -61,6 +61,26 @@ command_data = {
     ]
 }
 
+command_data_args = {
+    "lastOf": [
+        {
+            "def": "world1",
+            "lang": "command",
+            "code": "echo -n \\'World\\'",  # test nested quotes
+        },
+        {
+            "def": "world",
+            "args": [
+                "echo",
+                "-n",
+                "${ world1 }",  # and jinja expansion of nested quotes
+            ],
+            "contribute": [],
+        },
+        "Hello ${ world }!",
+    ]
+}
+
 
 def test_command():
     result = exec_dict(command_data, output="all")
@@ -68,6 +88,15 @@ def test_command():
     scope = result["scope"]
     assert document == "Hello World!"
     assert scope["world"] == "World"
+
+
+def test_command_args():
+    result = exec_dict(command_data_args, output="all")
+    document = result["result"]
+    scope = result["scope"]
+    assert document == "Hello 'World'!"
+    assert scope["world1"] == "'World'"
+    assert scope["world"] == "'World'"
 
 
 def test_jinja1():
