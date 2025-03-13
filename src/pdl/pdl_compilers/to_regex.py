@@ -10,6 +10,7 @@ from ..pdl_ast import (
     CodeBlock,
     DataBlock,
     ExpressionType,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -317,6 +318,8 @@ def compile_block(
         case IncludeBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case ImportBlock():
+            regex = ReStar(ReAnyChar())  # XXX TODO XXX
+        case FactorBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case FunctionBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX

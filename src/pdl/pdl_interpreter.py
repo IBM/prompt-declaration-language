@@ -12,6 +12,8 @@ import types
 import warnings
 from os import getenv
 
+from mu_ppl import PDL_model, factor, sample
+
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 # from itertools import batched
@@ -49,6 +51,7 @@ from .pdl_ast import (  # noqa: E402
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -444,8 +447,11 @@ def process_block_body(
     block.pdl__location = loc
     match block:
         case ModelBlock():
-            result, background, scope, trace = process_call_model(
-                state, scope, block, loc
+            # result, background, scope, trace = process_call_model(
+            #     state, scope, block, loc
+            # )
+            result, background, scope, trace = sample(
+                PDL_model(state, scope, block, loc)
             )
         case CodeBlock():
             result, background, scope, trace = process_call_code(
@@ -799,6 +805,13 @@ def process_block_body(
             trace = closure.model_copy(update={})
         case CallBlock():
             result, background, scope, trace = process_call(state, scope, block, loc)
+        case FactorBlock():
+            weight, trace = process_expr_of(
+                block, "factor", scope, append(loc, "factor")
+            )
+            factor(weight)
+            result = PdlConst(None)
+            background = PdlList([])
         case EmptyBlock():
             result = PdlConst("")
             background = PdlList([])

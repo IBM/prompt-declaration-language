@@ -1,0 +1,27 @@
+defs:
+  obs:
+    array: [0, 0,  0, 0, 0, 0, 0, 0, 1, 1]
+  p:
+    model: ollama_chat/granite3.2:2b
+    parameters:
+      temperature: 1
+    input: Generate a number between 0 and 1 that represents the bias of a coin that might returns head (represented with the value 1) more often than tail (represented with the value 0). DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
+    parser: json
+  data:
+    lang: python
+    code: |
+      import random
+      if not isinstance(p, float):
+        p = 0.5
+      result = random.choices([1, 0], weights=[p, 1 - p], k=10)
+lastOf:
+  - lang: python
+    code: |
+      print(f"The bias is {p}")
+      result = None
+  - if: ${ obs != data}
+    then: 
+      factor: ${ -10 }
+  - model: ollama_chat/granite3.2:2b
+    input: If the bias of a coin is ${p}, is it biased towards head? JUST ANSWER WITH A BOOLEAN (true or false)
+  # - ${p}

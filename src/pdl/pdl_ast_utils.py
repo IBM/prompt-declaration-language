@@ -10,6 +10,7 @@ from .pdl_ast import (
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -97,6 +98,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case ImportBlock():
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
+        case FactorBlock():
+            pass
         case EmptyBlock():
             pass
         case _:
@@ -198,6 +201,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case ImportBlock():
             if block.pdl__trace is not None:
                 block.pdl__trace = f.f_block(block.pdl__trace)
+        case FactorBlock():
+            pass
         case EmptyBlock():
             pass
         case _:

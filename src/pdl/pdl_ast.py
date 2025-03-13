@@ -56,6 +56,7 @@ class BlockKind(StrEnum):
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
+    FACTOR = "factor"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -734,6 +735,13 @@ class ImportBlock(LeafBlock):
     pdl__trace: Optional["BlockType"] = None
 
 
+class FactorBlock(LeafBlock):
+    """Condition the model."""
+
+    kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
+    factor: ExpressionType[float]
+
+
 class ErrorBlock(LeafBlock):
     """Block representing an error generated at runtime."""
 
@@ -771,6 +779,7 @@ AdvancedBlockType: TypeAlias = (
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | FactorBlock
     | ErrorBlock
     | EmptyBlock
 )

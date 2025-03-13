@@ -17,6 +17,7 @@ from .pdl_ast import (
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -174,6 +175,8 @@ def block_to_dict(  # noqa: C901
             d["import"] = block.import_
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
+        case FactorBlock():
+            d["factor"] = block.factor
         case IfBlock():
             d["if"] = block.condition
             d["then"] = block_to_dict(block.then, json_compatible)
