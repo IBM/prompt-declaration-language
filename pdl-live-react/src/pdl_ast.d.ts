@@ -3823,6 +3823,7 @@ export interface ContributeValue {
 }
 export interface LocalizedExpression {
   expr: Expr
+  pdl__result?: unknown
   pdl__location?: PdlLocationType | null
 }
 export interface Expr {

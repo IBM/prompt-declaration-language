@@ -102,6 +102,7 @@ from .pdl_utils import (  # noqa: E402
     lazy_messages_concat,
     replace_contribute_value,
     stringify,
+    value_of_expr,
 )
 
 empty_scope: ScopeType = PdlDict({"pdl_context": PdlList([])})
@@ -235,13 +236,14 @@ def process_block(
         if not isinstance(block, Block):
             start = time.time_ns()
             try:
-                result = PdlConst(process_expr(scope, block, loc))
+                v, expr = process_expr(scope, block, loc)
             except PDLRuntimeExpressionError as exc:
                 raise PDLRuntimeError(
                     exc.message,
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
                 ) from exc
+            result = PdlConst(v)
             stringified_result = lazy_apply(stringify, result)
             background = PdlList(
                 [
@@ -257,7 +259,7 @@ def process_block(
                 ]
             )
             trace = DataBlock(
-                data=block,
+                data=expr,
                 pdl__result=stringified_result,
                 pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
                 pdl__id=".".join(state.id_stack),
@@ -571,7 +573,7 @@ def process_block_body(
                 {"role": state.role, "content": content, "defsite": block.pdl__id}
             )
         case IfBlock():
-            b = process_condition_of(block, "condition", scope, loc, "if")
+            b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:
                 state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
@@ -590,6 +592,7 @@ def process_block_body(
                 trace = block
             trace = trace.model_copy(
                 update={
+                    "condition": if_trace,
                     "if_result": b,
                 }
             )
@@ -621,7 +624,8 @@ def process_block_body(
                 if "if_" in match_case.model_fields_set and match_case.if_ is not None:
                     loc_if = append(loc_i, "if")
                     try:
-                        b = process_expr(new_scope, match_case.if_, loc_if)
+                        b, if_trace = process_expr(new_scope, match_case.if_, loc_if)
+                        match_case = match_case.model_copy(update={"if_": if_trace})
                     except PDLRuntimeExpressionError as exc:
                         cases.append(match_case)
                         block.with_ = cases
@@ -716,7 +720,7 @@ def process_block_body(
                         break
                     if lengths is not None and iidx >= lengths[0]:
                         break
-                    stay = process_condition_of(block, "while_", scope, loc, "while")
+                    stay, _ = process_condition_of(block, "while_", scope, loc, "while")
                     if not stay:
                         break
                     iteration_state = iteration_state.with_iter(iidx)
@@ -761,7 +765,7 @@ def process_block_body(
                     iter_trace.append(body_trace)
                     iteration_state = iteration_state.with_pop()
                     iidx = iidx + 1
-                    stop = process_condition_of(block, "until", scope, loc)
+                    stop, _ = process_condition_of(block, "until", scope, loc)
                     if stop:
                         break
             except PDLRuntimeError as exc:
@@ -1041,17 +1045,25 @@ BlockTypeTVarProcessContribute = TypeVar(
 def process_contribute(
     block: BlockTypeTVarProcessContribute, scope: ScopeType, loc: PdlLocationType
 ) -> tuple[Any, BlockTypeTVarProcessContribute]:
+    result: list[ContributeTarget | dict[str, ContributeValue]]
+    value_trace: LocalizedExpression[
+        list[ContributeTarget | dict[str, ContributeValue]]
+    ]
     value = get_contribute_value(block.contribute)
+    if value is None:
+        return None, block
     loc = append(loc, "contribute")
     try:
-        result: ContributeValue = process_expr(scope, value, loc)  # pyright: ignore
+        result, value_trace = process_expr(scope, value, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
         ) from exc
-    replace = replace_contribute_value(block.contribute, result)
+    replace = replace_contribute_value(
+        block.contribute, ContributeValue(value=value_trace)
+    )
     trace = block.model_copy(update={"contribute": replace})
     return result, trace
 
@@ -1068,17 +1080,19 @@ def process_expr_of(
     loc: PdlLocationType,
     field_alias: Optional[str] = None,
 ) -> tuple[Any, BlockTypeTVarProcessExprOf]:
+    result: Any
+    expr_trace: LocalizedExpression[Any]
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result: Any = process_expr(scope, expr, loc)
+        result, expr_trace = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
         ) from exc
-    trace = block.model_copy(update={field: result})
+    trace = block.model_copy(update={field: expr_trace})
     return result, trace
 
 
@@ -1088,18 +1102,20 @@ def process_condition_of(
     scope: ScopeType,
     loc: PdlLocationType,
     field_alias: Optional[str] = None,
-) -> bool:
+) -> tuple[bool, LocalizedExpression[bool]]:
+    result: bool
+    expr_trace: LocalizedExpression[bool]
     expr = getattr(block, field)
     loc = append(loc, field_alias or field)
     try:
-        result: bool = process_expr(scope, expr, loc)
+        result, expr_trace = process_expr(scope, expr, loc)
     except PDLRuntimeExpressionError as exc:
         raise PDLRuntimeError(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
         ) from exc
-    return result
+    return result, expr_trace
 
 
 EXPR_START_STRING = "${"
@@ -1110,10 +1126,26 @@ ProcessExprT = TypeVar("ProcessExprT")
 
 def process_expr(  # pylint: disable=too-many-return-statements
     scope: ScopeType, expr: ExpressionType[ProcessExprT], loc: PdlLocationType
-) -> ProcessExprT:
+) -> tuple[ProcessExprT, LocalizedExpression[ProcessExprT]]:
     result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        return process_expr(scope, expr.expr, loc)
+        result = _process_expr(scope, expr.expr, loc)
+        trace = expr.model_copy(update={"pdl__result": result})
+    else:
+        result = _process_expr(scope, expr, loc)
+        trace = LocalizedExpression(expr=expr, pdl__result=result, pdl__location=loc)
+    return (result, trace)
+
+
+_ProcessExprT = TypeVar("_ProcessExprT")
+
+
+def _process_expr(  # pylint: disable=too-many-return-statements
+    scope: ScopeType, expr: ExpressionType[_ProcessExprT], loc: PdlLocationType
+) -> _ProcessExprT:
+    result: _ProcessExprT
+    if isinstance(expr, LocalizedExpression):
+        return _process_expr(scope, expr.expr, loc)
     if isinstance(expr, str):
         try:
             env = Environment(  # nosec B701
@@ -1178,15 +1210,15 @@ def process_expr(  # pylint: disable=too-many-return-statements
     if isinstance(expr, list):
         result_list: list[Any] = []
         for index, x in enumerate(expr):
-            res: Any = process_expr(scope, x, append(loc, "[" + str(index) + "]"))
+            res: Any = _process_expr(scope, x, append(loc, "[" + str(index) + "]"))
             result_list.append(res)
         return result_list  # type: ignore
     if isinstance(expr, dict):
         result_dict: dict[str, Any] = {}
         for k, v in expr.items():
             k_loc = append(loc, k)
-            k_res: str = process_expr(scope, k, k_loc)
-            v_res: Any = process_expr(scope, v, k_loc)
+            k_res: str = _process_expr(scope, k, k_loc)
+            v_res: Any = _process_expr(scope, v, k_loc)
             result_dict[k_res] = v_res
         return result_dict  # type: ignore
     return expr
@@ -1209,7 +1241,9 @@ def process_call_model(
     BlockTypeTVarProcessCallModel,
 ]:
     # evaluate model name
-    _, concrete_block = process_expr_of(block, "model", scope, loc)  # pyright: ignore
+    model_id, concrete_block = process_expr_of(
+        block, "model", scope, loc  # pyright: ignore
+    )  # pyright: ignore
     # evaluate model params
     match concrete_block:
         case LitellmModelBlock():
@@ -1227,7 +1261,7 @@ def process_call_model(
                 concrete_block.parameters, dict
             ):
                 concrete_block.parameters = apply_defaults(
-                    str(concrete_block.model),
+                    str(model_id),
                     concrete_block.parameters or {},
                     scope.get("pdl_model_default_parameters", []),
                 )
@@ -1295,14 +1329,14 @@ def process_call_model(
             scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
     except httpx.RequestError as exc:
-        message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+        message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
         raise PDLRuntimeError(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, pdl__location=loc, program=concrete_block),
         ) from exc
     except Exception as exc:
-        message = f"Error during '{block.model}' model call: {repr(exc)}"
+        message = f"Error during '{model_id}' model call: {repr(exc)}"
         raise PDLRuntimeError(
             message,
             loc=loc,
@@ -1337,15 +1371,18 @@ def generate_client_response_streaming(
     msg_stream: Generator[dict[str, Any], Any, Any]
     match block:
         case LitellmModelBlock():
-            assert isinstance(block.model, str)  # block is a "concrete block"
-            assert block.parameters is None or isinstance(
-                block.parameters, dict
+            if block.parameters is None:
+                parameters = None
+            else:
+                parameters = value_of_expr(block.parameters)  # pyright: ignore
+            assert parameters is None or isinstance(
+                parameters, dict
             )  # block is a "concrete block"
             msg_stream = LitellmModel.generate_text_stream(
-                model_id=block.model,
+                model_id=value_of_expr(block.model),
                 messages=model_input,
                 spec=block.spec,
-                parameters=litellm_parameters_to_dict(block.parameters),
+                parameters=litellm_parameters_to_dict(parameters),
             )
         case GraniteioModelBlock():
             # TODO: curently fallback to the non-streaming interface
@@ -1397,17 +1434,20 @@ def generate_client_response_single(
     block: LitellmModelBlock | GraniteioModelBlock,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
-    assert block.parameters is None or isinstance(
-        block.parameters, dict
+    if block.parameters is None:
+        parameters = None
+    else:
+        parameters = value_of_expr(block.parameters)  # pyright:ignore
+    assert parameters is None or isinstance(
+        parameters, dict
     )  # block is a "concrete block"
     match block:
         case LitellmModelBlock():
-            assert isinstance(block.model, str)  # block is a "concrete block"
-
             message, response = LitellmModel.generate_text(
                 block=block,
+                model_id=value_of_expr(block.model),
                 messages=model_input,
-                parameters=litellm_parameters_to_dict(block.parameters),
+                parameters=litellm_parameters_to_dict(parameters),
             )
         case GraniteioModelBlock():
             from .pdl_granite_io import GraniteioModel
@@ -1816,4 +1856,5 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 
 
 def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
-    return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
+    v, _ = process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
+    return v

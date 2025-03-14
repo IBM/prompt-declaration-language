@@ -40,12 +40,11 @@ class LitellmModel:
     @staticmethod
     async def async_generate_text(
         block: LitellmModelBlock,
+        model_id: str,
         messages: ModelInput,
         parameters: dict[str, Any],
     ) -> tuple[dict[str, Any], Any]:
         try:
-            assert isinstance(block.model, str)
-            model_id = block.model
             spec = block.spec
             parameters = set_structured_decoding_parameters(spec, parameters)
             if parameters.get("mock_response") is not None:
@@ -84,6 +83,7 @@ class LitellmModel:
     @staticmethod
     def generate_text(
         block: LitellmModelBlock,
+        model_id: str,
         messages: ModelInput,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
@@ -92,6 +92,7 @@ class LitellmModel:
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
                 block,
+                model_id,
                 messages,
                 parameters,
             ),
