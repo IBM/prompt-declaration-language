@@ -43,14 +43,10 @@ defs:
       - model: ollama/granite3.2:8b
         parser: json
         def: result
+        spec: { "result": float }
         fallback:
           data:
             result: 0
-      - if: ${ result[0] } # result was a list accidentally
-        then:
-          ${ result[0] }
-        fallback:
-          ${ result }
 
   compare_to_ground_truth:
     function:
