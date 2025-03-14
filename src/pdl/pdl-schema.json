@@ -3766,7 +3766,7 @@
               "type": "null"
             }
           ],
-          "default": null,
+          "default": "${ pdl_context }",
           "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
@@ -6237,7 +6237,7 @@
               "type": "null"
             }
           ],
-          "default": null,
+          "default": "${ pdl_context }",
           "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },

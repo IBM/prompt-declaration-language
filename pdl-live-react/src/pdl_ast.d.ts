@@ -140,7 +140,9 @@ export type Description19 = string | null
  */
 export type Def = string | null
 export type ContributeTarget = "result" | "context"
-export type Value = unknown[]
+export type Value = unknown[] | string | LocalizedExpression
+export type Path = string[]
+export type File = string
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -243,8 +245,6 @@ export type Context =
  *
  */
 export type PdlId = string | null
-export type Path = string[]
-export type File = string
 export type StartNanos = number | null
 export type EndNanos = number | null
 export type FirstUseNanos = number | null
@@ -3821,6 +3821,24 @@ export interface Defs19 {
 export interface ContributeValue {
   value: Value
 }
+export interface LocalizedExpression {
+  expr: Expr
+  pdl__location?: PdlLocationType | null
+}
+export interface Expr {
+  [k: string]: unknown
+}
+/**
+ * Internal data structure to keep track of the source location information.
+ */
+export interface PdlLocationType {
+  path: Path
+  file: File
+  table: Table
+}
+export interface Table {
+  [k: string]: number
+}
 export interface PdlParser {
   description?: Description20
   spec?: Spec20
@@ -3836,17 +3854,6 @@ export interface RegexParser {
   mode?: Mode
 }
 /**
- * Internal data structure to keep track of the source location information.
- */
-export interface PdlLocationType {
-  path: Path
-  file: File
-  table: Table
-}
-export interface Table {
-  [k: string]: number
-}
-/**
  * Internal data structure to record timing information in the trace.
  */
 export interface PdlTiming {
@@ -3854,13 +3861,6 @@ export interface PdlTiming {
   end_nanos?: EndNanos
   first_use_nanos?: FirstUseNanos
   timezone?: Timezone
-}
-export interface LocalizedExpression {
-  expr: Expr
-  pdl__location?: PdlLocationType | null
-}
-export interface Expr {
-  [k: string]: unknown
 }
 export interface JoinText {
   as?: As
