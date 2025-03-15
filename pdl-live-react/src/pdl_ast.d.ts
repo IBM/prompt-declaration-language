@@ -1920,6 +1920,11 @@ export type Kind15 = "code"
  */
 export type Lang = "python" | "command" | "jinja" | "pdl"
 /**
+ * Pip requirements.txt
+ *
+ */
+export type Requirements = string | string[] | null
+/**
  * Code to execute.
  *
  */
@@ -2837,6 +2842,7 @@ export interface CodeBlock {
   pdl__is_leaf?: PdlIsLeaf15
   kind?: Kind15
   lang: Lang
+  requirements?: Requirements
   code: Code
 }
 /**
