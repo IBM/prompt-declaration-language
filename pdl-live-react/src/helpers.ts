@@ -4,10 +4,12 @@ import type {
   GraniteioModelBlock,
   PdlBlock,
   TextBlock,
+  ArgsBlock,
+  CodeBlock,
 } from "./pdl_ast"
 
 /** Re-export for convenience */
-export { type PdlBlock } from "./pdl_ast"
+export type { PdlBlock } from "./pdl_ast"
 
 export type ModelBlock = Extract<
   PdlBlock,
@@ -257,4 +259,8 @@ export function extractStructuredModelResponse({
       )
 
   return { resultForDisplay, lang, meta }
+}
+
+export function isArgs(block: ArgsBlock | CodeBlock): block is ArgsBlock {
+  return Array.isArray((block as ArgsBlock).args)
 }

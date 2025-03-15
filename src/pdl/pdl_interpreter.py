@@ -36,6 +36,7 @@ from pydantic import BaseModel  # noqa: E402
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
     AnyPattern,
+    ArgsBlock,
     ArrayBlock,
     ArrayPattern,
     Block,
@@ -447,7 +448,7 @@ def process_block_body(
             result, background, scope, trace = process_call_model(
                 state, scope, block, loc
             )
-        case CodeBlock():
+        case ArgsBlock() | CodeBlock():
             result, background, scope, trace = process_call_code(
                 state, scope, block, loc
             )
@@ -1428,18 +1429,31 @@ def generate_client_response_single(
 
 
 def process_call_code(
-    state: InterpreterState, scope: ScopeType, block: CodeBlock, loc: PdlLocationType
-) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, CodeBlock]:
+    state: InterpreterState,
+    scope: ScopeType,
+    block: ArgsBlock | CodeBlock,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlock]:
     background: LazyMessages
-    code_, _, _, block = process_block_of(
-        block,
-        "code",
-        state.with_yield_result(False).with_yield_background(False),
-        scope,
-        loc,
-    )
-    code_s = code_.result()
-    match block.lang:
+    code_a: None | list[str] = None
+    code_s = ""
+    lang = ""
+    match block:
+        case ArgsBlock():
+            lang = "command"
+            code_a = [process_expr(scope, arg_i, loc) for arg_i in block.args]
+        case CodeBlock():
+            lang = block.lang
+            code_, _, _, block = process_block_of(
+                block,
+                "code",
+                state.with_yield_result(False).with_yield_background(False),
+                scope,
+                loc,
+            )
+            code_s = code_.result()
+
+    match lang:
         case "python":
             try:
                 result = call_python(code_s, scope)
@@ -1456,7 +1470,7 @@ def process_call_code(
                 ) from exc
         case "command":
             try:
-                result = call_command(code_s)
+                result = call_command(code_s, code_a)
                 background = PdlList(
                     [
                         PdlDict(  # type: ignore
@@ -1508,7 +1522,7 @@ def process_call_code(
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
         case _:
-            message = f"Unsupported language: {block.lang}"
+            message = f"Unsupported language: {lang}"
             raise PDLRuntimeError(
                 message,
                 loc=loc,
@@ -1530,8 +1544,11 @@ def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
     return PdlConst(result)
 
 
-def call_command(code: str) -> PdlLazy[str]:
-    args = shlex.split(code)
+def call_command(code: str, code_a: list[str] | None) -> PdlLazy[str]:
+    if code_a is not None:
+        args = code_a
+    else:
+        args = shlex.split(code)
     p = subprocess.run(
         args, capture_output=True, text=True, check=False, shell=False
     )  # nosec B603
