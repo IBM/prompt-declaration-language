@@ -84,7 +84,8 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         arbitrary_types_allowed=True,
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
-    expr: LocalizedExpressionT
+    expr: Any
+    pdl__result: Optional[LocalizedExpressionT] = None
     pdl__location: Optional[PdlLocationType] = None
 
 
