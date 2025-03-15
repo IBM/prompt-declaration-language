@@ -6,17 +6,20 @@ import yaml
 
 from . import pdl_ast
 from .pdl_ast import (
+    AggregatorBlock,
+    AggregatorType,
     AnyPattern,
     ArrayBlock,
     ArrayPattern,
     Block,
     CallBlock,
     CodeBlock,
+    ContributeElement,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -174,6 +177,8 @@ def block_to_dict(  # noqa: C901
             d["import"] = block.import_
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
+        case AggregatorBlock():
+            d["aggregator"] = aggregator_to_dict(block.aggregator)
         case IfBlock():
             d["if"] = block.condition
             d["then"] = block_to_dict(block.then, json_compatible)
@@ -344,7 +349,7 @@ def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
 
 
 def contribute_to_list(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]]
+    contribute: Sequence[ContributeElement],
 ) -> list[str | dict[str, Any]]:
     acc: list[str | dict[str, Any]] = []
     for contrib in contribute:
@@ -353,6 +358,18 @@ def contribute_to_list(
         elif isinstance(contrib, dict):
             acc.append({str(k): v.model_dump() for k, v in contrib.items()})
     return acc
+
+
+def aggregator_to_dict(aggregator: AggregatorType):
+    match aggregator:
+        case "messages" | "stdout" | "stderr":
+            result = aggregator
+        case FileAggregatorConfig():
+            result = aggregator.model_dump()
+        case _:
+            assert False, "Unexpected aggregator"
+
+    return result
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:

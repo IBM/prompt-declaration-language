@@ -1,5 +1,372 @@
 {
   "$defs": {
+    "AggregatorBlock": {
+      "additionalProperties": false,
+      "description": "Create a new aggregator that can be use in the `contribute` field.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "aggregator",
+          "default": "aggregator",
+          "title": "Kind",
+          "type": "string"
+        },
+        "aggregator": {
+          "anyOf": [
+            {
+              "enum": [
+                "messages",
+                "stdout",
+                "stderr"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FileAggregatorConfig"
+            }
+          ],
+          "title": "Aggregator"
+        }
+      },
+      "required": [
+        "aggregator"
+      ],
+      "title": "AggregatorBlock",
+      "type": "object"
+    },
     "AnyPattern": {
       "additionalProperties": false,
       "properties": {
@@ -119,6 +486,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -157,6 +527,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -260,6 +633,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -433,6 +809,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -602,6 +981,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -640,6 +1022,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -743,6 +1128,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -941,6 +1329,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -1052,6 +1443,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -1090,6 +1484,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -1193,6 +1590,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -1375,6 +1775,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -1520,6 +1923,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -1558,6 +1964,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -1661,6 +2070,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -1881,6 +2293,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -1919,6 +2334,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -2022,6 +2440,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -2220,6 +2641,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -2258,6 +2682,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -2361,6 +2788,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -2537,6 +2967,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -2555,6 +2988,112 @@
         "program"
       ],
       "title": "ErrorBlock",
+      "type": "object"
+    },
+    "FileAggregatorConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the aggregator config.\n    ",
+          "title": "Description"
+        },
+        "file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            }
+          ],
+          "description": "Name of the file to which contribute.",
+          "title": "File"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            }
+          ],
+          "default": "w",
+          "description": "File opening mode.",
+          "title": "Mode"
+        },
+        "encoding": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "utf-8",
+          "description": "File encoding.",
+          "title": "Encoding"
+        },
+        "prefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            }
+          ],
+          "default": "",
+          "description": "Prefix to the contributed value.",
+          "title": "Prefix"
+        },
+        "suffix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            }
+          ],
+          "default": "\n",
+          "description": "Suffix to the contributed value.",
+          "title": "Suffix"
+        },
+        "flush": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            }
+          ],
+          "default": false,
+          "description": "Whether to forcibly flush the stream.",
+          "title": "Flush"
+        }
+      },
+      "required": [
+        "file"
+      ],
+      "title": "FileAggregatorConfig",
       "type": "object"
     },
     "FunctionBlock": {
@@ -2649,6 +3188,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -2687,6 +3229,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -2790,6 +3335,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -2973,6 +3521,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -3085,6 +3636,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -3123,6 +3677,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -3226,6 +3783,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -3432,6 +3992,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -3470,6 +4033,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -3573,6 +4139,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -3757,6 +4326,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -3850,6 +4422,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -4021,6 +4596,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -4059,6 +4637,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -4162,6 +4743,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -4348,6 +4932,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -4427,6 +5014,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -4554,6 +5144,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -4592,6 +5185,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -4695,6 +5291,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -4871,6 +5470,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -4982,6 +5584,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -5020,6 +5625,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -5123,6 +5731,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -5297,6 +5908,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -5478,6 +6092,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -5516,6 +6133,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -5619,6 +6239,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -5792,6 +6415,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -5904,6 +6530,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -5942,6 +6571,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -6045,6 +6677,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -6228,6 +6863,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -6321,6 +6959,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -6885,6 +7526,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -6923,6 +7567,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -7026,6 +7673,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -7281,6 +7931,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -7427,6 +8080,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -7465,6 +8121,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -7568,6 +8227,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -7738,6 +8400,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -7850,6 +8515,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -7888,6 +8556,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -7991,6 +8662,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -8165,6 +8839,9 @@
                     "$ref": "#/$defs/ImportBlock"
                   },
                   {
+                    "$ref": "#/$defs/AggregatorBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
@@ -8245,6 +8922,9 @@
                   },
                   {
                     "$ref": "#/$defs/ImportBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/AggregatorBlock"
                   },
                   {
                     "$ref": "#/$defs/ErrorBlock"
@@ -8452,6 +9132,9 @@
           "$ref": "#/$defs/ImportBlock"
         },
         {
+          "$ref": "#/$defs/AggregatorBlock"
+        },
+        {
           "$ref": "#/$defs/ErrorBlock"
         },
         {
@@ -8588,6 +9271,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -8733,6 +9419,9 @@
           "$ref": "#/$defs/ImportBlock"
         },
         {
+          "$ref": "#/$defs/AggregatorBlock"
+        },
+        {
           "$ref": "#/$defs/ErrorBlock"
         },
         {
@@ -8837,6 +9526,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -8875,6 +9567,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -8978,6 +9673,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -9264,6 +9962,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -9302,6 +10003,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -9405,6 +10109,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -9619,6 +10326,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -9760,6 +10470,9 @@
                     "$ref": "#/$defs/ImportBlock"
                   },
                   {
+                    "$ref": "#/$defs/AggregatorBlock"
+                  },
+                  {
                     "$ref": "#/$defs/ErrorBlock"
                   },
                   {
@@ -9878,6 +10591,9 @@
                 "$ref": "#/$defs/ImportBlock"
               },
               {
+                "$ref": "#/$defs/AggregatorBlock"
+              },
+              {
                 "$ref": "#/$defs/ErrorBlock"
               },
               {
@@ -9916,6 +10632,9 @@
             "anyOf": [
               {
                 "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "type": "string"
               },
               {
                 "additionalProperties": {
@@ -10019,6 +10738,9 @@
             },
             {
               "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/AggregatorBlock"
             },
             {
               "$ref": "#/$defs/ErrorBlock"
@@ -10190,6 +10912,9 @@
               "$ref": "#/$defs/ImportBlock"
             },
             {
+              "$ref": "#/$defs/AggregatorBlock"
+            },
+            {
               "$ref": "#/$defs/ErrorBlock"
             },
             {
@@ -10263,6 +10988,9 @@
                   },
                   {
                     "$ref": "#/$defs/ImportBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/AggregatorBlock"
                   },
                   {
                     "$ref": "#/$defs/ErrorBlock"
