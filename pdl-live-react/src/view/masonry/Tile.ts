@@ -13,6 +13,8 @@ type Tile = {
 
   footer1Key?: string
   footer1Value?: string | number | boolean
+  footer2Key?: string
+  footer2Value?: string | number | boolean
   stability?: import("./stability").StabilityMetric[]
 
   block?: import("../../helpers").NonScalarPdlBlock

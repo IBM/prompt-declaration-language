@@ -2056,6 +2056,8 @@ export type Input =
  *
  */
 export type Modelresponse = string | null
+export type CompletionTokens = number | null
+export type PromptTokens = number | null
 export type PdlTrace3 =
   | boolean
   | number
@@ -2699,6 +2701,11 @@ export interface LitellmModelBlock {
   model: Model1
   input?: Input1
   modelResponse?: Modelresponse1
+  /**
+   * Tokens consumed during model call
+   *
+   */
+  pdl__model_stats?: PdlModelStats | null
   pdl__trace?: PdlTrace4
   platform?: Platform1
   parameters?: Parameters1
@@ -2763,6 +2770,11 @@ export interface GraniteioModelBlock {
   model: unknown
   input?: Input
   modelResponse?: Modelresponse
+  /**
+   * Tokens consumed during model call
+   *
+   */
+  pdl__model_stats?: PdlModelStats | null
   pdl__trace?: PdlTrace3
   platform?: Platform
   backend: Backend
@@ -3912,6 +3924,14 @@ export interface Object1 {
 export interface AnyPattern {
   def?: Def15
   any: Any
+}
+/**
+ * Internal data structure to record token consumption stats.
+ */
+export interface PdlModelStats {
+  completion_tokens?: CompletionTokens
+  prompt_tokens?: PromptTokens
+  [k: string]: unknown
 }
 /**
  * Parameters passed to LiteLLM. More details at [https://docs.litellm.ai/docs/completion/input](https://docs.litellm.ai/docs/completion/input).

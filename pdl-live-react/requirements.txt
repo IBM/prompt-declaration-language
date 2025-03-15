@@ -1,2 +1,3 @@
 #-e git+https://github.com/IBM/prompt-declaration-language.git#egg=prompt_declaration_language
-prompt-declaration-language==0.4.2
+-e git+https://github.com/starpit/prompt-declaration-language.git@stats#egg=prompt_declaration_language
+#prompt-declaration-language==0.4.2
