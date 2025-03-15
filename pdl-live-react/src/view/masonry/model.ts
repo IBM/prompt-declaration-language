@@ -7,6 +7,7 @@ import {
   hasMessage,
   hasParser,
   hasScalarResult,
+  hasModelStats,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
@@ -83,6 +84,21 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
+
+            footer2Key:
+              hasModelStats(block) && block.pdl__model_stats
+                ? "Tokens/sec"
+                : undefined,
+            footer2Value:
+              hasModelStats(block) && block.pdl__model_stats
+                ? (
+                    (block.pdl__model_stats.completion_tokens +
+                      block.pdl__model_stats.prompt_tokens) /
+                    ((block.pdl__timing.end_nanos -
+                      block.pdl__timing.start_nanos) /
+                      1000000000)
+                  ).toFixed(0)
+                : undefined,
 
             stability,
             //footer2Key: stability.map((m) => `T=${m.temperature} Stability`),

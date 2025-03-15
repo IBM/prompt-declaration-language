@@ -73,6 +73,7 @@ from .pdl_ast import (  # noqa: E402
     Pattern,
     PatternType,
     PdlLocationType,
+    PdlModelStats,
     PdlParser,
     PDLRuntimeError,
     PDLRuntimeExpressionError,
@@ -1291,6 +1292,8 @@ def process_call_model(
         trace = block.model_copy(
             update={"pdl__result": result, "pdl__trace": concrete_block}
         )
+        if concrete_block.pdl__model_stats is not None:
+            trace.pdl__model_stats = concrete_block.pdl__model_stats
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
         return result, background, scope, trace
@@ -1378,6 +1381,18 @@ def generate_client_response_streaming(
         raw_result = wrapped_gen.value
     if complete_msg is None:
         complete_msg = {"role": state.role, "content": ""}
+    if len(wrapped_gen.value) > 0:
+        last = wrapped_gen.value[-1]
+        if last["usage"] is not None:
+            usage = last["usage"]
+            if (
+                usage["completion_tokens"] is not None
+                and usage["prompt_tokens"] is not None
+            ):
+                block.pdl__model_stats = PdlModelStats(
+                    completion_tokens=usage["completion_tokens"],
+                    prompt_tokens=usage["prompt_tokens"],
+                )
     return PdlConst(complete_msg), PdlConst(raw_result)
 
 
@@ -1400,6 +1415,7 @@ def generate_client_response_single(
     assert block.parameters is None or isinstance(
         block.parameters, dict
     )  # block is a "concrete block"
+    block.pdl__model_stats = PdlModelStats()
     match block:
         case LitellmModelBlock():
             assert isinstance(block.model, str)  # block is a "concrete block"

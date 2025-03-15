@@ -36,6 +36,7 @@ from .pdl_ast import (
     ParserType,
     PatternType,
     PdlLocationType,
+    PdlModelStats,
     PdlParser,
     PdlTiming,
     ReadBlock,
@@ -122,6 +123,8 @@ def block_to_dict(  # noqa: C901
                     d["parameters"] = block.parameters
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if block.pdl__model_stats is not None:
+                d["pdl__model_stats"] = model_stats_to_dict(block.pdl__model_stats)
         case GraniteioModelBlock():
             d["model"] = block.model
             d["platform"] = str(block.platform)
@@ -133,6 +136,8 @@ def block_to_dict(  # noqa: C901
                 d["parameters"] = block.parameters
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if block.pdl__model_stats is not None:
+                d["pdl__model_stats"] = model_stats_to_dict(block.pdl__model_stats)
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
@@ -270,6 +275,13 @@ def timing_to_dict(timing: PdlTiming) -> dict:
         else:
             local_tzname = "UTC"
         d["timezone"] = local_tzname
+    return d
+
+
+def model_stats_to_dict(stats: PdlModelStats) -> dict:
+    d: dict = {}
+    d["completion_tokens"] = stats.completion_tokens
+    d["prompt_tokens"] = stats.prompt_tokens
     return d
 
 

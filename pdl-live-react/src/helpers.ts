@@ -9,10 +9,18 @@ import type {
 /** Re-export for convenience */
 export { type PdlBlock } from "./pdl_ast"
 
+type MakeNonNullable<T> = {
+  [K in keyof T]-?: NonNullable<T[K]>
+}
+
 export type ModelBlock = Extract<
   PdlBlock,
   LitellmModelBlock | GraniteioModelBlock
 >
+
+export type ModelBlockWithStats = ModelBlock & {
+  pdl__model_stats: Required<MakeNonNullable<import("./pdl_ast").PdlModelStats>>
+}
 
 export type NonScalarPdlBlock = Exclude<
   PdlBlock,
@@ -22,11 +30,9 @@ export type PdlBlockWithResult = NonScalarPdlBlock & {
   pdl__result: NonNullable<PdlBlock>
 }
 
-export type WithTiming = {
-  start_nanos: number
-  end_nanos: number
-  timezone: string
-}
+export type WithTiming = Required<
+  MakeNonNullable<import("./pdl_ast").PdlTiming>
+>
 
 export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
@@ -114,8 +120,12 @@ export function isTextBlockWithArrayContent(
 }
 
 /** Does the given block represent an LLM interaction? */
-export function isLLMBlock(data: PdlBlock): data is ModelBlock {
-  return (data as ModelBlock).kind === "model"
+export function isLLMBlock(data: unknown | PdlBlock): data is ModelBlock {
+  return (
+    data !== null &&
+    typeof data === "object" &&
+    (data as ModelBlock).kind === "model"
+  )
 }
 
 /** Does the given block have a `pdl__result` field? of type string */
@@ -158,6 +168,20 @@ export function hasTimingInformation(
     typeof block.pdl__timing.start_nanos === "number" &&
     typeof block.pdl__timing.end_nanos === "number" &&
     typeof block.pdl__timing.timezone === "string"
+  )
+}
+
+/** Does the given model block have model stats information? */
+export function hasModelStats(
+  block: unknown | PdlBlock,
+): block is ModelBlockWithStats & PdlBlockWithTiming {
+  return (
+    isLLMBlock(block) &&
+    hasTimingInformation(block) &&
+    block.pdl__model_stats !== null &&
+    typeof block.pdl__model_stats === "object" &&
+    typeof block.pdl__model_stats.completion_tokens === "number" &&
+    typeof block.pdl__model_stats.prompt_tokens === "number"
   )
 }
 

@@ -3783,6 +3783,18 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
+        "pdl__model_stats": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlModelStats"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tokens consumed during model call\n    "
+        },
         "pdl__trace": {
           "anyOf": [
             {
@@ -6254,6 +6266,18 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
+        "pdl__model_stats": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlModelStats"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tokens consumed during model call\n    "
+        },
         "pdl__trace": {
           "anyOf": [
             {
@@ -8492,6 +8516,37 @@
         "table"
       ],
       "title": "PdlLocationType",
+      "type": "object"
+    },
+    "PdlModelStats": {
+      "description": "Internal data structure to record token consumption stats.",
+      "properties": {
+        "completion_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Completion Tokens"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Prompt Tokens"
+        }
+      },
+      "title": "PdlModelStats",
       "type": "object"
     },
     "PdlParser": {

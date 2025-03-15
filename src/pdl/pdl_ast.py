@@ -197,6 +197,17 @@ class PdlTiming(BaseModel):
     """
 
 
+class PdlModelStats(BaseModel):
+    """Internal data structure to record token consumption stats."""
+
+    completion_tokens: Optional[int] = 0
+    """Completion tokens consumed
+    """
+    prompt_tokens: Optional[int] = 0
+    """Prompt tokens consumed
+    """
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -393,6 +404,9 @@ class ModelBlock(LeafBlock):
     """
     modelResponse: Optional[str] = None
     """Variable where to store the raw response of the model.
+    """
+    pdl__model_stats: Optional[PdlModelStats] = None
+    """Tokens consumed during model call
     """
     # Field for internal use
     pdl__trace: Optional["BlockType"] = None
