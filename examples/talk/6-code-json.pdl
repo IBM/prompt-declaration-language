@@ -26,6 +26,8 @@ text:
 - def: EVAL
   contribute: []
   lang: python
+  requirements:
+  - textdistance
   code:
     |
     import textdistance

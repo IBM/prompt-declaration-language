@@ -1920,6 +1920,11 @@ export type Kind15 = "code"
  */
 export type Lang = "python" | "command" | "jinja" | "pdl"
 /**
+ * Pip requirements.txt
+ *
+ */
+export type Requirements = string | string[] | null
+/**
  * Code to execute.
  *
  */
@@ -1947,6 +1952,32 @@ export type Code =
   | ImportBlock
   | ErrorBlock
   | EmptyBlock
+  | (
+      | boolean
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | GraniteioModelBlock
+      | CodeBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | MatchBlock
+      | RepeatBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ImportBlock
+      | ErrorBlock
+      | EmptyBlock
+      | null
+    )[]
   | null
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -2837,6 +2868,7 @@ export interface CodeBlock {
   pdl__is_leaf?: PdlIsLeaf15
   kind?: Kind15
   lang: Lang
+  requirements?: Requirements
   code: Code
 }
 /**

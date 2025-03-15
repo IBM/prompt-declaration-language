@@ -1,21 +1,25 @@
-use ::std::fs::{copy, create_dir_all};
+use ::std::fs::{copy, create_dir_all, write};
 use ::std::path::{Path, PathBuf};
 
 use duct::cmd;
+use rayon::prelude::*;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
+use tempfile::Builder;
+use yaml_rust2::Yaml;
 
+use crate::interpreter::extract;
 use crate::interpreter::shasum;
 
 #[cfg(desktop)]
-pub async fn pip_install_if_needed(
+fn pip_install_if_needed_with_hash(
     cache_path: &Path,
     requirements_path: &Path,
+    hash: String,
 ) -> Result<PathBuf, tauri::Error> {
     create_dir_all(&cache_path)?;
 
-    let hash = shasum::sha256sum(&requirements_path)?;
-    let venv_path = cache_path.join(hash);
+    let venv_path = cache_path.join("venvs").join(hash);
     let bin_path = venv_path.join(if cfg!(windows) { "Scripts" } else { "bin" });
 
     if !venv_path.exists() {
@@ -27,7 +31,7 @@ pub async fn pip_install_if_needed(
         };
         cmd!(python, "-mvenv", &venv_path).run()?;
 
-        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path,).run()?;
+        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path).run()?;
 
         let cached_requirements_path = venv_path.join("requirements.txt");
         copy(requirements_path, cached_requirements_path)?;
@@ -37,8 +41,44 @@ pub async fn pip_install_if_needed(
 }
 
 #[cfg(desktop)]
+fn pip_install_if_needed(
+    cache_path: &Path,
+    requirements_path: &Path,
+) -> Result<PathBuf, tauri::Error> {
+    let hash = shasum::sha256sum(&requirements_path)?;
+    pip_install_if_needed_with_hash(cache_path, requirements_path, hash)
+}
+
+#[cfg(desktop)]
+pub async fn pip_install_code_blocks_if_needed(
+    app_handle: &tauri::AppHandle,
+    program: &Yaml,
+) -> Result<Option<Yaml>, tauri::Error> {
+    let cache_path = app_handle.path().cache_dir()?.join("pdl");
+
+    let (reqs, updated_program) = extract::extract_requirements(&program);
+    let n = reqs
+        .into_par_iter()
+        .map(|req| -> Result<usize, tauri::Error> {
+            let req_path = Builder::new()
+                .prefix("pdl-requirements-")
+                .suffix(".txt")
+                .tempfile()?;
+            write(&req_path, req)?;
+            pip_install_if_needed(&cache_path, &req_path.path())?;
+            Ok(1)
+        })
+        .count();
+
+    match n {
+        0 => Ok(None), // We did not change the program
+        _ => Ok(Some(updated_program)),
+    }
+}
+
+#[cfg(desktop)]
 pub async fn pip_install_interpreter_if_needed(
-    app_handle: tauri::AppHandle,
+    app_handle: &tauri::AppHandle,
 ) -> Result<PathBuf, tauri::Error> {
     // the interpreter requirements.txt
     let requirements_path = app_handle
@@ -47,5 +87,5 @@ pub async fn pip_install_interpreter_if_needed(
 
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
 
-    pip_install_if_needed(&cache_path, &requirements_path).await
+    pip_install_if_needed(&cache_path, &requirements_path)
 }

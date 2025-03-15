@@ -51,7 +51,7 @@ export function map_block_children(
       }
     })
     .with({ kind: "code" }, (block) => {
-      const code = f(block.code)
+      const code = Array.isArray(block.code) ? block.code.map(f) : f(block.code)
       return { ...block, code: code }
     })
     .with({ kind: "get" }, (block) => block)
@@ -155,7 +155,11 @@ export function iter_block_children(
       if (block.input) f(block.input)
     })
     .with({ kind: "code" }, (block) => {
-      f(block.code)
+      if (Array.isArray(block.code)) {
+        block.code.forEach(f)
+      } else {
+        f(block.code)
+      }
     })
     .with({ kind: "get" }, () => {})
     .with({ kind: "data" }, () => {})
