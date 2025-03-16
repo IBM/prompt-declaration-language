@@ -2838,7 +2838,7 @@ export interface LitellmModelBlock {
    * Tokens consumed during model call
    *
    */
-  pdl__model_stats?: PdlModelStats | null
+  pdl__usage?: PdlUsage | null
   pdl__trace?: PdlTrace4
   platform?: Platform1
   parameters?: Parameters1
@@ -2908,7 +2908,7 @@ export interface GraniteioModelBlock {
    * Tokens consumed during model call
    *
    */
-  pdl__model_stats?: PdlModelStats | null
+  pdl__usage?: PdlUsage | null
   pdl__trace?: PdlTrace3
   platform?: Platform
   backend: Backend
@@ -4146,9 +4146,9 @@ export interface AnyPattern {
   any: Any
 }
 /**
- * Internal data structure to record token consumption stats.
+ * Internal data structure to record token consumption usage information.
  */
-export interface PdlModelStats {
+export interface PdlUsage {
   completion_tokens?: CompletionTokens
   prompt_tokens?: PromptTokens
   [k: string]: unknown

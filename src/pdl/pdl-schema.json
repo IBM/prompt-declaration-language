@@ -4224,10 +4224,10 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
-        "pdl__model_stats": {
+        "pdl__usage": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PdlModelStats"
+              "$ref": "#/$defs/PdlUsage"
             },
             {
               "type": "null"
@@ -6758,10 +6758,10 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
-        "pdl__model_stats": {
+        "pdl__usage": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PdlModelStats"
+              "$ref": "#/$defs/PdlUsage"
             },
             {
               "type": "null"
@@ -9046,37 +9046,6 @@
       "title": "PdlLocationType",
       "type": "object"
     },
-    "PdlModelStats": {
-      "description": "Internal data structure to record token consumption stats.",
-      "properties": {
-        "completion_tokens": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Completion Tokens"
-        },
-        "prompt_tokens": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Prompt Tokens"
-        }
-      },
-      "title": "PdlModelStats",
-      "type": "object"
-    },
     "PdlParser": {
       "additionalProperties": false,
       "properties": {
@@ -9248,6 +9217,37 @@
         }
       },
       "title": "PdlTiming",
+      "type": "object"
+    },
+    "PdlUsage": {
+      "description": "Internal data structure to record token consumption usage information.",
+      "properties": {
+        "completion_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Completion Tokens"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Prompt Tokens"
+        }
+      },
+      "title": "PdlUsage",
       "type": "object"
     },
     "Program": {
