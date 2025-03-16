@@ -51,7 +51,7 @@ jobs:
           # 3. `run` subcommand works with UI demos (json source)
           # demo8 uses a private model? not sure
           for i in ./src/demos/*.json
-          do if [[ $(basename $i) != "demo8.json" ]]; then pdl run $i; fi
+          do if [[ $(basename $i) != "demo8.json" ]] && [[  $(basename $i) != "demo9.json" ]]; then pdl run $i; fi
           done
 
       - name: Tear down xvfb

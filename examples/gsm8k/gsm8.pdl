@@ -8,7 +8,7 @@
 #
 #
 
-description: Grade School Math example
+description: Grade School Math
 defs:
   # The Grade School Math Dataset
   ALL_TESTS:
