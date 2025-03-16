@@ -7,7 +7,7 @@ import {
   hasMessage,
   hasParser,
   hasScalarResult,
-  hasModelStats,
+  hasModelUsage,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
@@ -90,14 +90,14 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
 
             footer2Key:
-              hasModelStats(block) && block.pdl__model_stats
+              hasModelUsage(block) && block.pdl__usage
                 ? "Tokens/sec"
                 : undefined,
             footer2Value:
-              hasModelStats(block) && block.pdl__model_stats
+              hasModelUsage(block) && block.pdl__usage
                 ? (
-                    (block.pdl__model_stats.completion_tokens +
-                      block.pdl__model_stats.prompt_tokens) /
+                    (block.pdl__usage.completion_tokens +
+                      block.pdl__usage.prompt_tokens) /
                     ((block.pdl__timing.end_nanos -
                       block.pdl__timing.start_nanos) /
                       1000000000)

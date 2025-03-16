@@ -20,8 +20,8 @@ export type ModelBlock = Extract<
   LitellmModelBlock | GraniteioModelBlock
 >
 
-export type ModelBlockWithStats = ModelBlock & {
-  pdl__model_stats: Required<MakeNonNullable<import("./pdl_ast").PdlModelStats>>
+export type ModelBlockWithUsage = ModelBlock & {
+  pdl__usage: Required<MakeNonNullable<import("./pdl_ast").PdlUsage>>
 }
 
 export type NonScalarPdlBlock = Exclude<
@@ -173,17 +173,17 @@ export function hasTimingInformation(
   )
 }
 
-/** Does the given model block have model stats information? */
-export function hasModelStats(
+/** Does the given model block have model token usage information? */
+export function hasModelUsage(
   block: unknown | PdlBlock,
-): block is ModelBlockWithStats & PdlBlockWithTiming {
+): block is ModelBlockWithUsage & PdlBlockWithTiming {
   return (
     isLLMBlock(block) &&
     hasTimingInformation(block) &&
-    block.pdl__model_stats !== null &&
-    typeof block.pdl__model_stats === "object" &&
-    typeof block.pdl__model_stats.completion_tokens === "number" &&
-    typeof block.pdl__model_stats.prompt_tokens === "number"
+    block.pdl__usage !== null &&
+    typeof block.pdl__usage === "object" &&
+    typeof block.pdl__usage.completion_tokens === "number" &&
+    typeof block.pdl__usage.prompt_tokens === "number"
   )
 }
 

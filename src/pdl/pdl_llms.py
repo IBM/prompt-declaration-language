@@ -109,15 +109,15 @@ class LitellmModel:
 
             result = future.result()[1]
             if (
-                block.pdl__model_stats is not None
+                block.pdl__usage is not None
                 and result["usage"] is not None
                 and result["usage"]["completion_tokens"] is not None
                 and result["usage"]["prompt_tokens"] is not None
             ):
-                block.pdl__model_stats.completion_tokens = result["usage"][
+                block.pdl__usage.completion_tokens = result["usage"][
                     "completion_tokens"
                 ]
-                block.pdl__model_stats.prompt_tokens = result["usage"]["prompt_tokens"]
+                block.pdl__usage.prompt_tokens = result["usage"]["prompt_tokens"]
 
             if block.pdl__timing is not None:
                 block.pdl__timing.end_nanos = time.time_ns()
