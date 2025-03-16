@@ -19,8 +19,6 @@ import {
 
 const RunTerminal = lazy(() => import("../term/RunTerminal"))
 
-//import Topology from "../memory/Topology"
-//import extractVariables from "../memory/model"
 import Masonry from "./Masonry"
 import Timeline from "../timeline/TimelineFromModel"
 import MasonryTileWrapper from "./MasonryTileWrapper"
@@ -198,10 +196,6 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [block],
   )
 
-  // This is the <Topology/> model. We compute this here, so we can
-  // nicely not render anything if we have an empty topology model.
-  // const { nodes, edges } = useMemo(() => extractVariables(block), [block])
-
   if (!block) {
     return "Invalid trace content"
   }
@@ -238,13 +232,6 @@ export default function MasonryCombo({ value, setValue }: Props) {
           <MasonryTileWrapper sml={sml} variant="plain">
             <Timeline model={base} numbering={numbering} />
           </MasonryTileWrapper>
-          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
-            <Topology
-              nodes={nodes}
-              edges={edges}
-              numbering={numbering}
-              sml={sml}
-            />)*/}
         </Masonry>
       </PageSection>
 
