@@ -14,6 +14,11 @@ export default function PageBreadcrumbDropdownItem({
   const navigate = useNavigate()
   const { hash } = useLocation()
   const [searchParams] = useSearchParams()
+  searchParams.delete("id")
+  searchParams.delete("def")
+  searchParams.delete("get")
+  searchParams.delete("type")
+  searchParams.delete("detail")
   const s = searchParams.toString()
   const search = s.length > 0 ? "?" + s : ""
 
