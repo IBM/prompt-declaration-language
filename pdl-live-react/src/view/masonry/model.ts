@@ -54,7 +54,11 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               resultForDisplay:
                 typeof block.pdl__result === "object"
                   ? stringify(block.pdl__result)
-                  : String(block.pdl__result),
+                  : typeof block.pdl__result === "string" ||
+                      typeof block.pdl__result === "number" ||
+                      typeof block.pdl__result === "boolean"
+                    ? block.pdl__result
+                    : String(block.pdl__result),
               meta: undefined,
               lang:
                 typeof block.pdl__result === "object"
@@ -153,7 +157,7 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
                     ? "json"
                     : (v.parser as Tile["lang"])
                   : undefined,
-                content: hasScalarResult(v) ? String(v.pdl__result) : "",
+                content: hasScalarResult(v) ? v.pdl__result : "",
               },
         )),
     ...tiles,
