@@ -15,7 +15,7 @@ pub async fn pip_install_if_needed(
     create_dir_all(&cache_path)?;
 
     let hash = shasum::sha256sum(&requirements_path)?;
-    let venv_path = cache_path.join(hash);
+    let venv_path = cache_path.join("venvs").join(hash);
     let bin_path = venv_path.join(if cfg!(windows) { "Scripts" } else { "bin" });
 
     if !venv_path.exists() {
