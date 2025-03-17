@@ -16,15 +16,6 @@ import {
   type NonScalarPdlBlock as Model,
 } from "../../helpers"
 
-function defBody(_def: string | null, block: Model) {
-  const value = hasResult(block) ? block.pdl__result : undefined
-  return (
-    <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
-      {!value ? "Value not found" : <DefContent value={value} />}
-    </Tab>
-  )
-}
-
 function blockBody(block: Model) {
   const tabs = [
     <Tab key={0} eventKey={0} title={<TabTitleText>Summary</TabTitleText>}>
@@ -37,7 +28,7 @@ function blockBody(block: Model) {
         <SourceTabContent block={block} />
       </Suspense>
     </Tab>,
-    <Tab key={2} eventKey={2} title={<TabTitleText>Raw Trace</TabTitleText>}>
+    <Tab key={2} eventKey={2} title={<TabTitleText>Trace</TabTitleText>}>
       <Suspense>
         <RawTraceTabContent block={block} />
       </Suspense>
@@ -48,7 +39,7 @@ function blockBody(block: Model) {
     tabs.splice(
       1,
       0,
-      <Tab key={3} eventKey={3} title={<TabTitleText>Context</TabTitleText>}>
+      <Tab key={3} eventKey={3} title={<TabTitleText>Messages</TabTitleText>}>
         <Suspense>
           <ContextTabContent block={block} />
         </Suspense>
@@ -82,29 +73,27 @@ type Props = {
 export default function DrawerContentBody({
   id,
   value,
-  def,
   objectType,
   model,
 }: Props) {
-  switch (objectType) {
-    case "def":
-      if (!model) {
-        return (
-          <Suspense>
-            <BlockNotFound pdl__id={id} value={value} />
-          </Suspense>
-        )
-      }
-      return defBody(def, model)
-    default:
-      if (!model) {
-        return (
-          <Suspense>
-            <BlockNotFound pdl__id={id} value={value} />
-          </Suspense>
-        )
-      }
+  if (!model) {
+    return (
+      <Suspense fallback={<div />}>
+        <BlockNotFound pdl__id={id} value={value} />
+      </Suspense>
+    )
+  }
 
+  switch (objectType) {
+    case "def": {
+      const value = hasResult(model) ? model.pdl__result : undefined
+      return (
+        <Tab eventKey={0} title={<TabTitleText>Value</TabTitleText>}>
+          {!value ? "Value not found" : <DefContent value={value} />}
+        </Tab>
+      )
+    }
+    default:
       return blockBody(model)
   }
 }
