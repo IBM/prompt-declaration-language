@@ -77,7 +77,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -223,7 +226,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -446,7 +452,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -592,7 +601,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -766,7 +778,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -938,7 +953,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -1084,7 +1102,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -1283,7 +1304,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -1345,450 +1369,6 @@
         "call"
       ],
       "title": "CallBlock",
-      "type": "object"
-    },
-    "CodeBlock": {
-      "additionalProperties": false,
-      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
-      "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
-        },
-        "spec": {
-          "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
-        },
-        "defs": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/FunctionBlock"
-              },
-              {
-                "$ref": "#/$defs/CallBlock"
-              },
-              {
-                "$ref": "#/$defs/LitellmModelBlock"
-              },
-              {
-                "$ref": "#/$defs/GraniteioModelBlock"
-              },
-              {
-                "$ref": "#/$defs/CodeBlock"
-              },
-              {
-                "$ref": "#/$defs/ArgsBlock"
-              },
-              {
-                "$ref": "#/$defs/GetBlock"
-              },
-              {
-                "$ref": "#/$defs/DataBlock"
-              },
-              {
-                "$ref": "#/$defs/IfBlock"
-              },
-              {
-                "$ref": "#/$defs/MatchBlock"
-              },
-              {
-                "$ref": "#/$defs/RepeatBlock"
-              },
-              {
-                "$ref": "#/$defs/TextBlock"
-              },
-              {
-                "$ref": "#/$defs/LastOfBlock"
-              },
-              {
-                "$ref": "#/$defs/ArrayBlock"
-              },
-              {
-                "$ref": "#/$defs/ObjectBlock"
-              },
-              {
-                "$ref": "#/$defs/MessageBlock"
-              },
-              {
-                "$ref": "#/$defs/ReadBlock"
-              },
-              {
-                "$ref": "#/$defs/IncludeBlock"
-              },
-              {
-                "$ref": "#/$defs/ImportBlock"
-              },
-              {
-                "$ref": "#/$defs/ErrorBlock"
-              },
-              {
-                "$ref": "#/$defs/EmptyBlock"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
-          "title": "Defs",
-          "type": "object"
-        },
-        "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
-        },
-        "contribute": {
-          "default": [
-            "result",
-            "context"
-          ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
-        },
-        "parser": {
-          "anyOf": [
-            {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
-        },
-        "fallback": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/GraniteioModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ArgsBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/MatchBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ImportBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Block to execute in case of error.\n    ",
-          "title": "Fallback"
-        },
-        "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
-        },
-        "context": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": [],
-          "description": "Current context\n    ",
-          "title": "Context"
-        },
-        "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
-        },
-        "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
-        },
-        "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "pdl__is_leaf": {
-          "const": true,
-          "default": true,
-          "title": "Pdl  Is Leaf",
-          "type": "boolean"
-        },
-        "kind": {
-          "const": "code",
-          "default": "code",
-          "title": "Kind",
-          "type": "string"
-        },
-        "lang": {
-          "description": "Programming language of the code.\n    ",
-          "enum": [
-            "python",
-            "command",
-            "jinja",
-            "pdl"
-          ],
-          "title": "Lang",
-          "type": "string"
-        },
-        "code": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/GraniteioModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/ArgsBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/MatchBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ImportBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Code to execute.\n    ",
-          "title": "Code"
-        }
-      },
-      "required": [
-        "lang",
-        "code"
-      ],
-      "title": "CodeBlock",
       "type": "object"
     },
     "ContributeTarget": {
@@ -1874,7 +1454,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -2020,7 +1603,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -2241,7 +1827,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -2387,7 +1976,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -2586,7 +2178,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -2732,7 +2327,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -2909,7 +2507,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -3024,7 +2625,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -3170,7 +2774,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -3354,7 +2961,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -3469,7 +3079,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -3615,7 +3228,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -3822,7 +3438,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -3968,7 +3587,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4153,7 +3775,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4263,7 +3888,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4435,7 +4063,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -4581,7 +4212,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4768,7 +4402,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4852,7 +4489,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -4980,7 +4620,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -5126,7 +4769,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -5303,7 +4949,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -5417,7 +5066,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -5563,7 +5215,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -5740,7 +5395,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -5922,7 +5580,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -6068,7 +5729,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -6242,7 +5906,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -6357,7 +6024,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -6503,7 +6173,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -6687,7 +6360,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -6797,7 +6473,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -7362,7 +7041,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -7508,7 +7190,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -7764,7 +7449,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -7913,7 +7601,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -8059,7 +7750,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -8230,7 +7924,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -8295,9 +7992,9 @@
       "title": "MessageBlock",
       "type": "object"
     },
-    "ObjectBlock": {
+    "NonPythonCodeBlock": {
       "additionalProperties": false,
-      "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
+      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: command\n  code: echo hi\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -8345,7 +8042,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -8491,7 +8191,462 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Code to execute.\n    ",
+          "title": "Code"
+        },
+        "lang": {
+          "description": "Programming language of the code.\n    ",
+          "enum": [
+            "command",
+            "jinja",
+            "pdl"
+          ],
+          "title": "Lang",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "lang"
+      ],
+      "title": "NonPythonCodeBlock",
+      "type": "object"
+    },
+    "ObjectBlock": {
+      "additionalProperties": false,
+      "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -8666,7 +8821,10 @@
                     "$ref": "#/$defs/GraniteioModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/CodeBlock"
+                    "$ref": "#/$defs/PythonCodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/NonPythonCodeBlock"
                   },
                   {
                     "$ref": "#/$defs/ArgsBlock"
@@ -8751,7 +8909,10 @@
                     "$ref": "#/$defs/GraniteioModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/CodeBlock"
+                    "$ref": "#/$defs/PythonCodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/NonPythonCodeBlock"
                   },
                   {
                     "$ref": "#/$defs/ArgsBlock"
@@ -8959,7 +9120,10 @@
           "$ref": "#/$defs/GraniteioModelBlock"
         },
         {
-          "$ref": "#/$defs/CodeBlock"
+          "$ref": "#/$defs/PythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/NonPythonCodeBlock"
         },
         {
           "$ref": "#/$defs/ArgsBlock"
@@ -9100,7 +9264,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -9277,7 +9444,10 @@
           "$ref": "#/$defs/GraniteioModelBlock"
         },
         {
-          "$ref": "#/$defs/CodeBlock"
+          "$ref": "#/$defs/PythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/NonPythonCodeBlock"
         },
         {
           "$ref": "#/$defs/ArgsBlock"
@@ -9334,9 +9504,9 @@
       "description": "Prompt Declaration Language program (PDL)",
       "title": "Program"
     },
-    "ReadBlock": {
+    "PythonCodeBlock": {
       "additionalProperties": false,
-      "description": "Read from a file or standard input.",
+      "description": "Execute a piece of Python code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -9384,7 +9554,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -9530,7 +9703,477 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Code to execute.\n    ",
+          "title": "Code"
+        },
+        "lang": {
+          "const": "python",
+          "default": "python",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
+        },
+        "requirements": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pip requirements.txt\n    ",
+          "title": "Requirements"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "PythonCodeBlock",
+      "type": "object"
+    },
+    "ReadBlock": {
+      "additionalProperties": false,
+      "description": "Read from a file or standard input.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -9817,7 +10460,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -9963,7 +10609,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -10178,7 +10827,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -10322,7 +10974,10 @@
                     "$ref": "#/$defs/GraniteioModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/CodeBlock"
+                    "$ref": "#/$defs/PythonCodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/NonPythonCodeBlock"
                   },
                   {
                     "$ref": "#/$defs/ArgsBlock"
@@ -10443,7 +11098,10 @@
                 "$ref": "#/$defs/GraniteioModelBlock"
               },
               {
-                "$ref": "#/$defs/CodeBlock"
+                "$ref": "#/$defs/PythonCodeBlock"
+              },
+              {
+                "$ref": "#/$defs/NonPythonCodeBlock"
               },
               {
                 "$ref": "#/$defs/ArgsBlock"
@@ -10589,7 +11247,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -10761,7 +11422,10 @@
               "$ref": "#/$defs/GraniteioModelBlock"
             },
             {
-              "$ref": "#/$defs/CodeBlock"
+              "$ref": "#/$defs/PythonCodeBlock"
+            },
+            {
+              "$ref": "#/$defs/NonPythonCodeBlock"
             },
             {
               "$ref": "#/$defs/ArgsBlock"
@@ -10839,7 +11503,10 @@
                     "$ref": "#/$defs/GraniteioModelBlock"
                   },
                   {
-                    "$ref": "#/$defs/CodeBlock"
+                    "$ref": "#/$defs/PythonCodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/NonPythonCodeBlock"
                   },
                   {
                     "$ref": "#/$defs/ArgsBlock"

@@ -43,7 +43,6 @@ from .pdl_ast import (  # noqa: E402
     BlockKind,
     BlockType,
     CallBlock,
-    CodeBlock,
     ContributeTarget,
     ContributeValue,
     DataBlock,
@@ -67,6 +66,7 @@ from .pdl_ast import (  # noqa: E402
     MessageBlock,
     ModelBlock,
     ModelInput,
+    NonPythonCodeBlock,
     ObjectBlock,
     ObjectPattern,
     OrPattern,
@@ -82,6 +82,7 @@ from .pdl_ast import (  # noqa: E402
     PdlTiming,
     PdlUsage,
     Program,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -449,7 +450,7 @@ def process_block_body(
             result, background, scope, trace = process_call_model(
                 state, scope, block, loc
             )
-        case ArgsBlock() | CodeBlock():
+        case ArgsBlock() | PythonCodeBlock() | NonPythonCodeBlock():
             result, background, scope, trace = process_call_code(
                 state, scope, block, loc
             )
@@ -1447,16 +1448,21 @@ def generate_client_response_single(
 def process_call_code(
     state: InterpreterState,
     scope: ScopeType,
-    block: ArgsBlock | CodeBlock,
+    block: ArgsBlock | PythonCodeBlock | NonPythonCodeBlock,
     loc: PdlLocationType,
-) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlock]:
+) -> tuple[
+    PdlLazy[Any],
+    LazyMessages,
+    ScopeType,
+    ArgsBlock | PythonCodeBlock | NonPythonCodeBlock,
+]:
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""
     match block:
         case ArgsBlock():
             code_a = [process_expr(scope, arg_i, loc) for arg_i in block.args]
-        case CodeBlock():
+        case PythonCodeBlock() | NonPythonCodeBlock():
             code_, _, _, block = process_block_of(
                 block,
                 "code",

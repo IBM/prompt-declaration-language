@@ -12,7 +12,6 @@ from .pdl_ast import (
     ArrayPattern,
     Block,
     CallBlock,
-    CodeBlock,
     ContributeTarget,
     ContributeValue,
     DataBlock,
@@ -31,6 +30,7 @@ from .pdl_ast import (
     LitellmParameters,
     MatchBlock,
     MessageBlock,
+    NonPythonCodeBlock,
     ObjectBlock,
     ObjectPattern,
     OrPattern,
@@ -40,6 +40,7 @@ from .pdl_ast import (
     PdlParser,
     PdlTiming,
     PdlUsage,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -141,9 +142,12 @@ def block_to_dict(  # noqa: C901
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
         case ArgsBlock():
             d["args"] = block.args
-        case CodeBlock():
+        case PythonCodeBlock() | NonPythonCodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
+            match block:
+                case PythonCodeBlock():
+                    d["requirements"] = block.requirements
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
