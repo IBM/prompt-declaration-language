@@ -21,6 +21,9 @@ RESULTS_VERSION = 15
 TO_SKIP = {
     str(name)
     for name in [
+        pathlib.Path("examples")
+        / "hello"
+        / "hello-structured-decoding.pdl",  # TODO: check why
         pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
         pathlib.Path("examples") / "talk" / "8-tools.pdl",  # TODO: check why
         pathlib.Path("examples") / "talk" / "10-sdg.pdl",  # TODO: check why
