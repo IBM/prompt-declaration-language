@@ -1,4 +1,9 @@
+.pf-v6-c-drawer__panel {
+  padding: 0;
+}
+
 .pdl-drawer-content {
+  border-radius: 0;
   .pdl-breadcrumb-bar {
     margin-top: 0.375em;
 
