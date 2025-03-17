@@ -40,12 +40,6 @@ function description(block: Block) {
 }
 
 export default function DrawerContent({ value }: Props) {
-  const [activeTab, setActiveTab] = useState<string | number>(0)
-  const handleTabClick = useCallback<Required<TabsProps>["onSelect"]>(
-    (_event, tabKey) => setActiveTab(tabKey),
-    [setActiveTab],
-  )
-
   const [searchParams] = useSearchParams()
   const id = searchParams.get("id")
   const def = searchParams.get("def")
@@ -74,9 +68,25 @@ export default function DrawerContent({ value }: Props) {
     () => (!id || !data ? null : findNode(data, id)),
     [id, data],
   )
+
+  const tabs = useMemo(
+    () =>
+      !objectType
+        ? undefined
+        : drawerContentBody({ id, value, def, objectType, model: block }),
+    [id, value, def, objectType, block],
+  )
   useEffect(() => {
-    setActiveTab(0)
-  }, [id, objectType, value])
+    setActiveTab(tabs?.[0].props.eventKey)
+  }, [tabs])
+
+  const [activeTab, setActiveTab] = useState<string | number>(
+    tabs?.[0].props.eventKey,
+  )
+  const handleTabClick = useCallback<Required<TabsProps>["onSelect"]>(
+    (_event, tabKey) => setActiveTab(tabKey),
+    [setActiveTab],
+  )
 
   const actions = useMemo(
     () => ({
@@ -109,7 +119,7 @@ export default function DrawerContent({ value }: Props) {
           mountOnEnter
           unmountOnExit
         >
-          {drawerContentBody({ id, value, def, objectType, model: block })}
+          {tabs}
         </Tabs>
       </CardBody>
     </Card>

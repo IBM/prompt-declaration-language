@@ -23,7 +23,8 @@
     flex: 1;
     overflow: auto;
 
-    .pf-v6-c-description-list {
+    & > .pdl-markdown,
+    & > .pf-v6-c-description-list {
       padding: 1em 2em 0 2em;
     }
 

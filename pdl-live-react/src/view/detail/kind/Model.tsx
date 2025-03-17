@@ -10,7 +10,7 @@ import {
 
 export default function ModelItems({ block }: { block: ModelBlock }) {
   const { platform, model, input } = block
-  const { resultForDisplay, lang, meta } = extractStructuredModelResponse(block)
+  const { meta } = extractStructuredModelResponse(block)
 
   const metaForDisplay = meta?.map(([k, v], idx) => (
     <Result
@@ -28,7 +28,6 @@ export default function ModelItems({ block }: { block: ModelBlock }) {
       )}
       {typeof model === "string" && <Group term="Model" description={model} />}
       {typeof input === "string" && <Group term="Input" description={input} />}
-      <Result result={resultForDisplay} lang={lang} />
       {metaForDisplay}
     </>
   )
