@@ -2180,32 +2180,6 @@ export type Input =
 export type Modelresponse = string | null
 export type CompletionTokens = number | null
 export type PromptTokens = number | null
-export type PdlTrace3 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
 /**
  * Optional field to ensure that the block is using granite-io.
  *
@@ -2352,32 +2326,6 @@ export type Input1 =
  *
  */
 export type Modelresponse1 = string | null
-export type PdlTrace4 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
 /**
  * Optional field to ensure that the block is using LiteLLM.
  *
@@ -2517,7 +2465,7 @@ export type Context19 =
 export type PdlId19 = string | null
 export type PdlIsLeaf19 = true
 export type Kind19 = "call"
-export type PdlTrace5 =
+export type PdlTrace3 =
   | boolean
   | number
   | string
@@ -2764,7 +2712,7 @@ export interface CallBlock {
   kind?: Kind19
   call: unknown
   args?: unknown
-  pdl__trace?: PdlTrace5
+  pdl__trace?: PdlTrace3
 }
 /**
  * Type specification of the result of the block.
@@ -2839,7 +2787,6 @@ export interface LitellmModelBlock {
    *
    */
   pdl__usage?: PdlUsage | null
-  pdl__trace?: PdlTrace4
   platform?: Platform1
   parameters?: Parameters1
 }
@@ -2909,7 +2856,6 @@ export interface GraniteioModelBlock {
    *
    */
   pdl__usage?: PdlUsage | null
-  pdl__trace?: PdlTrace3
   platform?: Platform
   backend: Backend
   processor?: Processor

@@ -1324,13 +1324,11 @@ def process_call_model(
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
-        trace = block.model_copy(
-            update={"pdl__result": result, "pdl__trace": concrete_block}
-        )
-        if concrete_block.pdl__usage is not None:
-            trace.pdl__usage = concrete_block.pdl__usage
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
+        trace: BlockTypeTVarProcessCallModel = concrete_block.model_copy(
+            update={"pdl__result": result}
+        )  # pyright: ignore
         return result, background, scope, trace
     except httpx.RequestError as exc:
         message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
