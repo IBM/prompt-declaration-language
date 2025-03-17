@@ -1495,7 +1495,15 @@ def process_call_code(
     code_s = ""
     match block:
         case ArgsBlock():
-            code_a = [process_expr(scope, arg_i, loc) for arg_i in block.args]
+            code_a = []
+            args_trace: list[LocalizedExpression[str]] = []
+            for expr_i in block.args:
+                arg_i: str
+                trace_i: LocalizedExpression[str]
+                arg_i, trace_i = process_expr(scope, expr_i, loc)
+                code_a.append(arg_i)
+                args_trace.append(trace_i)
+            block = block.model_copy(update={"args": args_trace})
         case CodeBlock():
             code_, _, _, block = process_block_of(
                 block,
