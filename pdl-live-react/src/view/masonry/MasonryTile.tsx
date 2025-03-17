@@ -53,6 +53,8 @@ export default function MasonryTile({
   footer1Value,
   footer2Key,
   footer2Value,
+  footer3Key,
+  footer3Value,
   stability,
   actions: tileActions = [],
   block,
@@ -119,6 +121,7 @@ export default function MasonryTile({
   const hasFooter =
     (footer1Key && footer1Value) ||
     (footer2Key && footer2Value) ||
+    (footer3Key && footer3Value) ||
     (stability?.length ?? 0) > 0
   const footer = hasFooter && (
     <DescriptionList className="pdl-masonry-tile-footer-dl">
@@ -135,6 +138,14 @@ export default function MasonryTile({
           <DescriptionListTerm>{footer2Key}</DescriptionListTerm>
           <DescriptionListDescription>
             {footer2Value}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      )}
+      {footer3Key && (
+        <DescriptionListGroup>
+          <DescriptionListTerm>{footer3Key}</DescriptionListTerm>
+          <DescriptionListDescription>
+            {footer3Value}
           </DescriptionListDescription>
         </DescriptionListGroup>
       )}

@@ -187,6 +187,19 @@ export function hasModelUsage(
   )
 }
 
+export function completionRate(
+  block: ModelBlockWithUsage & PdlBlockWithTiming,
+) {
+  return (
+    block.pdl__usage.completion_tokens /
+    ((block.pdl__timing.end_nanos - block.pdl__timing.start_nanos) / 1000000000)
+  )
+}
+
+export function ptcRatio(block: ModelBlockWithUsage) {
+  return block.pdl__usage.prompt_tokens / block.pdl__usage.completion_tokens
+}
+
 /** Does the given block have context/background information? */
 export function hasContextInformation(
   block: unknown | PdlBlock,
