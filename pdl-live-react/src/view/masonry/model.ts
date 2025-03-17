@@ -11,6 +11,8 @@ import {
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
+  completionRate,
+  ptcRatio,
   type NonScalarPdlBlock,
 } from "../../helpers"
 
@@ -89,20 +91,16 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
 
-            footer2Key:
-              hasModelUsage(block) && block.pdl__usage
-                ? "Tokens/sec"
-                : undefined,
-            footer2Value:
-              hasModelUsage(block) && block.pdl__usage
-                ? (
-                    (block.pdl__usage.completion_tokens +
-                      block.pdl__usage.prompt_tokens) /
-                    ((block.pdl__timing.end_nanos -
-                      block.pdl__timing.start_nanos) /
-                      1000000000)
-                  ).toFixed(0)
-                : undefined,
+            footer2Key: hasModelUsage(block) ? "Completion Rate" : undefined,
+            footer2Value: hasModelUsage(block)
+              ? completionRate(block).toFixed(0) + " tokens/sec"
+              : undefined,
+            footer3Key: hasModelUsage(block)
+              ? "Prompt/Completion Ratio"
+              : undefined,
+            footer3Value: hasModelUsage(block)
+              ? (100 * ptcRatio(block)).toFixed(2) + "%"
+              : undefined,
 
             stability,
             //footer2Key: stability.map((m) => `T=${m.temperature} Stability`),

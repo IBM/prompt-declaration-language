@@ -3,6 +3,7 @@ import { Tab, TabTitleText } from "@patternfly/react-core"
 
 const BlockNotFound = lazy(() => import("./BlockNotFound"))
 const DefContent = lazy(() => import("./DefContent"))
+const UsageTabContent = lazy(() => import("./UsageTabContent"))
 const SourceTabContent = lazy(() => import("./SourceTabContent"))
 const ContextTabContent = lazy(() => import("./ContextTabContent"))
 const SummaryTabContent = lazy(() => import("./SummaryTabContent"))
@@ -10,6 +11,7 @@ const RawTraceTabContent = lazy(() => import("./RawTraceTabContent"))
 
 import {
   hasContextInformation,
+  hasModelUsage,
   hasResult,
   type NonScalarPdlBlock as Model,
 } from "../../helpers"
@@ -49,6 +51,18 @@ function blockBody(block: Model) {
       <Tab key={3} eventKey={3} title={<TabTitleText>Context</TabTitleText>}>
         <Suspense>
           <ContextTabContent block={block} />
+        </Suspense>
+      </Tab>,
+    )
+  }
+
+  if (hasModelUsage(block)) {
+    tabs.splice(
+      1,
+      0,
+      <Tab key={4} eventKey={4} title={<TabTitleText>Usage</TabTitleText>}>
+        <Suspense>
+          <UsageTabContent block={block} />
         </Suspense>
       </Tab>,
     )
