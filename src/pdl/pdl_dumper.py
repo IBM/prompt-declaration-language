@@ -7,6 +7,7 @@ import yaml
 from . import pdl_ast
 from .pdl_ast import (
     AnyPattern,
+    ArgsBlock,
     ArrayBlock,
     ArrayPattern,
     Block,
@@ -40,6 +41,7 @@ from .pdl_ast import (
     PdlLocationType,
     PdlParser,
     PdlTiming,
+    PdlUsage,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -123,6 +125,8 @@ def block_to_dict(  # noqa: C901
                     d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if block.pdl__usage is not None:
+                d["pdl__usage"] = usage_to_dict(block.pdl__usage)
         case GraniteioModelBlock():
             d["model"] = expr_to_dict(block.model, json_compatible)
             d["platform"] = str(block.platform)
@@ -134,6 +138,10 @@ def block_to_dict(  # noqa: C901
                 d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if block.pdl__usage is not None:
+                d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+        case ArgsBlock():
+            d["args"] = block.args
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
@@ -287,6 +295,13 @@ def timing_to_dict(timing: PdlTiming) -> dict:
         else:
             local_tzname = "UTC"
         d["timezone"] = local_tzname
+    return d
+
+
+def usage_to_dict(usage: PdlUsage) -> dict:
+    d: dict = {}
+    d["completion_tokens"] = usage.completion_tokens
+    d["prompt_tokens"] = usage.prompt_tokens
     return d
 
 

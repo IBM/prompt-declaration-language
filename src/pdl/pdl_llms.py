@@ -108,6 +108,18 @@ class LitellmModel:
         def update_end_nanos(future):
             import time
 
+            result = future.result()[1]
+            if (
+                block.pdl__usage is not None
+                and result["usage"] is not None
+                and result["usage"]["completion_tokens"] is not None
+                and result["usage"]["prompt_tokens"] is not None
+            ):
+                block.pdl__usage.completion_tokens = result["usage"][
+                    "completion_tokens"
+                ]
+                block.pdl__usage.prompt_tokens = result["usage"]["prompt_tokens"]
+
             if block.pdl__timing is not None:
                 block.pdl__timing.end_nanos = time.time_ns()
 
@@ -153,6 +165,7 @@ class LitellmModel:
             model=model_id,
             messages=list(messages),
             stream=True,
+            stream_options={"include_usage": True},
             **parameters,
         )
         result = []

@@ -7,6 +7,7 @@ import {
   hasMessage,
   hasParser,
   hasScalarResult,
+  hasModelUsage,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
@@ -53,7 +54,11 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               resultForDisplay:
                 typeof block.pdl__result === "object"
                   ? stringify(block.pdl__result)
-                  : String(block.pdl__result),
+                  : typeof block.pdl__result === "string" ||
+                      typeof block.pdl__result === "number" ||
+                      typeof block.pdl__result === "boolean"
+                    ? block.pdl__result
+                    : String(block.pdl__result),
               meta: undefined,
               lang:
                 typeof block.pdl__result === "object"
@@ -83,6 +88,21 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
+
+            footer2Key:
+              hasModelUsage(block) && block.pdl__usage
+                ? "Tokens/sec"
+                : undefined,
+            footer2Value:
+              hasModelUsage(block) && block.pdl__usage
+                ? (
+                    (block.pdl__usage.completion_tokens +
+                      block.pdl__usage.prompt_tokens) /
+                    ((block.pdl__timing.end_nanos -
+                      block.pdl__timing.start_nanos) /
+                      1000000000)
+                  ).toFixed(0)
+                : undefined,
 
             stability,
             //footer2Key: stability.map((m) => `T=${m.temperature} Stability`),
@@ -137,7 +157,7 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
                     ? "json"
                     : (v.parser as Tile["lang"])
                   : undefined,
-                content: hasScalarResult(v) ? String(v.pdl__result) : "",
+                content: hasScalarResult(v) ? v.pdl__result : "",
               },
         )),
     ...tiles,
