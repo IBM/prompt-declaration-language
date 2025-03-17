@@ -18,6 +18,7 @@ from .pdl_ast import (
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    ExpressionType,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -29,6 +30,7 @@ from .pdl_ast import (
     LastOfBlock,
     LitellmModelBlock,
     LitellmParameters,
+    LocalizedExpression,
     MatchBlock,
     MessageBlock,
     ObjectBlock,
@@ -112,29 +114,28 @@ def block_to_dict(  # noqa: C901
     match block:
         case LitellmModelBlock():
             d["platform"] = str(block.platform)
-            d["model"] = block.model
-            if block.input is not None:
-                d["input"] = block_to_dict(block.input, json_compatible)
+            d["model"] = expr_to_dict(block.model, json_compatible)
+            d["input"] = block_to_dict(block.input, json_compatible)
             if block.parameters is not None:
                 if isinstance(block.parameters, LitellmParameters):
                     d["parameters"] = block.parameters.model_dump(
                         exclude_unset=True, exclude_defaults=True
                     )
                 else:
-                    d["parameters"] = block.parameters
+                    d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
         case GraniteioModelBlock():
-            d["model"] = block.model
+            d["model"] = expr_to_dict(block.model, json_compatible)
             d["platform"] = str(block.platform)
-            d["backend"] = block.backend
-            d["processor"] = block.processor
-            if block.input is not None:
-                d["input"] = block_to_dict(block.input, json_compatible)
+            d["backend"] = expr_to_dict(block.backend, json_compatible)
+            if block.processor is not None:
+                d["processor"] = expr_to_dict(block.processor, json_compatible)
+            d["input"] = block_to_dict(block.input, json_compatible)
             if block.parameters is not None:
-                d["parameters"] = block.parameters
+                d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
@@ -147,7 +148,7 @@ def block_to_dict(  # noqa: C901
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
-            d["data"] = data_to_dict(block.data, json_compatible)
+            d["data"] = expr_to_dict(block.data, json_compatible)
             if block.raw:
                 d["raw"] = block.raw
         case TextBlock():
@@ -171,7 +172,7 @@ def block_to_dict(  # noqa: C901
         case MessageBlock():
             d["content"] = block_to_dict(block.content, json_compatible)
         case ReadBlock():
-            d["read"] = block.read
+            d["read"] = expr_to_dict(block.read, json_compatible)
             d["message"] = block.message
             d["multiline"] = block.multiline
         case IncludeBlock():
@@ -183,18 +184,18 @@ def block_to_dict(  # noqa: C901
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case IfBlock():
-            d["if"] = block.condition
+            d["if"] = expr_to_dict(block.condition, json_compatible)
             d["then"] = block_to_dict(block.then, json_compatible)
             if block.else_ is not None:
                 d["else"] = block_to_dict(block.else_, json_compatible)
             if block.if_result is not None:
                 d["if_result"] = block.if_result
         case MatchBlock():
-            d["match"] = block.match_
+            d["match"] = expr_to_dict(block.match_, json_compatible)
             d["with"] = [
                 {
                     "case": pattern_to_dict(match_case.case),
-                    "if": match_case.if_,
+                    "if": expr_to_dict(match_case.if_, json_compatible),
                     "then": block_to_dict(match_case.then, json_compatible),
                     "pdl__case_result": match_case.pdl__case_result,
                     "pdl__if_result": match_case.pdl__if_result,
@@ -203,11 +204,17 @@ def block_to_dict(  # noqa: C901
                 for match_case in block.with_
             ]
         case RepeatBlock():
-            d["for"] = block.for_
-            d["while"] = block.while_
+            if block.for_ is not None:
+                d["for"] = expr_to_dict(block.for_, json_compatible)
+            if block.while_ is not None:
+                d["while"] = expr_to_dict(block.while_, json_compatible)
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
-            d["until"] = block.until
-            d["max_iterations"] = block.max_iterations
+            if block.until is not None:
+                d["until"] = expr_to_dict(block.until, json_compatible)
+            if block.max_iterations is not None:
+                d["max_iterations"] = expr_to_dict(
+                    block.max_iterations, json_compatible
+                )
             d["join"] = join_to_dict(block.join)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
@@ -219,8 +226,8 @@ def block_to_dict(  # noqa: C901
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope, json_compatible)
         case CallBlock():
-            d["call"] = block.call
-            d["args"] = data_to_dict(block.args, json_compatible)
+            d["call"] = expr_to_dict(block.call, json_compatible)
+            d["args"] = expr_to_dict(block.args, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = block_to_dict(
                     block.pdl__trace, json_compatible
@@ -257,11 +264,21 @@ def block_to_dict(  # noqa: C901
     return d
 
 
-def data_to_dict(data: Any, json_compatible):
+def data_to_dict(data: Any, json_compatible: bool):
     if json_compatible:
         d = as_json(data)
     else:
         d = data
+    return d
+
+
+def expr_to_dict(expr: ExpressionType, json_compatible: bool):
+    if isinstance(expr, LocalizedExpression):
+        d = {"expr": data_to_dict(expr.expr, json_compatible)}
+        if expr.pdl__result is not None:
+            d["pdl__result"] = data_to_dict(expr.pdl__result, json_compatible)
+    else:
+        d = data_to_dict(expr, json_compatible)
     return d
 
 
