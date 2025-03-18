@@ -98,7 +98,7 @@ function computeModelIter(
 
 export function childrenOf(block: NonScalarPdlBlock) {
   return match(block)
-    .with({ kind: "model" }, (data) => [data.input, data.pdl__result])
+    .with({ kind: "model" }, (data) => [/*data.input,*/ data.pdl__result])
     .with({ kind: "code" }, (data) => [data.pdl__result])
     .with({ kind: "get" }, (data) => [data.pdl__result])
     .with({ kind: "data" }, (data) => [data.pdl__result])

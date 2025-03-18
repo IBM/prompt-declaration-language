@@ -82,7 +82,10 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
             kind: block.kind,
             lang,
             message: hasInput(block)
-              ? block.input
+              ? String(
+                  block.pdl__model_input[block.pdl__model_input.length - 1]
+                    .content,
+                )
               : hasMessage(block)
                 ? block.message
                 : undefined,

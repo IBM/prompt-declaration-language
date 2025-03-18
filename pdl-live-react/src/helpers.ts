@@ -6,6 +6,7 @@ import type {
   TextBlock,
   ArgsBlock,
   CodeBlock,
+  PdlModelInput,
 } from "./pdl_ast"
 
 /** Re-export for convenience */
@@ -229,12 +230,15 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
   return typeof (block as MessageBearing).message === "string"
 }
 
-export function hasInput(
-  block: PdlBlock,
-): block is
-  | (Omit<GraniteioModelBlock, "input"> & { input: string })
-  | (Omit<LitellmModelBlock, "input"> & { input: string }) {
-  return typeof (block as ModelBlock).input === "string"
+export function hasInput(block: PdlBlock): block is
+  | (Omit<GraniteioModelBlock, "input"> & {
+      pdl__model_input: NonNullable<PdlModelInput>
+    })
+  | (Omit<LitellmModelBlock, "input"> & {
+      pdl__model_input: NonNullable<PdlModelInput>
+    }) {
+  const mb = block as ModelBlock
+  return Array.isArray(mb.pdl__model_input) && mb.pdl__model_input.length > 0
 }
 
 function tryJson(s: unknown) {
