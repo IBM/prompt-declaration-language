@@ -410,6 +410,7 @@ class ModelBlock(LeafBlock):
     pdl__usage: Optional[PdlUsage] = None
     """Tokens consumed during model call
     """
+    pdl__model_input: Optional[ModelInput] = None
 
 
 class LitellmModelBlock(ModelBlock):

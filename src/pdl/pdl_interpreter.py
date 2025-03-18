@@ -1277,25 +1277,21 @@ def process_call_model(
             assert False
     # evaluate input
     model_input: ModelInput
-    if concrete_block.input is not None:  # If not implicit, then input must be a block
-        model_input_future, _, _, input_trace = process_block_of(
-            concrete_block,
-            "input",
-            state.with_yield_result(False).with_yield_background(False),
-            scope,
-            loc,
-        )
-        model_input_result = model_input_future.result()
-        if isinstance(model_input_result, str):
-            model_input = [{"role": state.role, "content": model_input_result}]
-        else:
-            model_input = model_input_result
+    model_input_future, _, _, concrete_block = process_block_of(
+        concrete_block,
+        "input",
+        state.with_yield_result(False).with_yield_background(False),
+        scope,
+        loc,
+    )
+    model_input_result = model_input_future.result()
+    if isinstance(model_input_result, str):
+        model_input = [{"role": state.role, "content": model_input_result}]
     else:
-        model_input = scope["pdl_context"]  # pyright: ignore
-        input_trace = None
+        model_input = model_input_result
     concrete_block = concrete_block.model_copy(
         update={
-            "input": input_trace,
+            "pdl__model_input": model_input,
         }
     )
     # Execute model call
