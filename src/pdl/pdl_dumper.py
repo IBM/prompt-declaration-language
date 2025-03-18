@@ -127,6 +127,8 @@ def block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+            if block.pdl__model_input is not None:
+                d["pdl__model_input"] = block.pdl__model_input
         case GraniteioModelBlock():
             d["model"] = expr_to_dict(block.model, json_compatible)
             d["platform"] = str(block.platform)
