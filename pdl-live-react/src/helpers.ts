@@ -7,6 +7,7 @@ import type {
   ArgsBlock,
   CodeBlock,
   PdlModelInput,
+  LocalizedExpression,
 } from "./pdl_ast"
 
 /** Re-export for convenience */
@@ -16,10 +17,7 @@ type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>
 }
 
-export type ModelBlock = Extract<
-  PdlBlock,
-  LitellmModelBlock | GraniteioModelBlock
->
+export type ModelBlock = LitellmModelBlock | GraniteioModelBlock
 
 export type ModelBlockWithUsage = ModelBlock & {
   pdl__usage: Required<MakeNonNullable<import("./pdl_ast").PdlUsage>>
@@ -316,4 +314,18 @@ export function extractCode({ code }: CodeBlock): string {
   }
 
   return String(code)
+}
+
+function isExpr(e: unknown): e is LocalizedExpression {
+  return (
+    e !== null && typeof e === "object" && "expr" in (e as LocalizedExpression)
+  )
+}
+
+export function extractModel({ model }: ModelBlock): string {
+  return typeof model === "string"
+    ? model
+    : isExpr(model)
+      ? String(model.pdl__result)
+      : "unknown"
 }
