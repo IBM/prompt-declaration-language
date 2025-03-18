@@ -4,6 +4,8 @@ import { type PdlBlock } from "../../pdl_ast"
 import {
   hasTimingInformation,
   nonNullable,
+  isLLMBlock,
+  hasInput,
   type PdlBlockWithTiming,
   type NonScalarPdlBlock,
 } from "../../helpers"
@@ -53,7 +55,33 @@ export function computeModel(block: unknown | PdlBlock): TimelineModel {
     }
   })
 
+  return squashProximateModelInputs(model)
+}
+
+/**
+ * We don't need to repeat model inputs as a separate top-level
+ * element in the UI, since they will be presented in the model
+ * blocks.
+ */
+function squashProximateModelInputs(model: TimelineModel): TimelineModel {
   return model
+    .reduceRight((model, row, idx, A) => {
+      if (idx < A.length - 1) {
+        const prior = A[idx + 1].block
+        if (isLLMBlock(prior) && hasInput(prior)) {
+          const lastInput =
+            prior.pdl__model_input[prior.pdl__model_input.length - 1]
+          if (!!lastInput && lastInput.defsite === row.id) {
+            // Skip! We have found block_i such that block_(i+1) is a
+            // model block whose final input message was defined by
+            // block_i. No sense in repeating ourselves...
+            return model
+          }
+        }
+      }
+      return [...model, row]
+    }, [] as TimelineModel)
+    .reverse()
 }
 
 function computeModelIter(
