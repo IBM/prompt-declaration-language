@@ -63,6 +63,7 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     pdl__id: undefined,
     pdl__timing: undefined,
     pdl__location: undefined,
+    pdl__model_input: undefined,
   }
   // remove contribute: ["result", context]
   if (

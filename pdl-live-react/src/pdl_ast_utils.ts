@@ -1,7 +1,7 @@
 import { match, P } from "ts-pattern"
 
 import { PdlBlock } from "./pdl_ast"
-import { hasContextInformation, isArgs } from "./helpers"
+import { hasContextInformation, hasResult, isArgs } from "./helpers"
 
 export function map_block_children(
   f: (block: PdlBlock) => PdlBlock,
@@ -36,7 +36,14 @@ export function map_block_children(
     .with({ kind: "model" }, (block) => {
       if (block.input) {
         const input = f(block.input)
-        block = { ...block, input: input }
+        console.error("!!!!!", input)
+        block = { ...block, input }
+      }
+      if (
+        hasResult(block.model) &&
+        typeof block.model.pdl__result === "string"
+      ) {
+        block = { ...block, model: block.model.pdl__result }
       }
       // Remove `defsite` from context:
       return {
@@ -163,7 +170,9 @@ export function iter_block_children(
       }
     })
     .with({ kind: "get" }, () => {})
-    .with({ kind: "data" }, () => {})
+    .with({ kind: "data" }, (block) => {
+      if (block.data) f(block.data)
+    })
     .with({ kind: "text" }, (block) => {
       if (block.text instanceof Array) {
         block.text.forEach(f)
