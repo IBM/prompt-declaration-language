@@ -53,7 +53,7 @@ export default function DrawerContentBody({
 
     default: {
       // some blocks have nothing interesting to show other than their result
-      const hasSummary = !(block.kind === "data" || block.kind === "code")
+      const hasSummary = !(block.kind === "data")
 
       return [
         ...(!hasSummary
