@@ -4236,6 +4236,21 @@
           "default": null,
           "description": "Tokens consumed during model call\n    "
         },
+        "pdl__model_input": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Model Input"
+        },
         "platform": {
           "const": "granite-io",
           "default": "granite-io",
@@ -6685,6 +6700,21 @@
           ],
           "default": null,
           "description": "Tokens consumed during model call\n    "
+        },
+        "pdl__model_input": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Model Input"
         },
         "platform": {
           "const": "litellm",

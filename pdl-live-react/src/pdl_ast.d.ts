@@ -2180,6 +2180,11 @@ export type Input =
 export type Modelresponse = string | null
 export type CompletionTokens = number | null
 export type PromptTokens = number | null
+export type PdlModelInput =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
 /**
  * Optional field to ensure that the block is using granite-io.
  *
@@ -2326,6 +2331,11 @@ export type Input1 =
  *
  */
 export type Modelresponse1 = string | null
+export type PdlModelInput1 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
 /**
  * Optional field to ensure that the block is using LiteLLM.
  *
@@ -2787,6 +2797,7 @@ export interface LitellmModelBlock {
    *
    */
   pdl__usage?: PdlUsage | null
+  pdl__model_input?: PdlModelInput1
   platform?: Platform1
   parameters?: Parameters1
 }
@@ -2856,6 +2867,7 @@ export interface GraniteioModelBlock {
    *
    */
   pdl__usage?: PdlUsage | null
+  pdl__model_input?: PdlModelInput
   platform?: Platform
   backend: Backend
   processor?: Processor
