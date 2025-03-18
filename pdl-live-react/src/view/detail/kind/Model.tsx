@@ -4,12 +4,18 @@ import Group from "../Group"
 import Result from "../../Result"
 import {
   capitalizeAndUnSnakeCase,
+  extractModel,
   extractStructuredModelResponse,
+  hasInput,
   ModelBlock,
 } from "../../../helpers"
 
 export default function ModelItems({ block }: { block: ModelBlock }) {
-  const { platform, model, input } = block
+  const { platform } = block
+  const model = extractModel(block)
+  const input = !hasInput(block)
+    ? undefined
+    : String(block.pdl__model_input[block.pdl__model_input.length - 1].content)
   const { meta } = extractStructuredModelResponse(block)
 
   const metaForDisplay = meta?.map(([k, v], idx) => (
