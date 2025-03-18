@@ -406,11 +406,10 @@ class ModelBlock(LeafBlock):
     modelResponse: Optional[str] = None
     """Variable where to store the raw response of the model.
     """
+    # Field for internal use
     pdl__usage: Optional[PdlUsage] = None
     """Tokens consumed during model call
     """
-    # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
 
 
 class LitellmModelBlock(ModelBlock):
