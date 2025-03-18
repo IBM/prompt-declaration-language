@@ -305,3 +305,15 @@ export function extractStructuredModelResponse({
 export function isArgs(block: ArgsBlock | CodeBlock): block is ArgsBlock {
   return Array.isArray((block as ArgsBlock).args)
 }
+
+export function extractCode({ code }: CodeBlock): string {
+  if (
+    isNonScalarPdlBlock(code) &&
+    hasResult(code) &&
+    typeof code.pdl__result !== "object"
+  ) {
+    return String(code.pdl__result)
+  }
+
+  return String(code)
+}
