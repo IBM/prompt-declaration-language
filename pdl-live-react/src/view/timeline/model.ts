@@ -64,24 +64,21 @@ export function computeModel(block: unknown | PdlBlock): TimelineModel {
  * blocks.
  */
 function squashProximateModelInputs(model: TimelineModel): TimelineModel {
-  return model
-    .reduceRight((model, row, idx, A) => {
-      if (idx < A.length - 1) {
-        const prior = A[idx + 1].block
-        if (isLLMBlock(prior) && hasInput(prior)) {
-          const lastInput =
-            prior.pdl__model_input[prior.pdl__model_input.length - 1]
-          if (!!lastInput && lastInput.defsite === row.id) {
-            // Skip! We have found block_i such that block_(i+1) is a
-            // model block whose final input message was defined by
-            // block_i. No sense in repeating ourselves...
-            return model
-          }
+  const modelInputDefsites = model.reduce(
+    (M, { block }) => {
+      if (isLLMBlock(block) && hasInput(block)) {
+        const lastInput =
+          block.pdl__model_input[block.pdl__model_input.length - 1]
+        if (lastInput && typeof lastInput.defsite === "string") {
+          M[lastInput.defsite] = true
         }
       }
-      return [...model, row]
-    }, [] as TimelineModel)
-    .reverse()
+      return M
+    },
+    {} as Record<string, boolean>,
+  )
+
+  return model.filter(({ id }) => !modelInputDefsites[id]).filter(nonNullable)
 }
 
 function computeModelIter(

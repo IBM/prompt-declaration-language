@@ -8,6 +8,7 @@ import {
   hasParser,
   hasScalarResult,
   hasModelUsage,
+  hasResult,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
@@ -37,10 +38,16 @@ import { hasStabilityMetrics, type StabilityMetric } from "./stability"
 } */
 
 /** Remove objects from the Masonry model that aren't helpful to display */
-function removeFluff({ kind }: { kind?: string }) {
+function removeFluff({ kind, block }: Tile) {
   // re: empty, these house only defs, which are spliced in below via
   // `withDefs()`
-  return kind !== "if" && kind !== "empty"
+  return (
+    kind !== "if" &&
+    kind !== "empty" &&
+    (!hasResult(block) ||
+      typeof block.pdl__result !== "string" ||
+      block.pdl__result.trim().length > 0)
+  )
 }
 
 export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
