@@ -466,9 +466,8 @@ class CodeBlock(BaseCodeBlock):
 
     Example:
     ```PDL
-    - def: N
-      lang: python
-      code: |
+    lang: python
+    code: |
         import random
         # (In PDL, set `result` to the output you wish for your code block.)
         result = random.randint(1, 20)
@@ -600,11 +599,12 @@ class IfBlock(StructuredBlock):
 
     Example:
     ```PDL
-    - if: ${ eval == 'no' }
-      then:
-        text:
-        - read:
-          message: "Why not?\\n"
+    defs:
+      answer:
+        read:
+        message: "Enter a number? "
+    if: ${ (answer | int) == 42 }
+    then: You won!
     ```
     """
 
@@ -642,7 +642,25 @@ class MatchCase(BaseModel):
 
 
 class MatchBlock(StructuredBlock):
-    """Match control structure."""
+    """Match control structure.
+
+    Example:
+    ```PDL
+    defs:
+      answer:
+        read:
+        message: "Enter a number? "
+    match: ${ (answer | int) }
+    with:
+    - case: 42
+      then: You won!
+    - case:
+        any:
+        def: x
+      if: ${ x > 42 }
+      then: Too high
+    - then: Too low
+    """
 
     kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
     match_: ExpressionType[Any] = Field(alias="match")
@@ -735,7 +753,20 @@ class RepeatBlock(StructuredBlock):
 
 
 class ReadBlock(LeafBlock):
-    """Read from a file or standard input."""
+    """Read from a file or standard input.
+
+    Example. Read from the standard input with a prompt starting with `> `.
+    ```PDL
+    read:
+    message: "> "
+    ```
+
+    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+    ```PDL
+    read: ./data.yaml
+    parser: yaml
+    ```
+    """
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
     read: ExpressionType[str] | None
