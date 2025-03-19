@@ -46,6 +46,11 @@ jobs:
         run: mkdocs build --config-file ./mkdocs.yml --strict --site-dir ./_site
         env:
           CI: true
+      # Schema
+      - name: Copy schema
+        run: |
+          mkdir -p ./docs/dist
+          cp ./src/pdl/pdl-schema.json ./docs/dist/pdl-schema.json
       # Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
