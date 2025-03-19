@@ -1,3 +1,4 @@
+import { match, P } from "ts-pattern"
 import { lazy, Suspense } from "react"
 import { stringify } from "yaml"
 
@@ -65,6 +66,17 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     pdl__location: undefined,
     pdl__model_input: undefined,
   }
+  if (new_data.kind === "model") {
+    let input = match(new_data.input)
+      .with({ kind: "data" }, (i) => i.data)
+      .otherwise((_) => new_data.input)
+    input = match(input)
+      .with({ expr: P._ }, (e) => e.expr)
+      .otherwise((e) => e)
+    if (input) {
+      new_data.input = input
+    }
+  }
   // remove contribute: ["result", context]
   if (
     new_data?.contribute?.includes("result") &&
@@ -77,5 +89,14 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     delete new_data.defs
   }
   // recursive cleanup
-  return map_block_children(block_code_cleanup, new_data)
+  const clean_data = map_block_children(block_code_cleanup, new_data)
+  return match(clean_data)
+    .with({ kind: "data" }, (d) => {
+      return match(d.data)
+        .with({ expr: P._ }, (e) => e.expr)
+        .with(P.union(P.string, P.number, P.boolean, {}), (e) => e)
+        .otherwise((_) => d)
+    })
+    .with({ kind: P._ }, (d) => ({ ...d, kind: undefined }))
+    .otherwise((d) => d)
 }
