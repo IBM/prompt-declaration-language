@@ -1349,7 +1349,7 @@
     },
     "CodeBlock": {
       "additionalProperties": false,
-      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
+      "description": "Execute a piece of code.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -4318,7 +4318,7 @@
     },
     "IfBlock": {
       "additionalProperties": false,
-      "description": "Conditional control structure.\n\nExample:\n```PDL\n- if: ${ eval == 'no' }\n  then:\n    text:\n    - read:\n      message: \"Why not?\\n\"\n```",
+      "description": "Conditional control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nif: ${ (answer | int) == 42 }\nthen: You won!\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -7186,7 +7186,7 @@
     },
     "MatchBlock": {
       "additionalProperties": false,
-      "description": "Match control structure.",
+      "description": "Match control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nmatch: ${ (answer | int) }\nwith:\n- case: 42\n  then: You won!\n- case:\n    any:\n    def: x\n  if: ${ x > 42 }\n  then: Too high\n- then: Too low",
       "properties": {
         "description": {
           "anyOf": [
@@ -9208,7 +9208,7 @@
     },
     "ReadBlock": {
       "additionalProperties": false,
-      "description": "Read from a file or standard input.",
+      "description": "Read from a file or standard input.\n\nExample. Read from the standard input with a prompt starting with `> `.\n```PDL\nread:\nmessage: \"> \"\n```\n\nExample. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.\n```PDL\nread: ./data.yaml\nparser: yaml\n```",
       "properties": {
         "description": {
           "anyOf": [
