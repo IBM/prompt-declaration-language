@@ -37,3 +37,6 @@ base64ct = { version = "1.7.1", features = ["alloc"] }
 tauri-plugin-cli = "2"
 tauri-plugin-window-state = "2"
 
+[profile.release.package.wry]
+debug = true
+debug-assertions = true
