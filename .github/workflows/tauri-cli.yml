@@ -49,9 +49,11 @@ jobs:
           pdl run ./demos/demo1.pdl | grep 'write a hello'
 
           # 3. `run` subcommand works with UI demos (json source)
-          # demo8 uses a private model? not sure
+          # demo5,demo6 each depend on an external file, and the interpreter does not currently capture this in the trace
+          # demo8 currently requires building a model which the interpreter does not directly support
+          # demo9 takes forever, so... for now skip it
           for i in ./src/demos/*.json
-          do if [[ $(basename $i) != "demo8.json" ]] && [[  $(basename $i) != "demo9.json" ]]; then pdl run $i; fi
+          do if [[ $(basename $i) != "demo5.json" ]] && [[ $(basename $i) != "demo6.json" ]] && [[ $(basename $i) != "demo8.json" ]] && [[  $(basename $i) != "demo9.json" ]]; then pdl run $i; fi
           done
 
       - name: Tear down xvfb
