@@ -9208,7 +9208,7 @@
     },
     "ReadBlock": {
       "additionalProperties": false,
-      "description": "Read from a file or standard input.",
+      "description": "Read from a file or standard input.\n\nExample. Read from the standard input with a prompt starting with `> `.\n```PDL\nread:\nmessage: \"> \"\n```\n\nExample. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.\n```PDL\nread: ./data.yaml\nparser: yaml\n```",
       "properties": {
         "description": {
           "anyOf": [
