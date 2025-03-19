@@ -149,7 +149,7 @@ def generate(
     state: Optional[InterpreterState],
     initial_scope: ScopeType,
     trace_file: Optional[str | Path],
-):
+) -> int:
     """Execute the PDL program defined in `pdl_file`.
 
     Args:
@@ -157,6 +157,9 @@ def generate(
         initial_scope: Environment defining the variables in scope to execute the program.
         state: Initial state of the interpreter.
         trace_file: Indicate if the execution trace must be produced and the file to save it.
+
+    Returns:
+        Returns the exit code: `0` for success, `1` for failure
     """
     try:
         prog, loc = parse_file(pdl_file)
@@ -172,6 +175,7 @@ def generate(
             write_trace(trace_file, trace)
     except PDLParseError as exc:
         print("\n".join(exc.message), file=sys.stderr)
+        return 1
     except PDLRuntimeError as exc:
         if exc.loc is None:
             message = exc.message
@@ -180,6 +184,8 @@ def generate(
         print(message, file=sys.stderr)
         if trace_file and exc.pdl__trace is not None:
             write_trace(trace_file, exc.pdl__trace)
+        return 1
+    return 0
 
 
 def write_trace(

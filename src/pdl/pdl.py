@@ -205,7 +205,7 @@ def main():
     # This case must be before `if args.pdl is None:`
     if args.version:
         print(f"PDL {version}")
-        return
+        return 0
 
     # This case must be before `if args.pdl is None:`
     if args.schema:
@@ -218,11 +218,11 @@ def main():
         )
         top_level_schema["anyOf"] = list(schema.values())
         print(json.dumps(top_level_schema, indent=2))
-        return
+        return 0
 
     if args.pdl is None:
         parser.print_help()
-        return
+        return 0
 
     if args.sandbox:
         args = sys.argv[1:]
@@ -267,12 +267,13 @@ def main():
         batch=batch,
         cwd=pdl_file.parent,
     )
-    pdl_interpreter.generate(
+    exit_code = pdl_interpreter.generate(
         pdl_file,
         InterpreterState(**config),
         PdlDict(initial_scope),
         trace_file,
     )
+    return exit_code
 
 
 if __name__ == "__main__":
