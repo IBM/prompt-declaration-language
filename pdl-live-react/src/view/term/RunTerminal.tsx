@@ -11,6 +11,9 @@ type Props = {
   /** The cmd part of `cmd ...args` */
   cmd: string
 
+  /** The current working directory in which to run `cmd` */
+  cwd: string
+
   /** The args part of `cmd ...args */
   args?: string[]
 
@@ -21,7 +24,13 @@ type Props = {
   cancel?: import("../masonry/condvar").default
 }
 
-export default function RunTerminal({ cmd, args = [], onExit, cancel }: Props) {
+export default function RunTerminal({
+  cmd,
+  cwd,
+  args = [],
+  onExit,
+  cancel,
+}: Props) {
   const ref = createRef<HTMLDivElement>()
   const [term, setTerm] = useState<null | Terminal>(null)
   const [exitCode, setExitCode] = useState(-1)
@@ -73,6 +82,7 @@ export default function RunTerminal({ cmd, args = [], onExit, cancel }: Props) {
 
       // spawn shell
       const pty = spawn(cmd, args, {
+        cwd,
         cols: term.cols,
         rows: term.rows,
       })
