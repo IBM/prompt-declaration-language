@@ -50,7 +50,7 @@ export default function Code({
   )
 }
 
-function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
+export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   if (data === null || typeof data !== "object") {
     return data
   }
