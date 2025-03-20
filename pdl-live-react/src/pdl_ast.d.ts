@@ -146,7 +146,7 @@ export type Description20 = string | null
  */
 export type Def = string | null
 export type ContributeTarget = "result" | "context"
-export type Value = unknown[] | string | LocalizedExpression
+export type Value = LocalizedExpression | unknown[] | string
 export type Path = string[]
 export type File = string
 /**
@@ -660,7 +660,7 @@ export type Kind4 = "read"
  * Name of the file to read. If `None`, read the standard input.
  *
  */
-export type Read = string | LocalizedExpression | null
+export type Read = LocalizedExpression | string | null
 /**
  * Message to prompt the user to enter a value.
  *
@@ -1328,13 +1328,13 @@ export type Kind10 = "repeat"
  *
  */
 export type For = {
-  [k: string]: unknown[] | string | LocalizedExpression
+  [k: string]: LocalizedExpression | unknown[] | string
 } | null
 /**
  * Condition to stay at the beginning of the loop.
  *
  */
-export type While = boolean | string | LocalizedExpression
+export type While = LocalizedExpression | boolean | string
 /**
  * Body of the loop.
  *
@@ -1369,12 +1369,12 @@ export type Repeat =
  * Condition to exit at the end of the loop.
  *
  */
-export type Until = boolean | string | LocalizedExpression
+export type Until = LocalizedExpression | boolean | string
 /**
  * Maximal number of iterations to perform.
  *
  */
-export type MaxIterations = number | string | LocalizedExpression | null
+export type MaxIterations = LocalizedExpression | number | string | null
 /**
  * Define how to combine the result of each iteration.
  *
@@ -1543,7 +1543,7 @@ export type Anyof = (
   | AnyPattern
   | null
 )[]
-export type If = boolean | string | LocalizedExpression | null
+export type If = LocalizedExpression | boolean | string | null
 export type Then =
   | boolean
   | number
@@ -1657,7 +1657,7 @@ export type Kind12 = "if"
  * Condition.
  *
  */
-export type If1 = boolean | string | LocalizedExpression
+export type If1 = LocalizedExpression | boolean | string
 /**
  * Branch to execute if the condition is true.
  *
@@ -1957,7 +1957,7 @@ export type Lang = "command"
  * The argument vector to spawn.
  *
  */
-export type Args = (string | LocalizedExpression)[]
+export type Args = (LocalizedExpression | string)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2195,26 +2195,26 @@ export type Platform = "granite-io"
  *
  */
 export type Backend =
+  | LocalizedExpression
   | string
   | {
       [k: string]: unknown
     }
-  | LocalizedExpression
 /**
  * IO Processor name.
  *
  */
-export type Processor = string | LocalizedExpression | null
+export type Processor = LocalizedExpression | string | null
 /**
  * Parameters sent to the model.
  *
  */
 export type Parameters =
+  | LocalizedExpression
   | {
       [k: string]: unknown
     }
   | string
-  | LocalizedExpression
   | null
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -2295,7 +2295,7 @@ export type Kind18 = "model"
  * Name of the model following the LiteLLM convention.
  *
  */
-export type Model1 = string | LocalizedExpression
+export type Model1 = LocalizedExpression | string
 /**
  * Messages to send to the model.
  *
@@ -2347,11 +2347,11 @@ export type Platform1 = "litellm"
  */
 export type Parameters1 =
   | LitellmParameters
+  | LocalizedExpression
   | {
       [k: string]: unknown
     }
   | string
-  | LocalizedExpression
   | null
 export type Timeout = number | string | null
 export type Temperature = number | string | null
