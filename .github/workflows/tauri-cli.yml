@@ -42,8 +42,14 @@ jobs:
         run: |
           PATH=./src-tauri/target/release/:$PATH
           
-          # 1. `run` subcommand works without any arguments
-          pdl run | grep Usage
+          # 1a. `run` subcommand errors due to missing required positional parameter
+          pdl run && (echo "This should have failed" && exit 1) || (echo "Great, expected failure received" && exit 0)
+
+          # 1b.`run` subcommand works without any arguments to print Usage
+          pdl run 2>&1 | grep Usage
+
+          # 1c.`run` subcommand works with -h to print Usage
+          pdl run -h 2>&1 | grep Usage
 
           # 2. `run` subcommand works with UI demos (yaml source)
           pdl run ./demos/demo1.pdl | grep 'write a hello'

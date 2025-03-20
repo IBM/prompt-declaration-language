@@ -3,6 +3,7 @@ use tauri_plugin_pty;
 
 mod cli;
 mod commands;
+mod compile;
 mod gui;
 mod interpreter;
 
@@ -14,7 +15,13 @@ pub fn run() {
             if args_os().count() <= 1 {
                 gui::setup(app.handle().clone(), "".to_owned())?;
             } else {
-                cli::setup::cli(app)?;
+                match cli::setup::cli(app) {
+                    Ok(()) => ::std::process::exit(0),
+                    Err(s) => {
+                        eprintln!("{}", s);
+                        ::std::process::exit(1)
+                    }
+                }
             }
 
             Ok(())
