@@ -90,7 +90,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
-ExpressionType: TypeAlias = ExpressionTypeT | str | LocalizedExpression[ExpressionTypeT]
+ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 
 
 class Pattern(BaseModel):
