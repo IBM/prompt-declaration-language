@@ -449,12 +449,15 @@ def process_block_body(
     block.pdl__location = loc
     match block:
         case ModelBlock():
-            # result, background, scope, trace = process_call_model(
-            #     state, scope, block, loc
-            # )
-            result, background, scope, trace = sample(
-                PDL_model(state, scope, block, loc)
-            )
+
+            if block.sampling:
+                result, background, scope, trace = sample(
+                    PDL_model(state, scope, block, loc), name=block.pdl__id
+                )
+            else:
+                result, background, scope, trace = process_call_model(
+                    state, scope, block, loc
+                )
         case CodeBlock():
             result, background, scope, trace = process_call_code(
                 state, scope, block, loc
@@ -1834,7 +1837,6 @@ def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
 
 
-
 class PDL_model(Distribution[Any]):
     """
     Call an LLM via PDL
@@ -1850,7 +1852,41 @@ class PDL_model(Distribution[Any]):
         return process_call_model(self.state, self.scope, self.block, self.loc)
 
     def log_prob(self, x: Any) -> float:
-        raise RuntimeError("log_prob not defined for PDL_model")
+
+        res, _, _, _ = x
+
+        prompt = f"""
+Given a prompt I want you to estimate the logprob of a response that you already gave. Ready? 
+Here is the context:
+
+```
+{self.scope["pdl_context"]}
+```
+
+And here is the response:
+
+```
+{res.result()}
+```
+
+Answer with a json object in a single code block WITHOUT EXPLANATIONS! For instance, here is a valid answer:
+
+```
+{{"logprob": 0.0}}
+```
+
+What is the logprob of this response? 
+"""
+        block = self.block.model_copy(update={"input": prompt})
+        block.parser = "json"
+        # block.spec = {"logprob": "float"}
+        block.sampling = False
+        score, _, _, _ = process_block(self.state, self.scope, block, self.loc)
+        match score.result():
+            case list():
+                return score.result()[0]["logprob"]
+            case dict():
+                return score.result()["logprob"]
 
     def stats(self) -> Tuple[float, float]:
         raise RuntimeError("stats not defined for PDL_model")

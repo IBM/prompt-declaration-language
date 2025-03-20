@@ -397,6 +397,7 @@ class ModelBlock(LeafBlock):
     """
     # Field for internal use
     pdl__trace: Optional["BlockType"] = None
+    sampling: bool = True
 
 
 class LitellmModelBlock(ModelBlock):
