@@ -64,7 +64,7 @@ class LitellmModel:
                 response.json(),  # pyright: ignore
             )
         except httpx.RequestError as exc:
-            message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+            message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
             loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
@@ -72,7 +72,7 @@ class LitellmModel:
                 trace=ErrorBlock(msg=message, pdl__location=loc, program=block),
             ) from exc
         except Exception as exc:
-            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            message = f"Error during '{model_id}' model call: {repr(exc)}"
             loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
@@ -87,7 +87,7 @@ class LitellmModel:
         messages: ModelInput,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
-        print(f"Asynchronous model call started to {block.model}", file=stderr)
+        print(f"Asynchronous model call started to {model_id}", file=stderr)
         # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
@@ -131,7 +131,7 @@ class LitellmModel:
                 )
                 exec_nanos = block.pdl__timing.end_nanos - start
                 print(
-                    f"Asynchronous model call to {block.model} completed in {(exec_nanos)/1000000}ms",
+                    f"Asynchronous model call to {model_id} completed in {(exec_nanos)/1000000}ms",
                     file=stderr,
                 )
                 msg = future.result()[0]
