@@ -13,7 +13,7 @@ pub fn run_pdl_program(
     trace_file: Option<&tauri_plugin_cli::ArgData>,
     data: Option<&tauri_plugin_cli::ArgData>,
     stream: Option<&tauri_plugin_cli::ArgData>,
-) -> Result<(), tauri::Error> {
+) -> Result<(), Box<dyn ::std::error::Error>> {
     println!(
         "Running {:#?}",
         Path::new(&source_file_path).file_name().unwrap()
