@@ -1438,7 +1438,7 @@ def litellm_parameters_to_dict(
     parameters: Optional[LitellmParameters | dict[str, Any]]
 ) -> dict[str, Any]:
     if isinstance(parameters, dict):
-        return parameters
+        return {k: v for k, v in parameters.items() if k != "stream"}
     if parameters is None:
         parameters = LitellmParameters()
     parameters_dict = parameters.model_dump(exclude={"stream"})
