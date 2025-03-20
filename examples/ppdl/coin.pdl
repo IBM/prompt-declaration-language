@@ -22,6 +22,6 @@ lastOf:
   - if: ${ obs != data}
     then: 
       factor: ${ -10 }
-  - model: ollama_chat/granite3.2:2b
-    input: If the bias of a coin is ${p}, is it biased towards head? JUST ANSWER WITH A BOOLEAN (true or false)
-  # - ${p}
+  # - model: ollama_chat/granite3.2:2b
+  #   input: If the bias of a coin is ${p}, is it biased towards head? JUST ANSWER WITH A BOOLEAN (true or false)
+  - ${p}

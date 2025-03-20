@@ -7,18 +7,20 @@ import sys
 import time
 import traceback
 import types
+from mu_ppl import Distribution
+
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from os import getenv
 
-from mu_ppl import PDL_model, factor, sample
+from mu_ppl import factor, sample
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 # from itertools import batched
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+from typing import Any, Generator, Optional, Sequence, Tuple, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -1830,3 +1832,25 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 
 def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     return process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
+
+
+
+class PDL_model(Distribution[Any]):
+    """
+    Call an LLM via PDL
+    """
+
+    def __init__(self, state, scope, block, loc):
+        self.state = state
+        self.scope = scope
+        self.block = block
+        self.loc = loc
+
+    def sample(self) -> Any:
+        return process_call_model(self.state, self.scope, self.block, self.loc)
+
+    def log_prob(self, x: Any) -> float:
+        raise RuntimeError("log_prob not defined for PDL_model")
+
+    def stats(self) -> Tuple[float, float]:
+        raise RuntimeError("stats not defined for PDL_model")
