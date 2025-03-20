@@ -134,7 +134,10 @@ function isLocalizedExpression(
   p: unknown,
 ): p is import("../../pdl_ast").LocalizedExpression {
   return (
-    typeof p === "object" && !!p && "expr" in p && typeof p.expr === "object"
+    typeof p === "object" &&
+    !!p &&
+    "pdl__expr" in p &&
+    typeof p.pdl__expr === "object"
   )
 }
 

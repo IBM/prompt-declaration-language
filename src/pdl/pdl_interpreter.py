@@ -1131,11 +1131,13 @@ def process_expr(  # pylint: disable=too-many-return-statements
 ) -> tuple[ProcessExprT, LocalizedExpression[ProcessExprT]]:
     result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        result = _process_expr(scope, expr.expr, loc)
+        result = _process_expr(scope, expr.pdl__expr, loc)
         trace = expr.model_copy(update={"pdl__result": result})
     else:
         result = _process_expr(scope, expr, loc)
-        trace = LocalizedExpression(expr=expr, pdl__result=result, pdl__location=loc)
+        trace = LocalizedExpression(
+            pdl__expr=expr, pdl__result=result, pdl__location=loc
+        )
     return (result, trace)
 
 
@@ -1147,7 +1149,7 @@ def _process_expr(  # pylint: disable=too-many-return-statements
 ) -> _ProcessExprT:
     result: _ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        return _process_expr(scope, expr.expr, loc)
+        return _process_expr(scope, expr.pdl__expr, loc)
     if isinstance(expr, str):
         try:
             env = Environment(  # nosec B701
