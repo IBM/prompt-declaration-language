@@ -10727,6 +10727,24 @@
           "description": "Define how to combine the result of each iteration.\n    ",
           "title": "Join"
         },
+        "retry_on_error": {
+          "default": false,
+          "description": "Indicate if this block should be retried when an error occurs.\n    ",
+          "title": "Retry On Error",
+          "type": "boolean"
+        },
+        "retry_max": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Retry Max"
+        },
         "pdl__trace": {
           "anyOf": [
             {
