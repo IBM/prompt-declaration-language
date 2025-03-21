@@ -238,11 +238,7 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
     actual_runtime_error: set[str] = set()
     wrong_results = {}
 
-    test_files = pathlib.Path(".").glob("**/*.pdl")
-    test_files = pathlib.Path(".").glob("**/demo-halluncination.pdl")
-
     for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
-    # for pdl_file_name in test_files:
         scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue
