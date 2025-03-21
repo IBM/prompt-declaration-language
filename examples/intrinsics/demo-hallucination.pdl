@@ -5,6 +5,7 @@
 
 # The model responds to a query and provides a hallucination score
 
+description: Responds to a query and provides a hallucination score
 text:
 # Install dependencies
 - contribute: []
