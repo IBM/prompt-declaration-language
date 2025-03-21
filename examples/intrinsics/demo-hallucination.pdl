@@ -65,7 +65,13 @@ text:
     os.remove(model_file)
 
     result = f"Model {granite3_rag_model} available"
-
+# Remove dependencies
+- contribute: []
+  lang: command
+  args:
+    - "/bin/sh"
+    - "-c"
+    - "rm -rf llama.cpp"
 - role: system
   contribute: [context]
   text:
