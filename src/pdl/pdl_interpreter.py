@@ -1613,11 +1613,7 @@ def call_command(code: str, code_a: list[str] | None) -> PdlLazy[str]:
     else:
         args = shlex.split(code)
     p = subprocess.run(
-        code,
-        capture_output=True,
-        text=True,
-        check=False,
-        shell=True
+        args, capture_output=True, text=True, check=False, shell=False
     )  # nosec B603
     # [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
     # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`

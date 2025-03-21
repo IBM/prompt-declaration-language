@@ -9,17 +9,22 @@ text:
 # Install dependencies
 - contribute: []
   lang: command
-  code: |
-    [ -d "llama.cpp/.git" ] || git clone https://github.com/ggerganov/llama.cpp.git llama.cpp
+  args:
+    - "/bin/sh"
+    - "-c"
+    - "rm -rf llama.cpp || true && git clone https://github.com/ggml-org/llama.cpp.git llama.cpp"
 - contribute: []
   lang: command
-  code: |
-    pip install "git+https://github.com/ibm-granite-community/utils.git" \
-    "huggingface_hub" \
-    "langchain_community" \
-    "langchain_ollama" \
-    "ollama" \
-    -r llama.cpp/requirements.txt
+  args:
+    - "/bin/sh"
+    - "-c"
+    - |
+      pip install "git+https://github.com/ibm-granite-community/utils.git" \
+      "huggingface_hub" \
+      "langchain_community" \
+      "langchain_ollama" \
+      "ollama" \
+      -r llama.cpp/requirements.txt
 # Download base model and LoRA adapter and build granite3-rag model
 - contribute: []
   lang: python
