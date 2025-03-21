@@ -1,2 +1,2 @@
--e ../
-#prompt-declaration-language==0.5.0
+#-e ../
+prompt-declaration-language==0.5.1
