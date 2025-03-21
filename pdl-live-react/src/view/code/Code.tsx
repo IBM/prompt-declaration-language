@@ -1,7 +1,5 @@
 import { lazy, Suspense } from "react"
-
 import { stringify } from "yaml"
-import { match, P } from "ts-pattern"
 
 import { tryJsonPrettyPrint } from "../../helpers"
 import { type PdlBlock } from "../../pdl_ast"
@@ -52,23 +50,21 @@ export default function Code({
 }
 
 function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
-  if (
-    data === null ||
-    typeof data === "boolean" ||
-    typeof data === "number" ||
-    typeof data === "string"
-  ) {
+  if (data === null || typeof data !== "object") {
     return data
   }
   // remove pdl__result
-  const new_data = { ...data, pdl__result: undefined, pdl__is_leaf: undefined }
-  // remove trace
-  match(new_data).with({ pdl__trace: P._ }, (data) => {
-    delete data.pdl__trace
-  })
-  // remove other trace artifacts
-  delete new_data.pdl__id
-  delete new_data.pdl__timing
+  const new_data = {
+    ...data,
+    pdl__result: undefined,
+    pdl__is_leaf: undefined,
+    pdl__usage: undefined,
+    pdl__trace: undefined,
+    pdl__id: undefined,
+    pdl__timing: undefined,
+    pdl__location: undefined,
+    pdl__model_input: undefined,
+  }
   // remove contribute: ["result", context]
   if (
     new_data?.contribute?.includes("result") &&
@@ -80,8 +76,6 @@ function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   if (Object.keys(data?.defs ?? {}).length === 0) {
     delete new_data.defs
   }
-  // remove location info
-  delete new_data.pdl__location
   // recursive cleanup
   return map_block_children(block_code_cleanup, new_data)
 }

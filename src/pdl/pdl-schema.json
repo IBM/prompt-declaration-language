@@ -27,9 +27,9 @@
       "title": "AnyPattern",
       "type": "object"
     },
-    "ArrayBlock": {
+    "ArgsBlock": {
       "additionalProperties": false,
-      "description": "Return the array of values computed by each block of the list of blocks.",
+      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -78,6 +78,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -221,6 +224,378 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "lang": {
+          "const": "command",
+          "default": "command",
+          "title": "Lang",
+          "type": "string"
+        },
+        "args": {
+          "description": "The argument vector to spawn.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "title": "Args",
+          "type": "array"
+        }
+      },
+      "required": [
+        "args"
+      ],
+      "title": "ArgsBlock",
+      "type": "object"
+    },
+    "ArrayBlock": {
+      "additionalProperties": false,
+      "description": "Return the array of values computed by each block of the list of blocks.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -394,6 +769,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -563,6 +941,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -704,6 +1085,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -847,12 +1231,12 @@
         },
         "call": {
           "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {},
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Function to call.\n    ",
@@ -860,12 +1244,12 @@
         },
         "args": {
           "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {},
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": {},
@@ -900,6 +1284,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -962,7 +1349,7 @@
     },
     "CodeBlock": {
       "additionalProperties": false,
-      "description": "Execute a piece of code.\n\nExample:\n```PDL\n- def: N\n  lang: python\n  code: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
+      "description": "Execute a piece of code.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -1011,6 +1398,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -1154,6 +1544,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -1336,6 +1729,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -1409,14 +1805,14 @@
         "value": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "items": {},
               "type": "array"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "title": "Value"
@@ -1479,6 +1875,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -1622,6 +2021,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -1765,12 +2167,12 @@
         },
         "data": {
           "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {},
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Value defined.",
@@ -1840,6 +2242,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -1983,6 +2388,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -2181,6 +2589,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -2322,6 +2733,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -2498,6 +2912,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -2608,6 +3025,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -2751,6 +3171,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -2934,6 +3357,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -3044,6 +3470,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -3187,6 +3616,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -3393,6 +3825,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -3534,6 +3969,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -3677,12 +4115,12 @@
         },
         "model": {
           "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {},
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Model name used by the backend.\n    ",
@@ -3718,6 +4156,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -3766,7 +4207,7 @@
               "type": "null"
             }
           ],
-          "default": null,
+          "default": "${ pdl_context }",
           "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
@@ -3783,86 +4224,32 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
-        "pdl__trace": {
+        "pdl__usage": {
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/GraniteioModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/MatchBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ImportBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
+              "$ref": "#/$defs/PdlUsage"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "title": "Pdl  Trace"
+          "description": "Tokens consumed during model call\n    "
+        },
+        "pdl__model_input": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Model Input"
         },
         "platform": {
           "const": "granite-io",
@@ -3874,13 +4261,13 @@
         "backend": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "string"
             },
             {
               "type": "object"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Backend name and configuration.\n    ",
@@ -3889,10 +4276,10 @@
         "processor": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "type": "string"
             },
             {
               "type": "null"
@@ -3905,13 +4292,13 @@
         "parameters": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "object"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -3931,7 +4318,7 @@
     },
     "IfBlock": {
       "additionalProperties": false,
-      "description": "Conditional control structure.\n\nExample:\n```PDL\n- if: ${ eval == 'no' }\n  then:\n    text:\n    - read:\n      message: \"Why not?\\n\"\n```",
+      "description": "Conditional control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nif: ${ (answer | int) == 42 }\nthen: You won!\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -3980,6 +4367,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -4123,6 +4513,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -4267,13 +4660,13 @@
         "if": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "boolean"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Condition.\n    ",
@@ -4307,6 +4700,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -4388,6 +4784,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -4513,6 +4912,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -4656,6 +5058,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -4832,6 +5237,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -4941,6 +5349,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -5084,6 +5495,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -5258,6 +5672,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -5439,6 +5856,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -5580,6 +6000,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -5753,6 +6176,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -5863,6 +6289,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -6008,6 +6437,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -6150,10 +6582,10 @@
         "model": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "type": "string"
             }
           ],
           "description": "Name of the model following the LiteLLM convention.\n    ",
@@ -6189,6 +6621,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -6237,7 +6672,7 @@
               "type": "null"
             }
           ],
-          "default": null,
+          "default": "${ pdl_context }",
           "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
@@ -6254,86 +6689,32 @@
           "description": "Variable where to store the raw response of the model.\n    ",
           "title": "Modelresponse"
         },
-        "pdl__trace": {
+        "pdl__usage": {
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "$ref": "#/$defs/CallBlock"
-            },
-            {
-              "$ref": "#/$defs/LitellmModelBlock"
-            },
-            {
-              "$ref": "#/$defs/GraniteioModelBlock"
-            },
-            {
-              "$ref": "#/$defs/CodeBlock"
-            },
-            {
-              "$ref": "#/$defs/GetBlock"
-            },
-            {
-              "$ref": "#/$defs/DataBlock"
-            },
-            {
-              "$ref": "#/$defs/IfBlock"
-            },
-            {
-              "$ref": "#/$defs/MatchBlock"
-            },
-            {
-              "$ref": "#/$defs/RepeatBlock"
-            },
-            {
-              "$ref": "#/$defs/TextBlock"
-            },
-            {
-              "$ref": "#/$defs/LastOfBlock"
-            },
-            {
-              "$ref": "#/$defs/ArrayBlock"
-            },
-            {
-              "$ref": "#/$defs/ObjectBlock"
-            },
-            {
-              "$ref": "#/$defs/MessageBlock"
-            },
-            {
-              "$ref": "#/$defs/ReadBlock"
-            },
-            {
-              "$ref": "#/$defs/IncludeBlock"
-            },
-            {
-              "$ref": "#/$defs/ImportBlock"
-            },
-            {
-              "$ref": "#/$defs/ErrorBlock"
-            },
-            {
-              "$ref": "#/$defs/EmptyBlock"
+              "$ref": "#/$defs/PdlUsage"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "title": "Pdl  Trace"
+          "description": "Tokens consumed during model call\n    "
+        },
+        "pdl__model_input": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Model Input"
         },
         "platform": {
           "const": "litellm",
@@ -6348,13 +6729,13 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "object"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -6772,8 +7153,18 @@
     "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
       "properties": {
-        "expr": {
-          "title": "Expr"
+        "pdl__expr": {
+          "title": "Pdl  Expr"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Result"
         },
         "pdl__location": {
           "anyOf": [
@@ -6788,14 +7179,14 @@
         }
       },
       "required": [
-        "expr"
+        "pdl__expr"
       ],
       "title": "LocalizedExpression",
       "type": "object"
     },
     "MatchBlock": {
       "additionalProperties": false,
-      "description": "Match control structure.",
+      "description": "Match control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nmatch: ${ (answer | int) }\nwith:\n- case: 42\n  then: You won!\n- case:\n    any:\n    def: x\n  if: ${ x > 42 }\n  then: Too high\n- then: Too low",
       "properties": {
         "description": {
           "anyOf": [
@@ -6844,6 +7235,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -6989,6 +7383,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7130,12 +7527,12 @@
         },
         "match": {
           "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
             {},
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "description": "Matched expression.\n    ",
@@ -7197,13 +7594,13 @@
         "if": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "boolean"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -7240,6 +7637,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -7388,6 +7788,9 @@
                 "$ref": "#/$defs/CodeBlock"
               },
               {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
                 "$ref": "#/$defs/GetBlock"
               },
               {
@@ -7529,6 +7932,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -7699,6 +8105,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -7809,6 +8218,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -7952,6 +8364,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -8126,6 +8541,9 @@
                     "$ref": "#/$defs/CodeBlock"
                   },
                   {
+                    "$ref": "#/$defs/ArgsBlock"
+                  },
+                  {
                     "$ref": "#/$defs/GetBlock"
                   },
                   {
@@ -8206,6 +8624,9 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArgsBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -8413,6 +8834,9 @@
           "$ref": "#/$defs/CodeBlock"
         },
         {
+          "$ref": "#/$defs/ArgsBlock"
+        },
+        {
           "$ref": "#/$defs/GetBlock"
         },
         {
@@ -8551,6 +8975,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -8664,6 +9091,37 @@
       "title": "PdlTiming",
       "type": "object"
     },
+    "PdlUsage": {
+      "description": "Internal data structure to record token consumption usage information.",
+      "properties": {
+        "completion_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Completion Tokens"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0,
+          "title": "Prompt Tokens"
+        }
+      },
+      "title": "PdlUsage",
+      "type": "object"
+    },
     "Program": {
       "anyOf": [
         {
@@ -8692,6 +9150,9 @@
         },
         {
           "$ref": "#/$defs/CodeBlock"
+        },
+        {
+          "$ref": "#/$defs/ArgsBlock"
         },
         {
           "$ref": "#/$defs/GetBlock"
@@ -8747,7 +9208,7 @@
     },
     "ReadBlock": {
       "additionalProperties": false,
-      "description": "Read from a file or standard input.",
+      "description": "Read from a file or standard input.\n\nExample. Read from the standard input with a prompt starting with `> `.\n```PDL\nread:\nmessage: \"> \"\n```\n\nExample. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.\n```PDL\nread: ./data.yaml\nparser: yaml\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -8796,6 +9257,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -8939,6 +9403,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -9083,10 +9550,10 @@
         "read": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "type": "string"
             },
             {
               "type": "null"
@@ -9223,6 +9690,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -9366,6 +9836,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -9513,14 +9986,14 @@
               "additionalProperties": {
                 "anyOf": [
                   {
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                  },
+                  {
                     "items": {},
                     "type": "array"
                   },
                   {
                     "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   }
                 ]
               },
@@ -9537,13 +10010,13 @@
         "while": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "boolean"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": true,
@@ -9578,6 +10051,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -9634,13 +10110,13 @@
         "until": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "boolean"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             }
           ],
           "default": false,
@@ -9650,13 +10126,13 @@
         "max_iterations": {
           "anyOf": [
             {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
               "type": "integer"
             },
             {
               "type": "string"
-            },
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "null"
@@ -9719,6 +10195,9 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArgsBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"
@@ -9837,6 +10316,9 @@
               },
               {
                 "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
               },
               {
                 "$ref": "#/$defs/GetBlock"
@@ -9980,6 +10462,9 @@
             },
             {
               "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
             },
             {
               "$ref": "#/$defs/GetBlock"
@@ -10151,6 +10636,9 @@
               "$ref": "#/$defs/CodeBlock"
             },
             {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
               "$ref": "#/$defs/GetBlock"
             },
             {
@@ -10224,6 +10712,9 @@
                   },
                   {
                     "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArgsBlock"
                   },
                   {
                     "$ref": "#/$defs/GetBlock"

@@ -4,15 +4,24 @@ import type {
   GraniteioModelBlock,
   PdlBlock,
   TextBlock,
+  ArgsBlock,
+  CodeBlock,
+  PdlModelInput,
+  LocalizedExpression,
 } from "./pdl_ast"
 
 /** Re-export for convenience */
-export { type PdlBlock } from "./pdl_ast"
+export type { PdlBlock } from "./pdl_ast"
 
-export type ModelBlock = Extract<
-  PdlBlock,
-  LitellmModelBlock | GraniteioModelBlock
->
+type MakeNonNullable<T> = {
+  [K in keyof T]-?: NonNullable<T[K]>
+}
+
+export type ModelBlock = LitellmModelBlock | GraniteioModelBlock
+
+export type ModelBlockWithUsage = ModelBlock & {
+  pdl__usage: Required<MakeNonNullable<import("./pdl_ast").PdlUsage>>
+}
 
 export type NonScalarPdlBlock = Exclude<
   PdlBlock,
@@ -22,11 +31,9 @@ export type PdlBlockWithResult = NonScalarPdlBlock & {
   pdl__result: NonNullable<PdlBlock>
 }
 
-export type WithTiming = {
-  start_nanos: number
-  end_nanos: number
-  timezone: string
-}
+export type WithTiming = Required<
+  MakeNonNullable<import("./pdl_ast").PdlTiming>
+>
 
 export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
@@ -114,8 +121,12 @@ export function isTextBlockWithArrayContent(
 }
 
 /** Does the given block represent an LLM interaction? */
-export function isLLMBlock(data: PdlBlock): data is ModelBlock {
-  return (data as ModelBlock).kind === "model"
+export function isLLMBlock(data: unknown | PdlBlock): data is ModelBlock {
+  return (
+    data !== null &&
+    typeof data === "object" &&
+    (data as ModelBlock).kind === "model"
+  )
 }
 
 /** Does the given block have a `pdl__result` field? of type string */
@@ -161,6 +172,33 @@ export function hasTimingInformation(
   )
 }
 
+/** Does the given model block have model token usage information? */
+export function hasModelUsage(
+  block: unknown | PdlBlock,
+): block is ModelBlockWithUsage & PdlBlockWithTiming {
+  return (
+    isLLMBlock(block) &&
+    hasTimingInformation(block) &&
+    block.pdl__usage !== null &&
+    typeof block.pdl__usage === "object" &&
+    typeof block.pdl__usage.completion_tokens === "number" &&
+    typeof block.pdl__usage.prompt_tokens === "number"
+  )
+}
+
+export function completionRate(
+  block: ModelBlockWithUsage & PdlBlockWithTiming,
+) {
+  return (
+    block.pdl__usage.completion_tokens /
+    ((block.pdl__timing.end_nanos - block.pdl__timing.start_nanos) / 1000000000)
+  )
+}
+
+export function ptcRatio(block: ModelBlockWithUsage) {
+  return block.pdl__usage.prompt_tokens / block.pdl__usage.completion_tokens
+}
+
 /** Does the given block have context/background information? */
 export function hasContextInformation(
   block: unknown | PdlBlock,
@@ -190,12 +228,15 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
   return typeof (block as MessageBearing).message === "string"
 }
 
-export function hasInput(
-  block: PdlBlock,
-): block is
-  | (Omit<GraniteioModelBlock, "input"> & { input: string })
-  | (Omit<LitellmModelBlock, "input"> & { input: string }) {
-  return typeof (block as ModelBlock).input === "string"
+export function hasInput(block: PdlBlock): block is
+  | (Omit<GraniteioModelBlock, "input"> & {
+      pdl__model_input: NonNullable<PdlModelInput>
+    })
+  | (Omit<LitellmModelBlock, "input"> & {
+      pdl__model_input: NonNullable<PdlModelInput>
+    }) {
+  const mb = block as ModelBlock
+  return Array.isArray(mb.pdl__model_input) && mb.pdl__model_input.length > 0
 }
 
 function tryJson(s: unknown) {
@@ -257,4 +298,36 @@ export function extractStructuredModelResponse({
       )
 
   return { resultForDisplay, lang, meta }
+}
+
+export function isArgs(block: ArgsBlock | CodeBlock): block is ArgsBlock {
+  return Array.isArray((block as ArgsBlock).args)
+}
+
+export function extractCode({ code }: CodeBlock): string {
+  if (
+    isNonScalarPdlBlock(code) &&
+    hasResult(code) &&
+    typeof code.pdl__result !== "object"
+  ) {
+    return String(code.pdl__result)
+  }
+
+  return String(code)
+}
+
+function isExpr(e: unknown): e is LocalizedExpression {
+  return (
+    e !== null &&
+    typeof e === "object" &&
+    "pdl__expr" in (e as LocalizedExpression)
+  )
+}
+
+export function extractModel({ model }: ModelBlock): string {
+  return typeof model === "string"
+    ? model
+    : isExpr(model)
+      ? String(model.pdl__result)
+      : "unknown"
 }

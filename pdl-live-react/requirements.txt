@@ -1,2 +1,2 @@
--e git+https://github.com/IBM/prompt-declaration-language.git#egg=prompt_declaration_language
-#prompt-declaration-language==0.4.1
+-e ../
+#prompt-declaration-language==0.5.0

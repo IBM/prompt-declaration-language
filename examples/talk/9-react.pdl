@@ -72,25 +72,22 @@ text:
       parameters:
         stop_sequences: "\n"
       parser: json
+    - "\nObservation: "
     - match: ${ action[0].name }
       with:
         - case: 'Search'
           then:
-            text:
-            - "\nObservation: "
-            - lang: python
-              code: |
-                import warnings, wikipedia
-                warnings.simplefilter("ignore")
-                try:
-                  result = wikipedia.summary("${ action[0].arguments.topic }")
-                except wikipedia.WikipediaException as e:
-                  result = str(e)
+            lang: python
+            code: |
+              import warnings, wikipedia
+              warnings.simplefilter("ignore")
+              try:
+                result = wikipedia.summary("${ action[0].arguments.topic }")
+              except wikipedia.WikipediaException as e:
+                result = str(e)
         - case: 'Calc'
           then:
-            text:
-            - "\nObservation: "
-            - lang: python
-              code: result = ${ action[0].arguments.expr }
+            lang: python
+            code: result = ${ action[0].arguments.expr }
     - "\n"
   until: ${ action[0].name == "Finish" }

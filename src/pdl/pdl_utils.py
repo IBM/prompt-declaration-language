@@ -5,8 +5,10 @@ from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 from .pdl_ast import (
     ContributeTarget,
     ContributeValue,
+    ExpressionType,
     FunctionBlock,
     LazyMessages,
+    LocalizedExpression,
     get_sampling_defaults,
 )
 from .pdl_lazy import lazy_apply2
@@ -61,6 +63,20 @@ def stringify(result):
         except TypeError:
             s = str(result)
     return s
+
+
+ValueOfExprT = TypeVar("ValueOfExprT")
+
+
+def value_of_expr(expr: ExpressionType[ValueOfExprT]) -> ValueOfExprT:
+    if isinstance(expr, LocalizedExpression):
+        if "pdl__result" in expr.model_fields_set:
+            v = expr.pdl__result
+        else:
+            v = expr.pdl__expr
+    else:
+        v = expr
+    return v  # type: ignore
 
 
 def replace_contribute_value(

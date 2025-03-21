@@ -24,7 +24,12 @@ export default function Result({
   term = "Result",
   limitHeight = false,
 }: Props) {
-  const isCode = !!lang && lang !== "plaintext" && !!result
+  const isCode =
+    !!lang &&
+    lang !== "plaintext" &&
+    !!result &&
+    typeof result !== "number" &&
+    typeof result !== "boolean"
 
   const innerContent = isCode ? (
     <Code block={result} language={lang} />

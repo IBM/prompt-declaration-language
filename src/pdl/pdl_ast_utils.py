@@ -43,10 +43,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
         case ModelBlock():
-            if block.input is not None:
-                f(block.input)
-            if block.pdl__trace is not None:
-                f(block.pdl__trace)
+            f(block.input)
         case CodeBlock():
             f(block.code)
         case GetBlock():
@@ -135,18 +132,10 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.pdl__trace = f.f_block(block.pdl__trace)
         case LitellmModelBlock():
             block.model = f.f_expr(block.model)
-            if block.input is not None:
-                block.input = f.f_block(block.input)
-            if block.pdl__trace is not None:
-                block.pdl__trace = f.f_block(block.pdl__trace)
-            if block.parameters is not None:
-                block.parameters = f.f_expr(block.parameters)
+            block.input = f.f_block(block.input)
         case GraniteioModelBlock():
             block.model = f.f_expr(block.model)
-            if block.input is not None:
-                block.input = f.f_block(block.input)
-            if block.pdl__trace is not None:
-                block.pdl__trace = f.f_block(block.pdl__trace)
+            block.input = f.f_block(block.input)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():

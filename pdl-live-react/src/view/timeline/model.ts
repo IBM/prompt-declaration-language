@@ -4,6 +4,8 @@ import { type PdlBlock } from "../../pdl_ast"
 import {
   hasTimingInformation,
   nonNullable,
+  isLLMBlock,
+  hasInput,
   type PdlBlockWithTiming,
   type NonScalarPdlBlock,
 } from "../../helpers"
@@ -53,7 +55,30 @@ export function computeModel(block: unknown | PdlBlock): TimelineModel {
     }
   })
 
-  return model
+  return squashProximateModelInputs(model)
+}
+
+/**
+ * We don't need to repeat model inputs as a separate top-level
+ * element in the UI, since they will be presented in the model
+ * blocks.
+ */
+function squashProximateModelInputs(model: TimelineModel): TimelineModel {
+  const modelInputDefsites = model.reduce(
+    (M, { block }) => {
+      if (isLLMBlock(block) && hasInput(block)) {
+        const lastInput =
+          block.pdl__model_input[block.pdl__model_input.length - 1]
+        if (lastInput && typeof lastInput.defsite === "string") {
+          M[lastInput.defsite] = true
+        }
+      }
+      return M
+    },
+    {} as Record<string, boolean>,
+  )
+
+  return model.filter(({ id }) => !modelInputDefsites[id]).filter(nonNullable)
 }
 
 function computeModelIter(
@@ -98,7 +123,7 @@ function computeModelIter(
 
 export function childrenOf(block: NonScalarPdlBlock) {
   return match(block)
-    .with({ kind: "model" }, (data) => [data.input, data.pdl__result])
+    .with({ kind: "model" }, (data) => [/*data.input,*/ data.pdl__result])
     .with({ kind: "code" }, (data) => [data.pdl__result])
     .with({ kind: "get" }, (data) => [data.pdl__result])
     .with({ kind: "data" }, (data) => [data.pdl__result])

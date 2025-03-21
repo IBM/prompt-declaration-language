@@ -51,6 +51,10 @@ export default function MasonryTile({
   idx,
   footer1Key,
   footer1Value,
+  footer2Key,
+  footer2Value,
+  footer3Key,
+  footer3Value,
   stability,
   actions: tileActions = [],
   block,
@@ -114,7 +118,11 @@ export default function MasonryTile({
     </CardHeader>
   )
 
-  const hasFooter = (footer1Key && footer1Value) || (stability?.length ?? 0) > 0
+  const hasFooter =
+    (footer1Key && footer1Value) ||
+    (footer2Key && footer2Value) ||
+    (footer3Key && footer3Value) ||
+    (stability?.length ?? 0) > 0
   const footer = hasFooter && (
     <DescriptionList className="pdl-masonry-tile-footer-dl">
       {footer1Key && (
@@ -122,6 +130,22 @@ export default function MasonryTile({
           <DescriptionListTerm>{footer1Key}</DescriptionListTerm>
           <DescriptionListDescription>
             {footer1Value}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      )}
+      {footer2Key && (
+        <DescriptionListGroup>
+          <DescriptionListTerm>{footer2Key}</DescriptionListTerm>
+          <DescriptionListDescription>
+            {footer2Value}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      )}
+      {footer3Key && (
+        <DescriptionListGroup>
+          <DescriptionListTerm>{footer3Key}</DescriptionListTerm>
+          <DescriptionListDescription>
+            {footer3Value}
           </DescriptionListDescription>
         </DescriptionListGroup>
       )}
