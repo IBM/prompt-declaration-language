@@ -8,5 +8,6 @@ text:
     thinking: true
   modelResponse: outputs
 - |
+
   >> Thoughts:
-  ${ outputs.reasoning_content }
+  ${ outputs.results[0].next_message.reasoning_content }
