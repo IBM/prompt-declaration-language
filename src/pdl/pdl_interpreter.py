@@ -740,10 +740,11 @@ def process_block_body(
                 )
             repeat_loc = append(loc, "repeat")
             iidx = 0
-            try:
-                first = True
-                saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
-                while True:
+            first = True
+            retry_count = 0
+            saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
+            while True:
+                try:
                     if max_iterations is not None and iidx >= max_iterations:
                         break
                     if lengths is not None and iidx >= lengths[0]:
@@ -800,14 +801,25 @@ def process_block_body(
                     stop, _ = process_condition_of(block, "until", scope, loc)
                     if stop:
                         break
-            except PDLRuntimeError as exc:
-                iter_trace.append(exc.pdl__trace)
-                trace = block.model_copy(update={"pdl__trace": iter_trace})
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or repeat_loc,
-                    trace=trace,
-                ) from exc
+                except PDLRuntimeError as exc:
+                    manual_stop = False
+                    if "Keyboard Interrupt" in exc.message:
+                        manual_stop = True
+                    iter_trace.append(exc.pdl__trace)
+                    trace = block.model_copy(update={"pdl__trace": iter_trace})
+                    if block.retry_on_error and retry_count < block.retry_max and not manual_stop:
+                        retry_count += 1
+                        error = f"Retry on error is triggered in a repeat block. Error detail: {repr(exc)} "
+                        print(f"\n\033[0;31m{error}\033[0m\n")
+                        if background and background.data and background.data[-1]["content"].endswith(error):
+                            error = "The previous error occurs multiple times."
+                        background = lazy_messages_concat(background, [{"role": "assistant", "content": error}])
+                    else:
+                        raise PDLRuntimeError(
+                            exc.message,
+                            loc=exc.loc or repeat_loc,
+                            trace=trace,
+                        ) from exc
             result = combine_results(block.join.as_, results)
             if block.context is IndependentEnum.INDEPENDENT:
                 background = saved_background
