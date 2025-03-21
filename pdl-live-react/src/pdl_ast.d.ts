@@ -4041,11 +4041,11 @@ export interface ContributeValue {
   value: Value
 }
 export interface LocalizedExpression {
-  expr: Expr
+  pdl__expr: PdlExpr
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
 }
-export interface Expr {
+export interface PdlExpr {
   [k: string]: unknown
 }
 /**
