@@ -83,6 +83,9 @@ export default function RunTerminal({
       // spawn shell
       const pty = spawn(cmd, args, {
         cwd,
+        env: {
+          PDL_VERBOSE_ASYNC: "true",
+        },
         cols: term.cols,
         rows: term.rows,
       })
