@@ -17,5 +17,8 @@ EOF
 pdl --trace "$T"/demo5.json "$TOP"/examples/talk/6-code-json.pdl
 pdl --trace "$T"/demo6.json "$UI"/demos/error.pdl || true
 pdl --trace "$T"/demo7.json "$TOP"/examples/talk/4-function.pdl
-# TODO demo8...
+
+# Will git clone llama.cpp, so remove it after it's generated
+pdl --trace "$T"/demo8.json "$TOP"/examples/intrinsics/demo-hallucination.pdl
+rm -rf llama.cpp
 pdl --stream none --trace "$T"/demo9.json "$TOP"/examples/gsm8k/gsm8.pdl
