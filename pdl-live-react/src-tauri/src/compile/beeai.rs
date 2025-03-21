@@ -4,7 +4,7 @@ use ::std::fs::File;
 use ::std::io::BufReader;
 
 use serde::{Deserialize, Serialize};
-use serde_json::{from_reader, to_string, Value};
+use serde_json::{from_reader, json, to_string, Value};
 
 macro_rules! zip {
     ($x: expr) => ($x);
@@ -29,11 +29,30 @@ struct BeeAiInput {
     #[serde(rename = "py/state")]
     state: BeeAiInputState,
 }
+/*#[derive(Deserialize, Debug)]
+struct JsonSchemaParameter {
+    #[serde(rename = "type")]
+    parameter_type: String,
+    description: String,
+    title: String,
+}*/
+#[derive(Deserialize, Debug)]
+struct BeeAiToolSchema {
+    properties: HashMap<String, Value>,
+}
+#[derive(Deserialize, Debug)]
+struct BeeAiToolState {
+    name: String,
+    description: Option<String>,
+    input_schema: BeeAiToolSchema,
+    options: Option<HashMap<String, Value>>,
+}
 #[derive(Deserialize, Debug)]
 struct BeeAiTool {
-    //#[serde(rename = "py/object")]
-    //tool: String,
-    //options: Option<String>, // TODO maybe more general than String?
+    #[serde(rename = "py/object")]
+    object: String,
+    #[serde(rename = "py/state")]
+    state: BeeAiToolState,
 }
 #[derive(Deserialize, Debug)]
 struct BeeAiLlmParametersState {
@@ -46,35 +65,29 @@ struct BeeAiLlmParameters {
     state: BeeAiLlmParametersState,
 }
 #[derive(Deserialize, Debug)]
-struct BeeAiLlmSettings {
-    api_key: String,
-    // base_url: String,
-}
-#[derive(Deserialize, Debug)]
-struct BeeAiLlm {
-    // might be helpful to know it's Ollama?
-    //#[serde(rename = "py/object")]
-    //object: String,
-    parameters: BeeAiLlmParameters,
-
-    #[serde(rename = "_model_id")]
-    model_id: String,
-    //#[serde(rename = "_litellm_provider_id")]
-    //provider_id: String,
-    #[serde(rename = "_settings")]
-    settings: BeeAiLlmSettings,
-}
-#[derive(Deserialize, Debug)]
-struct BeeAiWorkflowStepStateMeta {
-    //name: String,
-    role: String,
-    llm: BeeAiLlm,
+struct BeeAiWorkflowStepStateAgentMetadataStateDict {
+    name: String,
+    description: String,
+    //extra_description: String,
+    llm_provider_id: String,
+    llm_model_id: String,
+    llm_parameters: BeeAiLlmParameters,
     instructions: Option<String>,
-    //tools: Option<Vec<BeeAiTool>>,
+    tools: Option<Vec<BeeAiTool>>,
+}
+#[derive(Deserialize, Debug)]
+struct BeeAiWorkflowStepStateAgentMetadataState {
+    #[serde(rename = "__dict__")]
+    dict: BeeAiWorkflowStepStateAgentMetadataStateDict,
+}
+#[derive(Deserialize, Debug)]
+struct BeeAiWorkflowStepStateAgentMetadata {
+    #[serde(rename = "py/state")]
+    state: BeeAiWorkflowStepStateAgentMetadataState,
 }
 #[derive(Deserialize, Debug)]
 struct BeeAiWorkflowStepStateDict {
-    meta: BeeAiWorkflowStepStateMeta,
+    agent_metadata: BeeAiWorkflowStepStateAgentMetadata,
 }
 #[derive(Deserialize, Debug)]
 struct BeeAiWorkflowStepState {
@@ -104,25 +117,294 @@ struct BeeAiProgram {
 }
 
 #[derive(Serialize, Debug)]
+enum Parser {
+    #[serde(rename = "json")]
+    Json,
+    /*#[serde(rename = "jsonl")]
+    Jsonl,
+    #[serde(rename = "yaml")]
+    Yaml,*/
+}
+
+#[derive(Serialize, Debug, Clone)]
+enum PdlBaseType {
+    #[serde(rename = "str")]
+    Str,
+    #[serde(rename = "bool")]
+    Bool,
+    #[serde(rename = "int")]
+    Int,
+    #[serde(rename = "null")]
+    Null,
+}
+
+#[derive(Serialize, Debug)]
+struct PdlOptionalType {
+    optional: PdlBaseType,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(untagged)]
+enum PdlType {
+    Base(PdlBaseType),
+    Optional(PdlOptionalType),
+    Object(HashMap<String, PdlType>),
+}
+
+#[derive(Serialize, Debug)]
 #[serde(untagged)]
 enum PdlBlock {
     String(String),
+    /*If {
+            #[serde(rename = "if")]
+            condition: String,
+            then: Box<PdlBlock>,
+    },*/
+    Object {
+        object: HashMap<String, PdlBlock>,
+    },
+    Call {
+        call: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        args: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        defs: Option<HashMap<String, PdlBlock>>,
+    },
+    Array {
+        array: Vec<PdlBlock>,
+    },
+    Message {
+        role: String,
+        content: Box<PdlBlock>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        description: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        name: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        tool_call_id: Option<String>,
+    },
+    Repeat {
+        #[serde(rename = "for")]
+        for_: HashMap<String, String>,
+        repeat: Box<PdlBlock>,
+    },
     Text {
         #[serde(skip_serializing_if = "Option::is_none")]
         description: Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
         role: Option<String>,
         text: Vec<PdlBlock>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        defs: Option<HashMap<String, PdlBlock>>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        parser: Option<Parser>,
     },
     Model {
         #[serde(skip_serializing_if = "Option::is_none")]
         description: Option<String>,
         model: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        def: Option<String>,
         parameters: HashMap<String, Value>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        input: Option<Box<PdlBlock>>, // really this should be restricted to be PdlBlock::Array; how do we do this in rust?
+        #[serde(rename = "modelResponse")]
+        #[serde(skip_serializing_if = "Option::is_none")]
+        model_response: Option<String>,
+    },
+    Function {
+        function: HashMap<String, PdlType>,
+        #[serde(rename = "return")]
+        return_: Box<PdlBlock>,
+    },
+    PythonCode {
+        lang: String,
+        code: String,
     },
 }
+/*#[derive(Serialize, Debug)]
+struct PdlFunctionJsonSchemaParameters {
+    #[serde(rename = "type")]
+    schema_type: String, // TODO constant "object"
+    properties: Option<HashMap<String, Value>>,
+}
+#[derive(Serialize, Debug)]
+struct PdlFunctionJsonSchema {
+    name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    description: Option<String>,
+    parameters: PdlFunctionJsonSchemaParameters,
+}
+#[derive(Serialize, Debug)]
+struct PdlFunctionDeclaration {
+    #[serde(rename = "type")]
+    declaration_type: String, // TODO constant "function"
+    function: PdlFunctionJsonSchema,
+}*/
 
-pub fn compile(source_file_path: &String, output_path: &String) -> Result<(), Box<dyn Error>> {
+fn a_tool(tool: &BeeAiToolState) -> Value {
+    json!({
+        "type": "function",
+        "function": json!({
+            "name": tool.name,
+            "description": tool.description,
+            "parameters": json!({
+                "type": "object",
+                "properties": tool.input_schema.properties,
+            }),
+            "options": tool.options
+        })
+    })
+}
+
+fn with_tools(
+    tools: &Option<Vec<BeeAiTool>>,
+    parameters: &HashMap<String, Value>,
+) -> HashMap<String, Value> {
+    match tools {
+        Some(tools) => {
+            match tools.len() {
+                0 => parameters.clone(), // litellm barfs on tools: []
+                _ => {
+                    let mut copy = parameters.clone();
+                    copy.insert(
+                        "tools".to_string(),
+                        tools.into_iter().map(|tool| a_tool(&tool.state)).collect(),
+                    );
+                    copy
+                }
+            }
+        }
+        _ => parameters.clone(),
+    }
+}
+
+fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
+    let repeat = PdlBlock::Text {
+        defs: None,
+        role: None,
+        parser: None,
+        description: Some("Calling tool ${ tool.function.name }".to_string()),
+        text: vec![PdlBlock::Model {
+            parameters: parameters.clone(),
+            description: None, /*Some(
+                                   "Sending tool ${ tool.function.name } response back to model".to_string(),
+                               ),*/
+            def: None,
+            model_response: None,
+            model: model.clone(),
+            input: Some(Box::new(PdlBlock::Array {
+                array: vec![PdlBlock::Message {
+                    role: "tool".to_string(),
+                    description: None,
+                    name: Some("${ tool.function.name }".to_string()),
+                    tool_call_id: Some("${ tool.id }".to_string()),
+                    content: Box::new(PdlBlock::Call {
+                        defs: json_loads(&"args", &"pdl__args", &"${ tool.function.arguments }"),
+                        call: "${ pdl__tools[tool.function.name] }".to_string(), // look up tool in tool_declarations def (see below)
+                        args: Some("${ args }".to_string()), // invoke with arguments as specified by the model
+                    }),
+                }],
+            })),
+        }],
+    };
+
+    let mut for_ = HashMap::new();
+    for_.insert(
+        "tool".to_string(),
+        "${ response.choices[0].message.tool_calls }".to_string(),
+    );
+
+    // response.choices[0].message.tool_calls
+    PdlBlock::Repeat {
+        for_: for_,
+        repeat: Box::new(repeat),
+    }
+}
+
+fn json_loads(
+    outer_name: &str,
+    inner_name: &str,
+    value: &str,
+) -> Option<HashMap<String, PdlBlock>> {
+    let mut m = HashMap::new();
+    m.insert(
+        outer_name.to_owned(),
+        PdlBlock::Text {
+            defs: None,
+            role: None,
+            description: Some(format!("Parsing json for {}={}", inner_name, value)),
+            text: vec![PdlBlock::String(format!(
+                "{{\"{}\": {}}}",
+                inner_name, value
+            ))],
+            parser: Some(Parser::Json),
+        },
+    );
+    Some(m)
+}
+
+fn json_schema_type_to_pdl_type(spec: &Value) -> PdlType {
+    match spec.get("type") {
+        Some(Value::String(t)) => {
+            let base = match t.as_str() {
+                "string" => PdlBaseType::Str,
+                "boolean" => PdlBaseType::Bool,
+                "integer" => PdlBaseType::Int,
+                "null" => PdlBaseType::Null,
+                _ => PdlBaseType::Null,
+            };
+            match spec.get("default") {
+                Some(_) => PdlType::Optional(PdlOptionalType { optional: base }),
+                _ => PdlType::Base(base),
+            }
+        }
+        _ => match spec.get("anyOf") {
+            Some(Value::Array(a)) => {
+                let types = a
+                    .into_iter()
+                    .map(json_schema_type_to_pdl_type)
+                    .collect::<Vec<_>>();
+                match types.as_slice() {
+                    [PdlType::Base(t), PdlType::Base(PdlBaseType::Null)] => {
+                        PdlType::Optional(PdlOptionalType {
+                            optional: t.clone(),
+                        })
+                    }
+                    _ => PdlType::Base(PdlBaseType::Null),
+                }
+            }
+            _ => PdlType::Base(PdlBaseType::Null),
+        },
+    }
+}
+
+fn json_schema_to_pdl(properties: &HashMap<String, Value>) -> HashMap<String, PdlType> {
+    properties
+        .into_iter()
+        .map(|(arg, spec)| (arg.clone(), json_schema_type_to_pdl_type(&spec)))
+        .collect::<HashMap<_, _>>()
+}
+
+fn pdl_args_schema(schema: HashMap<String, PdlType>) -> HashMap<String, PdlType> {
+    let mut m = HashMap::new();
+    m.insert("pdl__args".to_owned(), PdlType::Object(schema));
+    m
+}
+
+fn tool_imports(object: &String) -> (&str, &str) {
+    // e.g. object=beeai_framework.tools.search.wikipedia.WikipediaTool
+    match object.rfind('.') {
+        Some(n) => (&object[0..n], &object[n + 1..]),
+        _ => (&object[..], &object[..]), // TODO
+    }
+}
+
+pub fn compile(
+    source_file_path: &String,
+    output_path: &String,
+    debug: &bool,
+) -> Result<(), Box<dyn Error>> {
     println!("Compiling beeai {} to {}", source_file_path, output_path);
 
     // Open the file in read-only mode with buffer.
@@ -140,39 +422,198 @@ pub fn compile(source_file_path: &String, output_path: &String) -> Result<(), Bo
         .map(|prompt| PdlBlock::String(format!("{}\n", prompt)))
         .collect::<Vec<_>>();
 
-    let system_prompts = bee
+    /*let system_prompts = bee
+    .workflow
+    .workflow
+    .steps
+    .values()
+    .filter_map(|step| step.state.dict.agent_metadata.state.dict.instructions.clone())
+    .map(|instructions| PdlBlock::Text {
+        role: Some(String::from("system")),
+        text: vec![PdlBlock::String(instructions)],
+        defs: None,
+        description: None,
+    })
+    .collect::<Vec<_>>();*/
+
+    let tool_declarations = bee
         .workflow
         .workflow
         .steps
         .values()
-        .filter_map(|step| step.state.dict.meta.instructions.clone())
-        .map(|instructions| PdlBlock::Text {
-            role: Some(String::from("system")),
-            text: vec![PdlBlock::String(instructions)],
-            description: None,
+        .filter_map(|step| step.state.dict.agent_metadata.state.dict.tools.as_ref())
+        .flat_map(|tools| {
+            tools
+                .into_iter()
+                .map(|BeeAiTool { object, state }| {
+                    (
+                        tool_imports(object),
+                        state.name.clone(),
+                        pdl_args_schema(json_schema_to_pdl(&state.input_schema.properties)),
+                    )
+                })
+                .map(|((import_from, import_fn), tool_name, schema)| {
+                    (
+                        tool_name.clone(),
+                        PdlBlock::Function {
+                            return_: Box::new(PdlBlock::PythonCode {
+                                // tool function definition
+                                lang: "python".to_string(),
+                                code: format!(
+                                    "
+from {} import {}
+import asyncio
+async def invoke():
+    global result
+    {}
+    tool = {}()
+    output = await tool.run(pdl__args)
+    result = output.get_text_content()
+    {}
+asyncio.run(invoke())
+",
+                                    import_from,
+                                    import_fn,
+                                    if *debug {
+                                        format!("print('Invoking tool {}')", tool_name)
+                                    } else {
+                                        "".to_string()
+                                    },
+                                    import_fn,
+                                    /*schema
+                                    .iter()
+                                    .filter_map(|(arg, arg_type)| match arg_type {
+                                        PdlType::Base(PdlBaseType::Str) =>
+                                            Some(format!("\"{}\":\"${{ {} }}\"", arg, arg)),
+                                        PdlType::Base(_) =>
+                                            Some(format!("\"{}\":${{ {} }}", arg, arg)),
+                                        _ => None,
+                                    })
+                                    .collect::<Vec<_>>()
+                                    .join(" "),*/
+                                    if *debug {
+                                        format!(
+                                            "print(f'Response from tool {}: {{result}}')",
+                                            tool_name
+                                        )
+                                    } else {
+                                        "".to_string()
+                                    }
+                                ),
+                            }),
+                            function: schema,
+                        },
+                    )
+                })
         })
-        .collect::<Vec<_>>();
+        .collect::<HashMap<_, _>>();
 
     let model_calls = bee
         .workflow
         .workflow
         .steps
         .into_values()
-        .map(|step| (step.state.dict.meta.role, step.state.dict.meta.llm))
-        .map(|(role, llm)| PdlBlock::Model {
-            description: Some(role),
-            model: format!("{}/{}", llm.settings.api_key, llm.model_id),
-            parameters: llm.parameters.state.dict,
+        .map(|step| {
+            (
+                step.state.dict.agent_metadata.state.dict.name,
+                step.state.dict.agent_metadata.state.dict.description,
+                step.state.dict.agent_metadata.state.dict.tools,
+                step.state.dict.agent_metadata.state.dict.llm_provider_id,
+                step.state.dict.agent_metadata.state.dict.llm_model_id,
+                step.state.dict.agent_metadata.state.dict.llm_parameters,
+                step.state.dict.agent_metadata.state.dict.instructions,
+            )
         })
+        .map(
+            |(agent_name, description, tools, provider, model, parameters, instructions)| {
+                let mut model_call = vec![];
+                let model = format!("{}/{}", provider, model);
+
+                if let Some(instructions) = instructions {
+                    model_call.push(PdlBlock::Text {
+                        role: Some(String::from("system")),
+                        text: vec![PdlBlock::String(instructions)],
+                        defs: None,
+                        parser: None,
+                        description: None,
+                    });
+                }
+
+                let model_response = if let Some(tools) = &tools {
+                    match tools.len() {
+                        0 => None,
+                        _ => Some("response".to_string()),
+                    }
+                } else {
+                    None
+                };
+
+                model_call.push(PdlBlock::Model {
+                    input: None,
+                    description: Some(description),
+                    def: None,
+                    model: model.clone(),
+                    model_response: model_response,
+                    parameters: with_tools(&tools, &parameters.state.dict),
+                });
+
+                if let Some(tools) = tools {
+                    if tools.len() > 0 {
+                        model_call.push(call_tools(&model, &parameters.state.dict));
+                    }
+                }
+
+                let closure_name = format!("agent_closure_{}", agent_name);
+                let mut defs = HashMap::new();
+                defs.insert(
+                    closure_name.clone(),
+                    PdlBlock::Function {
+                        function: HashMap::new(),
+                        return_: Box::new(PdlBlock::Text {
+                            defs: None,
+                            role: None,
+                            parser: None,
+                            description: None,
+                            text: model_call,
+                        }),
+                    },
+                );
+                PdlBlock::Text {
+                    defs: Some(defs),
+                    role: None,
+                    parser: None,
+                    description: Some("Model call wrapper".to_string()),
+                    text: vec![PdlBlock::Call {
+                        call: format!("${{ {} }}", closure_name),
+                        defs: None,
+                        args: None,
+                    }],
+                }
+            },
+        )
+        .collect::<Vec<_>>();
+
+    let body = zip!(inputs, model_calls)
+        .flat_map(|(a, b)| [a, b])
         .collect::<Vec<_>>();
 
     let pdl: PdlBlock = PdlBlock::Text {
+        defs: if tool_declarations.len() == 0 {
+            None
+        } else {
+            let mut m = HashMap::new();
+            m.insert(
+                "pdl__tools".to_string(),
+                PdlBlock::Object {
+                    object: tool_declarations,
+                },
+            );
+            Some(m)
+        },
         description: Some(bee.workflow.workflow.name),
         role: None,
-        text: zip!(inputs, system_prompts, model_calls)
-            .map(|(a, (b, c))| [a, b, c])
-            .flatten()
-            .collect(),
+        parser: None,
+        text: body,
     };
 
     match output_path.as_str() {

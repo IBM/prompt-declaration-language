@@ -577,8 +577,20 @@ def process_block_body(
                 scope,
                 loc,
             )
+            name, block = process_expr_of(
+                block, "name", scope, loc  # pyright: ignore
+            )  # pyright: ignore
+            tool_call_id, block = process_expr_of(
+                block, "tool_call_id", scope, loc  # pyright: ignore
+            )  # pyright: ignore
             result = PdlDict(
-                {"role": state.role, "content": content, "defsite": block.pdl__id}
+                {
+                    "role": state.role,
+                    "content": content,
+                    "name": name,
+                    "tool_call_id": tool_call_id,
+                    "defsite": block.pdl__id,
+                }
             )
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")

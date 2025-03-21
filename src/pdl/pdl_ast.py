@@ -591,6 +591,10 @@ class MessageBlock(StructuredBlock):
     """  # pyright: ignore
     content: "BlockType"
     """Content of the message."""
+    name: Optional[ExpressionType[str]] = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: Optional[ExpressionType[str]] = None
+    """The id of the tool invocation for which this message is the tool response."""
 
 
 class IfBlock(StructuredBlock):

@@ -38,6 +38,10 @@
                   "short": "o",
                   "required": true,
                   "takesValue": true
+                },
+                {
+                  "name": "debug",
+                  "short": "g"
                 }
               ]
             }

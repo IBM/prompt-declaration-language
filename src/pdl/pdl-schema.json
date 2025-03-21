@@ -8158,6 +8158,38 @@
           ],
           "description": "Content of the message.",
           "title": "Content"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "For example, the name of the tool that was invoked, for which this message is the tool response.",
+          "title": "Name"
+        },
+        "tool_call_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The id of the tool invocation for which this message is the tool response.",
+          "title": "Tool Call Id"
         }
       },
       "required": [
