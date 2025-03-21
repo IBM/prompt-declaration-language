@@ -48,10 +48,11 @@ class GraniteioModel:
                 )
             case _:
                 assert False, f"Unexpected backend: {backend}"
-        if block.processor is None:
+        processor = value_of_expr(block.processor)
+        if processor is None:
             processor_name = model
         else:
-            processor_name = value_of_expr(block.processor)
+            processor_name = processor
         assert isinstance(
             processor_name, str
         ), f"The processor should be a string: {processor_name}"
