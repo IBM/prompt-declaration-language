@@ -126,9 +126,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
       }
 
       const [cmd, cwd, input, output] = (await invoke("replay_prep", {
-        trace: JSON.stringify(runThisBlock, (k, v) =>
-          /^pdl__/.test(k) ? undefined : v,
-        ),
+        trace: JSON.stringify(runThisBlock),
         name: block.description?.slice(0, 30).replace(/\s/g, "-") ?? "trace",
       })) as [string, string, string, string]
       console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
