@@ -84,6 +84,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
   const [modalContent, setModalContent] = useState<null | {
     header: string
     cmd: string
+    cwd: string
     args?: string[]
     onExit?: (exitCode: number) => void
     cancelCondVar?: ConditionVariable
@@ -124,12 +125,10 @@ export default function MasonryCombo({ value, setValue }: Props) {
         return
       }
 
-      const [cmd, input, output] = (await invoke("replay_prep", {
-        trace: JSON.stringify(runThisBlock, (k, v) =>
-          /^pdl__/.test(k) ? undefined : v,
-        ),
+      const [cmd, cwd, input, output] = (await invoke("replay_prep", {
+        trace: JSON.stringify(runThisBlock),
         name: block.description?.slice(0, 30).replace(/\s/g, "-") ?? "trace",
-      })) as [string, string, string]
+      })) as [string, string, string, string]
       console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
 
       // We need to pass tothe re-execution the original input context
@@ -141,6 +140,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
         setModalContent({
           header: "Running Program",
           cmd,
+          cwd,
           args: [
             "run",
             ...(async ? ["--stream", "none"] : []),
@@ -252,6 +252,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           <Suspense fallback={<div />}>
             <RunTerminal
               cmd={modalContent?.cmd ?? ""}
+              cwd={modalContent?.cwd ?? ""}
               args={modalContent?.args}
               cancel={modalContent?.cancelCondVar}
               onExit={onExit}

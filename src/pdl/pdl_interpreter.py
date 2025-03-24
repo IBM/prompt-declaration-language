@@ -149,7 +149,7 @@ def generate(
     state: Optional[InterpreterState],
     initial_scope: ScopeType,
     trace_file: Optional[str | Path],
-):
+) -> int:
     """Execute the PDL program defined in `pdl_file`.
 
     Args:
@@ -157,6 +157,9 @@ def generate(
         initial_scope: Environment defining the variables in scope to execute the program.
         state: Initial state of the interpreter.
         trace_file: Indicate if the execution trace must be produced and the file to save it.
+
+    Returns:
+        Returns the exit code: `0` for success, `1` for failure
     """
     try:
         prog, loc = parse_file(pdl_file)
@@ -172,6 +175,7 @@ def generate(
             write_trace(trace_file, trace)
     except PDLParseError as exc:
         print("\n".join(exc.message), file=sys.stderr)
+        return 1
     except PDLRuntimeError as exc:
         if exc.loc is None:
             message = exc.message
@@ -180,6 +184,8 @@ def generate(
         print(message, file=sys.stderr)
         if trace_file and exc.pdl__trace is not None:
             write_trace(trace_file, exc.pdl__trace)
+        return 1
+    return 0
 
 
 def write_trace(
@@ -1131,11 +1137,13 @@ def process_expr(  # pylint: disable=too-many-return-statements
 ) -> tuple[ProcessExprT, LocalizedExpression[ProcessExprT]]:
     result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        result = _process_expr(scope, expr.expr, loc)
+        result = _process_expr(scope, expr.pdl__expr, loc)
         trace = expr.model_copy(update={"pdl__result": result})
     else:
         result = _process_expr(scope, expr, loc)
-        trace = LocalizedExpression(expr=expr, pdl__result=result, pdl__location=loc)
+        trace = LocalizedExpression(
+            pdl__expr=expr, pdl__result=result, pdl__location=loc
+        )
     return (result, trace)
 
 
@@ -1147,7 +1155,7 @@ def _process_expr(  # pylint: disable=too-many-return-statements
 ) -> _ProcessExprT:
     result: _ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        return _process_expr(scope, expr.expr, loc)
+        return _process_expr(scope, expr.pdl__expr, loc)
     if isinstance(expr, str):
         try:
             env = Environment(  # nosec B701
@@ -1432,7 +1440,7 @@ def litellm_parameters_to_dict(
     parameters: Optional[LitellmParameters | dict[str, Any]]
 ) -> dict[str, Any]:
     if isinstance(parameters, dict):
-        return parameters
+        return {k: v for k, v in parameters.items() if k != "stream"}
     if parameters is None:
         parameters = LitellmParameters()
     parameters_dict = parameters.model_dump(exclude={"stream"})

@@ -73,7 +73,7 @@ def value_of_expr(expr: ExpressionType[ValueOfExprT]) -> ValueOfExprT:
         if "pdl__result" in expr.model_fields_set:
             v = expr.pdl__result
         else:
-            v = expr.expr
+            v = expr.pdl__expr
     else:
         v = expr
     return v  # type: ignore

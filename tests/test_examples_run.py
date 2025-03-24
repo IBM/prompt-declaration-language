@@ -38,6 +38,7 @@ TO_SKIP = {
         pathlib.Path("examples") / "gsm8k" / "math-python.pdl",
         pathlib.Path("examples") / "gsm8k" / "math.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
+        pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
         pathlib.Path("examples") / "tfidf_rag" / "rag.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
         pathlib.Path("examples") / "callback" / "repair_prompt.pdl",

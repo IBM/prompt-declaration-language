@@ -84,13 +84,13 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         arbitrary_types_allowed=True,
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
-    expr: Any
+    pdl__expr: Any
     pdl__result: Optional[LocalizedExpressionT] = None
     pdl__location: Optional[PdlLocationType] = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
-ExpressionType: TypeAlias = ExpressionTypeT | str | LocalizedExpression[ExpressionTypeT]
+ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 
 
 class Pattern(BaseModel):

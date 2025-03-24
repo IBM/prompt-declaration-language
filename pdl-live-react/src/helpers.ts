@@ -318,7 +318,9 @@ export function extractCode({ code }: CodeBlock): string {
 
 function isExpr(e: unknown): e is LocalizedExpression {
   return (
-    e !== null && typeof e === "object" && "expr" in (e as LocalizedExpression)
+    e !== null &&
+    typeof e === "object" &&
+    "pdl__expr" in (e as LocalizedExpression)
   )
 }
 
