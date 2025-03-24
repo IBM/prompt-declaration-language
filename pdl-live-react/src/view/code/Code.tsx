@@ -93,7 +93,7 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
   return match(clean_data)
     .with({ kind: "data" }, (d) => {
       return match(d.data)
-        .with({ expr: P._ }, (e) => e.expr)
+        .with({ pdl__expr: P._ }, (e) => ({ ...d, data: e.pdl__expr }))
         .with(P.union(P.string, P.number, P.boolean, {}), (e) => e)
         .otherwise((_) => d)
     })
