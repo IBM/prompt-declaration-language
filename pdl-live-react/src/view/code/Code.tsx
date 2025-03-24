@@ -4,6 +4,7 @@ import { stringify } from "yaml"
 
 import { tryJsonPrettyPrint } from "../../helpers"
 import { type PdlBlock } from "../../pdl_ast"
+import { type BlockType } from "../../helpers"
 import { map_block_children } from "../../pdl_ast_utils"
 
 const PreviewLight = lazy(() => import("./PreviewLight"))
@@ -50,12 +51,12 @@ export default function Code({
   )
 }
 
-export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
+export function block_code_cleanup(data: BlockType): BlockType {
   if (data === null || typeof data !== "object") {
     return data
   }
   // remove pdl__result
-  const new_data = {
+  let new_data = {
     ...data,
     pdl__result: undefined,
     pdl__is_leaf: undefined,
@@ -65,17 +66,6 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     pdl__timing: undefined,
     pdl__location: undefined,
     pdl__model_input: undefined,
-  }
-  if (new_data.kind === "model") {
-    let input = match(new_data.input)
-      .with({ kind: "data" }, (i) => i.data)
-      .otherwise((_) => new_data.input)
-    input = match(input)
-      .with({ expr: P._ }, (e) => e.expr)
-      .otherwise((e) => e)
-    if (input) {
-      new_data.input = input
-    }
   }
   // remove contribute: ["result", context]
   if (
@@ -89,7 +79,27 @@ export function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
     delete new_data.defs
   }
   // recursive cleanup
-  const clean_data = map_block_children(block_code_cleanup, new_data)
+  const new_data_rec = map_block_children(block_code_cleanup, new_data)
+  // replace `data: literal` by `literal`
+  const clean_data = match(new_data_rec)
+    .with(
+      {
+        kind: "data",
+        data: P.union(P.string, P.number, P.boolean),
+        raw: false,
+        spec: P.nullish,
+        description: P.nullish,
+        defs: {},
+        def: P.nullish,
+        contribute: P.union(["context", "result"], ["result", "context"]),
+        parser: P.nullish,
+        fallback: P.nullish,
+        role: P.nullish,
+      },
+      (d) => d.data,
+    )
+    .otherwise((d) => d)
+  // remove kind
   return match(clean_data)
     .with({ kind: "data" }, (d) => {
       return match(d.data)

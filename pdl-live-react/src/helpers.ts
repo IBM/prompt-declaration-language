@@ -13,6 +13,8 @@ import type {
 /** Re-export for convenience */
 export type { PdlBlock } from "./pdl_ast"
 
+export type BlockType = null | boolean | number | string | PdlBlock
+
 type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>
 }
