@@ -1,4 +1,4 @@
-# Call with pdl --data '"something": "ABC"' hello-data.pdl 
+# Call with pdl --data '"something": "ABC"' free_variables.pdl 
 description: Hello world with data
 text:
 - def: stutter
