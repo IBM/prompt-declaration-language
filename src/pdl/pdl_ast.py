@@ -273,7 +273,7 @@ class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
-    function: Optional[dict[str, Any]]
+    function: Optional[dict[str, Any]] = None
     """Functions parameters with their types.
     """
     returns: "BlockType" = Field(..., alias="return")

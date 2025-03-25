@@ -2659,7 +2659,7 @@ export interface FunctionBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf20
   kind?: Kind20
-  function: Function
+  function?: Function
   return: Return
 }
 /**

@@ -3324,6 +3324,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "description": "Functions parameters with their types.\n    ",
           "title": "Function"
         },
@@ -3413,7 +3414,6 @@
         }
       },
       "required": [
-        "function",
         "return"
       ],
       "title": "FunctionBlock",
