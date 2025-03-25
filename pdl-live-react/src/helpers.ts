@@ -14,6 +14,7 @@ import type {
 export type { PdlBlock } from "./pdl_ast"
 
 export type BlockType = null | boolean | number | string | PdlBlock
+export type ExpressionT<T> = T | string | LocalizedExpression
 
 type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>

@@ -4,7 +4,11 @@ import { stringify } from "yaml"
 
 import { tryJsonPrettyPrint } from "../../helpers"
 import { type PdlBlock } from "../../pdl_ast"
-import { type BlockType } from "../../helpers"
+import {
+  type BlockType,
+  type ExpressionT,
+  hasContextInformation,
+} from "../../helpers"
 import { map_block_children } from "../../pdl_ast_utils"
 
 const PreviewLight = lazy(() => import("./PreviewLight"))
@@ -51,13 +55,13 @@ export default function Code({
   )
 }
 
-export function block_code_cleanup(data: BlockType): BlockType {
-  if (data === null || typeof data !== "object") {
-    return data
+export function block_code_cleanup(block: BlockType): BlockType {
+  if (block === null || typeof block !== "object") {
+    return block
   }
   // remove pdl__result
-  let new_data = {
-    ...data,
+  let new_block = {
+    ...block,
     pdl__result: undefined,
     pdl__is_leaf: undefined,
     pdl__usage: undefined,
@@ -69,19 +73,34 @@ export function block_code_cleanup(data: BlockType): BlockType {
   }
   // remove contribute: ["result", context]
   if (
-    new_data?.contribute?.includes("result") &&
-    new_data?.contribute?.includes("context")
+    new_block?.contribute?.includes("result") &&
+    new_block?.contribute?.includes("context")
   ) {
-    delete new_data.contribute
+    delete new_block.contribute
   }
   // remove empty defs list
-  if (Object.keys(data?.defs ?? {}).length === 0) {
-    delete new_data.defs
+  if (Object.keys(block?.defs ?? {}).length === 0) {
+    delete new_block.defs
   }
   // recursive cleanup
-  const new_data_rec = map_block_children(block_code_cleanup, new_data)
-  // replace `data: literal` by `literal`
-  const clean_data = match(new_data_rec)
+  const new_block_rec = map_block_children(
+    block_code_cleanup,
+    expr_code_cleanup,
+    new_block,
+  )
+  const clean_block = match(new_block_rec)
+    // Remove `defsite` from context:
+    .with({ kind: "model" }, (block) => ({
+      ...block,
+      context: !hasContextInformation(block)
+        ? undefined
+        : JSON.parse(
+            JSON.stringify(block.context, (k, v) =>
+              k === "defsite" ? undefined : v,
+            ),
+          ),
+    }))
+    // replace `data: literal` by `literal`
     .with(
       {
         kind: "data",
@@ -96,17 +115,50 @@ export function block_code_cleanup(data: BlockType): BlockType {
         fallback: P.nullish,
         role: P.nullish,
       },
-      (d) => d.data,
+      (block) => block.data,
     )
-    .otherwise((d) => d)
-  // remove kind
-  return match(clean_data)
-    .with({ kind: "data" }, (d) => {
-      return match(d.data)
-        .with({ pdl__expr: P._ }, (e) => ({ ...d, data: e.pdl__expr }))
-        .with(P.union(P.string, P.number, P.boolean, {}), (e) => e)
-        .otherwise((_) => d)
+    .with({ kind: "match", with: P._ }, (block) => {
+      const with_ = block.with.map((case_) => {
+        const clean_case = {
+          ...case_,
+          pdl__case_result: undefined,
+          pdl__if_result: undefined,
+          pdl__matched: undefined,
+        }
+        if (clean_case.case === null) {
+          delete clean_case.case
+        }
+        if (clean_case.if === null) {
+          delete clean_case.if
+        }
+        return clean_case
+      })
+      return { ...block, with: with_ }
     })
-    .with({ kind: P._ }, (d) => ({ ...d, kind: undefined }))
-    .otherwise((d) => d)
+    .with({ kind: "repeat" }, (block) => {
+      if (block.for === null) {
+        delete block.for
+      }
+      if (block.while === true) {
+        delete block.while
+      }
+      if (block.until === false) {
+        delete block.until
+      }
+      if (block.max_iterations === null) {
+        delete block.max_iterations
+      }
+      return block
+    })
+    .otherwise((block) => block)
+  // remove kind
+  return match(clean_block)
+    .with({ kind: P._ }, (block) => ({ ...block, kind: undefined }))
+    .otherwise((block) => block)
+}
+
+export function expr_code_cleanup(expr: ExpressionT<any>): ExpressionT<any> {
+  return match(expr)
+    .with({ pdl__expr: P._ }, (e) => e.pdl__expr)
+    .otherwise((e) => e)
 }
