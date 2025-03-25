@@ -45,7 +45,7 @@ export function map_block_children(
     )
     new_block = { ...new_block, contribute }
   }
-  // @ts-ignore
+  // @ts-expect-error: TODO
   new_block = match(new_block)
     // .with(P.string, s => s)
     .with({ kind: "empty" }, (block) => block)
@@ -63,13 +63,13 @@ export function map_block_children(
       (block) => {
         const model = f_expr(block.model)
         const input = block.input ? f_block(block.input) : undefined
-        // @ts-ignore
+        // @ts-expect-error: f_expr does not preserve the type of the expression
         const parameters: Parameters = block.parameters
           ? f_expr(block.parameters)
           : undefined
-        // @ts-ignore
+        // @ts-expect-error: f_expr does not preserve the type of the expression
         const backend: Backend = f_expr(block.backend)
-        // @ts-ignore
+        // @ts-expect-error: f_expr does not preserve the type of the expression
         const processor: Processor = block.processor ? f_expr(block.processor) : undefined
         return {
           ...block,
