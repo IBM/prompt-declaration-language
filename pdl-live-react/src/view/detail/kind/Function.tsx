@@ -2,7 +2,7 @@ import { stringify } from "yaml"
 
 import Group from "../Group"
 import CodeGroup from "../../code/CodeGroup"
-import { block_code_cleanup } from "../../code/Code"
+import { block_code_cleanup } from "../../../pdl_code_cleanup"
 
 export default function FunctionItems({
   block: { def, function: func, return: retrn },
