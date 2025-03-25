@@ -5,7 +5,7 @@ import { BlockType, ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
   f_block: (block: BlockType) => BlockType,
-  f_expr: (expr: ExpressionT<any>) => ExpressionT<any>,
+  f_expr: (expr: ExpressionT<unknown>) => ExpressionT<unknown>,
   block: BlockType,
 ): BlockType {
   if (
@@ -27,20 +27,23 @@ export function map_block_children(
     new_block = { ...block, defs: defs }
   }
   if (new_block?.contribute !== undefined) {
-    new_block.contribute = new_block.contribute?.map((contrib) =>
+    const contribute = new_block.contribute?.map((contrib) =>
       match(contrib)
         .with({}, (c) =>
           Object.fromEntries(
             Object.entries(c).map(([k, v]) => [
               k,
               match(v)
-                .with({ value: P._ }, (v) => ({ value: f_expr(v) }))
+                .with({ value: P.array(P._) }, (v) => ({
+                  value: v.value.map(f_expr),
+                }))
                 .otherwise((v) => v),
             ]),
           ),
         )
         .otherwise((contrib) => contrib),
     )
+    new_block = { ...new_block, contribute }
   }
   new_block = match(new_block)
     // .with(P.string, s => s)
