@@ -59,7 +59,12 @@ export function map_block_children(
       return { ...block, call, args }
     })
     .with(
-      { kind: "model", platform: "granite-io", backend: P.nonNullable, processor: P._ },
+      {
+        kind: "model",
+        platform: "granite-io",
+        backend: P.nonNullable,
+        processor: P._,
+      },
       (block) => {
         const model = f_expr(block.model)
         const input = block.input ? f_block(block.input) : undefined
@@ -70,7 +75,9 @@ export function map_block_children(
         // @ts-expect-error: f_expr does not preserve the type of the expression
         const backend: Backend = f_expr(block.backend)
         // @ts-expect-error: f_expr does not preserve the type of the expression
-        const processor: Processor = block.processor ? f_expr(block.processor) : undefined
+        const processor: Processor = block.processor
+          ? f_expr(block.processor)
+          : undefined
         return {
           ...block,
           model,
