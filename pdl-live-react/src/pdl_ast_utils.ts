@@ -1,6 +1,6 @@
 import { match, P } from "ts-pattern"
 
-import { PdlBlock } from "./pdl_ast"
+import { Backend, PdlBlock, Processor } from "./pdl_ast"
 import { BlockType, ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
@@ -45,6 +45,7 @@ export function map_block_children(
     )
     new_block = { ...new_block, contribute }
   }
+  // @ts-ignore
   new_block = match(new_block)
     // .with(P.string, s => s)
     .with({ kind: "empty" }, (block) => block)
@@ -57,30 +58,40 @@ export function map_block_children(
       const args = f_expr(block.args)
       return { ...block, call, args }
     })
-    .with({ kind: "model" }, (block) => {
-      const model = f_expr(block.model)
-      const input = block.input ? f_block(block.input) : undefined
-      const parameters = block.parameters ? f_expr(block.parameters) : undefined
-      return match(block)
-        .with({ platform: "litellm" }, (_) => ({
+    .with(
+      { kind: "model", platform: "granite-io", backend: P.nonNullable, processor: P._ },
+      (block) => {
+        const model = f_expr(block.model)
+        const input = block.input ? f_block(block.input) : undefined
+        // @ts-ignore
+        const parameters: Parameters = block.parameters
+          ? f_expr(block.parameters)
+          : undefined
+        // @ts-ignore
+        const backend: Backend = f_expr(block.backend)
+        // @ts-ignore
+        const processor: Processor = block.processor ? f_expr(block.processor) : undefined
+        return {
           ...block,
           model,
           input,
           parameters,
-        }))
-        .with(
-          {
-            platform: "granite-io",
-            backend: P.select("b"),
-            processor: P.select("p"),
-          },
-          ({ b, p }) => {
-            const backend = f_expr(b)
-            const processor = f_expr(p)
-            return { ...block, model, input, parameters, backend, processor }
-          },
-        )
-        .exhaustive()
+          backend,
+          processor,
+        }
+      },
+    )
+    .with({ kind: "model" }, (block) => {
+      const model = f_expr(block.model)
+      const input = block.input ? f_block(block.input) : undefined
+      const parameters = block.parameters ? f_expr(block.parameters) : undefined
+      return {
+        ...block,
+        platform: "litellm",
+        model,
+        input,
+        parameters,
+      }
     })
     .with({ kind: "code" }, (block) => {
       if (isArgs(block)) {
