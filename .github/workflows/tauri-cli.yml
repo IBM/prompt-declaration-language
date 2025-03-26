@@ -36,7 +36,17 @@ jobs:
       - name: Setup xvfb for screen 0
         run: Xvfb :1 -screen 0 1600x1200x24 &
 
-      - name: Run production build
+      - name: Test beeai compiler
+        env:
+          DISPLAY: :1
+        run: |
+          PATH=./src-tauri/target/release/:$PATH
+
+          for i in ./demos/beeai/*.py
+          do pdl compile beeai $i -g -o /tmp/z.json && jq .description /tmp/z.json
+          done
+          
+      - name: Test pdl run against production build
         env:
           DISPLAY: :1
         run: |
@@ -64,4 +74,4 @@ jobs:
           done
 
       - name: Tear down xvfb
-        run: killall Xvfb  
+        run: killall Xvfb || true
