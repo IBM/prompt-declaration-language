@@ -3,8 +3,10 @@ use ::std::error::Error;
 use ::std::fs::File;
 use ::std::io::BufReader;
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use serde_json::{from_reader, json, to_string, Value};
+
+use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
 
 macro_rules! zip {
     ($x: expr) => ($x);
@@ -116,132 +118,6 @@ struct BeeAiProgram {
     workflow: BeeAiWorkflow,
 }
 
-#[derive(Serialize, Debug)]
-enum Parser {
-    #[serde(rename = "json")]
-    Json,
-    /*#[serde(rename = "jsonl")]
-    Jsonl,
-    #[serde(rename = "yaml")]
-    Yaml,*/
-}
-
-#[derive(Serialize, Debug, Clone)]
-enum PdlBaseType {
-    #[serde(rename = "str")]
-    Str,
-    #[serde(rename = "bool")]
-    Bool,
-    #[serde(rename = "int")]
-    Int,
-    #[serde(rename = "null")]
-    Null,
-}
-
-#[derive(Serialize, Debug)]
-struct PdlOptionalType {
-    optional: PdlBaseType,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(untagged)]
-enum PdlType {
-    Base(PdlBaseType),
-    Optional(PdlOptionalType),
-    Object(HashMap<String, PdlType>),
-}
-
-#[derive(Serialize, Debug)]
-#[serde(untagged)]
-enum PdlBlock {
-    String(String),
-    /*If {
-            #[serde(rename = "if")]
-            condition: String,
-            then: Box<PdlBlock>,
-    },*/
-    Object {
-        object: HashMap<String, PdlBlock>,
-    },
-    Call {
-        call: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        args: Option<String>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        defs: Option<HashMap<String, PdlBlock>>,
-    },
-    Array {
-        array: Vec<PdlBlock>,
-    },
-    Message {
-        role: String,
-        content: Box<PdlBlock>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        description: Option<String>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        name: Option<String>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        tool_call_id: Option<String>,
-    },
-    Repeat {
-        #[serde(rename = "for")]
-        for_: HashMap<String, String>,
-        repeat: Box<PdlBlock>,
-    },
-    Text {
-        #[serde(skip_serializing_if = "Option::is_none")]
-        description: Option<String>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        role: Option<String>,
-        text: Vec<PdlBlock>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        defs: Option<HashMap<String, PdlBlock>>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        parser: Option<Parser>,
-    },
-    Model {
-        #[serde(skip_serializing_if = "Option::is_none")]
-        description: Option<String>,
-        model: String,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        def: Option<String>,
-        parameters: HashMap<String, Value>,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        input: Option<Box<PdlBlock>>, // really this should be restricted to be PdlBlock::Array; how do we do this in rust?
-        #[serde(rename = "modelResponse")]
-        #[serde(skip_serializing_if = "Option::is_none")]
-        model_response: Option<String>,
-    },
-    Function {
-        function: HashMap<String, PdlType>,
-        #[serde(rename = "return")]
-        return_: Box<PdlBlock>,
-    },
-    PythonCode {
-        lang: String,
-        code: String,
-    },
-}
-/*#[derive(Serialize, Debug)]
-struct PdlFunctionJsonSchemaParameters {
-    #[serde(rename = "type")]
-    schema_type: String, // TODO constant "object"
-    properties: Option<HashMap<String, Value>>,
-}
-#[derive(Serialize, Debug)]
-struct PdlFunctionJsonSchema {
-    name: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    description: Option<String>,
-    parameters: PdlFunctionJsonSchemaParameters,
-}
-#[derive(Serialize, Debug)]
-struct PdlFunctionDeclaration {
-    #[serde(rename = "type")]
-    declaration_type: String, // TODO constant "function"
-    function: PdlFunctionJsonSchema,
-}*/
-
 fn a_tool(tool: &BeeAiToolState) -> Value {
     json!({
         "type": "function",
@@ -338,7 +214,7 @@ fn json_loads(
                 "{{\"{}\": {}}}",
                 inner_name, value
             ))],
-            parser: Some(Parser::Json),
+            parser: Some(PdlParser::Json),
         },
     );
     Some(m)
@@ -422,20 +298,6 @@ pub fn compile(
         .map(|prompt| PdlBlock::String(format!("{}\n", prompt)))
         .collect::<Vec<_>>();
 
-    /*let system_prompts = bee
-    .workflow
-    .workflow
-    .steps
-    .values()
-    .filter_map(|step| step.state.dict.agent_metadata.state.dict.instructions.clone())
-    .map(|instructions| PdlBlock::Text {
-        role: Some(String::from("system")),
-        text: vec![PdlBlock::String(instructions)],
-        defs: None,
-        description: None,
-    })
-    .collect::<Vec<_>>();*/
-
     let tool_declarations = bee
         .workflow
         .workflow
@@ -480,17 +342,6 @@ asyncio.run(invoke())
                                         "".to_string()
                                     },
                                     import_fn,
-                                    /*schema
-                                    .iter()
-                                    .filter_map(|(arg, arg_type)| match arg_type {
-                                        PdlType::Base(PdlBaseType::Str) =>
-                                            Some(format!("\"{}\":\"${{ {} }}\"", arg, arg)),
-                                        PdlType::Base(_) =>
-                                            Some(format!("\"{}\":${{ {} }}", arg, arg)),
-                                        _ => None,
-                                    })
-                                    .collect::<Vec<_>>()
-                                    .join(" "),*/
                                     if *debug {
                                         format!(
                                             "print(f'Response from tool {}: {{result}}')",
