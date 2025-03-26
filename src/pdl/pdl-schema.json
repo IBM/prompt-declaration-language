@@ -379,7 +379,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
               },
               {
                 "type": "string"
@@ -1232,7 +1232,7 @@
         "call": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1245,7 +1245,7 @@
         "args": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1805,7 +1805,7 @@
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "items": {},
@@ -2168,7 +2168,7 @@
         "data": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -4116,7 +4116,7 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -4261,7 +4261,7 @@
         "backend": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -4276,7 +4276,7 @@
         "processor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -4292,7 +4292,7 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "object"
@@ -4660,7 +4660,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -6582,7 +6582,7 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -6729,7 +6729,7 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "object"
@@ -7150,7 +7150,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression_TypeVar_": {
+    "LocalizedExpression__ExpressionTypeT_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
@@ -7528,7 +7528,7 @@
         "match": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -7594,7 +7594,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -9550,7 +9550,7 @@
         "read": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -9986,7 +9986,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
                   },
                   {
                     "items": {},
@@ -10010,7 +10010,7 @@
         "while": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -10110,7 +10110,7 @@
         "until": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -10126,7 +10126,7 @@
         "max_iterations": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "integer"
@@ -10164,12 +10164,6 @@
           "description": "Define how to combine the result of each iteration.\n    ",
           "title": "Join"
         },
-        "retry_on_error": {
-          "default": false,
-          "description": "Indicate if this block should be retried when an error occurs.\n    ",
-          "title": "Retry On Error",
-          "type": "boolean"
-        },
         "retry_max": {
           "anyOf": [
             {
@@ -10180,6 +10174,7 @@
             }
           ],
           "default": 0,
+          "description": "Maximum number of retry on errors in the loop.\n    ",
           "title": "Retry Max"
         },
         "pdl__trace": {
