@@ -47,3 +47,5 @@ text:
     controls:
       hallucinations: true
       citations: true
+  modelResponse: outputs
+- ${ outputs }
