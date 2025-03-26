@@ -1,18 +1,142 @@
 import { match, P } from "ts-pattern"
 
 import {
-  type BlockType,
-  type ExpressionT,
+  AdvancedBlockType,
+  ExpressionT,
   hasContextInformation,
 } from "./helpers"
 import { map_block_children } from "./pdl_ast_utils"
+import {
+  DataBlock,
+  GraniteioModelBlock,
+  LitellmModelBlock,
+  MatchBlock,
+  PdlBlock,
+  RepeatBlock,
+} from "./pdl_ast"
 
-export function block_code_cleanup(block: BlockType): BlockType {
-  if (block === null || typeof block !== "object") {
-    return block
+export function block_code_cleanup(block: PdlBlock): PdlBlock {
+  const block_with_clean_children = map_block_children(
+    block_code_cleanup,
+    expr_code_cleanup,
+    block,
+  )
+  if (
+    block_with_clean_children === null ||
+    typeof block_with_clean_children !== "object"
+  ) {
+    return block_with_clean_children
   }
-  // remove pdl__result
-  const new_block = {
+  let block_with_generic_clean = remove_block_default_values(
+    block_with_clean_children,
+  )
+  block_with_generic_clean = remove_internal_block_fields(
+    block_with_generic_clean,
+  )
+  const clean_block = match(block_with_generic_clean)
+    .with({ kind: "model" }, clean_model_block)
+    .with({ kind: "data" }, clean_data_block)
+    .with({ kind: "match", with: P._ }, clean_match_block)
+    .with({ kind: "repeat" }, clean_repeat_block)
+    .otherwise((block) => block)
+  // remove kind
+  return match(clean_block)
+    .with({ kind: P._ }, (block) => ({ ...block, kind: undefined }))
+    .otherwise((block) => block)
+}
+
+function clean_model_block(block: LitellmModelBlock | GraniteioModelBlock) {
+  return {
+    ...block,
+    context: !hasContextInformation(block)
+      ? undefined
+      : JSON.parse(
+          JSON.stringify(block.context, (k, v) =>
+            k === "defsite" ? undefined : v,
+          ),
+        ),
+  }
+}
+
+function clean_data_block(block: DataBlock) {
+  return match(block)
+    .with(
+      {
+        kind: "data",
+        data: P.union(P.string, P.number, P.boolean),
+        raw: false,
+        spec: P.nullish,
+        description: P.nullish,
+        defs: P.union(undefined, {}),
+        def: P.nullish,
+        contribute: P.union(
+          ["context", "result"],
+          ["result", "context"],
+          undefined,
+        ),
+        parser: P.nullish,
+        fallback: P.nullish,
+        role: P.nullish,
+      },
+      (block) => block.data,
+    )
+    .otherwise((block) => block)
+}
+
+function clean_match_block(block: MatchBlock) {
+  const with_ = block.with.map((case_) => {
+    const clean_case = {
+      ...case_,
+      pdl__case_result: undefined,
+      pdl__if_result: undefined,
+      pdl__matched: undefined,
+    }
+    if (clean_case.case === null) {
+      delete clean_case.case
+    }
+    if (clean_case.if === null) {
+      delete clean_case.if
+    }
+    return clean_case
+  })
+  return { ...block, with: with_ }
+}
+
+function remove_block_default_values(
+  block: AdvancedBlockType,
+): AdvancedBlockType {
+  // remove contribute: ["result", context]
+  if (
+    block?.contribute?.includes("result") &&
+    block?.contribute?.includes("context")
+  ) {
+    block = { ...block, contribute: undefined }
+  }
+  // remove empty defs list
+  if (Object.keys(block?.defs ?? {}).length === 0) {
+    block = { ...block, defs: undefined }
+  }
+  return block
+}
+
+function clean_repeat_block(block: RepeatBlock) {
+  if (block.for === null) {
+    delete block.for
+  }
+  if (block.while === true) {
+    delete block.while
+  }
+  if (block.until === false) {
+    delete block.until
+  }
+  if (block.max_iterations === null) {
+    delete block.max_iterations
+  }
+  return block
+}
+
+function remove_internal_block_fields(block: AdvancedBlockType) {
+  return {
     ...block,
     pdl__result: undefined,
     pdl__is_leaf: undefined,
@@ -23,90 +147,6 @@ export function block_code_cleanup(block: BlockType): BlockType {
     pdl__location: undefined,
     pdl__model_input: undefined,
   }
-  // remove contribute: ["result", context]
-  if (
-    new_block?.contribute?.includes("result") &&
-    new_block?.contribute?.includes("context")
-  ) {
-    delete new_block.contribute
-  }
-  // remove empty defs list
-  if (Object.keys(block?.defs ?? {}).length === 0) {
-    delete new_block.defs
-  }
-  // recursive cleanup
-  const new_block_rec = map_block_children(
-    block_code_cleanup,
-    expr_code_cleanup,
-    new_block,
-  )
-  const clean_block = match(new_block_rec)
-    // Remove `defsite` from context:
-    .with({ kind: "model" }, (block) => ({
-      ...block,
-      context: !hasContextInformation(block)
-        ? undefined
-        : JSON.parse(
-            JSON.stringify(block.context, (k, v) =>
-              k === "defsite" ? undefined : v,
-            ),
-          ),
-    }))
-    // replace `data: literal` by `literal`
-    .with(
-      {
-        kind: "data",
-        data: P.union(P.string, P.number, P.boolean),
-        raw: false,
-        spec: P.nullish,
-        description: P.nullish,
-        defs: {},
-        def: P.nullish,
-        contribute: P.union(["context", "result"], ["result", "context"]),
-        parser: P.nullish,
-        fallback: P.nullish,
-        role: P.nullish,
-      },
-      (block) => block.data,
-    )
-    .with({ kind: "match", with: P._ }, (block) => {
-      const with_ = block.with.map((case_) => {
-        const clean_case = {
-          ...case_,
-          pdl__case_result: undefined,
-          pdl__if_result: undefined,
-          pdl__matched: undefined,
-        }
-        if (clean_case.case === null) {
-          delete clean_case.case
-        }
-        if (clean_case.if === null) {
-          delete clean_case.if
-        }
-        return clean_case
-      })
-      return { ...block, with: with_ }
-    })
-    .with({ kind: "repeat" }, (block) => {
-      if (block.for === null) {
-        delete block.for
-      }
-      if (block.while === true) {
-        delete block.while
-      }
-      if (block.until === false) {
-        delete block.until
-      }
-      if (block.max_iterations === null) {
-        delete block.max_iterations
-      }
-      return block
-    })
-    .otherwise((block) => block)
-  // remove kind
-  return match(clean_block)
-    .with({ kind: P._ }, (block) => ({ ...block, kind: undefined }))
-    .otherwise((block) => block)
 }
 
 function expr_code_cleanup(expr: ExpressionT<unknown>): ExpressionT<unknown> {

@@ -1,13 +1,13 @@
 import { match, P } from "ts-pattern"
 
 import { Backend, PdlBlock, Processor } from "./pdl_ast"
-import { BlockType, ExpressionT, isArgs } from "./helpers"
+import { ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
-  f_block: (block: BlockType) => BlockType,
+  f_block: (block: PdlBlock) => PdlBlock,
   f_expr: (expr: ExpressionT<unknown>) => ExpressionT<unknown>,
-  block: BlockType,
-): BlockType {
+  block: PdlBlock,
+): PdlBlock {
   if (
     block === null ||
     typeof block === "boolean" ||
