@@ -807,13 +807,24 @@ def process_block_body(
                         manual_stop = True
                     iter_trace.append(exc.pdl__trace)
                     trace = block.model_copy(update={"pdl__trace": iter_trace})
-                    if block.retry_on_error and retry_count < block.retry_max and not manual_stop:
+                    if (
+                        block.retry_max
+                        and block.retry_max > 0
+                        and retry_count < block.retry_max
+                        and not manual_stop
+                    ):
                         retry_count += 1
                         error = f"Retry on error is triggered in a repeat block. Error detail: {repr(exc)} "
                         print(f"\n\033[0;31m{error}\033[0m\n")
-                        if background and background.data and background.data[-1]["content"].endswith(error):
+                        if (
+                            background
+                            and background.data
+                            and background.data[-1]["content"].endswith(error)
+                        ):
                             error = "The previous error occurs multiple times."
-                        background = lazy_messages_concat(background, [{"role": "assistant", "content": error}])
+                        background = lazy_messages_concat(
+                            background, [{"role": "assistant", "content": error}]
+                        )
                     else:
                         raise PDLRuntimeError(
                             exc.message,

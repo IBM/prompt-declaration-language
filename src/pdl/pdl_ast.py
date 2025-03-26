@@ -873,11 +873,8 @@ class RepeatBlock(StructuredBlock):
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
-    retry_on_error: bool = False
-    """Indicate if this block should be retried when an error occurs.
-    """
-    retry_max: int = 3
-    """Maximum number of retry.
+    retry_max: Optional[int] = 0
+    """Maximum number of retry on errors in the loop.
     """
     # Field for internal use
     pdl__trace: Optional[list["BlockType"]] = None
