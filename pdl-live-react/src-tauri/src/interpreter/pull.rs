@@ -42,7 +42,10 @@ fn ollama_exists(model: &str) -> bool {
 /// The Ollama implementation of a single model pull
 fn ollama_pull_if_needed(model: &str) -> Result<(), LoadError> {
     if !ollama_exists(model) {
-        cmd!("ollama", "pull", model).run().map_err(LoadError::IO)?;
+        cmd!("ollama", "pull", model)
+            .stdout_to_stderr()
+            .run()
+            .map_err(LoadError::IO)?;
     }
     Ok(())
 }

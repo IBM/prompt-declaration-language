@@ -25,9 +25,13 @@ pub async fn pip_install_if_needed(
         } else {
             "python3"
         };
-        cmd!(python, "-mvenv", &venv_path).run()?;
+        cmd!(python, "-mvenv", &venv_path)
+            .stdout_to_stderr()
+            .run()?;
 
-        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path,).run()?;
+        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path,)
+            .stdout_to_stderr()
+            .run()?;
 
         let cached_requirements_path = venv_path.join("requirements.txt");
         copy(requirements_path, cached_requirements_path)?;
