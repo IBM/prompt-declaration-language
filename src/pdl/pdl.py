@@ -70,7 +70,8 @@ def exec_program(
     if not isinstance(scope, PdlDict):
         scope = PdlDict(scope or {})
     loc = loc or empty_block_location
-    future_result, _, future_scope, trace = process_prog(state, scope, prog, loc)
+    initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
+    future_result, _, future_scope, trace = process_prog(state, scope | initial_scope, prog, loc)
     result = future_result.result()
     match output:
         case "result":
