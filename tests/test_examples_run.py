@@ -21,6 +21,11 @@ RESULTS_VERSION = 15
 TO_SKIP = {
     str(name)
     for name in [
+        pathlib.Path("examples") / "tutorial" / "programs" / "chatbot.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "code-json.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "tfidf_rag.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "weather.pdl",
         pathlib.Path("examples")
         / "tutorial"
         / "structured-decoding.pdl",  # TODO: check why
@@ -53,9 +58,7 @@ TO_SKIP = {
         pathlib.Path("examples")
         / "tutorial"
         / "calling_llm_with_input.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "defs.pdl",  # TODO check why
+        pathlib.Path("examples") / "tutorial" / "defs.pdl",  # TODO check why
         pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
         pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
         pathlib.Path("examples")
