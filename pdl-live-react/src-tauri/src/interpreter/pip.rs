@@ -37,13 +37,14 @@ pub async fn pip_install_if_needed(
 }
 
 #[cfg(desktop)]
-pub async fn pip_install_interpreter_if_needed(
+pub async fn pip_install_internal_if_needed(
     app_handle: tauri::AppHandle,
+    requirements: &str,
 ) -> Result<PathBuf, tauri::Error> {
     // the interpreter requirements.txt
     let requirements_path = app_handle
         .path()
-        .resolve("interpreter/requirements.txt", BaseDirectory::Resource)?;
+        .resolve(requirements, BaseDirectory::Resource)?;
 
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
 

@@ -1,12 +1,18 @@
 use ::std::collections::HashMap;
 use ::std::error::Error;
+use ::std::ffi::OsStr;
 use ::std::fs::File;
 use ::std::io::BufReader;
+use ::std::path::{Path, PathBuf};
 
+use duct::cmd;
+use futures::executor::block_on;
 use serde::Deserialize;
 use serde_json::{from_reader, json, to_string, Value};
+use tempfile::Builder;
 
 use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
+use crate::interpreter::pip::pip_install_internal_if_needed;
 
 macro_rules! zip {
     ($x: expr) => ($x);
@@ -276,18 +282,70 @@ fn tool_imports(object: &String) -> (&str, &str) {
     }
 }
 
+fn python_source_to_json(
+    app_handle: tauri::AppHandle,
+    source_file_path: &String,
+    debug: &bool,
+) -> Result<PathBuf, Box<dyn Error>> {
+    if *debug {
+        eprintln!("Compiling from Python source");
+    }
+    let bin_path = block_on(pip_install_internal_if_needed(
+        app_handle,
+        &"interpreter/beeai-requirements.txt",
+    ))?;
+
+    let dry_run_file_path = Builder::new()
+        .prefix(&"pdl-bee")
+        .suffix(".json")
+        .tempfile()?;
+    let (_f, dry_run_file) = dry_run_file_path.keep()?;
+
+    let args = vec![source_file_path];
+
+    cmd(bin_path.join("python"), &args)
+        .env("DRY_RUN", "True")
+        .env("DRY_RUN_FILE", &dry_run_file)
+        .stdout_null()
+        .run()?;
+
+    if *debug {
+        eprintln!(
+            "Finished generating BeeAi JSON snapshot to {:?}",
+            &dry_run_file
+        )
+    }
+    Ok(dry_run_file)
+}
+
 pub fn compile(
+    app_handle: tauri::AppHandle,
     source_file_path: &String,
     output_path: &String,
     debug: &bool,
 ) -> Result<(), Box<dyn Error>> {
-    println!("Compiling beeai {} to {}", source_file_path, output_path);
+    if *debug {
+        eprintln!("Compiling beeai {} to {}", source_file_path, output_path);
+    }
 
-    // Open the file in read-only mode with buffer.
-    let file = File::open(source_file_path)?;
-    let reader = BufReader::new(file);
+    let file = match Path::new(source_file_path)
+        .extension()
+        .and_then(OsStr::to_str)
+    {
+        Some("py") => {
+            let json_snapshot_file = python_source_to_json(app_handle, source_file_path, debug)?;
+            File::open(json_snapshot_file)
+        }
+        _ => {
+            if *debug {
+                eprintln!("Compiling from JSON snapshot");
+            }
+            File::open(source_file_path)
+        }
+    }?;
 
     // Read the JSON contents of the file as an instance of `User`.
+    let reader = BufReader::new(file);
     let bee: BeeAiProgram = from_reader(reader)?;
 
     let inputs: Vec<PdlBlock> = bee
