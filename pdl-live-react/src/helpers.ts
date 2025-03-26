@@ -12,10 +12,6 @@ import type {
 
 /** Re-export for convenience */
 export type { PdlBlock } from "./pdl_ast"
-export type AdvancedBlockType = Exclude<
-  PdlBlock,
-  null | string | boolean | number
->
 export type ExpressionT<T> = T | string | LocalizedExpression
 
 type MakeNonNullable<T> = {

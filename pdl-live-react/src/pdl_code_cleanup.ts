@@ -1,7 +1,7 @@
 import { match, P } from "ts-pattern"
 
 import {
-  AdvancedBlockType,
+  NonScalarPdlBlock,
   ExpressionT,
   hasContextInformation,
 } from "./helpers"
@@ -103,8 +103,8 @@ function clean_match_block(block: MatchBlock) {
 }
 
 function remove_block_default_values(
-  block: AdvancedBlockType,
-): AdvancedBlockType {
+  block: NonScalarPdlBlock,
+): NonScalarPdlBlock {
   // remove contribute: ["result", context]
   if (
     block?.contribute?.includes("result") &&
@@ -135,7 +135,7 @@ function clean_repeat_block(block: RepeatBlock) {
   return block
 }
 
-function remove_internal_block_fields(block: AdvancedBlockType) {
+function remove_internal_block_fields(block: NonScalarPdlBlock) {
   return {
     ...block,
     pdl__result: undefined,
