@@ -776,6 +776,14 @@ export type Content =
   | EmptyBlock
   | null
 /**
+ * For example, the name of the tool that was invoked, for which this message is the tool response.
+ */
+export type Name = LocalizedExpression | string | null
+/**
+ * The id of the tool invocation for which this message is the tool response.
+ */
+export type ToolCallId = LocalizedExpression | string | null
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -3681,6 +3689,8 @@ export interface MessageBlock {
   pdl__is_leaf?: PdlIsLeaf5
   kind?: Kind5
   content: Content
+  name?: Name
+  tool_call_id?: ToolCallId
 }
 /**
  * Type specification of the result of the block.
@@ -4041,11 +4051,11 @@ export interface ContributeValue {
   value: Value
 }
 export interface LocalizedExpression {
-  expr: Expr
+  pdl__expr: PdlExpr
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
 }
-export interface Expr {
+export interface PdlExpr {
   [k: string]: unknown
 }
 /**

@@ -2,6 +2,7 @@ import { stringify } from "yaml"
 
 import Group from "../Group"
 import CodeGroup from "../../code/CodeGroup"
+import { block_code_cleanup } from "../../../pdl_code_cleanup"
 
 export default function FunctionItems({
   block: { def, function: func, return: retrn },
@@ -12,7 +13,7 @@ export default function FunctionItems({
     <>
       {def && <Group description={def} term="Name" />}
       <CodeGroup code={stringify(func)} term="Parameters" />
-      <CodeGroup code={stringify(retrn)} term="Body" />
+      <CodeGroup code={stringify(block_code_cleanup(retrn))} term="Body" />
     </>
   )
 }

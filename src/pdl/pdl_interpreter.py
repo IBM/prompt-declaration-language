@@ -577,8 +577,20 @@ def process_block_body(
                 scope,
                 loc,
             )
+            name, block = process_expr_of(
+                block, "name", scope, loc  # pyright: ignore
+            )  # pyright: ignore
+            tool_call_id, block = process_expr_of(
+                block, "tool_call_id", scope, loc  # pyright: ignore
+            )  # pyright: ignore
             result = PdlDict(
-                {"role": state.role, "content": content, "defsite": block.pdl__id}
+                {
+                    "role": state.role,
+                    "content": content,
+                    "name": name,
+                    "tool_call_id": tool_call_id,
+                    "defsite": block.pdl__id,
+                }
             )
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
@@ -1137,11 +1149,13 @@ def process_expr(  # pylint: disable=too-many-return-statements
 ) -> tuple[ProcessExprT, LocalizedExpression[ProcessExprT]]:
     result: ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        result = _process_expr(scope, expr.expr, loc)
+        result = _process_expr(scope, expr.pdl__expr, loc)
         trace = expr.model_copy(update={"pdl__result": result})
     else:
         result = _process_expr(scope, expr, loc)
-        trace = LocalizedExpression(expr=expr, pdl__result=result, pdl__location=loc)
+        trace = LocalizedExpression(
+            pdl__expr=expr, pdl__result=result, pdl__location=loc
+        )
     return (result, trace)
 
 
@@ -1153,7 +1167,7 @@ def _process_expr(  # pylint: disable=too-many-return-statements
 ) -> _ProcessExprT:
     result: _ProcessExprT
     if isinstance(expr, LocalizedExpression):
-        return _process_expr(scope, expr.expr, loc)
+        return _process_expr(scope, expr.pdl__expr, loc)
     if isinstance(expr, str):
         try:
             env = Environment(  # nosec B701

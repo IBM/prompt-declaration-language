@@ -12,6 +12,7 @@ import type {
 
 /** Re-export for convenience */
 export type { PdlBlock } from "./pdl_ast"
+export type ExpressionT<T> = T | string | LocalizedExpression
 
 type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>
@@ -318,7 +319,9 @@ export function extractCode({ code }: CodeBlock): string {
 
 function isExpr(e: unknown): e is LocalizedExpression {
   return (
-    e !== null && typeof e === "object" && "expr" in (e as LocalizedExpression)
+    e !== null &&
+    typeof e === "object" &&
+    "pdl__expr" in (e as LocalizedExpression)
   )
 }
 

@@ -84,7 +84,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         arbitrary_types_allowed=True,
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
-    expr: Any
+    pdl__expr: Any
     pdl__result: Optional[LocalizedExpressionT] = None
     pdl__location: Optional[PdlLocationType] = None
 
@@ -591,6 +591,10 @@ class MessageBlock(StructuredBlock):
     """  # pyright: ignore
     content: "BlockType"
     """Content of the message."""
+    name: Optional[ExpressionType[str]] = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: Optional[ExpressionType[str]] = None
+    """The id of the tool invocation for which this message is the tool response."""
 
 
 class IfBlock(StructuredBlock):

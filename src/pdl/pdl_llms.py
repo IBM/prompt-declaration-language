@@ -2,6 +2,7 @@
 import asyncio
 import threading
 from concurrent.futures import Future
+from os import environ
 from sys import stderr
 from typing import Any, Callable, Generator, TypeVar
 
@@ -64,7 +65,7 @@ class LitellmModel:
                 response.json(),  # pyright: ignore
             )
         except httpx.RequestError as exc:
-            message = f"model '{block.model}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
+            message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
             loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
@@ -72,7 +73,7 @@ class LitellmModel:
                 trace=ErrorBlock(msg=message, pdl__location=loc, program=block),
             ) from exc
         except Exception as exc:
-            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            message = f"Error during '{model_id}' model call: {repr(exc)}"
             loc = block.pdl__location
             raise PDLRuntimeError(
                 message,
@@ -87,7 +88,8 @@ class LitellmModel:
         messages: ModelInput,
         parameters: dict[str, Any],
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
-        print(f"Asynchronous model call started to {block.model}", file=stderr)
+        if "PDL_VERBOSE_ASYNC" in environ:
+            print(f"Asynchronous model call started to {model_id}", file=stderr)
         # global _BACKGROUND_TASKS
         future = asyncio.run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
@@ -130,22 +132,23 @@ class LitellmModel:
                     else 0
                 )
                 exec_nanos = block.pdl__timing.end_nanos - start
-                print(
-                    f"Asynchronous model call to {block.model} completed in {(exec_nanos)/1000000}ms",
-                    file=stderr,
-                )
-                msg = future.result()[0]
-                if msg["content"] is not None:
-                    from termcolor import colored
-
-                    from .pdl_ast import BlockKind
-                    from .pdl_scheduler import color_of
-
+                if "PDL_VERBOSE_ASYNC" in environ:
                     print(
-                        colored(msg["content"], color=color_of(BlockKind.MODEL)),
+                        f"Asynchronous model call to {model_id} completed in {(exec_nanos)/1000000}ms",
                         file=stderr,
                     )
-                    print("\n", file=stderr)
+                    msg = future.result()[0]
+                    if msg["content"] is not None:
+                        from termcolor import colored
+
+                        from .pdl_ast import BlockKind
+                        from .pdl_scheduler import color_of
+
+                        print(
+                            colored(msg["content"], color=color_of(BlockKind.MODEL)),
+                            file=stderr,
+                        )
+                        print("\n", file=stderr)
 
         future.add_done_callback(update_end_nanos)
 

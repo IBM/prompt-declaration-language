@@ -276,7 +276,7 @@ def data_to_dict(data: Any, json_compatible: bool):
 
 def expr_to_dict(expr: ExpressionType, json_compatible: bool):
     if isinstance(expr, LocalizedExpression):
-        d = {"expr": data_to_dict(expr.expr, json_compatible)}
+        d = {"pdl__expr": data_to_dict(expr.pdl__expr, json_compatible)}
         if expr.pdl__result is not None:
             d["pdl__result"] = data_to_dict(expr.pdl__result, json_compatible)
     else:
