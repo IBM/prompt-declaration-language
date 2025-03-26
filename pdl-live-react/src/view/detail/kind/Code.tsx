@@ -8,7 +8,8 @@ export default function CodeItems({
 }: {
   block:
     | import("../../../pdl_ast").ArgsBlock
-    | import("../../../pdl_ast").CodeBlock
+    | import("../../../pdl_ast").PythonCodeBlock
+    | import("../../../pdl_ast").NonPythonCodeBlock
 }) {
   const { lang } = block
   const code = isArgs(block) ? block.args.join(" ") : extractCode(block)

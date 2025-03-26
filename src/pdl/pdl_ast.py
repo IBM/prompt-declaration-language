@@ -474,13 +474,48 @@ class CodeBlock(BaseCodeBlock):
     ```
     """
 
-    lang: Annotated[
-        Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
-    ]
-    """Programming language of the code.
-    """
     code: "BlockType"
     """Code to execute.
+    """
+
+
+class NonPythonCodeBlock(CodeBlock):
+    """
+    Execute a piece of code.
+
+    Example:
+    ```PDL
+    - def: N
+      lang: command
+      code: echo hi
+    ```
+    """
+
+    lang: Annotated[Literal["command", "jinja", "pdl"], BeforeValidator(_ensure_lower)]
+    """Programming language of the code.
+    """
+
+
+class PythonCodeBlock(CodeBlock):
+    """
+    Execute a piece of Python code.
+
+    Example:
+    ```PDL
+    - def: N
+      lang: python
+      code: |
+        import random
+        # (In PDL, set `result` to the output you wish for your code block.)
+        result = random.randint(1, 20)
+    ```
+    """
+
+    lang: Annotated[Literal["python"], BeforeValidator(_ensure_lower)] = "python"
+    """Programming language of the code.
+    """
+    requirements: Optional[str | list[str]] = None
+    """Pip requirements.txt
     """
 
 
@@ -829,7 +864,8 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | NonPythonCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock

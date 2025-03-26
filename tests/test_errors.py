@@ -140,7 +140,6 @@ def test_error5():
     error(
         error5,
         [
-            "line 0 - Missing required field: lang",
             "line 0 - Field not allowed: lans",
         ],
     )
