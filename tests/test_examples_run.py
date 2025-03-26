@@ -21,32 +21,25 @@ RESULTS_VERSION = 15
 TO_SKIP = {
     str(name)
     for name in [
+        pathlib.Path("examples") / "tutorial" / "programs" / "chatbot.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "code-json.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "tfidf_rag.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "weather.pdl",
         pathlib.Path("examples")
-        / "hello"
-        / "hello-structured-decoding.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "8-tools.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "10-sdg.pdl",  # TODO: check why
+        / "tutorial"
+        / "structured-decoding.pdl",  # TODO: check why
+        pathlib.Path("examples") / "demo" / "8-tools.pdl",  # TODO: check why
+        pathlib.Path("examples") / "demo" / "10-sdg.pdl",  # TODO: check why
         pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
         pathlib.Path("examples") / "tools" / "calc.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tutorial" / "calling_apis.pdl",
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
-        pathlib.Path("examples") / "talk" / "10-multi-agent.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsmhard-bugs.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-base.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-jinja.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-python.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
         pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tfidf_rag" / "rag.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math_no_sd.pdl",
         pathlib.Path("examples") / "react" / "demo.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "9-react.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "4-translator.pdl",  # TODO check why
+        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
+        pathlib.Path("examples") / "demo" / "9-react.pdl",  # TODO: check why
         pathlib.Path("examples")
         / "tutorial"
         / "calling_llm_with_input_messages.pdl",  # TODO check why
@@ -65,32 +58,16 @@ TO_SKIP = {
         pathlib.Path("examples")
         / "tutorial"
         / "calling_llm_with_input.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "conditionals_loops.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "grouping_definitions.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "granite"
-        / "single_round_chat.pdl",  # TODO check why
+        pathlib.Path("examples") / "tutorial" / "defs.pdl",  # TODO check why
         pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
         pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
         pathlib.Path("examples")
         / "intrinsics"
         / "demo-hallucination.pdl",  # TODO check why
         pathlib.Path("examples")
-        / "hello"
-        / "hello-function-empty-context.pdl",  # TODO CREATE RESULTS FILE
-        pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",  # TODO check why
-        pathlib.Path("examples") / "hello" / "hello-import.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-import-lib.pdl",  # (Produces no output)
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-model-chaining.pdl",  # TODO check why
-        pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",  # TODO check why
+        / "tutorial"
+        / "function-empty-context.pdl",  # TODO CREATE RESULTS FILE
+        pathlib.Path("examples") / "demo" / "7-chatbot-roles.pdl",  # TODO check why
         pathlib.Path("examples")
         / "rag"
         / "pdf_index.pdl",  # TODO: check what the expected output is
@@ -111,7 +88,6 @@ TO_SKIP = {
         pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
-        pathlib.Path("examples") / "hello" / "hello-graniteio.pdl",
     ]
 }
 
@@ -119,26 +95,17 @@ NOT_DETERMINISTIC = {
     str(name)
     for name in [
         pathlib.Path("examples") / "weather" / "weather.pdl",
-        pathlib.Path("examples") / "demo" / "3-weather.pdl",
-        pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
         pathlib.Path("examples") / "react" / "demo.pdl",
-        pathlib.Path("examples") / "react" / "wikipedia.pdl",
         pathlib.Path("examples") / "code" / "code.pdl",
         pathlib.Path("examples") / "code" / "code-eval.pdl",
         pathlib.Path("examples") / "code" / "code-json.pdl",
-        pathlib.Path("examples") / "talk" / "1-hello.pdl",
-        pathlib.Path("examples") / "talk" / "2-model-chaining.pdl",
-        pathlib.Path("examples") / "talk" / "3-def-use.pdl",
-        pathlib.Path("examples") / "talk" / "5-code-eval.pdl",
-        pathlib.Path("examples") / "talk" / "6-code-json.pdl",
-        pathlib.Path("examples") / "talk" / "9-react.pdl",
-        pathlib.Path("examples") / "tutorial" / "include.pdl",
-        pathlib.Path("examples") / "tutorial" / "data_block.pdl",
+        pathlib.Path("examples") / "demo" / "1-hello.pdl",
+        pathlib.Path("examples") / "demo" / "2-model-chaining.pdl",
+        pathlib.Path("examples") / "demo" / "3-def-use.pdl",
+        pathlib.Path("examples") / "demo" / "5-code-eval.pdl",
+        pathlib.Path("examples") / "demo" / "6-code-json.pdl",
+        pathlib.Path("examples") / "demo" / "9-react.pdl",
         pathlib.Path("examples") / "sdk" / "hello.pdl",
-        pathlib.Path("examples") / "hello" / "hello.pdl",
-        pathlib.Path("examples") / "hello" / "hello-model-input.pdl",
-        pathlib.Path("examples") / "hello" / "hello-parser-regex.pdl",
-        pathlib.Path("examples") / "hello" / "hello-def-use.pdl",
     ]
 }
 
@@ -152,9 +119,6 @@ class InputsType:
 TESTS_WITH_INPUT: dict[str, InputsType] = {
     str(name): inputs
     for name, inputs in {
-        pathlib.Path("examples")
-        / "demo"
-        / "4-translator.pdl": InputsType(stdin="french\nstop\n"),
         pathlib.Path("examples")
         / "tutorial"
         / "input_stdin.pdl": InputsType(stdin="Hello\n"),
@@ -171,21 +135,11 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "chatbot"
         / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
         pathlib.Path("examples")
-        / "talk"
+        / "demo"
         / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
         pathlib.Path("examples")
-        / "granite"
-        / "single_round_chat.pdl": InputsType(
-            scope=PdlDict({"PROMPT": "What is APR?\nyes\n"})
-        ),
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-data.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
-        pathlib.Path("examples")
         / "tutorial"
-        / "conditionals_loops.pdl": InputsType(
-            stdin="What is APR?\nno\nSay it as a poem\nyes\n"
-        ),
+        / "free_variables.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
     }.items()
 }
 
@@ -202,12 +156,8 @@ EXPECTED_PARSE_ERROR = [
 ]
 
 EXPECTED_RUNTIME_ERROR = [
-    pathlib.Path("examples") / "demo" / "1-gen-data.pdl",
-    pathlib.Path("examples") / "tutorial" / "gen-data.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type-code.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type-list.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type.pdl",
-    pathlib.Path("examples") / "hello" / "hello-parser-json.pdl",
+    pathlib.Path("examples") / "tutorial" / "type_list.pdl",
+    pathlib.Path("examples") / "tutorial" / "type_checking.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello12.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello13.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello14.pdl",
