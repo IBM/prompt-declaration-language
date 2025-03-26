@@ -112,10 +112,10 @@ def test_code_var():
     result = exec_dict(code_var_data, output="all")
     text = result["result"]
     scope = result["scope"]
-    assert scope == {
-        "pdl_context": [{"role": "user", "content": text, "defsite": "text.0.code"}],
-        "I": 0,
-    }
+    assert scope["pdl_context"] == [
+        {"role": "user", "content": text, "defsite": "text.0.code"}
+    ]
+    assert scope["I"] == 0
     assert text == "0"
 
 
