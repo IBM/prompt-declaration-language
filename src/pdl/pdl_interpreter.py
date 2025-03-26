@@ -1290,11 +1290,13 @@ def process_call_model(
         case GraniteioModelBlock():
             _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
             if concrete_block.processor is not None:
-                _, concrete_block = process_expr_of(concrete_block, "processor", scope, loc)
+                _, concrete_block = process_expr_of(
+                    concrete_block, "processor", scope, loc
+                )
             if concrete_block.parameters is not None:
                 _, concrete_block = process_expr_of(
-                concrete_block, "parameters", scope, loc
-            )
+                    concrete_block, "parameters", scope, loc
+                )
         case _:
             assert False
     # evaluate input
