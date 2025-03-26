@@ -64,19 +64,19 @@ function clean_data_block(block: DataBlock) {
       {
         kind: "data",
         data: P.union(P.string, P.number, P.boolean),
-        raw: false,
-        spec: P.nullish,
-        description: P.nullish,
-        defs: P.union(undefined, {}),
-        def: P.nullish,
-        contribute: P.union(
-          ["context", "result"],
-          ["result", "context"],
-          undefined,
+        raw: P.optional(false),
+        spec: P.optional(P.nullish),
+        description: P.optional(P.union(P.nullish, "")),
+        defs: P.optional(
+          P.when((defs) => Object.keys(defs ?? {}).length === 0),
         ),
-        parser: P.nullish,
-        fallback: P.nullish,
-        role: P.nullish,
+        def: P.optional(P.nullish),
+        contribute: P.optional(
+          P.union(["context", "result"], ["result", "context"]),
+        ),
+        parser: P.optional(P.nullish),
+        fallback: P.optional(P.nullish),
+        role: P.optional(P.nullish),
       },
       (block) => block.data,
     )
