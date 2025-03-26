@@ -104,7 +104,7 @@ Consider the following example ([file](https://github.com/IBM/prompt-declaration
 ```
 
 Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `${ }` for accessing the value of a variable. Any [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) expression is allowed to be used inside these braces. These expressions
-are also used to specify conditions for loops and conditionals. See for example this [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/chatbot/chatbot.pdl).
+are also used to specify conditions for loops and conditionals. See for example this [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/chatbot.pdl).
 
 When we execute this program, we obtain:
 ```
@@ -350,7 +350,7 @@ The following script shows how to execute python code ([file](https://github.com
 
 In order to define variables that are carried over to the next Python code block, a special variable `PDL_SESSION` can be used, and
 variables assigned to it as fields.
-See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/rag/tfidf_rag.pdl)).
+See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/tfidf_rag.pdl)).
 
 ```yaml
 --8<-- "./examples/tutorial/code_python.pdl"
@@ -368,10 +368,10 @@ PDL also supports Jinja code blocks, shell commands, as well as PDL code blocks 
 
 ## Calling REST APIs
 
-PDL programs can contain calls to REST APIs with Python code. Consider a simple weather app ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/weather/weather.pdl)):
+PDL programs can contain calls to REST APIs with Python code. Consider a simple weather app ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/weather.pdl)):
 
 ```yaml
---8<-- "./examples/weather/weather.pdl"
+--8<-- "./examples/tutorial/programs/weather.pdl"
 ```
 
 In this program, we first define a query about the weather in some location (assigned to variable `QUERY`). The next block is a call to a Granite model with few-shot examples to extract the location, which we assign to variable `LOCATION`. The next block makes an API call with Python (mocked in this example). Here the `LOCATION` is appended to the `url`. The result is a JSON object, which may be hard to interpret for a human user. So we make a final call to an LLM to interpret the JSON in terms of weather. Notice that many blocks have `contribute` set to `[]` to hide intermediate results.
@@ -379,10 +379,10 @@ In this program, we first define a query about the weather in some location (ass
 
 ##  Data Block
 
-PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](https://ibm.github.io/prompt-declaration-language/#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be generalized to read jsonl files to generate data en masse by piping into another jsonl file ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-json.pdl)).
+PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](https://ibm.github.io/prompt-declaration-language/#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be generalized to read jsonl files to generate data en masse by piping into another jsonl file ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/programs/code-json.pdl)).
 
 ```yaml
---8<-- "./examples/code/code-json.pdl"
+--8<-- "./examples/tutorial/programs/code-json.pdl"
 ```
 
 Notice that in the `data` block the values are interpreted as Jinja expressions. If values need to be PDL programs to be interpreted, then you need to use
@@ -424,11 +424,11 @@ The `import` block means that the PDL code at that file is executed and its scop
 
 ##  Conditionals and Loops
 
-PDL supports conditionals and loops as illustrated in the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/chatbot/chatbot.pdl)), which implements a chatbot.
+PDL supports conditionals and loops as illustrated in the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/chatbot.pdl)), which implements a chatbot.
 
 
 ```yaml
---8<-- "./examples/chatbot/chatbot.pdl"
+--8<-- "./examples/tutorial/programs/chatbot.pdl"
 ```
 
 The first block prompts the user for a query, and this is contributed to the background context. The next
@@ -553,7 +553,7 @@ as soon as one of the exit conditions is satisfied:
 ### Match block
 
 PDL provides a match block for convenience. 
-Consider the [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/intrinsics/demo-hallucination.pdl). This shows retrieved RAG documents
+Consider the [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/demo-hallucination.pdl). This shows retrieved RAG documents
 that are then submitted with a query to a RAG Granite model.
 The output contains an answer to the query together with hallucination
 score and possibly a citation.
@@ -582,7 +582,7 @@ The `match` field indicates an expression to match on. The cases follow the `wit
 
 ## Roles and Chat Templates
 
-Consider again the chatbot example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/chatbot/chatbot.pdl)). By default blocks have role `user`, except for model call blocks, which have role `assistant`.
+Consider again the chatbot example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/chatbot.pdl)). By default blocks have role `user`, except for model call blocks, which have role `assistant`.
 If we write roles explicitly for the chatbot, we obtain:
 
 
