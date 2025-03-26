@@ -14,8 +14,9 @@
     "tauri": "tauri",
     "test:quality": "concurrently -n 'lint,types,formatting' 'npm run lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
     "test:ui": "playwright install --with-deps && playwright test",
+    "test:bee": "./src-tauri/target/debug/pdl compile beeai demos/beeai.py -g --output - | jq", 
     "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions && npm run format",
-    "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
+    "test": "concurrently -n 'quality,playwright,bee' 'npm run test:quality' 'npm run test:ui' 'npm run test:bee'",
     "pdl": "./src-tauri/target/debug/pdl",
     "view": "npm run pdl view",
     "start": "npm run tauri dev"

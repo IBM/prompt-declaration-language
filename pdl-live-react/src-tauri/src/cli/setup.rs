@@ -50,7 +50,12 @@ pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
                                 value: Value::Bool(debug),
                                 ..
                             }),
-                        ) => compile::beeai::compile(source_file_path, output_file_path, debug),
+                        ) => compile::beeai::compile(
+                            app.handle().clone(),
+                            source_file_path,
+                            output_file_path,
+                            debug,
+                        ),
                         _ => Err(Box::from("Invalid compile subcommand")),
                     }
                 }
