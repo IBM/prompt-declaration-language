@@ -109,7 +109,7 @@ export default function RunTerminal({
         }
       }
     }
-  }, [term, ref, exitCode, cmd, args, cancel, onExit2])
+  }, [term, ref, exitCode, cmd, args, cwd, cancel, onExit2])
 
   return (
     <div className="pdl-run-terminal" ref={ref} style={{ height: "600px" }} />
