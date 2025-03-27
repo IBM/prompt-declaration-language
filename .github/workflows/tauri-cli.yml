@@ -43,7 +43,11 @@ jobs:
           PATH=./src-tauri/target/release/:$PATH
 
           for i in ./demos/beeai/*.py
-          do pdl compile beeai $i -g -o /tmp/z.json && jq .description /tmp/z.json
+          do
+            DRY_RUN=True DRY_RUN_FILE=/tmp/in.json python $i
+            pdl compile beeai /tmp/in.json -o /tmp/out.json && jq .description /tmp/out.json
+            pdl compile beeai $i -o /tmp/out.json && jq .description /tmp/out.json
+            pdl compile beeai $i -g -o /tmp/out.json && jq .description /tmp/out.json
           done
           
       - name: Test pdl run against production build
