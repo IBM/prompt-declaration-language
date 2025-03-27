@@ -87,10 +87,6 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "resources": {
-      "../requirements.txt": "interpreter/requirements.txt",
-      "../beeai-requirements.txt": "interpreter/beeai-requirements.txt"
-    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

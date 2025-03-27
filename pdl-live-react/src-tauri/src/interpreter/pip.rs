@@ -1,20 +1,19 @@
-use ::std::fs::{copy, create_dir_all};
+use ::std::fs::{create_dir_all, write};
 use ::std::path::{Path, PathBuf};
 
 use duct::cmd;
-use tauri::path::BaseDirectory;
 use tauri::Manager;
 
 use crate::interpreter::shasum;
 
 #[cfg(desktop)]
-pub async fn pip_install_if_needed(
+async fn pip_install_if_needed(
     cache_path: &Path,
-    requirements_path: &Path,
-) -> Result<PathBuf, tauri::Error> {
+    requirements: &str,
+) -> Result<PathBuf, Box<dyn ::std::error::Error>> {
     create_dir_all(&cache_path)?;
 
-    let hash = shasum::sha256sum(&requirements_path)?;
+    let hash = shasum::sha256sum_str(requirements);
     let venv_path = cache_path.join("venvs").join(hash);
     let bin_path = venv_path.join(if cfg!(windows) { "Scripts" } else { "bin" });
 
@@ -29,12 +28,12 @@ pub async fn pip_install_if_needed(
             .stdout_to_stderr()
             .run()?;
 
-        cmd!(bin_path.join("pip"), "install", "-r", &requirements_path,)
+        cmd!(bin_path.join("pip"), "install", &requirements)
             .stdout_to_stderr()
             .run()?;
 
         let cached_requirements_path = venv_path.join("requirements.txt");
-        copy(requirements_path, cached_requirements_path)?;
+        write(&cached_requirements_path, requirements)?;
     }
 
     Ok(bin_path.to_path_buf())
@@ -44,13 +43,7 @@ pub async fn pip_install_if_needed(
 pub async fn pip_install_internal_if_needed(
     app_handle: tauri::AppHandle,
     requirements: &str,
-) -> Result<PathBuf, tauri::Error> {
-    // the interpreter requirements.txt
-    let requirements_path = app_handle
-        .path()
-        .resolve(requirements, BaseDirectory::Resource)?;
-
+) -> Result<PathBuf, Box<dyn ::std::error::Error>> {
     let cache_path = app_handle.path().cache_dir()?.join("pdl");
-
-    pip_install_if_needed(&cache_path, &requirements_path).await
+    pip_install_if_needed(&cache_path, requirements).await
 }

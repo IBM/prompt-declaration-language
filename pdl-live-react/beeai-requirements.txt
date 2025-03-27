@@ -1,2 +1,0 @@
--e git+https://github.com/starpit/bee-agent-framework.git@nick-meta-combo#egg=beeai_framework&subdirectory=python
-#beeai_framework==0.1
