@@ -1,16 +1,18 @@
 use ::std::fs::{create_dir_all, write};
-use ::std::path::{Path, PathBuf};
+use ::std::path::PathBuf;
 
+use dirs::cache_dir;
 use duct::cmd;
-use tauri::Manager;
 
 use crate::interpreter::shasum;
 
 #[cfg(desktop)]
-async fn pip_install_if_needed(
-    cache_path: &Path,
+pub async fn pip_install_if_needed(
     requirements: &str,
 ) -> Result<PathBuf, Box<dyn ::std::error::Error>> {
+    let Some(cache_path) = cache_dir() else {
+        return Err(Box::from("Could not find user cache directory"));
+    };
     create_dir_all(&cache_path)?;
 
     let hash = shasum::sha256sum_str(requirements);
@@ -37,13 +39,4 @@ async fn pip_install_if_needed(
     }
 
     Ok(bin_path.to_path_buf())
-}
-
-#[cfg(desktop)]
-pub async fn pip_install_internal_if_needed(
-    app_handle: tauri::AppHandle,
-    requirements: &str,
-) -> Result<PathBuf, Box<dyn ::std::error::Error>> {
-    let cache_path = app_handle.path().cache_dir()?.join("pdl");
-    pip_install_if_needed(&cache_path, requirements).await
 }

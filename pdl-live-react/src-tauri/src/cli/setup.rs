@@ -50,12 +50,7 @@ pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
                                 value: Value::Bool(debug),
                                 ..
                             }),
-                        ) => compile::beeai::compile(
-                            app.handle().clone(),
-                            source_file_path,
-                            output_file_path,
-                            debug,
-                        ),
+                        ) => compile::beeai::compile(source_file_path, output_file_path, debug),
                         _ => Err(Box::from("Invalid compile subcommand")),
                     }
                 }
@@ -68,7 +63,6 @@ pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
                 ..
             }) => run::run_pdl_program(
                 source_file_path.clone(),
-                app.handle().clone(),
                 subcommand_matches.matches.args.get("trace"),
                 subcommand_matches.matches.args.get("data"),
                 subcommand_matches.matches.args.get("stream"),

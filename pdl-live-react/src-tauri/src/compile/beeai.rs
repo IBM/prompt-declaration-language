@@ -12,7 +12,7 @@ use serde_json::{from_reader, json, to_string, Value};
 use tempfile::Builder;
 
 use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
-use crate::interpreter::pip::pip_install_internal_if_needed;
+use crate::interpreter::pip::pip_install_if_needed;
 use crate::interpreter::requirements::BEEAI_FRAMEWORK;
 
 macro_rules! zip {
@@ -284,14 +284,13 @@ fn tool_imports(object: &String) -> (&str, &str) {
 }
 
 fn python_source_to_json(
-    app_handle: tauri::AppHandle,
     source_file_path: &String,
     debug: &bool,
 ) -> Result<PathBuf, Box<dyn Error>> {
     if *debug {
         eprintln!("Compiling from Python source");
     }
-    let bin_path = block_on(pip_install_internal_if_needed(app_handle, &BEEAI_FRAMEWORK))?;
+    let bin_path = block_on(pip_install_if_needed(&BEEAI_FRAMEWORK))?;
 
     let dry_run_file_path = Builder::new()
         .prefix(&"pdl-bee")
@@ -317,7 +316,6 @@ fn python_source_to_json(
 }
 
 pub fn compile(
-    app_handle: tauri::AppHandle,
     source_file_path: &String,
     output_path: &String,
     debug: &bool,
@@ -331,7 +329,7 @@ pub fn compile(
         .and_then(OsStr::to_str)
     {
         Some("py") => {
-            let json_snapshot_file = python_source_to_json(app_handle, source_file_path, debug)?;
+            let json_snapshot_file = python_source_to_json(source_file_path, debug)?;
             File::open(json_snapshot_file)
         }
         _ => {
