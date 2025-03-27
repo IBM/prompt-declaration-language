@@ -5,7 +5,7 @@ use urlencoding::encode;
 
 use crate::compile;
 use crate::gui::new_window;
-use crate::interpreter::run::run_pdl_program;
+use crate::pdl::run::run_pdl_program;
 
 #[cfg(desktop)]
 pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {

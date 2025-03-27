@@ -4,7 +4,7 @@ use duct::cmd;
 use rayon::prelude::*;
 use yaml_rust2::{Yaml, YamlLoader};
 
-use crate::interpreter::extract;
+use crate::pdl::extract;
 
 /// Read the given filesystem path and produce a potentially multi-document Yaml
 fn from_path(path: &str) -> Result<Vec<Yaml>, Error> {

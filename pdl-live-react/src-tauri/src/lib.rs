@@ -5,7 +5,8 @@ mod cli;
 mod commands;
 mod compile;
 mod gui;
-mod interpreter;
+mod pdl;
+mod util;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

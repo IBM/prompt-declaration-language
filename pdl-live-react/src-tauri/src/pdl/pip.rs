@@ -4,7 +4,7 @@ use ::std::path::PathBuf;
 use dirs::cache_dir;
 use duct::cmd;
 
-use crate::interpreter::shasum;
+use crate::util::shasum;
 
 #[cfg(desktop)]
 pub async fn pip_install_if_needed(
