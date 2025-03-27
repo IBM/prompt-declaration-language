@@ -109,20 +109,20 @@ def get_contribute_value(
 def messages_concat(
     messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
-    if len(messages1) == 0:
-        return messages2
-    if len(messages2) == 0:
-        return messages1
-    left = messages1[-1]
-    right = messages2[0]
-    if (
-        left["role"] == right["role"] and simple_message(left) and simple_message(right)
-    ):  # test that there are no other keys
-        return (
-            messages1[:-1]
-            + [{"role": left["role"], "content": left["content"] + right["content"]}]
-            + messages2[1:]
-        )
+    # if len(messages1) == 0:
+    #     return messages2
+    # if len(messages2) == 0:
+    #     return messages1
+    # left = messages1[-1]
+    # right = messages2[0]
+    # if (
+    #     left["role"] == right["role"] and simple_message(left) and simple_message(right)
+    # ):  # test that there are no other keys
+    #     return (
+    #         messages1[:-1]
+    #         + [{"role": left["role"], "content": left["content"] + right["content"]}]
+    #         + messages2[1:]
+    #     )
     return messages1 + messages2
 
 
