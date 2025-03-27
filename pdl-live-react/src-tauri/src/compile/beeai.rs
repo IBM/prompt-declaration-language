@@ -13,6 +13,7 @@ use tempfile::Builder;
 
 use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
 use crate::interpreter::pip::pip_install_internal_if_needed;
+use crate::interpreter::requirements::BEEAI_FRAMEWORK;
 
 macro_rules! zip {
     ($x: expr) => ($x);
@@ -290,10 +291,7 @@ fn python_source_to_json(
     if *debug {
         eprintln!("Compiling from Python source");
     }
-    let bin_path = block_on(pip_install_internal_if_needed(
-        app_handle,
-        &"interpreter/beeai-requirements.txt",
-    ))?;
+    let bin_path = block_on(pip_install_internal_if_needed(app_handle, &BEEAI_FRAMEWORK))?;
 
     let dry_run_file_path = Builder::new()
         .prefix(&"pdl-bee")

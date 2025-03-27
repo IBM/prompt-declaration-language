@@ -1,2 +1,0 @@
-#-e ../
-prompt-declaration-language==0.5.1
