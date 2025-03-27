@@ -32,8 +32,7 @@ TO_SKIP = {
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
         pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
-        
-        pathlib.Path("examples") / "fibonacci" / "fib.pdl",  
+        pathlib.Path("examples") / "fibonacci" / "fib.pdl",
         pathlib.Path("examples")
         / "rag"
         / "pdf_index.pdl",  # TODO: check what the expected output is
@@ -62,8 +61,8 @@ NOT_DETERMINISTIC = {
     for name in [
         pathlib.Path("examples") / "react" / "demo.pdl",
         pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("examples") / "react" / "demo.pdl",  
-        pathlib.Path("examples") / "demo" / "9-react.pdl", 
+        pathlib.Path("examples") / "react" / "demo.pdl",
+        pathlib.Path("examples") / "demo" / "9-react.pdl",
         pathlib.Path("examples") / "code" / "code.pdl",
         pathlib.Path("examples") / "code" / "code-eval.pdl",
         pathlib.Path("examples") / "code" / "code-json.pdl",
