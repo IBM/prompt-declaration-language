@@ -3,14 +3,13 @@ use duct::cmd;
 use futures::executor::block_on;
 use yaml_rust2::yaml::LoadError;
 
-use crate::interpreter::pip::pip_install_internal_if_needed;
+use crate::interpreter::pip::pip_install_if_needed;
 use crate::interpreter::pull::pull_if_needed;
 use crate::interpreter::requirements::PDL_INTERPRETER;
 
 #[cfg(desktop)]
 pub fn run_pdl_program(
     source_file_path: String,
-    app_handle: tauri::AppHandle,
     trace_file: Option<&tauri_plugin_cli::ArgData>,
     data: Option<&tauri_plugin_cli::ArgData>,
     stream: Option<&tauri_plugin_cli::ArgData>,
@@ -22,7 +21,7 @@ pub fn run_pdl_program(
 
     // async the model pull and pip installs
     let pull_future = pull_if_needed(&source_file_path);
-    let bin_path_future = pip_install_internal_if_needed(app_handle, &PDL_INTERPRETER);
+    let bin_path_future = pip_install_if_needed(&PDL_INTERPRETER);
 
     // wait for any model pulls to finish
     block_on(pull_future).map_err(|e| match e {
