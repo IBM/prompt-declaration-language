@@ -1,9 +1,7 @@
 use ::std::path::Path;
 
-use serde_json::Value;
+use tauri_plugin_cli::CliExt;
 use urlencoding::encode;
-
-use tauri_plugin_cli::{ArgData, CliExt};
 
 use crate::cli::run;
 use crate::compile;
@@ -35,29 +33,21 @@ pub fn cli(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
             let args = compile_subcommand_matches.matches.args;
 
             match compile_subcommand_matches.name.as_str() {
-                "beeai" => {
-                    match (args.get("source"), args.get("output"), args.get("debug")) {
-                        (
-                            // TODO this probably fails if the source is a number??
-                            Some(ArgData {
-                                value: Value::String(source_file_path),
-                                ..
-                            }),
-                            Some(ArgData {
-                                value: Value::String(output_file_path),
-                                ..
-                            }),
-                            Some(ArgData {
-                                value: Value::Bool(debug),
-                                ..
-                            }),
-                        ) => compile::beeai::compile(source_file_path, output_file_path, debug),
-                        _ => Err(Box::from("Invalid compile subcommand")),
-                    }
-                }
+                "beeai" => compile::beeai::compile(
+                    args.get("source")
+                        .and_then(|a| a.value.as_str())
+                        .expect("valid positional source arg"),
+                    args.get("output")
+                        .and_then(|a| a.value.as_str())
+                        .expect("valid output arg"),
+                    args.get("debug")
+                        .and_then(|a| a.value.as_bool())
+                        .or(Some(false))
+                        == Some(true),
+                )
+                .and_then(|()| Ok(true)),
                 _ => Err(Box::from("Unsupported compile command")),
             }
-            .and_then(|()| Ok(true))
         }
         "run" => run::run_pdl_program(
             subcommand_args
