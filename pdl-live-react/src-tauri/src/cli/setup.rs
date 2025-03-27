@@ -10,7 +10,7 @@ use crate::compile;
 use crate::gui::setup as gui_setup;
 
 #[cfg(desktop)]
-pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
+pub fn cli(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
     app.handle().plugin(tauri_plugin_cli::init())?;
 
     // `matches` here is a Struct with { args, subcommand }.
@@ -26,6 +26,7 @@ pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
         }
     };
 
+    let subcommand_args = subcommand_matches.matches.args;
     match subcommand_matches.name.as_str() {
         "compile" => {
             let Some(compile_subcommand_matches) = subcommand_matches.matches.subcommand else {
@@ -56,32 +57,33 @@ pub fn cli(app: &mut tauri::App) -> Result<(), Box<dyn ::std::error::Error>> {
                 }
                 _ => Err(Box::from("Unsupported compile command")),
             }
+            .and_then(|()| Ok(true))
         }
-        "run" => match subcommand_matches.matches.args.get("source") {
-            Some(ArgData {
-                value: Value::String(source_file_path),
-                ..
-            }) => run::run_pdl_program(
-                source_file_path.clone(),
-                subcommand_matches.matches.args.get("trace"),
-                subcommand_matches.matches.args.get("data"),
-                subcommand_matches.matches.args.get("stream"),
-            ),
-            _ => Err(Box::from("Invalid source file argument")),
-        },
-        "view" => match subcommand_matches.matches.args.get("trace") {
-            Some(ArgData {
-                value: Value::String(trace_file),
-                ..
-            }) => gui_setup(
-                app.handle().clone(),
-                Path::new("/local")
-                    .join(encode(trace_file).as_ref())
-                    .display()
-                    .to_string(),
-            ),
-            _ => Err(Box::from("Invalid trace file argument")),
-        },
+        "run" => run::run_pdl_program(
+            subcommand_args
+                .get("source")
+                .and_then(|a| a.value.as_str())
+                .expect("valid positional source arg"),
+            subcommand_args.get("trace").and_then(|a| a.value.as_str()),
+            subcommand_args.get("data").and_then(|a| a.value.as_str()),
+            subcommand_args.get("stream").and_then(|a| a.value.as_str()),
+        )
+        .and_then(|()| Ok(true)),
+        "view" => gui_setup(
+            app.handle().clone(),
+            subcommand_args
+                .get("trace")
+                .and_then(|a| {
+                    Some(
+                        Path::new("#/local")
+                            .join(encode(&a.value.as_str().expect("trace arg is string")).as_ref())
+                            .display()
+                            .to_string(),
+                    )
+                })
+                .expect("valid positional trace arg"),
+        )
+        .and_then(|()| Ok(false)),
         _ => Err(Box::from("Unsupported command")),
     }
 }
