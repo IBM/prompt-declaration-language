@@ -2,9 +2,9 @@ use ::std::path::Path;
 use duct::cmd;
 use futures::executor::block_on;
 
-use crate::interpreter::pip::pip_install_if_needed;
-use crate::interpreter::pull::pull_if_needed;
-use crate::interpreter::requirements::PDL_INTERPRETER;
+use crate::pdl::pip::pip_install_if_needed;
+use crate::pdl::pull::pull_if_needed;
+use crate::pdl::requirements::PDL_INTERPRETER;
 
 #[cfg(desktop)]
 pub fn run_pdl_program(

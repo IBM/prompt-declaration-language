@@ -3,12 +3,12 @@ use ::std::path::Path;
 use tauri_plugin_cli::CliExt;
 use urlencoding::encode;
 
-use crate::cli::run;
 use crate::compile;
-use crate::gui::setup as gui_setup;
+use crate::gui::new_window;
+use crate::pdl::run::run_pdl_program;
 
 #[cfg(desktop)]
-pub fn cli(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
+pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
     app.handle().plugin(tauri_plugin_cli::init())?;
 
     // `matches` here is a Struct with { args, subcommand }.
@@ -49,7 +49,7 @@ pub fn cli(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
                 _ => Err(Box::from("Unsupported compile command")),
             }
         }
-        "run" => run::run_pdl_program(
+        "run" => run_pdl_program(
             subcommand_args
                 .get("source")
                 .and_then(|a| a.value.as_str())
@@ -59,19 +59,14 @@ pub fn cli(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
             subcommand_args.get("stream").and_then(|a| a.value.as_str()),
         )
         .and_then(|()| Ok(true)),
-        "view" => gui_setup(
+        "view" => new_window(
             app.handle().clone(),
-            subcommand_args
-                .get("trace")
-                .and_then(|a| {
-                    Some(
-                        Path::new("#/local")
-                            .join(encode(&a.value.as_str().expect("trace arg is string")).as_ref())
-                            .display()
-                            .to_string(),
-                    )
-                })
-                .expect("valid positional trace arg"),
+            subcommand_args.get("trace").and_then(|a| {
+                Some(
+                    Path::new("#/local")
+                        .join(encode(&a.value.as_str().expect("trace arg is string")).as_ref()),
+                )
+            }),
         )
         .and_then(|()| Ok(false)),
         _ => Err(Box::from("Unsupported command")),

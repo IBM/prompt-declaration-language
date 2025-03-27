@@ -11,9 +11,9 @@ use serde::Deserialize;
 use serde_json::{from_reader, json, to_string, Value};
 use tempfile::Builder;
 
-use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
-use crate::interpreter::pip::pip_install_if_needed;
-use crate::interpreter::requirements::BEEAI_FRAMEWORK;
+use crate::pdl::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
+use crate::pdl::pip::pip_install_if_needed;
+use crate::pdl::requirements::BEEAI_FRAMEWORK;
 
 macro_rules! zip {
     ($x: expr) => ($x);
