@@ -4,4 +4,3 @@ pub mod pip;
 pub mod pull;
 pub mod requirements;
 pub mod run;
-pub mod shasum;
