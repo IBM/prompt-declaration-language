@@ -122,28 +122,9 @@
         border-color: transparent;
         border-left-color: var(--pdl-bb-color);
       }
-      /*      &:hover{
-        background-color: #e9f7df;
-        
-        &:before{
-          border-color:#e9f7df;
-          border-left-color:transparent;
-         }
-        &:after{
-          border-left-color:#e9f7df;
-        }
+      &:hover {
+        filter: brightness(1.0875);
       }
-      &:active{
-        background-color: #afdc8f;
-        
-        &:before{
-          border-color:#afdc8f;
-          border-left-color:transparent;
-         }
-        &:after{
-          border-left-color:#afdc8f;
-        }
-      }*/
     }
   }
 }

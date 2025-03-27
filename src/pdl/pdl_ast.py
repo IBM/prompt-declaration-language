@@ -85,12 +85,13 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         arbitrary_types_allowed=True,
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
-    expr: LocalizedExpressionT
+    pdl__expr: Any
+    pdl__result: Optional[LocalizedExpressionT] = None
     pdl__location: Optional[PdlLocationType] = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
-ExpressionType: TypeAlias = ExpressionTypeT | str | LocalizedExpression[ExpressionTypeT]
+ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 
 
 class Pattern(BaseModel):
@@ -195,6 +196,17 @@ class PdlTiming(BaseModel):
     """
     timezone: Optional[str] = ""
     """Timezone of start_nanos and end_nanos.
+    """
+
+
+class PdlUsage(BaseModel):
+    """Internal data structure to record token consumption usage information."""
+
+    completion_tokens: Optional[int] = 0
+    """Completion tokens consumed
+    """
+    prompt_tokens: Optional[int] = 0
+    """Prompt tokens consumed
     """
 
 
@@ -389,15 +401,19 @@ class ModelBlock(LeafBlock):
     model: ExpressionType
     """Model to use.
     """
-    input: Optional["BlockType"] = None
+    input: "BlockType" = "${ pdl_context }"
     """Messages to send to the model.
     """
     modelResponse: Optional[str] = None
     """Variable where to store the raw response of the model.
     """
+    sampling: bool = True
     # Field for internal use
     pdl__trace: Optional["BlockType"] = None
-    sampling: bool = True
+    pdl__usage: Optional[PdlUsage] = None
+    """Tokens consumed during model call
+    """
+    pdl__model_input: Optional[ModelInput] = None
 
 
 class LitellmModelBlock(ModelBlock):
@@ -443,22 +459,24 @@ class GraniteioModelBlock(ModelBlock):
     """
 
 
-class CodeBlock(LeafBlock):
+class BaseCodeBlock(LeafBlock):
+    kind: Literal[BlockKind.CODE] = BlockKind.CODE
+
+
+class CodeBlock(BaseCodeBlock):
     """
     Execute a piece of code.
 
     Example:
     ```PDL
-    - def: N
-      lang: python
-      code: |
+    lang: python
+    code: |
         import random
         # (In PDL, set `result` to the output you wish for your code block.)
         result = random.randint(1, 20)
     ```
     """
 
-    kind: Literal[BlockKind.CODE] = BlockKind.CODE
     lang: Annotated[
         Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
     ]
@@ -466,6 +484,25 @@ class CodeBlock(LeafBlock):
     """
     code: "BlockType"
     """Code to execute.
+    """
+
+
+class ArgsBlock(BaseCodeBlock):
+    """
+    Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.
+
+    Example:
+    ```PDL
+    args:
+    - /bin/sh
+    - "-c"
+    - "if [[ $x = 1 ]]; then echo y; else echo n; fi"
+    ```
+    """
+
+    lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
+    args: list[ExpressionType[str]]
+    """The argument vector to spawn.
     """
 
 
@@ -557,6 +594,10 @@ class MessageBlock(StructuredBlock):
     """  # pyright: ignore
     content: "BlockType"
     """Content of the message."""
+    name: Optional[ExpressionType[str]] = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: Optional[ExpressionType[str]] = None
+    """The id of the tool invocation for which this message is the tool response."""
 
 
 class IfBlock(StructuredBlock):
@@ -565,11 +606,12 @@ class IfBlock(StructuredBlock):
 
     Example:
     ```PDL
-    - if: ${ eval == 'no' }
-      then:
-        text:
-        - read:
-          message: "Why not?\\n"
+    defs:
+      answer:
+        read:
+        message: "Enter a number? "
+    if: ${ (answer | int) == 42 }
+    then: You won!
     ```
     """
 
@@ -607,7 +649,25 @@ class MatchCase(BaseModel):
 
 
 class MatchBlock(StructuredBlock):
-    """Match control structure."""
+    """Match control structure.
+
+    Example:
+    ```PDL
+    defs:
+      answer:
+        read:
+        message: "Enter a number? "
+    match: ${ (answer | int) }
+    with:
+    - case: 42
+      then: You won!
+    - case:
+        any:
+        def: x
+      if: ${ x > 42 }
+      then: Too high
+    - then: Too low
+    """
 
     kind: Literal[BlockKind.MATCH] = BlockKind.MATCH
     match_: ExpressionType[Any] = Field(alias="match")
@@ -700,7 +760,20 @@ class RepeatBlock(StructuredBlock):
 
 
 class ReadBlock(LeafBlock):
-    """Read from a file or standard input."""
+    """Read from a file or standard input.
+
+    Example. Read from the standard input with a prompt starting with `> `.
+    ```PDL
+    read:
+    message: "> "
+    ```
+
+    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+    ```PDL
+    read: ./data.yaml
+    parser: yaml
+    ```
+    """
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
     read: ExpressionType[str] | None
@@ -767,6 +840,7 @@ AdvancedBlockType: TypeAlias = (
     | LitellmModelBlock
     | GraniteioModelBlock
     | CodeBlock
+    | ArgsBlock
     | GetBlock
     | DataBlock
     | IfBlock

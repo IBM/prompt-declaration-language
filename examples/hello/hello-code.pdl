@@ -1,9 +1,0 @@
-description: Hello world showing call out to python code
-text:
-- 'Hello, '
-- lang: python
-  code: |
-    import random
-    import string
-    result = random.choice(string.ascii_lowercase)
-- '!'

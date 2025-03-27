@@ -1,0 +1,24 @@
+description: Chatbot
+text:
+# Allow the user to type any question, implicitly adding the question to the context.
+- read:
+  message: "What is your query?\n"
+- repeat:
+    text:
+    # Send context to Granite model hosted at replicate.com
+    - model: ollama_chat/granite3.2:2b
+    # Allow the user to type 'yes', 'no', or anything else, storing
+    # the input into a variable named `eval`.  The input is also implicitly
+    # added to the context.
+    - read:
+      def: eval
+      message: "\nIs this a good answer[yes/no]?\n"
+    - "\n"
+    # If the user only typed "no", prompt the user for input to add to the context.
+    - if: ${ eval == 'no' }
+      then:
+        text:
+        - read:
+          message: "Why not?\n"
+  # If the user typed only "yes", finish the `repeat` and end the program
+  until: ${ eval == 'yes'}

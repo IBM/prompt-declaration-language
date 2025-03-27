@@ -1,0 +1,12 @@
+# Call with pdl --data '"something": "ABC"' free_variables.pdl 
+description: Hello world with data
+text:
+- def: stutter
+  function: 
+  return:
+    ${ something }
+- "Hello World!\n"
+- call: ${ stutter }
+- "\n"
+
+

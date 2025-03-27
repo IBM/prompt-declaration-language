@@ -13,26 +13,27 @@ from .pdl_ast import (
 )
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_llms import _LOOP
+from .pdl_utils import value_of_expr
 
 
 class GraniteioModel:
     @staticmethod
     def processor_of_block(block: GraniteioModelBlock):
+        model = value_of_expr(block.model)
+        backend = value_of_expr(block.backend)
+        assert isinstance(model, str), f"The model should be a string: {model}"
         assert isinstance(
-            block.model, str
-        ), f"The model should be a string: {block.model}"
-        assert isinstance(
-            block.backend, (dict, str)
-        ), f"The backend should be a string or a dictionnary: {block.backend}"
-        match block.backend:
+            backend, (dict, str)
+        ), f"The backend should be a string or a dictionnary: {backend}"
+        match backend:
             case {"transformers": device}:
-                assert isinstance(block.backend, dict)
+                assert isinstance(backend, dict)
                 from granite_io import make_backend
 
                 backend = make_backend(
                     "transformers",
                     {
-                        "model_name": block.model,
+                        "model_name": model,
                         "device": device,
                     },
                 )
@@ -42,14 +43,15 @@ class GraniteioModel:
                 backend = make_backend(
                     backend_name,
                     {
-                        "model_name": block.model,
+                        "model_name": model,
                     },
                 )
             case _:
-                assert False, f"Unexpected backend: {block.backend}"
-        processor_name = block.processor
-        if processor_name is None:
-            processor_name = block.model
+                assert False, f"Unexpected backend: {backend}"
+        if block.processor is None:
+            processor_name = model
+        else:
+            processor_name = value_of_expr(block.processor)
         assert isinstance(
             processor_name, str
         ), f"The processor should be a string: {processor_name}"
@@ -73,10 +75,14 @@ class GraniteioModel:
         block: GraniteioModelBlock,
         messages: ModelInput,
     ) -> tuple[dict[str, Any], Any]:
+        if block.parameters is None:
+            parameters = None
+        else:
+            parameters = value_of_expr(block.parameters)
         try:
-            assert block.parameters is None or isinstance(block.parameters, dict)
+            assert parameters is None or isinstance(parameters, dict)
             io_processor = GraniteioModel.processor_of_block(block)
-            inputs = GraniteioModel.build_message(messages, block.parameters)
+            inputs = GraniteioModel.build_message(messages, parameters)
             result = io_processor.create_chat_completion(inputs)  # pyright: ignore
             try:  # TODO: update when new version of granite-io is released
                 message = result.next_message.model_dump()
@@ -88,7 +94,9 @@ class GraniteioModel:
                 raw_result,
             )
         except Exception as exc:
-            message = f"Error during '{block.model}' model call: {repr(exc)}"
+            message = (
+                f"Error during '{value_of_expr(block.model)}' model call: {repr(exc)}"
+            )
             loc = block.pdl__location
             raise PDLRuntimeError(
                 message,

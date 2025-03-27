@@ -1,12 +1,9 @@
 import { lazy, Suspense } from "react"
-
 import { stringify } from "yaml"
-import { match, P } from "ts-pattern"
 
 import { tryJsonPrettyPrint } from "../../helpers"
 import { type PdlBlock } from "../../pdl_ast"
-import { map_block_children } from "../../pdl_ast_utils"
-
+import { block_code_cleanup } from "../../pdl_code_cleanup"
 const PreviewLight = lazy(() => import("./PreviewLight"))
 
 export type SupportedLanguage =
@@ -49,39 +46,4 @@ export default function Code({
       />
     </Suspense>
   )
-}
-
-function block_code_cleanup(data: string | PdlBlock): string | PdlBlock {
-  if (
-    data === null ||
-    typeof data === "boolean" ||
-    typeof data === "number" ||
-    typeof data === "string"
-  ) {
-    return data
-  }
-  // remove pdl__result
-  const new_data = { ...data, pdl__result: undefined, pdl__is_leaf: undefined }
-  // remove trace
-  match(new_data).with({ pdl__trace: P._ }, (data) => {
-    delete data.pdl__trace
-  })
-  // remove other trace artifacts
-  delete new_data.pdl__id
-  delete new_data.pdl__timing
-  // remove contribute: ["result", context]
-  if (
-    new_data?.contribute?.includes("result") &&
-    new_data?.contribute?.includes("context")
-  ) {
-    delete new_data.contribute
-  }
-  // remove empty defs list
-  if (Object.keys(data?.defs ?? {}).length === 0) {
-    delete new_data.defs
-  }
-  // remove location info
-  delete new_data.pdl__location
-  // recursive cleanup
-  return map_block_children(block_code_cleanup, new_data)
 }

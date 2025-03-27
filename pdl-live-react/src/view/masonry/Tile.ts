@@ -9,10 +9,14 @@ type Tile = {
   timezone?: string
 
   lang?: import("../code/Code").SupportedLanguage
-  content: string
+  content: string | number | boolean
 
   footer1Key?: string
   footer1Value?: string | number | boolean
+  footer2Key?: string
+  footer2Value?: string | number | boolean
+  footer3Key?: string
+  footer3Value?: string | number | boolean
   stability?: import("./stability").StabilityMetric[]
 
   block?: import("../../helpers").NonScalarPdlBlock

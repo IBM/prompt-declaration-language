@@ -19,8 +19,6 @@ import {
 
 const RunTerminal = lazy(() => import("../term/RunTerminal"))
 
-//import Topology from "../memory/Topology"
-//import extractVariables from "../memory/model"
 import Masonry from "./Masonry"
 import Timeline from "../timeline/TimelineFromModel"
 import MasonryTileWrapper from "./MasonryTileWrapper"
@@ -86,6 +84,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
   const [modalContent, setModalContent] = useState<null | {
     header: string
     cmd: string
+    cwd: string
     args?: string[]
     onExit?: (exitCode: number) => void
     cancelCondVar?: ConditionVariable
@@ -126,12 +125,10 @@ export default function MasonryCombo({ value, setValue }: Props) {
         return
       }
 
-      const [cmd, input, output] = (await invoke("replay_prep", {
-        trace: JSON.stringify(runThisBlock, (k, v) =>
-          /^pdl__/.test(k) ? undefined : v,
-        ),
+      const [cmd, cwd, input, output] = (await invoke("replay_prep", {
+        trace: JSON.stringify(runThisBlock),
         name: block.description?.slice(0, 30).replace(/\s/g, "-") ?? "trace",
-      })) as [string, string, string]
+      })) as [string, string, string, string]
       console.error(`Replaying with cmd=${cmd} input=${input} output=${output}`)
 
       // We need to pass tothe re-execution the original input context
@@ -143,6 +140,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
         setModalContent({
           header: "Running Program",
           cmd,
+          cwd,
           args: [
             "run",
             ...(async ? ["--stream", "none"] : []),
@@ -198,10 +196,6 @@ export default function MasonryCombo({ value, setValue }: Props) {
     [block],
   )
 
-  // This is the <Topology/> model. We compute this here, so we can
-  // nicely not render anything if we have an empty topology model.
-  // const { nodes, edges } = useMemo(() => extractVariables(block), [block])
-
   if (!block) {
     return "Invalid trace content"
   }
@@ -238,13 +232,6 @@ export default function MasonryCombo({ value, setValue }: Props) {
           <MasonryTileWrapper sml={sml} variant="plain">
             <Timeline model={base} numbering={numbering} />
           </MasonryTileWrapper>
-          {/*(as !== "list" || sml !== "s") && nodes.length > 0 && (
-            <Topology
-              nodes={nodes}
-              edges={edges}
-              numbering={numbering}
-              sml={sml}
-            />)*/}
         </Masonry>
       </PageSection>
 
@@ -265,6 +252,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           <Suspense fallback={<div />}>
             <RunTerminal
               cmd={modalContent?.cmd ?? ""}
+              cwd={modalContent?.cwd ?? ""}
               args={modalContent?.args}
               cancel={modalContent?.cancelCondVar}
               onExit={onExit}

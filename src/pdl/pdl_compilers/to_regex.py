@@ -271,7 +271,7 @@ def compile_block(
                         if isinstance(block.parameters, LitellmParameters):
                             parameters = block.parameters.model_dump()
                         elif isinstance(block.parameters, LocalizedExpression):
-                            parameters = block.parameters.expr
+                            parameters = block.parameters.pdl__expr
                         elif isinstance(block.parameters, str):
                             parameters = {}
                         else:

@@ -1,0 +1,90 @@
+# Granite.runtime Intrinsics Demo with PDL
+
+# Provide document(s) to Granite3-rag model with hallucination_tag
+# Granite3-rag model: Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on ollama
+
+# The model responds to a query providing a hallucination score
+
+text:
+- role: system
+  contribute: [context]
+  text:
+    data:
+      instruction: |
+        Respond to the user's latest question based solely on the information provided
+        in the documents. Ensure that your response is strictly aligned with the facts
+        in the provided documents. If the information needed to answer the question is
+        not available in the documents, inform the user that the question cannot be
+        answered based on the available data. Make sure that your response follows
+        the attributes mentioned in the 'meta' field.
+      documents:
+      - doc_id: 1
+        text: |
+          Audrey Faith McGraw (born September 21, 1967) is an American singer
+          and record producer. She is one of the most successful country artists
+          of all time, having sold more than 40 million albums worldwide. Hill is
+          married to American singer Tim McGraw, with whom she has recorded several duets.
+          Hill's first two albums, Take Me as I Am (1993) and It Matters to Me (1995),
+          were major successes and placed a combined three number ones on Billboard's
+          country charts. Hill's debut album was Take Me as I Am (1993); sales were strong,
+          buoyed by the chart success of "Wild One". Hill became the first female country
+          singer in 30 years to hold Billboard's number one position for four consecutive
+          weeks when "Wild One" managed the feat in 1994. Her version of "Piece of My Heart",
+          also went to the top of the country charts in 1994. The album sold a total of
+          3 million copies. Other singles from the album include "Take Me as I Am".  The recording
+          of Faith's second album was delayed by surgery to repair a ruptured blood vessel on
+          her vocal cords. It Matters to Me finally appeared in 1995 and was another
+          success, with the title track becoming her third number-one country single.
+          Several other top 10 singles followed, and more than 3 million copies of the
+          album were sold. The fifth single from the album, "I Can't Do That Anymore",
+          was written by country music artist Alan Jackson. Other singles from the album
+          include "You Can't Lose Me", "Someone Else's Dream", and "Let's Go to Vegas".
+          During this period, Hill appeared on the acclaimed PBS music program Austin City Limits.
+          In spring 1996, Hill began the Spontaneous Combustion Tour with country singer Tim McGraw.
+          At that time, Hill had recently become engaged to her former producer, Scott Hendricks,
+          and McGraw had recently broken an engagement. McGraw and Hill were quickly
+          attracted to each other and began an affair. After discovering that Hill was
+          pregnant with their first child, the couple married on October 6, 1996. The
+          couple have three daughters together: Gracie Katherine (born 1997), Maggie Elizabeth (born 1998)
+          and Audrey Caroline (born 2001). Since their marriage, Hill and McGraw have endeavored
+          never to be apart for more than three consecutive days.  After the release of It Matters to Me,
+          Hill took a three-year break from recording to give herself a rest from four years of touring
+          and to begin a family with McGraw. During her break, she joined forces with her husband
+          for their first duet, "It's Your Love". The song stayed at number one for six weeks,
+          and won awards from both the Academy of Country Music and the Country Music Association.
+          Hill has remarked that sometimes when they perform the song together,
+          "it [doesn't] feel like anybody else was really watching."
+        meta:
+          hallucination_tags: true
+          citations: true
+
+# User Query
+# (This query produces a hallucination "low" with citation)
+- Did Faith Hill take a break from recording after releasing her second album, It Matters to Me?
+# (This query produces a hallucination "unanswerable" with no citation)
+# - Is the Academy of Country Music in Brooklyn, New York?
+# (This query produces a hallucination "high" with a citation)
+# - Where was Faith Hill born?
+
+# Base model granite3-dense:8b setup with Granite RAG LoRA (Low-Rank Adaption) on ollama.
+- defs:
+    # Store the results of making the LLM invocation in a JSON variable named 'out'
+    out:
+      model: ollama/granite3-rag:8b
+      parameters:
+        temperature: 0
+      parser: json
+- |
+
+
+  The answer is: ${ out[0].sentence }
+- match: ${out[0].meta.hallucination_level}
+  with:
+  - case: "high"
+    then: Totally hallucinating, sorry!
+  - case: "low"
+    if: ${ out[0].meta.citation }
+    then: |
+      I am not hallucinating, promise!
+      The citation is: ${ out[0].meta.citation.snippet }
+  - then: Not sure if I am hallucinating...
