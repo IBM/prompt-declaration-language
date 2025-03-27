@@ -20,6 +20,8 @@ text:
   model: replicate/ibm-granite/granite-3.1-8b-instruct
   parser: json
   spec: [{ name: str, arguments: { expr: str }}]
+  parameters:
+    drop_params: true
 - "\n"
 - if: ${ actions[0].name == "calc" }
   then:

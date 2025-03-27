@@ -16,7 +16,7 @@ from pdl.pdl_parser import PDLParseError
 # to the expected results in tests/results/examples
 
 UPDATE_RESULTS = False
-RESULTS_VERSION = 15
+RESULTS_VERSION = 16
 
 TO_SKIP = {
     str(name)
@@ -26,48 +26,13 @@ TO_SKIP = {
         pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
         pathlib.Path("examples") / "tutorial" / "programs" / "tfidf_rag.pdl",
         pathlib.Path("examples") / "tutorial" / "programs" / "weather.pdl",
-        pathlib.Path("examples")
-        / "tutorial"
-        / "structured-decoding.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "8-tools.pdl",  # TODO: check why
+        pathlib.Path("examples") / "react" / "react_call.pdl",  # TODO: check why
         pathlib.Path("examples") / "demo" / "10-sdg.pdl",  # TODO: check why
         pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tools" / "calc.pdl",  # TODO: check why
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
         pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
-        pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("examples") / "react" / "demo.pdl",  # TODO: check why
-        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
-        pathlib.Path("examples") / "demo" / "9-react.pdl",  # TODO: check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "calling_llm_with_input_messages.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "muting_block_output.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "calling_code.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "calling_llm.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "variable_def_use.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "model_chaining.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "function_definition.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "calling_llm_with_input.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "defs.pdl",  # TODO check why
-        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
-        pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "intrinsics"
-        / "demo-hallucination.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "function-empty-context.pdl",  # TODO CREATE RESULTS FILE
-        pathlib.Path("examples") / "demo" / "7-chatbot-roles.pdl",  # TODO check why
+        pathlib.Path("examples") / "fibonacci" / "fib.pdl",
         pathlib.Path("examples")
         / "rag"
         / "pdf_index.pdl",  # TODO: check what the expected output is
@@ -94,18 +59,16 @@ TO_SKIP = {
 NOT_DETERMINISTIC = {
     str(name)
     for name in [
-        pathlib.Path("examples") / "weather" / "weather.pdl",
         pathlib.Path("examples") / "react" / "demo.pdl",
+        pathlib.Path("examples") / "react" / "react_call.pdl",
+        pathlib.Path("examples") / "react" / "demo.pdl",
+        pathlib.Path("examples") / "demo" / "9-react.pdl",
         pathlib.Path("examples") / "code" / "code.pdl",
         pathlib.Path("examples") / "code" / "code-eval.pdl",
         pathlib.Path("examples") / "code" / "code-json.pdl",
-        pathlib.Path("examples") / "demo" / "1-hello.pdl",
-        pathlib.Path("examples") / "demo" / "2-model-chaining.pdl",
-        pathlib.Path("examples") / "demo" / "3-def-use.pdl",
         pathlib.Path("examples") / "demo" / "5-code-eval.pdl",
         pathlib.Path("examples") / "demo" / "6-code-json.pdl",
         pathlib.Path("examples") / "demo" / "9-react.pdl",
-        pathlib.Path("examples") / "sdk" / "hello.pdl",
     ]
 }
 
@@ -156,6 +119,7 @@ EXPECTED_PARSE_ERROR = [
 ]
 
 EXPECTED_RUNTIME_ERROR = [
+    pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
     pathlib.Path("examples") / "tutorial" / "type_list.pdl",
     pathlib.Path("examples") / "tutorial" / "type_checking.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello12.pdl",
