@@ -1078,8 +1078,7 @@ def process_contribute_old(
     block: BlockTypeTVarProcessContributeOld, scope: ScopeType, loc: PdlLocationType
 ) -> tuple[Any, BlockTypeTVarProcessContributeOld]:
     result: list[ContributeElement]
-    value_trace: LocalizedExpression[
-        list[ContributeElement]]
+    value_trace: LocalizedExpression[list[ContributeElement]]
     value = get_contribute_value(block.contribute)
     if value is None:
         return None, block
@@ -2020,22 +2019,35 @@ def process_aggregator(
         case FileAggregatorConfig():
             try:
                 cfg = block.aggregator
+                file: str
+                file_trace: ExpressionType[str]
                 file, file_trace = process_expr(scope, cfg.file, loc)
+                mode: str
+                mode_trace: ExpressionType[str]
                 mode, mode_trace = process_expr(scope, cfg.mode, loc)
+                encoding: Optional[str]
+                encoding_trace: ExpressionType[Optional[str]]
                 encoding, encoding_trace = process_expr(scope, cfg.encoding, loc)
+                prefix: str
+                prefix_trace: ExpressionType[str]
                 prefix, prefix_trace = process_expr(scope, cfg.prefix, loc)
+                suffix: str
+                suffix_trace: ExpressionType[str]
                 suffix, suffix_trace = process_expr(scope, cfg.suffix, loc)
+                flush: bool
+                flush_trace: ExpressionType[bool]
                 flush, flush_trace = process_expr(scope, cfg.flush, loc)
                 cfg = block.aggregator.model_copy(
                     update={
-                        "file": file,
-                        "mode": mode,
-                        "encoding": encoding,
-                        "prefix": prefix,
-                        "suffix": suffix,
-                        "flush": flush,
+                        "file": file_trace,
+                        "mode": mode_trace,
+                        "encoding": encoding_trace,
+                        "prefix": prefix_trace,
+                        "suffix": suffix_trace,
+                        "flush": flush_trace,
                     }
                 )
+                trace = block.model_copy(update={"aggregator": cfg})
             except PDLRuntimeExpressionError as exc:
                 raise PDLRuntimeError(
                     exc.message,
@@ -2049,7 +2061,7 @@ def process_aggregator(
         case _:
             assert False, "Unexpected aggregator"
     background: LazyMessages = PdlList([])
-    trace = block.model_copy(update={})
+    trace = block.model_copy()
     return PdlConst(aggregator), background, scope, trace
 
 
