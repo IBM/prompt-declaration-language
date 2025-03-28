@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 import { Button, Flex } from "@patternfly/react-core"
 
 import ExternalLinkSquareAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-square-alt-icon"
@@ -28,6 +29,9 @@ export default function Links() {
         >
           GitHub
         </a>
+      </Button>
+      <Button variant="link" isInline>
+        <Link to="/run">Run</Link>
       </Button>
     </Flex>
   )

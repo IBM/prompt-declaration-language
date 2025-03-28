@@ -45,7 +45,7 @@ jobs:
           for i in ./demos/beeai/*.py
           do pdl compile beeai $i -g -o /tmp/z.json && jq .description /tmp/z.json
           done
-          
+
       - name: Test pdl run against production build
         env:
           DISPLAY: :1

@@ -6,6 +6,7 @@ import MyTraces from "../page/MyTracesPage"
 import About from "../page/About"
 import Local from "../page/Local"
 import MyTrace from "../page/MyTrace"
+import Run from "../page/Run"
 import Welcome from "../page/welcome/Welcome"
 import Uploader from "../page/Uploader"
 import ErrorBoundary from "../page/ErrorBoundary"
@@ -25,6 +26,7 @@ export default function PdlRoutes() {
         <Route path="upload" element={<Uploader />} />
         <Route path="my" element={<MyTraces />} />
         <Route path="demos" element={<Demos />} />
+        <Route path="run" element={<Run />} />
 
         {demos.map((demo, idx) => (
           <Route
