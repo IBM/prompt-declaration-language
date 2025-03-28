@@ -1,0 +1,9 @@
+defs:
+  obj:
+    object:
+      a:
+        text:
+          - foo
+text:
+  - ${ obj.a }
+    

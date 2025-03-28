@@ -1,0 +1,5 @@
+defs:
+  x: 5
+if: ${x!=5}
+then: bug
+else: good

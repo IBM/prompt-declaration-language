@@ -1,0 +1,6 @@
+lastOf:
+  - text:
+      - '{"key": "value"}'
+    parser: json
+    def: foo
+  - ${ foo.key }

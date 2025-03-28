@@ -1,0 +1,12 @@
+defs:
+  foo:
+    function:
+      x: int
+    return:
+      description: nullary function
+      text:
+        - hello world ${x+1} bye
+text:
+  - call: ${ foo }
+    args:
+      x: 3
