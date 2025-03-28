@@ -3,6 +3,7 @@ import json
 from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
 
 from .pdl_ast import (
+    ContributeElement,
     ContributeTarget,
     ContributeValue,
     ExpressionType,
@@ -79,8 +80,8 @@ def value_of_expr(expr: ExpressionType[ValueOfExprT]) -> ValueOfExprT:
     return v  # type: ignore
 
 
-def replace_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+def replace_contribute_value(  # TODO: remove
+    contribute: Sequence[ContributeElement],
     value: ContributeValue,
 ):
     ret = []
@@ -93,14 +94,14 @@ def replace_contribute_value(
     return ret
 
 
-def get_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None
+def get_contribute_value(  # TODO: remove
+    contribute: Sequence[ContributeElement] | None,
 ):
     if contribute is None:
         return None
     for item in contribute:
         if isinstance(item, dict) and isinstance(
-            item[ContributeTarget.CONTEXT], ContributeValue
+            item.get(ContributeTarget.CONTEXT), ContributeValue
         ):
             return item[ContributeTarget.CONTEXT].value
     return None
