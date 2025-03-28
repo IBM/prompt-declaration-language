@@ -14,7 +14,8 @@
     "tauri": "tauri",
     "test:quality": "concurrently -n 'lint,types,formatting' 'npm run lint' 'tsc --build --noEmit' \"prettier --check 'tests/**/*.ts'  'src/**/*.{ts,tsx,css}'\"",
     "test:ui": "playwright install --with-deps && playwright test",
-    "test:bee": "until [ -f ./src-tauri/target/debug/pdl ]; do sleep 1; done; for i in ./demos/beeai/*.py; do ./src-tauri/target/debug/pdl compile beeai $i -g --output - | jq; done", 
+    "test:bee": "until [ -f ./src-tauri/target/debug/pdl ]; do sleep 1; done; for i in ./demos/beeai/*.py; do ./src-tauri/target/debug/pdl compile beeai $i -g --output - | jq; done",
+    "test:interpreter": "cd src-tauri && cargo test",
     "types": "(cd .. && python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json) && json2ts ../src/pdl/pdl-schema.json src/pdl_ast.d.ts --unreachableDefinitions && npm run format",
     "test": "concurrently -n 'quality,playwright' 'npm run test:quality' 'npm run test:ui'",
     "pdl": "./src-tauri/target/debug/pdl",
@@ -22,6 +23,7 @@
     "start": "npm run tauri dev"
   },
   "dependencies": {
+    "@patternfly/react-code-editor": "^6.1.0",
     "@patternfly/react-core": "^6.1.0",
     "@tauri-apps/api": "^2.3.0",
     "@tauri-apps/plugin-cli": "^2.2.0",

@@ -1,0 +1,12 @@
+defs:
+  x:
+    text:
+      - xxxx
+  y:
+    data:
+      n: 3
+      x: ${x}
+      b: true
+lastOf:
+   - ${y.x~y.n~y.b}
+  

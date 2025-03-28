@@ -1,0 +1,9 @@
+for:
+  x:
+    - z: 4
+    - z: 5
+    - z: 6
+  y: ["a","b","c"]
+repeat:
+  text:
+    - "${ x.z ~ y }"

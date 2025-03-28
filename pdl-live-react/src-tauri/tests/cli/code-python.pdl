@@ -1,0 +1,2 @@
+lang: python
+code: 'print(''hi ho''); result = {"foo": 3}'
