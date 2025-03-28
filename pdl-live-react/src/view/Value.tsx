@@ -1,7 +1,7 @@
 import Code from "./code/Code"
 import Markdown from "./Markdown"
 
-type Props = { children: number | string | unknown }
+type Props = { children: boolean | number | string | unknown }
 
 function isJson(s: string) {
   try {
@@ -14,7 +14,7 @@ function isJson(s: string) {
 
 export default function Value({ children: s }: Props) {
   return typeof s === "number" ? (
-    s
+    <div className="pdl-markdown">{s}</div>
   ) : typeof s === "string" ? (
     isJson(s) ? (
       <Code block={s} language="json" />

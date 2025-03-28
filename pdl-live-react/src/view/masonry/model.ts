@@ -7,9 +7,13 @@ import {
   hasMessage,
   hasParser,
   hasScalarResult,
+  hasModelUsage,
+  hasResult,
   hasTimingInformation,
   capitalizeAndUnSnakeCase,
   extractStructuredModelResponse,
+  completionRate,
+  ptcRatio,
   type NonScalarPdlBlock,
 } from "../../helpers"
 
@@ -34,10 +38,16 @@ import { hasStabilityMetrics, type StabilityMetric } from "./stability"
 } */
 
 /** Remove objects from the Masonry model that aren't helpful to display */
-function removeFluff({ kind }: { kind?: string }) {
+function removeFluff({ kind, block }: Tile) {
   // re: empty, these house only defs, which are spliced in below via
   // `withDefs()`
-  return kind !== "if" && kind !== "empty"
+  return (
+    kind !== "if" &&
+    kind !== "empty" &&
+    (!hasResult(block) ||
+      typeof block.pdl__result !== "string" ||
+      block.pdl__result.trim().length > 0)
+  )
 }
 
 export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
@@ -53,7 +63,11 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               resultForDisplay:
                 typeof block.pdl__result === "object"
                   ? stringify(block.pdl__result)
-                  : String(block.pdl__result),
+                  : typeof block.pdl__result === "string" ||
+                      typeof block.pdl__result === "number" ||
+                      typeof block.pdl__result === "boolean"
+                    ? block.pdl__result
+                    : String(block.pdl__result),
               meta: undefined,
               lang:
                 typeof block.pdl__result === "object"
@@ -75,7 +89,10 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
             kind: block.kind,
             lang,
             message: hasInput(block)
-              ? block.input
+              ? String(
+                  block.pdl__model_input[block.pdl__model_input.length - 1]
+                    .content,
+                )
               : hasMessage(block)
                 ? block.message
                 : undefined,
@@ -83,6 +100,17 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
               ? capitalizeAndUnSnakeCase(String(meta[0][0]))
               : undefined,
             footer1Value: meta?.[0]?.[1] ? String(meta[0][1]) : undefined,
+
+            footer2Key: hasModelUsage(block) ? "Completion Rate" : undefined,
+            footer2Value: hasModelUsage(block)
+              ? completionRate(block).toFixed(0) + " tokens/sec"
+              : undefined,
+            footer3Key: hasModelUsage(block)
+              ? "Prompt/Completion Ratio"
+              : undefined,
+            footer3Value: hasModelUsage(block)
+              ? (100 * ptcRatio(block)).toFixed(2) + "%"
+              : undefined,
 
             stability,
             //footer2Key: stability.map((m) => `T=${m.temperature} Stability`),
@@ -137,7 +165,7 @@ function withDefs(block: NonScalarPdlBlock, tiles: Tile[]) {
                     ? "json"
                     : (v.parser as Tile["lang"])
                   : undefined,
-                content: hasScalarResult(v) ? String(v.pdl__result) : "",
+                content: hasScalarResult(v) ? v.pdl__result : "",
               },
         )),
     ...tiles,

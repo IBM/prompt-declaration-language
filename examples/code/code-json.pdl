@@ -5,10 +5,9 @@ defs:
     parser: yaml
   TRUTH:
     read: ./ground_truth.txt
-text:
+lastOf:
 - model: ollama_chat/granite3.2:2b
   def: EXPLANATION
-  contribute: []
   input:
      |
       Here is some info about the location of the function in the repo.
@@ -21,10 +20,7 @@ text:
       Explain the following code:
       ```
       ${ CODE.source_code }```
-  parameters:
-    temperature: 0
 - def: EVAL
-  contribute: []
   lang: python
   code:
     |
@@ -35,7 +31,6 @@ text:
     truth = """
     ${ TRUTH }
     """
-    # (In PDL, set `result` to the output you wish for your code block.)
     result = textdistance.levenshtein.normalized_similarity(expl, truth)
 - data:
     input: ${ CODE }

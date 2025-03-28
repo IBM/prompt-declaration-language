@@ -106,6 +106,8 @@ We can pass initial data to the interpreter to populate variables used in a PDL 
 pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
+For an example, see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/free_variables.pdl).
+
 This can also be done by passing a JSON or YAML file:
 
 ```

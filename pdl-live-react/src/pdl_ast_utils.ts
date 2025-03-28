@@ -1,10 +1,11 @@
 import { match, P } from "ts-pattern"
 
-import { PdlBlock } from "./pdl_ast"
-import { hasContextInformation } from "./helpers"
+import { Backend, PdlBlock, Processor } from "./pdl_ast"
+import { ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
-  f: (block: PdlBlock) => PdlBlock,
+  f_block: (block: PdlBlock) => PdlBlock,
+  f_expr: (expr: ExpressionT<unknown>) => ExpressionT<unknown>,
   block: PdlBlock,
 ): PdlBlock {
   if (
@@ -21,108 +22,171 @@ export function map_block_children(
   } else {
     const defs: { [k: string]: PdlBlock } = {}
     for (const x in block.defs) {
-      defs[x] = f(block.defs[x])
+      defs[x] = f_block(block.defs[x])
     }
     new_block = { ...block, defs: defs }
   }
+  if (new_block?.contribute !== undefined) {
+    const contribute = new_block.contribute?.map((contrib) =>
+      match(contrib)
+        .with({}, (c) =>
+          Object.fromEntries(
+            Object.entries(c).map(([k, v]) => [
+              k,
+              match(v)
+                .with({ value: P.array(P._) }, (v) => ({
+                  value: v.value.map(f_expr),
+                }))
+                .otherwise((v) => v),
+            ]),
+          ),
+        )
+        .otherwise((contrib) => contrib),
+    )
+    new_block = { ...new_block, contribute }
+  }
+  // @ts-expect-error: TODO
   new_block = match(new_block)
     // .with(P.string, s => s)
     .with({ kind: "empty" }, (block) => block)
     .with({ kind: "function" }, (block) => {
-      const returns = f(block.return)
-      return { ...block, return: returns }
+      const return_ = f_block(block.return)
+      return { ...block, return: return_ }
     })
-    .with({ kind: "call" }, (block) => block)
+    .with({ kind: "call" }, (block) => {
+      const call = f_expr(block.call)
+      const args = f_expr(block.args)
+      return { ...block, call, args }
+    })
+    .with(
+      {
+        kind: "model",
+        platform: "granite-io",
+        backend: P.nonNullable,
+        processor: P._,
+      },
+      (block) => {
+        const model = f_expr(block.model)
+        const input = block.input ? f_block(block.input) : undefined
+        // @ts-expect-error: f_expr does not preserve the type of the expression
+        const parameters: Parameters = block.parameters
+          ? f_expr(block.parameters)
+          : undefined
+        // @ts-expect-error: f_expr does not preserve the type of the expression
+        const backend: Backend = f_expr(block.backend)
+        // @ts-expect-error: f_expr does not preserve the type of the expression
+        const processor: Processor = block.processor
+          ? f_expr(block.processor)
+          : undefined
+        return {
+          ...block,
+          model,
+          input,
+          parameters,
+          backend,
+          processor,
+        }
+      },
+    )
     .with({ kind: "model" }, (block) => {
-      if (block.input) {
-        const input = f(block.input)
-        block = { ...block, input: input }
-      }
-      // Remove `defsite` from context:
+      const model = f_expr(block.model)
+      const input = block.input ? f_block(block.input) : undefined
+      const parameters = block.parameters ? f_expr(block.parameters) : undefined
       return {
         ...block,
-        context: !hasContextInformation(block)
-          ? undefined
-          : JSON.parse(
-              JSON.stringify(block.context, (k, v) =>
-                k === "defsite" ? undefined : v,
-              ),
-            ),
+        platform: "litellm",
+        model,
+        input,
+        parameters,
       }
     })
     .with({ kind: "code" }, (block) => {
-      const code = f(block.code)
-      return { ...block, code: code }
+      if (isArgs(block)) {
+        const args = block.args.map((arg) => f_expr(arg))
+        return { ...block, args }
+      }
+      return { ...block, code: f_block(block.code) }
     })
     .with({ kind: "get" }, (block) => block)
-    .with(
-      { kind: "data", data: P.union(P.number, P.boolean, P.string) },
-      ({ data }) => data, // { kind: "data", data: "hello" } -> "hello"
-    )
-    .with({ kind: "data" }, (block) => block)
+    .with({ kind: "data" }, (block) => {
+      const data = f_expr(block.data)
+      return { ...block, data }
+    })
     .with({ kind: "text" }, (block) => {
       let text
       if (block.text instanceof Array) {
-        text = block.text.map(f)
+        text = block.text.map(f_block)
       } else {
-        text = f(block.text)
+        text = f_block(block.text)
       }
       return { ...block, text: text }
     })
     .with({ kind: "lastOf" }, (block) => {
-      const lastOf = block.lastOf.map(f)
+      const lastOf = block.lastOf.map(f_block)
       return { ...block, lastOf: lastOf }
     })
     .with({ kind: "array" }, (block) => {
-      const array = block.array.map(f)
+      const array = block.array.map(f_block)
       return { ...block, array: array }
     })
     .with({ kind: "object" }, (block) => {
       let object
       if (block.object instanceof Array) {
-        object = block.object.map(f)
+        object = block.object.map(f_block)
       } else {
         object = Object.fromEntries(
-          Object.entries(block.object).map(([k, v]) => [k, f(v)]),
+          Object.entries(block.object).map(([k, v]) => [k, f_block(v)]),
         )
       }
       return { ...block, object: object }
     })
     .with({ kind: "message" }, (block) => {
-      const content = f(block.content)
+      const content = f_block(block.content)
       return { ...block, content: content }
     })
     .with({ kind: "if" }, (block) => {
-      const then_ = f(block.then)
-      const else_ = block.else ? f(block.else) : undefined
-      return { ...block, then: then_, else: else_ }
+      const if_ = f_expr(block.if)
+      const then_ = f_block(block.then)
+      const else_ = block.else ? f_block(block.else) : undefined
+      return { ...block, if: if_, then: then_, else: else_ }
     })
     .with({ kind: "match" }, (block) => {
+      const match = f_expr(block.match)
       const with_ = block.with.map((match_case) => {
-        return { ...match_case, then: f(match_case.then) }
+        const if_ = f_expr(match_case.if)
+        const then_ = f_block(match_case.then)
+        return { ...match_case, if: if_, then: then_ }
       })
-      return { ...block, with: with_ }
+      return { ...block, match, with: with_ }
     })
     .with({ kind: "repeat" }, (block) => {
-      const repeat = f(block.repeat)
-      return { ...block, repeat: repeat }
+      const for_ = block?.for ? f_expr(block.for) : undefined
+      const until = block?.until ? f_expr(block.until) : undefined
+      const max_iterations = block?.max_iterations
+        ? f_expr(block.max_iterations)
+        : undefined
+      const repeat = f_block(block.repeat)
+      return { ...block, for: for_, repeat, until, max_iterations }
     })
     .with({ kind: "error" }, (block) => {
-      const doc = f(block.program)
+      const doc = f_block(block.program)
       return { ...block, program: doc }
     })
-    .with({ kind: "read" }, (block) => block)
+    .with({ kind: "read" }, (block) => {
+      const read = f_expr(block.read)
+      return { ...block, read }
+    })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
     .with({ kind: undefined }, (block) => block)
     .exhaustive()
   match(new_block)
     .with({ parser: { pdl: P._ } }, (block) => {
-      block.parser.pdl = f(block.parser.pdl)
+      block.parser.pdl = f_block(block.parser.pdl)
     })
     .otherwise(() => {})
   if (block.fallback) {
-    block.fallback = f(block.fallback)
+    block.fallback = f_block(block.fallback)
   }
   return new_block
 }
@@ -155,10 +219,14 @@ export function iter_block_children(
       if (block.input) f(block.input)
     })
     .with({ kind: "code" }, (block) => {
-      f(block.code)
+      if (!isArgs(block)) {
+        f(block.code)
+      }
     })
     .with({ kind: "get" }, () => {})
-    .with({ kind: "data" }, () => {})
+    .with({ kind: "data" }, (block) => {
+      if (block.data) f(block.data)
+    })
     .with({ kind: "text" }, (block) => {
       if (block.text instanceof Array) {
         block.text.forEach(f)
