@@ -1,0 +1,53 @@
+Here is a Python implementation of the Merge Sort algorithm:
+
+```python
+def merge_sort(arr):
+    # Base case: if array has 1 or no elements, it's already sorted
+    if len(arr) <= 1:
+        return arr
+
+    # Divide the array into two halves
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    # Recursively sort both halves
+    left_sorted = merge_sort(left_half)
+    right_sorted = merge_sort(right_half)
+
+    # Merge the sorted halves back together
+    return merge(left_sorted, right_sorted)
+
+def merge(left, right):
+    """
+    Merge two sorted arrays into one sorted array.
+    """
+    merged = []  # Initialize an empty list for the result
+    left_index = 0  # Index for left array
+    right_index = 0  # Index for right array
+
+    # Continue until we've processed all elements in both lists
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] <= right[right_index]:
+            merged.append(left[left_index])
+            left_index += 1
+        else:
+            merged.append(right[right_index])
+            right_index += 1
+
+    # If there are any remaining elements in either list, append them to the result
+    merged.extend(left[left_index:])
+    merged.extend(right[right_index:])
+
+    return merged
+```
+
+This code first checks if the array is already sorted (i.e., has one or no elements). If not, it divides the array into two halves and recursively sorts them. Then, it merges these sorted halves back together using a helper function `merge()`. The merging process compares elements from both halves and adds the smaller element to the result list until all elements are processed.
+
+You can use this function like so:
+
+```python
+arr = [38, 27, 43, 3, 9, 82, 10]
+sorted_arr = merge_sort(arr)
+print(sorted_arr)  # Outputs: [3, 9, 10, 27, 38, 43, 82]
+```
