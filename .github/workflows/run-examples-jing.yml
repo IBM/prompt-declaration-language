@@ -98,8 +98,6 @@ jobs:
         git config --local user.name github-actions[bot]
         git config --local user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
         git status
-        if ! git diff --exit-code; then
-          git add tests/results/
-          git commit -m "GH Action updated results file when running examples $(date)"
-          git push
-        fi
+        git add tests/results/
+        git diff --cached --quiet || git commit -m "GH Action updated results file when running examples $(date)"
+        git push
