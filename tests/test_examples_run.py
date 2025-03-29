@@ -16,7 +16,7 @@ from pdl.pdl_parser import PDLParseError
 # test_examples_run.py runs the examples and compares the results
 # to the expected results in tests/results/examples
 
-UPDATE_RESULTS = True
+UPDATE_RESULTS = False
 RESULTS_VERSION = 1
 OLLAMA_GHACTIONS_RESULTS_ENV_VAR = os.getenv("OLLAMA_GHACTIONS_RESULTS", "")
 OLLAMA_GHACTIONS_RESULTS = False
@@ -191,28 +191,34 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 output="all",
                 config=pdl.InterpreterConfig(batch=0),
             )
-            result = output["result"]
+            actual_result = output["result"]
 
             block_to_dict(output["trace"], json_compatible=True)
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
 
-            if not __find_and_compare_results(pdl_file_name, str(result)):
+            if not __find_and_compare_results(pdl_file_name, str(actual_result)):
 
                 if OLLAMA_GHACTIONS_RESULTS:
                     print(
-                        "-------------------- Updating result from running Ollama on GitHub Actions -------------------- "
+                        f"Program {str(pdl_file_name)} requries updating its result on GitHub Actions"
                     )
+                    print(f"Actual results: {str(actual_result)}")
                     result_file_name = f"{pdl_file_name.stem}.ollama_ghactions.result"
                     __write_to_results_file(
-                        result_dir_name, result_file_name, str(result)
+                        result_dir_name, result_file_name, str(actual_result)
                     )
 
                     # Evaluate the results again. If fails again, then consider this program as failing
-                    if not __find_and_compare_results(pdl_file_name, str(result)):
+                    if not __find_and_compare_results(
+                        pdl_file_name, str(actual_result)
+                    ):
+                        print(
+                            f"Program {str(pdl_file_name)} failed second time even after generating results from Github Actions. Consider this failing!"
+                        )
                         wrong_results[str(pdl_file_name)] = {
-                            "actual": str(result),
+                            "actual": str(actual_result),
                         }
                     # If evaluating results produces correct result, then this is considered passing
                     else:
@@ -223,11 +229,11 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                         f"{pdl_file_name.stem}.{str(RESULTS_VERSION)}.result"
                     )
                     __write_to_results_file(
-                        result_dir_name, result_file_name, str(result)
+                        result_dir_name, result_file_name, str(actual_result)
                     )
 
                 wrong_results[str(pdl_file_name)] = {
-                    "actual": str(result),
+                    "actual": str(actual_result),
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}

@@ -64,6 +64,8 @@ jobs:
 
     # Run tests
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -94,3 +96,11 @@ jobs:
         REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         OLLAMA_GHACTIONS_RESULTS: true
       run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py
+    - name: Update example result files (if any) generated from Ollama running on GH Actions
+      run: |
+        git config --local user.name github-actions[bot]
+        git config --local user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+        git status
+        git add tests/results/
+        git diff --cached --quiet || git commit -m "github-actions[bot]: Updated results file when running examples on $(date)"
+        git push

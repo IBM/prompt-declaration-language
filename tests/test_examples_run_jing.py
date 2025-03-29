@@ -16,7 +16,7 @@ from pdl.pdl_parser import PDLParseError
 # test_examples_run.py runs the examples and compares the results
 # to the expected results in tests/results/examples
 
-UPDATE_RESULTS = True
+UPDATE_RESULTS = False
 RESULTS_VERSION = 1
 OLLAMA_GHACTIONS_RESULTS_ENV_VAR = os.getenv("OLLAMA_GHACTIONS_RESULTS", "")
 OLLAMA_GHACTIONS_RESULTS = False
