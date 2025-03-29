@@ -1,5 +1,5 @@
 ---
-name: Run examples
+name: Run examples (Jing)
 
 on: [push, pull_request]
 
@@ -16,48 +16,48 @@ jobs:
 
     steps:
 
-    #   # Free up some disk space
-    # - name: Remove unnecessary files
-    #   run: |
-    #     sudo rm -rf /usr/share/dotnet
-    #     sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+      # Free up some disk space
+    - name: Remove unnecessary files
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-    #   # Set up Ollama
-    # - name: Install Ollama and start server
-    #   shell: bash
-    #   run: |
-    #     curl -fsSL https://ollama.com/install.sh | sudo -E sh
+      # Set up Ollama
+    - name: Install Ollama and start server
+      shell: bash
+      run: |
+        curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
-    # - name: Pull models in examples/
-    #   shell: bash
-    #   run: |
-    #     ollama pull granite3.2:2b
-    #     ollama pull mxbai-embed-large
-    #     ollama list
+    - name: Pull models in examples/
+      shell: bash
+      run: |
+        ollama pull granite3.2:2b
+        ollama pull mxbai-embed-large
+        ollama list
 
-    # - name: Check that all required models are available
-    #   shell: bash
-    #   run: |
-    #     models=("mxbai-embed-large" "granite3.2:2b")
-    #     missing=0
-    #     for model in "${models[@]}"; do
-    #       if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
-    #         echo "❌ Model $model (or substring) is missing!"
-    #         missing=1
-    #       fi
-    #     done
+    - name: Check that all required models are available
+      shell: bash
+      run: |
+        models=("mxbai-embed-large" "granite3.2:2b")
+        missing=0
+        for model in "${models[@]}"; do
+          if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
+            echo "❌ Model $model (or substring) is missing!"
+            missing=1
+          fi
+        done
 
-    #     if [ "$missing" -eq 1 ]; then
-    #       exit 1
-    #     else
-    #       echo "✅ All expected models are available."
-    #     fi
+        if [ "$missing" -eq 1 ]; then
+          exit 1
+        else
+          echo "✅ All expected models are available."
+        fi
 
-    # - name: Wait for Ollama server
-    #   shell: bash
-    #   run: |
-    #     sleep 10
-    #     time curl -i http://localhost:11434
+    - name: Wait for Ollama server
+      shell: bash
+      run: |
+        sleep 10
+        time curl -i http://localhost:11434
 
     # Run tests
     - uses: actions/checkout@v4
@@ -90,4 +90,4 @@ jobs:
         WATSONX_URL: ${{ secrets.WATSONX_URL }}
         REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         OLLAMA_GHACTIONS_RESULTS: true
-      run: python env_test.py
+      run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py

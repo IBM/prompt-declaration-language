@@ -91,5 +91,4 @@ jobs:
         WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
         WATSONX_URL: ${{ secrets.WATSONX_URL }}
         REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-        OLLAMA_GHACTIONS_RESULTS: True
-      run: python env_test.py
+      run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py
