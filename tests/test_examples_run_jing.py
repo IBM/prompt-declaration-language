@@ -212,6 +212,8 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                         result_dir_name, result_file_name, str(result)
                     )
 
+                    print(f"Results from Ollama running on GH Actions: {str(result)}")
+
                     # Evaluate the results again. If fails again, then consider this program as failing
                     if not __find_and_compare_results(pdl_file_name, str(result)):
                         wrong_results[str(pdl_file_name)] = {
