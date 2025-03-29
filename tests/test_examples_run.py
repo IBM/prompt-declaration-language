@@ -32,6 +32,7 @@ TO_SKIP = {
         pathlib.Path("examples") / "gsm8k" / "gsm8k-plan.pdl",
         # Requires installation dependencies
         pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
         # Skip RAG examples
         pathlib.Path("examples") / "rag" / "pdf_index.pdl",
         pathlib.Path("examples") / "rag" / "pdf_query.pdl",
