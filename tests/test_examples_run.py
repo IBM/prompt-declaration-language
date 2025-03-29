@@ -42,7 +42,7 @@ TO_SKIP = {
         # Skip structure decoding example (Jing doesn't have WATSONX API KEY)
         pathlib.Path("examples") / "tutorial" / "structured_decoding.pdl",
         # OUtput result include trace (and thus timing) for some reason. Investigate why
-        pathlib.Path("examples") / "react" / "react_call.pdl",  # Very non-deterministic
+        pathlib.Path("examples") / "react" / "react_call.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",

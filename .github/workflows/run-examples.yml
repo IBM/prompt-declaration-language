@@ -97,6 +97,7 @@ jobs:
         OLLAMA_GHACTIONS_RESULTS: true
       run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py
     - name: Update example result files (if any) generated from Ollama running on GH Actions
+      if: matrix.python-version == '3.11'
       run: |
         git config --local user.name github-actions[bot]
         git config --local user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
