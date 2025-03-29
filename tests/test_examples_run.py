@@ -1,4 +1,5 @@
 import io
+import os
 import pathlib
 import random
 from dataclasses import dataclass
@@ -16,9 +17,11 @@ from pdl.pdl_parser import PDLParseError
 # to the expected results in tests/results/examples
 
 UPDATE_RESULTS = True
-# OLLAMA_GHACTIONS_RESULTS = os.getenv("OLLAMA_GHACTIONS_RESULTS", False)
-OLLAMA_GHACTIONS_RESULTS = False
 RESULTS_VERSION = 1
+OLLAMA_GHACTIONS_RESULTS_ENV_VAR = os.getenv("OLLAMA_GHACTIONS_RESULTS", "False")
+OLLAMA_GHACTIONS_RESULTS = False
+if OLLAMA_GHACTIONS_RESULTS_ENV_VAR.lower().strip() == "true":
+    OLLAMA_GHACTIONS_RESULTS = True
 
 TO_SKIP = {
     str(name)
