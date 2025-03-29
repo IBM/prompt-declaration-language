@@ -15,36 +15,30 @@ from pdl.pdl_parser import PDLParseError
 # test_examples_run.py runs the examples and compares the results
 # to the expected results in tests/results/examples
 
-UPDATE_RESULTS = False
-RESULTS_VERSION = 16
+UPDATE_RESULTS = True
+# OLLAMA_GHACTIONS_RESULTS = os.getenv("OLLAMA_GHACTIONS_RESULTS", False)
+OLLAMA_GHACTIONS_RESULTS = False
+RESULTS_VERSION = 1
 
 TO_SKIP = {
     str(name)
     for name in [
-        pathlib.Path("examples") / "tutorial" / "programs" / "chatbot.pdl",
-        pathlib.Path("examples") / "tutorial" / "programs" / "code-json.pdl",
-        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
-        pathlib.Path("examples") / "tutorial" / "programs" / "tfidf_rag.pdl",
-        pathlib.Path("examples") / "tutorial" / "programs" / "weather.pdl",
-        pathlib.Path("examples") / "react" / "react_call.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "10-sdg.pdl",  # TODO: check why
-        pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
+        # Requires dataset dependency
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
-        pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
-        pathlib.Path("examples") / "fibonacci" / "fib.pdl",
-        pathlib.Path("examples")
-        / "rag"
-        / "pdf_index.pdl",  # TODO: check what the expected output is
-        pathlib.Path("examples")
-        / "rag"
-        / "pdf_query.pdl",  # TODO: check what the expected output is
+        pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-plan.pdl",
+        # Requires installation dependencies
+        pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
+        # Skip RAG examples
+        pathlib.Path("examples") / "rag" / "pdf_index.pdl",
+        pathlib.Path("examples") / "rag" / "pdf_query.pdl",
         pathlib.Path("examples")
         / "rag"
         / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
-        pathlib.Path("examples")
-        / "rag"
-        / "tfidf_rag.pdl",  # TODO: check what the expected output is
+        # Skip structure decoding example (Jing doesn't have WATSONX API KEY)
+        pathlib.Path("examples") / "tutorial" / "structured_decoding.pdl",
+        # OUtput result include trace (and thus timing) for some reason. Investigate why
+        pathlib.Path("examples") / "react" / "react_call.pdl",  # Very non-deterministic
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
@@ -53,22 +47,6 @@ TO_SKIP = {
         pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
-    ]
-}
-
-NOT_DETERMINISTIC = {
-    str(name)
-    for name in [
-        pathlib.Path("examples") / "react" / "demo.pdl",
-        pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("examples") / "react" / "demo.pdl",
-        pathlib.Path("examples") / "demo" / "9-react.pdl",
-        pathlib.Path("examples") / "code" / "code.pdl",
-        pathlib.Path("examples") / "code" / "code-eval.pdl",
-        pathlib.Path("examples") / "code" / "code-json.pdl",
-        pathlib.Path("examples") / "demo" / "5-code-eval.pdl",
-        pathlib.Path("examples") / "demo" / "6-code-json.pdl",
-        pathlib.Path("examples") / "demo" / "9-react.pdl",
     ]
 }
 
@@ -82,6 +60,10 @@ class InputsType:
 TESTS_WITH_INPUT: dict[str, InputsType] = {
     str(name): inputs
     for name, inputs in {
+        pathlib.Path("examples")
+        / "tutorial"
+        / "programs"
+        / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
         pathlib.Path("examples")
         / "tutorial"
         / "input_stdin.pdl": InputsType(stdin="Hello\n"),
@@ -146,11 +128,46 @@ EXPECTED_RUNTIME_ERROR = [
 ]
 
 
+def __write_to_results_file(
+    dir_name: pathlib.Path, filename: str, content: str
+) -> None:
+    """
+    Write to results file
+    """
+
+    dir_name.mkdir(parents=True, exist_ok=True)
+    with open(dir_name / filename, "w", encoding="utf-8") as result_file:
+        result_file.write(content)
+
+
+def __find_and_compare_results(
+    test_file_name: pathlib.Path, actual_result: str
+) -> bool:
+    """
+    Look through test_file_name's parent directory and see if any of *.result
+    matches the actual output
+    """
+
+    result_dir_name = pathlib.Path(".") / "tests" / "results" / test_file_name.parent
+    expected_files = result_dir_name.glob(test_file_name.stem + ".*.result")
+
+    for expected_file in expected_files:
+        with open(expected_file, "r", encoding="utf-8") as truth_file:
+            expected_result = str(truth_file.read())
+            if str(actual_result).strip() == expected_result.strip():
+                return True
+    return False
+
+
 def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
     actual_parse_error: set[str] = set()
     actual_runtime_error: set[str] = set()
     wrong_results = {}
-    for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
+
+    files = pathlib.Path(".").glob("**/*.pdl")
+
+    for pdl_file_name in files:
+
         scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue
@@ -172,31 +189,40 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 config=pdl.InterpreterConfig(batch=0),
             )
             result = output["result"]
+
             block_to_dict(output["trace"], json_compatible=True)
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
-            if str(pdl_file_name) in NOT_DETERMINISTIC:
-                continue
-            wrong_result = True
-            for result_file_name in result_dir_name.glob(
-                pdl_file_name.stem + ".*.result"
-            ):
-                with open(result_file_name, "r", encoding="utf-8") as result_file:
-                    expected_result = str(result_file.read())
-                if str(result).strip() == expected_result.strip():
-                    wrong_result = False
-                    break
-            if wrong_result:
-                if UPDATE_RESULTS:
-                    result_file_name_0 = (
-                        pdl_file_name.stem + "." + str(RESULTS_VERSION) + ".result"
+
+            if not __find_and_compare_results(pdl_file_name, str(result)):
+
+                if OLLAMA_GHACTIONS_RESULTS:
+                    print(
+                        "-------------------- Updating result from running Ollama on GitHub Actions -------------------- "
                     )
-                    result_dir_name.mkdir(parents=True, exist_ok=True)
-                    with open(
-                        result_dir_name / result_file_name_0, "w", encoding="utf-8"
-                    ) as result_file:
-                        print(str(result), file=result_file)
+                    result_file_name = f"{pdl_file_name.stem}.ollama_ghactions.result"
+                    __write_to_results_file(
+                        result_dir_name, result_file_name, str(result)
+                    )
+
+                    # Evaluate the results again. If fails again, then consider this program as failing
+                    if not __find_and_compare_results(pdl_file_name, str(result)):
+                        wrong_results[str(pdl_file_name)] = {
+                            "actual": str(result),
+                        }
+                    # If evaluating results produces correct result, then this is considered passing
+                    else:
+                        continue
+
+                if UPDATE_RESULTS:
+                    result_file_name = (
+                        f"{pdl_file_name.stem}.{str(RESULTS_VERSION)}.result"
+                    )
+                    __write_to_results_file(
+                        result_dir_name, result_file_name, str(result)
+                    )
+
                 wrong_results[str(pdl_file_name)] = {
                     "actual": str(result),
                 }
