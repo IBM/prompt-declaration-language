@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: replicate/ibm-granite/granite-3.1-8b-instruct
+  teacher_model: ollama_chat/granite3.2:8b
   teacher_template:
     function:
       sys_prompt: str
@@ -29,13 +29,13 @@ defs:
           * The questions should not be template-based or generic, it should be very diverse.
           * Simply return the questions, do not return any answers or explanations.
           * Strictly adhere to the prompt and generate responses in the same style and format as the example.
-          Use this format to generate the questions: 
-          ### Question 1: 
+          Use this format to generate the questions:
+          ### Question 1:
         examples: |
           To better assist you with this task, here is an example:
           ### Question 1: ${icl_question}
         generation: |
-          Now generate ${num_samples} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above. 
+          Now generate ${num_samples} such questions, remember to follow the principles mentioned above and use the same format as the examples. Remember to use the same style and format as the example above.
         max_new_tokens: 10000
 
   gen_questions_freeform_inner:
@@ -203,7 +203,7 @@ defs:
     spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
     return:
       data:
-        introduction: Your task is to faithfully follow the user's prompt and generate a response. 
+        introduction: Your task is to faithfully follow the user's prompt and generate a response.
         principles: |
           Please follow these guiding principles when generating responses:
           * Use proper grammar and punctuation.
@@ -299,7 +299,7 @@ defs:
         introduction: |
           Please act as an impartial judge and evaluate the quality of the answer provided by an AI assistant to the questions displayed below. Evaluate whether or not the answer is a good example of how AI Assistant should respond to the user's instruction. Please assign a score using the following 3-point scale.
         principles: |
-          1: It means the answer is incorrect, irrelevant, unsafe or provides incomplete and garbage information. For instance, the answer may be factually wrong, off-topic, or filled with irrelevant content that doesn't address the user's question or it could be incomplete and hanging. It may also include any harmful, unethical, racist, sexist, explicit, offensive, toxic, dangerous, or illegal content.  
+          1: It means the answer is incorrect, irrelevant, unsafe or provides incomplete and garbage information. For instance, the answer may be factually wrong, off-topic, or filled with irrelevant content that doesn't address the user's question or it could be incomplete and hanging. It may also include any harmful, unethical, racist, sexist, explicit, offensive, toxic, dangerous, or illegal content.
 
           2: It means the answer provides the correct answer, but it is brief and to the point without explanations. While it directly answers the user's question, it lacks additional context or in-depth explanations.
 
@@ -401,7 +401,7 @@ text:
 - def: qa_pairs
   call: ${gen_answers}
   args:
-    questions: ${filtered_questions} 
+    questions: ${filtered_questions}
 - "\n\n----- Filtering QA pairs -----\n\n"
 - call: ${filter_question_answer_pair}
   args:

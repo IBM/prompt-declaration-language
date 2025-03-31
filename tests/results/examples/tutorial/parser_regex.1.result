@@ -1,2 +1,0 @@
-result = add_numbers(3, 5)
-print(result)  # Outputs: 8
