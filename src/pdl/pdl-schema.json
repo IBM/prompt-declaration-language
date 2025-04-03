@@ -29,7 +29,7 @@
     },
     "ArgsBlock": {
       "additionalProperties": false,
-      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
+      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
       "properties": {
         "description": {
           "anyOf": [

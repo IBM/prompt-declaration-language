@@ -1,0 +1,16 @@
+How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025.
+Thought: I need to find out who discovered the Hudson River and then calculate how many years ago they were born, given that it's currently 2025.
+Action:
+<tool_call>[{"name": "Search", "arguments": {"topic": "Hudson River discoverer"}}]
+Observation: The Hudson River was discovered by Henry Hudson in 1609.
+Thought: Henry Hudson was born around 1565 to 1570. I need to find the exact birth year and then calculate how many years ago it was from 2025.
+Action:
+<tool_call>[{"name": "Search", "arguments": {"topic": "Henry Hudson birth year"}}]
+Observation: Henry Hudson was born in 1565.
+Thought: To find out how many years ago he was born, I subtract his birth year from the current year (2025).
+Action:
+<tool_call>[{"name": "Calc", "arguments": {"expr": "2025 - 1565"}}]
+Observation: The result of the calculation is 460.
+Thought: Henry Hudson was born 460 years ago.Action:
+[{"name": "Finish", "arguments": {"topic": "460 years ago"}}]
+Observation: 

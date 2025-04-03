@@ -2842,7 +2842,7 @@ export interface Defs4 {
     | null
 }
 /**
- * Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.
+ * Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.
  *
  * Example:
  * ```PDL
