@@ -1,6 +1,6 @@
 import fnmatch
 import json
-from typing import Any, Generator, Generic, Mapping, Sequence, TypeVar
+from typing import Any, Generator, Generic, Sequence, TypeVar
 
 from .pdl_ast import (
     ContributeTarget,
@@ -106,40 +106,20 @@ def get_contribute_value(
     return None
 
 
-def messages_concat(
+def _messages_concat(
     messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
-    # if len(messages1) == 0:
-    #     return messages2
-    # if len(messages2) == 0:
-    #     return messages1
-    # left = messages1[-1]
-    # right = messages2[0]
-    # if (
-    #     left["role"] == right["role"] and simple_message(left) and simple_message(right)
-    # ):  # test that there are no other keys
-    #     return (
-    #         messages1[:-1]
-    #         + [{"role": left["role"], "content": left["content"] + right["content"]}]
-    #         + messages2[1:]
-    #     )
     return messages1 + messages2
 
 
 def lazy_messages_concat(
     messages1: LazyMessages, messages2: LazyMessages
 ) -> LazyMessages:
-    return lazy_apply2(messages_concat, messages1, messages2)
+    return lazy_apply2(_messages_concat, messages1, messages2)
 
 
 def messages_to_str(messages: LazyMessages) -> str:
     return "\n".join([str(msg) for msg in messages.result()])
-
-
-def simple_message(message: Mapping[str, Any]) -> bool:
-    if message.keys() == {"role", "content"} and message["content"] is not None:
-        return True
-    return False
 
 
 def remove_none_values_from_message(message: dict) -> dict[str, Any]:
