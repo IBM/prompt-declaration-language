@@ -73,14 +73,14 @@ jobs:
       env:
         MODIFIED_PDL_FILES: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
       run: echo "$MODIFIED_PDL_FILES"
-    - name: Update tests/test_example_run.yaml
+    - name: Update tests/test_examplea_run.yaml
       uses: fjogeleit/yaml-update-action@main
       with:
-        valueFile: 'tests/test_example_run.yaml'
+        valueFile: 'tests/test_examples_run.yaml'
         changes: |
           {
             "check": "${{ steps.changed-pdl-files.outputs.all_changed_files }}"
-          }
+          s
         # propertyPath: 'check'
         # value: ${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}
         commitChange: false
