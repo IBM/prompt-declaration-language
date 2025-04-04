@@ -78,7 +78,7 @@ jobs:
       with:
         valueFile: 'tests/test_example_run.yaml'
         propertyPath: 'check'
-        value: "f${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}"
+        value: "${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}"
         commitChange: false
 
     - name: print yaml config
