@@ -697,7 +697,7 @@ export type Fallback5 =
   | EmptyBlock
   | null
 /**
- * Role of associated to the message.
+ * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
@@ -716,7 +716,7 @@ export type Context5 =
  *
  */
 export type PdlId5 = string | null
-export type PdlIsLeaf5 = false
+export type PdlIsLeaf5 = true
 export type Kind5 = "message"
 export type Content =
   | boolean
@@ -3491,7 +3491,7 @@ export interface MessageBlock {
   contribute?: Contribute5
   parser?: Parser5
   fallback?: Fallback5
-  role: Role5
+  role?: Role5
   context?: Context5
   pdl__id?: PdlId5
   pdl__result?: unknown
