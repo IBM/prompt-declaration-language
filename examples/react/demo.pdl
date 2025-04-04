@@ -59,18 +59,18 @@ text:
     <tool_call>[{"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}]
   contribute: [context]
 
-- "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025.\n"
+- "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.\n"
 - repeat:
     text:
     - def: thought
       model: ollama_chat/granite3.2:8b
       parameters:
-        stop_sequences: "Action:"
+        stop: ["Action:"]
     - "Action:\n"
     - def: action
       model: ollama_chat/granite3.2:8b
       parameters:
-        stop_sequences: "\n"
+        stop: ["\n"]
       parser: json
     - match: ${ action[0].name }
       with:
