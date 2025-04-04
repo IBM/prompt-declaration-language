@@ -77,10 +77,13 @@ jobs:
       uses: fjogeleit/yaml-update-action@main
       with:
         valueFile: 'tests/test_example_run.yaml'
-        propertyPath: 'check'
-        value: ${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}
+        changes: |
+          {
+            "check": "${{ steps.changed-pdl-files.outputs.all_changed_files }}"
+          }
+        # propertyPath: 'check'
+        # value: ${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}
         commitChange: false
-
     - name: print yaml config
       run: cat tests/test_example_run.yaml
 
