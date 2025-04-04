@@ -1122,7 +1122,7 @@ def process_contribution(
     scope: ScopeType,
     loc: PdlLocationType,
 ) -> tuple[ScopeType, ContributeElement]:
-    if elem in ContributeTarget:
+    if elem in set(ContributeTarget):
         return scope, elem
     if isinstance(elem, str):
         target = elem
