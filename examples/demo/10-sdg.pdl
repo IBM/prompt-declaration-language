@@ -252,7 +252,7 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop: [${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }]
+            stop: ["${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }"]
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
         parsed_answer:
