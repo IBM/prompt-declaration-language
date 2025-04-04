@@ -10,23 +10,35 @@ defs:
       - defs:
           tools:
             data:
-            - name: Calc
-              description: Calculator function
-              arguments:
-                expr:
-                  type: string
-                  description: Arithmetic expression to calculate
-            - name: Search
-              description: Wikipedia search
-              arguments:
-                topic:
-                  type: string
-                  description: Topic to search
+            - type: function
+              function:
+                name: Calc
+                description: Calculator function
+                parameters:
+                  type: object
+                  properties:
+                    expr:
+                      type: string
+                      description: Arithmetic expression to calculate
+                  required:
+                  - expr
+            - type: function
+              function:
+                name: Search
+                description: Wikipedia search
+                parameters:
+                  type: object
+                  properties:
+                    topic:
+                      type: string
+                      description: Topic to search
+                  required:
+                  - topic
       - for:
           ex: ${ examples }
         repeat:
           "${ ex }\n"
-      - "\n"
+        contribute: [context]
       - ${ question }
       - "\n"
       - role: system
@@ -47,13 +59,13 @@ defs:
             model: ${ model }
             parameters:
               temperature: 0
-              stop_sequences: "Action:"
+              stop: ["Action:"]
           - "Action:\n"
           - def: action
             model: ${ model }
             parameters:
               temperature: 0
-              stop_sequences: "\n"
+              stop: ["\n"]
             parser: json
           - if: ${ action != prev_action}
             then:
