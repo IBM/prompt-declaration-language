@@ -589,6 +589,7 @@ def process_block_body(
                 tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
                 message["tool_call_id"] = tool_call_id
             result = PdlDict(message)
+            background = PdlList([result])
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:

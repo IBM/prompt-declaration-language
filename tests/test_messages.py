@@ -134,4 +134,6 @@ array:
             "content": 42,
             "name": "f",
             "tool_call_id": "id",
-            "defsite": "array.0.message", } ]
+            "defsite": "array.0.message",
+        }
+    ]
