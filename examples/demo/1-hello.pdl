@@ -4,5 +4,5 @@ text:
 - model: ollama_chat/granite3.2:2b
   parameters:
     stop: ["!"]
-    # include_stop_sequence: true
+
 
