@@ -1,6 +1,6 @@
 description: Model call
 text:
-- "Hello\n"
+- "Hello!\n"
 - model: ollama_chat/granite3.2:2b
   parameters:
     stop: ["!"]
