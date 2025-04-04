@@ -570,7 +570,7 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
         case MessageBlock():
-            content, background, scope, trace = process_block_of(
+            content, _, scope, trace = process_block_of(
                 block,
                 "content",
                 state,
@@ -1275,15 +1275,6 @@ def process_call_model(
                 concrete_block, "parameters", scope, loc
             )
 
-            # Apply PDL defaults to model invocation
-            if concrete_block.parameters is None or isinstance(
-                concrete_block.parameters, dict
-            ):
-                concrete_block.parameters = apply_defaults(
-                    str(model_id),
-                    concrete_block.parameters or {},
-                    scope.get("pdl_model_default_parameters", []),
-                )
         case GraniteioModelBlock():
             _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
             if concrete_block.processor is not None:
@@ -1336,7 +1327,9 @@ def process_call_model(
         if getenv("OTEL_EXPORTER") and getenv("OTEL_ENDPOINT"):
             litellm.callbacks = ["otel"]
 
-        msg, raw_result = generate_client_response(state, concrete_block, model_input)
+        msg, raw_result = generate_client_response(
+            state, scope, concrete_block, str(model_id), model_input
+        )
         background: LazyMessages = PdlList([lazy_apply(lambda msg: msg | {"defsite": block.pdl__id}, msg)])  # type: ignore
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
@@ -1365,17 +1358,19 @@ def process_call_model(
 
 def generate_client_response(
     state: InterpreterState,
+    scope: ScopeType,
     block: LitellmModelBlock | GraniteioModelBlock,
+    model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
     match state.batch:
         case 0:
             model_output, raw_result = generate_client_response_streaming(
-                state, block, model_input
+                state, scope, block, model_id, model_input
             )
         case 1:
             model_output, raw_result = generate_client_response_single(
-                state, block, model_input
+                state, scope, block, model_id, model_input
             )
         case _:
             assert False
@@ -1384,7 +1379,9 @@ def generate_client_response(
 
 def generate_client_response_streaming(
     state: InterpreterState,
+    scope: ScopeType,
     block: LitellmModelBlock | GraniteioModelBlock,
+    model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
     msg_stream: Generator[dict[str, Any], Any, Any]
@@ -1397,6 +1394,13 @@ def generate_client_response_streaming(
             assert parameters is None or isinstance(
                 parameters, dict
             )  # block is a "concrete block"
+            # Apply PDL defaults to model invocation
+
+            parameters = apply_defaults(
+                model_id,
+                parameters or {},
+                scope.get("pdl_model_default_parameters", []),
+            )
             msg_stream = LitellmModel.generate_text_stream(
                 model_id=value_of_expr(block.model),
                 messages=model_input,
@@ -1405,7 +1409,9 @@ def generate_client_response_streaming(
             )
         case GraniteioModelBlock():
             # TODO: curently fallback to the non-streaming interface
-            return generate_client_response_single(state, block, model_input)
+            return generate_client_response_single(
+                state, scope, block, model_id, model_input
+            )
         case _:
             assert False
     complete_msg: Optional[dict[str, Any]] = None
@@ -1462,7 +1468,9 @@ def litellm_parameters_to_dict(
 
 def generate_client_response_single(
     state: InterpreterState,
+    scope: ScopeType,
     block: LitellmModelBlock | GraniteioModelBlock,
+    model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
     if block.parameters is None:
@@ -1472,6 +1480,11 @@ def generate_client_response_single(
     assert parameters is None or isinstance(
         parameters, dict
     )  # block is a "concrete block"
+    parameters = apply_defaults(
+        model_id,
+        parameters or {},
+        scope.get("pdl_model_default_parameters", []),
+    )
     block.pdl__usage = PdlUsage()
     match block:
         case LitellmModelBlock():

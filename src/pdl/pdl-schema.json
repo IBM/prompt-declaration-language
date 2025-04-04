@@ -29,7 +29,7 @@
     },
     "ArgsBlock": {
       "additionalProperties": false,
-      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
+      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -133,7 +133,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -278,7 +277,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -298,6 +296,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -502,7 +501,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -647,7 +645,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -667,6 +664,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -738,7 +736,6 @@
           "type": "string"
         },
         "array": {
-          "description": "Elements of the array.",
           "items": {
             "anyOf": [
               {
@@ -994,7 +991,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1139,7 +1135,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1159,6 +1154,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1453,7 +1449,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1598,7 +1593,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1618,6 +1612,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1780,7 +1775,6 @@
               "type": "null"
             }
           ],
-          "description": "Code to execute.\n    ",
           "title": "Code"
         }
       },
@@ -1930,7 +1924,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2075,7 +2068,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2095,6 +2087,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2297,7 +2290,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2442,7 +2434,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2462,6 +2453,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2642,7 +2634,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2787,7 +2778,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2807,6 +2797,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2963,7 +2954,6 @@
               "type": "null"
             }
           ],
-          "description": "Block that raised the error.\n    ",
           "title": "Program"
         }
       },
@@ -3080,7 +3070,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3225,7 +3214,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3245,6 +3233,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3318,6 +3307,7 @@
         "function": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -3408,7 +3398,6 @@
               "type": "null"
             }
           ],
-          "description": "Body of the function\n    ",
           "title": "Return"
         }
       },
@@ -3525,7 +3514,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3670,7 +3658,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3690,6 +3677,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3878,7 +3866,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4023,7 +4010,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4043,6 +4029,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4208,7 +4195,6 @@
             }
           ],
           "default": "${ pdl_context }",
-          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -4240,6 +4226,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4267,6 +4254,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             }
           ],
@@ -4295,6 +4283,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -4422,7 +4411,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4567,7 +4555,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4587,6 +4574,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4753,7 +4741,6 @@
               "type": "null"
             }
           ],
-          "description": "Branch to execute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -4838,7 +4825,6 @@
             }
           ],
           "default": null,
-          "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
         },
         "if_result": {
@@ -4967,7 +4953,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5112,7 +5097,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5132,6 +5116,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -5404,7 +5389,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5549,7 +5533,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5569,6 +5552,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -5909,7 +5893,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6054,7 +6037,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6074,6 +6056,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6145,7 +6128,6 @@
           "type": "string"
         },
         "lastOf": {
-          "description": "Sequence of blocks to execute.",
           "items": {
             "anyOf": [
               {
@@ -6344,7 +6326,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6489,7 +6470,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6509,6 +6489,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6673,7 +6654,6 @@
             }
           ],
           "default": "${ pdl_context }",
-          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -6705,6 +6685,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6732,6 +6713,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -6882,6 +6864,7 @@
         "logit_bias": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -6909,6 +6892,7 @@
         "response_format": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -6958,6 +6942,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7015,6 +7000,7 @@
         "extra_headers": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7290,7 +7276,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7435,7 +7420,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7455,6 +7439,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7841,7 +7826,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7986,7 +7970,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7998,13 +7981,15 @@
               "type": "null"
             }
           ],
-          "description": "Role of associated to the message.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -8064,8 +8049,8 @@
           "default": null
         },
         "pdl__is_leaf": {
-          "const": false,
-          "default": false,
+          "const": true,
+          "default": true,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
         },
@@ -8156,7 +8141,6 @@
               "type": "null"
             }
           ],
-          "description": "Content of the message.",
           "title": "Content"
         },
         "name": {
@@ -8193,7 +8177,6 @@
         }
       },
       "required": [
-        "role",
         "content"
       ],
       "title": "MessageBlock",
@@ -8305,7 +8288,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8450,7 +8432,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8470,6 +8451,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -8968,6 +8950,7 @@
         "spec": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -9344,7 +9327,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9489,7 +9471,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -9509,6 +9490,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -9639,6 +9621,7 @@
         "spec": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -9777,7 +9760,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9922,7 +9904,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -9942,6 +9923,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -10136,7 +10118,6 @@
               "type": "null"
             }
           ],
-          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "until": {
@@ -10403,7 +10384,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -10548,7 +10528,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -10568,6 +10547,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -10804,7 +10784,6 @@
               "type": "null"
             }
           ],
-          "description": "Body of the text.\n    ",
           "title": "Text"
         }
       },

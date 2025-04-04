@@ -5,7 +5,8 @@ mod cli;
 mod commands;
 mod compile;
 mod gui;
-mod interpreter;
+mod pdl;
+mod util;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -13,18 +14,18 @@ pub fn run() {
         .setup(|app| {
             // Default to GUI if the app was opened with no CLI args.
             if args_os().count() <= 1 {
-                gui::setup(app.handle().clone(), "".to_owned())?;
+                gui::new_window(app.handle().clone(), None)
             } else {
-                match cli::setup::cli(app) {
-                    Ok(()) => ::std::process::exit(0),
+                match cli::setup(app) {
+                    Ok(true) => ::std::process::exit(0), // success with CLI
+                    Ok(false) => Ok(()), // instead, open GUI (fallthrough to the logic below)
                     Err(s) => {
+                        // error with CLI
                         eprintln!("{}", s);
                         ::std::process::exit(1)
                     }
                 }
             }
-
-            Ok(())
         })
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
@@ -34,5 +35,5 @@ pub fn run() {
             commands::replay_prep::replay_prep,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running PDL");
+        .expect("GUI opens")
 }

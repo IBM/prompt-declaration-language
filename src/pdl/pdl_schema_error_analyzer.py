@@ -48,7 +48,7 @@ def get_non_null_type(schema):
 
 
 def match(ref_type, data):
-    all_fields = ref_type["properties"].keys()
+    all_fields = ref_type.get("properties", {}).keys()
     intersection = list(set(data.keys()) & set(all_fields))
     return len(intersection)
 

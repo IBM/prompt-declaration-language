@@ -1,0 +1,47 @@
+description: Retrieval-augmented generation for NL-to-Code generation task.
+text:
+- lang: python
+  code: | # initialize PDL_SESSION.vec_db and PDL_SESSION.embed() function
+    import datasets, sklearn.feature_extraction.text
+    train_in = datasets.load_dataset("mbpp", "sanitized", split="train")
+    corpus = [row["prompt"] for row in train_in]
+    tfidf = sklearn.feature_extraction.text.TfidfVectorizer().fit(corpus)
+    def embed(text):
+        singleton_batch = [text]
+        sparse_result = tfidf.transform(raw_documents=singleton_batch)
+        return sparse_result.toarray().flatten()
+    train_em = train_in.map(lambda row: {"embeddings": embed(row["prompt"])})
+    PDL_SESSION.vec_db = train_em.add_faiss_index("embeddings")
+    PDL_SESSION.embed = embed
+    result = ""
+- def: TEST_PROMPT
+  text: >-
+    Write a python function to remove first and last occurrence of a
+    given character from the string.
+  contribute: []
+- def: RETRIEVED
+  lang: python
+  spec: {prompt: [str], code: [str]}
+  code: |
+    key = PDL_SESSION.embed("${ TEST_PROMPT }")
+    nearest = PDL_SESSION.vec_db.get_nearest_examples("embeddings", key, 5)
+    result = {col: nearest.examples[col] for col in ["prompt", "code"]}
+  contribute: []
+- |
+    Given the text after "Q:", generate a Python function after "A:".
+
+    Here are some examples, complete the last one:
+- for:
+    prompt: ${ RETRIEVED.prompt }
+    code: ${ RETRIEVED.code }
+  repeat: |
+
+    Q: ${ prompt }
+    A: ```${ code }```
+- |-
+
+    Q: ${ TEST_PROMPT }
+    A:
+- model: ollama_chat/granite3.2:2b
+  parameters:
+    temperature: 0

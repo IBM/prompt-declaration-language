@@ -1,8 +1,0 @@
-# Expected not to type check
-description: Hello world showing call out to python code
-text:
-- lang: python
-  spec: int
-  code: |
-    import string
-    result = "hello"

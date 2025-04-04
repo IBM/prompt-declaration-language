@@ -1,0 +1,13 @@
+description: Hello world with function definition and call
+text:
+- def: hello
+  function:
+    name: str
+  return:
+    text:
+    -  Hello ${ name }!
+    - model: ollama_chat/granite3.2:8b
+- call: ${ hello }
+  args:
+    name: World
+    pdl_context: []

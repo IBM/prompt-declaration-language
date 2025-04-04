@@ -1,0 +1,39 @@
+description: Code explanation example
+defs:
+  CODE:
+    read: ../../code/data.yaml
+    parser: yaml
+  TRUTH:
+    read: ../../code/ground_truth.txt
+lastOf:
+- model: ollama_chat/granite3.2:2b
+  def: EXPLANATION
+  input:
+     |
+      Here is some info about the location of the function in the repo.
+      repo:
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
+
+
+      Explain the following code:
+      ```
+      ${ CODE.source_code }```
+- def: EVAL
+  lang: python
+  code:
+    |
+    import textdistance
+    expl = """
+    ${ EXPLANATION }
+    """
+    truth = """
+    ${ TRUTH }
+    """
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)
+- data:
+    input: ${ CODE }
+    output: ${ EXPLANATION }
+    metric: ${ EVAL }
+

@@ -5,7 +5,7 @@ defs:
     - name: calc
       description: Calculator function
       arguments:
-        expr: 
+        expr:
           type: string
           description: Arithmetic expression to calculate
 text:
@@ -17,9 +17,9 @@ text:
   contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
 - def: actions
-  model: replicate/ibm-granite/granite-3.1-8b-instruct
+  model: ollama_chat/granite3.2:8b
   parser: json
-  spec: [{ name: str, arguments: { expr: str }}]  
+  spec: [{ name: str, arguments: { expr: str }}]
   parameters:
     drop_params: true  # This is needed because the model does not support structured decoding. It directs LiteLLM to ignore parameters sent for structured decoding.
 - "\n"

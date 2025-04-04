@@ -11,8 +11,9 @@ use serde::Deserialize;
 use serde_json::{from_reader, json, to_string, Value};
 use tempfile::Builder;
 
-use crate::interpreter::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
-use crate::interpreter::pip::pip_install_internal_if_needed;
+use crate::pdl::ast::{PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType};
+use crate::pdl::pip::pip_install_if_needed;
+use crate::pdl::requirements::BEEAI_FRAMEWORK;
 
 macro_rules! zip {
     ($x: expr) => ($x);
@@ -282,18 +283,11 @@ fn tool_imports(object: &String) -> (&str, &str) {
     }
 }
 
-fn python_source_to_json(
-    app_handle: tauri::AppHandle,
-    source_file_path: &String,
-    debug: &bool,
-) -> Result<PathBuf, Box<dyn Error>> {
-    if *debug {
+fn python_source_to_json(source_file_path: &str, debug: bool) -> Result<PathBuf, Box<dyn Error>> {
+    if debug {
         eprintln!("Compiling from Python source");
     }
-    let bin_path = block_on(pip_install_internal_if_needed(
-        app_handle,
-        &"interpreter/beeai-requirements.txt",
-    ))?;
+    let bin_path = block_on(pip_install_if_needed(&BEEAI_FRAMEWORK))?;
 
     let dry_run_file_path = Builder::new()
         .prefix(&"pdl-bee")
@@ -309,7 +303,7 @@ fn python_source_to_json(
         .stdout_null()
         .run()?;
 
-    if *debug {
+    if debug {
         eprintln!(
             "Finished generating BeeAi JSON snapshot to {:?}",
             &dry_run_file
@@ -319,12 +313,11 @@ fn python_source_to_json(
 }
 
 pub fn compile(
-    app_handle: tauri::AppHandle,
-    source_file_path: &String,
-    output_path: &String,
-    debug: &bool,
+    source_file_path: &str,
+    output_path: &str,
+    debug: bool,
 ) -> Result<(), Box<dyn Error>> {
-    if *debug {
+    if debug {
         eprintln!("Compiling beeai {} to {}", source_file_path, output_path);
     }
 
@@ -333,11 +326,11 @@ pub fn compile(
         .and_then(OsStr::to_str)
     {
         Some("py") => {
-            let json_snapshot_file = python_source_to_json(app_handle, source_file_path, debug)?;
+            let json_snapshot_file = python_source_to_json(source_file_path, debug)?;
             File::open(json_snapshot_file)
         }
         _ => {
-            if *debug {
+            if debug {
                 eprintln!("Compiling from JSON snapshot");
             }
             File::open(source_file_path)
@@ -394,13 +387,13 @@ asyncio.run(invoke())
 ",
                                     import_from,
                                     import_fn,
-                                    if *debug {
+                                    if debug {
                                         format!("print('Invoking tool {}')", tool_name)
                                     } else {
                                         "".to_string()
                                     },
                                     import_fn,
-                                    if *debug {
+                                    if debug {
                                         format!(
                                             "print(f'Response from tool {}: {{result}}')",
                                             tool_name
@@ -525,7 +518,7 @@ asyncio.run(invoke())
         text: body,
     };
 
-    match output_path.as_str() {
+    match output_path {
         "-" => println!("{}", to_string(&pdl)?),
         _ => {
             ::std::fs::write(output_path, to_string(&pdl)?)?;

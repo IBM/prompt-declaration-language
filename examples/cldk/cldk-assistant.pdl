@@ -1,5 +1,5 @@
 description: CodeLLM-Devkit Assistant
-text: 
+text:
 - read:
   def: project
   message: "Please enter the path to your Java project:\n"
@@ -34,9 +34,9 @@ text:
       contribute: []
     - "\n***Generating PDL code for your query:\n"
     - if: ${ query != 'quit'}
-      then: 
+      then:
         text:
-          - model: replicate/ibm-granite/granite-3.1-8b-instruct
+          - model: ollama_chat/granite3.2:8b
             def: PDL
             input: |
                 Question: What are all the classes?
@@ -86,7 +86,7 @@ text:
                 text:
                 - lang: python
                   code: |
-                    graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None) 
+                    graph =  PDL_SESSION.cldk_state.get_class_call_graph("org.ibm.App", method_name=None)
                     result = graph
                 ```
 
@@ -109,7 +109,7 @@ text:
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a summary of method Foo\n\n"
-                - model: replicate/ibm-granite/granite-3.1-8b-instruct
+                - model: ollama_chat/granite3.2:8b
                 ```
 
                 Question: Generate a different comment for method Foo(string) in class org.ibm.App?
@@ -121,11 +121,11 @@ text:
                     method = PDL_SESSION.cldk_state.get_method("org.ibm.App", "Foo(string)")
                     result = method
                 - "\n\nGenerate a different comment for method Foo(string)\n\n"
-                - model: replicate/ibm-granite/granite-3.1-8b-instruct
+                - model: ollama_chat/granite3.2:8b
                 ```
 
                 If the query contains something about a field be sure to call a model.
-                
+
                 Question: ${ query }
 
 
@@ -135,10 +135,10 @@ text:
           - "\n\n***Executing the above PDL code:\n\n"
           - lang: python
             contribute: [result]
-            code: | 
+            code: |
               from pdl.pdl import exec_str
               s = """${ PDL }"""
               pdl = s.split("```")[1]
               result = exec_str(pdl)
-              
+
   until: ${ query == 'quit' }

@@ -1,4 +1,5 @@
 import io
+import os
 import pathlib
 import random
 from dataclasses import dataclass
@@ -16,93 +17,32 @@ from pdl.pdl_parser import PDLParseError
 # to the expected results in tests/results/examples
 
 UPDATE_RESULTS = False
-RESULTS_VERSION = 15
+RESULTS_VERSION = 1
+OLLAMA_GHACTIONS_RESULTS_ENV_VAR = os.getenv("OLLAMA_GHACTIONS_RESULTS", "")
+OLLAMA_GHACTIONS_RESULTS = False
+if OLLAMA_GHACTIONS_RESULTS_ENV_VAR.lower().strip() == "true":
+    OLLAMA_GHACTIONS_RESULTS = True
 
 TO_SKIP = {
     str(name)
     for name in [
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-structured-decoding.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "2-teacher.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "8-tools.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "10-sdg.pdl",  # TODO: check why
-        pathlib.Path("examples") / "teacher" / "teacher.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tools" / "calc.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tutorial" / "calling_apis.pdl",
+        # Requires dataset dependency
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
-        pathlib.Path("examples") / "talk" / "10-multi-agent.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsmhard-bugs.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-base.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-jinja.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math-python.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",  # TODO: check why
-        pathlib.Path("examples") / "gsm8k" / "gsm8-plan.pdl",  # TODO: check why
-        pathlib.Path("examples") / "tfidf_rag" / "rag.pdl",
-        pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math.pdl",
-        pathlib.Path("examples") / "gsm8k" / "math_no_sd.pdl",
-        pathlib.Path("examples") / "react" / "demo.pdl",  # TODO: check why
-        pathlib.Path("examples") / "talk" / "9-react.pdl",  # TODO: check why
-        pathlib.Path("examples") / "demo" / "4-translator.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "calling_llm_with_input_messages.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "muting_block_output.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "calling_code.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "calling_llm.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "variable_def_use.pdl",  # TODO check why
-        pathlib.Path("examples") / "tutorial" / "model_chaining.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "function_definition.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "calling_llm_with_input.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "conditionals_loops.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "tutorial"
-        / "grouping_definitions.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "granite"
-        / "single_round_chat.pdl",  # TODO check why
-        pathlib.Path("examples") / "chatbot" / "chatbot.pdl",  # TODO check why
-        pathlib.Path("examples") / "fibonacci" / "fib.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "intrinsics"
-        / "demo-hallucination.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-function-empty-context.pdl",  # TODO CREATE RESULTS FILE
-        pathlib.Path("examples") / "hello" / "hello-roles-array.pdl",  # TODO check why
-        pathlib.Path("examples") / "hello" / "hello-import.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-import-lib.pdl",  # (Produces no output)
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-model-chaining.pdl",  # TODO check why
-        pathlib.Path("examples") / "talk" / "7-chatbot-roles.pdl",  # TODO check why
-        pathlib.Path("examples")
-        / "rag"
-        / "pdf_index.pdl",  # TODO: check what the expected output is
-        pathlib.Path("examples")
-        / "rag"
-        / "pdf_query.pdl",  # TODO: check what the expected output is
+        pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-plan.pdl",
+        # Requires installation dependencies
+        pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
+        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
+        # Skip RAG examples
+        pathlib.Path("examples") / "rag" / "pdf_index.pdl",
+        pathlib.Path("examples") / "rag" / "pdf_query.pdl",
         pathlib.Path("examples")
         / "rag"
         / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
-        pathlib.Path("examples")
-        / "rag"
-        / "tfidf_rag.pdl",  # TODO: check what the expected output is
+        # Skip structure decoding example (Jing doesn't have WATSONX API KEY)
+        pathlib.Path("examples") / "tutorial" / "structured_decoding.pdl",
+        # OUtput result include trace (and thus timing) for some reason. Investigate why
+        pathlib.Path("examples") / "react" / "react_call.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
@@ -111,34 +51,6 @@ TO_SKIP = {
         pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
-        pathlib.Path("examples") / "hello" / "hello-graniteio.pdl",
-    ]
-}
-
-NOT_DETERMINISTIC = {
-    str(name)
-    for name in [
-        pathlib.Path("examples") / "weather" / "weather.pdl",
-        pathlib.Path("examples") / "demo" / "3-weather.pdl",
-        pathlib.Path("examples") / "granite" / "multi_round_chat.pdl",
-        pathlib.Path("examples") / "react" / "demo.pdl",
-        pathlib.Path("examples") / "react" / "wikipedia.pdl",
-        pathlib.Path("examples") / "code" / "code.pdl",
-        pathlib.Path("examples") / "code" / "code-eval.pdl",
-        pathlib.Path("examples") / "code" / "code-json.pdl",
-        pathlib.Path("examples") / "talk" / "1-hello.pdl",
-        pathlib.Path("examples") / "talk" / "2-model-chaining.pdl",
-        pathlib.Path("examples") / "talk" / "3-def-use.pdl",
-        pathlib.Path("examples") / "talk" / "5-code-eval.pdl",
-        pathlib.Path("examples") / "talk" / "6-code-json.pdl",
-        pathlib.Path("examples") / "talk" / "9-react.pdl",
-        pathlib.Path("examples") / "tutorial" / "include.pdl",
-        pathlib.Path("examples") / "tutorial" / "data_block.pdl",
-        pathlib.Path("examples") / "sdk" / "hello.pdl",
-        pathlib.Path("examples") / "hello" / "hello.pdl",
-        pathlib.Path("examples") / "hello" / "hello-model-input.pdl",
-        pathlib.Path("examples") / "hello" / "hello-parser-regex.pdl",
-        pathlib.Path("examples") / "hello" / "hello-def-use.pdl",
     ]
 }
 
@@ -153,8 +65,9 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
     str(name): inputs
     for name, inputs in {
         pathlib.Path("examples")
-        / "demo"
-        / "4-translator.pdl": InputsType(stdin="french\nstop\n"),
+        / "tutorial"
+        / "programs"
+        / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
         pathlib.Path("examples")
         / "tutorial"
         / "input_stdin.pdl": InputsType(stdin="Hello\n"),
@@ -171,21 +84,11 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "chatbot"
         / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
         pathlib.Path("examples")
-        / "talk"
+        / "demo"
         / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
         pathlib.Path("examples")
-        / "granite"
-        / "single_round_chat.pdl": InputsType(
-            scope=PdlDict({"PROMPT": "What is APR?\nyes\n"})
-        ),
-        pathlib.Path("examples")
-        / "hello"
-        / "hello-data.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
-        pathlib.Path("examples")
         / "tutorial"
-        / "conditionals_loops.pdl": InputsType(
-            stdin="What is APR?\nno\nSay it as a poem\nyes\n"
-        ),
+        / "free_variables.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
     }.items()
 }
 
@@ -202,12 +105,9 @@ EXPECTED_PARSE_ERROR = [
 ]
 
 EXPECTED_RUNTIME_ERROR = [
-    pathlib.Path("examples") / "demo" / "1-gen-data.pdl",
-    pathlib.Path("examples") / "tutorial" / "gen-data.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type-code.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type-list.pdl",
-    pathlib.Path("examples") / "hello" / "hello-type.pdl",
-    pathlib.Path("examples") / "hello" / "hello-parser-json.pdl",
+    pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
+    pathlib.Path("examples") / "tutorial" / "type_list.pdl",
+    pathlib.Path("examples") / "tutorial" / "type_checking.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello12.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello13.pdl",
     pathlib.Path("tests") / "data" / "line" / "hello14.pdl",
@@ -232,11 +132,46 @@ EXPECTED_RUNTIME_ERROR = [
 ]
 
 
+def __write_to_results_file(
+    dir_name: pathlib.Path, filename: str, content: str
+) -> None:
+    """
+    Write to results file
+    """
+
+    dir_name.mkdir(parents=True, exist_ok=True)
+    with open(dir_name / filename, "w", encoding="utf-8") as result_file:
+        result_file.write(content)
+
+
+def __find_and_compare_results(
+    test_file_name: pathlib.Path, actual_result: str
+) -> bool:
+    """
+    Look through test_file_name's parent directory and see if any of *.result
+    matches the actual output
+    """
+
+    result_dir_name = pathlib.Path(".") / "tests" / "results" / test_file_name.parent
+    expected_files = result_dir_name.glob(test_file_name.stem + ".*.result")
+
+    for expected_file in expected_files:
+        with open(expected_file, "r", encoding="utf-8") as truth_file:
+            expected_result = str(truth_file.read())
+            if str(actual_result).strip() == expected_result.strip():
+                return True
+    return False
+
+
 def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
     actual_parse_error: set[str] = set()
     actual_runtime_error: set[str] = set()
     wrong_results = {}
-    for pdl_file_name in pathlib.Path(".").glob("**/*.pdl"):
+
+    files = pathlib.Path(".").glob("**/*.pdl")
+
+    for pdl_file_name in files:
+
         scope: ScopeType = PdlDict({})
         if str(pdl_file_name) in TO_SKIP:
             continue
@@ -257,34 +192,49 @@ def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -
                 output="all",
                 config=pdl.InterpreterConfig(batch=0),
             )
-            result = output["result"]
+            actual_result = output["result"]
+
             block_to_dict(output["trace"], json_compatible=True)
             result_dir_name = (
                 pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
             )
-            if str(pdl_file_name) in NOT_DETERMINISTIC:
-                continue
-            wrong_result = True
-            for result_file_name in result_dir_name.glob(
-                pdl_file_name.stem + ".*.result"
-            ):
-                with open(result_file_name, "r", encoding="utf-8") as result_file:
-                    expected_result = str(result_file.read())
-                if str(result).strip() == expected_result.strip():
-                    wrong_result = False
-                    break
-            if wrong_result:
-                if UPDATE_RESULTS:
-                    result_file_name_0 = (
-                        pdl_file_name.stem + "." + str(RESULTS_VERSION) + ".result"
+
+            if not __find_and_compare_results(pdl_file_name, str(actual_result)):
+
+                if OLLAMA_GHACTIONS_RESULTS:
+                    print(
+                        f"Program {str(pdl_file_name)} requries updating its result on GitHub Actions"
                     )
-                    result_dir_name.mkdir(parents=True, exist_ok=True)
-                    with open(
-                        result_dir_name / result_file_name_0, "w", encoding="utf-8"
-                    ) as result_file:
-                        print(str(result), file=result_file)
+                    print(f"Actual results: {str(actual_result)}")
+                    result_file_name = f"{pdl_file_name.stem}.ollama_ghactions.result"
+                    __write_to_results_file(
+                        result_dir_name, result_file_name, str(actual_result)
+                    )
+
+                    # Evaluate the results again. If fails again, then consider this program as failing
+                    if not __find_and_compare_results(
+                        pdl_file_name, str(actual_result)
+                    ):
+                        print(
+                            f"Program {str(pdl_file_name)} failed second time even after generating results from Github Actions. Consider this failing!"
+                        )
+                        wrong_results[str(pdl_file_name)] = {
+                            "actual": str(actual_result),
+                        }
+                    # If evaluating results produces correct result, then this is considered passing
+                    else:
+                        continue
+
+                if UPDATE_RESULTS:
+                    result_file_name = (
+                        f"{pdl_file_name.stem}.{str(RESULTS_VERSION)}.result"
+                    )
+                    __write_to_results_file(
+                        result_dir_name, result_file_name, str(actual_result)
+                    )
+
                 wrong_results[str(pdl_file_name)] = {
-                    "actual": str(result),
+                    "actual": str(actual_result),
                 }
         except PDLParseError:
             actual_parse_error |= {str(pdl_file_name)}

@@ -21,9 +21,11 @@ export default function Local() {
 
     async function load() {
       if (traceFile) {
-        const buf = (await invoke("read_trace", { traceFile })) as ArrayBuffer
-        const decoder = new TextDecoder("utf-8") // Assuming UTF-8 encoding
-        const value = decoder.decode(buf)
+        const buf = (await invoke("read_trace", { traceFile })) as number[]
+        let value = ""
+        for (let i = 0; i < buf.length; i++) {
+          value += String.fromCharCode(buf[i])
+        }
         if (!active) {
           return
         }

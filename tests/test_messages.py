@@ -1,7 +1,7 @@
 from pdl.pdl import exec_str
 
 
-def test_messages1():
+def test_message1():
     prog_str = """
 description: Messages block
 array:
@@ -38,7 +38,77 @@ array:
     ]
 
 
-def test_messages2():
+def test_message2():
+    prog_str = """
+description: Messages block
+role: user
+content:
+    array:
+    - Hello
+    - Bye
+"""
+    result = exec_str(prog_str, output="all")
+    context = result["scope"]["pdl_context"]
+    assert result["result"] == {
+        "role": "user",
+        "content": ["Hello", "Bye"],
+        "defsite": "message",
+    }
+    assert context == [
+        {
+            "role": "user",
+            "content": ["Hello", "Bye"],
+            "defsite": "message",
+        },
+    ]
+
+
+def test_message3():
+    prog_str = """
+description: Messages block
+content:
+    data: {"a": 1}
+"""
+    result = exec_str(prog_str, output="all")
+    context = result["scope"]["pdl_context"]
+    assert result["result"] == {
+        "role": "user",
+        "content": {"a": 1},
+        "defsite": "message",
+    }
+    assert context == [
+        {
+            "role": "user",
+            "content": {"a": 1},
+            "defsite": "message",
+        },
+    ]
+
+
+def test_message4():
+    prog_str = """
+description: Messages block
+content:
+    text:
+      data: {"a": 1}
+"""
+    result = exec_str(prog_str, output="all")
+    context = result["scope"]["pdl_context"]
+    assert result["result"] == {
+        "role": "user",
+        "content": '{"a": 1}',
+        "defsite": "message",
+    }
+    assert context == [
+        {
+            "role": "user",
+            "content": '{"a": 1}',
+            "defsite": "message",
+        },
+    ]
+
+
+def test_messages5():
     prog_str = """
 description: Messages block
 array:
@@ -64,6 +134,4 @@ array:
             "content": 42,
             "name": "f",
             "tool_call_id": "id",
-            "defsite": "array.0.message",
-        },
-    ]
+            "defsite": "array.0.message", } ]

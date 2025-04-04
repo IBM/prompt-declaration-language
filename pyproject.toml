@@ -78,3 +78,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 pdl = ["pdl-schema.json"]
+
+[tool.pyright]
+include = ["src", "tests", "examples", "docs"]
