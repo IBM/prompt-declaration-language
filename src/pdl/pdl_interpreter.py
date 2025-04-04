@@ -577,18 +577,18 @@ def process_block_body(
                 scope,
                 loc,
             )
-            d = {
+            message = {
                 "role": state.role,
                 "content": content,
                 "defsite": block.pdl__id,
             }
             if block.name is not None:
                 name, block = process_expr_of(block, "name", scope, loc)
-                d["name"] = name
+                message["name"] = name
             if block.tool_call_id is not None:
                 tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
-                d["tool_call_id"] = tool_call_id
-            result = PdlDict(d)
+                message["tool_call_id"] = tool_call_id
+            result = PdlDict(message)
             background = PdlList([result])
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")

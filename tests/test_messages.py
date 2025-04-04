@@ -106,3 +106,34 @@ content:
             "defsite": "message",
         },
     ]
+
+
+def test_messages5():
+    prog_str = """
+description: Messages block
+array:
+  - role: tool
+    content: 42
+    name: f
+    tool_call_id: id
+"""
+    result = exec_str(prog_str, output="all")
+    context = result["scope"]["pdl_context"]
+    assert result["result"] == [
+        {
+            "role": "tool",
+            "content": 42,
+            "name": "f",
+            "tool_call_id": "id",
+            "defsite": "array.0.message",
+        },
+    ]
+    assert context == [
+        {
+            "role": "tool",
+            "content": 42,
+            "name": "f",
+            "tool_call_id": "id",
+            "defsite": "array.0.message",
+        }
+    ]
