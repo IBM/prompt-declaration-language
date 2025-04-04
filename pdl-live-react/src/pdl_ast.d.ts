@@ -716,7 +716,7 @@ export type Context5 =
  *
  */
 export type PdlId5 = string | null
-export type PdlIsLeaf5 = false
+export type PdlIsLeaf5 = true
 export type Kind5 = "message"
 export type Content =
   | boolean

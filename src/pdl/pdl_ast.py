@@ -580,7 +580,7 @@ class ObjectBlock(StructuredBlock):
     object: dict[str, "BlockType"] | list["BlockType"]
 
 
-class MessageBlock(StructuredBlock):
+class MessageBlock(LeafBlock):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE

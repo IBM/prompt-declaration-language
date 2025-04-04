@@ -8048,8 +8048,8 @@
           "default": null
         },
         "pdl__is_leaf": {
-          "const": false,
-          "default": false,
+          "const": true,
+          "default": true,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
         },

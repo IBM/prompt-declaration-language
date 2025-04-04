@@ -570,7 +570,7 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
         case MessageBlock():
-            content, background, scope, trace = process_block_of(
+            content, _, scope, trace = process_block_of(
                 block,
                 "content",
                 state,
@@ -592,6 +592,7 @@ def process_block_body(
                     "defsite": block.pdl__id,
                 }
             )
+            background = PdlList([result])
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:
