@@ -75,7 +75,7 @@ content:
         "role": "user",
         "content": {"a": 1},
         "defsite": "message",
-    }, f"Actual result: {result["result"]}"
+    }
     assert context == [
         {
             "role": "user",
