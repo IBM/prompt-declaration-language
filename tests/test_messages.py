@@ -50,10 +50,10 @@ content:
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
     assert result["result"] == {
-            "role": "user",
-            "content": ["Hello", "Bye"],
-            "defsite": "message",
-        }
+        "role": "user",
+        "content": ["Hello", "Bye"],
+        "defsite": "message",
+    }
     assert context == [
         {
             "role": "user",
@@ -72,10 +72,10 @@ content:
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
     assert result["result"] == {
-            "role": "user",
-            "content": {"a": 1},
-            "defsite": "message",
-        }, f"Actual result: {result["result"]}"
+        "role": "user",
+        "content": {"a": 1},
+        "defsite": "message",
+    }, f"Actual result: {result["result"]}"
     assert context == [
         {
             "role": "user",
@@ -83,6 +83,7 @@ content:
             "defsite": "message",
         },
     ]
+
 
 def test_message4():
     prog_str = """
@@ -94,10 +95,10 @@ content:
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
     assert result["result"] == {
-            "role": "user",
-            "content": '{"a": 1}',
-            "defsite": "message",
-        }, f"Actual result: {result["result"]}"
+        "role": "user",
+        "content": '{"a": 1}',
+        "defsite": "message",
+    }, f"Actual result: {result["result"]}"
     assert context == [
         {
             "role": "user",
