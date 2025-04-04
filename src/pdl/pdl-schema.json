@@ -7981,7 +7981,8 @@
               "type": "null"
             }
           ],
-          "description": "Role of associated to the message.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
@@ -8176,7 +8177,6 @@
         }
       },
       "required": [
-        "role",
         "content"
       ],
       "title": "MessageBlock",
