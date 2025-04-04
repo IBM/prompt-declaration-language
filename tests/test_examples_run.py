@@ -3,7 +3,7 @@ import os
 import pathlib
 import random
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Tuple
 
 from pytest import CaptureFixture, MonkeyPatch
 
@@ -131,6 +131,100 @@ EXPECTED_RUNTIME_ERROR = [
     pathlib.Path("tests") / "data" / "line" / "hello9.pdl",
 ]
 
+# ACTUAL_NO_ERROR indicates there was no error when running pdl.exec_file
+ACTUAL_NO_ERROR = 0
+# ACTUAL_NO_ERROR indicates there was PdlParserError when running pdl.exec_file
+ACTUAL_PARSE_ERROR_CODE = 1
+# ACTUAL_RUNTIME_ERROR_CODE indicates there was runtime error when running pdl.exec_file
+ACTUAL_RUNTIME_ERROR_CODE = 2
+
+def run_single_file(pdl_file_name: str, monkeypatch: MonkeyPatch) -> Tuple[bool, str, int]:
+    """
+    Tests a single file
+    Returns:
+    - bool: True if runs successfully and False otherwise
+    - str: "" if runs succesfully and the actual results otherwise
+    - int: a code to indicate what kind of error occured. 0 for no error, 1 for parse error, and 2 for runtime error
+    """
+    if pdl_file_name in TO_SKIP:
+        print(f"File {pdl_file_name} is part of TO_SKIP, skipping test...")
+        return True, "", ACTUAL_NO_ERROR
+
+    path_obj = pathlib.Path(pdl_file_name)
+    scope: ScopeType = PdlDict({})
+
+    if pdl_file_name in TESTS_WITH_INPUT:
+        inputs = TESTS_WITH_INPUT[pdl_file_name]
+        if inputs.stdin is not None:
+            monkeypatch.setattr(
+                "sys.stdin",
+                io.StringIO(inputs.stdin),
+            )
+        if inputs.scope is not None:
+            scope = inputs.scope
+
+    try:
+        random.seed(11)
+        output = pdl.exec_file(
+            path_obj,
+            scope=scope,
+            output="all",
+            config=pdl.InterpreterConfig(batch=0),
+        )
+
+        actual_result = output["result"]
+        block_to_dict(output["trace"], json_compatible=True)
+        result_dir_name = (
+            pathlib.Path(".") / "tests" / "results" / path_obj.parent
+        )
+
+        print(actual_result)
+
+        # Find and compare results
+        if not __find_and_compare_results(path_obj, str(actual_result)):
+            if OLLAMA_GHACTIONS_RESULTS:
+                print(
+                    f"Program {pdl_file_name} requries updating its result on GitHub Actions"
+                )
+                print(f"Actual results: {str(actual_result)}")
+                result_file_name = f"{path_obj.stem}.ollama_ghactions.result"
+                __write_to_results_file(result_dir_name, result_file_name, str(actual_result))
+
+                # Evaluate the results again. If fails again, then consider this program as failing
+                if not __find_and_compare_results(
+                    path_obj, str(actual_result)
+                ):
+                    print(
+                        f"Program {str(pdl_file_name)} failed second time even after generating results from Github Actions. Consider this failing!"
+                    )
+
+                    return False, str(actual_result), ACTUAL_NO_ERROR
+                else:
+                    return True, "", ACTUAL_NO_ERROR
+
+            if UPDATE_RESULTS:
+                result_file_name = (
+                        f"{path_obj.stem}.{str(RESULTS_VERSION)}.result"
+                    )
+                __write_to_results_file(
+                    result_dir_name, result_file_name, str(actual_result)
+                )
+
+            return False, str(actual_result), ACTUAL_NO_ERROR
+
+    except PDLParseError:
+        expected_parse_errors = set(str(p) for p in EXPECTED_PARSE_ERROR)
+        if pdl_file_name in expected_parse_errors:
+            return True, "", ACTUAL_PARSE_ERROR_CODE
+        return False, "", ACTUAL_PARSE_ERROR_CODE
+
+    except Exception:
+        expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
+        if pdl_file_name in expected_runtime_error:
+            return True, "", ACTUAL_RUNTIME_ERROR_CODE
+        return False, "", ACTUAL_RUNTIME_ERROR_CODE
+
+    return True, "", ACTUAL_NO_ERROR
 
 def __write_to_results_file(
     dir_name: pathlib.Path, filename: str, content: str
@@ -162,112 +256,37 @@ def __find_and_compare_results(
                 return True
     return False
 
+def test_all_pdl_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
 
-def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
-    actual_parse_error: set[str] = set()
-    actual_runtime_error: set[str] = set()
+    unexpected_parse_error: set[str] = set()
+    unexpected_runtime_error: set[str] = set()
     wrong_results = {}
 
     files = pathlib.Path(".").glob("**/*.pdl")
+    files = [str(f) for f in files]
+
+    # Check if we only want to test a subset of PDL programs
+    # MODIFIED_PDL_FILES_ENV_VAR is a string of PDL files, comma separated
+    MODIFIED_PDL_FILES_ENV_VAR = os.getenv("MODIFIED_PDL_FILES", "")
+    MODIFIED_PDL_FILES = [item.strip() for item in MODIFIED_PDL_FILES_ENV_VAR.split(",")]
+
+    if len(MODIFIED_PDL_FILES) > 0:
+        print("Only testing a subset of PDL programs, particularly newly added examples or PDL files that were modified.")
+        files = MODIFIED_PDL_FILES
 
     for pdl_file_name in files:
 
-        scope: ScopeType = PdlDict({})
-        if str(pdl_file_name) in TO_SKIP:
-            continue
-        if str(pdl_file_name) in TESTS_WITH_INPUT:
-            inputs = TESTS_WITH_INPUT[str(pdl_file_name)]
-            if inputs.stdin is not None:
-                monkeypatch.setattr(
-                    "sys.stdin",
-                    io.StringIO(inputs.stdin),
-                )
-            if inputs.scope is not None:
-                scope = inputs.scope
-        try:
-            random.seed(11)
-            output = pdl.exec_file(
-                pdl_file_name,
-                scope=scope,
-                output="all",
-                config=pdl.InterpreterConfig(batch=0),
-            )
-            actual_result = output["result"]
+        pdl_file_name_str = str(pdl_file_name)
+        successful, actual_results, error_code = run_single_file(pdl_file_name_str, monkeypatch)
 
-            block_to_dict(output["trace"], json_compatible=True)
-            result_dir_name = (
-                pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
-            )
+        if not successful:
+            if error_code == ACTUAL_PARSE_ERROR_CODE:
+                unexpected_parse_error |= {pdl_file_name_str}
+            elif error_code == ACTUAL_RUNTIME_ERROR_CODE:
+                unexpected_runtime_error |= {pdl_file_name_str}
+            else:
+                wrong_results[pdl_file_name_str] = actual_results
 
-            if not __find_and_compare_results(pdl_file_name, str(actual_result)):
-
-                if OLLAMA_GHACTIONS_RESULTS:
-                    print(
-                        f"Program {str(pdl_file_name)} requries updating its result on GitHub Actions"
-                    )
-                    print(f"Actual results: {str(actual_result)}")
-                    result_file_name = f"{pdl_file_name.stem}.ollama_ghactions.result"
-                    __write_to_results_file(
-                        result_dir_name, result_file_name, str(actual_result)
-                    )
-
-                    # Evaluate the results again. If fails again, then consider this program as failing
-                    if not __find_and_compare_results(
-                        pdl_file_name, str(actual_result)
-                    ):
-                        print(
-                            f"Program {str(pdl_file_name)} failed second time even after generating results from Github Actions. Consider this failing!"
-                        )
-                        wrong_results[str(pdl_file_name)] = {
-                            "actual": str(actual_result),
-                        }
-                    # If evaluating results produces correct result, then this is considered passing
-                    else:
-                        continue
-
-                if UPDATE_RESULTS:
-                    result_file_name = (
-                        f"{pdl_file_name.stem}.{str(RESULTS_VERSION)}.result"
-                    )
-                    __write_to_results_file(
-                        result_dir_name, result_file_name, str(actual_result)
-                    )
-
-                wrong_results[str(pdl_file_name)] = {
-                    "actual": str(actual_result),
-                }
-        except PDLParseError:
-            actual_parse_error |= {str(pdl_file_name)}
-        except Exception as exc:
-            if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
-                print(f"{pdl_file_name}: {exc}")  # unexpected error: breakpoint
-            actual_runtime_error |= {str(pdl_file_name)}
-            print(exc)
-
-    # Parse errors
-    expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
-    unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
-    assert (
-        len(unexpected_parse_error) == 0
-    ), f"Unexpected parse error: {unexpected_parse_error}"
-
-    # Runtime errors
-    expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
-    unexpected_runtime_error = sorted(
-        list(actual_runtime_error - expected_runtime_error)
-    )
-    assert (
-        len(unexpected_runtime_error) == 0
-    ), f"Unexpected runtime error: {unexpected_runtime_error}"
-
-    # Unexpected valid
-    unexpected_valid = sorted(
-        list(
-            (expected_parse_error - actual_parse_error).union(
-                expected_runtime_error - actual_runtime_error
-            )
-        )
-    )
-    assert len(unexpected_valid) == 0, f"Unexpected valid: {unexpected_valid}"
-    # Unexpected results
+    assert len(unexpected_parse_error) == 0, f"Unexpected parse error: {unexpected_parse_error}"
+    assert len(unexpected_runtime_error) == 0, f"Unexpected runtime error: {unexpected_runtime_error}"
     assert len(wrong_results) == 0, f"Wrong results: {wrong_results}"
