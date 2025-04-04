@@ -1,0 +1,113 @@
+# Configuration file for test_examples_run.py
+update_results: False
+results_version: 1
+
+# A subset of files to check, useful for local dev
+# If empty, check all files
+# check accepts a list of strings
+check:
+  # - examples/chatbot/chatbot.pdl
+  # - examples/tutorial/programs/chatbot.pdl # with inputs
+  # - examples/rag/pdf_index.pdl  # skip
+  # - tests/data/line/hello3.pdl  # parse error
+  # - examples/callback/repair_prompt.pdl # runtime error
+
+# Files to skip
+skip:
+  # Requires dataset dependency
+  - examples/cldk/cldk-assistant.pdl
+  - examples/gsm8k/gsm8.pdl
+  - examples/gsm8k/gsm8k-plan.pdl
+
+  # Requires installation dependencies
+  - examples/intrinsics/demo-hallucination.pdl
+  - examples/tutorial/programs/demo-hallucination.pdl
+
+  # Skip RAG examples
+  - examples/rag/pdf_index.pdl
+  - examples/rag/pdf_query.pdl
+  - examples/rag/rag_library1.pdl
+
+  # Skip structure decoding examples for now
+  - examples/tutorial/structured_decoding.pdl
+
+  # Output result include trace (and thus timing) for some reason. Investigate why
+  - examples/react/react_call.pdl
+
+  # UI examples
+  - pdl-live-react/demos/error.pdl
+  - pdl-live-react/demos/demo1.pdl
+  - pdl-live-react/demos/demo2.pdl
+
+  # Granite-io examples
+  - examples/granite-io/granite_io_hallucinations.pdl
+  - examples/granite-io/granite_io_openai.pdl
+  - examples/granite-io/granite_io_thinking.pdl
+  - examples/granite-io/granite_io_transformers.pdl
+
+# Files that require input
+with_inputs:
+  examples/tutorial/programs/chatbot.pdl:
+    stdin: "What is APR?\nyes\n"
+    scope: null
+  examples/chatbot/chatbot.pdl:
+    stdin: "What is APR?\nyes\n"
+    scope: null
+  examples/demo/7-chatbot-roles.pdl:
+    stdin: "What is APR?\nquit\n"
+    scope: null
+  examples/tutorial/input_stdin.pdl:
+    stdin: "What is APR?\nyes\n"
+    scope: null
+  examples/tutorial/input_stdin_multiline.pdl:
+    stdin: "Hello\nBye\n"
+    scope: null
+  examples/input/input_test1.pdl:
+    stdin: "Hello\n"
+    scope: null
+  examples/input/input_test2.pdl:
+    stdin: "Hello\n"
+    scope: null
+  examples/tutorial/free_variables.pdl:
+    stdin: null
+    scope: {
+        "something": "ABC"
+      }
+
+# Files expecting PDL parse error
+expected_parse_error:
+  - tests/data/line/hello.pdl
+  - tests/data/line/hello1.pdl
+  - tests/data/line/hello4.pdl
+  - tests/data/line/hello7.pdl
+  - tests/data/line/hello8.pdl
+  - tests/data/line/hello10.pdl
+  - tests/data/line/hello11.pdl
+  - tests/data/line/hello31.pdl
+
+# Files expecting runtime error
+expected_runtime_error:
+  - examples/callback/repair_prompt.pdl
+  - examples/tutorial/type_list.pdl
+  - examples/tutorial/type_checking.pdl
+  - tests/data/line/hello3.pdl
+  - tests/data/line/hello9.pdl
+  - tests/data/line/hello12.pdl
+  - tests/data/line/hello13.pdl
+  - tests/data/line/hello14.pdl
+  - tests/data/line/hello15.pdl
+  - tests/data/line/hello16.pdl
+  - tests/data/line/hello17.pdl
+  - tests/data/line/hello18.pdl
+  - tests/data/line/hello19.pdl
+  - tests/data/line/hello20.pdl
+  - tests/data/line/hello21.pdl
+  - tests/data/line/hello22.pdl
+  - tests/data/line/hello23.pdl
+  - tests/data/line/hello24.pdl
+  - tests/data/line/hello25.pdl
+  - tests/data/line/hello26.pdl
+  - tests/data/line/hello27.pdl
+  - tests/data/line/hello28.pdl
+  - tests/data/line/hello29.pdl
+  - tests/data/line/hello30.pdl

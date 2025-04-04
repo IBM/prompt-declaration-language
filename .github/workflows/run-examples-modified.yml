@@ -3,7 +3,6 @@ name: Run examples on modified PDL files
 
 on: [push, pull_request]
 
-
 jobs:
   tests:
     name: Execution tests
@@ -15,49 +14,49 @@ jobs:
         python-version: ['3.11']
 
     steps:
-      # Free up some disk space
-    - name: Remove unnecessary files
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+    #   # Free up some disk space
+    # - name: Remove unnecessary files
+    #   run: |
+    #     sudo rm -rf /usr/share/dotnet
+    #     sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
-      # Set up Ollama
-    - name: Install Ollama and start server
-      shell: bash
-      run: |
-        curl -fsSL https://ollama.com/install.sh | sudo -E sh
+    #   # Set up Ollama
+    # - name: Install Ollama and start server
+    #   shell: bash
+    #   run: |
+    #     curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
-    - name: Pull models in examples/
-      shell: bash
-      run: |
-        ollama pull granite3.2:2b
-        ollama pull granite3.2:8b
-        ollama pull mxbai-embed-large
-        ollama list
+    # - name: Pull models in examples/
+    #   shell: bash
+    #   run: |
+    #     ollama pull granite3.2:2b
+    #     ollama pull granite3.2:8b
+    #     ollama pull mxbai-embed-large
+    #     ollama list
 
-    - name: Check that all required models are available
-      shell: bash
-      run: |
-        models=("mxbai-embed-large" "granite3.2:2b" "granite3.2:8b")
-        missing=0
-        for model in "${models[@]}"; do
-          if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
-            echo "❌ Model $model (or substring) is missing!"
-            missing=1
-          fi
-        done
+    # - name: Check that all required models are available
+    #   shell: bash
+    #   run: |
+    #     models=("mxbai-embed-large" "granite3.2:2b" "granite3.2:8b")
+    #     missing=0
+    #     for model in "${models[@]}"; do
+    #       if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
+    #         echo "❌ Model $model (or substring) is missing!"
+    #         missing=1
+    #       fi
+    #     done
 
-        if [ "$missing" -eq 1 ]; then
-          exit 1
-        else
-          echo "✅ All expected models are available."
-        fi
+    #     if [ "$missing" -eq 1 ]; then
+    #       exit 1
+    #     else
+    #       echo "✅ All expected models are available."
+    #     fi
 
-    - name: Wait for Ollama server
-      shell: bash
-      run: |
-        sleep 10
-        time curl -i http://localhost:11434
+    # - name: Wait for Ollama server
+    #   shell: bash
+    #   run: |
+    #     sleep 10
+    #     time curl -i http://localhost:11434
 
     # Run tests
     - uses: actions/checkout@v4
@@ -69,38 +68,49 @@ jobs:
       with:
         files: |
           **.pdl
-    - name: List PDL files that were modified or added
+        json: 'true'
+    - name: List PDL files that were modified or added and append to test_examples_run
       env:
         MODIFIED_PDL_FILES: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
       run: echo "$MODIFIED_PDL_FILES"
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - name: Update tests/test_example_run.yaml
+      uses: fjogeleit/yaml-update-action@main
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Cache pip
-      uses: actions/cache@v4
-      with:
-        # This path is specific to Ubuntu
-        path: ${{ env.pythonLocation }}
-        # Look to see if there is a cache hit for the setup file
-        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-new3
-          ${{ runner.os }}-new3
-    - name: Install dependencies
-      run: pip install --upgrade --upgrade-strategy eager .[all]
-    - name: pip list packages
-      run: pip list
-    - name: show pip dependencies
-      run: |
-        pip install pipdeptree
-        pipdeptree -fl
-    - name: run tests
-      env:
-        WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
-        WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
-        WATSONX_URL: ${{ secrets.WATSONX_URL }}
-        REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-        OLLAMA_GHACTIONS_RESULTS: true
-        MODIFIED_PDL_FILES: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
-      run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py
+        valueFile: 'tests/test_example_run.yaml'
+        propertyPath: 'check'
+        value: "f${{ fromJSON(steps.changed-pdl-files.outputs.all_changed_files) }}"
+        commitChange: false
+
+    - name: print yaml config
+      run: cat tests/test_example_run.yaml
+
+
+    # - name: Set up Python ${{ matrix.python-version }}
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: ${{ matrix.python-version }}
+    # - name: Cache pip
+    #   uses: actions/cache@v4
+    #   with:
+    #     # This path is specific to Ubuntu
+    #     path: ${{ env.pythonLocation }}
+    #     # Look to see if there is a cache hit for the setup file
+    #     key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pip-new3
+    #       ${{ runner.os }}-new3
+    # - name: Install dependencies
+    #   run: pip install --upgrade --upgrade-strategy eager .[all]
+    # - name: pip list packages
+    #   run: pip list
+    # - name: show pip dependencies
+    #   run: |
+    #     pip install pipdeptree
+    #     pipdeptree -fl
+    # - name: run tests
+    #   env:
+    #     WATSONX_PROJECT_ID: ${{ secrets.WATSONX_PROJECT_ID }}
+    #     WATSONX_APIKEY: ${{ secrets.WATSONX_APIKEY }}
+    #     WATSONX_URL: ${{ secrets.WATSONX_URL }}
+    #     REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+    #   run: py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py

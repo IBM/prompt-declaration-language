@@ -2,7 +2,7 @@ description: Chatbot
 text:
 # Allow the user to type any question, implicitly adding the question to the context.
 - read:
-  message: "What is your query?\n"
+  message: "What is your query??\n"
 - repeat:
     text:
     # Send context to Granite model hosted at ollama
