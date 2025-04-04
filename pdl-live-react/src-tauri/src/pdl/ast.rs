@@ -198,9 +198,16 @@ impl PdlModelBlock {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum PdlListOrString {
+    String(String),
+    List(Vec<Value>),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PdlRepeatBlock {
     #[serde(rename = "for")]
-    pub for_: HashMap<String, String>,
+    pub for_: HashMap<String, PdlListOrString>,
     pub repeat: Box<PdlBlock>,
 }
 

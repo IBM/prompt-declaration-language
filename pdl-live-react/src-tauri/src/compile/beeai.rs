@@ -12,9 +12,9 @@ use serde_json::{from_reader, json, to_string, Map, Value};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    PdlBaseType, PdlBlock, PdlCallBlock, PdlFunctionBlock, PdlMessageBlock, PdlModelBlock,
-    PdlObjectBlock, PdlOptionalType, PdlParser, PdlPythonCodeBlock, PdlRepeatBlock, PdlTextBlock,
-    PdlType, Role,
+    PdlBaseType, PdlBlock, PdlCallBlock, PdlFunctionBlock, PdlListOrString, PdlMessageBlock,
+    PdlModelBlock, PdlObjectBlock, PdlOptionalType, PdlParser, PdlPythonCodeBlock, PdlRepeatBlock,
+    PdlTextBlock, PdlType, Role,
 };
 use crate::pdl::pip::pip_install_if_needed;
 use crate::pdl::requirements::BEEAI_FRAMEWORK;
@@ -58,7 +58,7 @@ struct BeeAiToolState {
     name: String,
     description: Option<String>,
     input_schema: BeeAiToolSchema,
-    options: Option<HashMap<String, Value>>,
+    // options: Option<HashMap<String, Value>>,
 }
 #[derive(Deserialize, Debug)]
 struct BeeAiTool {
@@ -223,7 +223,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
     let mut for_ = HashMap::new();
     for_.insert(
         "tool".to_string(),
-        "${ response.choices[0].message.tool_calls }".to_string(),
+        PdlListOrString::String("${ response.choices[0].message.tool_calls }".to_string()),
     );
 
     // response.choices[0].message.tool_calls

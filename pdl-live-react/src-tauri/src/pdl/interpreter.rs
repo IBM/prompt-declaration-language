@@ -25,8 +25,8 @@ use serde_json::{from_str, to_string, Map, Value};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    PdlBlock, PdlCallBlock, PdlModelBlock, PdlParser, PdlPythonCodeBlock, PdlReadBlock,
-    PdlRepeatBlock, PdlTextBlock, PdlUsage, Role,
+    PdlBlock, PdlCallBlock, PdlListOrString, PdlModelBlock, PdlParser, PdlPythonCodeBlock,
+    PdlReadBlock, PdlRepeatBlock, PdlTextBlock, PdlUsage, Role,
 };
 
 type Context = Vec<ChatMessage>;
@@ -112,7 +112,7 @@ impl<'a> Interpreter<'a> {
         self.run_with_emit(program, context, self.emit).await
     }
 
-    // Evaluate as a Jinja2 expression
+    // Evaluate String as a Jinja2 expression
     fn eval<T: serde::de::DeserializeOwned + ::std::convert::From<String>>(
         &self,
         expr: &String,
@@ -132,6 +132,43 @@ impl<'a> Interpreter<'a> {
             }
             backup.into()
         }))
+    }
+
+    fn eval_complex(&self, expr: &Value) -> Result<Value, Box<dyn Error + Send + Sync>> {
+        match expr {
+            Value::String(s) => self.eval(s),
+            Value::Array(a) => Ok(Value::Array(
+                a.iter()
+                    .map(|v| self.eval_complex(v))
+                    .collect::<Result<_, _>>()?,
+            )),
+            Value::Object(o) => Ok(Value::Object(
+                o.iter()
+                    .map(|(k, v)| match self.eval_complex(v) {
+                        Ok(v) => Ok((k.clone(), v)),
+                        Err(e) => Err(e),
+                    })
+                    .collect::<Result<_, _>>()?,
+            )),
+            v => Ok(v.clone()),
+        }
+    }
+
+    // Evaluate an string or list of Values into a list of Values
+    fn eval_list_or_string(
+        &self,
+        expr: &PdlListOrString,
+    ) -> Result<Vec<Value>, Box<dyn Error + Send + Sync>> {
+        match expr {
+            PdlListOrString::String(s) => match self.eval::<Value>(s)? {
+                Value::Array(a) => Ok(a),
+                x => Err(Box::from(format!(
+                    "Jinja string expanded to non-list. {} -> {:?}",
+                    s, x
+                ))),
+            },
+            PdlListOrString::List(l) => l.iter().map(|v| self.eval_complex(v)).collect(),
+        }
     }
 
     // Run a PdlBlock::String
@@ -179,53 +216,26 @@ impl<'a> Interpreter<'a> {
             eprintln!("Call {:?}({:?})", block.call, block.args);
         }
 
-        let args = match &block.args {
-            Some(x) => match x {
-                // args is a string; eval it and see if we get an Object out the other side
-                Value::String(s) => match self.eval::<Value>(&s)? {
-                    // args was a string that eval'd to an Object
-                    Value::Object(m) => Ok(Some(self.to_pdl(&m))),
-                    // args was a string that eval'd to something we don't understand
-                    y => Err(Box::<dyn Error + Send + Sync>::from(format!(
-                        "Invalid arguments to call {:?}",
-                        y
-                    ))),
-                },
-                // args is already an Object
-                Value::Object(m) => Ok(Some(self.to_pdl(&m))),
-                // args is something we don't understand
-                y => Err(Box::from(format!("Invalid arguments to call {:?}", y))),
-            },
-            // no args... that's ok (TODO: check against function schema)
-            None => Ok(None),
-        }?;
-        self.extend_scope_with_map(&args);
+        if let Some(args) = &block.args {
+            match self.eval_complex(args)? {
+                Value::Object(m) => Ok(self.extend_scope_with_json_map(m)),
+                x => Err(Box::<dyn Error + Send + Sync>::from(format!(
+                    "Call arguments not a map: {:?}",
+                    x
+                ))),
+            }?;
+        }
 
         let res = match self.eval::<PdlBlock>(&block.call)? {
             PdlBlock::Function(f) => self.run(&f.return_, context.clone()).await,
             _ => Err(Box::from(format!("call of non-function {:?}", &block.call))),
         };
-        self.scope.pop();
+
+        if let Some(_) = block.args {
+            self.scope.pop();
+        }
 
         res
-    }
-
-    fn to_pdl(&self, m: &Map<String, Value>) -> HashMap<String, PdlBlock> {
-        m.into_iter()
-            .map(|(k, v)| {
-                (
-                    k.clone(),
-                    match v {
-                        Value::String(s) => PdlBlock::String(s.clone()),
-                        Value::Number(n) => PdlBlock::Number(n.clone()),
-                        x => {
-                            eprintln!("Unhandled arg value {:?}", x);
-                            "error".into()
-                        }
-                    },
-                )
-            })
-            .collect()
     }
 
     fn to_ollama_model_options(
@@ -428,19 +438,41 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Repeat
-    async fn run_repeat(&mut self, block: &PdlRepeatBlock, _context: Context) -> Interpretation {
-        let for_ = block
+    async fn run_repeat(&mut self, block: &PdlRepeatBlock, context: Context) -> Interpretation {
+        // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
+        //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
+        //            .into_iter()
+        //            .unzip();
+        let map = block
             .for_
             .iter()
-            .map(|(var, values)| (var, self.eval::<PdlBlock>(&values)));
+            .map(|(var, values)| match self.eval_list_or_string(values) {
+                Ok(value) => Ok((var.clone(), value)),
+                Err(e) => Err(e),
+            })
+            .collect::<Result<HashMap<_, _>, _>>()?;
 
         if self.debug {
-            eprintln!("Repeat {:?}", &for_);
+            eprintln!("Repeat {:?}", map);
         }
-        Ok((
-            vec![ChatMessage::user("TODO".into())],
-            PdlBlock::Repeat(block.clone()),
-        ))
+
+        let mut messages = vec![];
+        let mut trace = vec![];
+        if let Some(n) = map.iter().map(|(_, v)| v.len()).min() {
+            for iter in 0..n {
+                let scope: HashMap<String, Value> = map
+                    .iter()
+                    .map(|(k, v)| (k.clone(), v[iter].clone()))
+                    .collect();
+                self.extend_scope_with_map(scope);
+                let (ms, t) = self.run_quiet(&block.repeat, context.clone()).await?;
+                messages.extend(ms);
+                trace.push(t);
+                self.scope.pop();
+            }
+        }
+
+        Ok((messages, PdlBlock::Repeat(block.clone())))
     }
 
     fn to_ollama_role(&self, role: &Role) -> MessageRole {
@@ -462,7 +494,18 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    fn extend_scope_with_map(&mut self, map: &Option<HashMap<String, PdlBlock>>) {
+    fn extend_scope_with_map(&mut self, new_scope: HashMap<String, Value>) {
+        self.scope.push(new_scope);
+    }
+
+    fn extend_scope_with_json_map(&mut self, new_scope: Map<String, Value>) {
+        let mut scope = self.scope.last().unwrap_or(&HashMap::new()).clone();
+        // TODO figure out iterators
+        scope.extend(new_scope.into_iter().collect::<HashMap<String, Value>>());
+        self.extend_scope_with_map(scope);
+    }
+
+    fn extend_scope_with_block_map(&mut self, map: &Option<HashMap<String, PdlBlock>>) {
         let cur_scope = self.scope.last().unwrap_or(&HashMap::new()).clone();
         let new_scope = match map {
             Some(defs) => {
@@ -479,7 +522,7 @@ impl<'a> Interpreter<'a> {
             None => cur_scope,
         };
 
-        self.scope.push(new_scope);
+        self.extend_scope_with_map(new_scope);
     }
 
     // Run a PdlBlock::Text
@@ -498,7 +541,7 @@ impl<'a> Interpreter<'a> {
         let mut output_messages = vec![];
         let mut output_blocks = vec![];
 
-        self.extend_scope_with_map(&block.defs);
+        self.extend_scope_with_block_map(&block.defs);
         let mut iter = block.text.iter();
         while let Some(block) = iter.next() {
             // run each element of the Text block

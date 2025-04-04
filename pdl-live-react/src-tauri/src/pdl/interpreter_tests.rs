@@ -5,11 +5,11 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{PdlBlock, PdlModelBlock, PdlParser, PdlTextBlock},
+        ast::{PdlBlock, PdlModelBlock},
         interpreter::{run_json_sync as run_json, run_sync as run},
     };
 
-    use ollama_rs::generation::chat::MessageRole;
+    use ollama_rs::generation::chat::{ChatMessage, MessageRole};
 
     const DEFAULT_MODEL: &'static str = "ollama/granite3.2:2b";
 
@@ -218,6 +218,80 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "this should be foo\n");
+        Ok(())
+    }
+
+    #[test]
+    fn text_repeat_numbers_1d() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "for": {
+                "x": [1,2,3]
+            },
+            "repeat": {
+                "text": [
+                    "${ x + 1 }"
+                ]
+            }
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 3);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "2");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "3");
+        assert_eq!(messages[2].role, MessageRole::User);
+        assert_eq!(messages[2].content, "4");
+        Ok(())
+    }
+
+    #[test]
+    fn text_repeat_numbers_2d() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "for": {
+                "x": [1,2,3],
+                "y": [4,5,6]
+            },
+            "repeat": {
+                "text": [
+                    "${ x + y }"
+                ]
+            }
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 3);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "5");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "7");
+        assert_eq!(messages[2].role, MessageRole::User);
+        assert_eq!(messages[2].content, "9");
+        Ok(())
+    }
+
+    #[test]
+    fn text_repeat_mix_2d() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "for": {
+                "x": [{"z": 4}, {"z": 5}, {"z": 6}],
+                "y": ["a","b","c"]
+            },
+            "repeat": {
+                "text": [
+                    "${ x.z ~ y }" // ~ is string concatenation in jinja
+                ]
+            }
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 3);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "4a");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "5b");
+        assert_eq!(messages[2].role, MessageRole::User);
+        assert_eq!(messages[2].content, "6c");
         Ok(())
     }
 }
