@@ -50,18 +50,23 @@ pub enum PdlType {
     Object(HashMap<String, PdlType>),
 }
 
+/// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlCallBlock {
+pub struct CallBlock {
+    /// Function to call
     pub call: String,
+
+    /// Arguments of the function with their values
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Value>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub defs: Option<HashMap<String, PdlBlock>>,
 }
 
-impl PdlCallBlock {
+impl CallBlock {
     pub fn new(call: String) -> Self {
-        PdlCallBlock {
+        CallBlock {
             call: call,
             args: None,
             defs: None,
@@ -69,24 +74,32 @@ impl PdlCallBlock {
     }
 }
 
+/// Create the concatenation of the stringify version of the result of
+/// each block of the list of blocks.
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlTextBlock {
+pub struct TextBlock {
+    /// Body of the text
+    pub text: Vec<PdlBlock>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
-    pub text: Vec<PdlBlock>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub defs: Option<HashMap<String, PdlBlock>>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub def: Option<String>,
 }
 
-impl PdlTextBlock {
+impl TextBlock {
     pub fn new(text: Vec<PdlBlock>) -> Self {
-        PdlTextBlock {
+        TextBlock {
             def: None,
             defs: None,
             description: None,
@@ -116,14 +129,14 @@ impl PdlTextBlock {
     }
 }
 
-impl From<Vec<PdlBlock>> for PdlTextBlock {
+impl From<Vec<PdlBlock>> for TextBlock {
     fn from(v: Vec<PdlBlock>) -> Self {
-        PdlTextBlock::new(v).build()
+        TextBlock::new(v).build()
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlFunctionBlock {
+pub struct FunctionBlock {
     pub function: HashMap<String, PdlType>,
     #[serde(rename = "return")]
     pub return_: Box<PdlBlock>,
@@ -142,7 +155,7 @@ pub struct PdlUsage {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlModelBlock {
+pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     pub model: String,
@@ -163,9 +176,9 @@ pub struct PdlModelBlock {
     pub pdl_usage: Option<PdlUsage>,
 }
 
-impl PdlModelBlock {
+impl ModelBlock {
     pub fn new(model: &str) -> Self {
-        PdlModelBlock {
+        ModelBlock {
             def: None,
             description: None,
             model_response: None,
@@ -199,61 +212,88 @@ impl PdlModelBlock {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum PdlListOrString {
+pub enum ListOrString {
     String(String),
     List(Vec<Value>),
 }
 
+/// Repeat the execution of a block.
+///
+/// For loop example:
+/// ```PDL
+/// for:
+///     number: [1, 2, 3, 4]
+///     name: ["Bob", "Carol", "David", "Ernest"]
+/// repeat:
+///     "${ name }'s number is ${ number }\\n"
+/// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlRepeatBlock {
+pub struct RepeatBlock {
+    /// Arrays to iterate over
     #[serde(rename = "for")]
-    pub for_: HashMap<String, PdlListOrString>,
+    pub for_: HashMap<String, ListOrString>,
+
+    /// Body of the loop
     pub repeat: Box<PdlBlock>,
 }
 
+/// Create a message
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlMessageBlock {
+pub struct MessageBlock {
+    /// Role of associated to the message, e.g. User or Assistant
     pub role: Role,
+
+    /// Content of the message
     pub content: Box<PdlBlock>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+
+    /// For example, the name of the tool that was invoked, for which this message is the tool response
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+
+    /// The id of the tool invocation for which this message is the tool response
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_call_id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlObjectBlock {
+pub struct ObjectBlock {
     pub object: HashMap<String, PdlBlock>,
 }
 
+/// Execute a piece of Python code.
+///
+/// Example:
+/// ```yaml
+/// lang: python
+/// code: |
+///     import random
+///     # (In PDL, set `result` to the output you wish for your code block.)
+///     result = random.randint(1, 20)
+/// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlPythonCodeBlock {
-    #[serde(default = "lang_python")]
+pub struct PythonCodeBlock {
     pub lang: String,
     pub code: String,
 }
 
-fn lang_python() -> String {
-    "python".to_string()
-}
-
-// Read from a file or standard input.
-//
-// Example. Read from the standard input with a prompt starting with `> `.
-// ```PDL
-// read:
-// message: "> "
-// ```
-//
-// Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
-// ```PDL
-// read: ./data.yaml
-// parser: yaml
-// ```
+/// Read from a file or standard input.
+///
+/// Example. Read from the standard input with a prompt starting with `> `.
+/// ```PDL
+/// read:
+/// message: "> "
+/// ```
+///
+/// Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+/// ```PDL
+/// read: ./data.yaml
+/// parser: yaml
+/// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PdlReadBlock {
+pub struct ReadBlock {
     // Name of the file to read. If `None`, read the standard input.
     pub read: Value,
     // Name of the file to read. If `None`, read the standard input.
@@ -262,27 +302,49 @@ pub struct PdlReadBlock {
     pub multiline: Option<bool>,
 }
 
+/// Conditional control structure.
+///
+/// Example:
+/// ```PDL
+/// defs:
+///   answer:
+///     read:
+///     message: "Enter a number? "
+/// if: ${ (answer | int) == 42 }
+/// then: You won!
+/// ```
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct IfBlock {
+    /// The condition to check
+    #[serde(rename = "if")]
+    condition: String,
+
+    /// Branch to execute if the condition is true
+    then: Box<PdlBlock>,
+
+    /// Branch to execute if the condition is false.
+    #[serde(rename = "else")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    else_: Option<Box<PdlBlock>>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum PdlBlock {
     Bool(bool),
     Number(Number),
     String(String),
-    /*If {
-            #[serde(rename = "if")]
-            condition: String,
-            then: Box<PdlBlock>,
-    },*/
-    Object(PdlObjectBlock),
-    Call(PdlCallBlock),
+    If(IfBlock),
+    Object(ObjectBlock),
+    Call(CallBlock),
     Array { array: Vec<PdlBlock> },
-    Message(PdlMessageBlock),
-    Repeat(PdlRepeatBlock),
-    Text(PdlTextBlock),
-    Model(PdlModelBlock),
-    Function(PdlFunctionBlock),
-    PythonCode(PdlPythonCodeBlock),
-    Read(PdlReadBlock),
+    Message(MessageBlock),
+    Repeat(RepeatBlock),
+    Text(TextBlock),
+    Model(ModelBlock),
+    Function(FunctionBlock),
+    PythonCode(PythonCodeBlock),
+    Read(ReadBlock),
 }
 
 impl From<&str> for PdlBlock {

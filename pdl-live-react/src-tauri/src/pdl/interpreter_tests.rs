@@ -5,7 +5,7 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{PdlBlock, PdlModelBlock},
+        ast::{ModelBlock, PdlBlock},
         interpreter::{run_json_sync as run_json, run_sync as run},
     };
 
@@ -25,7 +25,7 @@ mod tests {
     #[test]
     fn single_model_via_input() -> Result<(), Box<dyn Error>> {
         let (messages, _) = run(
-            &PdlBlock::Model(PdlModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
+            &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
             false,
         )?;
         assert_eq!(messages.len(), 1);

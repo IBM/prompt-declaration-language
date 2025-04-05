@@ -25,8 +25,8 @@ use serde_json::{from_str, to_string, Map, Value};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    PdlBlock, PdlCallBlock, PdlListOrString, PdlModelBlock, PdlParser, PdlPythonCodeBlock,
-    PdlReadBlock, PdlRepeatBlock, PdlTextBlock, PdlUsage, Role,
+    CallBlock, ListOrString, ModelBlock, PdlBlock, PdlParser, PdlUsage, PythonCodeBlock, ReadBlock,
+    RepeatBlock, Role, TextBlock,
 };
 
 type Context = Vec<ChatMessage>;
@@ -157,17 +157,17 @@ impl<'a> Interpreter<'a> {
     // Evaluate an string or list of Values into a list of Values
     fn eval_list_or_string(
         &self,
-        expr: &PdlListOrString,
+        expr: &ListOrString,
     ) -> Result<Vec<Value>, Box<dyn Error + Send + Sync>> {
         match expr {
-            PdlListOrString::String(s) => match self.eval::<Value>(s)? {
+            ListOrString::String(s) => match self.eval::<Value>(s)? {
                 Value::Array(a) => Ok(a),
                 x => Err(Box::from(format!(
                     "Jinja string expanded to non-list. {} -> {:?}",
                     s, x
                 ))),
             },
-            PdlListOrString::List(l) => l.iter().map(|v| self.eval_complex(v)).collect(),
+            ListOrString::List(l) => l.iter().map(|v| self.eval_complex(v)).collect(),
         }
     }
 
@@ -187,7 +187,7 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Read
-    async fn run_read(&self, block: &PdlReadBlock, _context: Context) -> Interpretation {
+    async fn run_read(&self, block: &ReadBlock, _context: Context) -> Interpretation {
         let trace = block.clone();
 
         if let Some(message) = &block.message {
@@ -211,7 +211,7 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Call
-    async fn run_call(&mut self, block: &PdlCallBlock, context: Context) -> Interpretation {
+    async fn run_call(&mut self, block: &CallBlock, context: Context) -> Interpretation {
         if self.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
         }
@@ -276,7 +276,7 @@ impl<'a> Interpreter<'a> {
     // Run a PdlBlock::PythonCode
     async fn run_python_code(
         &mut self,
-        block: &PdlPythonCodeBlock,
+        block: &PythonCodeBlock,
         context: Context,
     ) -> Interpretation {
         use rustpython_vm as vm;
@@ -323,7 +323,7 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Model
-    async fn run_model(&mut self, block: &PdlModelBlock, context: Context) -> Interpretation {
+    async fn run_model(&mut self, block: &ModelBlock, context: Context) -> Interpretation {
         match &block.model {
             pdl_model
                 if pdl_model.starts_with("ollama/") || pdl_model.starts_with("ollama_chat/") =>
@@ -438,7 +438,7 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Repeat
-    async fn run_repeat(&mut self, block: &PdlRepeatBlock, context: Context) -> Interpretation {
+    async fn run_repeat(&mut self, block: &RepeatBlock, context: Context) -> Interpretation {
         // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
         //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
         //            .into_iter()
@@ -526,7 +526,7 @@ impl<'a> Interpreter<'a> {
     }
 
     // Run a PdlBlock::Text
-    async fn run_text(&mut self, block: &PdlTextBlock, context: Context) -> Interpretation {
+    async fn run_text(&mut self, block: &TextBlock, context: Context) -> Interpretation {
         if self.debug {
             eprintln!(
                 "Text {:?}",
