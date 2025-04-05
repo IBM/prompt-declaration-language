@@ -25,8 +25,8 @@ use serde_json::{from_str, to_string, Map, Value};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    CallBlock, ListOrString, ModelBlock, PdlBlock, PdlParser, PdlUsage, PythonCodeBlock, ReadBlock,
-    RepeatBlock, Role, TextBlock,
+    CallBlock, IfBlock, ListOrString, ModelBlock, PdlBlock, PdlParser, PdlUsage, PythonCodeBlock,
+    ReadBlock, RepeatBlock, Role, StringOrBoolean, TextBlock,
 };
 
 type Context = Vec<ChatMessage>;
@@ -82,8 +82,9 @@ impl<'a> Interpreter<'a> {
         let (messages, trace) = match program {
             PdlBlock::String(s) => self.run_string(s, context).await,
             PdlBlock::Call(block) => self.run_call(block, context).await,
-            PdlBlock::PythonCode(block) => self.run_python_code(block, context).await,
+            PdlBlock::If(block) => self.run_if(block, context).await,
             PdlBlock::Model(block) => self.run_model(block, context).await,
+            PdlBlock::PythonCode(block) => self.run_python_code(block, context).await,
             PdlBlock::Read(block) => self.run_read(block, context).await,
             PdlBlock::Repeat(block) => self.run_repeat(block, context).await,
             PdlBlock::Text(block) => self.run_text(block, context).await,
@@ -235,6 +236,34 @@ impl<'a> Interpreter<'a> {
             self.scope.pop();
         }
 
+        res
+    }
+
+    // Run a PdlBlock::Call
+    async fn run_if(&mut self, block: &IfBlock, context: Context) -> Interpretation {
+        if self.debug {
+            eprintln!("If {:?}({:?})", block.condition, block.then);
+        }
+
+        self.extend_scope_with_block_map(&block.defs);
+
+        let cond = match &block.condition {
+            StringOrBoolean::Boolean(b) => Value::Bool(*b),
+            StringOrBoolean::String(s) => self.eval::<Value>(s)?,
+        };
+        let res = match cond {
+            Value::Bool(true) => self.run_quiet(&block.then, context).await,
+            Value::Bool(false) => match &block.else_ {
+                Some(else_block) => self.run_quiet(&else_block, context).await,
+                None => Ok((vec![], PdlBlock::If(block.clone()))),
+            },
+            x => Err(Box::from(format!(
+                "if block condition evaluated to non-boolean value: {:?}",
+                x
+            ))),
+        };
+
+        self.scope.pop();
         res
     }
 

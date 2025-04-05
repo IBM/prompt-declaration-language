@@ -9,7 +9,7 @@ mod tests {
         interpreter::{run_json_sync as run_json, run_sync as run},
     };
 
-    use ollama_rs::generation::chat::{ChatMessage, MessageRole};
+    use ollama_rs::generation::chat::MessageRole;
 
     const DEFAULT_MODEL: &'static str = "ollama/granite3.2:2b";
 
@@ -292,6 +292,53 @@ mod tests {
         assert_eq!(messages[1].content, "5b");
         assert_eq!(messages[2].role, MessageRole::User);
         assert_eq!(messages[2].content, "6c");
+        Ok(())
+    }
+
+    #[test]
+    fn text_if_true() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "if": true,
+            "then": "good"
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "good");
+        Ok(())
+    }
+
+    #[test]
+    fn text_if_false() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "if": false,
+            "then": "bug",
+            "else": "good"
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "good");
+        Ok(())
+    }
+
+    #[test]
+    fn text_if_with_defs() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "defs": {
+                "x": 5
+            },
+            "if": "${x!=5}",
+            "then": "bug",
+            "else": "good"
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "good");
         Ok(())
     }
 }

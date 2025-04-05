@@ -302,6 +302,13 @@ pub struct ReadBlock {
     pub multiline: Option<bool>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum StringOrBoolean {
+    String(String),
+    Boolean(bool),
+}
+
 /// Conditional control structure.
 ///
 /// Example:
@@ -317,15 +324,18 @@ pub struct ReadBlock {
 pub struct IfBlock {
     /// The condition to check
     #[serde(rename = "if")]
-    condition: String,
+    pub condition: StringOrBoolean,
 
     /// Branch to execute if the condition is true
-    then: Box<PdlBlock>,
+    pub then: Box<PdlBlock>,
 
     /// Branch to execute if the condition is false.
     #[serde(rename = "else")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    else_: Option<Box<PdlBlock>>,
+    pub else_: Option<Box<PdlBlock>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub defs: Option<HashMap<String, PdlBlock>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
