@@ -728,9 +728,10 @@ def process_block_body(
                 )
             repeat_loc = append(loc, "repeat")
             iidx = 0
-            try:
-                first = True
-                while True:
+            first = True
+            retry_count = 0
+            while True:
+                try:
                     if max_iterations is not None and iidx >= max_iterations:
                         break
                     if lengths is not None and iidx >= lengths[0]:
@@ -783,14 +784,41 @@ def process_block_body(
                     stop, _ = process_condition_of(block, "until", scope, loc)
                     if stop:
                         break
-            except PDLRuntimeError as exc:
-                iter_trace.append(exc.pdl__trace)
-                trace = block.model_copy(update={"pdl__trace": iter_trace})
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or repeat_loc,
-                    trace=trace,
-                ) from exc
+                except PDLRuntimeError as exc:
+                    manual_stop = False
+                    if "Keyboard Interrupt" in exc.message:
+                        manual_stop = True
+                    iter_trace.append(exc.pdl__trace)
+                    trace = block.model_copy(update={"pdl__trace": iter_trace})
+                    if (
+                        block.retry_max
+                        and block.retry_max > 0
+                        and retry_count < block.retry_max
+                        and not manual_stop
+                    ):
+                        retry_count += 1
+                        error = f"Retry on error is triggered in a repeat block. Error detail: {repr(exc)} "
+                        print(f"\n\033[0;31m{error}\033[0m\n")
+                        repeating_same_error = False
+                        if background and background.data:
+                            bg_data = background.data
+                            if isinstance(bg_data, list):
+                                last_error = bg_data[-1]["content"]
+                                if isinstance(last_error, str):
+                                    if last_error.endswith(error):
+                                        repeating_same_error = True
+                        if repeating_same_error:
+                            error = "The previous error occurs multiple times."
+                        background = lazy_messages_concat(
+                            background,
+                            PdlList([{"role": "assistant", "content": error}]),
+                        )
+                    else:
+                        raise PDLRuntimeError(
+                            exc.message,
+                            loc=exc.loc or repeat_loc,
+                            trace=trace,
+                        ) from exc
             result = combine_results(block.join.as_, results)
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
