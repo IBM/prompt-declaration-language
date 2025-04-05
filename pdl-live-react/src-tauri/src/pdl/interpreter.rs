@@ -1,10 +1,10 @@
 // use ::std::cell::LazyCell;
 use ::std::collections::HashMap;
-use std::sync::{Arc, Mutex};
-// use ::std::env::current_dir;
+use ::std::env::current_dir;
 use ::std::error::Error;
 use ::std::fs::{read_to_string as read_file_to_string, File};
-// use ::std::path::PathBuf;
+use ::std::path::PathBuf;
+use std::sync::{Arc, Mutex};
 
 use async_recursion::async_recursion;
 use minijinja::{syntax::SyntaxConfig, Environment};
@@ -31,13 +31,14 @@ use crate::pdl::ast::{
 
 type Context = Vec<ChatMessage>;
 type Scope = HashMap<String, Value>;
-type Interpretation = Result<(Context, PdlBlock), Box<dyn Error + Send + Sync>>;
+type PdlError = Box<dyn Error + Send + Sync>;
+type Interpretation = Result<(Context, PdlBlock), PdlError>;
 type InterpretationSync = Result<(Context, PdlBlock), Box<dyn Error>>;
 
 struct Interpreter<'a> {
     // batch: u32,
     // role: Role,
-    // cwd: Box<PathBuf>,
+    cwd: PathBuf,
     // id_stack: Vec<String>,
     jinja_env: Environment<'a>,
     // rt: Runtime,
@@ -60,7 +61,7 @@ impl<'a> Interpreter<'a> {
         Self {
             // batch: 0,
             // role: Role::User,
-            // cwd: Box::new(current_dir().unwrap_or(PathBuf::from("/"))),
+            cwd: current_dir().unwrap_or(PathBuf::from("/")),
             // id_stack: vec![],
             jinja_env: jinja_env,
             // rt: Runtime::new().unwrap(),
@@ -113,11 +114,11 @@ impl<'a> Interpreter<'a> {
         self.run_with_emit(program, context, self.emit).await
     }
 
-    // Evaluate String as a Jinja2 expression
+    /// Evaluate String as a Jinja2 expression
     fn eval<T: serde::de::DeserializeOwned + ::std::convert::From<String>>(
         &self,
         expr: &String,
-    ) -> Result<T, Box<dyn Error + Send + Sync>> {
+    ) -> Result<T, PdlError> {
         let result = self
             .jinja_env
             .render_str(expr.as_str(), self.scope.last().unwrap_or(&HashMap::new()))?;
@@ -135,7 +136,7 @@ impl<'a> Interpreter<'a> {
         }))
     }
 
-    fn eval_complex(&self, expr: &Value) -> Result<Value, Box<dyn Error + Send + Sync>> {
+    fn eval_complex(&self, expr: &Value) -> Result<Value, PdlError> {
         match expr {
             Value::String(s) => self.eval(s),
             Value::Array(a) => Ok(Value::Array(
@@ -155,11 +156,8 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    // Evaluate an string or list of Values into a list of Values
-    fn eval_list_or_string(
-        &self,
-        expr: &ListOrString,
-    ) -> Result<Vec<Value>, Box<dyn Error + Send + Sync>> {
+    /// Evaluate an string or list of Values into a list of Values
+    fn eval_list_or_string(&self, expr: &ListOrString) -> Result<Vec<Value>, PdlError> {
         match expr {
             ListOrString::String(s) => match self.eval::<Value>(s)? {
                 Value::Array(a) => Ok(a),
@@ -172,7 +170,7 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    // Run a PdlBlock::String
+    /// Run a PdlBlock::String
     async fn run_string(&self, msg: &String, _context: Context) -> Interpretation {
         let trace = self.eval::<PdlBlock>(msg)?;
         if self.debug {
@@ -187,8 +185,38 @@ impl<'a> Interpreter<'a> {
         Ok((messages, trace))
     }
 
-    // Run a PdlBlock::Read
-    async fn run_read(&self, block: &ReadBlock, _context: Context) -> Interpretation {
+    fn path_to(&self, file_path: &String) -> PathBuf {
+        let mut path = self.cwd.clone();
+        path.push(file_path);
+        path
+    }
+
+    fn def(
+        &mut self,
+        variable: &Option<String>,
+        value: &String,
+        parser: &Option<PdlParser>,
+    ) -> Result<(), PdlError> {
+        if let Some(def) = &variable {
+            let result = if let Some(parser) = parser {
+                self.parse_result(parser, &value)?
+            } else {
+                Value::from(value.clone()) // TODO
+            };
+
+            if let Some(scope) = self.scope.last_mut() {
+                if self.debug {
+                    eprintln!("Def {} -> {}", def, result);
+                }
+                scope.insert(def.clone(), result);
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Run a PdlBlock::Read
+    async fn run_read(&mut self, block: &ReadBlock, _context: Context) -> Interpretation {
         let trace = block.clone();
 
         if let Some(message) = &block.message {
@@ -196,7 +224,7 @@ impl<'a> Interpreter<'a> {
         }
 
         let buffer = match &block.read {
-            Value::String(file_path) => Ok(read_file_to_string(file_path)?),
+            Value::String(file_path) => Ok(read_file_to_string(self.path_to(file_path))?),
             Value::Null => {
                 let mut buffer = String::new();
                 ::std::io::stdin().read_line(&mut buffer)?;
@@ -208,10 +236,12 @@ impl<'a> Interpreter<'a> {
             ))),
         }?;
 
+        self.def(&block.def, &buffer, &block.parser)?;
+
         Ok((vec![ChatMessage::user(buffer)], PdlBlock::Read(trace)))
     }
 
-    // Run a PdlBlock::Call
+    /// Run a PdlBlock::Call
     async fn run_call(&mut self, block: &CallBlock, context: Context) -> Interpretation {
         if self.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
@@ -239,7 +269,7 @@ impl<'a> Interpreter<'a> {
         res
     }
 
-    // Run a PdlBlock::Call
+    /// Run a PdlBlock::Call
     async fn run_if(&mut self, block: &IfBlock, context: Context) -> Interpretation {
         if self.debug {
             eprintln!("If {:?}({:?})", block.condition, block.then);
@@ -302,7 +332,7 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    // Run a PdlBlock::PythonCode
+    /// Run a PdlBlock::PythonCode
     async fn run_python_code(
         &mut self,
         block: &PythonCodeBlock,
@@ -351,7 +381,7 @@ impl<'a> Interpreter<'a> {
         })
     }
 
-    // Run a PdlBlock::Model
+    /// Run a PdlBlock::Model
     async fn run_model(&mut self, block: &ModelBlock, context: Context) -> Interpretation {
         match &block.model {
             pdl_model
@@ -466,7 +496,7 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    // Run a PdlBlock::Repeat
+    /// Run a PdlBlock::Repeat
     async fn run_repeat(&mut self, block: &RepeatBlock, context: Context) -> Interpretation {
         // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
         //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
@@ -513,13 +543,10 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    fn parse_result(
-        &self,
-        parser: &PdlParser,
-        result: &String,
-    ) -> Result<Value, Box<dyn Error + Send + Sync>> {
+    fn parse_result(&self, parser: &PdlParser, result: &String) -> Result<Value, PdlError> {
         match parser {
             PdlParser::Json => Ok(from_str(result)?),
+            PdlParser::Yaml => Ok(from_yaml_str(result)?),
         }
     }
 
@@ -554,7 +581,7 @@ impl<'a> Interpreter<'a> {
         self.extend_scope_with_map(new_scope);
     }
 
-    // Run a PdlBlock::Text
+    /// Run a PdlBlock::Text
     async fn run_text(&mut self, block: &TextBlock, context: Context) -> Interpretation {
         if self.debug {
             eprintln!(
@@ -615,19 +642,25 @@ impl<'a> Interpreter<'a> {
     }
 }
 
-pub async fn run(program: &PdlBlock, debug: bool) -> Interpretation {
+pub async fn run(program: &PdlBlock, cwd: Option<PathBuf>, debug: bool) -> Interpretation {
     let mut interpreter = Interpreter::new();
     interpreter.debug = debug;
+    if let Some(cwd) = cwd {
+        interpreter.cwd = cwd
+    };
     interpreter.run(&program, vec![]).await
 }
 
-pub fn run_sync(program: &PdlBlock, debug: bool) -> InterpretationSync {
-    tauri::async_runtime::block_on(run(program, debug))
+pub fn run_sync(program: &PdlBlock, cwd: Option<PathBuf>, debug: bool) -> InterpretationSync {
+    tauri::async_runtime::block_on(run(program, cwd, debug))
         .map_err(|err| Box::<dyn ::std::error::Error>::from(err.to_string()))
 }
 
 pub async fn run_file(source_file_path: &str, debug: bool) -> Interpretation {
-    run(&from_reader(File::open(source_file_path)?)?, debug).await
+    let cwd = PathBuf::from(source_file_path)
+        .parent()
+        .and_then(|cwd| Some(cwd.to_path_buf()));
+    run(&from_reader(File::open(source_file_path)?)?, cwd, debug).await
 }
 
 pub fn run_file_sync(source_file_path: &str, debug: bool) -> InterpretationSync {
@@ -636,7 +669,7 @@ pub fn run_file_sync(source_file_path: &str, debug: bool) -> InterpretationSync 
 }
 
 pub async fn run_string(source: &str, debug: bool) -> Interpretation {
-    run(&from_yaml_str(source)?, debug).await
+    run(&from_yaml_str(source)?, None, debug).await
 }
 
 pub async fn run_json(source: Value, debug: bool) -> Interpretation {

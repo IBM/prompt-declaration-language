@@ -15,7 +15,7 @@ mod tests {
 
     #[test]
     fn string() -> Result<(), Box<dyn Error>> {
-        let (messages, _) = run(&"hello".into(), false)?;
+        let (messages, _) = run(&"hello".into(), None, false)?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello");
@@ -26,6 +26,7 @@ mod tests {
     fn single_model_via_input() -> Result<(), Box<dyn Error>> {
         let (messages, _) = run(
             &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
+            None,
             false,
         )?;
         assert_eq!(messages.len(), 1);
@@ -208,7 +209,7 @@ mod tests {
     }
 
     #[test]
-    fn text_read_file() -> Result<(), Box<dyn Error>> {
+    fn text_read_file_text() -> Result<(), Box<dyn Error>> {
         let program = json!({
             "message": "Read a file",
             "read":"./tests/data/foo.txt"
@@ -218,6 +219,29 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "this should be foo\n");
+        Ok(())
+    }
+
+    #[test]
+    fn text_read_file_struct() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "text": [
+                { "read": "./tests/data/struct.yaml", "def": "struct", "parser": "yaml" },
+                "${ struct.a.b }"
+            ]
+        });
+
+        let (messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(
+            messages[0].content,
+            "a:
+  b: 3
+"
+        );
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "3");
         Ok(())
     }
 

@@ -20,9 +20,9 @@ pub enum PdlParser {
     #[serde(rename = "json")]
     Json,
     /*#[serde(rename = "jsonl")]
-    Jsonl,
+    Jsonl,*/
     #[serde(rename = "yaml")]
-    Yaml,*/
+    Yaml,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -294,12 +294,20 @@ pub struct PythonCodeBlock {
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ReadBlock {
-    // Name of the file to read. If `None`, read the standard input.
+    /// Name of the file to read. If `None`, read the standard input.
     pub read: Value,
-    // Name of the file to read. If `None`, read the standard input.
+
+    /// Name of the file to read. If `None`, read the standard input.
     pub message: Option<String>,
-    // Indicate if one or multiple lines should be read.
+
+    /// Indicate if one or multiple lines should be read.
     pub multiline: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub def: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parser: Option<PdlParser>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
