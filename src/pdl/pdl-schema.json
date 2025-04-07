@@ -2218,10 +2218,7 @@
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
-            {
-              "items": {},
-              "type": "array"
-            },
+            {},
             {
               "type": "string"
             }
