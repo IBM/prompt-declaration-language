@@ -443,6 +443,13 @@ pub struct PythonCodeBlock {
     pub code: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum StringOrNull {
+    Null,
+    String(String),
+}
+
 /// Read from a file or standard input.
 ///
 /// Example. Read from the standard input with a prompt starting with `> `.
@@ -459,7 +466,7 @@ pub struct PythonCodeBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ReadBlock {
     /// Name of the file to read. If `None`, read the standard input.
-    pub read: Value,
+    pub read: StringOrNull,
 
     /// Name of the file to read. If `None`, read the standard input.
     pub message: Option<String>,
