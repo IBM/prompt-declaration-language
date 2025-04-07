@@ -1122,9 +1122,9 @@ def process_contribution(
     scope: ScopeType,
     loc: PdlLocationType,
 ) -> tuple[ScopeType, ContributeElement]:
-    if elem in set(ContributeTarget):
-        return scope, elem
     if isinstance(elem, str):
+        if elem in set(ContributeTarget):
+            return scope, elem
         target = elem
         aggregator = get_var(elem, scope, loc)
     elif isinstance(elem, dict):
@@ -1139,14 +1139,14 @@ def process_contribution(
         target, contribute_value = list(elem.items()).pop()
         aggregator = get_var(target, scope, loc)
         try:
-            result = process_expr(scope, contribute_value.value, loc)
+            result, value_trace = process_expr(scope, contribute_value.value, loc)
         except PDLRuntimeExpressionError as exc:
             raise PDLRuntimeError(
                 exc.message,
                 loc=exc.loc or loc,
                 trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
             ) from exc
-        elem = {target: result}
+        elem = {target: ContributeValue(value=value_trace)}
     else:
         msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
         raise PDLRuntimeError(
