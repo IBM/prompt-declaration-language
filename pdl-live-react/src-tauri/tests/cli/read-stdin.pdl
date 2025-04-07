@@ -1,3 +1,2 @@
-text:
-  - message: How are you?
-    read: null
+message: How are you?
+read: null

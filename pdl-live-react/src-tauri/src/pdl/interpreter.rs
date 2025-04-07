@@ -276,15 +276,25 @@ impl<'a> Interpreter<'a> {
     async fn run_read(&mut self, block: &ReadBlock, _context: Context) -> Interpretation {
         let trace = block.clone();
 
-        if let Some(message) = &block.message {
-            println!("{}", message);
-        }
+        println!(
+            "{}",
+            match (&block.message, block.multiline) {
+                (Some(message), _) => message.as_str(),
+                (None, Some(true)) => "Enter/Paste your content. Ctrl-D to save it.",
+                _ => "How can i help you?",
+            }
+        );
 
         let buffer = match &block.read {
             Value::String(file_path) => Ok(read_file_to_string(self.path_to(file_path))?),
             Value::Null => {
                 let mut buffer = String::new();
-                ::std::io::stdin().read_line(&mut buffer)?;
+                let mut bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
+                if let Some(true) = block.multiline {
+                    while bytes_read > 0 {
+                        bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
+                    }
+                }
                 Ok(buffer)
             }
             x => Err(Box::<dyn Error + Send + Sync>::from(format!(
