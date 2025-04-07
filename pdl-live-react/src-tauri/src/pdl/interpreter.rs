@@ -28,7 +28,7 @@ use crate::pdl::ast::{
     ArrayBlock, CallBlock, Closure, DataBlock, EmptyBlock, FunctionBlock, IfBlock, ImportBlock,
     IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlBlock, PdlParser,
     PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope, SequencingBlock,
-    StringOrBoolean,
+    StringOrBoolean, StringOrNull,
 };
 
 type Context = Vec<ChatMessage>;
@@ -286,8 +286,8 @@ impl<'a> Interpreter<'a> {
         );
 
         let buffer = match &block.read {
-            Value::String(file_path) => Ok(read_file_to_string(self.path_to(file_path))?),
-            Value::Null => {
+            StringOrNull::String(file_path) => read_file_to_string(self.path_to(file_path))?,
+            StringOrNull::Null => {
                 let mut buffer = String::new();
                 let mut bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
                 if let Some(true) = block.multiline {
@@ -295,13 +295,9 @@ impl<'a> Interpreter<'a> {
                         bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
                     }
                 }
-                Ok(buffer)
+                buffer
             }
-            x => Err(Box::<dyn Error + Send + Sync>::from(format!(
-                "Unsupported value for read field: {:?}",
-                x
-            ))),
-        }?;
+        };
 
         let result = self.def(&block.def, &buffer.clone().into(), &block.parser)?;
 
