@@ -1,0 +1,135 @@
+description: Grade School Math -- for every problem we generate a plan, then exectute and evaluate it.
+defs:
+  problems:
+    read: ./test.jsonl
+    parser: jsonl
+
+  MAX_ITERATIONS: 50
+
+  planning:
+    function:
+      problem: str
+      demos: [str]
+    return:
+      lastOf:
+      - |
+        Please generate a high-level plan for solving the following question. 
+        As the first step, just say what method and idea you will use to solve the question. 
+        You can reorganize the information in the question. Do not do the actual calculation. 
+        Keep your response concise and within 80 words. 
+
+      - for: 
+          demo: ${ demos } 
+        repeat: 
+          ${ demo }
+        join:
+          with: "\n"
+      - text:
+        - "\nProblem:\n"
+        - ${ problem }
+        - "\n"
+        - model: ollama/granite3.2:8b
+  
+  solve:
+    function:
+      plan: str
+    return:
+      text:
+      - ${ plan }
+      - |
+
+        The plan looks good! Now, use real numbers and do the calculation. Please solve the question 
+        step-by-step according to the high-level plan. Give me the final answer. Make your response short.
+      - "\nThe answer is:\n"
+      - model: ollama/granite3.2:8b
+
+  extract_final_answer:
+    function:
+      solution: str
+    return:
+      lastOf:
+      - ${ solution }
+      - Extract the result from the above solution into a JSON object with field "result" and a float as value. Remove any dollar signs or other symbols.
+      - model: ollama/granite3.2:8b
+        parser: json
+        def: result
+        spec: { "result": float }
+        fallback:
+          data:
+            result: 0
+
+  compare_to_ground_truth:
+    function:
+      result: obj
+      truth: str
+    return:
+      lastOf:
+      - data: ${ truth }
+        parser:
+          regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
+          spec:
+            answer: str
+        def: ground_truth
+      - if: ${ result.result|float == ground_truth.answer|float}
+        then:
+          1
+        else:
+          0
+
+text:
+- defs:
+    demos:
+      read: demos.yaml
+      parser: yaml
+  for:
+    problem: ${ problems }
+  repeat:
+    call: ${ planning }
+    args:
+      pdl_context: []
+      problem: ${ problem.question }
+      demos: ${ demos }
+  max_iterations: ${ MAX_ITERATIONS }
+  def: plans
+  join:
+    as: array
+
+- for:
+    plan: ${ plans }
+  repeat:
+    call: ${ solve }
+    args:
+      pdl_context: []
+      plan: ${ plan }
+  max_iterations: ${ MAX_ITERATIONS }
+  def: solutions
+  join:
+    as: array
+
+- for:
+    solution: ${ solutions }
+  repeat:
+    call: ${ extract_final_answer }
+    args:
+      pdl_context: []
+      solution: ${ solution }
+  max_iterations: ${ MAX_ITERATIONS }
+  def: results
+  join:
+    as: array
+
+- for:
+    result: ${ results }
+    problem: ${ problems[:MAX_ITERATIONS] }
+  repeat:
+    call: ${ compare_to_ground_truth }
+    args:
+      pdl_context: []
+      result: ${ result }
+      truth: ${ problem.answer }
+  max_iterations: ${ MAX_ITERATIONS }
+  def: stats
+  join:
+    as: array
+
+- "\nAccuracy: ${ stats|sum / MAX_ITERATIONS * 100}% "
