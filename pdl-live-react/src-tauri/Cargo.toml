@@ -40,7 +40,7 @@ owo-colors = "4.2.0"
 rustpython-vm = "0.4.0"
 async-recursion = "1.1.1"
 tokio-stream = "0.1.17"
-tokio = { version = "1.44.1", features = ["io-std"] }
+tokio = { version = "1.44.2", features = ["io-std"] }
 indexmap = { version = "2.9.0", features = ["serde"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
