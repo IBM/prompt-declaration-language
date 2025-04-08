@@ -133,6 +133,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -277,6 +278,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -501,6 +503,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -645,6 +648,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -736,6 +740,7 @@
           "type": "string"
         },
         "array": {
+          "description": "Elements of the array.",
           "items": {
             "anyOf": [
               {
@@ -991,6 +996,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1135,6 +1141,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1449,6 +1456,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1593,6 +1601,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -1775,6 +1784,7 @@
               "type": "null"
             }
           ],
+          "description": "Code to execute.\n    ",
           "title": "Code"
         }
       },
@@ -1924,6 +1934,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2068,6 +2079,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2290,6 +2302,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2434,6 +2447,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2634,6 +2648,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2778,6 +2793,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -2954,6 +2970,7 @@
               "type": "null"
             }
           ],
+          "description": "Block that raised the error.\n    ",
           "title": "Program"
         }
       },
@@ -3070,6 +3087,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3214,6 +3232,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3398,6 +3417,7 @@
               "type": "null"
             }
           ],
+          "description": "Body of the function\n    ",
           "title": "Return"
         }
       },
@@ -3514,6 +3534,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3658,6 +3679,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -3866,6 +3888,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4010,6 +4033,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4195,6 +4219,7 @@
             }
           ],
           "default": "${ pdl_context }",
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -4411,6 +4436,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4555,6 +4581,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -4741,6 +4768,7 @@
               "type": "null"
             }
           ],
+          "description": "Branch to execute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -4825,6 +4853,7 @@
             }
           ],
           "default": null,
+          "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
         },
         "if_result": {
@@ -4953,6 +4982,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5097,6 +5127,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5389,6 +5420,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5533,6 +5565,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -5893,6 +5926,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6037,6 +6071,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6128,6 +6163,7 @@
           "type": "string"
         },
         "lastOf": {
+          "description": "Sequence of blocks to execute.",
           "items": {
             "anyOf": [
               {
@@ -6326,6 +6362,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6470,6 +6507,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -6654,6 +6692,7 @@
             }
           ],
           "default": "${ pdl_context }",
+          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -7276,6 +7315,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7420,6 +7460,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -7826,6 +7867,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7970,6 +8012,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -8141,6 +8184,7 @@
               "type": "null"
             }
           ],
+          "description": "Content of the message.",
           "title": "Content"
         },
         "name": {
@@ -8288,6 +8332,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8432,6 +8477,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -9327,6 +9373,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9471,6 +9518,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -9760,6 +9808,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9904,6 +9953,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -10118,6 +10168,7 @@
               "type": "null"
             }
           ],
+          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "until": {
@@ -10384,6 +10435,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -10528,6 +10580,7 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "role": {
@@ -10784,6 +10837,7 @@
               "type": "null"
             }
           ],
+          "description": "Body of the text.\n    ",
           "title": "Text"
         }
       },
