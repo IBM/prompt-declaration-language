@@ -459,37 +459,41 @@ impl<'a> Interpreter<'a> {
         _context: Context,
     ) -> Interpretation {
         use rustpython_vm as vm;
-        vm::Interpreter::without_stdlib(Default::default()).enter(|vm| -> Interpretation {
+        let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
+            vm.add_native_modules(rustpython_stdlib::get_module_inits());
+        });
+        interp.enter(|vm| -> Interpretation {
             let scope = vm.new_scope_with_builtins();
 
             // TODO vm.new_syntax_error(&err, Some(block.code.as_str()))
-            let code_obj = vm
+            let code_obj = match vm
                 .compile(
                     block.code.as_str(),
                     vm::compiler::Mode::Exec,
                     "<embedded>".to_owned(),
-                )
-                .map_err(|_err| {
-                    panic!("Syntax error in Python code");
-                })
-                .unwrap();
+                ) {
+                    Ok(x) => Ok(x),
+                    Err(exc) => Err(Box::<dyn Error + Send + Sync>::from(format!("Syntax error in Python code {:?}", exc))),
+                }?;
 
-            let _output = vm
-                .run_code_obj(code_obj, scope.clone())
-                .map_err(|_err| {
-                    // TODO vm.print_exception(exc);
-                    println!("Error executing Python code");
-                })
-                .unwrap();
+            // TODO vm.print_exception(exc);
+            match vm.run_code_obj(code_obj, scope.clone()) {
+                Ok(_) => Ok(()),
+                Err(exc) => {
+                    vm.print_exception(exc);
+                    Err(Box::<dyn Error + Send + Sync>::from("Error executing Python code"))
+                },
+            }?;
 
             match scope.globals.get_item("result", vm) {
                 Ok(result) => {
-                    let result_string = result
-                        .str(vm)
-                        .map_err(|e| {
-                            panic!("Unable to stringify Python 'result' value {:?}", e);
-                        })
-                        .unwrap();
+                    let result_string = match result.str(vm) {
+                        Ok(x) => Ok(x),
+                        Err(exc) => {
+                            vm.print_exception(exc);
+                            Err(Box::<dyn Error + Send + Sync>::from("Unable to stringify Python 'result' value"))
+                        },
+                    }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
                     let trace = PdlBlock::PythonCode(block.clone());
                     Ok((messages[0].content.clone().into(), messages, trace))
