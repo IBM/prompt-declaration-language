@@ -3,7 +3,7 @@ use duct::cmd;
 use futures::executor::block_on;
 
 use crate::pdl::pip::pip_install_if_needed;
-use crate::pdl::pull::pull_if_needed;
+use crate::pdl::pull::pull_if_needed_from_path;
 use crate::pdl::requirements::PDL_INTERPRETER;
 
 #[cfg(desktop)]
@@ -19,11 +19,13 @@ pub fn run_pdl_program(
     );
 
     // async the model pull and pip installs
-    let pull_future = pull_if_needed(&source_file_path);
+    let pull_future = pull_if_needed_from_path(&source_file_path);
     let bin_path_future = pip_install_if_needed(&PDL_INTERPRETER);
 
     // wait for any model pulls to finish
-    block_on(pull_future)?;
+    if let Err(e) = block_on(pull_future) {
+        return Err(e);
+    }
 
     // wait for any pip installs to finish
     let bin_path = block_on(bin_path_future)?;

@@ -466,23 +466,27 @@ impl<'a> Interpreter<'a> {
             let scope = vm.new_scope_with_builtins();
 
             // TODO vm.new_syntax_error(&err, Some(block.code.as_str()))
-            let code_obj = match vm
-                .compile(
-                    block.code.as_str(),
-                    vm::compiler::Mode::Exec,
-                    "<embedded>".to_owned(),
-                ) {
-                    Ok(x) => Ok(x),
-                    Err(exc) => Err(Box::<dyn Error + Send + Sync>::from(format!("Syntax error in Python code {:?}", exc))),
-                }?;
+            let code_obj = match vm.compile(
+                block.code.as_str(),
+                vm::compiler::Mode::Exec,
+                "<embedded>".to_owned(),
+            ) {
+                Ok(x) => Ok(x),
+                Err(exc) => Err(Box::<dyn Error + Send + Sync>::from(format!(
+                    "Syntax error in Python code {:?}",
+                    exc
+                ))),
+            }?;
 
             // TODO vm.print_exception(exc);
             match vm.run_code_obj(code_obj, scope.clone()) {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
-                    Err(Box::<dyn Error + Send + Sync>::from("Error executing Python code"))
-                },
+                    Err(Box::<dyn Error + Send + Sync>::from(
+                        "Error executing Python code",
+                    ))
+                }
             }?;
 
             match scope.globals.get_item("result", vm) {
@@ -491,8 +495,10 @@ impl<'a> Interpreter<'a> {
                         Ok(x) => Ok(x),
                         Err(exc) => {
                             vm.print_exception(exc);
-                            Err(Box::<dyn Error + Send + Sync>::from("Unable to stringify Python 'result' value"))
-                        },
+                            Err(Box::<dyn Error + Send + Sync>::from(
+                                "Unable to stringify Python 'result' value",
+                            ))
+                        }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
                     let trace = PdlBlock::PythonCode(block.clone());
@@ -927,7 +933,7 @@ pub fn run_sync(program: &PdlBlock, cwd: Option<PathBuf>, debug: bool) -> Interp
 }
 
 /// Read in a file from disk and parse it as a PDL program
-fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
+pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
     from_reader(File::open(path)?)
         .map_err(|err| Box::<dyn Error + Send + Sync>::from(err.to_string()))
 }
@@ -937,6 +943,7 @@ pub async fn run_file(source_file_path: &str, debug: bool) -> Interpretation {
     let cwd = path.parent().and_then(|cwd| Some(cwd.to_path_buf()));
     let program = parse_file(&path)?;
 
+    crate::pdl::pull::pull_if_needed(&program).await?;
     run(&program, cwd, debug).await
 }
 
