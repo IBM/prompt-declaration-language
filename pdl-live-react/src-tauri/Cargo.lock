@@ -4343,7 +4343,6 @@ dependencies = [
  "num-traits",
  "num_enum",
  "once_cell",
- "openssl",
  "page_size",
  "parking_lot",
  "paste",
