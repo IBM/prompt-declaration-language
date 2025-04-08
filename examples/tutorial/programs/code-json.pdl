@@ -1,10 +1,10 @@
 description: Code explanation example
 defs:
   CODE:
-    read: ./data.yaml
+    read: ../../code/data.yaml
     parser: yaml
   TRUTH:
-    read: ./ground_truth.txt
+    read: ../../code/ground_truth.txt
 lastOf:
 - model: ollama_chat/granite3.2:2b
   def: EXPLANATION

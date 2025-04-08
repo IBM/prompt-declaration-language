@@ -489,7 +489,7 @@ class CodeBlock(BaseCodeBlock):
 
 class ArgsBlock(BaseCodeBlock):
     """
-    Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.
+    Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.
 
     Example:
     ```PDL
@@ -583,15 +583,10 @@ class ObjectBlock(StructuredBlock):
     object: dict[str, "BlockType"] | list["BlockType"]
 
 
-class MessageBlock(StructuredBlock):
+class MessageBlock(LeafBlock):
     """Create a message."""
 
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    role: RoleType  # pyright: ignore
-    """Role of associated to the message.
-    Typical roles are `system`, `user`, and `assistant`,
-    but there may be other roles such as `available_tools`.
-    """  # pyright: ignore
     content: "BlockType"
     """Content of the message."""
     name: Optional[ExpressionType[str]] = None

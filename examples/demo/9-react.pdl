@@ -30,7 +30,8 @@ text:
   text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
   contribute: [context]
 - role: tools
-  text: ${ tools }
+  content:
+    text: ${ tools }
   contribute: [context]
 - text:
     |
@@ -59,18 +60,18 @@ text:
     <tool_call>[{"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}]
   contribute: [context]
 
-- "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025.\n"
+- "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.\n"
 - repeat:
     text:
     - def: thought
-      model: replicate/ibm-granite/granite-3.1-8b-instruct
+      model: ollama_chat/granite3.2:8b
       parameters:
-        stop_sequences: "Action:"
+        stop: ["Action:"]
     - "Action:\n"
     - def: action
-      model: replicate/ibm-granite/granite-3.1-8b-instruct
+      model: ollama_chat/granite3.2:8b
       parameters:
-        stop_sequences: "\n"
+        stop: ["\n"]
       parser: json
     - "\nObservation: "
     - match: ${ action[0].name }

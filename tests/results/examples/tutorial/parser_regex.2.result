@@ -1,2 +1,0 @@
-result = add_two_numbers(5, 7)
-print(result)  # Output will be: 12

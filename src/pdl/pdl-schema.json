@@ -29,7 +29,7 @@
     },
     "ArgsBlock": {
       "additionalProperties": false,
-      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or somne shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
+      "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -304,6 +304,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -679,6 +680,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1180,6 +1182,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1648,6 +1651,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2134,6 +2138,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2507,6 +2512,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2858,6 +2864,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3673,6 +3680,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3746,6 +3754,7 @@
         "function": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -4127,6 +4136,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4486,6 +4496,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4778,6 +4789,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4805,6 +4817,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             }
           ],
@@ -4833,6 +4846,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -5131,6 +5145,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -5688,6 +5703,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6134,6 +6150,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6648,6 +6665,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7092,6 +7110,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7383,6 +7402,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7410,6 +7430,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7560,6 +7581,7 @@
         "logit_bias": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7587,6 +7609,7 @@
         "response_format": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7636,6 +7659,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7693,6 +7717,7 @@
         "extra_headers": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -8139,6 +8164,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -8691,13 +8717,15 @@
               "type": "null"
             }
           ],
-          "description": "Role of associated to the message.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
         "context": {
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -8757,8 +8785,8 @@
           "default": null
         },
         "pdl__is_leaf": {
-          "const": false,
-          "default": false,
+          "const": true,
+          "default": true,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
         },
@@ -8889,7 +8917,6 @@
         }
       },
       "required": [
-        "role",
         "content"
       ],
       "title": "MessageBlock",
@@ -9172,6 +9199,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -9679,6 +9707,7 @@
         "spec": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -10232,6 +10261,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -10362,6 +10392,7 @@
         "spec": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -10671,6 +10702,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -11309,6 +11341,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"

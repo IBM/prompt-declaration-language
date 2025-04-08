@@ -4,7 +4,7 @@ hello = {
     "text": [
         "Hello\n",
         {
-            "model": "replicate/ibm-granite/granite-3.1-8b-instruct",
+            "model": "ollama_chat/granite3.2:8b",
             "parameters": {"stop_sequences": "!"},
         },
     ]
