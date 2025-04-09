@@ -974,6 +974,8 @@ pub async fn run(
     debug: bool,
     stream: bool,
 ) -> Interpretation {
+    crate::pdl::pull::pull_if_needed(&program).await?;
+
     let mut interpreter = Interpreter::new();
     interpreter.debug = debug;
     interpreter.stream = stream;
@@ -1005,7 +1007,6 @@ pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Inte
     let cwd = path.parent().and_then(|cwd| Some(cwd.to_path_buf()));
     let program = parse_file(&path)?;
 
-    crate::pdl::pull::pull_if_needed(&program).await?;
     run(&program, cwd, debug, stream).await
 }
 
