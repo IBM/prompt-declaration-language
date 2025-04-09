@@ -1,10 +1,7 @@
 // use ::std::cell::LazyCell;
 use ::std::collections::HashMap;
-use ::std::env::current_dir;
 use ::std::error::Error;
-use ::std::fs::{read_to_string as read_file_to_string, File};
 use ::std::path::PathBuf;
-use std::sync::{Arc, Mutex};
 
 use async_recursion::async_recursion;
 use minijinja::{syntax::SyntaxConfig, Environment};
@@ -32,7 +29,8 @@ use crate::pdl::ast::{
 };
 
 type Context = Vec<ChatMessage>;
-type PdlError = Box<dyn Error + Send + Sync>;
+type ThreadSafeError = dyn Error + Send + Sync;
+type PdlError = Box<ThreadSafeError>;
 type Interpretation = Result<(PdlResult, Context, PdlBlock), PdlError>;
 type InterpretationSync = Result<(PdlResult, Context, PdlBlock), Box<dyn Error>>;
 
@@ -62,7 +60,7 @@ impl<'a> Interpreter<'a> {
         Self {
             // batch: 0,
             // role: Role::User,
-            cwd: current_dir().unwrap_or(PathBuf::from("/")),
+            cwd: ::std::env::current_dir().unwrap_or(PathBuf::from("/")),
             // id_stack: vec![],
             jinja_env: jinja_env,
             scope: vec![Scope::new()],
@@ -289,7 +287,7 @@ impl<'a> Interpreter<'a> {
         );
 
         let buffer = match &block.read {
-            StringOrNull::String(file_path) => read_file_to_string(self.path_to(file_path))?,
+            StringOrNull::String(file_path) => ::std::fs::read_to_string(self.path_to(file_path))?,
             StringOrNull::Null => {
                 let mut buffer = String::new();
                 let mut bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
@@ -326,7 +324,7 @@ impl<'a> Interpreter<'a> {
                             self.push_and_extend_scope_with(m, c.scope);
                             Ok(())
                         }
-                        x => Err(Box::<dyn Error + Send + Sync>::from(format!(
+                        x => Err(PdlError::from(format!(
                             "Call arguments not a map: {:?}",
                             x
                         ))),
@@ -504,7 +502,7 @@ impl<'a> Interpreter<'a> {
                 "<embedded>".to_owned(),
             ) {
                 Ok(x) => Ok(x),
-                Err(exc) => Err(Box::<dyn Error + Send + Sync>::from(format!(
+                Err(exc) => Err(PdlError::from(format!(
                     "Syntax error in Python code {:?}",
                     exc
                 ))),
@@ -515,7 +513,7 @@ impl<'a> Interpreter<'a> {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
-                    Err(Box::<dyn Error + Send + Sync>::from(
+                    Err(PdlError::from(
                         "Error executing Python code",
                     ))
                 }
@@ -527,7 +525,7 @@ impl<'a> Interpreter<'a> {
                         Ok(x) => Ok(x),
                         Err(exc) => {
                             vm.print_exception(exc);
-                            Err(Box::<dyn Error + Send + Sync>::from(
+                            Err(PdlError::from(
                                 "Unable to stringify Python 'result' value",
                             ))
                         }
@@ -604,7 +602,7 @@ impl<'a> Interpreter<'a> {
                 } else {
                     let mut stream = ollama
                         .send_chat_messages_with_history_stream(
-                            Arc::new(Mutex::new(history)),
+                            ::std::sync::Arc::new(::std::sync::Mutex::new(history)),
                             req,
                             //ollama.generate(GenerationRequest::new(model.into(), prompt),
                         )
@@ -998,8 +996,8 @@ pub fn run_sync(
 
 /// Read in a file from disk and parse it as a PDL program
 pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
-    from_reader(File::open(path)?)
-        .map_err(|err| Box::<dyn Error + Send + Sync>::from(err.to_string()))
+    from_reader(::std::fs::File::open(path)?)
+        .map_err(|err| PdlError::from(err.to_string()))
 }
 
 pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Interpretation {
