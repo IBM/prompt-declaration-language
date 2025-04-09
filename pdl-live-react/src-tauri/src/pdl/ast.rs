@@ -53,6 +53,7 @@ pub enum PdlType {
 
 /// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "call")]
 pub struct CallBlock {
     /// Function to call
     pub call: String,
@@ -91,6 +92,7 @@ pub trait SequencingBlock {
 
 /// Return the value of the last block if the list of blocks
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "lastOf")]
 pub struct LastOfBlock {
     /// Sequence of blocks to execute
     #[serde(rename = "lastOf")]
@@ -158,6 +160,7 @@ impl SequencingBlock for LastOfBlock {
 /// Create the concatenation of the stringify version of the result of
 /// each block of the list of blocks.
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "text")]
 pub struct TextBlock {
     /// Body of the text
     pub text: Vec<PdlBlock>,
@@ -260,6 +263,7 @@ impl From<Vec<PdlBlock>> for TextBlock {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "function")]
 pub struct FunctionBlock {
     pub function: HashMap<String, PdlType>,
     #[serde(rename = "return")]
@@ -279,6 +283,7 @@ pub struct PdlUsage {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "model")]
 pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -352,6 +357,7 @@ pub enum ListOrString {
 ///     "${ name }'s number is ${ number }\\n"
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "repeat")]
 pub struct RepeatBlock {
     /// Arrays to iterate over
     #[serde(rename = "for")]
@@ -363,6 +369,7 @@ pub struct RepeatBlock {
 
 /// Create a message
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "message")]
 pub struct MessageBlock {
     /// Role of associated to the message, e.g. User or Assistant
     pub role: Role,
@@ -386,6 +393,7 @@ pub struct MessageBlock {
 /// block. If the body of the object is an array, the resulting object
 /// is the union of the objects computed by each element of the array.
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "object")]
 pub struct ObjectBlock {
     pub object: HashMap<String, PdlBlock>,
 }
@@ -413,6 +421,7 @@ pub struct ObjectBlock {
 ///   def: EXTRACTED_GROUND_TRUTH
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind")]
 pub struct DataBlock {
     pub data: Value,
 
@@ -438,6 +447,7 @@ pub struct DataBlock {
 ///     result = random.randint(1, 20)
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "code")]
 pub struct PythonCodeBlock {
     pub lang: String,
     pub code: String,
@@ -464,6 +474,7 @@ pub enum StringOrNull {
 /// parser: yaml
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "read")]
 pub struct ReadBlock {
     /// Name of the file to read. If `None`, read the standard input.
     pub read: StringOrNull,
@@ -500,6 +511,7 @@ pub enum StringOrBoolean {
 /// then: You won!
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "if")]
 pub struct IfBlock {
     /// The condition to check
     #[serde(rename = "if")]
@@ -519,6 +531,7 @@ pub struct IfBlock {
 
 /// Return the array of values computed by each block of the list of blocks
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "array")]
 pub struct ArrayBlock {
     /// Elements of the array
     pub array: Vec<PdlBlock>,
@@ -526,6 +539,7 @@ pub struct ArrayBlock {
 
 /// Include a PDL file
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "include")]
 pub struct IncludeBlock {
     /// Name of the file to include.
     pub include: String,
@@ -533,6 +547,7 @@ pub struct IncludeBlock {
 
 /// Import a PDL file
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "import")]
 pub struct ImportBlock {
     /// Name of the file to include.
     pub import: String,
@@ -540,10 +555,12 @@ pub struct ImportBlock {
 
 /// Block containing only defs
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "empty")]
 pub struct EmptyBlock {
     pub defs: IndexMap<String, PdlBlock>,
 }
 
+/// A PDL program/sub-program consists of either a literal (string, number, boolean) or some kind of structured block
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum PdlBlock {
@@ -568,6 +585,12 @@ pub enum PdlBlock {
 
     // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
     Empty(EmptyBlock),
+}
+
+impl From<bool> for PdlBlock {
+    fn from(b: bool) -> Self {
+        PdlBlock::Bool(b)
+    }
 }
 
 impl From<&str> for PdlBlock {
