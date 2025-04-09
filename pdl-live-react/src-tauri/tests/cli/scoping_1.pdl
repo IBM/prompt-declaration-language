@@ -1,0 +1,6 @@
+text:
+  - defs:
+      x: 3
+    text:
+      - ${x~"yo"}
+  - ${x~"mo"}

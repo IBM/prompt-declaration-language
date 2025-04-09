@@ -28,21 +28,57 @@ use crate::pdl::ast::{
     StringOrBoolean, StringOrNull,
 };
 
-type Context = Vec<ChatMessage>;
+type Messages = Vec<ChatMessage>;
 type ThreadSafeError = dyn Error + Send + Sync;
 type PdlError = Box<ThreadSafeError>;
-type Interpretation = Result<(PdlResult, Context, PdlBlock), PdlError>;
-type InterpretationSync = Result<(PdlResult, Context, PdlBlock), Box<dyn Error>>;
+type Interpretation = Result<(PdlResult, Messages, PdlBlock), PdlError>;
+type InterpretationSync = Result<(PdlResult, Messages, PdlBlock), Box<dyn Error>>;
+
+#[derive(Clone)]
+struct State {
+    emit: bool,
+    cwd: PathBuf,
+    scope: Scope,
+    escaped_variables: Vec<String>,
+    messages: Messages,
+}
+
+impl State {
+    fn new() -> Self {
+        Self {
+            emit: true,
+            cwd: ::std::env::current_dir().unwrap_or(PathBuf::from("/")),
+            scope: Scope::new(),
+            escaped_variables: vec![],
+            messages: vec![],
+        }
+    }
+
+    fn with_cwd(&self, cwd: PathBuf) -> Self {
+        let mut s = self.clone();
+        s.cwd = cwd;
+        s
+    }
+
+    fn with_emit(&self, emit: bool) -> Self {
+        let mut s = self.clone();
+        s.emit = emit;
+        s
+    }
+
+    fn extend_scope(&self, scopes: Vec<Scope>) -> Self {
+        let mut s = self.clone();
+        scopes.into_iter().for_each(|m| s.scope.extend(m));
+        s
+    }
+}
 
 struct Interpreter<'a> {
     // batch: u32,
     // role: Role,
-    cwd: PathBuf,
     // id_stack: Vec<String>,
     jinja_env: Environment<'a>,
-    scope: Vec<Scope>,
     debug: bool,
-    emit: bool,
     stream: bool,
 }
 
@@ -60,32 +96,19 @@ impl<'a> Interpreter<'a> {
         Self {
             // batch: 0,
             // role: Role::User,
-            cwd: ::std::env::current_dir().unwrap_or(PathBuf::from("/")),
             // id_stack: vec![],
             jinja_env: jinja_env,
-            scope: vec![Scope::new()],
             debug: false,
-            emit: true,
             stream: true,
         }
     }
 
-    async fn run_with_emit(
+    async fn _run_with_state(
         &mut self,
         program: &PdlBlock,
-        context: Context,
-        emit: bool,
+        state: &mut State,
+        parent_scope: &mut Scope,
     ) -> Interpretation {
-        /* if self.debug {
-            if let Some(scope) = self.scope.last() {
-                if scope.len() > 0 {
-                    eprintln!("Run with Scope {:?}", scope);
-                }
-            }
-        } */
-        let prior_emit = self.emit;
-        self.emit = emit;
-
         let (result, messages, trace) = match program {
             PdlBlock::Bool(b) => Ok((
                 b.into(),
@@ -98,58 +121,69 @@ impl<'a> Interpreter<'a> {
                 PdlBlock::Number(n.clone()),
             )),
             PdlBlock::Function(f) => Ok((
-                PdlResult::Closure(self.closure(&f)),
+                PdlResult::Closure(self.closure(&f, state)),
                 vec![],
                 PdlBlock::Function(f.clone()),
             )),
-            PdlBlock::String(s) => self.run_string(s, context).await,
-            PdlBlock::Call(block) => self.run_call(block, context).await,
-            PdlBlock::Empty(block) => self.run_empty(block, context).await,
-            PdlBlock::If(block) => self.run_if(block, context).await,
-            PdlBlock::Import(block) => self.run_import(block, context).await,
-            PdlBlock::Include(block) => self.run_include(block, context).await,
-            PdlBlock::Model(block) => self.run_model(block, context).await,
-            PdlBlock::Data(block) => self.run_data(block, context).await,
-            PdlBlock::Object(block) => self.run_object(block, context).await,
-            PdlBlock::PythonCode(block) => self.run_python_code(block, context).await,
-            PdlBlock::Read(block) => self.run_read(block, context).await,
-            PdlBlock::Repeat(block) => self.run_repeat(block, context).await,
-            PdlBlock::LastOf(block) => self.run_sequence(block, context).await,
-            PdlBlock::Text(block) => self.run_sequence(block, context).await,
-            PdlBlock::Array(block) => self.run_array(block, context).await,
-            PdlBlock::Message(block) => self.run_message(block, context).await,
+            PdlBlock::String(s) => self.run_string(s, state).await,
+            PdlBlock::Call(block) => self.run_call(block, state).await,
+            PdlBlock::Empty(block) => self.run_empty(block, state).await,
+            PdlBlock::If(block) => self.run_if(block, state).await,
+            PdlBlock::Import(block) => self.run_import(block, state).await,
+            PdlBlock::Include(block) => self.run_include(block, state).await,
+            PdlBlock::Model(block) => self.run_model(block, state).await,
+            PdlBlock::Data(block) => self.run_data(block, state).await,
+            PdlBlock::Object(block) => self.run_object(block, state).await,
+            PdlBlock::PythonCode(block) => self.run_python_code(block, state).await,
+            PdlBlock::Read(block) => self.run_read(block, state).await,
+            PdlBlock::Repeat(block) => self.run_repeat(block, state).await,
+            PdlBlock::LastOf(block) => self.run_sequence(block, state).await,
+            PdlBlock::Text(block) => self.run_sequence(block, state).await,
+            PdlBlock::Array(block) => self.run_array(block, state).await,
+            PdlBlock::Message(block) => self.run_message(block, state).await,
         }?;
 
         if match program {
-            PdlBlock::Text(_) | PdlBlock::LastOf(_) | PdlBlock::Call(_) | PdlBlock::Model(_) => {
-                false
-            }
-            _ => self.emit,
+            PdlBlock::Message(_)
+            | PdlBlock::Text(_)
+            | PdlBlock::Import(_)
+            | PdlBlock::Include(_)
+            | PdlBlock::LastOf(_)
+            | PdlBlock::Call(_)
+            | PdlBlock::Model(_) => false,
+            _ => state.emit,
         } {
             println!("{}", pretty_print(&messages));
         }
-        self.emit = prior_emit;
+
+        // copy any escaped variable bindings to the parent scope
+        parent_scope.extend(
+            state
+                .escaped_variables
+                .iter()
+                .filter_map(|variable| state.scope.remove_entry(&variable.clone())),
+        );
 
         Ok((result, messages, trace))
     }
 
     #[async_recursion]
-    async fn run_quiet(&mut self, program: &PdlBlock, context: Context) -> Interpretation {
-        self.run_with_emit(program, context, false).await
+    async fn run_quiet(&mut self, program: &PdlBlock, state: &mut State) -> Interpretation {
+        self._run_with_state(program, &mut state.with_emit(false), &mut state.scope)
+            .await
     }
 
     #[async_recursion]
-    async fn run(&mut self, program: &PdlBlock, context: Context) -> Interpretation {
-        self.run_with_emit(program, context, self.emit).await
+    async fn run(&mut self, program: &PdlBlock, state: &mut State) -> Interpretation {
+        self._run_with_state(program, &mut state.with_emit(true), &mut state.scope)
+            .await
     }
 
     /// Evaluate String as a Jinja2 expression
-    fn eval(&self, expr: &String) -> Result<PdlResult, PdlError> {
-        let result = self
-            .jinja_env
-            .render_str(expr.as_str(), self.scope.last().unwrap_or(&HashMap::new()))?;
+    fn eval(&self, expr: &String, state: &State) -> Result<PdlResult, PdlError> {
+        let result = self.jinja_env.render_str(expr.as_str(), &state.scope)?;
         if self.debug {
-            eprintln!("Eval {} -> {}", expr, result);
+            eprintln!("Eval {} -> {} with scope {:?}", expr, result, state.scope);
         }
 
         let backup = result.clone();
@@ -163,8 +197,8 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Evaluate String as a Jinja2 expression, expecting a string in response
-    fn eval_to_string(&self, expr: &String) -> Result<String, PdlError> {
-        match self.eval(expr)? {
+    fn eval_to_string(&self, expr: &String, state: &State) -> Result<String, PdlError> {
+        match self.eval(expr, state)? {
             PdlResult::String(s) => Ok(s),
             x => Err(Box::from(format!(
                 "Expression {expr} evaluated to non-string {:?}",
@@ -174,20 +208,20 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Traverse the given JSON Value, applying `self.eval()` to the value elements within.
-    fn eval_json(&self, expr: &Value) -> Result<PdlResult, PdlError> {
+    fn eval_json(&self, expr: &Value, state: &State) -> Result<PdlResult, PdlError> {
         match expr {
             Value::Null => Ok("".into()),
             Value::Bool(b) => Ok(PdlResult::Bool(*b)),
             Value::Number(n) => Ok(PdlResult::Number(n.clone())),
-            Value::String(s) => self.eval(s),
+            Value::String(s) => self.eval(s, state),
             Value::Array(a) => Ok(PdlResult::List(
                 a.iter()
-                    .map(|v| self.eval_json(v))
+                    .map(|v| self.eval_json(v, state))
                     .collect::<Result<_, _>>()?,
             )),
             Value::Object(o) => Ok(PdlResult::Dict(
                 o.iter()
-                    .map(|(k, v)| match self.eval_json(v) {
+                    .map(|(k, v)| match self.eval_json(v, state) {
                         Ok(v) => Ok((k.clone(), v)),
                         Err(e) => Err(e),
                     })
@@ -197,30 +231,34 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Evaluate an string or list of Values into a list of Values
-    fn eval_list_or_string(&self, expr: &ListOrString) -> Result<Vec<PdlResult>, PdlError> {
+    fn eval_list_or_string(
+        &self,
+        expr: &ListOrString,
+        state: &State,
+    ) -> Result<Vec<PdlResult>, PdlError> {
         match expr {
-            ListOrString::String(s) => match self.eval(s)? {
+            ListOrString::String(s) => match self.eval(s, state)? {
                 PdlResult::List(a) => Ok(a),
                 x => Err(Box::from(format!(
                     "Jinja string expanded to non-list. {} -> {:?}",
                     s, x
                 ))),
             },
-            ListOrString::List(l) => l.iter().map(|v| self.eval_json(v)).collect(),
+            ListOrString::List(l) => l.iter().map(|v| self.eval_json(v, state)).collect(),
         }
     }
 
     /// Create a closure for the given function `f`
-    fn closure(&self, f: &FunctionBlock) -> Closure {
+    fn closure(&self, f: &FunctionBlock, state: &State) -> Closure {
         Closure {
             function: f.clone(),
-            scope: self.scope.last().unwrap_or(&HashMap::new()).clone(),
+            scope: state.scope.clone(),
         }
     }
 
     /// Run a PdlBlock::String
-    async fn run_string(&self, msg: &String, _context: Context) -> Interpretation {
-        let trace = self.eval(msg)?;
+    async fn run_string(&self, msg: &String, state: &State) -> Interpretation {
+        let trace = self.eval(msg, state)?;
         if self.debug {
             eprintln!("String {} -> {:?}", msg, trace);
         }
@@ -234,9 +272,9 @@ impl<'a> Interpreter<'a> {
         Ok((trace, messages, PdlBlock::String(msg.clone())))
     }
 
-    /// If `file_path` is not absolute, join it with self.cwd
-    fn path_to(&self, file_path: &String) -> PathBuf {
-        let mut path = self.cwd.clone();
+    /// If `file_path` is not absolute, join it with state.cwd
+    fn path_to(&self, file_path: &String, state: &State) -> PathBuf {
+        let mut path = state.cwd.clone();
         path.push(file_path);
         if path.extension().is_none() {
             path.with_extension("pdl")
@@ -250,6 +288,8 @@ impl<'a> Interpreter<'a> {
         variable: &Option<String>,
         value: &PdlResult,
         parser: &Option<PdlParser>,
+        state: &mut State,
+        escape: bool,
     ) -> Result<PdlResult, PdlError> {
         let result = if let Some(parser) = parser {
             if let PdlResult::String(s) = value {
@@ -266,11 +306,14 @@ impl<'a> Interpreter<'a> {
         }?;
 
         if let Some(def) = &variable {
-            if let Some(scope) = self.scope.last_mut() {
-                if self.debug {
-                    eprintln!("Def {} -> {}", def, result);
-                }
-                scope.insert(def.clone(), result.clone());
+            if self.debug {
+                eprintln!("Def {} -> {}", def, result);
+            }
+            state.scope.insert(def.clone(), result.clone());
+
+            // then we want this binding to escape to the parent scope
+            if escape {
+                state.escaped_variables.push(def.clone());
             }
         }
 
@@ -278,20 +321,27 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Read
-    async fn run_read(&mut self, block: &ReadBlock, _context: Context) -> Interpretation {
+    async fn run_read(&mut self, block: &ReadBlock, state: &mut State) -> Interpretation {
         let trace = block.clone();
 
-        println!(
-            "{}",
-            match (&block.message, block.multiline) {
-                (Some(message), _) => message.as_str(),
-                (None, Some(true)) => "Enter/Paste your content. Ctrl-D to save it.",
-                _ => "How can i help you?",
+        match (&block.read, &block.message) {
+            (StringOrNull::String(_), None) => {} // read from file and no explicit message... then don't print a message
+            _ => {
+                println!(
+                    "{}",
+                    match (&block.message, block.multiline) {
+                        (Some(message), _) => message.as_str(),
+                        (None, Some(true)) => "Enter/Paste your content. Ctrl-D to save it.",
+                        _ => "How can i help you?",
+                    }
+                );
             }
-        );
+        }
 
         let buffer = match &block.read {
-            StringOrNull::String(file_path) => ::std::fs::read_to_string(self.path_to(file_path))?,
+            StringOrNull::String(file_path) => {
+                ::std::fs::read_to_string(self.path_to(file_path, state))?
+            }
             StringOrNull::Null => {
                 let mut buffer = String::new();
                 let mut bytes_read = ::std::io::stdin().read_line(&mut buffer)?;
@@ -304,7 +354,13 @@ impl<'a> Interpreter<'a> {
             }
         };
 
-        let result = self.def(&block.def, &buffer.clone().into(), &block.parser)?;
+        let result = self.def(
+            &block.def,
+            &buffer.clone().into(),
+            &block.parser,
+            state,
+            true,
+        )?;
 
         Ok((
             result,
@@ -314,112 +370,102 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Call
-    async fn run_call(&mut self, block: &CallBlock, context: Context) -> Interpretation {
+    async fn run_call(&mut self, block: &CallBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
-            eprintln!("Call scope {:?}", self.scope.last());
+            eprintln!("Call scope {:?}", state.scope);
         }
 
-        let res = match self.eval(&block.call)? {
+        match self.eval(&block.call, state)? {
             PdlResult::Closure(c) => {
-                if let Some(args) = &block.args {
-                    match self.eval_json(args)? {
-                        PdlResult::Dict(m) => {
-                            self.push_and_extend_scope_with(m, c.scope);
-                            Ok(())
-                        }
+                let mut new_state = match &block.args {
+                    None => Ok(state.clone()),
+                    Some(args) => match self.eval_json(args, state)? {
+                        PdlResult::Dict(m) => Ok(state.extend_scope(vec![m, c.scope])),
                         x => Err(PdlError::from(format!("Call arguments not a map: {:?}", x))),
-                    }?;
-                }
+                    },
+                }?;
 
-                self.run(&c.function.return_, context.clone()).await
+                self.run(&c.function.return_, &mut new_state).await
             }
             x => Err(Box::from(format!(
                 "call of non-function {:?}->{:?}",
                 block.call, x
             ))),
-        };
-
-        if let Some(_) = block.args {
-            self.scope.pop();
         }
-
-        res
     }
 
     /// Run a PdlBlock::Empty
-    async fn run_empty(&mut self, block: &EmptyBlock, _context: Context) -> Interpretation {
+    async fn run_empty(&mut self, block: &EmptyBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Empty");
         }
 
         let trace = block.clone();
-        self.process_defs(&Some(block.defs.clone())).await?;
+        self.process_defs(&Some(block.defs.clone()), state).await?;
         Ok((
-            PdlResult::Dict(self.scope.last().unwrap_or(&HashMap::new()).clone()),
+            PdlResult::Dict(state.scope.clone()),
             vec![],
             PdlBlock::Empty(trace),
         ))
     }
 
     /// Run a PdlBlock::Call
-    async fn run_if(&mut self, block: &IfBlock, context: Context) -> Interpretation {
+    async fn run_if(&mut self, block: &IfBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("If {:?}({:?})", block.condition, block.then);
         }
 
-        self.process_defs(&block.defs).await?;
+        self.process_defs(&block.defs, state).await?;
 
         let cond = match &block.condition {
             StringOrBoolean::Boolean(b) => PdlResult::Bool(*b),
-            StringOrBoolean::String(s) => self.eval(s)?,
+            StringOrBoolean::String(s) => self.eval(s, state)?,
         };
-        let res = match cond {
-            PdlResult::Bool(true) => self.run_quiet(&block.then, context).await,
+
+        match cond {
+            PdlResult::Bool(true) => self.run_quiet(&block.then, state).await,
             PdlResult::Bool(false) => match &block.else_ {
-                Some(else_block) => self.run_quiet(&else_block, context).await,
+                Some(else_block) => self.run_quiet(&else_block, state).await,
                 None => Ok(("".into(), vec![], PdlBlock::If(block.clone()))),
             },
             x => Err(Box::from(format!(
                 "if block condition evaluated to non-boolean value: {:?}",
                 x
             ))),
-        };
-
-        self.scope.pop();
-        res
+        }
     }
 
     /// Run a PdlBlock::Include
-    async fn run_include(&mut self, block: &IncludeBlock, context: Context) -> Interpretation {
+    async fn run_include(&mut self, block: &IncludeBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Include {:?}", block.include);
         }
 
-        let path = self.path_to(&block.include);
-        let old_cwd = self.cwd.clone();
-        if let Some(cwd) = path.parent() {
-            self.cwd = cwd.to_path_buf()
-        }
-        let res = self.run_quiet(&parse_file(&path)?, context.clone()).await;
-        self.cwd = old_cwd;
-        res
+        let path = self.path_to(&block.include, state);
+        let mut new_state = if let Some(cwd) = path.parent() {
+            state.with_cwd(cwd.to_path_buf())
+        } else {
+            state.clone()
+        };
+
+        self.run(&parse_file(&path)?, &mut new_state).await
     }
 
     /// Run a PdlBlock::Import
-    async fn run_import(&mut self, block: &ImportBlock, context: Context) -> Interpretation {
+    async fn run_import(&mut self, block: &ImportBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Import {:?}", block.import);
         }
 
-        let path = self.path_to(&block.import);
-        let old_cwd = self.cwd.clone();
-        if let Some(cwd) = path.parent() {
-            self.cwd = cwd.to_path_buf()
-        }
-        let res = self.run_quiet(&parse_file(&path)?, context.clone()).await;
-        self.cwd = old_cwd;
-        res
+        let path = self.path_to(&block.import, state);
+        let mut new_state = if let Some(cwd) = path.parent() {
+            state.with_cwd(cwd.to_path_buf())
+        } else {
+            state.clone()
+        };
+
+        self.run(&parse_file(&path)?, &mut new_state).await
     }
 
     fn to_ollama_model_options(
@@ -487,7 +533,7 @@ impl<'a> Interpreter<'a> {
     async fn run_python_code(
         &mut self,
         block: &PythonCodeBlock,
-        _context: Context,
+        _state: &mut State,
     ) -> Interpretation {
         use rustpython_vm as vm;
         let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
@@ -539,7 +585,7 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Model
-    async fn run_model(&mut self, block: &ModelBlock, context: Context) -> Interpretation {
+    async fn run_model(&mut self, block: &ModelBlock, state: &mut State) -> Interpretation {
         match &block.model {
             pdl_model
                 if pdl_model.starts_with("ollama/") || pdl_model.starts_with("ollama_chat/") =>
@@ -557,13 +603,16 @@ impl<'a> Interpreter<'a> {
                     eprintln!("Model tools {:?} {:?}", block.description, tools);
                 }
 
+                // The input messages to the model is either:
+                // a) block.input, if given
+                // b) the current state's accumulated messages
                 let input_messages = match &block.input {
                     Some(input) => {
                         // TODO ignoring result, trace
-                        let (_result, messages, _trace) = self.run_quiet(&*input, context).await?;
+                        let (_result, messages, _trace) = self.run_quiet(&*input, state).await?;
                         messages
                     }
-                    None => context,
+                    None => state.messages.clone(),
                 };
                 let (prompt, history_slice): (&ChatMessage, &[ChatMessage]) =
                     match input_messages.split_last() {
@@ -581,9 +630,9 @@ impl<'a> Interpreter<'a> {
                     );
                 }
 
-                if self.emit {
-                    println!("{}", pretty_print(&input_messages));
-                }
+                //if state.emit {
+                //println!("{}", pretty_print(&input_messages));
+                //}
 
                 let req = ChatMessageRequest::new(model.into(), vec![prompt.clone()])
                     .options(options)
@@ -641,6 +690,8 @@ impl<'a> Interpreter<'a> {
                             &block.model_response,
                             &self.resultify_as_litellm(&from_str(&to_string(&res)?)?),
                             &None,
+                            state,
+                            true,
                         )?;
                     }
                 }
@@ -701,23 +752,35 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Data
-    async fn run_data(&mut self, block: &DataBlock, _context: Context) -> Interpretation {
+    async fn run_data(&mut self, block: &DataBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Data raw={:?} {:?}", block.raw, block.data);
         }
 
         let mut trace = block.clone();
         if let Some(true) = block.raw {
-            let result = self.def(&block.def, &self.resultify(&block.data), &block.parser)?;
+            let result = self.def(
+                &block.def,
+                &self.resultify(&block.data),
+                &block.parser,
+                state,
+                true,
+            )?;
             Ok((result, vec![], PdlBlock::Data(trace)))
         } else {
-            let result = self.def(&block.def, &self.eval_json(&block.data)?, &block.parser)?;
+            let result = self.def(
+                &block.def,
+                &self.eval_json(&block.data, state)?,
+                &block.parser,
+                state,
+                true,
+            )?;
             trace.data = from_str(to_string(&result)?.as_str())?;
             Ok((result, vec![], PdlBlock::Data(trace)))
         }
     }
 
-    async fn run_object(&mut self, block: &ObjectBlock, context: Context) -> Interpretation {
+    async fn run_object(&mut self, block: &ObjectBlock, state: &mut State) -> Interpretation {
         if self.debug {
             eprintln!("Object {:?}", block.object);
         }
@@ -728,8 +791,7 @@ impl<'a> Interpreter<'a> {
 
         let mut iter = block.object.iter();
         while let Some((k, v)) = iter.next() {
-            let (this_result, this_messages, this_trace) =
-                self.run_quiet(v, context.clone()).await?;
+            let (this_result, this_messages, this_trace) = self.run_quiet(v, state).await?;
             messages.extend(this_messages);
             result_map.insert(k.clone(), this_result);
             trace_map.insert(k.clone(), this_trace);
@@ -743,7 +805,7 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Repeat
-    async fn run_repeat(&mut self, block: &RepeatBlock, context: Context) -> Interpretation {
+    async fn run_repeat(&mut self, block: &RepeatBlock, state: &mut State) -> Interpretation {
         // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
         //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
         //            .into_iter()
@@ -751,10 +813,12 @@ impl<'a> Interpreter<'a> {
         let iter_scopes = block
             .for_
             .iter()
-            .map(|(var, values)| match self.eval_list_or_string(values) {
-                Ok(value) => Ok((var.clone(), value)),
-                Err(e) => Err(e),
-            })
+            .map(
+                |(var, values)| match self.eval_list_or_string(values, state) {
+                    Ok(value) => Ok((var.clone(), value)),
+                    Err(e) => Err(e),
+                },
+            )
             .collect::<Result<HashMap<_, _>, _>>()?;
 
         if self.debug {
@@ -764,18 +828,19 @@ impl<'a> Interpreter<'a> {
         let mut results = vec![];
         let mut messages = vec![];
         let mut trace = vec![];
+        let mut iter_state = state.clone();
         if let Some(n) = iter_scopes.iter().map(|(_, v)| v.len()).min() {
             for iter in 0..n {
                 let this_iter_scope = iter_scopes
                     .iter()
                     .map(|(k, v)| (k.clone(), v[iter].clone()))
                     .collect();
-                self.push_and_extend_scope(this_iter_scope);
-                let (result, ms, t) = self.run_quiet(&block.repeat, context.clone()).await?;
+                iter_state = iter_state.extend_scope(vec![this_iter_scope]);
+                let (result, ms, t) = self.run_quiet(&block.repeat, &mut iter_state).await?;
                 results.push(result);
                 messages.extend(ms);
                 trace.push(t);
-                self.pop_scope();
+                //self.pop_scope();
             }
         }
 
@@ -802,40 +867,20 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    fn push_and_extend_scope(&mut self, scope: HashMap<String, PdlResult>) {
-        let mut new_scope = self.scope.last().unwrap_or(&HashMap::new()).clone();
-        new_scope.extend(scope);
-        self.scope.push(new_scope);
-    }
-
-    fn push_and_extend_scope_with(
-        &mut self,
-        mut scope: HashMap<String, PdlResult>,
-        other_scope: HashMap<String, PdlResult>,
-    ) {
-        scope.extend(other_scope);
-        self.push_and_extend_scope(scope);
-    }
-
-    fn pop_scope(&mut self) {
-        self.scope.pop();
-    }
-
     async fn process_defs(
         &mut self,
         defs: &Option<indexmap::IndexMap<String, PdlBlock>>,
+        state: &mut State,
     ) -> Result<(), PdlError> {
-        let mut new_scope: Scope = HashMap::new();
-        if let Some(cur_scope) = self.scope.last() {
-            new_scope.extend(cur_scope.clone());
-        }
-        self.scope.push(new_scope);
+        // in pdl, blocks are not a lexical scope. strange, but true
+        //let mut new_state = state.clone();
 
         if let Some(defs) = defs {
             let mut iter = defs.iter();
             while let Some((var, def)) = iter.next() {
-                let (result, _, _) = self.run_quiet(def, vec![]).await?;
-                let _ = self.def(&Some(var.clone()), &result, &None);
+                let (result, _, _) = self.run_quiet(def, state).await?;
+                let escape = false; // ?? do we want pdl defs to escape to the parent scope? lexical scoping would say no
+                let _ = self.def(&Some(var.clone()), &result, &None, state, escape);
             }
         }
 
@@ -846,7 +891,7 @@ impl<'a> Interpreter<'a> {
     async fn run_sequence(
         &mut self,
         block: &impl SequencingBlock,
-        context: Context,
+        state: &mut State,
     ) -> Interpretation {
         if self.debug {
             let description = if let Some(d) = block.description() {
@@ -857,34 +902,36 @@ impl<'a> Interpreter<'a> {
             eprintln!("{} {description}", block.kind());
         }
 
-        let mut input_messages = context.clone();
         let mut output_results = vec![];
         let mut output_messages = vec![];
         let mut output_blocks = vec![];
 
-        self.process_defs(block.defs()).await?;
+        self.process_defs(block.defs(), state).await?;
 
+        // here is where we iterate over the sequence items
         let mut iter = block.items().iter();
         while let Some(block) = iter.next() {
             // run each element of the Text block
-            let (this_result, this_messages, trace) =
-                self.run(&block, input_messages.clone()).await?;
-            input_messages.extend(this_messages.clone());
-            output_results.push(this_result);
+            let (this_result, this_messages, trace) = self.run(&block, state).await?;
 
-            output_messages.extend(this_messages);
+            state.messages.extend(this_messages.iter().cloned());
+
+            output_results.push(this_result);
+            output_messages.extend(this_messages.iter().cloned());
             output_blocks.push(trace);
         }
 
-        self.scope.pop();
+        // self.scope.pop();
 
         let trace = block.with_items(output_blocks);
         let result = self.def(
             trace.def(),
             &trace.result_for(output_results),
             trace.parser(),
+            state,
+            true,
         )?;
-        let result_messages = trace.messages_for::<ChatMessage>(output_messages);
+        let result_messages = trace.messages_for::<ChatMessage>(&output_messages);
         Ok((
             result,
             match block.role() {
@@ -899,7 +946,7 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Array
-    async fn run_array(&mut self, block: &ArrayBlock, context: Context) -> Interpretation {
+    async fn run_array(&mut self, block: &ArrayBlock, state: &mut State) -> Interpretation {
         let mut result_items = vec![];
         let mut all_messages = vec![];
         let mut trace_items = vec![];
@@ -907,7 +954,7 @@ impl<'a> Interpreter<'a> {
         let mut iter = block.array.iter();
         while let Some(item) = iter.next() {
             // TODO accumulate messages
-            let (result, messages, trace) = self.run_quiet(item, context.clone()).await?;
+            let (result, messages, trace) = self.run_quiet(item, state).await?;
             result_items.push(result);
             all_messages.extend(messages);
             trace_items.push(trace);
@@ -921,16 +968,16 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Message
-    async fn run_message(&mut self, block: &MessageBlock, context: Context) -> Interpretation {
+    async fn run_message(&mut self, block: &MessageBlock, state: &mut State) -> Interpretation {
         let (content_result, content_messages, content_trace) =
-            self.run(&block.content, context).await?;
+            self.run(&block.content, state).await?;
         let name = if let Some(name) = &block.name {
-            Some(self.eval_to_string(&name)?)
+            Some(self.eval_to_string(&name, state)?)
         } else {
             None
         };
         let tool_call_id = if let Some(tool_call_id) = &block.tool_call_id {
-            Some(self.eval_to_string(&tool_call_id)?)
+            Some(self.eval_to_string(&tool_call_id, state)?)
         } else {
             None
         };
@@ -976,10 +1023,11 @@ pub async fn run(
     let mut interpreter = Interpreter::new();
     interpreter.debug = debug;
     interpreter.stream = stream;
+    let mut state = State::new();
     if let Some(cwd) = cwd {
-        interpreter.cwd = cwd
-    };
-    interpreter.run(&program, vec![]).await
+        state.cwd = cwd
+    }
+    interpreter.run(&program, &mut state).await
 }
 
 #[allow(dead_code)]
