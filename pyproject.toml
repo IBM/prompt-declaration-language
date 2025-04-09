@@ -69,6 +69,7 @@ Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 
 [project.scripts]
 pdl = "pdl.pdl:main"
+pdl-lint = "pdl.pdl_linter:run_linter"
 
 [tool.setuptools_scm]
 version_file = "src/pdl/_version.py"
@@ -81,3 +82,15 @@ pdl = ["pdl-schema.json"]
 
 [tool.pyright]
 include = ["src", "tests", "examples", "docs"]
+
+[tool.pdl-lint]
+ignore = [
+  "tests/data/line/hello.pdl",
+  "tests/data/line/hello1.pdl",
+  "tests/data/line/hello10.pdl",
+  "tests/data/line/hello11.pdl",
+  "tests/data/line/hello31.pdl",
+  "tests/data/line/hello4.pdl",
+  "tests/data/line/hello7.pdl",
+  "tests/data/line/hello8.pdl",
+]

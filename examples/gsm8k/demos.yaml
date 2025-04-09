@@ -1,0 +1,69 @@
+- |
+  Problem: 
+  Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?
+
+  Plan:
+  Figure out how many clips Natalia sold in May, by halving the number sold in April. Then add the number sold in April with the number sold in May.
+
+- |
+  Problem:
+  Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?
+
+  Plan: 
+  First calculate how much Weng earns per minute. Then multiply this number by 50.
+  
+- |
+  Problem:
+  Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents decided to give her $15 for that purpose, and her grandparents twice as much as her parents. How much more money does Betty need to buy the wallet?
+  
+  Plan: 
+  First calculate how much money Betty already has, which is half of $100. Then calculate how much her grandparents gave her by multiplying how much her parents give her by 2. Calculate the difference between 100 and all the money she has and is given.
+  
+- |
+  Problem:
+  Julie is reading a 120-page book. Yesterday, she was able to read 12 pages and today, she read twice as many pages as yesterday. If she wants to read half of the remaining pages tomorrow, how many pages should she read?
+  
+  Plan: 
+  First calculate how many pages Julie reads today by multiplying 12 by 2. Second, calculate the total read for yesterday and today. Third, calculate the number of remaining pages. Finally compute half the remaining pages.
+
+- |
+  Problem:
+  James writes a 3-page letter to 2 different friends twice a week.  How many pages does he write a year?
+  
+  Plan: 
+  First calculate how many pages he writes to each friend every week. Second calculate the total number of pages he writes each week. Multiply that number by 52 to obtain how many pages he writes every month. 
+
+- |
+  Problem: 
+  Mark has a garden with flowers. He Planted Plants of three different colors in it. Ten of them are yellow, and there are 80% more of those in purple. There are only 25% as many green flowers as there are yellow and purple flowers. How many flowers does Mark have in his garden?
+  
+  Plan: 
+  First calculate how many more purple flowers there are. Second calculate how many purples flowers. Calculate the number of purple and yellow flowers together. Calculate the number of green flowers, knowing that it's 25% of purple and yellow flowers. Add the number of purple and yellow with the number of green flowers.
+
+- |
+  Problem: 
+  Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?
+  
+  Plan: 
+  First calculate the number of slices from the large pizzas. Then calculate the number of slices from the small pizzas. Finally add the number of slices from large and small pizzas.
+
+- | 
+  Problem: 
+  Ken created a care package to send to his brother, who was away at boarding school.  Ken placed a box on a scale, and then he poured into the box enough jelly beans to bring the weight to 2 pounds.  Then, he added enough brownies to cause the weight to triple.  Next, he added another 2 pounds of jelly beans.  And finally, he added enough gummy worms to double the weight once again.  What was the final weight of the box of goodies, in pounds?
+  
+  Plan: First calculate the weight after adding the brownies. Then add the weight of the next batch of jelly beans. Finally double that amount.
+
+- |
+  Problem: 
+  Alexis is applying for a new job and bought a new set of business clothes to wear to the interview. She went to a department store with a budget of $200 and spent $30 on a button-up shirt, $46 on suit pants, $38 on a suit coat, $11 on socks, and $18 on a belt. She also purchased a pair of shoes, but lost the receipt for them. She has $16 left from her budget. How much did Alexis pay for the shoes?
+  
+  Plan: 
+  First calculate how much Alexis spent except for shoes. Then calculate how much she spent in total by subtracting $16 from $200. Finally, subtract the amount spent except shoes from the total spent.
+
+- |
+  Problem: 
+  Jasper will serve charcuterie at his dinner party. He buys 2 pounds of cheddar cheese for $10, a pound of cream cheese that cost half the price of the cheddar cheese, and a pack of cold cuts that cost twice the price of the cheddar cheese. How much does he spend on the ingredients?
+  
+  Plan: 
+  First calculate how much a pound of cream cheese costs. Then calculate how much the pack of cold cuts costs by multiplying that by 2. Finall add the cost of cheddar cheese, cream cheese, and cold cuts.
+  

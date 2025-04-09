@@ -47,6 +47,23 @@
             }
           }
         },
+        "runr": {
+          "args": [
+            {
+              "name": "source",
+              "index": 1,
+              "required": true,
+              "takesValue": true
+            },
+            {
+              "name": "no-stream"
+            },
+            {
+              "name": "debug",
+              "short": "g"
+            }
+          ]
+        },
         "run": {
           "description": "Run a PDL program",
           "args": [

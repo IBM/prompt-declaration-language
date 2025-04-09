@@ -203,6 +203,10 @@ export type Spec22 = {
 } | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback =
   | boolean
   | number
@@ -278,6 +282,10 @@ export type Parser1 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback1 =
   | boolean
   | number
@@ -331,6 +339,10 @@ export type Kind1 = "error"
  *
  */
 export type Msg = string
+/**
+ * Block that raised the error.
+ *
+ */
 export type Program1 =
   | boolean
   | number
@@ -380,6 +392,10 @@ export type Parser2 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback2 =
   | boolean
   | number
@@ -482,6 +498,10 @@ export type Parser3 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback3 =
   | boolean
   | number
@@ -584,6 +604,10 @@ export type Parser4 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback4 =
   | boolean
   | number
@@ -670,6 +694,10 @@ export type Parser5 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback5 =
   | boolean
   | number
@@ -697,7 +725,7 @@ export type Fallback5 =
   | EmptyBlock
   | null
 /**
- * Role of associated to the message.
+ * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
@@ -716,8 +744,11 @@ export type Context5 =
  *
  */
 export type PdlId5 = string | null
-export type PdlIsLeaf5 = false
+export type PdlIsLeaf5 = true
 export type Kind5 = "message"
+/**
+ * Content of the message.
+ */
 export type Content =
   | boolean
   | number
@@ -775,6 +806,10 @@ export type Parser6 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback6 =
   | boolean
   | number
@@ -902,6 +937,10 @@ export type Parser7 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback7 =
   | boolean
   | number
@@ -950,6 +989,9 @@ export type Context7 =
 export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
 export type Kind7 = "array"
+/**
+ * Elements of the array.
+ */
 export type Array = (
   | boolean
   | number
@@ -1000,6 +1042,10 @@ export type Parser8 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback8 =
   | boolean
   | number
@@ -1048,6 +1094,9 @@ export type Context8 =
 export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
 export type Kind8 = "lastOf"
+/**
+ * Sequence of blocks to execute.
+ */
 export type Lastof = (
   | boolean
   | number
@@ -1098,6 +1147,10 @@ export type Parser9 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback9 =
   | boolean
   | number
@@ -1146,6 +1199,10 @@ export type Context9 =
 export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
 export type Kind9 = "text"
+/**
+ * Body of the text.
+ *
+ */
 export type Text =
   | boolean
   | number
@@ -1222,6 +1279,10 @@ export type Parser10 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback10 =
   | boolean
   | number
@@ -1282,6 +1343,10 @@ export type For = {
  *
  */
 export type While = LocalizedExpression | boolean | string
+/**
+ * Body of the loop.
+ *
+ */
 export type Repeat =
   | boolean
   | number
@@ -1400,6 +1465,10 @@ export type Parser11 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback11 =
   | boolean
   | number
@@ -1540,6 +1609,10 @@ export type Parser12 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback12 =
   | boolean
   | number
@@ -1593,6 +1666,10 @@ export type Kind12 = "if"
  *
  */
 export type If1 = LocalizedExpression | boolean | string
+/**
+ * Branch to execute if the condition is true.
+ *
+ */
 export type Then1 =
   | boolean
   | number
@@ -1619,6 +1696,10 @@ export type Then1 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
 export type Else =
   | boolean
   | number
@@ -1669,6 +1750,10 @@ export type Parser13 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback13 =
   | boolean
   | number
@@ -1744,6 +1829,10 @@ export type Parser14 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback14 =
   | boolean
   | number
@@ -1819,6 +1908,10 @@ export type Parser15 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback15 =
   | boolean
   | number
@@ -1896,6 +1989,10 @@ export type Parser16 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback16 =
   | boolean
   | number
@@ -1949,6 +2046,10 @@ export type Kind16 = "code"
  *
  */
 export type Lang1 = "python" | "command" | "jinja" | "pdl"
+/**
+ * Code to execute.
+ *
+ */
 export type Code =
   | boolean
   | number
@@ -1998,6 +2099,10 @@ export type Parser17 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback17 =
   | boolean
   | number
@@ -2046,6 +2151,10 @@ export type Context17 =
 export type PdlId17 = string | null
 export type PdlIsLeaf17 = true
 export type Kind17 = "model"
+/**
+ * Messages to send to the model.
+ *
+ */
 export type Input =
   | boolean
   | number
@@ -2138,6 +2247,10 @@ export type Parser18 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback18 =
   | boolean
   | number
@@ -2191,6 +2304,10 @@ export type Kind18 = "model"
  *
  */
 export type Model1 = LocalizedExpression | string
+/**
+ * Messages to send to the model.
+ *
+ */
 export type Input1 =
   | boolean
   | number
@@ -2314,6 +2431,10 @@ export type Parser19 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback19 =
   | boolean
   | number
@@ -2411,6 +2532,10 @@ export type Parser20 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback20 =
   | boolean
   | number
@@ -2466,6 +2591,10 @@ export type Kind20 = "function"
 export type Function = {
   [k: string]: unknown
 } | null
+/**
+ * Body of the function
+ *
+ */
 export type Return =
   | boolean
   | number
@@ -2548,6 +2677,10 @@ export interface FunctionBlock {
 export interface Spec {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs {
   [k: string]:
     | boolean
@@ -2606,6 +2739,10 @@ export interface CallBlock {
 export interface Spec1 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs1 {
   [k: string]:
     | boolean
@@ -2679,6 +2816,10 @@ export interface LitellmModelBlock {
 export interface Spec2 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs2 {
   [k: string]:
     | boolean
@@ -2747,6 +2888,10 @@ export interface GraniteioModelBlock {
 export interface Spec3 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs3 {
   [k: string]:
     | boolean
@@ -2813,6 +2958,10 @@ export interface CodeBlock {
 export interface Spec4 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs4 {
   [k: string]:
     | boolean
@@ -2878,6 +3027,10 @@ export interface ArgsBlock {
 export interface Spec5 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs5 {
   [k: string]:
     | boolean
@@ -2936,6 +3089,10 @@ export interface GetBlock {
 export interface Spec6 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs6 {
   [k: string]:
     | boolean
@@ -3014,6 +3171,10 @@ export interface DataBlock {
 export interface Spec7 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs7 {
   [k: string]:
     | boolean
@@ -3083,6 +3244,10 @@ export interface IfBlock {
 export interface Spec8 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs8 {
   [k: string]:
     | boolean
@@ -3157,6 +3322,10 @@ export interface MatchBlock {
 export interface Spec9 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs9 {
   [k: string]:
     | boolean
@@ -3228,6 +3397,10 @@ export interface RepeatBlock {
 export interface Spec10 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs10 {
   [k: string]:
     | boolean
@@ -3284,6 +3457,10 @@ export interface TextBlock {
 export interface Spec11 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs11 {
   [k: string]:
     | boolean
@@ -3340,6 +3517,10 @@ export interface LastOfBlock {
 export interface Spec12 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs12 {
   [k: string]:
     | boolean
@@ -3396,6 +3577,10 @@ export interface ArrayBlock {
 export interface Spec13 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs13 {
   [k: string]:
     | boolean
@@ -3452,6 +3637,10 @@ export interface ObjectBlock {
 export interface Spec14 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs14 {
   [k: string]:
     | boolean
@@ -3491,7 +3680,7 @@ export interface MessageBlock {
   contribute?: Contribute5
   parser?: Parser5
   fallback?: Fallback5
-  role: Role5
+  role?: Role5
   context?: Context5
   pdl__id?: PdlId5
   pdl__result?: unknown
@@ -3510,6 +3699,10 @@ export interface MessageBlock {
 export interface Spec15 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs15 {
   [k: string]:
     | boolean
@@ -3580,6 +3773,10 @@ export interface ReadBlock {
 export interface Spec16 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs16 {
   [k: string]:
     | boolean
@@ -3637,6 +3834,10 @@ export interface IncludeBlock {
 export interface Spec17 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs17 {
   [k: string]:
     | boolean
@@ -3694,6 +3895,10 @@ export interface ImportBlock {
 export interface Spec18 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs18 {
   [k: string]:
     | boolean
@@ -3751,6 +3956,10 @@ export interface ErrorBlock {
 export interface Spec19 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs19 {
   [k: string]:
     | boolean
@@ -3806,6 +4015,10 @@ export interface EmptyBlock {
 export interface Spec20 {
   [k: string]: unknown
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs20 {
   [k: string]:
     | boolean

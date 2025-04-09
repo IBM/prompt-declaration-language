@@ -252,13 +252,12 @@ def process_block(
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
                 ) from exc
             result = PdlConst(v)
-            stringified_result = lazy_apply(stringify, result)
             background = PdlList(
                 [
                     PdlDict(  # type: ignore
                         {
                             "role": state.role,
-                            "content": stringified_result,
+                            "content": result,
                             "defsite": ".".join(
                                 state.id_stack
                             ),  # Warning: defsite for a literal value
@@ -268,7 +267,7 @@ def process_block(
             )
             trace = DataBlock(
                 data=expr,
-                pdl__result=stringified_result,
+                pdl__result=result,
                 pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
                 pdl__id=".".join(state.id_stack),
             )
@@ -475,9 +474,8 @@ def process_block_body(
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
                 ) from exc
-            stringified_result = lazy_apply(stringify, result)
             background = PdlList(
-                [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
+                [PdlDict({"role": state.role, "content": result})]  # type: ignore
             )
             trace = block.model_copy()
             if state.yield_result:
@@ -492,9 +490,8 @@ def process_block_body(
             else:
                 v, trace = process_expr_of(block, "data", scope, loc)
                 result = PdlConst(v)
-            stringified_result = stringify(v)
             background = PdlList(
-                [PdlDict({"role": state.role, "content": stringified_result})]  # type: ignore
+                [PdlDict({"role": state.role, "content": result})]  # type: ignore
             )
             if state.yield_result:
                 yield_result(result.result(), block.kind)
@@ -570,28 +567,26 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
         case MessageBlock():
-            content, background, scope, trace = process_block_of(
+            content, _, scope, trace = process_block_of(
                 block,
                 "content",
                 state,
                 scope,
                 loc,
             )
-            name, block = process_expr_of(
-                block, "name", scope, loc  # pyright: ignore
-            )  # pyright: ignore
-            tool_call_id, block = process_expr_of(
-                block, "tool_call_id", scope, loc  # pyright: ignore
-            )  # pyright: ignore
-            result = PdlDict(
-                {
-                    "role": state.role,
-                    "content": content,
-                    "name": name,
-                    "tool_call_id": tool_call_id,
-                    "defsite": block.pdl__id,
-                }
-            )
+            message = {
+                "role": state.role,
+                "content": content,
+                "defsite": block.pdl__id,
+            }
+            if block.name is not None:
+                name, block = process_expr_of(block, "name", scope, loc)
+                message["name"] = name
+            if block.tool_call_id is not None:
+                tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
+                message["tool_call_id"] = tool_call_id
+            result = PdlDict(message)
+            background = PdlList([result])
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:
@@ -1603,9 +1598,8 @@ def process_call_code(
         case "pdl":
             try:
                 result = call_pdl(code_s, scope)
-                stringified_result = lazy_apply(stringify, result)
                 background = PdlList(
-                    [PdlDict({"role": state.role, "content": stringified_result, "defsite": block.pdl__id})]  # type: ignore
+                    [PdlDict({"role": state.role, "content": result, "defsite": block.pdl__id})]  # type: ignore
                 )
             except Exception as exc:
                 raise PDLRuntimeError(
