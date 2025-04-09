@@ -23,9 +23,9 @@ use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
     ArrayBlock, CallBlock, Closure, DataBlock, EmptyBlock, FunctionBlock, IfBlock, ImportBlock,
-    IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlBlock, PdlParser,
-    PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope, SequencingBlock,
-    StringOrBoolean, StringOrNull,
+    IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlAdvancedBlock, PdlBlock,
+    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
+    SequencingBlock, StringOrBoolean, StringOrNull,
 };
 
 type Context = Vec<ChatMessage>;
@@ -87,39 +87,46 @@ impl<'a> Interpreter<'a> {
         self.emit = emit;
 
         let (result, messages, trace) = match program {
+            PdlBlock::Bool(b) => Ok((
+                b.into(),
+                vec![ChatMessage::user(format!("{b}"))],
+                PdlBlock::Bool(b.clone()),
+            )),
             PdlBlock::Number(n) => Ok((
                 n.clone().into(),
                 vec![ChatMessage::user(format!("{n}"))],
                 PdlBlock::Number(n.clone()),
             )),
-            PdlBlock::Function(f) => Ok((
-                PdlResult::Closure(self.closure(&f)),
-                vec![],
-                PdlBlock::Function(f.clone()),
-            )),
             PdlBlock::String(s) => self.run_string(s, context).await,
-            PdlBlock::Call(block) => self.run_call(block, context).await,
-            PdlBlock::Empty(block) => self.run_empty(block, context).await,
-            PdlBlock::If(block) => self.run_if(block, context).await,
-            PdlBlock::Import(block) => self.run_import(block, context).await,
-            PdlBlock::Include(block) => self.run_include(block, context).await,
-            PdlBlock::Model(block) => self.run_model(block, context).await,
-            PdlBlock::Data(block) => self.run_data(block, context).await,
-            PdlBlock::Object(block) => self.run_object(block, context).await,
-            PdlBlock::PythonCode(block) => self.run_python_code(block, context).await,
-            PdlBlock::Read(block) => self.run_read(block, context).await,
-            PdlBlock::Repeat(block) => self.run_repeat(block, context).await,
-            PdlBlock::LastOf(block) => self.run_sequence(block, context).await,
-            PdlBlock::Text(block) => self.run_sequence(block, context).await,
-            PdlBlock::Array(block) => self.run_array(block, context).await,
-            PdlBlock::Message(block) => self.run_message(block, context).await,
-            _ => Err(Box::from(format!("Unsupported block {:?}", program))),
+            PdlBlock::Advanced(b) => match b {
+                PdlAdvancedBlock::Function(f) => Ok((
+                    PdlResult::Closure(self.closure(&f)),
+                    vec![],
+                    PdlBlock::Advanced(PdlAdvancedBlock::Function(f.clone())),
+                )),
+                PdlAdvancedBlock::Call(block) => self.run_call(block, context).await,
+                PdlAdvancedBlock::Empty(block) => self.run_empty(block, context).await,
+                PdlAdvancedBlock::If(block) => self.run_if(block, context).await,
+                PdlAdvancedBlock::Import(block) => self.run_import(block, context).await,
+                PdlAdvancedBlock::Include(block) => self.run_include(block, context).await,
+                PdlAdvancedBlock::Model(block) => self.run_model(block, context).await,
+                PdlAdvancedBlock::Data(block) => self.run_data(block, context).await,
+                PdlAdvancedBlock::Object(block) => self.run_object(block, context).await,
+                PdlAdvancedBlock::PythonCode(block) => self.run_python_code(block, context).await,
+                PdlAdvancedBlock::Read(block) => self.run_read(block, context).await,
+                PdlAdvancedBlock::Repeat(block) => self.run_repeat(block, context).await,
+                PdlAdvancedBlock::LastOf(block) => self.run_sequence(block, context).await,
+                PdlAdvancedBlock::Text(block) => self.run_sequence(block, context).await,
+                PdlAdvancedBlock::Array(block) => self.run_array(block, context).await,
+                PdlAdvancedBlock::Message(block) => self.run_message(block, context).await,
+            },
         }?;
 
         if match program {
-            PdlBlock::Text(_) | PdlBlock::LastOf(_) | PdlBlock::Call(_) | PdlBlock::Model(_) => {
-                false
-            }
+            PdlBlock::Advanced(PdlAdvancedBlock::Text(_))
+            | PdlBlock::Advanced(PdlAdvancedBlock::LastOf(_))
+            | PdlBlock::Advanced(PdlAdvancedBlock::Call(_))
+            | PdlBlock::Advanced(PdlAdvancedBlock::Model(_)) => false,
             _ => self.emit,
         } {
             println!("{}", pretty_print(&messages));
@@ -305,7 +312,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             result,
             vec![ChatMessage::user(buffer)],
-            PdlBlock::Read(trace),
+            PdlBlock::Advanced(PdlAdvancedBlock::Read(trace)),
         ))
     }
 
@@ -324,10 +331,7 @@ impl<'a> Interpreter<'a> {
                             self.push_and_extend_scope_with(m, c.scope);
                             Ok(())
                         }
-                        x => Err(PdlError::from(format!(
-                            "Call arguments not a map: {:?}",
-                            x
-                        ))),
+                        x => Err(PdlError::from(format!("Call arguments not a map: {:?}", x))),
                     }?;
                 }
 
@@ -357,7 +361,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::Dict(self.scope.last().unwrap_or(&HashMap::new()).clone()),
             vec![],
-            PdlBlock::Empty(trace),
+            PdlBlock::Advanced(PdlAdvancedBlock::Empty(trace)),
         ))
     }
 
@@ -377,7 +381,11 @@ impl<'a> Interpreter<'a> {
             PdlResult::Bool(true) => self.run_quiet(&block.then, context).await,
             PdlResult::Bool(false) => match &block.else_ {
                 Some(else_block) => self.run_quiet(&else_block, context).await,
-                None => Ok(("".into(), vec![], PdlBlock::If(block.clone()))),
+                None => Ok((
+                    "".into(),
+                    vec![],
+                    PdlBlock::Advanced(PdlAdvancedBlock::If(block.clone())),
+                )),
             },
             x => Err(Box::from(format!(
                 "if block condition evaluated to non-boolean value: {:?}",
@@ -513,9 +521,7 @@ impl<'a> Interpreter<'a> {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
-                    Err(PdlError::from(
-                        "Error executing Python code",
-                    ))
+                    Err(PdlError::from("Error executing Python code"))
                 }
             }?;
 
@@ -525,13 +531,11 @@ impl<'a> Interpreter<'a> {
                         Ok(x) => Ok(x),
                         Err(exc) => {
                             vm.print_exception(exc);
-                            Err(PdlError::from(
-                                "Unable to stringify Python 'result' value",
-                            ))
+                            Err(PdlError::from("Unable to stringify Python 'result' value"))
                         }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
-                    let trace = PdlBlock::PythonCode(block.clone());
+                    let trace = PdlBlock::Advanced(PdlAdvancedBlock::PythonCode(block.clone()));
                     Ok((messages[0].content.clone().into(), messages, trace))
                 }
                 Err(_) => Err(Box::from(
@@ -664,11 +668,15 @@ impl<'a> Interpreter<'a> {
                     Ok((
                         res.message.content.into(),
                         output_messages,
-                        PdlBlock::Model(trace),
+                        PdlBlock::Advanced(PdlAdvancedBlock::Model(trace)),
                     ))
                 } else {
                     // nothing came out of the model
-                    Ok(("".into(), vec![], PdlBlock::Model(trace)))
+                    Ok((
+                        "".into(),
+                        vec![],
+                        PdlBlock::Advanced(PdlAdvancedBlock::Model(trace)),
+                    ))
                 }
                 // dbg!(history);
             }
@@ -712,11 +720,19 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         if let Some(true) = block.raw {
             let result = self.def(&block.def, &self.resultify(&block.data), &block.parser)?;
-            Ok((result, vec![], PdlBlock::Data(trace)))
+            Ok((
+                result,
+                vec![],
+                PdlBlock::Advanced(PdlAdvancedBlock::Data(trace)),
+            ))
         } else {
             let result = self.def(&block.def, &self.eval_json(&block.data)?, &block.parser)?;
             trace.data = from_str(to_string(&result)?.as_str())?;
-            Ok((result, vec![], PdlBlock::Data(trace)))
+            Ok((
+                result,
+                vec![],
+                PdlBlock::Advanced(PdlAdvancedBlock::Data(trace)),
+            ))
         }
     }
 
@@ -741,7 +757,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::Dict(result_map),
             messages,
-            PdlBlock::Object(ObjectBlock { object: trace_map }),
+            PdlBlock::Advanced(PdlAdvancedBlock::Object(ObjectBlock { object: trace_map })),
         ))
     }
 
@@ -785,7 +801,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::List(results),
             messages,
-            PdlBlock::Repeat(block.clone()),
+            PdlBlock::Advanced(PdlAdvancedBlock::Repeat(block.clone())),
         ))
     }
 
@@ -919,7 +935,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::List(result_items),
             all_messages,
-            PdlBlock::Array(ArrayBlock { array: trace_items }),
+            PdlBlock::Advanced(PdlAdvancedBlock::Array(ArrayBlock { array: trace_items })),
         ))
     }
 
@@ -957,13 +973,13 @@ impl<'a> Interpreter<'a> {
                 .into_iter()
                 .map(|m| ChatMessage::new(self.to_ollama_role(&block.role), m.content))
                 .collect(),
-            PdlBlock::Message(MessageBlock {
+            PdlBlock::Advanced(PdlAdvancedBlock::Message(MessageBlock {
                 role: block.role.clone(),
                 content: Box::new(content_trace),
                 description: block.description.clone(),
                 name: name,
                 tool_call_id: tool_call_id,
-            }),
+            })),
         ))
     }
 }
@@ -998,8 +1014,7 @@ pub fn run_sync(
 
 /// Read in a file from disk and parse it as a PDL program
 pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
-    from_reader(::std::fs::File::open(path)?)
-        .map_err(|err| PdlError::from(err.to_string()))
+    from_reader(::std::fs::File::open(path)?).map_err(|err| PdlError::from(err.to_string()))
 }
 
 pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Interpretation {

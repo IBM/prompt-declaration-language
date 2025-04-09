@@ -5,7 +5,7 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{ModelBlock, PdlBlock},
+        ast::{ModelBlock, PdlAdvancedBlock, PdlBlock},
         interpreter::{run_json_sync as run_json, run_sync as run},
     };
 
@@ -25,7 +25,9 @@ mod tests {
     #[test]
     fn single_model_via_input_string() -> Result<(), Box<dyn Error>> {
         let (_, messages, _) = run(
-            &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
+            &PdlBlock::Advanced(PdlAdvancedBlock::Model(
+                ModelBlock::new(DEFAULT_MODEL).input_str("hello").build(),
+            )),
             None,
             false,
             true,
