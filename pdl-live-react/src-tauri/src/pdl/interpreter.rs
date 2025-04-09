@@ -15,13 +15,13 @@ use tokio_stream::StreamExt;
 use ollama_rs::{
     generation::{
         chat::{request::ChatMessageRequest, ChatMessage, ChatMessageResponse, MessageRole},
-        tools::ToolInfo,
+        tools::{ToolFunctionInfo, ToolInfo, ToolType},
     },
     models::ModelOptions,
     Ollama,
 };
 
-use serde_json::{from_str, to_string, Value};
+use serde_json::{from_str, json, to_string, Value};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
@@ -45,6 +45,7 @@ struct Interpreter<'a> {
     scope: Vec<Scope>,
     debug: bool,
     emit: bool,
+    stream: bool,
 }
 
 impl<'a> Interpreter<'a> {
@@ -67,6 +68,7 @@ impl<'a> Interpreter<'a> {
             scope: vec![Scope::new()],
             debug: false,
             emit: true,
+            stream: true,
         }
     }
 
@@ -76,14 +78,13 @@ impl<'a> Interpreter<'a> {
         context: Context,
         emit: bool,
     ) -> Interpretation {
-        if self.debug {
+        /* if self.debug {
             if let Some(scope) = self.scope.last() {
                 if scope.len() > 0 {
                     eprintln!("Run with Scope {:?}", scope);
                 }
             }
-        }
-
+        } */
         let prior_emit = self.emit;
         self.emit = emit;
 
@@ -118,7 +119,9 @@ impl<'a> Interpreter<'a> {
         }?;
 
         if match program {
-            PdlBlock::Call(_) | PdlBlock::Model(_) => false,
+            PdlBlock::Text(_) | PdlBlock::LastOf(_) | PdlBlock::Call(_) | PdlBlock::Model(_) => {
+                false
+            }
             _ => self.emit,
         } {
             println!("{}", pretty_print(&messages));
@@ -150,7 +153,7 @@ impl<'a> Interpreter<'a> {
         let backup = result.clone();
         Ok(from_str(&result).unwrap_or_else(|err| {
             if self.debug {
-                eprintln!("Treating as plain string {}", &result);
+                eprintln!("Treating as plain string {}", result);
                 eprintln!("... due to {}", err);
             }
             backup.into()
@@ -332,7 +335,10 @@ impl<'a> Interpreter<'a> {
 
                 self.run(&c.function.return_, context.clone()).await
             }
-            _ => Err(Box::from(format!("call of non-function {:?}", &block.call))),
+            x => Err(Box::from(format!(
+                "call of non-function {:?}->{:?}",
+                block.call, x
+            ))),
         };
 
         if let Some(_) = block.args {
@@ -438,10 +444,36 @@ impl<'a> Interpreter<'a> {
                 0.0
             };
 
-            let tools = if let Some(Value::Array(_tools)) = parameters.get(&"tools".to_string()) {
-                // TODO
-                //tools.into_iter().map(|tool| function!()).collect()
-                vec![]
+            let tools = if let Some(Value::Array(tools)) = parameters.get("tools") {
+                tools
+                    .into_iter()
+                    .filter_map(|tool| tool.get("function"))
+                    .filter_map(|tool| {
+                        //from_str(&to_string(tool)?)
+                        match (
+                            tool.get("name"),
+                            tool.get("description"),
+                            tool.get("parameters"),
+                        ) {
+                            (
+                                Some(Value::String(name)),
+                                Some(Value::String(description)),
+                                Some(Value::Object(parameters)),
+                            ) => Some(ToolInfo {
+                                tool_type: ToolType::Function,
+                                function: ToolFunctionInfo {
+                                    name: name.to_string(),
+                                    description: description.to_string(),
+                                    parameters: schemars::schema_for_value!(parameters),
+                                },
+                            }),
+                            _ => {
+                                eprintln!("Error: tools do not satisfy schema {:?}", tool);
+                                None
+                            }
+                        }
+                    })
+                    .collect()
             } else {
                 vec![]
             };
@@ -517,7 +549,7 @@ impl<'a> Interpreter<'a> {
             pdl_model
                 if pdl_model.starts_with("ollama/") || pdl_model.starts_with("ollama_chat/") =>
             {
-                let ollama = Ollama::default();
+                let mut ollama = Ollama::default();
                 let model = if pdl_model.starts_with("ollama/") {
                     &pdl_model[7..]
                 } else {
@@ -526,7 +558,8 @@ impl<'a> Interpreter<'a> {
 
                 let (options, tools) = self.to_ollama_model_options(&block.parameters);
                 if self.debug {
-                    println!("Model options {:?}", options);
+                    eprintln!("Model options {:?} {:?}", block.description, options);
+                    eprintln!("Model tools {:?} {:?}", block.description, tools);
                 }
 
                 let input_messages = match &block.input {
@@ -542,7 +575,7 @@ impl<'a> Interpreter<'a> {
                         Some(x) => x,
                         None => (&ChatMessage::user("".into()), &[]),
                     };
-                let history = Vec::from(history_slice);
+                let mut history = Vec::from(history_slice);
                 if self.debug {
                     eprintln!(
                         "Ollama {:?} model={:?} prompt={:?} history={:?}",
@@ -560,52 +593,62 @@ impl<'a> Interpreter<'a> {
                 let req = ChatMessageRequest::new(model.into(), vec![prompt.clone()])
                     .options(options)
                     .tools(tools);
-                /* if we ever want non-streaming:
-                let res = ollama
-                    .send_chat_messages_with_history(
-                        &mut history,
-                        req,
-                        //ollama.generate(GenerationRequest::new(model.into(), prompt),
-                    )
-                    .await?;
-                // dbg!("Model result {:?}", &res);
 
-                let mut trace = block.clone();
-                trace.pdl_result = Some(res.message.content.clone());
+                let (last_res, response_string) = if !self.stream {
+                    let res = ollama
+                        .send_chat_messages_with_history(&mut history, req)
+                        .await?;
+                    let response_string = res.message.content.clone();
+                    print!("{}", response_string);
+                    (Some(res), response_string)
+                } else {
+                    let mut stream = ollama
+                        .send_chat_messages_with_history_stream(
+                            Arc::new(Mutex::new(history)),
+                            req,
+                            //ollama.generate(GenerationRequest::new(model.into(), prompt),
+                        )
+                        .await?;
+                    // dbg!("Model result {:?}", &res);
 
-                if let Some(usage) = res.final_data {
-                    trace.pdl_usage = Some(PdlUsage {
-                        prompt_tokens: usage.prompt_eval_count,
-                        prompt_nanos: usage.prompt_eval_duration,
-                        completion_tokens: usage.eval_count,
-                        completion_nanos: usage.eval_duration,
-                    });
+                    let emit = if let Some(_) = &block.model_response {
+                        false
+                    } else {
+                        true
+                    };
+
+                    let mut last_res: Option<ChatMessageResponse> = None;
+                    let mut response_string = String::new();
+                    let mut stdout = stdout();
+                    if emit {
+                        stdout.write_all(b"\x1b[1mAssistant: \x1b[0m").await?;
+                    }
+                    while let Some(Ok(res)) = stream.next().await {
+                        if emit {
+                            stdout.write_all(b"\x1b[32m").await?; // green
+                            stdout.write_all(res.message.content.as_bytes()).await?;
+                            stdout.flush().await?;
+                            stdout.write_all(b"\x1b[0m").await?; // reset color
+                        }
+                        response_string += res.message.content.as_str();
+                        last_res = Some(res);
+                    }
+                    if emit {
+                        stdout.write_all(b"\n").await?;
+                    }
+
+                    (last_res, response_string)
+                };
+
+                if let Some(_) = &block.model_response {
+                    if let Some(ref res) = last_res {
+                        self.def(
+                            &block.model_response,
+                            &self.resultify_as_litellm(&from_str(&to_string(&res)?)?),
+                            &None,
+                        )?;
+                    }
                 }
-                // dbg!(history);
-                Ok((vec![res.message], PdlBlock::Model(trace)))
-                 */
-                let mut stream = ollama
-                    .send_chat_messages_with_history_stream(
-                        Arc::new(Mutex::new(history)),
-                        req,
-                        //ollama.generate(GenerationRequest::new(model.into(), prompt),
-                    )
-                    .await?;
-                // dbg!("Model result {:?}", &res);
-
-                let mut last_res: Option<ChatMessageResponse> = None;
-                let mut response_string = String::new();
-                let mut stdout = stdout();
-                stdout.write_all(b"\x1b[1mAssistant: \x1b[0m").await?;
-                while let Some(Ok(res)) = stream.next().await {
-                    stdout.write_all(b"\x1b[32m").await?; // green
-                    stdout.write_all(res.message.content.as_bytes()).await?;
-                    stdout.flush().await?;
-                    stdout.write_all(b"\x1b[0m").await?; // reset color
-                    response_string += res.message.content.as_str();
-                    last_res = Some(res);
-                }
-                stdout.write_all(b"\n").await?;
 
                 let mut trace = block.clone();
                 trace.pdl_result = Some(response_string.clone());
@@ -651,6 +694,15 @@ impl<'a> Interpreter<'a> {
                     .collect::<HashMap<_, _>>(),
             ),
         }
+    }
+
+    /// Transform a JSON Value into a PdlResult object that is compatible with litellm's model response schema
+    fn resultify_as_litellm(&self, value: &Value) -> PdlResult {
+        self.resultify(&json!({
+            "choices": [
+                value
+            ]
+        }))
     }
 
     /// Run a PdlBlock::Data
@@ -821,7 +873,7 @@ impl<'a> Interpreter<'a> {
         while let Some(block) = iter.next() {
             // run each element of the Text block
             let (this_result, this_messages, trace) =
-                self.run_quiet(&block, input_messages.clone()).await?;
+                self.run(&block, input_messages.clone()).await?;
             input_messages.extend(this_messages.clone());
             output_results.push(this_result);
 
@@ -918,17 +970,29 @@ impl<'a> Interpreter<'a> {
     }
 }
 
-pub async fn run(program: &PdlBlock, cwd: Option<PathBuf>, debug: bool) -> Interpretation {
+pub async fn run(
+    program: &PdlBlock,
+    cwd: Option<PathBuf>,
+    debug: bool,
+    stream: bool,
+) -> Interpretation {
     let mut interpreter = Interpreter::new();
     interpreter.debug = debug;
+    interpreter.stream = stream;
     if let Some(cwd) = cwd {
         interpreter.cwd = cwd
     };
     interpreter.run(&program, vec![]).await
 }
 
-pub fn run_sync(program: &PdlBlock, cwd: Option<PathBuf>, debug: bool) -> InterpretationSync {
-    tauri::async_runtime::block_on(run(program, cwd, debug))
+#[allow(dead_code)]
+pub fn run_sync(
+    program: &PdlBlock,
+    cwd: Option<PathBuf>,
+    debug: bool,
+    stream: bool,
+) -> InterpretationSync {
+    tauri::async_runtime::block_on(run(program, cwd, debug, stream))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
 
@@ -938,28 +1002,30 @@ pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
         .map_err(|err| Box::<dyn Error + Send + Sync>::from(err.to_string()))
 }
 
-pub async fn run_file(source_file_path: &str, debug: bool) -> Interpretation {
+pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Interpretation {
     let path = PathBuf::from(source_file_path);
     let cwd = path.parent().and_then(|cwd| Some(cwd.to_path_buf()));
     let program = parse_file(&path)?;
 
     crate::pdl::pull::pull_if_needed(&program).await?;
-    run(&program, cwd, debug).await
+    run(&program, cwd, debug, stream).await
 }
 
-pub fn run_file_sync(source_file_path: &str, debug: bool) -> InterpretationSync {
-    tauri::async_runtime::block_on(run_file(source_file_path, debug))
+pub fn run_file_sync(source_file_path: &str, debug: bool, stream: bool) -> InterpretationSync {
+    tauri::async_runtime::block_on(run_file(source_file_path, debug, stream))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
 
 pub async fn run_string(source: &str, debug: bool) -> Interpretation {
-    run(&from_yaml_str(source)?, None, debug).await
+    run(&from_yaml_str(source)?, None, debug, true).await
 }
 
+#[allow(dead_code)]
 pub async fn run_json(source: Value, debug: bool) -> Interpretation {
     run_string(&to_string(&source)?, debug).await
 }
 
+#[allow(dead_code)]
 pub fn run_json_sync(source: Value, debug: bool) -> InterpretationSync {
     tauri::async_runtime::block_on(run_json(source, debug))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))

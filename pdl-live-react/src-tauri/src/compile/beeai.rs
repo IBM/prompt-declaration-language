@@ -348,15 +348,7 @@ fn python_source_to_json(source_file_path: &str, debug: bool) -> Result<PathBuf,
     Ok(dry_run_file)
 }
 
-pub fn compile(
-    source_file_path: &str,
-    output_path: &str,
-    debug: bool,
-) -> Result<(), Box<dyn Error>> {
-    if debug {
-        eprintln!("Compiling beeai {} to {}", source_file_path, output_path);
-    }
-
+pub fn compile(source_file_path: &str, debug: bool) -> Result<PdlBlock, Box<dyn Error>> {
     let file = match Path::new(source_file_path)
         .extension()
         .and_then(OsStr::to_str)
@@ -558,6 +550,20 @@ asyncio.run(invoke())
         parser: None,
         text: body,
     });
+
+    Ok(pdl)
+}
+
+pub fn compile_to_file(
+    source_file_path: &str,
+    output_path: &str,
+    debug: bool,
+) -> Result<(), Box<dyn Error>> {
+    if debug {
+        eprintln!("Compiling beeai {} to {}", source_file_path, output_path);
+    }
+
+    let pdl = compile(source_file_path, debug)?;
 
     match output_path {
         "-" => println!("{}", to_string(&pdl)?),
