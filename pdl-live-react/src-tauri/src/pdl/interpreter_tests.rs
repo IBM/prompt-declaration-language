@@ -15,7 +15,7 @@ mod tests {
 
     #[test]
     fn string() -> Result<(), Box<dyn Error>> {
-        let (_, messages, _) = run(&"hello".into(), None, false)?;
+        let (_, messages, _) = run(&"hello".into(), None, false, true)?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello");
@@ -28,6 +28,7 @@ mod tests {
             &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
             None,
             false,
+            true,
         )?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::Assistant);
@@ -532,6 +533,31 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "Bye!");
+        Ok(())
+    }
+
+    #[test]
+    fn bee_1() -> Result<(), Box<dyn Error>> {
+        let program = crate::compile::beeai::compile("./tests/data/bee_1.py", false)?;
+        let (_, messages, _) = run(&program, None, false, false)?;
+        assert_eq!(messages.len(), 9);
+        assert!(
+            messages.iter().any(|m| m.role == MessageRole::User
+                && m.content == "Provide a short history of Saint-Tropez."),
+            "Could not find message user:Provide a short history of Saint-Tropez. in {:?}",
+            messages
+        );
+        assert!(
+            messages.iter().any(|m| m.role == MessageRole::System
+                && m.content
+                    == "You can combine disparate information into a final coherent summary."),
+            "Could not find message system:Provide a short history of Saint-Tropez. in {:?}",
+            messages
+        );
+        // assert!(messages.iter().any(|m| m.role == MessageRole::Assistant && m.content.contains("a renowned French Riviera town")), "Could not find message assistant:a renowned French Riviera town in {:?}", messages);
+        //assert_eq!(true, messages.iter().any(|m| m.role == MessageRole::Assistant && m.content.contains("I'll use the OpenMeteoTool")));
+        //assert_eq!(true, messages.iter().any(|m| m.role == MessageRole::Assistant && m.content.contains("The current temperature in Saint-Tropez")));
+
         Ok(())
     }
 }
