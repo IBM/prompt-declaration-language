@@ -537,6 +537,21 @@ mod tests {
     }
 
     #[test]
+    fn scoping_1() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "include": "./tests/cli/scoping_1.pdl"
+        });
+
+        let (_, messages, _) = run_json(program, false)?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "3yo");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "mo");
+        Ok(())
+    }
+
+    #[test]
     fn bee_1() -> Result<(), Box<dyn Error>> {
         let program = crate::compile::beeai::compile("./tests/data/bee_1.py", false)?;
         let (_, messages, _) = run(&program, None, false, false)?;
