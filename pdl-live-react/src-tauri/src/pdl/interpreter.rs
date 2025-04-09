@@ -87,6 +87,11 @@ impl<'a> Interpreter<'a> {
         self.emit = emit;
 
         let (result, messages, trace) = match program {
+            PdlBlock::Bool(b) => Ok((
+                b.into(),
+                vec![ChatMessage::user(format!("{b}"))],
+                PdlBlock::Bool(b.clone()),
+            )),
             PdlBlock::Number(n) => Ok((
                 n.clone().into(),
                 vec![ChatMessage::user(format!("{n}"))],
@@ -113,7 +118,6 @@ impl<'a> Interpreter<'a> {
             PdlBlock::Text(block) => self.run_sequence(block, context).await,
             PdlBlock::Array(block) => self.run_array(block, context).await,
             PdlBlock::Message(block) => self.run_message(block, context).await,
-            _ => Err(Box::from(format!("Unsupported block {:?}", program))),
         }?;
 
         if match program {
@@ -324,10 +328,7 @@ impl<'a> Interpreter<'a> {
                             self.push_and_extend_scope_with(m, c.scope);
                             Ok(())
                         }
-                        x => Err(PdlError::from(format!(
-                            "Call arguments not a map: {:?}",
-                            x
-                        ))),
+                        x => Err(PdlError::from(format!("Call arguments not a map: {:?}", x))),
                     }?;
                 }
 
@@ -513,9 +514,7 @@ impl<'a> Interpreter<'a> {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
-                    Err(PdlError::from(
-                        "Error executing Python code",
-                    ))
+                    Err(PdlError::from("Error executing Python code"))
                 }
             }?;
 
@@ -525,9 +524,7 @@ impl<'a> Interpreter<'a> {
                         Ok(x) => Ok(x),
                         Err(exc) => {
                             vm.print_exception(exc);
-                            Err(PdlError::from(
-                                "Unable to stringify Python 'result' value",
-                            ))
+                            Err(PdlError::from("Unable to stringify Python 'result' value"))
                         }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
@@ -998,8 +995,7 @@ pub fn run_sync(
 
 /// Read in a file from disk and parse it as a PDL program
 pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
-    from_reader(::std::fs::File::open(path)?)
-        .map_err(|err| PdlError::from(err.to_string()))
+    from_reader(::std::fs::File::open(path)?).map_err(|err| PdlError::from(err.to_string()))
 }
 
 pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Interpretation {
