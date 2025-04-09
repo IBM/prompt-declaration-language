@@ -56,6 +56,9 @@
               "takesValue": true
             },
             {
+              "name": "no-stream"
+            },
+            {
               "name": "debug",
               "short": "g"
             }

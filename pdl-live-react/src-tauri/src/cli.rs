@@ -34,7 +34,7 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
             let args = compile_subcommand_matches.matches.args;
 
             match compile_subcommand_matches.name.as_str() {
-                "beeai" => compile::beeai::compile(
+                "beeai" => compile::beeai::compile_to_file(
                     args.get("source")
                         .and_then(|a| a.value.as_str())
                         .expect("valid positional source arg"),
@@ -60,6 +60,11 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 .and_then(|a| a.value.as_bool())
                 .or(Some(false))
                 == Some(true),
+            subcommand_args
+                .get("no-stream")
+                .and_then(|a| a.value.as_bool())
+                .or(Some(false))
+                == Some(false),
         )
         .and_then(|_trace| Ok(true)),
         "run" => run_pdl_program(
