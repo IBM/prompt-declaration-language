@@ -87,7 +87,7 @@ pub trait SequencingBlock {
     fn parser(&self) -> &Option<PdlParser>;
     fn to_block(&self) -> PdlBlock;
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult;
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T>;
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T>;
 }
 
 /// Return the value of the last block if the list of blocks
@@ -149,7 +149,7 @@ impl SequencingBlock for LastOfBlock {
             None => "".into(),
         }
     }
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T> {
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T> {
         match output_messages.last() {
             Some(m) => vec![m.clone()],
             None => vec![],
@@ -219,8 +219,8 @@ impl SequencingBlock for TextBlock {
                 .join("\n"),
         )
     }
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T> {
-        output_messages
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T> {
+        output_messages.clone()
     }
 }
 
