@@ -5,20 +5,56 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{ModelBlock, PdlBlock},
-        interpreter::{run_json_sync as run_json, run_sync as run},
+        ast::{ModelBlock, PdlBlock, Scope},
+        interpreter::{load_scope, run_json_sync as run_json, run_sync as run, RunOptions},
     };
 
     use ollama_rs::generation::chat::MessageRole;
 
     const DEFAULT_MODEL: &'static str = "ollama/granite3.2:2b";
 
+    fn streaming<'a>() -> RunOptions<'a> {
+        let mut o: RunOptions = Default::default();
+        o.stream = true;
+        o
+    }
+
+    fn non_streaming<'a>() -> RunOptions<'a> {
+        let mut o: RunOptions = Default::default();
+        o.stream = false;
+        o
+    }
+
+    fn initial_scope() -> Scope {
+        Default::default()
+    }
+
     #[test]
     fn string() -> Result<(), Box<dyn Error>> {
-        let (_, messages, _) = run(&"hello".into(), None, false, true)?;
+        let (_, messages, _) = run(&"hello".into(), None, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello");
+        Ok(())
+    }
+
+    #[test]
+    fn string_via_initial_scope() -> Result<(), Box<dyn Error>> {
+        let (_, messages, _) = run(
+            &"${x}".into(),
+            None,
+            streaming(),
+            load_scope(
+                None,
+                None,
+                Some(json!({
+                    "x": 333
+                })),
+            )?,
+        )?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "333");
         Ok(())
     }
 
@@ -27,8 +63,8 @@ mod tests {
         let (_, messages, _) = run(
             &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
             None,
-            false,
-            true,
+            streaming(),
+            initial_scope(),
         )?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::Assistant);
@@ -45,7 +81,8 @@ mod tests {
                     { "model": DEFAULT_MODEL }
                 ]
             }),
-            false,
+            streaming(),
+            initial_scope(),
         )?;
         assert_eq!(messages.len(), 2);
         assert_eq!(messages[0].role, MessageRole::User);
@@ -67,7 +104,8 @@ mod tests {
                     ]
                 }
             }),
-            false,
+            streaming(),
+            initial_scope(),
         )?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::Assistant);
@@ -92,7 +130,8 @@ mod tests {
                     { "model": DEFAULT_MODEL },
                 ]
             }),
-            false,
+            streaming(),
+            initial_scope(),
         )?;
         assert_eq!(messages.len(), 4);
         assert_eq!(messages[0].role, MessageRole::User);
@@ -130,7 +169,7 @@ mod tests {
             ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 2);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, json);
@@ -149,7 +188,7 @@ mod tests {
             ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "value");
@@ -175,7 +214,7 @@ mod tests {
             ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello world");
@@ -203,7 +242,7 @@ mod tests {
             ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello world 4");
@@ -217,7 +256,7 @@ mod tests {
             "code":"print('hi ho'); result = 33"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "33");
@@ -231,7 +270,7 @@ mod tests {
             "code":"print('hi ho'); result = 'foo'"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "foo");
@@ -245,7 +284,7 @@ mod tests {
             "code":"print('hi ho'); result = {\"foo\": 3}"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "{'foo': 3}");
@@ -259,7 +298,7 @@ mod tests {
             "read":"./tests/data/foo.txt"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "this should be foo\n");
@@ -275,7 +314,7 @@ mod tests {
             ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 2);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(
@@ -302,7 +341,7 @@ mod tests {
             }
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 3);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "2");
@@ -327,7 +366,7 @@ mod tests {
             }
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 3);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "5");
@@ -352,7 +391,7 @@ mod tests {
             }
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 3);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "4a");
@@ -370,7 +409,7 @@ mod tests {
             "then": "good"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "good");
@@ -385,7 +424,7 @@ mod tests {
             "else": "good"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "good");
@@ -403,7 +442,7 @@ mod tests {
             "else": "good"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "good");
@@ -425,7 +464,7 @@ mod tests {
             "text": [ "${ obj.a }" ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "good on object");
@@ -451,7 +490,7 @@ mod tests {
             "text": [ "${ obj.a.b }" ]
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "good on object");
@@ -464,7 +503,7 @@ mod tests {
             "include": "./tests/cli/call-with-args.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "hello world 4 bye");
@@ -477,7 +516,7 @@ mod tests {
             "include": "./tests/cli/data1.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "xxxx3true");
@@ -490,7 +529,7 @@ mod tests {
             "include": "./tests/cli/data2.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "xxxx3true");
@@ -503,7 +542,7 @@ mod tests {
             "include": "./tests/cli/data3.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "${x}3true");
@@ -516,7 +555,7 @@ mod tests {
             "include": "./tests/cli/data4.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "yyyyxxxx3true");
@@ -529,7 +568,7 @@ mod tests {
             "include": "../../examples/tutorial/import.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "Bye!");
@@ -542,7 +581,7 @@ mod tests {
             "include": "./tests/cli/scoping_1.pdl"
         });
 
-        let (_, messages, _) = run_json(program, false)?;
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
         assert_eq!(messages.len(), 2);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "3yo");
@@ -554,7 +593,7 @@ mod tests {
     #[test]
     fn bee_1() -> Result<(), Box<dyn Error>> {
         let program = crate::compile::beeai::compile("./tests/data/bee_1.py", false)?;
-        let (_, messages, _) = run(&program, None, false, false)?;
+        let (_, messages, _) = run(&program, None, non_streaming(), initial_scope())?;
         assert_eq!(messages.len(), 9);
         assert!(
             messages.iter().any(|m| m.role == MessageRole::User

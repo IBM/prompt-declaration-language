@@ -5,7 +5,7 @@ use urlencoding::encode;
 
 use crate::compile;
 use crate::gui::new_window;
-use crate::pdl::interpreter::run_file_sync as run;
+use crate::pdl::interpreter::{load_scope, run_file_sync, RunOptions};
 
 #[cfg(desktop)]
 pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
@@ -49,26 +49,31 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 _ => Err(Box::from("Unsupported compile command")),
             }
         }
-        "run" => run(
+        "run" => run_file_sync(
             subcommand_args
                 .get("source")
                 .and_then(|a| a.value.as_str())
                 .expect("valid positional source arg"),
-            subcommand_args.get("trace").and_then(|a| a.value.as_str()),
-            subcommand_args.get("data").and_then(|a| a.value.as_str()),
-            subcommand_args
-                .get("data-file")
-                .and_then(|a| a.value.as_str()),
-            subcommand_args
-                .get("debug")
-                .and_then(|a| a.value.as_bool())
-                .or(Some(false))
-                == Some(true),
-            subcommand_args
-                .get("no-stream")
-                .and_then(|a| a.value.as_bool())
-                .or(Some(false))
-                == Some(false),
+            RunOptions {
+                trace: subcommand_args.get("trace").and_then(|a| a.value.as_str()),
+                debug: subcommand_args
+                    .get("debug")
+                    .and_then(|a| a.value.as_bool())
+                    .or(Some(false))
+                    == Some(true),
+                stream: subcommand_args
+                    .get("no-stream")
+                    .and_then(|a| a.value.as_bool())
+                    .or(Some(false))
+                    == Some(false),
+            },
+            load_scope(
+                subcommand_args.get("data").and_then(|a| a.value.as_str()),
+                subcommand_args
+                    .get("data-file")
+                    .and_then(|a| a.value.as_str()),
+                None,
+            )?,
         )
         .and_then(|_trace| Ok(true)),
         "view" => new_window(
