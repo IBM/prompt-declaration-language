@@ -1,6 +1,7 @@
 use ::std::io::Error;
 
 use duct::cmd;
+use fs4::fs_std::FileExt;
 use rayon::prelude::*;
 
 use crate::pdl::ast::PdlBlock;
@@ -46,8 +47,20 @@ fn ollama_exists(model: &str) -> bool {
 
 /// The Ollama implementation of a single model pull
 fn ollama_pull_if_needed(model: &str) -> Result<(), Error> {
-    if !ollama_exists(model) {
-        cmd!("ollama", "pull", model).stdout_to_stderr().run()?;
-    }
-    Ok(())
+    let path = ::std::env::temp_dir().join(format!("pdl-ollama-pull-{model}"));
+    let f = ::std::fs::File::create(path)?;
+    f.lock_exclusive()?;
+
+    // don't ? the cmd! so that we can "finally" unlock the file
+    let res = if !ollama_exists(model) {
+        cmd!("ollama", "pull", model)
+            .stdout_to_stderr()
+            .run()
+            .and_then(|_| Ok(()))
+    } else {
+        Ok(())
+    };
+
+    FileExt::unlock(&f)?;
+    res
 }
