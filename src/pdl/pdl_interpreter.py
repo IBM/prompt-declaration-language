@@ -341,6 +341,28 @@ def id_with_set_first_use_nanos(timing):
     return identity
 
 
+def set_error_to_scope_for_retry(scope: ScopeType, error, block_id: str) -> ScopeType:
+    repeating_same_error = False
+    if scope["pdl_context"] and isinstance(scope["pdl_context"], list):
+        last_error = scope["pdl_context"][-1]["content"]
+        if last_error.endswith(error):
+            repeating_same_error = True
+    if repeating_same_error:
+        error = "The previous error occurs multiple times."
+    err_msg = {
+        "role": "assistant",
+        "content": error,
+        "defsite": block_id,
+    }
+    scope = scope | {
+        "pdl_context": lazy_messages_concat(
+            scope["pdl_context"],
+            PdlList([err_msg]),
+        )
+    }
+    return scope
+
+
 def process_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
@@ -390,39 +412,19 @@ def process_advanced_block(
                 result.result()
             break
         except Exception as exc:
-            if block.fallback is None and block.retry is None:
+            do_retry = (
+                block.retry
+                and trial_idx + 1 < trial_total
+                and "Keyboard Interrupt" not in exc.message
+            )
+            if block.fallback is None and not do_retry:
                 raise exc from exc
-            elif block.retry:
-                # Raise exception if it was the last trial
-                if trial_idx + 1 == trial_total:
-                    raise exc from exc
-                # Do not retry on keyboard interrupt
-                if "Keyboard Interrupt" in exc.message:
-                    raise exc from exc
-                # Retry for all other errors
+            elif do_retry:
                 error = (
                     f"An error occurred in a PDL block. Error details: {exc.message}"
                 )
                 print(f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n")
-                repeating_same_error = False
-                if scope["pdl_context"] and isinstance(scope["pdl_context"], list):
-                    last_error = scope["pdl_context"][-1]["content"]
-                    if isinstance(last_error, str):
-                        if last_error.endswith(error):
-                            repeating_same_error = True
-                if repeating_same_error:
-                    error = "The previous error occurs multiple times."
-                err_msg = {
-                    "role": "assistant",
-                    "content": error,
-                    "defsite": block.pdl__id,
-                }
-                scope = scope | {
-                    "pdl_context": lazy_messages_concat(
-                        scope["pdl_context"],
-                        PdlList([err_msg]),
-                    )
-                }
+                scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
                 continue
             (
                 result,
