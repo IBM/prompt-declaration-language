@@ -61,10 +61,12 @@
             },
             {
               "name": "data",
+              "short": "d",
               "takesValue": true
             },
             {
               "name": "data-file",
+              "short": "f",
               "takesValue": true
             },
             {
