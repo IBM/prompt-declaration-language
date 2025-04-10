@@ -21,6 +21,7 @@ dependencies = [
   "rich>=14.0.0",
   "evalplus>=0.3.1",
   "duration_parser>=1.0.1",
+  "granite-io>=0.2,<0.4",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
