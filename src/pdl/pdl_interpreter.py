@@ -361,52 +361,89 @@ def process_advanced_block(
     state = state.with_yield_background(
         state.yield_background and context_in_contribute(block)
     )
-    try:
-        result, background, new_scope, trace = process_block_body(
-            state, scope, block, loc
-        )
-        result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
-        background = lazy_apply(
-            id_with_set_first_use_nanos(block.pdl__timing), background
-        )
-        trace = trace.model_copy(update={"pdl__result": result})
-        if block.parser is not None:
-            parser = block.parser
-            result = lazy_apply(lambda r: parse_result(parser, r), result)
-            if init_state.yield_result and ContributeTarget.RESULT:
-                yield_result(result, block.kind)
-        if block.spec is not None and not isinstance(block, FunctionBlock):
-            result = lazy_apply(
-                lambda r: result_with_type_checking(
-                    r, block.spec, "Type errors during spec checking:", loc, trace
-                ),
-                result,
+    max_retry = block.retry if block.retry else 0
+    trial_total = max_retry + 1
+    background: LazyMessages = PdlList([])
+    for trial_idx in range(trial_total):
+        try:
+            result, background, new_scope, trace = process_block_body(
+                state, scope, block, loc
             )
-        if block.fallback is not None:
-            result.result()
-    except Exception as exc:
-        if block.fallback is None:
-            raise exc from exc
-        (
-            result,
-            background,
-            new_scope,
-            trace,
-        ) = process_block_of(
-            block,
-            "fallback",
-            state,
-            scope,
-            loc=loc,
-        )
-        if block.spec is not None and not isinstance(block, FunctionBlock):
-            loc = append(loc, "fallback")
-            result = lazy_apply(
-                lambda r: result_with_type_checking(
-                    r, block.spec, "Type errors during spec checking:", loc, trace
-                ),
-                result,
+            result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
+            background = lazy_apply(
+                id_with_set_first_use_nanos(block.pdl__timing), background
             )
+            trace = trace.model_copy(update={"pdl__result": result})
+            if block.parser is not None:
+                parser = block.parser
+                result = lazy_apply(lambda r: parse_result(parser, r), result)
+                if init_state.yield_result and ContributeTarget.RESULT:
+                    yield_result(result, block.kind)
+            if block.spec is not None and not isinstance(block, FunctionBlock):
+                result = lazy_apply(
+                    lambda r: result_with_type_checking(
+                        r, block.spec, "Type errors during spec checking:", loc, trace
+                    ),
+                    result,
+                )
+            if block.fallback is not None:
+                result.result()
+            break
+        except Exception as exc:
+            if block.fallback is None and block.retry is None:
+                raise exc from exc
+            elif block.retry:
+                # Raise exception if it was the last trial
+                if trial_idx + 1 == trial_total:
+                    raise exc from exc
+                # Do not retry on keyboard interrupt
+                if "Keyboard Interrupt" in exc.message:
+                    raise exc from exc
+                # Retry for all other errors
+                error = (
+                    f"An error occurred in a PDL block. Error details: {exc.message}"
+                )
+                print(f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n")
+                repeating_same_error = False
+                if scope["pdl_context"] and isinstance(scope["pdl_context"], list):
+                    last_error = scope["pdl_context"][-1]["content"]
+                    if isinstance(last_error, str):
+                        if last_error.endswith(error):
+                            repeating_same_error = True
+                if repeating_same_error:
+                    error = "The previous error occurs multiple times."
+                err_msg = {
+                    "role": "assistant",
+                    "content": error,
+                    "defsite": block.pdl__id,
+                }
+                scope = scope | {
+                    "pdl_context": lazy_messages_concat(
+                        scope["pdl_context"],
+                        PdlList([err_msg]),
+                    )
+                }
+                continue
+            (
+                result,
+                background,
+                new_scope,
+                trace,
+            ) = process_block_of(
+                block,
+                "fallback",
+                state,
+                scope,
+                loc=loc,
+            )
+            if block.spec is not None and not isinstance(block, FunctionBlock):
+                loc = append(loc, "fallback")
+                result = lazy_apply(
+                    lambda r: result_with_type_checking(
+                        r, block.spec, "Type errors during spec checking:", loc, trace
+                    ),
+                    result,
+                )
     if block.def_ is not None:
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
@@ -741,7 +778,6 @@ def process_block_body(
             repeat_loc = append(loc, "repeat")
             iidx = 0
             first = True
-            retry_count = 0
             saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
             while True:
                 try:
@@ -801,41 +837,14 @@ def process_block_body(
                     stop, _ = process_condition_of(block, "until", scope, loc)
                     if stop:
                         break
-                except PDLRuntimeError as exc:
-                    manual_stop = False
-                    if "Keyboard Interrupt" in exc.message:
-                        manual_stop = True
-                    iter_trace.append(exc.pdl__trace)
-                    trace = block.model_copy(update={"pdl__trace": iter_trace})
-                    if (
-                        block.retry_max
-                        and block.retry_max > 0
-                        and retry_count < block.retry_max
-                        and not manual_stop
-                    ):
-                        retry_count += 1
-                        error = f"Retry on error is triggered in a repeat block. Error detail: {repr(exc)} "
-                        print(f"\n\033[0;31m{error}\033[0m\n")
-                        repeating_same_error = False
-                        if background and background.data:
-                            bg_data = background.data
-                            if isinstance(bg_data, list):
-                                last_error = bg_data[-1]["content"]
-                                if isinstance(last_error, str):
-                                    if last_error.endswith(error):
-                                        repeating_same_error = True
-                        if repeating_same_error:
-                            error = "The previous error occurs multiple times."
-                        background = lazy_messages_concat(
-                            background,
-                            PdlList([{"role": "assistant", "content": error}]),
-                        )
-                    else:
-                        raise PDLRuntimeError(
-                            exc.message,
-                            loc=exc.loc or repeat_loc,
-                            trace=trace,
-                        ) from exc
+            except PDLRuntimeError as exc:
+                iter_trace.append(exc.pdl__trace)
+                trace = block.model_copy(update={"pdl__trace": iter_trace})
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or repeat_loc,
+                    trace=trace,
+                ) from exc
             result = combine_results(block.join.as_, results)
             if block.context is IndependentEnum.INDEPENDENT:
                 background = saved_background

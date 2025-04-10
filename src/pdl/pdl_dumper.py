@@ -234,8 +234,8 @@ def block_to_dict(  # noqa: C901
                     block.max_iterations, json_compatible
                 )
             d["join"] = join_to_dict(block.join)
-            if block.retry_max is not None:
-                d["retry_max"] = expr_to_dict(block.retry_max, json_compatible)
+            if block.retry is not None:
+                d["retry"] = expr_to_dict(block.retry, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
