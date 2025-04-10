@@ -5,8 +5,7 @@ use urlencoding::encode;
 
 use crate::compile;
 use crate::gui::new_window;
-use crate::pdl::interpreter::run_file_sync as runr;
-use crate::pdl::run::run_pdl_program;
+use crate::pdl::interpreter::run_file_sync as run;
 
 #[cfg(desktop)]
 pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
@@ -50,11 +49,16 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 _ => Err(Box::from("Unsupported compile command")),
             }
         }
-        "runr" => runr(
+        "run" => run(
             subcommand_args
                 .get("source")
                 .and_then(|a| a.value.as_str())
                 .expect("valid positional source arg"),
+            subcommand_args.get("trace").and_then(|a| a.value.as_str()),
+            subcommand_args.get("data").and_then(|a| a.value.as_str()),
+            subcommand_args
+                .get("data-file")
+                .and_then(|a| a.value.as_str()),
             subcommand_args
                 .get("debug")
                 .and_then(|a| a.value.as_bool())
@@ -67,16 +71,6 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 == Some(false),
         )
         .and_then(|_trace| Ok(true)),
-        "run" => run_pdl_program(
-            subcommand_args
-                .get("source")
-                .and_then(|a| a.value.as_str())
-                .expect("valid positional source arg"),
-            subcommand_args.get("trace").and_then(|a| a.value.as_str()),
-            subcommand_args.get("data").and_then(|a| a.value.as_str()),
-            subcommand_args.get("stream").and_then(|a| a.value.as_str()),
-        )
-        .and_then(|()| Ok(true)),
         "view" => new_window(
             app.handle().clone(),
             subcommand_args.get("trace").and_then(|a| {
