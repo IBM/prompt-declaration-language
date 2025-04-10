@@ -124,6 +124,8 @@ def block_to_dict(  # noqa: C901
         d["defs"] = {
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
         }
+    if block.retry is not None:
+        d["retry"] = expr_to_dict(block.retry, json_compatible)
     if isinstance(block, StructuredBlock):
         d["context"] = block.context
 
@@ -234,8 +236,6 @@ def block_to_dict(  # noqa: C901
                     block.max_iterations, json_compatible
                 )
             d["join"] = join_to_dict(block.join)
-            if block.retry is not None:
-                d["retry"] = expr_to_dict(block.retry, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
