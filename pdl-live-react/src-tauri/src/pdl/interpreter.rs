@@ -34,6 +34,22 @@ type PdlError = Box<ThreadSafeError>;
 type Interpretation = Result<(PdlResult, Messages, PdlBlock), PdlError>;
 type InterpretationSync = Result<(PdlResult, Messages, PdlBlock), Box<dyn Error>>;
 
+pub struct RunOptions<'a> {
+    pub stream: bool,
+    pub debug: bool,
+    pub trace: Option<&'a str>,
+}
+
+impl<'a> Default for RunOptions<'a> {
+    fn default() -> Self {
+        Self {
+            stream: true,
+            debug: false,
+            trace: None,
+        }
+    }
+}
+
 #[derive(Clone)]
 struct State {
     emit: bool,
@@ -44,11 +60,11 @@ struct State {
 }
 
 impl State {
-    fn new() -> Self {
+    fn new(initial_scope: Scope) -> Self {
         Self {
             emit: true,
             cwd: ::std::env::current_dir().unwrap_or(PathBuf::from("/")),
-            scope: Scope::new(),
+            scope: initial_scope,
             escaped_variables: vec![],
             messages: vec![],
         }
@@ -77,13 +93,12 @@ struct Interpreter<'a> {
     // batch: u32,
     // role: Role,
     // id_stack: Vec<String>,
+    options: RunOptions<'a>,
     jinja_env: Environment<'a>,
-    debug: bool,
-    stream: bool,
 }
 
 impl<'a> Interpreter<'a> {
-    fn new() -> Self {
+    fn new(options: RunOptions<'a>) -> Self {
         let mut jinja_env = Environment::new();
         // PDL uses custom variable delimeters, because {{ }} have pre-defined meaning in yaml
         jinja_env.set_syntax(
@@ -98,8 +113,7 @@ impl<'a> Interpreter<'a> {
             // role: Role::User,
             // id_stack: vec![],
             jinja_env: jinja_env,
-            debug: false,
-            stream: true,
+            options: options,
         }
     }
 
@@ -182,13 +196,13 @@ impl<'a> Interpreter<'a> {
     /// Evaluate String as a Jinja2 expression
     fn eval(&self, expr: &String, state: &State) -> Result<PdlResult, PdlError> {
         let result = self.jinja_env.render_str(expr.as_str(), &state.scope)?;
-        if self.debug {
+        if self.options.debug {
             eprintln!("Eval {} -> {} with scope {:?}", expr, result, state.scope);
         }
 
         let backup = result.clone();
         Ok(from_str(&result).unwrap_or_else(|err| {
-            if self.debug {
+            if self.options.debug {
                 eprintln!("Treating as plain string {}", result);
                 eprintln!("... due to {}", err);
             }
@@ -259,7 +273,7 @@ impl<'a> Interpreter<'a> {
     /// Run a PdlBlock::String
     async fn run_string(&self, msg: &String, state: &State) -> Interpretation {
         let trace = self.eval(msg, state)?;
-        if self.debug {
+        if self.options.debug {
             eprintln!("String {} -> {:?}", msg, trace);
         }
 
@@ -306,7 +320,7 @@ impl<'a> Interpreter<'a> {
         }?;
 
         if let Some(def) = &variable {
-            if self.debug {
+            if self.options.debug {
                 eprintln!("Def {} -> {}", def, result);
             }
             state.scope.insert(def.clone(), result.clone());
@@ -371,7 +385,7 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::Call
     async fn run_call(&mut self, block: &CallBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
             eprintln!("Call scope {:?}", state.scope);
         }
@@ -397,7 +411,7 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::Empty
     async fn run_empty(&mut self, block: &EmptyBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Empty");
         }
 
@@ -412,7 +426,7 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::Call
     async fn run_if(&mut self, block: &IfBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("If {:?}({:?})", block.condition, block.then);
         }
 
@@ -438,7 +452,7 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::Include
     async fn run_include(&mut self, block: &IncludeBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Include {:?}", block.include);
         }
 
@@ -454,7 +468,7 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::Import
     async fn run_import(&mut self, block: &ImportBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Import {:?}", block.import);
         }
 
@@ -598,7 +612,7 @@ impl<'a> Interpreter<'a> {
                 };
 
                 let (options, tools) = self.to_ollama_model_options(&block.parameters);
-                if self.debug {
+                if self.options.debug {
                     eprintln!("Model options {:?} {:?}", block.description, options);
                     eprintln!("Model tools {:?} {:?}", block.description, tools);
                 }
@@ -620,7 +634,7 @@ impl<'a> Interpreter<'a> {
                         None => (&ChatMessage::user("".into()), &[]),
                     };
                 let mut history = Vec::from(history_slice);
-                if self.debug {
+                if self.options.debug {
                     eprintln!(
                         "Ollama {:?} model={:?} prompt={:?} history={:?}",
                         block.description.clone().unwrap_or("".into()),
@@ -638,7 +652,7 @@ impl<'a> Interpreter<'a> {
                     .options(options)
                     .tools(tools);
 
-                let (last_res, response_string) = if !self.stream {
+                let (last_res, response_string) = if !self.options.stream {
                     let res = ollama
                         .send_chat_messages_with_history(&mut history, req)
                         .await?;
@@ -688,7 +702,7 @@ impl<'a> Interpreter<'a> {
                     if let Some(ref res) = last_res {
                         self.def(
                             &block.model_response,
-                            &self.resultify_as_litellm(&from_str(&to_string(&res)?)?),
+                            &resultify_as_litellm(&from_str(&to_string(&res)?)?),
                             &None,
                             state,
                             true,
@@ -724,36 +738,9 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    /// Transform a JSON Value into a PdlResult object
-    fn resultify(&self, value: &Value) -> PdlResult {
-        match value {
-            Value::Null => "".into(),
-            Value::Bool(b) => b.into(),
-            Value::Number(n) => n.clone().into(),
-            Value::String(s) => s.clone().into(),
-            Value::Array(a) => {
-                PdlResult::List(a.iter().map(|v| self.resultify(v)).collect::<Vec<_>>())
-            }
-            Value::Object(m) => PdlResult::Dict(
-                m.iter()
-                    .map(|(k, v)| (k.clone(), self.resultify(v)))
-                    .collect::<HashMap<_, _>>(),
-            ),
-        }
-    }
-
-    /// Transform a JSON Value into a PdlResult object that is compatible with litellm's model response schema
-    fn resultify_as_litellm(&self, value: &Value) -> PdlResult {
-        self.resultify(&json!({
-            "choices": [
-                value
-            ]
-        }))
-    }
-
     /// Run a PdlBlock::Data
     async fn run_data(&mut self, block: &DataBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Data raw={:?} {:?}", block.raw, block.data);
         }
 
@@ -761,7 +748,7 @@ impl<'a> Interpreter<'a> {
         if let Some(true) = block.raw {
             let result = self.def(
                 &block.def,
-                &self.resultify(&block.data),
+                &resultify(&block.data),
                 &block.parser,
                 state,
                 true,
@@ -781,7 +768,7 @@ impl<'a> Interpreter<'a> {
     }
 
     async fn run_object(&mut self, block: &ObjectBlock, state: &mut State) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             eprintln!("Object {:?}", block.object);
         }
 
@@ -821,7 +808,7 @@ impl<'a> Interpreter<'a> {
             )
             .collect::<Result<HashMap<_, _>, _>>()?;
 
-        if self.debug {
+        if self.options.debug {
             eprintln!("Repeat {:?}", iter_scopes);
         }
 
@@ -893,7 +880,7 @@ impl<'a> Interpreter<'a> {
         block: &impl SequencingBlock,
         state: &mut State,
     ) -> Interpretation {
-        if self.debug {
+        if self.options.debug {
             let description = if let Some(d) = block.description() {
                 d
             } else {
@@ -1012,18 +999,16 @@ impl<'a> Interpreter<'a> {
     }
 }
 
-pub async fn run(
+pub async fn run<'a>(
     program: &PdlBlock,
     cwd: Option<PathBuf>,
-    debug: bool,
-    stream: bool,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
 ) -> Interpretation {
     crate::pdl::pull::pull_if_needed(&program).await?;
 
-    let mut interpreter = Interpreter::new();
-    interpreter.debug = debug;
-    interpreter.stream = stream;
-    let mut state = State::new();
+    let mut interpreter = Interpreter::new(options);
+    let mut state = State::new(initial_scope);
     if let Some(cwd) = cwd {
         state.cwd = cwd
     }
@@ -1031,13 +1016,13 @@ pub async fn run(
 }
 
 #[allow(dead_code)]
-pub fn run_sync(
+pub fn run_sync<'a>(
     program: &PdlBlock,
     cwd: Option<PathBuf>,
-    debug: bool,
-    stream: bool,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
 ) -> InterpretationSync {
-    tauri::async_runtime::block_on(run(program, cwd, debug, stream))
+    tauri::async_runtime::block_on(run(program, cwd, options, initial_scope))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
 
@@ -1046,38 +1031,51 @@ pub fn parse_file(path: &PathBuf) -> Result<PdlBlock, PdlError> {
     from_reader(::std::fs::File::open(path)?).map_err(|err| PdlError::from(err.to_string()))
 }
 
-pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Interpretation {
+pub async fn run_file<'a>(
+    source_file_path: &str,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
+) -> Interpretation {
     let path = PathBuf::from(source_file_path);
     let cwd = path.parent().and_then(|cwd| Some(cwd.to_path_buf()));
     let program = parse_file(&path)?;
 
-    run(&program, cwd, debug, stream).await
+    run(&program, cwd, options, initial_scope).await
 }
 
-pub fn run_file_sync(
+pub fn run_file_sync<'a>(
     source_file_path: &str,
-    _trace: Option<&str>,
-    _data: Option<&str>,
-    _data_file: Option<&str>,
-    debug: bool,
-    stream: bool,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
 ) -> InterpretationSync {
-    tauri::async_runtime::block_on(run_file(source_file_path, debug, stream))
+    tauri::async_runtime::block_on(run_file(source_file_path, options, initial_scope))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
 
-pub async fn run_string(source: &str, debug: bool) -> Interpretation {
-    run(&from_yaml_str(source)?, None, debug, true).await
+pub async fn run_string<'a>(
+    source: &str,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
+) -> Interpretation {
+    run(&from_yaml_str(source)?, None, options, initial_scope).await
 }
 
 #[allow(dead_code)]
-pub async fn run_json(source: Value, debug: bool) -> Interpretation {
-    run_string(&to_string(&source)?, debug).await
+pub async fn run_json<'a>(
+    source: Value,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
+) -> Interpretation {
+    run_string(&to_string(&source)?, options, initial_scope).await
 }
 
 #[allow(dead_code)]
-pub fn run_json_sync(source: Value, debug: bool) -> InterpretationSync {
-    tauri::async_runtime::block_on(run_json(source, debug))
+pub fn run_json_sync<'a>(
+    source: Value,
+    options: RunOptions<'a>,
+    initial_scope: Scope,
+) -> InterpretationSync {
+    tauri::async_runtime::block_on(run_json(source, options, initial_scope))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
 
@@ -1104,4 +1102,65 @@ pub fn pretty_print(messages: &Vec<ChatMessage>) -> String {
         )
         .collect::<Vec<_>>()
         .join("\n")
+}
+
+/// Transform a JSON Value into a PdlResult object
+fn resultify(value: &Value) -> PdlResult {
+    match value {
+        Value::Null => "".into(),
+        Value::Bool(b) => b.into(),
+        Value::Number(n) => n.clone().into(),
+        Value::String(s) => s.clone().into(),
+        Value::Array(a) => PdlResult::List(a.iter().map(|v| resultify(v)).collect::<Vec<_>>()),
+        Value::Object(m) => PdlResult::Dict(
+            m.iter()
+                .map(|(k, v)| (k.clone(), resultify(v)))
+                .collect::<HashMap<_, _>>(),
+        ),
+    }
+}
+
+/// Transform a JSON Value into a PdlResult object that is compatible with litellm's model response schema
+fn resultify_as_litellm(value: &Value) -> PdlResult {
+    resultify(&json!({
+        "choices": [
+            value
+        ]
+    }))
+}
+
+pub fn load_scope(
+    data: Option<&str>,
+    data_file: Option<&str>,
+    value: Option<Value>,
+) -> Result<Scope, Box<dyn Error>> {
+    let mut scope = HashMap::new();
+
+    if let Some(data_file) = data_file {
+        if let PdlResult::Dict(d) = resultify(&from_reader(::std::fs::File::open(data_file)?)?) {
+            scope.extend(d);
+        } else {
+            return Err(Box::from(format!(
+                "Data file {data_file} does not contain a dictionary"
+            )));
+        }
+    }
+
+    if let Some(data) = data {
+        if let PdlResult::Dict(d) = resultify(&from_yaml_str(data)?) {
+            scope.extend(d);
+        } else {
+            return Err(Box::from(format!("Data is not a dictionary")));
+        }
+    }
+
+    if let Some(value) = value {
+        if let PdlResult::Dict(d) = resultify(&value) {
+            scope.extend(d);
+        } else {
+            return Err(Box::from(format!("Data is not a dictionary")));
+        }
+    }
+
+    Ok(scope)
 }
