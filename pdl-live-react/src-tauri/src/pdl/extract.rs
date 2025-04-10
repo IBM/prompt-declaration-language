@@ -1,4 +1,4 @@
-use crate::pdl::ast::PdlBlock;
+use crate::pdl::ast::{Metadata, PdlBlock};
 
 /// Extract models referenced by the programs
 pub fn extract_models(program: &PdlBlock) -> Vec<String> {
@@ -35,7 +35,10 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
             b.text
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
-            if let Some(defs) = &b.defs {
+            if let Some(Metadata {
+                defs: Some(defs), ..
+            }) = &b.metadata
+            {
                 defs.values()
                     .for_each(|p| extract_values_iter(p, field, values));
             }
@@ -44,7 +47,10 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
             b.last_of
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
-            if let Some(defs) = &b.defs {
+            if let Some(Metadata {
+                defs: Some(defs), ..
+            }) = &b.metadata
+            {
                 defs.values()
                     .for_each(|p| extract_values_iter(p, field, values));
             }
@@ -54,10 +60,18 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
             if let Some(else_) = &b.else_ {
                 extract_values_iter(else_, field, values);
             }
-            if let Some(defs) = &b.defs {
+            if let Some(Metadata {
+                defs: Some(defs), ..
+            }) = &b.metadata
+            {
                 defs.values()
                     .for_each(|p| extract_values_iter(p, field, values));
             }
+        }
+        PdlBlock::Empty(b) => {
+            b.defs
+                .values()
+                .for_each(|p| extract_values_iter(p, field, values));
         }
         PdlBlock::Object(b) => b
             .object

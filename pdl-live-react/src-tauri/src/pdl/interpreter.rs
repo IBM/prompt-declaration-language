@@ -1,4 +1,3 @@
-// use ::std::cell::LazyCell;
 use ::std::collections::HashMap;
 use ::std::error::Error;
 use ::std::path::PathBuf;
@@ -91,7 +90,6 @@ impl State {
 
 struct Interpreter<'a> {
     // batch: u32,
-    // role: Role,
     // id_stack: Vec<String>,
     options: RunOptions<'a>,
     jinja_env: Environment<'a>,
@@ -110,7 +108,6 @@ impl<'a> Interpreter<'a> {
 
         Self {
             // batch: 0,
-            // role: Role::User,
             // id_stack: vec![],
             jinja_env: jinja_env,
             options: options,
@@ -415,8 +412,9 @@ impl<'a> Interpreter<'a> {
             eprintln!("Empty");
         }
 
-        let trace = block.clone();
         self.process_defs(&Some(block.defs.clone()), state).await?;
+
+        let trace = block.clone();
         Ok((
             PdlResult::Dict(state.scope.clone()),
             vec![],
@@ -430,7 +428,9 @@ impl<'a> Interpreter<'a> {
             eprintln!("If {:?}({:?})", block.condition, block.then);
         }
 
-        self.process_defs(&block.defs, state).await?;
+        if let Some(meta) = &block.metadata {
+            self.process_defs(&meta.defs, state).await?;
+        }
 
         let cond = match &block.condition {
             StringOrBoolean::Boolean(b) => PdlResult::Bool(*b),
@@ -893,7 +893,9 @@ impl<'a> Interpreter<'a> {
         let mut output_messages = vec![];
         let mut output_blocks = vec![];
 
-        self.process_defs(block.defs(), state).await?;
+        if let Some(meta) = block.metadata() {
+            self.process_defs(&meta.defs, state).await?;
+        }
 
         // here is where we iterate over the sequence items
         let mut iter = block.items().iter();
