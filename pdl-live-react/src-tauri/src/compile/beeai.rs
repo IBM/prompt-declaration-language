@@ -12,9 +12,9 @@ use serde_json::{from_reader, json, to_string, Map, Value};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    ArrayBlock, CallBlock, FunctionBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock,
-    PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType, PythonCodeBlock, RepeatBlock, Role,
-    TextBlock,
+    ArrayBlock, CallBlock, FunctionBlock, ListOrString, MessageBlock, Metadata, ModelBlock,
+    ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType, PythonCodeBlock,
+    RepeatBlock, Role, TextBlock,
 };
 use crate::pdl::pip::pip_install_if_needed;
 use crate::pdl::requirements::BEEAI_FRAMEWORK;
@@ -192,7 +192,7 @@ fn with_tools(
 fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
     let repeat = PdlBlock::Text(TextBlock {
         def: None,
-        defs: None,
+        metadata: None,
         role: None,
         parser: None,
         description: Some("Calling tool ${ tool.function.name }".to_string()),
@@ -206,11 +206,13 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
                         name: Some("${ tool.function.name }".to_string()),
                         tool_call_id: Some("${ tool.id }".to_string()),
                         content: Box::new(PdlBlock::Call(CallBlock {
-                            defs: json_loads(
-                                &"args",
-                                &"pdl__args",
-                                &"${ tool.function.arguments }",
-                            ),
+                            metadata: Some(Metadata {
+                                defs: json_loads(
+                                    &"args",
+                                    &"pdl__args",
+                                    &"${ tool.function.arguments }",
+                                ),
+                            }),
                             call: "${ pdl__tools[tool.function.name] }".to_string(), // look up tool in tool_declarations def (see below)
                             args: Some("${ args }".into()), // invoke with arguments as specified by the model
                         })),
@@ -464,7 +466,7 @@ asyncio.run(invoke())
                         role: Some(Role::System),
                         text: vec![PdlBlock::String(instructions)],
                         def: None,
-                        defs: None,
+                        metadata: None,
                         parser: None,
                         description: Some("Model instructions".into()),
                     }));
@@ -504,7 +506,7 @@ asyncio.run(invoke())
                         function: HashMap::new(),
                         return_: Box::new(PdlBlock::Text(TextBlock {
                             def: None,
-                            defs: None,
+                            metadata: None,
                             role: None,
                             parser: None,
                             description: Some(format!("Model call {}", &model)),
@@ -514,7 +516,7 @@ asyncio.run(invoke())
                 );
                 PdlBlock::Text(TextBlock {
                     def: None,
-                    defs: Some(defs),
+                    metadata: Some(Metadata { defs: Some(defs) }),
                     role: None,
                     parser: None,
                     description: Some("Model call wrapper".to_string()),
@@ -533,7 +535,7 @@ asyncio.run(invoke())
 
     let pdl: PdlBlock = PdlBlock::Text(TextBlock {
         def: None,
-        defs: if tool_declarations.len() == 0 {
+        metadata: if tool_declarations.len() == 0 {
             None
         } else {
             let mut m = indexmap::IndexMap::new();
@@ -543,7 +545,7 @@ asyncio.run(invoke())
                     object: tool_declarations,
                 }),
             );
-            Some(m)
+            Some(Metadata { defs: Some(m) })
         },
         description: Some(bee.workflow.workflow.name),
         role: None,
