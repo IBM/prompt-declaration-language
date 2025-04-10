@@ -1054,7 +1054,14 @@ pub async fn run_file(source_file_path: &str, debug: bool, stream: bool) -> Inte
     run(&program, cwd, debug, stream).await
 }
 
-pub fn run_file_sync(source_file_path: &str, debug: bool, stream: bool) -> InterpretationSync {
+pub fn run_file_sync(
+    source_file_path: &str,
+    _trace: Option<&str>,
+    _data: Option<&str>,
+    _data_file: Option<&str>,
+    debug: bool,
+    stream: bool,
+) -> InterpretationSync {
     tauri::async_runtime::block_on(run_file(source_file_path, debug, stream))
         .map_err(|err| Box::<dyn Error>::from(err.to_string()))
 }
