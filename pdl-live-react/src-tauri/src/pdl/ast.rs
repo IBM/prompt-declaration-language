@@ -51,6 +51,13 @@ pub enum PdlType {
     Object(HashMap<String, PdlType>),
 }
 
+/// Common metadata of blocks
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Metadata {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub defs: Option<IndexMap<String, PdlBlock>>,
+}
+
 /// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "call")]
@@ -62,8 +69,9 @@ pub struct CallBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Value>,
 
+    #[serde(flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    pub metadata: Option<Metadata>,
 }
 
 impl CallBlock {
@@ -71,7 +79,7 @@ impl CallBlock {
         CallBlock {
             call: call,
             args: None,
-            defs: None,
+            metadata: None,
         }
     }
 }
@@ -81,7 +89,7 @@ pub trait SequencingBlock {
     fn description(&self) -> &Option<String>;
     fn role(&self) -> &Option<Role>;
     fn def(&self) -> &Option<String>;
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>>;
+    fn metadata(&self) -> &Option<Metadata>;
     fn items(&self) -> &Vec<PdlBlock>;
     fn with_items(&self, items: Vec<PdlBlock>) -> Self;
     fn parser(&self) -> &Option<PdlParser>;
@@ -104,8 +112,9 @@ pub struct LastOfBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 
+    #[serde(flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    pub metadata: Option<Metadata>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
@@ -126,8 +135,8 @@ impl SequencingBlock for LastOfBlock {
     fn def(&self) -> &Option<String> {
         return &self.def;
     }
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>> {
-        &self.defs
+    fn metadata(&self) -> &Option<Metadata> {
+        &self.metadata
     }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.last_of
@@ -171,8 +180,9 @@ pub struct TextBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 
+    #[serde(flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    pub metadata: Option<Metadata>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
@@ -193,8 +203,8 @@ impl SequencingBlock for TextBlock {
     fn def(&self) -> &Option<String> {
         return &self.def;
     }
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>> {
-        &self.defs
+    fn metadata(&self) -> &Option<Metadata> {
+        &self.metadata
     }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.text
@@ -228,7 +238,7 @@ impl TextBlock {
     pub fn new(text: Vec<PdlBlock>) -> Self {
         TextBlock {
             def: None,
-            defs: None,
+            metadata: None,
             description: None,
             role: None,
             parser: None,
@@ -525,8 +535,9 @@ pub struct IfBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub else_: Option<Box<PdlBlock>>,
 
+    #[serde(flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    pub metadata: Option<Metadata>,
 }
 
 /// Return the array of values computed by each block of the list of blocks
