@@ -47,7 +47,8 @@
             }
           }
         },
-        "runr": {
+        "run": {
+          "description": "Run a PDL program",
           "args": [
             {
               "name": "source",
@@ -59,31 +60,20 @@
               "name": "no-stream"
             },
             {
-              "name": "debug",
-              "short": "g"
-            }
-          ]
-        },
-        "run": {
-          "description": "Run a PDL program",
-          "args": [
-            {
-              "name": "source",
-              "index": 1,
-              "required": true,
-              "takesValue": true
-            },
-            {
-              "name": "stream",
-              "takesValue": true
-            },
-            {
               "name": "data",
+              "takesValue": true
+            },
+            {
+              "name": "data-file",
               "takesValue": true
             },
             {
               "name": "trace",
               "takesValue": true
+            },
+            {
+              "name": "debug",
+              "short": "g"
             }
           ]
         },
