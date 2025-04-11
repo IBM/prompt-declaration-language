@@ -183,7 +183,7 @@ impl SequencingBlock for LastOfBlock {
         &self.parser
     }
     fn to_block(&self) -> PdlBlock {
-        PdlBlock::LastOf(self.clone())
+        PdlBlock::Advanced(Block::LastOf(self.clone()))
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         match output_results.last() {
@@ -243,7 +243,7 @@ impl SequencingBlock for TextBlock {
         &self.parser
     }
     fn to_block(&self) -> PdlBlock {
-        PdlBlock::Text(self.clone())
+        PdlBlock::Advanced(Block::Text(self.clone()))
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         PdlResult::String(
@@ -596,8 +596,15 @@ pub enum PdlBlock {
     Number(Number),
     String(String),
     Function(FunctionBlock),
+    Advanced(Block),
+    // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
+    Empty(EmptyBlock),
+}
 
-    // the rest have Metadata; TODO refactor to make this more explicit
+/// A PDL block that has structure and metadata
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum Block {
     If(IfBlock),
     Import(ImportBlock),
     Include(IncludeBlock),
@@ -612,9 +619,6 @@ pub enum PdlBlock {
     Model(ModelBlock),
     LastOf(LastOfBlock),
     Text(TextBlock),
-
-    // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
-    Empty(EmptyBlock),
 }
 
 impl From<bool> for PdlBlock {
