@@ -281,6 +281,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -650,6 +663,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -1144,6 +1170,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -1603,6 +1642,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -2082,6 +2134,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2450,6 +2515,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2795,6 +2873,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -3234,6 +3325,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -3682,6 +3786,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -4035,6 +4152,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -4584,6 +4714,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -5130,6 +5273,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -5567,6 +5723,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -6074,6 +6243,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -6509,6 +6691,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -7463,6 +7658,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8015,6 +8223,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8479,6 +8700,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -9521,6 +9755,19 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -9955,6 +10202,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
@@ -10582,6 +10842,19 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "role": {
           "anyOf": [
