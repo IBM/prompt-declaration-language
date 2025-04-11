@@ -366,7 +366,7 @@ impl<'a> Interpreter<'a> {
         };
 
         let result = self.def(
-            &block.def,
+            &block.metadata.as_ref().and_then(|m| m.def.clone()),
             &buffer.clone().into(),
             &block.parser,
             state,
@@ -747,7 +747,7 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         if let Some(true) = block.raw {
             let result = self.def(
-                &block.def,
+                &block.metadata.as_ref().and_then(|m| m.def.clone()),
                 &resultify(&block.data),
                 &block.parser,
                 state,
@@ -756,7 +756,7 @@ impl<'a> Interpreter<'a> {
             Ok((result, vec![], PdlBlock::Data(trace)))
         } else {
             let result = self.def(
-                &block.def,
+                &block.metadata.as_ref().and_then(|m| m.def.clone()),
                 &self.eval_json(&block.data, state)?,
                 &block.parser,
                 state,
@@ -914,7 +914,7 @@ impl<'a> Interpreter<'a> {
 
         let trace = block.with_items(output_blocks);
         let result = self.def(
-            trace.def(),
+            &block.metadata().as_ref().and_then(|m| m.def.clone()),
             &trace.result_for(output_results),
             trace.parser(),
             state,
