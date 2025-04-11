@@ -21,10 +21,10 @@ use serde_json::{from_str, json, to_string, Value};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    ArrayBlock, CallBlock, Closure, DataBlock, EmptyBlock, FunctionBlock, IfBlock, ImportBlock,
-    IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlBlock, PdlParser,
-    PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope, SequencingBlock,
-    StringOrBoolean, StringOrNull,
+    ArrayBlock, CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock, IfBlock,
+    ImportBlock, IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlBlock,
+    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
+    SequencingBlock, StringOrBoolean, StringOrNull,
 };
 
 type Messages = Vec<ChatMessage>;
@@ -205,6 +205,33 @@ impl<'a> Interpreter<'a> {
             }
             backup.into()
         }))
+    }
+
+    /// Evaluate an Expr to a bool
+    fn eval_to_bool(
+        &self,
+        expr: &EvalsTo<StringOrBoolean, bool>,
+        state: &State,
+    ) -> Result<bool, PdlError> {
+        match expr {
+            EvalsTo::Const(b)
+            | EvalsTo::Expr(Expr {
+                pdl_expr: StringOrBoolean::Boolean(b),
+                ..
+            }) => Ok(b.clone()),
+
+            EvalsTo::Jinja(s)
+            | EvalsTo::Expr(Expr {
+                pdl_expr: StringOrBoolean::String(s),
+                ..
+            }) => match self.eval(s, state)? {
+                PdlResult::Bool(b) => Ok(b.clone()),
+                x => Err(Box::from(format!(
+                    "Expression {s} evaluated to non-boolean {:?}",
+                    x
+                ))),
+            },
+        }
     }
 
     /// Evaluate String as a Jinja2 expression, expecting a string in response
@@ -432,21 +459,13 @@ impl<'a> Interpreter<'a> {
             self.process_defs(&meta.defs, state).await?;
         }
 
-        let cond = match &block.condition {
-            StringOrBoolean::Boolean(b) => PdlResult::Bool(*b),
-            StringOrBoolean::String(s) => self.eval(s, state)?,
-        };
-
-        match cond {
-            PdlResult::Bool(true) => self.run_quiet(&block.then, state).await,
-            PdlResult::Bool(false) => match &block.else_ {
+        if self.eval_to_bool(&block.condition, state)? {
+            self.run_quiet(&block.then, state).await
+        } else {
+            match &block.else_ {
                 Some(else_block) => self.run_quiet(&else_block, state).await,
                 None => Ok(("".into(), vec![], PdlBlock::If(block.clone()))),
-            },
-            x => Err(Box::from(format!(
-                "if block condition evaluated to non-boolean value: {:?}",
-                x
-            ))),
+            }
         }
     }
 

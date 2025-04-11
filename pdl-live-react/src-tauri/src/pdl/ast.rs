@@ -519,6 +519,23 @@ pub enum StringOrBoolean {
     Boolean(bool),
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Expr<S, T> {
+    #[serde(rename = "pdl__expr")]
+    pub pdl_expr: S,
+
+    #[serde(rename = "pdl__result", skip_serializing_if = "Option::is_none")]
+    pub pdl_result: Option<T>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum EvalsTo<S, T> {
+    Const(T),
+    Jinja(String),
+    Expr(Expr<S, T>),
+}
+
 /// Conditional control structure.
 ///
 /// Example:
@@ -535,7 +552,7 @@ pub enum StringOrBoolean {
 pub struct IfBlock {
     /// The condition to check
     #[serde(rename = "if")]
-    pub condition: StringOrBoolean,
+    pub condition: EvalsTo<StringOrBoolean, bool>,
 
     /// Branch to execute if the condition is true
     pub then: Box<PdlBlock>,
