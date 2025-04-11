@@ -12,7 +12,7 @@ use serde_json::{Map, Value, from_reader, json, to_string};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    ArrayBlockBuilder, CallBlock, EvalsTo, FunctionBlock, ListOrString, MessageBlock,
+    ArrayBlockBuilder, CallBlock, EvalsTo, Expr, FunctionBlock, ListOrString, MessageBlock,
     MetadataBuilder, ModelBlockBuilder, ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType,
     PdlParser, PdlType, PythonCodeBlock, RepeatBlock, Role, TextBlock, TextBlockBuilder,
 };
@@ -239,7 +239,12 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
     let mut for_ = HashMap::new();
     for_.insert(
         "tool".to_string(),
-        ListOrString::String("${ response.choices[0].message.tool_calls }".to_string()),
+        EvalsTo::Expr(Expr {
+            pdl_expr: ListOrString::String(
+                "${ response.choices[0].message.tool_calls }".to_string(),
+            ),
+            pdl_result: None,
+        }),
     );
 
     // response.choices[0].message.tool_calls
