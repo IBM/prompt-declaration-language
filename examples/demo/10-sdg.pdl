@@ -68,7 +68,7 @@ defs:
           input: ${teacher_input}
           parameters:
             temperature: 0
-            stop_sequences: "${teacher_stop_token}"
+            stop: ["${teacher_stop_token}"]
             max_new_tokens: ${prompt_data.max_new_tokens}
           parser:
             regex: '### Question [0-9]+:\s*([^#\n]+)'
@@ -156,7 +156,7 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop_sequences: "${teacher_stop_token}"
+            stop: ["${teacher_stop_token}"]
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
           parser:
@@ -252,7 +252,7 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop_sequences: ${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }
+            stop: ["${ ([teacher_stop_token] + prompt_data.additional_stop_tokens) | join(',') }"]
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
         parsed_answer:
@@ -339,7 +339,7 @@ defs:
           model: ${teacher_model}
           input: ${teacher_input}
           parameters:
-            stop_sequences: "${teacher_stop_token}"
+            stop: ["${teacher_stop_token}"]
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
           parser:

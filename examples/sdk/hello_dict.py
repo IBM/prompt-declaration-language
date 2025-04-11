@@ -4,8 +4,10 @@ hello = {
     "text": [
         "Hello\n",
         {
-            "model": "ollama_chat/granite3.2:8b",
-            "parameters": {"stop_sequences": "!"},
+            "model": "ollama_chat/granite3.2:2b",
+            "parameters": {
+                "stop": ["!"],
+            },
         },
     ]
 }
