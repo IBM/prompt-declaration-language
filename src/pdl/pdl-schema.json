@@ -7370,7 +7370,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression__ExpressionTypeT_": {
+    "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
