@@ -350,7 +350,7 @@ pub enum ListOrString {
 pub struct RepeatBlock {
     /// Arrays to iterate over
     #[serde(rename = "for")]
-    pub for_: HashMap<String, ListOrString>,
+    pub for_: HashMap<String, EvalsTo<ListOrString, Vec<PdlResult>>>,
 
     /// Body of the loop
     pub repeat: Box<PdlBlock>,
