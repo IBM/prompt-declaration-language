@@ -300,7 +300,6 @@ impl<'a> Interpreter<'a> {
                     x
                 ))),
             },
-            // EvalsTo::Const(l) |
             EvalsTo::Expr(Expr {
                 pdl_expr: ListOrString::List(l),
                 ..
