@@ -191,7 +191,6 @@ fn with_tools(
 
 fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
     let repeat = PdlBlock::Text(TextBlock {
-        def: None,
         metadata: None,
         role: None,
         parser: None,
@@ -207,6 +206,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
                         tool_call_id: Some("${ tool.id }".to_string()),
                         content: Box::new(PdlBlock::Call(CallBlock {
                             metadata: Some(Metadata {
+                                def: None,
                                 defs: json_loads(
                                     &"args",
                                     &"pdl__args",
@@ -465,7 +465,6 @@ asyncio.run(invoke())
                     model_call.push(PdlBlock::Text(TextBlock {
                         role: Some(Role::System),
                         text: vec![PdlBlock::String(instructions)],
-                        def: None,
                         metadata: None,
                         parser: None,
                         description: Some("Model instructions".into()),
@@ -482,9 +481,9 @@ asyncio.run(invoke())
                 };
 
                 model_call.push(PdlBlock::Model(ModelBlock {
+                    metadata: None,
                     input: None,
                     description: Some(description),
-                    def: None,
                     model: model.clone(),
                     model_response: model_response,
                     pdl_result: None,
@@ -505,7 +504,6 @@ asyncio.run(invoke())
                     PdlBlock::Function(FunctionBlock {
                         function: HashMap::new(),
                         return_: Box::new(PdlBlock::Text(TextBlock {
-                            def: None,
                             metadata: None,
                             role: None,
                             parser: None,
@@ -515,8 +513,10 @@ asyncio.run(invoke())
                     }),
                 );
                 PdlBlock::Text(TextBlock {
-                    def: None,
-                    metadata: Some(Metadata { defs: Some(defs) }),
+                    metadata: Some(Metadata {
+                        def: None,
+                        defs: Some(defs),
+                    }),
                     role: None,
                     parser: None,
                     description: Some("Model call wrapper".to_string()),
@@ -534,7 +534,6 @@ asyncio.run(invoke())
         .collect::<Vec<_>>();
 
     let pdl: PdlBlock = PdlBlock::Text(TextBlock {
-        def: None,
         metadata: if tool_declarations.len() == 0 {
             None
         } else {
@@ -545,7 +544,10 @@ asyncio.run(invoke())
                     object: tool_declarations,
                 }),
             );
-            Some(Metadata { defs: Some(m) })
+            Some(Metadata {
+                def: None,
+                defs: Some(m),
+            })
         },
         description: Some(bee.workflow.workflow.name),
         role: None,
