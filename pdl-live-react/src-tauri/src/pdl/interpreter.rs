@@ -207,6 +207,18 @@ impl<'a> Interpreter<'a> {
         }))
     }
 
+    fn eval_string(
+        &self,
+        expr: &EvalsTo<String, Box<PdlResult>>,
+        state: &State,
+    ) -> Result<PdlResult, PdlError> {
+        match expr {
+            EvalsTo::Const(t) => Ok(*t.clone()),
+            EvalsTo::Jinja(s) => self.eval(s, state),
+            EvalsTo::Expr(e) => self.eval(&e.pdl_expr, state),
+        }
+    }
+
     /// Evaluate an Expr to a bool
     fn eval_to_bool(
         &self,
@@ -414,7 +426,7 @@ impl<'a> Interpreter<'a> {
             eprintln!("Call scope {:?}", state.scope);
         }
 
-        match self.eval(&block.call, state)? {
+        match self.eval_string(&block.call, state)? {
             PdlResult::Closure(c) => {
                 let mut new_state = match &block.args {
                     None => Ok(state.clone()),
@@ -1060,6 +1072,7 @@ pub async fn run_file<'a>(
     let path = PathBuf::from(source_file_path);
     let cwd = path.parent().and_then(|cwd| Some(cwd.to_path_buf()));
     let program = parse_file(&path)?;
+    // println!("{}", serde_json::to_string_pretty(&program)?);
 
     run(&program, cwd, options, initial_scope).await
 }
