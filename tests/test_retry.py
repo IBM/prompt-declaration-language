@@ -1,6 +1,6 @@
 import io
 from contextlib import redirect_stdout
-import traceback
+
 from pdl.pdl import exec_dict
 
 
@@ -13,14 +13,17 @@ def repeat_retry_data(n: int):
                 {
                     "lang": "python",
                     "code": {
-                        "text": ["raise ValueError('dummy exception')\n", "result = 'World'"]
+                        "text": [
+                            "raise ValueError('dummy exception')\n",
+                            "result = 'World'",
+                        ]
                     },
                 },
                 "!\n",
             ],
-            "retry": n
+            "retry": n,
         },
-        "max_iterations": 2
+        "max_iterations": 2,
     }
 
 
@@ -67,11 +70,14 @@ def code_retry_data(n: int):
             {
                 "lang": "python",
                 "code": {
-                    "text": ["raise ValueError('dummy exception')\n", "result = 'hello, world!'"]
+                    "text": [
+                        "raise ValueError('dummy exception')\n",
+                        "result = 'hello, world!'",
+                    ]
                 },
             },
         ],
-        "retry": n
+        "retry": n,
     }
 
 
