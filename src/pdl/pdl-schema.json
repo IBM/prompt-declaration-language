@@ -4589,6 +4589,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             }
           ],
@@ -4617,6 +4618,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7311,6 +7313,7 @@
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7539,6 +7542,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
