@@ -1,4 +1,4 @@
-use crate::pdl::ast::{Metadata, PdlBlock};
+use crate::pdl::ast::{Block::*, Metadata, PdlBlock, PdlBlock::Advanced};
 
 /// Extract models referenced by the programs
 pub fn extract_models(program: &PdlBlock) -> Vec<String> {
@@ -20,18 +20,26 @@ pub fn extract_values(program: &PdlBlock, field: &str) -> Vec<String> {
 /// Take one Yaml fragment and produce a vector of the string-valued entries of the given field
 fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>) {
     match program {
-        PdlBlock::Model(b) => values.push(b.model.clone()),
-        PdlBlock::Repeat(b) => {
+        PdlBlock::Empty(b) => {
+            b.defs
+                .values()
+                .for_each(|p| extract_values_iter(p, field, values));
+        }
+        PdlBlock::Function(b) => {
+            extract_values_iter(&b.return_, field, values);
+        }
+        Advanced(Model(b)) => values.push(b.model.clone()),
+        Advanced(Repeat(b)) => {
             extract_values_iter(&b.repeat, field, values);
         }
-        PdlBlock::Message(b) => {
+        Advanced(Message(b)) => {
             extract_values_iter(&b.content, field, values);
         }
-        PdlBlock::Array(b) => b
+        Advanced(Array(b)) => b
             .array
             .iter()
             .for_each(|p| extract_values_iter(p, field, values)),
-        PdlBlock::Text(b) => {
+        Advanced(Text(b)) => {
             b.text
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
@@ -43,7 +51,7 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
                     .for_each(|p| extract_values_iter(p, field, values));
             }
         }
-        PdlBlock::LastOf(b) => {
+        Advanced(LastOf(b)) => {
             b.last_of
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
@@ -55,7 +63,7 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
                     .for_each(|p| extract_values_iter(p, field, values));
             }
         }
-        PdlBlock::If(b) => {
+        Advanced(If(b)) => {
             extract_values_iter(&b.then, field, values);
             if let Some(else_) = &b.else_ {
                 extract_values_iter(else_, field, values);
@@ -68,19 +76,10 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
                     .for_each(|p| extract_values_iter(p, field, values));
             }
         }
-        PdlBlock::Empty(b) => {
-            b.defs
-                .values()
-                .for_each(|p| extract_values_iter(p, field, values));
-        }
-        PdlBlock::Object(b) => b
+        Advanced(Object(b)) => b
             .object
             .values()
             .for_each(|p| extract_values_iter(p, field, values)),
-
-        PdlBlock::Function(b) => {
-            extract_values_iter(&b.return_, field, values);
-        }
 
         _ => {}
     }

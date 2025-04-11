@@ -21,10 +21,10 @@ use serde_json::{Value, from_str, json, to_string};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    ArrayBlock, CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock, IfBlock,
-    ImportBlock, IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock, PdlBlock,
-    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
-    SequencingBlock, StringOrBoolean, StringOrNull,
+    ArrayBlock, Block::*, CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock,
+    IfBlock, ImportBlock, IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock,
+    PdlBlock, PdlBlock::Advanced, PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock,
+    RepeatBlock, Role, Scope, SequencingBlock, StringOrBoolean, StringOrNull,
 };
 
 type Messages = Vec<ChatMessage>;
@@ -137,31 +137,27 @@ impl<'a> Interpreter<'a> {
                 PdlBlock::Function(f.clone()),
             )),
             PdlBlock::String(s) => self.run_string(s, state).await,
-            PdlBlock::Call(block) => self.run_call(block, state).await,
             PdlBlock::Empty(block) => self.run_empty(block, state).await,
-            PdlBlock::If(block) => self.run_if(block, state).await,
-            PdlBlock::Import(block) => self.run_import(block, state).await,
-            PdlBlock::Include(block) => self.run_include(block, state).await,
-            PdlBlock::Model(block) => self.run_model(block, state).await,
-            PdlBlock::Data(block) => self.run_data(block, state).await,
-            PdlBlock::Object(block) => self.run_object(block, state).await,
-            PdlBlock::PythonCode(block) => self.run_python_code(block, state).await,
-            PdlBlock::Read(block) => self.run_read(block, state).await,
-            PdlBlock::Repeat(block) => self.run_repeat(block, state).await,
-            PdlBlock::LastOf(block) => self.run_sequence(block, state).await,
-            PdlBlock::Text(block) => self.run_sequence(block, state).await,
-            PdlBlock::Array(block) => self.run_array(block, state).await,
-            PdlBlock::Message(block) => self.run_message(block, state).await,
+            Advanced(Call(block)) => self.run_call(block, state).await,
+            Advanced(If(block)) => self.run_if(block, state).await,
+            Advanced(Import(block)) => self.run_import(block, state).await,
+            Advanced(Include(block)) => self.run_include(block, state).await,
+            Advanced(Model(block)) => self.run_model(block, state).await,
+            Advanced(Data(block)) => self.run_data(block, state).await,
+            Advanced(Object(block)) => self.run_object(block, state).await,
+            Advanced(PythonCode(block)) => self.run_python_code(block, state).await,
+            Advanced(Read(block)) => self.run_read(block, state).await,
+            Advanced(Repeat(block)) => self.run_repeat(block, state).await,
+            Advanced(LastOf(block)) => self.run_sequence(block, state).await,
+            Advanced(Text(block)) => self.run_sequence(block, state).await,
+            Advanced(Array(block)) => self.run_array(block, state).await,
+            Advanced(Message(block)) => self.run_message(block, state).await,
         }?;
 
         if match program {
-            PdlBlock::Message(_)
-            | PdlBlock::Text(_)
-            | PdlBlock::Import(_)
-            | PdlBlock::Include(_)
-            | PdlBlock::LastOf(_)
-            | PdlBlock::Call(_)
-            | PdlBlock::Model(_) => false,
+            Advanced(Message(_)) | Advanced(Text(_)) | Advanced(Import(_))
+            | Advanced(Include(_)) | Advanced(LastOf(_)) | Advanced(Call(_))
+            | Advanced(Model(_)) => false,
             _ => state.emit,
         } {
             println!("{}", pretty_print(&messages));
@@ -424,7 +420,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             result,
             vec![ChatMessage::user(buffer)],
-            PdlBlock::Read(trace),
+            Advanced(Read(trace)),
         ))
     }
 
@@ -485,7 +481,7 @@ impl<'a> Interpreter<'a> {
         } else {
             match &block.else_ {
                 Some(else_block) => self.run_quiet(&else_block, state).await,
-                None => Ok(("".into(), vec![], PdlBlock::If(block.clone()))),
+                None => Ok(("".into(), vec![], Advanced(If(block.clone())))),
             }
         }
     }
@@ -628,7 +624,7 @@ impl<'a> Interpreter<'a> {
                         }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
-                    let trace = PdlBlock::PythonCode(block.clone());
+                    let trace = Advanced(PythonCode(block.clone()));
                     Ok((messages[0].content.clone().into(), messages, trace))
                 }
                 Err(_) => Err(Box::from(
@@ -764,11 +760,11 @@ impl<'a> Interpreter<'a> {
                     Ok((
                         res.message.content.into(),
                         output_messages,
-                        PdlBlock::Model(trace),
+                        Advanced(Model(trace)),
                     ))
                 } else {
                     // nothing came out of the model
-                    Ok(("".into(), vec![], PdlBlock::Model(trace)))
+                    Ok(("".into(), vec![], Advanced(Model(trace))))
                 }
                 // dbg!(history);
             }
@@ -791,7 +787,7 @@ impl<'a> Interpreter<'a> {
                 state,
                 true,
             )?;
-            Ok((result, vec![], PdlBlock::Data(trace)))
+            Ok((result, vec![], Advanced(Data(trace))))
         } else {
             let result = self.def(
                 &block.metadata.as_ref().and_then(|m| m.def.clone()),
@@ -801,7 +797,7 @@ impl<'a> Interpreter<'a> {
                 true,
             )?;
             trace.data = from_str(to_string(&result)?.as_str())?;
-            Ok((result, vec![], PdlBlock::Data(trace)))
+            Ok((result, vec![], Advanced(Data(trace))))
         }
     }
 
@@ -825,7 +821,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::Dict(result_map),
             messages,
-            PdlBlock::Object(ObjectBlock { object: trace_map }),
+            Advanced(Object(ObjectBlock { object: trace_map })),
         ))
     }
 
@@ -872,7 +868,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::List(results),
             messages,
-            PdlBlock::Repeat(block.clone()),
+            Advanced(Repeat(block.clone())),
         ))
     }
 
@@ -993,7 +989,7 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::List(result_items),
             all_messages,
-            PdlBlock::Array(trace),
+            Advanced(Array(trace)),
         ))
     }
 
@@ -1031,14 +1027,14 @@ impl<'a> Interpreter<'a> {
                 .into_iter()
                 .map(|m| ChatMessage::new(self.to_ollama_role(&block.role), m.content))
                 .collect(),
-            PdlBlock::Message(MessageBlock {
+            Advanced(Message(MessageBlock {
                 metadata: block.metadata.clone(),
                 role: block.role.clone(),
                 content: Box::new(content_trace),
                 name: name,
                 defsite: None,
                 tool_call_id: tool_call_id,
-            }),
+            })),
         ))
     }
 }

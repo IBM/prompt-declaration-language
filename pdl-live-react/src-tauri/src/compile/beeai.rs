@@ -12,9 +12,10 @@ use serde_json::{Map, Value, from_reader, json, to_string};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    ArrayBlockBuilder, CallBlock, EvalsTo, Expr, FunctionBlock, ListOrString, MessageBlock,
-    MetadataBuilder, ModelBlockBuilder, ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType,
-    PdlParser, PdlType, PythonCodeBlock, RepeatBlock, Role, TextBlock, TextBlockBuilder,
+    ArrayBlockBuilder, Block::*, CallBlock, EvalsTo, Expr, FunctionBlock, ListOrString,
+    MessageBlock, MetadataBuilder, ModelBlockBuilder, ObjectBlock, PdlBaseType, PdlBlock,
+    PdlBlock::Advanced, PdlOptionalType, PdlParser, PdlType, PythonCodeBlock, RepeatBlock, Role,
+    TextBlock, TextBlockBuilder,
 };
 use crate::pdl::pip::pip_install_if_needed;
 use crate::pdl::requirements::BEEAI_FRAMEWORK;
@@ -190,7 +191,7 @@ fn with_tools(
 }
 
 fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
-    let repeat = PdlBlock::Text(TextBlock {
+    let repeat = Advanced(Text(TextBlock {
         metadata: Some(
             MetadataBuilder::default()
                 .description("Calling tool ${ tool.function.name }".to_string())
@@ -199,19 +200,19 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
         ),
         role: None,
         parser: None,
-        text: vec![PdlBlock::Model(
+        text: vec![Advanced(Model(
             ModelBlockBuilder::default()
                 .model(model.as_str())
                 .parameters(strip_nulls(parameters))
-                .input(PdlBlock::Array(
+                .input(Advanced(Array(
                     ArrayBlockBuilder::default()
-                        .array(vec![PdlBlock::Message(MessageBlock {
+                        .array(vec![Advanced(Message(MessageBlock {
                             metadata: None,
                             role: Role::Tool,
                             defsite: None,
                             name: Some("${ tool.function.name }".to_string()),
                             tool_call_id: Some("${ tool.id }".to_string()),
-                            content: Box::new(PdlBlock::Call(CallBlock {
+                            content: Box::new(Advanced(Call(CallBlock {
                                 metadata: Some(
                                     MetadataBuilder::default()
                                         .defs(json_loads(
@@ -226,15 +227,15 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
                                     "${ pdl__tools[tool.function.name] }".to_string(),
                                 ), // look up tool in tool_declarations def (see below)
                                 args: Some("${ args }".into()), // invoke with arguments as specified by the model
-                            })),
-                        })])
+                            }))),
+                        }))])
                         .build()
                         .unwrap(),
-                ))
+                )))
                 .build()
                 .unwrap(),
-        )],
-    });
+        ))],
+    }));
 
     let mut for_ = HashMap::new();
     for_.insert(
@@ -248,11 +249,11 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
     );
 
     // response.choices[0].message.tool_calls
-    PdlBlock::Repeat(RepeatBlock {
+    Advanced(Repeat(RepeatBlock {
         metadata: None,
         for_: for_,
         repeat: Box::new(repeat),
-    })
+    }))
 }
 
 fn json_loads(
@@ -263,7 +264,7 @@ fn json_loads(
     let mut m = indexmap::IndexMap::new();
     m.insert(
         outer_name.to_owned(),
-        PdlBlock::Text(
+        Advanced(Text(
             TextBlockBuilder::default()
                 .text(vec![PdlBlock::String(format!(
                     "{{\"{}\": {}}}",
@@ -278,7 +279,7 @@ fn json_loads(
                 .parser(PdlParser::Json)
                 .build()
                 .unwrap(),
-        ),
+        )),
     );
     m
 }
@@ -427,7 +428,7 @@ pub fn compile(source_file_path: &str, debug: bool) -> Result<PdlBlock, Box<dyn 
                         tool_name.clone(),
                         PdlBlock::Function(FunctionBlock {
                             function: schema,
-                            return_: Box::new(PdlBlock::PythonCode(PythonCodeBlock {
+                            return_: Box::new(Advanced(PythonCode(PythonCodeBlock {
                                 // tool function definition
                                 metadata: None,
                                 lang: "python".to_string(),
@@ -461,7 +462,7 @@ asyncio.run(invoke())
                                         "".to_string()
                                     }
                                 ),
-                            })),
+                            }))),
                         }),
                     )
                 })
@@ -490,7 +491,7 @@ asyncio.run(invoke())
                 let model = format!("{}/{}", provider, model);
 
                 if let Some(instructions) = instructions {
-                    model_call.push(PdlBlock::Text(TextBlock {
+                    model_call.push(Advanced(Text(TextBlock {
                         role: Some(Role::System),
                         text: vec![PdlBlock::String(instructions)],
                         metadata: Some(
@@ -500,7 +501,7 @@ asyncio.run(invoke())
                                 .unwrap(),
                         ),
                         parser: None,
-                    }));
+                    })));
                 }
 
                 let mut model_builder = ModelBlockBuilder::default();
@@ -523,7 +524,7 @@ asyncio.run(invoke())
                     }
                 }
 
-                model_call.push(PdlBlock::Model(model_builder.build().unwrap()));
+                model_call.push(Advanced(Model(model_builder.build().unwrap())));
 
                 if let Some(tools) = tools {
                     if tools.len() > 0 {
@@ -537,7 +538,7 @@ asyncio.run(invoke())
                     closure_name.clone(),
                     PdlBlock::Function(FunctionBlock {
                         function: HashMap::new(),
-                        return_: Box::new(PdlBlock::Text(TextBlock {
+                        return_: Box::new(Advanced(Text(TextBlock {
                             metadata: Some(
                                 MetadataBuilder::default()
                                     .description(format!("Model call {}", &model))
@@ -547,10 +548,10 @@ asyncio.run(invoke())
                             role: None,
                             parser: None,
                             text: model_call,
-                        })),
+                        }))),
                     }),
                 );
-                PdlBlock::Text(TextBlock {
+                Advanced(Text(TextBlock {
                     metadata: Some(
                         MetadataBuilder::default()
                             .description("Model call wrapper".to_string())
@@ -560,11 +561,11 @@ asyncio.run(invoke())
                     ),
                     role: None,
                     parser: None,
-                    text: vec![PdlBlock::Call(CallBlock::new(format!(
+                    text: vec![Advanced(Call(CallBlock::new(format!(
                         "${{ {} }}",
                         closure_name
-                    )))],
-                })
+                    ))))],
+                }))
             },
         )
         .collect::<Vec<_>>();
@@ -579,19 +580,19 @@ asyncio.run(invoke())
         let mut defs = indexmap::IndexMap::new();
         defs.insert(
             "pdl__tools".to_string(),
-            PdlBlock::Object(ObjectBlock {
+            Advanced(Object(ObjectBlock {
                 object: tool_declarations,
-            }),
+            })),
         );
         metadata.defs(defs);
     }
 
-    let pdl: PdlBlock = PdlBlock::Text(TextBlock {
+    let pdl: PdlBlock = Advanced(Text(TextBlock {
         metadata: Some(metadata.build().unwrap()),
         role: None,
         parser: None,
         text: body,
-    });
+    }));
 
     Ok(pdl)
 }
