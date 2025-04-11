@@ -8,13 +8,13 @@ use ::std::path::{Path, PathBuf};
 use duct::cmd;
 use futures::executor::block_on;
 use serde::Deserialize;
-use serde_json::{from_reader, json, to_string, Map, Value};
+use serde_json::{Map, Value, from_reader, json, to_string};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    ArrayBlock, CallBlock, EvalsTo, Expr, FunctionBlock, ListOrString, MessageBlock, MetadataBuilder,
-    ModelBlock, ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType,
-    PythonCodeBlock, RepeatBlock, Role, TextBlock, TextBlockBuilder,
+    ArrayBlockBuilder, CallBlock, EvalsTo, Expr, FunctionBlock, ListOrString, MessageBlock,
+    MetadataBuilder, ModelBlockBuilder, ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType,
+    PdlParser, PdlType, PythonCodeBlock, RepeatBlock, Role, TextBlock, TextBlockBuilder,
 };
 use crate::pdl::pip::pip_install_if_needed;
 use crate::pdl::requirements::BEEAI_FRAMEWORK;
@@ -200,32 +200,39 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
         role: None,
         parser: None,
         text: vec![PdlBlock::Model(
-            ModelBlock::new(model.as_str())
-                .parameters(&strip_nulls(parameters))
-                .input(PdlBlock::Array(ArrayBlock {
-                    array: vec![PdlBlock::Message(MessageBlock {
-                        metadata: None,
-                        role: Role::Tool,
-                        defsite: None,
-                        name: Some("${ tool.function.name }".to_string()),
-                        tool_call_id: Some("${ tool.id }".to_string()),
-                        content: Box::new(PdlBlock::Call(CallBlock {
-                            metadata: Some(
-                                MetadataBuilder::default()
-                                    .defs(json_loads(
-                                        &"args",
-                                        &"pdl__args",
-                                        &"${ tool.function.arguments }",
-                                    ))
-                                    .build()
-                                    .unwrap(),
-                            ),
-                            call: EvalsTo::Jinja("${ pdl__tools[tool.function.name] }".to_string()), // look up tool in tool_declarations def (see below)
-                            args: Some("${ args }".into()), // invoke with arguments as specified by the model
-                        })),
-                    })],
-                }))
-                .build(),
+            ModelBlockBuilder::default()
+                .model(model.as_str())
+                .parameters(strip_nulls(parameters))
+                .input(PdlBlock::Array(
+                    ArrayBlockBuilder::default()
+                        .array(vec![PdlBlock::Message(MessageBlock {
+                            metadata: None,
+                            role: Role::Tool,
+                            defsite: None,
+                            name: Some("${ tool.function.name }".to_string()),
+                            tool_call_id: Some("${ tool.id }".to_string()),
+                            content: Box::new(PdlBlock::Call(CallBlock {
+                                metadata: Some(
+                                    MetadataBuilder::default()
+                                        .defs(json_loads(
+                                            &"args",
+                                            &"pdl__args",
+                                            &"${ tool.function.arguments }",
+                                        ))
+                                        .build()
+                                        .unwrap(),
+                                ),
+                                call: EvalsTo::Jinja(
+                                    "${ pdl__tools[tool.function.name] }".to_string(),
+                                ), // look up tool in tool_declarations def (see below)
+                                args: Some("${ args }".into()), // invoke with arguments as specified by the model
+                            })),
+                        })])
+                        .build()
+                        .unwrap(),
+                ))
+                .build()
+                .unwrap(),
         )],
     });
 
@@ -242,6 +249,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
 
     // response.choices[0].message.tool_calls
     PdlBlock::Repeat(RepeatBlock {
+        metadata: None,
         for_: for_,
         repeat: Box::new(repeat),
     })
@@ -421,6 +429,7 @@ pub fn compile(source_file_path: &str, debug: bool) -> Result<PdlBlock, Box<dyn 
                             function: schema,
                             return_: Box::new(PdlBlock::PythonCode(PythonCodeBlock {
                                 // tool function definition
+                                metadata: None,
                                 lang: "python".to_string(),
                                 code: format!(
                                     "
@@ -494,28 +503,27 @@ asyncio.run(invoke())
                     }));
                 }
 
-                let model_response = if let Some(tools) = &tools {
-                    match tools.len() {
-                        0 => None,
-                        _ => Some("response".to_string()),
-                    }
-                } else {
-                    None
-                };
-
-                model_call.push(PdlBlock::Model(ModelBlock {
-                    metadata: Some(
+                let mut model_builder = ModelBlockBuilder::default();
+                model_builder
+                    .metadata(
                         MetadataBuilder::default()
                             .description(description)
                             .build()
                             .unwrap(),
-                    ),
-                    input: None,
-                    model: model.clone(),
-                    model_response: model_response,
-                    pdl_usage: None,
-                    parameters: Some(with_tools(&tools, &parameters.state.dict)),
-                }));
+                    )
+                    .model(model.clone())
+                    .parameters(with_tools(&tools, &parameters.state.dict));
+
+                if let Some(tools) = &tools {
+                    if tools.len() > 0 {
+                        // then we want the model response as a
+                        // "response" variable, so we can scan for
+                        // tool calls
+                        model_builder.model_response("response".to_string());
+                    }
+                }
+
+                model_call.push(PdlBlock::Model(model_builder.build().unwrap()));
 
                 if let Some(tools) = tools {
                     if tools.len() > 0 {
