@@ -3,21 +3,21 @@ use ::std::error::Error;
 use ::std::path::PathBuf;
 
 use async_recursion::async_recursion;
-use minijinja::{syntax::SyntaxConfig, Environment};
+use minijinja::{Environment, syntax::SyntaxConfig};
 use owo_colors::OwoColorize;
-use tokio::io::{stdout, AsyncWriteExt};
+use tokio::io::{AsyncWriteExt, stdout};
 use tokio_stream::StreamExt;
 
 use ollama_rs::{
+    Ollama,
     generation::{
-        chat::{request::ChatMessageRequest, ChatMessage, ChatMessageResponse, MessageRole},
+        chat::{ChatMessage, ChatMessageResponse, MessageRole, request::ChatMessageRequest},
         tools::{ToolFunctionInfo, ToolInfo, ToolType},
     },
     models::ModelOptions,
-    Ollama,
 };
 
-use serde_json::{from_str, json, to_string, Value};
+use serde_json::{Value, from_str, json, to_string};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
@@ -979,10 +979,13 @@ impl<'a> Interpreter<'a> {
             trace_items.push(trace);
         }
 
+        let mut trace = block.clone();
+        trace.array = trace_items;
+
         Ok((
             PdlResult::List(result_items),
             all_messages,
-            PdlBlock::Array(ArrayBlock { array: trace_items }),
+            PdlBlock::Array(trace),
         ))
     }
 
