@@ -5,8 +5,8 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{ModelBlock, PdlBlock, Scope},
-        interpreter::{load_scope, run_json_sync as run_json, run_sync as run, RunOptions},
+        ast::{ModelBlockBuilder, PdlBlock, Scope},
+        interpreter::{RunOptions, load_scope, run_json_sync as run_json, run_sync as run},
     };
 
     use ollama_rs::generation::chat::MessageRole;
@@ -61,7 +61,12 @@ mod tests {
     #[test]
     fn single_model_via_input_string() -> Result<(), Box<dyn Error>> {
         let (_, messages, _) = run(
-            &PdlBlock::Model(ModelBlock::new(DEFAULT_MODEL).input_str("hello").build()),
+            &PdlBlock::Model(
+                ModelBlockBuilder::default()
+                    .model(DEFAULT_MODEL)
+                    .input(Box::from(PdlBlock::String("hello".to_string())))
+                    .build()?,
+            ),
             None,
             streaming(),
             initial_scope(),
