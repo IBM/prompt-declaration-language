@@ -51,38 +51,55 @@ pub enum PdlType {
     Object(HashMap<String, PdlType>),
 }
 
-/// Common metadata of blocks
+/// Timing information
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Timing {
+    start_nanos: u64,
+    end_nanos: u64,
+    timezone: String,
+}
+
+/// Common metadata of blocks
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
+#[serde(default)]
+#[builder(setter(into, strip_option), default)]
 pub struct Metadata {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub defs: Option<IndexMap<String, PdlBlock>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub def: Option<String>,
-}
-impl Default for Metadata {
-    fn default() -> Self {
-        Self {
-            defs: None,
-            def: None,
-        }
-    }
+
+    #[serde(rename = "pdl__id", skip_serializing_if = "Option::is_none")]
+    pub pdl_id: Option<String>,
+
+    #[serde(rename = "pdl__result", skip_serializing_if = "Option::is_none")]
+    pub pdl_result: Option<Box<PdlResult>>,
+
+    #[serde(rename = "pdl__is_leaf", skip_serializing_if = "Option::is_none")]
+    pub pdl_is_leaf: Option<bool>,
+
+    #[serde(rename = "pdl__timing", skip_serializing_if = "Option::is_none")]
+    pub pdl_timing: Option<Timing>,
 }
 
 /// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "call")]
 pub struct CallBlock {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
     /// Function to call
     pub call: EvalsTo<String, Box<PdlResult>>,
 
     /// Arguments of the function with their values
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Value>,
-
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
 }
 
 impl CallBlock {
@@ -97,7 +114,6 @@ impl CallBlock {
 
 pub trait SequencingBlock {
     fn kind(&self) -> &str;
-    fn description(&self) -> &Option<String>;
     fn role(&self) -> &Option<Role>;
     fn metadata(&self) -> &Option<Metadata>;
     fn items(&self) -> &Vec<PdlBlock>;
@@ -117,9 +133,6 @@ pub struct LastOfBlock {
     pub last_of: Vec<PdlBlock>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 
     #[serde(flatten)]
@@ -132,9 +145,6 @@ pub struct LastOfBlock {
 impl SequencingBlock for LastOfBlock {
     fn kind(&self) -> &str {
         "lastOf"
-    }
-    fn description(&self) -> &Option<String> {
-        &self.description
     }
     fn role(&self) -> &Option<Role> {
         &self.role
@@ -172,31 +182,29 @@ impl SequencingBlock for LastOfBlock {
 
 /// Create the concatenation of the stringify version of the result of
 /// each block of the list of blocks.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
 #[serde(tag = "kind", rename = "text")]
+#[builder(setter(into, strip_option), default)]
 pub struct TextBlock {
-    /// Body of the text
-    pub text: Vec<PdlBlock>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub role: Option<Role>,
-
-    #[serde(flatten)]
+    #[serde(default, flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<Metadata>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    /// Body of the text
+    // Note: do NOT apply #[serde(default)] here. This seems to give
+    // permission for the deserializer to match everything to
+    // TextBlock, since ... all fields are optional/have defaults.
+    pub text: Vec<PdlBlock>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub role: Option<Role>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
 }
 impl SequencingBlock for TextBlock {
     fn kind(&self) -> &str {
         "text"
-    }
-    fn description(&self) -> &Option<String> {
-        &self.description
     }
     fn role(&self) -> &Option<Role> {
         &self.role
@@ -232,52 +240,6 @@ impl SequencingBlock for TextBlock {
     }
 }
 
-impl TextBlock {
-    pub fn new(text: Vec<PdlBlock>) -> Self {
-        TextBlock {
-            metadata: None,
-            description: None,
-            role: None,
-            parser: None,
-            text: text,
-        }
-    }
-
-    pub fn def(&mut self, def: &str) -> &mut Self {
-        match &mut self.metadata {
-            Some(metadata) => {
-                metadata.def = Some(def.into());
-            }
-            None => {
-                let mut metadata: Metadata = Default::default();
-                metadata.def = Some(def.into());
-                self.metadata = Some(metadata);
-            }
-        }
-        self
-    }
-
-    pub fn description(&mut self, description: String) -> &mut Self {
-        self.description = Some(description);
-        self
-    }
-
-    pub fn parser(&mut self, parser: PdlParser) -> &mut Self {
-        self.parser = Some(parser);
-        self
-    }
-
-    pub fn build(&self) -> Self {
-        self.clone()
-    }
-}
-
-impl From<Vec<PdlBlock>> for TextBlock {
-    fn from(v: Vec<PdlBlock>) -> Self {
-        TextBlock::new(v).build()
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "function")]
 pub struct FunctionBlock {
@@ -305,8 +267,6 @@ pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<Metadata>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
     pub model: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<HashMap<String, Value>>,
@@ -315,9 +275,6 @@ pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "modelResponse")]
     pub model_response: Option<String>,
-    #[serde(rename = "pdl__result")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pdl_result: Option<String>,
     #[serde(rename = "pdl__usage")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
@@ -326,15 +283,29 @@ pub struct ModelBlock {
 impl ModelBlock {
     pub fn new(model: &str) -> Self {
         ModelBlock {
-            metadata: None,
-            description: None,
+            metadata: Default::default(),
             model_response: None,
             parameters: None,
-            pdl_result: None,
             pdl_usage: None,
             model: model.into(),
             input: None,
         }
+    }
+
+    pub fn with_result(&self, result: PdlResult) -> Self {
+        let mut c = self.clone();
+        let mut metadata = if let Some(meta) = c.metadata {
+            meta
+        } else {
+            Default::default()
+        };
+        metadata.pdl_result = Some(Box::from(result));
+        c.metadata = Some(metadata);
+        c
+    }
+
+    pub fn description(&self) -> Option<String> {
+        self.metadata.as_ref().and_then(|m| m.description.clone())
     }
 
     pub fn input(&mut self, input: PdlBlock) -> &mut Self {
@@ -389,14 +360,19 @@ pub struct RepeatBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "message")]
 pub struct MessageBlock {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
     /// Role of associated to the message, e.g. User or Assistant
     pub role: Role,
 
     /// Content of the message
     pub content: Box<PdlBlock>,
 
+    /// pdl_id of block that defined the `content of this message
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    pub defsite: Option<String>,
 
     /// For example, the name of the tool that was invoked, for which this message is the tool response
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -439,7 +415,7 @@ pub struct ObjectBlock {
 ///   def: EXTRACTED_GROUND_TRUTH
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(tag = "kind")]
+#[serde(tag = "kind", rename = "data")]
 pub struct DataBlock {
     #[serde(flatten)]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -614,12 +590,12 @@ pub enum PdlBlock {
     Array(ArrayBlock),
     Message(MessageBlock),
     Repeat(RepeatBlock),
-    Text(TextBlock),
-    LastOf(LastOfBlock),
-    Model(ModelBlock),
     Function(FunctionBlock),
     PythonCode(PythonCodeBlock),
     Read(ReadBlock),
+    Model(ModelBlock),
+    LastOf(LastOfBlock),
+    Text(TextBlock),
 
     // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
     Empty(EmptyBlock),
@@ -663,8 +639,8 @@ pub enum PdlResult {
     Number(Number),
     String(String),
     Bool(bool),
-    Block(PdlBlock),
     Closure(Closure),
+    Block(PdlBlock),
     List(Vec<PdlResult>),
     Dict(HashMap<String, PdlResult>),
 }
