@@ -192,7 +192,8 @@ impl<'a> Interpreter<'a> {
 
     /// Evaluate String as a Jinja2 expression
     fn eval(&self, expr: &String, state: &State) -> Result<PdlResult, PdlError> {
-        let result = self.jinja_env.render_str(expr.as_str(), &state.scope)?;
+        let tmpl = self.jinja_env.template_from_str(expr.as_str())?;
+        let result = tmpl.render(&state.scope)?;
         if self.options.debug {
             eprintln!("Eval {} -> {} with scope {:?}", expr, result, state.scope);
         }
@@ -644,8 +645,8 @@ impl<'a> Interpreter<'a> {
 
                 let (options, tools) = self.to_ollama_model_options(&block.parameters);
                 if self.options.debug {
-                    eprintln!("Model options {:?} {:?}", block.description, options);
-                    eprintln!("Model tools {:?} {:?}", block.description, tools);
+                    eprintln!("Model options {:?} {:?}", block.description(), options);
+                    eprintln!("Model tools {:?} {:?}", block.description(), tools);
                 }
 
                 // The input messages to the model is either:
@@ -668,7 +669,7 @@ impl<'a> Interpreter<'a> {
                 if self.options.debug {
                     eprintln!(
                         "Ollama {:?} model={:?} prompt={:?} history={:?}",
-                        block.description.clone().unwrap_or("".into()),
+                        block.description(),
                         block.model,
                         prompt,
                         history
@@ -741,9 +742,7 @@ impl<'a> Interpreter<'a> {
                     }
                 }
 
-                let mut trace = block.clone();
-                trace.pdl_result = Some(response_string.clone());
-
+                let mut trace = block.with_result(response_string.clone().into());
                 if let Some(res) = last_res {
                     if let Some(usage) = res.final_data {
                         trace.pdl_usage = Some(PdlUsage {
@@ -912,12 +911,12 @@ impl<'a> Interpreter<'a> {
         state: &mut State,
     ) -> Interpretation {
         if self.options.debug {
-            let description = if let Some(d) = block.description() {
-                d
-            } else {
-                &"<no description>".to_string()
-            };
-            eprintln!("{} {description}", block.kind());
+            let description = block
+                .metadata()
+                .as_ref()
+                .and_then(|m| m.description.clone())
+                .or(Some("<no description>".to_string()));
+            eprintln!("{} {:?}", block.kind(), description);
         }
 
         let mut output_results = vec![];
@@ -1022,10 +1021,11 @@ impl<'a> Interpreter<'a> {
                 .map(|m| ChatMessage::new(self.to_ollama_role(&block.role), m.content))
                 .collect(),
             PdlBlock::Message(MessageBlock {
+                metadata: block.metadata.clone(),
                 role: block.role.clone(),
                 content: Box::new(content_trace),
-                description: block.description.clone(),
                 name: name,
+                defsite: None,
                 tool_call_id: tool_call_id,
             }),
         ))
