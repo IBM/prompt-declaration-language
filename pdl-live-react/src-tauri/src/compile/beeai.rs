@@ -12,9 +12,9 @@ use serde_json::{from_reader, json, to_string, Map, Value};
 use tempfile::Builder;
 
 use crate::pdl::ast::{
-    ArrayBlock, CallBlock, FunctionBlock, ListOrString, MessageBlock, Metadata, ModelBlock,
-    ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType, PythonCodeBlock,
-    RepeatBlock, Role, TextBlock,
+    ArrayBlock, CallBlock, EvalsTo, FunctionBlock, ListOrString, MessageBlock, Metadata,
+    ModelBlock, ObjectBlock, PdlBaseType, PdlBlock, PdlOptionalType, PdlParser, PdlType,
+    PythonCodeBlock, RepeatBlock, Role, TextBlock,
 };
 use crate::pdl::pip::pip_install_if_needed;
 use crate::pdl::requirements::BEEAI_FRAMEWORK;
@@ -213,7 +213,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
                                     &"${ tool.function.arguments }",
                                 ),
                             }),
-                            call: "${ pdl__tools[tool.function.name] }".to_string(), // look up tool in tool_declarations def (see below)
+                            call: EvalsTo::Jinja("${ pdl__tools[tool.function.name] }".to_string()), // look up tool in tool_declarations def (see below)
                             args: Some("${ args }".into()), // invoke with arguments as specified by the model
                         })),
                     })],

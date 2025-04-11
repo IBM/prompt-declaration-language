@@ -74,7 +74,7 @@ impl Default for Metadata {
 #[serde(tag = "kind", rename = "call")]
 pub struct CallBlock {
     /// Function to call
-    pub call: String,
+    pub call: EvalsTo<String, Box<PdlResult>>,
 
     /// Arguments of the function with their values
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -88,7 +88,7 @@ pub struct CallBlock {
 impl CallBlock {
     pub fn new(call: String) -> Self {
         CallBlock {
-            call: call,
+            call: EvalsTo::Jinja(call),
             args: None,
             metadata: None,
         }
@@ -531,8 +531,8 @@ pub struct Expr<S, T> {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum EvalsTo<S, T> {
-    Const(T),
     Jinja(String),
+    Const(T),
     Expr(Expr<S, T>),
 }
 
