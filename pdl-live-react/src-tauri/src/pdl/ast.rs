@@ -550,6 +550,54 @@ pub struct IfBlock {
     pub metadata: Option<Metadata>,
 }
 
+
+/// Case of a match
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct MatchCase {
+    /// The condition to check
+    #[serde(rename = "if")]
+    pub if_: Option<StringOrBoolean>,
+
+    /// Branch to execute if the condition is true
+    pub then: Box<PdlBlock>,
+
+}
+
+
+/// Match control structure.
+///
+/// Example:
+/// ```PDL
+/// defs:
+///     answer:
+///     read:
+///     message: "Enter a number? "
+/// match: ${ (answer | int) }
+/// with:
+/// - case: 42
+///     then: You won!
+/// - case:
+///     any:
+///     def: x
+///     if: ${ x > 42 }
+///     then: Too high
+/// - then: Too low
+/// ```
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct MatchBlock {
+    /// The expression to match 
+    #[serde(rename = "match")]
+    pub match_: StringOrBoolean,
+
+    /// Branch to execute if the condition is true
+    pub with: Vec<MatchCase>,
+
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+}
+
+
 /// Return the array of values computed by each block of the list of blocks
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "array")]
