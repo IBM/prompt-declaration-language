@@ -284,18 +284,26 @@ impl<'a> Interpreter<'a> {
     /// Evaluate an string or list of Values into a list of Values
     fn eval_list_or_string(
         &self,
-        expr: &ListOrString,
+        expr: &EvalsTo<ListOrString, Vec<PdlResult>>,
         state: &State,
     ) -> Result<Vec<PdlResult>, PdlError> {
         match expr {
-            ListOrString::String(s) => match self.eval(s, state)? {
-                PdlResult::List(a) => Ok(a),
+            EvalsTo::Const(c) => Ok(c.clone()),
+            EvalsTo::Jinja(s)
+            | EvalsTo::Expr(Expr {
+                pdl_expr: ListOrString::String(s),
+                ..
+            }) => match self.eval(s, state)? {
+                PdlResult::List(l) => Ok(l),
                 x => Err(Box::from(format!(
-                    "Jinja string expanded to non-list. {} -> {:?}",
-                    s, x
+                    "Expression {s} evaluated to non-list {:?}",
+                    x
                 ))),
             },
-            ListOrString::List(l) => l.iter().map(|v| self.eval_json(v, state)).collect(),
+            EvalsTo::Expr(Expr {
+                pdl_expr: ListOrString::List(l),
+                ..
+            }) => l.iter().map(|v| self.eval_json(v, state)).collect(),
         }
     }
 
