@@ -56,6 +56,17 @@ pub enum PdlType {
 pub struct Metadata {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub defs: Option<IndexMap<String, PdlBlock>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub def: Option<String>,
+}
+impl Default for Metadata {
+    fn default() -> Self {
+        Self {
+            defs: None,
+            def: None,
+        }
+    }
 }
 
 /// Call a function
@@ -88,7 +99,6 @@ pub trait SequencingBlock {
     fn kind(&self) -> &str;
     fn description(&self) -> &Option<String>;
     fn role(&self) -> &Option<Role>;
-    fn def(&self) -> &Option<String>;
     fn metadata(&self) -> &Option<Metadata>;
     fn items(&self) -> &Vec<PdlBlock>;
     fn with_items(&self, items: Vec<PdlBlock>) -> Self;
@@ -118,9 +128,6 @@ pub struct LastOfBlock {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 }
 impl SequencingBlock for LastOfBlock {
     fn kind(&self) -> &str {
@@ -131,9 +138,6 @@ impl SequencingBlock for LastOfBlock {
     }
     fn role(&self) -> &Option<Role> {
         &self.role
-    }
-    fn def(&self) -> &Option<String> {
-        return &self.def;
     }
     fn metadata(&self) -> &Option<Metadata> {
         &self.metadata
@@ -186,9 +190,6 @@ pub struct TextBlock {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 }
 impl SequencingBlock for TextBlock {
     fn kind(&self) -> &str {
@@ -199,9 +200,6 @@ impl SequencingBlock for TextBlock {
     }
     fn role(&self) -> &Option<Role> {
         &self.role
-    }
-    fn def(&self) -> &Option<String> {
-        return &self.def;
     }
     fn metadata(&self) -> &Option<Metadata> {
         &self.metadata
@@ -237,7 +235,6 @@ impl SequencingBlock for TextBlock {
 impl TextBlock {
     pub fn new(text: Vec<PdlBlock>) -> Self {
         TextBlock {
-            def: None,
             metadata: None,
             description: None,
             role: None,
@@ -247,7 +244,16 @@ impl TextBlock {
     }
 
     pub fn def(&mut self, def: &str) -> &mut Self {
-        self.def = Some(def.into());
+        match &mut self.metadata {
+            Some(metadata) => {
+                metadata.def = Some(def.into());
+            }
+            None => {
+                let mut metadata: Metadata = Default::default();
+                metadata.def = Some(def.into());
+                self.metadata = Some(metadata);
+            }
+        }
         self
     }
 
@@ -295,11 +301,13 @@ pub struct PdlUsage {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "model")]
 pub struct ModelBlock {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     pub model: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<HashMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -318,7 +326,7 @@ pub struct ModelBlock {
 impl ModelBlock {
     pub fn new(model: &str) -> Self {
         ModelBlock {
-            def: None,
+            metadata: None,
             description: None,
             model_response: None,
             parameters: None,
@@ -433,14 +441,15 @@ pub struct ObjectBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind")]
 pub struct DataBlock {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
     pub data: Value,
 
     /// Do not evaluate expressions inside strings.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raw: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
@@ -486,6 +495,10 @@ pub enum StringOrNull {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "read")]
 pub struct ReadBlock {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
     /// Name of the file to read. If `None`, read the standard input.
     pub read: StringOrNull,
 
@@ -494,9 +507,6 @@ pub struct ReadBlock {
 
     /// Indicate if one or multiple lines should be read.
     pub multiline: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
