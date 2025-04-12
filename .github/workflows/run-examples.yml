@@ -23,5 +23,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
           runner-os: ${{ runner.os }}
           head-ref: ${{ github.head_ref }}
-          update-results: 'true'
+          update-results: 'false'
           check: '[]'   # Empty list means run against all PDL programs
