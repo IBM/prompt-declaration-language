@@ -61,8 +61,7 @@ When you make changes to PDL, ensure to document any new features in the docs se
 Install the required dependencies for documentation.
 
 ```
-pip install mkdocs-get-deps
-pip install $(mkdocs-get-deps)
+pip install -e .[docs]
 ```
 
 Then serve the docs to load a preview.
@@ -72,3 +71,49 @@ mkdocs serve
 ```
 
 You are all set!
+
+### Run examples
+
+PDL executes nightly runs for Run Examples, which searches for all the `.pdl` programs in the repo and runs the interpreter against each file. The [config file for Run Examples](../tests/test_examples_run.yaml) describes how to handle with each file. There are four conditions:
+
+1. `skip`: a list of PDL files that are skipped in Run Examples
+2. `with_inputs`: PDL files that require user input. Each file name is mapped to two fields that describe how inputs are patched
+   1. `stdin`: separated by a newline, each line represents the user input
+   2. `scope`: scope for the PDL program
+3. `expected_parse_error`: a list of PDL files that expect parse errors 
+4. `expected_runtime_error`: a list of PDL files that expect runtime errors
+   
+If you wish to make a contribution to PDL and modify or add any PDL program to the repo, it is important that you provide the new expected results for those files so that the Run Examples nightly test does not break. 
+
+### Local dev
+
+Under `check`, you can provide a list of files that you want to run Pytest against. If you leave it empty (`check: ` or `check: []`), then by default, Pytest will be executed against all files in the repo, except for those under `skip`. For local development, it is useful to only test against a subset of files so that Pytest executes faster.
+
+If you expect the files to produce a different result, setting `update_results: true` will automatically create a new file under `tests/examples/results` capturing the new output for each of the file in `check`. It is useful to set this field to `true` before opening a PR. 
+
+Run this Pytest command for Run Examples, which is the same command for the nightly test.
+
+```
+pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-warnings
+```
+
+### Opening a pull request
+
+A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs. You can utilize the `update_results` when opening a PR to capture the expected results in the GH Actions environment. 
+
+When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the files you have added and modified. 
+
+- If in the PR, `update_results: false`, Pytest will be executed against those files 
+  - If Pytest fails, you can manually examine the failures and add the results to your PR
+- If in the PR, `update_results: true`, Pytest will be executed against those files. 
+  - If Pytest fails, a GH-Actions bot will push a commit with the new results produced in the GH environment to your PR
+  - Additionally, another commit will push `update_results: false`. 
+  - If you need to make other changes to your PR, make sure to pull the new changes first.
+
+Your PR should always set `update_results: false` before merging. 
+
+Here's a preview of the current configuration file for Run Examples:
+
+```yaml
+--8<-- "../tests/test_examples_run.yaml"
+```
