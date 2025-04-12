@@ -1,4 +1,4 @@
-update_results: false
+update_results: true
 check: []
 skip:
   - examples/cldk/cldk-assistant.pdl
