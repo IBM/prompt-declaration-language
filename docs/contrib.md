@@ -85,7 +85,7 @@ PDL executes nightly runs for Run Examples, which searches for all the `.pdl` pr
    
 If you wish to make a contribution to PDL and modify or add any PDL program to the repo, it is important that you provide the new expected results for those files so that the Run Examples nightly test does not break. 
 
-### Local dev
+#### Local dev
 
 Under `check`, you can provide a list of files that you want to run Pytest against. If you leave it empty (`check: ` or `check: []`), then by default, Pytest will be executed against all files in the repo, except for those under `skip`. For local development, it is useful to only test against a subset of files so that Pytest executes faster.
 
@@ -97,18 +97,18 @@ Run this Pytest command for Run Examples, which is the same command for the nigh
 pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-warnings
 ```
 
-### Opening a pull request
+#### Opening a pull request
 
 A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs. You can utilize the `update_results` when opening a PR to capture the expected results in the GH Actions environment. 
 
 When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the files you have added and modified. 
 
-- If in the PR, `update_results: false`, Pytest will be executed against those files 
+- If in the PR, `update_results: false`, 
   - If Pytest fails, you can manually examine the failures and add the results to your PR
-- If in the PR, `update_results: true`, Pytest will be executed against those files. 
+- If in the PR, `update_results: true`,
   - If Pytest fails, a GH-Actions bot will push a commit with the new results produced in the GH environment to your PR
-  - Additionally, another commit will push `update_results: false`. 
-  - If you need to make other changes to your PR, make sure to pull the new changes first.
+  - Additionally, another commit will push `update_results: false`. This is to ensure that for the nightly test, different results are not committed
+  - If you need to make other changes to your PR, make sure to pull the new changes first
 
 Your PR should always set `update_results: false` before merging. 
 
