@@ -5,6 +5,7 @@ text:
   message: "What is your query?\n"
 - repeat:
     text:
+    - Hello
     # Send context to Granite model hosted at ollama
     - model: ollama_chat/granite3.2:2b
     # Allow the user to type 'yes', 'no', or anything else, storing

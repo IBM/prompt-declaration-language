@@ -45,6 +45,26 @@ jobs:
         echo "value=$value"
         echo "update_results=$value" >> $GITHUB_OUTPUT
       # Install yq if needed
+    
+    # Cache Ollama before running examples 
+    - name: Restore Ollama model cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.ollama
+        key: ollama-cache-${{ runner.os }}-llama3
+        restore-keys: ollama-cache-${{ runner.os }}
+
+    # Cache pip before running examples
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        # This path is specific to Ubuntu
+        path: ${{ env.pythonLocation }}
+        # Look to see if there is a cache hit for the setup file
+        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-new3
+          ${{ runner.os }}-new3
       
     - uses: ./.github/actions/run-examples
       if: ${{ steps.changed-pdl-files.outputs.all_changed_files_count > 0 }}
