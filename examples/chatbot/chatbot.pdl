@@ -1,4 +1,4 @@
-description: A Chatbot that responds to user questions
+description: A Chatbot that responds to user's questions
 text:
 # Allow the user to type any question, implicitly adding the question to the context.
 - read:
