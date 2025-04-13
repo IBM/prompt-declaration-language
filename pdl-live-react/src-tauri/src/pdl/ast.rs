@@ -274,7 +274,7 @@ pub struct PdlUsage {
 #[serde(tag = "kind", rename = "model")]
 #[builder(setter(into, strip_option), default)]
 pub struct ModelBlock {
-    pub model: String,
+    pub model: EvalsTo<String, String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<HashMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -466,6 +466,23 @@ pub enum EvalsTo<S, T> {
     Jinja(String),
     Const(T),
     Expr(Expr<S, T>),
+}
+
+impl Default for EvalsTo<String, String> {
+    fn default() -> Self {
+        EvalsTo::Const("".to_string())
+    }
+}
+
+impl From<&str> for EvalsTo<String, String> {
+    fn from(s: &str) -> Self {
+        EvalsTo::Const(s.to_string())
+    }
+}
+impl From<String> for EvalsTo<String, String> {
+    fn from(s: String) -> Self {
+        EvalsTo::Const(s)
+    }
 }
 
 /// Conditional control structure.

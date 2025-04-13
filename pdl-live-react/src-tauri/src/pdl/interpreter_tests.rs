@@ -80,6 +80,26 @@ mod tests {
     }
 
     #[test]
+    fn single_model_via_text_chain_expr() -> Result<(), Box<dyn Error>> {
+        let (_, messages, _) = run_json(
+            json!({
+                "text": [
+                    "hello",
+                    {"model": { "pdl__expr": DEFAULT_MODEL }}
+                ]
+            }),
+            streaming(),
+            initial_scope(),
+        )?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "hello");
+        assert_eq!(messages[1].role, MessageRole::Assistant);
+        assert!(messages[1].content.contains("Hello!"));
+        Ok(())
+    }
+
+    #[test]
     fn single_model_via_text_chain() -> Result<(), Box<dyn Error>> {
         let (_, messages, _) = run_json(
             json!({
