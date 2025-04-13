@@ -35,6 +35,8 @@ runs:
     - uses: actions/checkout@v4
       with:
         token: ${{ inputs.token }}
+        head-ref: ${{ inputs.head-ref }}
+        repository: ${{ inputs.repository }}
         fetch-depth: 0
     
     - name: Patch tests/test_examples_run.yaml check with modified files
