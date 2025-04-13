@@ -57,17 +57,18 @@ pub enum PdlType {
 /// Timing information
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Timing {
-    start_nanos: u128,
-    end_nanos: u128,
+    // TODO serde_json doesn't support u128, but (below) as_nanos() returns u128...
+    start_nanos: u64,
+    end_nanos: u64,
     timezone: String,
 }
 
 type TimingError = Box<dyn Error + Send + Sync>;
 impl Timing {
-    fn now() -> Result<u128, TimingError> {
+    fn now() -> Result<u64, TimingError> {
         Ok(::std::time::SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)?
-            .as_nanos())
+            .as_nanos() as u64)
     }
 
     pub fn start() -> Result<Timing, TimingError> {
@@ -257,14 +258,16 @@ pub struct FunctionBlock {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PdlUsage {
-    // Completion tokens consumed
+    /// Completion tokens consumed
     pub completion_tokens: u64,
-    // Prompt tokens consumed
+    /// Prompt tokens consumed
     pub prompt_tokens: u64,
-    // Completion nanos
-    pub completion_nanos: u64,
-    // Prompt nanos
-    pub prompt_nanos: u64,
+    /// Completion nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completion_nanos: Option<u64>,
+    /// Prompt nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prompt_nanos: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
@@ -277,11 +280,17 @@ pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<Box<PdlBlock>>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub platform: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context: Option<Vec<MessageBlock>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "modelResponse")]
     pub model_response: Option<String>,
     #[serde(rename = "pdl__usage")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
+    #[serde(rename = "pdl__model_input", skip_serializing_if = "Option::is_none")]
+    pub pdl_model_input: Option<Vec<MessageBlock>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
