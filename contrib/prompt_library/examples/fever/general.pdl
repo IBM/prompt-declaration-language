@@ -1,0 +1,84 @@
+description: Demo of ReAct template fever
+defs:
+  search_tools_react:
+    data:
+      - name: Search ReAct
+        display_name: Search
+        pdl_function: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: topic
+            type: string
+            description: The topic of interest
+        examples: []
+
+  search_tools_rewoo:
+    data:
+      - name: Search ReWOO
+        display_name: Search
+        pdl_function: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          - name: topic
+            type: string
+            description: The topic of interest
+        examples: []
+
+  search_tools:
+    data:
+      - type: function
+        function:
+          name: Search
+          description: Search Wikipedia for a summary
+          parameters:
+            type: object
+            properties:
+              topic:
+                type: string
+                description: The topic of interest
+            required:
+              - topic
+
+  task: |-
+    Task: On June 2017, the following claim was made: ${ claim }
+    Q: Was this claim true or false?
+text:
+  - include: ../../tools.pdl
+
+  # CoT
+  - if: ${ prompt_pattern == 'cot' }
+    then:
+      text:
+      - include: ../../CoT.pdl
+      - call: ${ chain_of_thought_claim }
+        args:
+          examples: ${ demonstrations }
+          question: ${ task }
+          model: ${ model }
+
+  # ReAct
+  - if: ${ prompt_pattern == 'react' }
+    then:
+      text:
+      - include: ../../ReAct.pdl
+      - call: ${ react }
+        def: ANSWER
+        args:
+          task: ${ task }
+          model: ${ model }
+          tools: ${ search_tools }
+          trajectories: ${ demonstrations }
+
+  # ReWOO
+  - if: ${ prompt_pattern == 'rewoo' }
+    then:
+      text:
+      - include: ../../ReWoo.pdl
+      - call: ${ rewoo }
+        def: ANSWER
+        args:
+          task: ${ task }
+          model: ${ model }
+          tools: ${ search_tools }
+          trajectories: ${ demonstrations }
+          show_plans: false
