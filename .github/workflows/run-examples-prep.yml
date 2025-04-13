@@ -55,11 +55,11 @@ jobs:
         head-ref: ${{ github.head_ref }}
 
     # Patch config with update_results to false
-    # Fetch the latest branch
-    - uses: actions/checkout@v4
-      if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
-      with:
-        fetch-depth: 0
+    # # Fetch the latest branch
+    # - uses: actions/checkout@v4
+    #   if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
+    #   with:
+    #     fetch-depth: 0
     - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version
       if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
       shell: bash 
