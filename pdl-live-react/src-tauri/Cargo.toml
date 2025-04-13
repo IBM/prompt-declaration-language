@@ -47,6 +47,7 @@ rustpython-stdlib = { version = "0.4.0", features = ["zlib"] }
 schemars = "0.8.22"
 fs4 = "0.13.1"
 derive_builder = "0.20.2"
+iana-time-zone = "0.1.63"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-cli = "2"
