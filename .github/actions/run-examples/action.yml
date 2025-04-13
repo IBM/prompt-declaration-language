@@ -30,15 +30,10 @@ runs:
         ref: ${{ inputs.head-ref }}
         fetch-depth: 0                        # Full history needed for fetch/rebase
     - name: Patch tests/test_examples_run.yaml check with modified files
-      uses: fjogeleit/yaml-update-action@main
-      with:
-        changes: |
-          {
-            "tests/test_examples_run.yaml": {
-                "check": ${{ inputs.check }}
-              }
-          }
-        commitChange: false
+      shell: bash 
+      run: |
+        yq -i '.check = (${{ inputs.check }} | from_json )' tests/test_examples_run.yaml
+        
     - name: Print test Run Examples config
       shell: bash
       run: cat tests/test_examples_run.yaml

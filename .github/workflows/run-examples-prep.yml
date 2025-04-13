@@ -63,15 +63,9 @@ jobs:
         fetch-depth: 0
     - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version
       if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
-      uses: fjogeleit/yaml-update-action@main
-      with:
-        changes: |
-          {
-            "tests/test_examples_run.yaml": {
-                "update_results": false
-              }
-          }
-        commitChange: false 
+      shell: bash 
+      run: |
+        yq -i '.update_results = ('false')' tests/test_examples_run.yaml
     - name: Push the new run-examples yaml config 
       if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
       shell: bash 
