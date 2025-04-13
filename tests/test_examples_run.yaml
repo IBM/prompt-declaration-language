@@ -1,5 +1,5 @@
-update_results: false
-check: ["s1", "s2"]
+update_results: true
+check: []
 skip:
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8.pdl

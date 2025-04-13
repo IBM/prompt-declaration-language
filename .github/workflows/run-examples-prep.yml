@@ -12,6 +12,7 @@ jobs:
       max-parallel: 1
       matrix:
         python-version: ['3.11', '3.12', '3.13']
+        
     steps:
     # Detect modified PDL files, includes Add, Modified, but not Deleted
     - uses: actions/checkout@v4
@@ -31,12 +32,6 @@ jobs:
       run: echo "$MODIFIED_PDL_FILES"
 
     # Run tests if there are modified PDL files
-    # - uses: actions/checkout@v4
-    #   if: ${{ steps.changed-pdl-files.outputs.all_changed_files_count > 0 }}
-    #   with:
-    #     ref: ${{ github.head_ref }}
-    #     fetch-depth: 0
-      
     - name: Check if update results automatically by GitHub Actions Bot 
       id: parse-run-examples-config
       shell: bash
@@ -55,11 +50,6 @@ jobs:
         head-ref: ${{ github.head_ref }}
 
     # Patch config with update_results to false
-    # # Fetch the latest branch
-    # - uses: actions/checkout@v4
-    #   if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
-    #   with:
-    #     fetch-depth: 0
     - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version
       if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
       shell: bash 

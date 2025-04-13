@@ -26,9 +26,7 @@ runs:
 
     # Configure Run Examples environment
     - uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.head-ref }}
-        fetch-depth: 0                        # Full history needed for fetch/rebase
+    
     - name: Patch tests/test_examples_run.yaml check with modified files
       shell: bash 
       run: |
