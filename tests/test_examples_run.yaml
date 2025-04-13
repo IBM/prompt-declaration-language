@@ -1,5 +1,8 @@
 update_results: true
-check: []
+check:
+  - examples/chatbot/chatbot.pdl
+  - examples/demo/9-react.pdl
+  - examples/react/demo.pdl
 skip:
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8.pdl

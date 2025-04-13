@@ -30,7 +30,7 @@ runs:
     - name: Patch tests/test_examples_run.yaml check with modified files
       shell: bash 
       run: |
-        yq -i '.check = (${{ inputs.check }} | from_json )' tests/test_examples_run.yaml
+        yq -i '.check = (${{ inputs.check }})' tests/test_examples_run.yaml
         
     - name: Print test Run Examples config
       shell: bash
