@@ -49,7 +49,7 @@ jobs:
         update-results: ${{ steps.parse-run-examples-config.outputs.update_results }}
         check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
         head-ref: ${{ github.event.pull_request.head.ref }}
-        repository: ${{ github.event.repository.full_name }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
         token: ${{ github.token }}
 
     # Patch config with update_results to false
