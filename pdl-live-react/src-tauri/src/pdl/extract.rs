@@ -1,4 +1,6 @@
-use crate::pdl::ast::{Block, Body::*, Metadata, PdlBlock, PdlBlock::Advanced};
+use crate::pdl::ast::{
+    Block, Body::*, EvalsTo, Expr, Metadata, ModelBlock, PdlBlock, PdlBlock::Advanced,
+};
 
 /// Extract models referenced by the programs
 pub fn extract_models(program: &PdlBlock) -> Vec<String> {
@@ -28,7 +30,30 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
         PdlBlock::Function(b) => {
             extract_values_iter(&b.return_, field, values);
         }
-        Advanced(Block { body: Model(b), .. }) => values.push(b.model.clone()),
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Const(m),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Jinja(m),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Expr(Expr { pdl_expr: m, .. }),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
         Advanced(Block {
             body: Repeat(b), ..
         }) => {
