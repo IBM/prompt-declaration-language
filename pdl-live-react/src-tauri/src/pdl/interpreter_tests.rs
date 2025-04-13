@@ -1,11 +1,10 @@
 #[cfg(test)]
 mod tests {
-    //    use super::*;
     use ::std::error::Error;
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{Block::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
+        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
         interpreter::{RunOptions, load_scope, run_json_sync as run_json, run_sync as run},
     };
 
@@ -61,12 +60,15 @@ mod tests {
     #[test]
     fn single_model_via_input_string() -> Result<(), Box<dyn Error>> {
         let (_, messages, _) = run(
-            &Advanced(Model(
-                ModelBlockBuilder::default()
-                    .model(DEFAULT_MODEL)
-                    .input(Box::from(PdlBlock::String("hello".to_string())))
-                    .build()?,
-            )),
+            &Advanced(Block {
+                metadata: None,
+                body: Model(
+                    ModelBlockBuilder::default()
+                        .model(DEFAULT_MODEL)
+                        .input(Box::from(PdlBlock::String("hello".to_string())))
+                        .build()?,
+                ),
+            }),
             None,
             streaming(),
             initial_scope(),

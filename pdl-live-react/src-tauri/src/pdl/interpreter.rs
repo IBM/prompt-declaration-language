@@ -21,16 +21,20 @@ use serde_json::{Value, from_str, json, to_string};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    ArrayBlock, Block::*, CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock,
-    IfBlock, ImportBlock, IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock,
-    PdlBlock, PdlBlock::Advanced, PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock,
-    RepeatBlock, Role, Scope, SequencingBlock, StringOrBoolean, StringOrNull,
+    ArrayBlock, Block,
+    Body::{self, *},
+    CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock, IfBlock, ImportBlock,
+    IncludeBlock, ListOrString, MessageBlock, Metadata, ModelBlock, ObjectBlock, PdlBlock,
+    PdlBlock::Advanced,
+    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
+    SequencingBlock, StringOrBoolean, StringOrNull, Timing,
 };
 
 type Messages = Vec<ChatMessage>;
 type ThreadSafeError = dyn Error + Send + Sync;
 type PdlError = Box<ThreadSafeError>;
 type Interpretation = Result<(PdlResult, Messages, PdlBlock), PdlError>;
+type BodyInterpretation = Result<(PdlResult, Messages, Body), PdlError>;
 type InterpretationSync = Result<(PdlResult, Messages, PdlBlock), Box<dyn Error>>;
 
 pub struct RunOptions<'a> {
@@ -120,7 +124,7 @@ impl<'a> Interpreter<'a> {
         state: &mut State,
         parent_scope: &mut Scope,
     ) -> Interpretation {
-        let (result, messages, trace) = match program {
+        let res = match program {
             PdlBlock::Bool(b) => Ok((
                 b.into(),
                 vec![ChatMessage::user(format!("{b}"))],
@@ -136,32 +140,10 @@ impl<'a> Interpreter<'a> {
                 vec![],
                 PdlBlock::Function(f.clone()),
             )),
+            PdlBlock::Empty(b) => self.run_empty(b, state).await,
             PdlBlock::String(s) => self.run_string(s, state).await,
-            PdlBlock::Empty(block) => self.run_empty(block, state).await,
-            Advanced(Call(block)) => self.run_call(block, state).await,
-            Advanced(If(block)) => self.run_if(block, state).await,
-            Advanced(Import(block)) => self.run_import(block, state).await,
-            Advanced(Include(block)) => self.run_include(block, state).await,
-            Advanced(Model(block)) => self.run_model(block, state).await,
-            Advanced(Data(block)) => self.run_data(block, state).await,
-            Advanced(Object(block)) => self.run_object(block, state).await,
-            Advanced(PythonCode(block)) => self.run_python_code(block, state).await,
-            Advanced(Read(block)) => self.run_read(block, state).await,
-            Advanced(Repeat(block)) => self.run_repeat(block, state).await,
-            Advanced(LastOf(block)) => self.run_sequence(block, state).await,
-            Advanced(Text(block)) => self.run_sequence(block, state).await,
-            Advanced(Array(block)) => self.run_array(block, state).await,
-            Advanced(Message(block)) => self.run_message(block, state).await,
+            Advanced(b) => self.run_advanced(b, state).await,
         }?;
-
-        if match program {
-            Advanced(Message(_)) | Advanced(Text(_)) | Advanced(Import(_))
-            | Advanced(Include(_)) | Advanced(LastOf(_)) | Advanced(Call(_))
-            | Advanced(Model(_)) => false,
-            _ => state.emit,
-        } {
-            println!("{}", pretty_print(&messages));
-        }
 
         // copy any escaped variable bindings to the parent scope
         parent_scope.extend(
@@ -171,7 +153,70 @@ impl<'a> Interpreter<'a> {
                 .filter_map(|variable| state.scope.remove_entry(&variable.clone())),
         );
 
-        Ok((result, messages, trace))
+        if match &program {
+            Advanced(Block {
+                body: Message(_), ..
+            })
+            | Advanced(Block { body: Text(_), .. })
+            | Advanced(Block {
+                body: Import(_), ..
+            })
+            | Advanced(Block {
+                body: Include(_), ..
+            })
+            | Advanced(Block {
+                body: LastOf(_), ..
+            })
+            | Advanced(Block { body: Call(_), .. })
+            | Advanced(Block { body: Model(_), .. }) => false,
+            _ => state.emit,
+        } {
+            println!("{}", pretty_print(&res.1));
+        }
+
+        Ok(res)
+    }
+
+    async fn run_advanced(&mut self, block: &Block, state: &mut State) -> Interpretation {
+        let mut timing = Timing::start()?;
+
+        // This is just so we can avoid Option<Metadata> in the run_*
+        // functions. We pass in an immutable reference, so no harm in
+        // the or_default() part.
+        let m = &block.metadata.clone().unwrap_or_default();
+
+        self.process_defs(&m.defs, state).await?;
+
+        let (result, messages, trace_body) = match &block.body {
+            Call(b) => self.run_call(b, m, state).await,
+            Data(b) => self.run_data(b, m, state).await,
+            If(b) => self.run_if(b, m, state).await,
+            Import(b) => self.run_import(b, m, state).await,
+            Include(b) => self.run_include(b, m, state).await,
+            Model(b) => self.run_model(b, m, state).await,
+            Object(b) => self.run_object(b, m, state).await,
+            PythonCode(b) => self.run_python_code(b, m, state).await,
+            Read(b) => self.run_read(b, m, state).await,
+            Repeat(b) => self.run_repeat(b, m, state).await,
+            LastOf(b) => self.run_sequence(b, m, state).await,
+            Text(b) => self.run_sequence(b, m, state).await,
+            Array(b) => self.run_array(b, m, state).await,
+            Message(b) => self.run_message(b, m, state).await,
+        }?;
+
+        let mut trace = Block {
+            metadata: block.metadata.clone(),
+            body: trace_body,
+        };
+
+        timing.end()?;
+
+        let mut trace_metadata = m.clone();
+        trace_metadata.pdl_timing = Some(timing);
+        trace_metadata.pdl_result = Some(Box::new(result.clone()));
+        trace.metadata = Some(trace_metadata);
+
+        Ok((result, messages, Advanced(trace)))
     }
 
     #[async_recursion]
@@ -376,7 +421,12 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Read
-    async fn run_read(&mut self, block: &ReadBlock, state: &mut State) -> Interpretation {
+    async fn run_read(
+        &mut self,
+        block: &ReadBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let trace = block.clone();
 
         match (&block.read, &block.message) {
@@ -410,22 +460,23 @@ impl<'a> Interpreter<'a> {
         };
 
         let result = self.def(
-            &block.metadata.as_ref().and_then(|m| m.def.clone()),
+            &metadata.def,
             &buffer.clone().into(),
             &block.parser,
             state,
             true,
         )?;
 
-        Ok((
-            result,
-            vec![ChatMessage::user(buffer)],
-            Advanced(Read(trace)),
-        ))
+        Ok((result, vec![ChatMessage::user(buffer)], Read(trace)))
     }
 
     /// Run a PdlBlock::Call
-    async fn run_call(&mut self, block: &CallBlock, state: &mut State) -> Interpretation {
+    async fn run_call(
+        &mut self,
+        block: &CallBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
             eprintln!("Call scope {:?}", state.scope);
@@ -441,7 +492,11 @@ impl<'a> Interpreter<'a> {
                     },
                 }?;
 
-                self.run(&c.function.return_, &mut new_state).await
+                let (result, messages, call_trace) =
+                    self.run(&c.function.return_, &mut new_state).await?;
+                let mut trace = block.clone();
+                trace.pdl_trace = Some(Box::new(call_trace));
+                Ok((result, messages, Body::Call(trace)))
             }
             x => Err(Box::from(format!(
                 "call of non-function {:?}->{:?}",
@@ -467,27 +522,42 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Call
-    async fn run_if(&mut self, block: &IfBlock, state: &mut State) -> Interpretation {
+    async fn run_if(
+        &mut self,
+        block: &IfBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("If {:?}({:?})", block.condition, block.then);
         }
 
-        if let Some(meta) = &block.metadata {
-            self.process_defs(&meta.defs, state).await?;
-        }
+        let mut trace = block.clone();
+        let if_result = self.eval_to_bool(&block.condition, state)?;
+        trace.if_result = Some(if_result);
 
-        if self.eval_to_bool(&block.condition, state)? {
-            self.run_quiet(&block.then, state).await
+        let (result, messages) = if if_result {
+            let (result, messages, then_trace) = self.run_quiet(&block.then, state).await?;
+            trace.then = Box::new(then_trace);
+            (result, messages)
+        } else if let Some(else_block) = &block.else_ {
+            let (result, messages, else_trace) = self.run_quiet(&else_block, state).await?;
+            trace.else_ = Some(Box::new(else_trace));
+            (result, messages)
         } else {
-            match &block.else_ {
-                Some(else_block) => self.run_quiet(&else_block, state).await,
-                None => Ok(("".into(), vec![], Advanced(If(block.clone())))),
-            }
-        }
+            ("".into(), vec![])
+        };
+
+        Ok((result, messages, If(trace)))
     }
 
     /// Run a PdlBlock::Include
-    async fn run_include(&mut self, block: &IncludeBlock, state: &mut State) -> Interpretation {
+    async fn run_include(
+        &mut self,
+        block: &IncludeBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Include {:?}", block.include);
         }
@@ -499,11 +569,22 @@ impl<'a> Interpreter<'a> {
             state.clone()
         };
 
-        self.run(&parse_file(&path)?, &mut new_state).await
+        let (result, messages, include_trace) =
+            self.run(&parse_file(&path)?, &mut new_state).await?;
+
+        let mut trace = block.clone();
+        trace.pdl_trace = Some(Box::new(include_trace));
+
+        Ok((result, messages, Include(trace)))
     }
 
     /// Run a PdlBlock::Import
-    async fn run_import(&mut self, block: &ImportBlock, state: &mut State) -> Interpretation {
+    async fn run_import(
+        &mut self,
+        block: &ImportBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Import {:?}", block.import);
         }
@@ -515,7 +596,13 @@ impl<'a> Interpreter<'a> {
             state.clone()
         };
 
-        self.run(&parse_file(&path)?, &mut new_state).await
+        let (result, messages, import_trace) =
+            self.run(&parse_file(&path)?, &mut new_state).await?;
+
+        let mut trace = block.clone();
+        trace.pdl_trace = Some(Box::new(import_trace));
+
+        Ok((result, messages, Import(trace)))
     }
 
     fn to_ollama_model_options(
@@ -583,13 +670,14 @@ impl<'a> Interpreter<'a> {
     async fn run_python_code(
         &mut self,
         block: &PythonCodeBlock,
+        _metadata: &Metadata,
         _state: &mut State,
-    ) -> Interpretation {
+    ) -> BodyInterpretation {
         use rustpython_vm as vm;
         let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
             vm.add_native_modules(rustpython_stdlib::get_module_inits());
         });
-        interp.enter(|vm| -> Interpretation {
+        interp.enter(|vm| -> BodyInterpretation {
             let scope = vm.new_scope_with_builtins();
 
             // TODO vm.new_syntax_error(&err, Some(block.code.as_str()))
@@ -624,7 +712,7 @@ impl<'a> Interpreter<'a> {
                         }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
-                    let trace = Advanced(PythonCode(block.clone()));
+                    let trace = PythonCode(block.clone());
                     Ok((messages[0].content.clone().into(), messages, trace))
                 }
                 Err(_) => Err(Box::from(
@@ -635,7 +723,12 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Model
-    async fn run_model(&mut self, block: &ModelBlock, state: &mut State) -> Interpretation {
+    async fn run_model(
+        &mut self,
+        block: &ModelBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         match &block.model {
             pdl_model
                 if pdl_model.starts_with("ollama/") || pdl_model.starts_with("ollama_chat/") =>
@@ -649,8 +742,8 @@ impl<'a> Interpreter<'a> {
 
                 let (options, tools) = self.to_ollama_model_options(&block.parameters);
                 if self.options.debug {
-                    eprintln!("Model options {:?} {:?}", block.description(), options);
-                    eprintln!("Model tools {:?} {:?}", block.description(), tools);
+                    eprintln!("Model options {:?} {:?}", metadata.description, options);
+                    eprintln!("Model tools {:?} {:?}", metadata.description, tools);
                 }
 
                 // The input messages to the model is either:
@@ -673,10 +766,7 @@ impl<'a> Interpreter<'a> {
                 if self.options.debug {
                     eprintln!(
                         "Ollama {:?} model={:?} prompt={:?} history={:?}",
-                        block.description(),
-                        block.model,
-                        prompt,
-                        history
+                        metadata.description, block.model, prompt, history
                     );
                 }
 
@@ -746,7 +836,7 @@ impl<'a> Interpreter<'a> {
                     }
                 }
 
-                let mut trace = block.with_result(response_string.clone().into());
+                let mut trace = block.clone();
                 if let Some(res) = last_res {
                     if let Some(usage) = res.final_data {
                         trace.pdl_usage = Some(PdlUsage {
@@ -757,14 +847,10 @@ impl<'a> Interpreter<'a> {
                         });
                     }
                     let output_messages = vec![ChatMessage::assistant(response_string)];
-                    Ok((
-                        res.message.content.into(),
-                        output_messages,
-                        Advanced(Model(trace)),
-                    ))
+                    Ok((res.message.content.into(), output_messages, Model(trace)))
                 } else {
                     // nothing came out of the model
-                    Ok(("".into(), vec![], Advanced(Model(trace))))
+                    Ok(("".into(), vec![], Model(trace)))
                 }
                 // dbg!(history);
             }
@@ -773,7 +859,12 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Data
-    async fn run_data(&mut self, block: &DataBlock, state: &mut State) -> Interpretation {
+    async fn run_data(
+        &mut self,
+        block: &DataBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Data raw={:?} {:?}", block.raw, block.data);
         }
@@ -781,27 +872,32 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         if let Some(true) = block.raw {
             let result = self.def(
-                &block.metadata.as_ref().and_then(|m| m.def.clone()),
+                &metadata.def,
                 &resultify(&block.data),
                 &block.parser,
                 state,
                 true,
             )?;
-            Ok((result, vec![], Advanced(Data(trace))))
+            Ok((result, vec![], Data(trace)))
         } else {
             let result = self.def(
-                &block.metadata.as_ref().and_then(|m| m.def.clone()),
+                &metadata.def,
                 &self.eval_json(&block.data, state)?,
                 &block.parser,
                 state,
                 true,
             )?;
             trace.data = from_str(to_string(&result)?.as_str())?;
-            Ok((result, vec![], Advanced(Data(trace))))
+            Ok((result, vec![], Data(trace)))
         }
     }
 
-    async fn run_object(&mut self, block: &ObjectBlock, state: &mut State) -> Interpretation {
+    async fn run_object(
+        &mut self,
+        block: &ObjectBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Object {:?}", block.object);
         }
@@ -821,12 +917,17 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::Dict(result_map),
             messages,
-            Advanced(Object(ObjectBlock { object: trace_map })),
+            Object(ObjectBlock { object: trace_map }),
         ))
     }
 
     /// Run a PdlBlock::Repeat
-    async fn run_repeat(&mut self, block: &RepeatBlock, state: &mut State) -> Interpretation {
+    async fn run_repeat(
+        &mut self,
+        block: &RepeatBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
         //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
         //            .into_iter()
@@ -865,11 +966,7 @@ impl<'a> Interpreter<'a> {
             }
         }
 
-        Ok((
-            PdlResult::List(results),
-            messages,
-            Advanced(Repeat(block.clone())),
-        ))
+        Ok((PdlResult::List(results), messages, Repeat(block.clone())))
     }
 
     fn to_ollama_role(&self, role: &Role) -> MessageRole {
@@ -912,24 +1009,20 @@ impl<'a> Interpreter<'a> {
     async fn run_sequence(
         &mut self,
         block: &impl SequencingBlock,
+        metadata: &Metadata,
         state: &mut State,
-    ) -> Interpretation {
+    ) -> BodyInterpretation {
         if self.options.debug {
-            let description = block
-                .metadata()
-                .as_ref()
-                .and_then(|m| m.description.clone())
-                .or(Some("<no description>".to_string()));
-            eprintln!("{} {:?}", block.kind(), description);
+            eprintln!(
+                "{} {:?}",
+                block.kind(),
+                metadata.description.clone().unwrap_or_default()
+            );
         }
 
         let mut output_results = vec![];
         let mut output_messages = vec![];
         let mut output_blocks = vec![];
-
-        if let Some(meta) = block.metadata() {
-            self.process_defs(&meta.defs, state).await?;
-        }
 
         // here is where we iterate over the sequence items
         let mut iter = block.items().iter();
@@ -948,7 +1041,7 @@ impl<'a> Interpreter<'a> {
 
         let trace = block.with_items(output_blocks);
         let result = self.def(
-            &block.metadata().as_ref().and_then(|m| m.def.clone()),
+            &metadata.def,
             &trace.result_for(output_results),
             trace.parser(),
             state,
@@ -969,7 +1062,12 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Array
-    async fn run_array(&mut self, block: &ArrayBlock, state: &mut State) -> Interpretation {
+    async fn run_array(
+        &mut self,
+        block: &ArrayBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let mut result_items = vec![];
         let mut all_messages = vec![];
         let mut trace_items = vec![];
@@ -986,15 +1084,16 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         trace.array = trace_items;
 
-        Ok((
-            PdlResult::List(result_items),
-            all_messages,
-            Advanced(Array(trace)),
-        ))
+        Ok((PdlResult::List(result_items), all_messages, Array(trace)))
     }
 
     /// Run a PdlBlock::Message
-    async fn run_message(&mut self, block: &MessageBlock, state: &mut State) -> Interpretation {
+    async fn run_message(
+        &mut self,
+        block: &MessageBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let (content_result, content_messages, content_trace) =
             self.run(&block.content, state).await?;
         let name = if let Some(name) = &block.name {
@@ -1027,14 +1126,13 @@ impl<'a> Interpreter<'a> {
                 .into_iter()
                 .map(|m| ChatMessage::new(self.to_ollama_role(&block.role), m.content))
                 .collect(),
-            Advanced(Message(MessageBlock {
-                metadata: block.metadata.clone(),
+            Message(MessageBlock {
                 role: block.role.clone(),
                 content: Box::new(content_trace),
                 name: name,
                 defsite: None,
                 tool_call_id: tool_call_id,
-            })),
+            }),
         ))
     }
 }
