@@ -17,6 +17,7 @@ jobs:
     # Detect modified PDL files, includes Add, Modified, but not Deleted
     - uses: actions/checkout@v4
       with:
+        token: ${{ github.token }}
         fetch-depth: 0
     - name: Detect all PDL files that were changed or added
       id: changed-pdl-files
@@ -47,7 +48,9 @@ jobs:
         runner-os: ${{ runner.os }}
         update-results: ${{ steps.parse-run-examples-config.outputs.update_results }}
         check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
-        head-ref: ${{ github.head_ref }}
+        head-ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.repository.full_name }}
+        token: ${{ github.token }}
 
     # Patch config with update_results to false
     - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version

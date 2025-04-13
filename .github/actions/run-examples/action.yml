@@ -8,9 +8,16 @@ inputs:
   runner-os:
     description: 'Runner OS'
     required: true
+  repository:
+    description: 'Repository name this pull request is initiated from'
+    required: false
   head-ref:
     description: 'Head ref of the repo'
-    required: true
+    required: false
+    default: 'main'
+  token: 
+    description: 'Github token'
+    required: false 
   update-results:
     description: 'Whether to update the results for this run. Must be false for nightly runs'
     required: true
@@ -26,6 +33,9 @@ runs:
 
     # Configure Run Examples environment
     - uses: actions/checkout@v4
+      with:
+        token: ${{ inputs.token }}
+        fetch-depth: 0
     
     - name: Patch tests/test_examples_run.yaml check with modified files
       shell: bash 
@@ -81,10 +91,10 @@ runs:
         git config --local user.name github-actions[bot]
         git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
         git status
-        git pull
+        git pull origin ${{ inputs.head-ref }}
         git add tests/results/
         git diff --cached --quiet || git commit -s -m "github-actions[bot]: Run examples: updated result files on your behalf"
-        git push
+        git push origin ${{ inputs.head-ref }}
 
     - name: Check if pytest passed
       shell: bash
