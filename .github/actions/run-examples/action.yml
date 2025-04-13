@@ -35,7 +35,7 @@ runs:
     - uses: actions/checkout@v4
       with:
         token: ${{ inputs.token }}
-        head-ref: ${{ inputs.head-ref }}
+        ref: ${{ inputs.head-ref }}
         repository: ${{ inputs.repository }}
         fetch-depth: 0
     
