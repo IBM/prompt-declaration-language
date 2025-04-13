@@ -841,9 +841,9 @@ impl<'a> Interpreter<'a> {
                     if let Some(usage) = res.final_data {
                         trace.pdl_usage = Some(PdlUsage {
                             prompt_tokens: usage.prompt_eval_count,
-                            prompt_nanos: usage.prompt_eval_duration,
+                            prompt_nanos: Some(usage.prompt_eval_duration),
                             completion_tokens: usage.eval_count,
-                            completion_nanos: usage.eval_duration,
+                            completion_nanos: Some(usage.eval_duration),
                         });
                     }
                     let output_messages = vec![ChatMessage::assistant(response_string)];
