@@ -50,10 +50,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         runner-os: ${{ runner.os }}
-        # update-results: ${{ steps.parse-run-examples-config.outputs.update_results }}
-        # check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
-        update-results: 'true'
-        check: '[]'
+        update-results: ${{ steps.parse-run-examples-config.outputs.update_results }}
+        check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
         head-ref: ${{ github.head_ref }}
 
     # Patch config with update_results to false
