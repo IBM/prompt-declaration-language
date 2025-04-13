@@ -1,5 +1,4 @@
 # pylint: disable=too-many-instance-attributes
-from pdl.optimize.bam_logprobs import get_seq_logprobs
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
 from pdl.pdl_ast import Program, ScopeType
