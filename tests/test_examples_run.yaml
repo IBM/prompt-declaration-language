@@ -1,4 +1,4 @@
-update_results: false
+update_results: true
 check:
   - examples/chatbot/chatbot.pdl
   - examples/demo/9-react.pdl
