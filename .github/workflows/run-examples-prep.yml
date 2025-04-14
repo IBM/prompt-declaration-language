@@ -52,7 +52,7 @@ jobs:
         check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
         head-ref: ${{ github.event.pull_request.head.ref }}
         repository: ${{ github.event.pull_request.head.repo.full_name }}
-        token: ${{ github.token }}
+        token: ${{ secrets.PDL_PAT }}
 
     # Patch config with update_results to false
     - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version
