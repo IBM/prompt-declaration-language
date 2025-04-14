@@ -20,7 +20,6 @@ class TrialOutput:
     pdl_program: Program
     correct: bool = False
     exception: BaseException | None = None
-    input_logprobs: ModelResponse | None = None
     scope: ScopeType | None = None
     pdl_result: Any = None
     pdl_document: str = ""
@@ -48,7 +47,6 @@ class CandidateResult:
     """Stores the result(s) of the evaluation of one candidate."""
 
     candidate: dict | None
-    input_model_response: ModelResponse | None
     results: list[TrialOutput] | None
     metric: float | int | None
     runtime: float | None

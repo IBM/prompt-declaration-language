@@ -68,6 +68,7 @@ text:
           model: ${ model }
           tools: ${ search_tools }
           trajectories: ${ demonstrations }
+          system_prompt: ${ system_prompt }
 
   # ReWOO
   - if: ${ prompt_pattern == 'rewoo' }

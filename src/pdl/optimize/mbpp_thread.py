@@ -7,6 +7,7 @@ from evalplus.evaluate import check_correctness
 from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_lazy import PdlApply
 
 
 class MBPPTrialThread(PDLThread):
@@ -19,7 +20,7 @@ class MBPPTrialThread(PDLThread):
         self.answer_key = "canonical_solution"
 
     def get_scope(self) -> ScopeType:
-        scope = empty_scope
+        scope = {}
         if "model" in self.candidate:
             scope["model"] = self.candidate["model"]
 
@@ -58,10 +59,10 @@ class MBPPTrialThread(PDLThread):
 
         scope["task_id"] = self.example["task_id"]
 
-        return scope
+        return empty_scope | scope
 
-    def extract_answer(self, document: str) -> bool:
-        solution = document.split("Solution:\n")[-1]
+    def extract_answer(self, document: PdlApply):
+        solution = document.result().split("Solution:\n")[-1]
         if "```" in solution:
             solution = solution.replace("```python", "```")
             solution = solution.split("```")[1]

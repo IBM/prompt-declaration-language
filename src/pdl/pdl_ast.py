@@ -475,7 +475,7 @@ class CodeBlock(BaseCodeBlock):
     """
 
     lang: Annotated[
-        Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
+        Literal["python", "command", "jinja", "pdl", "ipython"], BeforeValidator(_ensure_lower)
     ]
     """Programming language of the code.
     """

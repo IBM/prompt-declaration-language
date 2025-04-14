@@ -28,7 +28,6 @@ from pdl.optimize.util import (
 )
 from pdl.pdl_ast import DataBlock, Program
 from pdl.pdl_dumper import dump_yaml
-from pdl.pdl_token_cnt import get_usage_stats, reset_usage_stats
 
 # from pdl.pdl_dumper import dump_program
 
@@ -435,12 +434,12 @@ class PDLOptimizer:
                     ],
                     "candidates": [c.to_dict() for c in scores],
                     "timestamp": time.time(),
-                    "usage": get_usage_stats(),
+                    # "usage": get_usage_stats(),
                 },
             )
 
             exp_file = self.save_experiment()
-            logger.info(get_usage_stats())
+            # logger.info(get_usage_stats())
             logger.info(f"Sorting {num_candidates} candidates...")
 
             # Step 2: Sort candidates by their scores in descending order
@@ -483,7 +482,7 @@ class PDLOptimizer:
             logger.info("Reset results cache...")
 
             # Reset token count stats
-            reset_usage_stats()
+            # reset_usage_stats()
 
             range_end = min(
                 ending_validation_set_size,
@@ -518,9 +517,9 @@ class PDLOptimizer:
                 "timestamp_before": before_time,
                 "timestamp_after": time.time(),
                 "score": final_score.metric,
-                "usage": get_usage_stats(),
+                # "usage": get_usage_stats(),
             }
-            logger.info(get_usage_stats())
+            # logger.info(get_usage_stats())
 
             final_results = final_score.results
             final_results = filter(lambda x: not x.correct, final_results)
@@ -605,7 +604,6 @@ class PDLOptimizer:
                     example=example,
                     candidate=candidate,
                     index=index,
-                    return_logprobs=False,
                     timeout=self.timeout,
                     yield_output=self.yield_output,
                     config=self.config,
@@ -618,7 +616,6 @@ class PDLOptimizer:
         timeout_count = 0
         exceptions = []
         results = []
-        input_logprobs = None
         start_time = time.time()
 
         index = -1
@@ -670,8 +667,6 @@ class PDLOptimizer:
 
                 matches += int(result.correct)
 
-                if result.input_logprobs is not None:
-                    input_logprobs = result.input_logprobs
                 p_passing = matches / (index + 1)
 
         end_time = time.time()
@@ -688,7 +683,6 @@ class PDLOptimizer:
 
         return CandidateResult(
             candidate=candidate,
-            input_model_response=input_logprobs,
             results=results,
             metric=p_passing,
             runtime=runtime,
