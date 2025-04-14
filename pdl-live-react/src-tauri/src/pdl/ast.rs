@@ -285,15 +285,19 @@ pub struct ModelBlock {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub context: Option<Vec<MessageBlock>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "modelResponse")]
     pub model_response: Option<String>,
     #[serde(rename = "pdl__usage")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
+
+    /// The result of evaluating the `input` field (if given)
     #[serde(rename = "pdl__model_input", skip_serializing_if = "Option::is_none")]
     pub pdl_model_input: Option<Vec<MessageBlock>>,
+
+    /// The actual input given to the model (whether via `input` or from the incoming messages)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context: Option<Vec<MessageBlock>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
