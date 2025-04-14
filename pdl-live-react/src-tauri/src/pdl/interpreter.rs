@@ -827,12 +827,14 @@ impl<'a> Interpreter<'a> {
             eprintln!("Model tools {:?} {:?}", metadata.description, tools);
         }
 
+        let mut trace = block.clone();
+
         // The input messages to the model is either:
         // a) block.input, if given
         // b) the current state's accumulated messages
         let input_messages = match &block.input {
             Some(input) => {
-                // TODO ignoring result, trace
+                // TODO ignoring result and trace
                 let (_result, messages, _trace) = self.run_quiet(&*input, state).await?;
                 messages
             }
@@ -917,13 +919,28 @@ impl<'a> Interpreter<'a> {
             }
         }
 
-        let mut trace = block.clone();
+        // TODO, does this belong in run_advanced(), and does
+        // trace.context belong in Metadata rather than ModelBlock
+        trace.context = Some(
+            state
+                .messages
+                .iter()
+                .map(|m| MessageBlock {
+                    role: self.from_ollama_role(&m.role),
+                    content: Box::new(PdlBlock::String(m.content.clone())),
+                    name: None,
+                    tool_call_id: None,
+                    defsite: None,
+                })
+                .collect(),
+        );
+        // TODO, what is the difference between context and pdl_model_input fields?
         trace.pdl_model_input = Some(
             input_messages
-                .into_iter()
+                .iter()
                 .map(|m| MessageBlock {
-                    role: self.from_ollama_role(m.role),
-                    content: Box::new(PdlBlock::String(m.content)),
+                    role: self.from_ollama_role(&m.role),
+                    content: Box::new(PdlBlock::String(m.content.clone())),
                     name: None,
                     tool_call_id: None,
                     defsite: None,
@@ -1090,7 +1107,7 @@ impl<'a> Interpreter<'a> {
         }
     }
 
-    fn from_ollama_role(&self, role: MessageRole) -> Role {
+    fn from_ollama_role(&self, role: &MessageRole) -> Role {
         match role {
             MessageRole::User => Role::User,
             MessageRole::Assistant => Role::Assistant,
