@@ -17,9 +17,6 @@ jobs:
     # Detect modified PDL files, includes Add, Modified, but not Deleted
     - uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.ref }}
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        token: ${{ github.token }}
         fetch-depth: 0
     - name: Detect all PDL files that were changed or added
       id: changed-pdl-files
@@ -30,38 +27,104 @@ jobs:
         json: "true"
         escape_json: "false"
     - name: List PDL files that were modified or added and append to test_examples_run
-      env:
-        MODIFIED_PDL_FILES: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
-      run: echo "$MODIFIED_PDL_FILES"
+      run: |
+        echo ${{ steps.changed-pdl-files.outputs.all_changed_files }}
+        if [ ${{ steps.changed-pdl-files.outputs.all_changed_files_count }} -gt 0 ]; then
+          echo "early-stop=false" >> $GITHUB_ENV
+        else
+          echo "No file need to be checked, skipping all subsequent tests."
+          echo "early-stop=true" >> $GITHUB_ENV
+        fi
 
     # Run tests if there are modified PDL files
     - name: Check if update results automatically by GitHub Actions Bot 
+      if: ${{ !env.early-stop }}
       id: parse-run-examples-config
       shell: bash
       run: |
         value=$(yq '.update_results' tests/test_examples_run.yaml | tr '[:upper:]' '[:lower:]')
         echo "value=$value"
-        echo "update_results=$value" >> $GITHUB_OUTPUT
+        echo "update_results=$value" >> $GITHUB_ENV
+    
+    # Set up Ollama
+    - name: Cache Ollama model files 
+      if: ${{ !env.early-stop }}
+      uses: actions/cache@v4
+      with:
+        path: /usr/share/ollama/.ollama/models
+        key: ${{ runner.os }}-build-ollama-cache
+        restore-keys: |
+          ${{ runner.os }}-build-
+          ${{ runner.os }}
+    - uses: ./.github/actions/ollama
+      if: ${{ !env.early-stop }}
       
-    - uses: ./.github/actions/run-examples
-      if: ${{ steps.changed-pdl-files.outputs.all_changed_files_count > 0 }}
+    # Set up Run Examples environment 
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      if: ${{ !env.early-stop }}
       with:
         python-version: ${{ matrix.python-version }}
-        runner-os: ${{ runner.os }}
-        update-results: ${{ steps.parse-run-examples-config.outputs.update_results }}
-        check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
-        head-ref: ${{ github.event.pull_request.head.ref }}
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        token: ${{ secrets.PDL_PAT }}
+    - name: Cache pip
+      uses: actions/cache@v4
+      if: ${{ !env.early-stop }}
+      with:
+        # This path is specific to Ubuntu
+        path: ${{ env.pythonLocation }}
+        # Look to see if there is a cache hit for the setup file
+        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-new3
+          ${{ runner.os }}-new3
+    - name: Install dependencies
+      if: ${{ !env.early-stop }}
+      shell: bash
+      run: pip install --upgrade --upgrade-strategy eager .[all]
+    - name: Pip list packages
+      if: ${{ !env.early-stop }}
+      shell: bash
+      run: pip list
+    - name: View Run Examples config
+      if: ${{ !env.early-stop }}
+      shell: bash
+      run: cat tests/test_examples_run.yaml
+    - name: Run Pytest
+      if: ${{ !env.early-stop }}
+      shell: bash
+      run: |    
+        (
+          set +e
+          py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-warnings
+          EXIT_CODE=$?
 
-    # Patch config with update_results to false
-    - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last matrix version
-      if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "TEST_RESULT=PASSED" >> $GITHUB_ENV
+          else
+            echo "TEST_RESULT=FAILED" >> $GITHUB_ENV
+          fi
+        )
+    
+    # Commit the results if update results
+    - name: Push new results to branch
+      shell: bash
+      if: ${{ !env.early-stop && env.update_results }}
+      run: |
+        git config --local user.name github-actions[bot]
+        git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git status
+        git pull 
+        git add tests/results/
+        git diff --cached --quiet || git commit -s -m "github-actions[bot]: Run examples: updated result files on your behalf"
+        git push 
+
+    # Patch config with update_results to false and commit to PR
+    - name: Patch tests/test_examples_run.yaml with update_results to False, only for the last job in the series
+      if: ${{ !env.early-stop && env.update_results && matrix.python-version == '3.13' }}
       shell: bash 
       run: |
         yq -i '.update_results = ('false')' tests/test_examples_run.yaml
     - name: Push the new run-examples yaml config 
-      if: ${{ steps.parse-run-examples-config.outputs.update_results && matrix.python-version == '3.13' }}
+      if: ${{ !env.early-stop && env.update_results && matrix.python-version == '3.13' }}
       shell: bash 
       run: |
         git config --local user.name github-actions[bot]
@@ -71,8 +134,14 @@ jobs:
         git add tests/test_examples_run.yaml
         git diff --cached --quiet || git commit -s -m "github-actions[bot]: Run examples: reverting update_result to false on your behalf"
         git push
-      
-      
-      
-      
+
+    - name: Check if pytest passed
+      shell: bash
+      run: |
+        if [ "$TEST_RESULT" == "PASSED" ]; then
+          exit 0
+        else
+            exit 1
+        fi
+
       
