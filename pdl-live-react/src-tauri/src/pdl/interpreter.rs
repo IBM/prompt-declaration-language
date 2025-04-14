@@ -24,7 +24,8 @@ use crate::pdl::ast::{
     ArrayBlock, Block,
     Body::{self, *},
     CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock, IfBlock, ImportBlock,
-    IncludeBlock, ListOrString, MessageBlock, Metadata, ModelBlock, ObjectBlock, PdlBlock,
+    IncludeBlock, ListOrString, MessageBlock, Metadata, MetadataBuilder, ModelBlock, ObjectBlock,
+    PdlBlock,
     PdlBlock::Advanced,
     PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
     SequencingBlock, StringOrBoolean, StringOrNull, Timing,
@@ -73,6 +74,10 @@ impl State {
             messages: vec![],
             id_stack: vec![],
         }
+    }
+
+    fn id(&self) -> String {
+        self.id_stack.join(".")
     }
 
     fn with_cwd(&self, cwd: PathBuf) -> Self {
@@ -268,7 +273,7 @@ impl<'a> Interpreter<'a> {
         timing.end()?;
 
         let mut trace_metadata = m.clone();
-        trace_metadata.pdl_id = Some(state.id_stack.join("."));
+        trace_metadata.pdl_id = Some(state.id());
         trace_metadata.pdl_timing = Some(timing);
         trace_metadata.pdl_result = Some(Box::new(result.clone()));
         trace.metadata = Some(trace_metadata);
@@ -429,18 +434,27 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::String
     async fn run_string(&self, msg: &String, state: &State) -> Interpretation {
-        let trace = self.eval(msg, state)?;
+        let result = self.eval(msg, state)?;
         if self.options.debug {
-            eprintln!("String {} -> {:?}", msg, trace);
+            eprintln!("String {} -> {:?}", msg, result);
         }
 
-        let result_string = match &trace {
+        let result_string = match &result {
             PdlResult::String(s) => s.clone(),
             x => to_string(&x)?,
         };
-        let messages = vec![ChatMessage::user(result_string)];
 
-        Ok((trace, messages, PdlBlock::String(msg.clone())))
+        let messages = vec![ChatMessage::user(result_string)];
+        let trace = Advanced(Block {
+            metadata: Some(MetadataBuilder::default().pdl_id(state.id()).build()?),
+            body: Data(DataBlock {
+                data: json!({ "pdl__expr": msg.clone(), "pdl__result": result.clone() }),
+                parser: None,
+                raw: None,
+            }),
+        });
+
+        Ok((result, messages, trace))
     }
 
     /// If `file_path` is not absolute, join it with state.cwd
@@ -904,6 +918,19 @@ impl<'a> Interpreter<'a> {
         }
 
         let mut trace = block.clone();
+        trace.pdl_model_input = Some(
+            input_messages
+                .into_iter()
+                .map(|m| MessageBlock {
+                    role: self.from_ollama_role(m.role),
+                    content: Box::new(PdlBlock::String(m.content)),
+                    name: None,
+                    tool_call_id: None,
+                    defsite: None,
+                })
+                .collect(),
+        );
+
         if let Some(res) = last_res {
             if let Some(usage) = res.final_data {
                 trace.pdl_usage = Some(PdlUsage {
@@ -1063,6 +1090,15 @@ impl<'a> Interpreter<'a> {
         }
     }
 
+    fn from_ollama_role(&self, role: MessageRole) -> Role {
+        match role {
+            MessageRole::User => Role::User,
+            MessageRole::Assistant => Role::Assistant,
+            MessageRole::System => Role::System,
+            MessageRole::Tool => Role::Tool,
+        }
+    }
+
     fn parse_result(&self, parser: &PdlParser, result: &String) -> Result<PdlResult, PdlError> {
         match parser {
             PdlParser::Json => from_str(result).map_err(|e| Box::from(e)),
@@ -1135,22 +1171,22 @@ impl<'a> Interpreter<'a> {
             &mut iter_state,
             true,
         )?;
-        let result_messages = trace.messages_for::<ChatMessage>(&output_messages);
 
         state.scope = iter_state.scope;
         state.escaped_variables = iter_state.escaped_variables;
 
-        Ok((
-            result,
-            match block.role() {
-                Some(role) => result_messages
-                    .into_iter()
-                    .map(|m| ChatMessage::new(self.to_ollama_role(role), m.content))
-                    .collect(),
-                None => result_messages,
-            },
-            trace.to_block(),
-        ))
+        // We may be asked to overlay a role on to the messages (TODO,
+        // does this belong in common code, i.e. run_advanced()?)
+        let result_messages = trace.messages_for::<ChatMessage>(&output_messages);
+        let messages = match block.role() {
+            Some(role) => result_messages
+                .into_iter()
+                .map(|m| ChatMessage::new(self.to_ollama_role(role), m.content))
+                .collect(),
+            None => result_messages,
+        };
+
+        Ok((result, messages, trace.to_block()))
     }
 
     /// Run a PdlBlock::Array

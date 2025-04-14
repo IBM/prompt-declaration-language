@@ -238,7 +238,10 @@ impl SequencingBlock for TextBlock {
         PdlResult::String(
             output_results
                 .into_iter()
-                .map(|m| m.to_string())
+                .map(|m| match m {
+                    PdlResult::String(s) => s,
+                    x => x.to_string(),
+                })
                 .collect::<Vec<_>>()
                 .join("\n"),
         )
