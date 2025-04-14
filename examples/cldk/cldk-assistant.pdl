@@ -130,7 +130,7 @@ text:
 
 
             parameters:
-              stop_sequences: "Question"
+              stop: ["Question"]
               temperature: 0
           - "\n\n***Executing the above PDL code:\n\n"
           - lang: python
