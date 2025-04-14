@@ -96,7 +96,8 @@ runs:
         git pull origin ${{ inputs.head-ref }}
         git add tests/results/
         git diff --cached --quiet || git commit -s -m "github-actions[bot]: Run examples: updated result files on your behalf"
-        git push origin ${{ inputs.head-ref }}
+        # git push origin ${{ inputs.head-ref }}
+        git push https://x-access-token:${{ inputs.token }}@github.com/${{ inputs.repository }} HEAD:${{ inputs.head-ref }}
 
     - name: Check if pytest passed
       shell: bash
