@@ -89,7 +89,7 @@ text:
           Assistant:
           <thought>
         - defs:
-            temperature: 0.0
+            temperature: 0
             SOLUTION: ""
             iterations: 0
             max_iterations: 5

@@ -56,7 +56,6 @@ class PDLThread(Thread):
         document = ""
         answer = None
         exception = None
-        model_input = None
         result = None
         match = False
         truth = self.example[self.answer_key]
@@ -83,7 +82,7 @@ class PDLThread(Thread):
                     state,
                     scope,
                     self.pdl_program,
-                    timeout=self.timeout,
+                    # timeout=self.timeout,
                 )
 
                 self.scope = scope
@@ -98,7 +97,7 @@ class PDLThread(Thread):
                     answer = self.extract_answer(result)
 
                     if answer is None:
-                        last_line = result.splitlines()[-1]
+                        last_line = result.result().splitlines()[-1]
                         console.log("Couldn't extract answer: ", last_line)
 
                 if answer is None or errored:
@@ -155,7 +154,6 @@ class PDLThread(Thread):
             pdl_program=self.pdl_program,
             correct=match,
             exception=exception,
-            input_logprobs=model_input,
             scope=scope,
             pdl_result=result,
             pdl_document=document,

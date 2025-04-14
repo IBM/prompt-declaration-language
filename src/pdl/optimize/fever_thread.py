@@ -3,6 +3,7 @@ from typing import Any
 from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_lazy import PdlApply
 
 
 class FEVERTrialThread(PDLThread):
@@ -17,7 +18,7 @@ class FEVERTrialThread(PDLThread):
     def get_scope(self) -> ScopeType:
         demo_var = self.config.demonstrations_variable_name
 
-        scope = empty_scope
+        scope = {}
 
         for k in self.config.variables:
             if k in self.candidate:
@@ -61,11 +62,11 @@ class FEVERTrialThread(PDLThread):
                 pass
 
         scope["claim"] = self.example["claim"]
-        return scope
+        return empty_scope | scope
 
-    def extract_answer(self, document: str) -> bool:
+    def extract_answer(self, document: PdlApply) -> bool:
         #  "SUPPORTS", and otherwise with "REFUTES"
-        response = document.splitlines()[-1].lower()
+        response = document.result().splitlines()[-1].lower()
         if "```" in response:
             response = response.split("```")[1]
         supports = "true" in response

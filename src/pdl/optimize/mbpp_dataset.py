@@ -24,7 +24,7 @@ class MBPPDataset(dict):
             MBPP_OUTPUT_NOT_NONE_TASKS,
         )
 
-        self.mbpp = load_from_disk("var/mbpp_trajectified").rename_column(
+        self.mbpp = load_from_disk("../prompt-declaration-language-merge/var/mbpp_trajectified").rename_column(
             "code",
             "canonical_solution",
         )

@@ -4,6 +4,7 @@ from pdl.optimize.parse_number import extract_math_answer
 from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_lazy import PdlApply
 
 
 class Gsm8kTrialThread(PDLThread):
@@ -17,7 +18,7 @@ class Gsm8kTrialThread(PDLThread):
     def get_scope(self) -> ScopeType:
         demo_var = self.config.demonstrations_variable_name
 
-        scope = empty_scope
+        scope = {}
 
         for k in self.config.variables:
             if k in self.candidate:
@@ -62,10 +63,10 @@ class Gsm8kTrialThread(PDLThread):
 
         scope["question"] = self.example["question"]
         scope["reasoning"] = self.example["reasoning"]
-        return scope
+        return empty_scope | scope
 
-    def extract_answer(self, document: str) -> Any:
-        return extract_math_answer(document)
+    def extract_answer(self, document: PdlApply) -> Any:
+        return extract_math_answer(document.result())
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         return answer == truth or document.endswith(f" {truth}")
