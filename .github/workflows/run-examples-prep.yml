@@ -17,6 +17,8 @@ jobs:
     # Detect modified PDL files, includes Add, Modified, but not Deleted
     - uses: actions/checkout@v4
       with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
         token: ${{ github.token }}
         fetch-depth: 0
     - name: Detect all PDL files that were changed or added
