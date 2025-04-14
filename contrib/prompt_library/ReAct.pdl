@@ -107,6 +107,7 @@ defs:
       model: str
       tools: { list: obj }
       trajectories: { list: list }
+      system_prompt: str
     return:
       lastOf:
         - if: ${ system_prompt == "llama3"}
