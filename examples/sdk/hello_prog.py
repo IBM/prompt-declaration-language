@@ -6,8 +6,8 @@ hello = Program(
         text=[
             "Hello\n",
             LitellmModelBlock(
-                model="ollama_chat/granite3.2:8b",
-                parameters=LitellmParameters(stop_sequences="!"),  # pyright: ignore
+                model="ollama_chat/granite3.2:2b",
+                parameters=LitellmParameters(stop=["!"]),  # pyright: ignore
             ),
         ]
     )
