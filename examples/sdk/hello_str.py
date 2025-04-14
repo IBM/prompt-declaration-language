@@ -3,9 +3,9 @@ from pdl.pdl import exec_str
 HELLO = """
 text:
 - "Hello\n"
-- model: ollama_chat/granite3.2:8b
+- model: ollama_chat/granite3.2:2b
   parameters:
-    stop_sequences: '!'
+    stop: ['!']
 """
 
 
