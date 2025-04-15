@@ -1,2 +1,5 @@
 lang: python
-code: 'print(''hi ho''); result = {"foo": 3}'
+code: |
+  import os
+  print(f"hi ho {os.getcwd()}")
+  result = {"foo": 3}
