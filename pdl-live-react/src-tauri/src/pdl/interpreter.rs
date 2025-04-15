@@ -760,7 +760,8 @@ impl<'a> Interpreter<'a> {
     ) -> BodyInterpretation {
         use rustpython_vm as vm;
         let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
-            vm.add_native_modules(rustpython_stdlib::get_module_inits());
+            //vm.add_native_modules(rustpython_stdlib::get_module_inits());
+            vm.add_frozen(rustpython_pylib::FROZEN_STDLIB);
         });
         interp.enter(|vm| -> BodyInterpretation {
             let scope = vm.new_scope_with_builtins();
