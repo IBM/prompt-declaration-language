@@ -84,6 +84,11 @@ jobs:
       if: ${{ env.early-stop == 'false' }}
       shell: bash
       run: pip list
+    - name: Patch tests/test_examples_run.yaml check with modified files
+      if: ${{ env.early-stop == 'false' }}
+      shell: bash 
+      run: |
+        yq -i '.check = (${{ steps.changed-pdl-files.outputs.all_changed_files }})' tests/test_examples_run.yaml
     - name: View Run Examples config
       if: ${{ env.early-stop == 'false' }}
       shell: bash
