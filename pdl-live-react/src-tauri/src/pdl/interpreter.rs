@@ -931,6 +931,22 @@ impl<'a> Interpreter<'a> {
         // The input messages to the model is either:
         // a) block.input, if given
         // b) the current state's accumulated messages
+        if let Some(c) = &block.context {
+            state.scope.insert(
+                "pdl_context".to_string(),
+                PdlResult::List(
+                    c.iter()
+                        .map(|m| {
+                            PdlResult::Block(PdlBlock::Advanced(Block {
+                                metadata: None,
+                                body: Body::Message(m.clone()),
+                            }))
+                        })
+                        .collect(),
+                ),
+            );
+        }
+
         let input_messages = match &block.input {
             Some(input) => {
                 // TODO ignoring result and trace
@@ -1027,7 +1043,23 @@ impl<'a> Interpreter<'a> {
                 true,
             )?;
             trace.data = from_str(to_string(&result)?.as_str())?;
-            Ok((result, vec![], Data(trace)))
+            let messages = match &trace.data {
+                Value::Object(m) => match m.get("pdl__result") {
+                    Some(Value::Array(a)) => a
+                        .iter()
+                        .filter_map(|m| match m {
+                            Value::Object(d) => match d.get("content") {
+                                Some(Value::String(s)) => Some(ChatMessage::user(s.clone())),
+                                _ => None,
+                            },
+                            _ => None,
+                        })
+                        .collect(),
+                    _ => vec![],
+                },
+                _ => vec![],
+            };
+            Ok((result, messages, Data(trace)))
         }
     }
 
