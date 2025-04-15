@@ -47,15 +47,15 @@ jobs:
         echo "update_results=$value" >> $GITHUB_ENV
     
     # Set up Ollama
-    - name: Cache Ollama model files 
-      if: ${{ env.early-stop == 'false' }}
-      uses: actions/cache@v4
-      with:
-        path: /usr/share/ollama/.ollama/models
-        key: ${{ runner.os }}-build-ollama-cache
-        restore-keys: |
-          ${{ runner.os }}-build-
-          ${{ runner.os }}
+    # - name: Cache Ollama model files 
+    #   if: ${{ env.early-stop == 'false' }}
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: /usr/share/ollama/.ollama/models
+    #     key: ${{ runner.os }}-build-ollama-cache
+    #     restore-keys: |
+    #       ${{ runner.os }}-build-
+    #       ${{ runner.os }}
     - uses: ./.github/actions/ollama
       if: ${{ env.early-stop == 'false' }}
       
