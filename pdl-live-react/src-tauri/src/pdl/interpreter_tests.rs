@@ -319,6 +319,45 @@ mod tests {
     }
 
     #[test]
+    fn text_python_two_code_result_dict() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "text": [
+                { "lang": "python",
+                   "code":"print('hi ho'); result = {\"foo\": 3}"
+                },
+                { "lang": "python",
+                   "code":"import os; print('hi ho'); result = {\"foo\": 4}"
+                }
+            ]
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "{'foo': 3}");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "{'foo': 4}");
+        Ok(())
+    }
+
+    // TODO: illegal instruction, but only during tests
+    #[test]
+    fn text_python_code_import_venv() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "include": "./tests/cli/code-python.pdl"
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(
+            messages[0].content,
+            "{'foo': None, 'diff': {'D': {'two': {'N': 3}}}}"
+        );
+        Ok(())
+    }
+
+    #[test]
     fn text_read_file_text() -> Result<(), Box<dyn Error>> {
         let program = json!({
             "message": "Read a file",

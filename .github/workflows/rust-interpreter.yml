@@ -31,4 +31,8 @@ jobs:
             (curl -fsSL https://ollama.com/install.sh | sudo -E sh && sleep 2)
           wait
       - name: Run interpreter tests
-        run: npm run test:interpreter
+        run: |
+          python3.12 -mvenv venv
+          source venv/bin/activate
+          pip install nested-diff
+          npm run test:interpreter
