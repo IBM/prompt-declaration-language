@@ -759,28 +759,55 @@ impl<'a> Interpreter<'a> {
         _state: &mut State,
     ) -> BodyInterpretation {
         use rustpython_vm as vm;
-        let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
-            //vm.add_native_modules(rustpython_stdlib::get_module_inits());
+
+        let mut settings = rustpython_vm::Settings::default();
+
+        // add PYTHONPATH to sys.path
+        settings.path_list.extend(get_paths("PDLPYTHONPATH"));
+        settings.path_list.extend(get_paths("PYTHONPATH"));
+
+        if let Ok(venv) = ::std::env::var("VIRTUAL_ENV") {
+            let path = ::std::path::PathBuf::from(venv).join(if cfg!(windows) {
+                "lib/site-packages"
+            } else {
+                // TODO generalize this!
+                "lib/python3.12/site-packages"
+            });
+            settings = settings.with_path(path.display().to_string());
+        }
+
+        let interp = vm::Interpreter::with_init(settings, |vm| {
+            vm.add_native_modules(rustpython_stdlib::get_module_inits());
             vm.add_frozen(rustpython_pylib::FROZEN_STDLIB);
         });
         interp.enter(|vm| -> BodyInterpretation {
             let scope = vm.new_scope_with_builtins();
 
-            // TODO vm.new_syntax_error(&err, Some(block.code.as_str()))
-            let code_obj = match vm.compile(
-                block.code.as_str(),
-                vm::compiler::Mode::Exec,
+            // Sigh, this is copy-pasted from RustPython/src/lib.rs
+            // `run_rustpython` as of 20250416 commit hash
+            // a917da3b1. Without this (and also: importlib and
+            // encodings features on rustpython-vm crate), then
+            // pulling in venvs does not work.
+            match vm.run_code_string(
+                vm.new_scope_with_builtins(),
+                "import sys; sys.path.insert(0, '')",
                 "<embedded>".to_owned(),
             ) {
-                Ok(x) => Ok(x),
-                Err(exc) => Err(PdlError::from(format!(
-                    "Syntax error in Python code {:?}",
-                    exc
-                ))),
+                Ok(_) => Ok(()),
+                Err(exc) => {
+                    vm.print_exception(exc);
+                    Err(PdlError::from("Error setting up Python site path"))
+                }
             }?;
+            let site_result = vm.import("site", 0);
+            if site_result.is_err() {
+                println!(
+                    "Failed to import site, consider adding the Lib directory to your RUSTPYTHONPATH \
+                     environment variable",
+                );
+            }
 
-            // TODO vm.print_exception(exc);
-            match vm.run_code_obj(code_obj, scope.clone()) {
+            match vm.run_code_string(scope.clone(), block.code.as_str(), "<embedded>".to_owned()) {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
@@ -1499,4 +1526,31 @@ pub fn load_scope(
     }
 
     Ok(scope)
+}
+
+/// Helper function to retrieve a sequence of paths from an environment variable.
+fn get_paths(env_variable_name: &str) -> impl Iterator<Item = String> + '_ {
+    ::std::env::var_os(env_variable_name)
+        .into_iter()
+        .flat_map(move |paths| {
+            split_paths(&paths)
+                .map(|path| {
+                    path.into_os_string()
+                        .into_string()
+                        .unwrap_or_else(|_| panic!("{env_variable_name} isn't valid unicode"))
+                })
+                .collect::<Vec<_>>()
+        })
+}
+
+#[cfg(not(target_os = "wasi"))]
+pub(crate) use ::std::env::split_paths;
+#[cfg(target_os = "wasi")]
+pub(crate) fn split_paths<T: AsRef<std::ffi::OsStr> + ?Sized>(
+    s: &T,
+) -> impl Iterator<Item = std::path::PathBuf> + '_ {
+    use std::os::wasi::ffi::OsStrExt;
+    let s = s.as_ref().as_bytes();
+    s.split(|b| *b == b':')
+        .map(|x| std::ffi::OsStr::from_bytes(x).to_owned().into())
 }
