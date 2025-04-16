@@ -38,7 +38,7 @@ minijinja = { version = "2.9.0", features = ["custom_syntax"] }
 #ollama-rs = { version = "0.3.0", features = ["stream"] }
 ollama-rs = { git = "https://github.com/starpit/ollama-rs.git", branch = "tools-pub-7", features = ["stream"] }
 owo-colors = "4.2.0"
-rustpython-vm = { git="https://github.com/RustPython/RustPython.git" } # "0.4.0"
+rustpython-vm = { git="https://github.com/RustPython/RustPython.git", features= ["importlib", "threading", "encodings"] } # "0.4.0"
 async-recursion = "1.1.1"
 tokio-stream = "0.1.17"
 tokio = { version = "1.44.1", features = ["io-std"] }
