@@ -1,5 +1,10 @@
 lang: python
 code: |
-  import os
-  print(f"hi ho {os.getcwd()}")
-  result = {"foo": 3}
+  import sys # test import stdlib
+  import os # test import stdlib
+  print(f"!!! {sys.path}")
+  #import textdistance # test import from venv
+  from nested_diff import diff # test import from venv
+  a = {'one': 1, 'two': 2, 'three': 3}
+  b = {'one': 1, 'two': 3, 'three': 3}
+  result = {"foo": os.getenv("FOO999999999999999999999999"), "diff": diff(a, b, O=False, U=False)}
