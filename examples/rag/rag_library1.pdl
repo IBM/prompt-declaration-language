@@ -10,8 +10,8 @@ text:
   return:
     lang: python
     code: |
-        from examples.rag.rag import parse
-        result = parse(filename, chunk_size, chunk_overlap)
+        import rag
+        result = rag.parse(filename, chunk_size, chunk_overlap)
 - def: rag_index
   function:
     inp: list # This is a list[str], but PDL doesn't allow that type
@@ -22,8 +22,8 @@ text:
   return:
     lang: python
     code: |
-        from examples.rag.rag import rag_index
-        result = rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
+        import rag
+        result = rag.rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
 - def: rag_retrieve
   function:
     inp: str
@@ -34,5 +34,5 @@ text:
   return:
     lang: python
     code: |
-        from examples.rag.rag import rag_retrieve
-        result = rag_retrieve(inp, encoder_model, limit, database_name, collection_name)
+        import rag
+        result = rag.rag_retrieve(inp, encoder_model, limit, database_name, collection_name)
