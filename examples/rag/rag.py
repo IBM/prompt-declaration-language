@@ -105,7 +105,7 @@ def rag_retrieve(
         # Typically litellm.exceptions.APIConnectionError
         return f"Unexpected {type(be)}: be={be}"
 
-    data = response.data[0]["embedding"]
+    data = response.data[0]["embedding"]  # type: ignore
 
     milvus_client = get_or_create_client(database_name)
     search_res = milvus_client.search(

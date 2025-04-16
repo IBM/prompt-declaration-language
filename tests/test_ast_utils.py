@@ -25,11 +25,11 @@ class MapCounter:
     def __init__(self):
         self.cpt = 0
 
-    def count(map_self, ast):  # pylint: disable=no-self-argument
+    def count(map_self, ast):  # pylint: disable=no-self-argument # type: ignore
         map_self.cpt += 1
 
         class C(MappedFunctions):
-            def f_block(_, block):  # pylint: disable=no-self-argument
+            def f_block(_, block):  # pylint: disable=no-self-argument # type: ignore
                 return map_self.count(block)
 
         _ = map_block_children(C(), ast)
