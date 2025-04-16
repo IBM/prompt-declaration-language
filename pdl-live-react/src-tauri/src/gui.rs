@@ -11,6 +11,7 @@ pub fn new_window(
         tauri::WebviewUrl::App(path.unwrap_or("".into())),
     )
     .title("Prompt Declaration Language")
+    .prevent_overflow()
     .zoom_hotkeys_enabled(true)
     .inner_size(1400.0, 1050.0)
     .build()?;
