@@ -46,6 +46,11 @@ TO_SKIP = {
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
+        pathlib.Path("pdl-live-react")
+        / "src-tauri"
+        / "tests"
+        / "cli"
+        / "read-stdin.pdl",
         # For now, skip the granite-io examples
         pathlib.Path("examples") / "granite-io" / "granite_io_hallucinations.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
