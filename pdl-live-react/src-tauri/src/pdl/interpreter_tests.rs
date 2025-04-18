@@ -1,11 +1,10 @@
 #[cfg(test)]
 mod tests {
-    //    use super::*;
     use ::std::error::Error;
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{Block::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
+        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
         interpreter::{RunOptions, load_scope, run_json_sync as run_json, run_sync as run},
     };
 
@@ -61,12 +60,15 @@ mod tests {
     #[test]
     fn single_model_via_input_string() -> Result<(), Box<dyn Error>> {
         let (_, messages, _) = run(
-            &Advanced(Model(
-                ModelBlockBuilder::default()
-                    .model(DEFAULT_MODEL)
-                    .input(Box::from(PdlBlock::String("hello".to_string())))
-                    .build()?,
-            )),
+            &Advanced(Block {
+                metadata: None,
+                body: Model(
+                    ModelBlockBuilder::default()
+                        .model(DEFAULT_MODEL)
+                        .input(Box::from(PdlBlock::String("hello".to_string())))
+                        .build()?,
+                ),
+            }),
             None,
             streaming(),
             initial_scope(),
@@ -74,6 +76,26 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::Assistant);
         assert!(messages[0].content.contains("Hello!"));
+        Ok(())
+    }
+
+    #[test]
+    fn single_model_via_text_chain_expr() -> Result<(), Box<dyn Error>> {
+        let (_, messages, _) = run_json(
+            json!({
+                "text": [
+                    "hello",
+                    {"model": { "pdl__expr": DEFAULT_MODEL }}
+                ]
+            }),
+            streaming(),
+            initial_scope(),
+        )?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "hello");
+        assert_eq!(messages[1].role, MessageRole::Assistant);
+        assert!(messages[1].content.contains("Hello!"));
         Ok(())
     }
 
@@ -293,6 +315,45 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].role, MessageRole::User);
         assert_eq!(messages[0].content, "{'foo': 3}");
+        Ok(())
+    }
+
+    #[test]
+    fn text_python_two_code_result_dict() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "text": [
+                { "lang": "python",
+                   "code":"print('hi ho'); result = {\"foo\": 3}"
+                },
+                { "lang": "python",
+                   "code":"import os; print('hi ho'); result = {\"foo\": 4}"
+                }
+            ]
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 2);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "{'foo': 3}");
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "{'foo': 4}");
+        Ok(())
+    }
+
+    // TODO: illegal instruction, but only during tests
+    #[test]
+    fn text_python_code_import_venv() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "include": "./tests/cli/code-python.pdl"
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(
+            messages[0].content,
+            "{'foo': None, 'diff': {'D': {'two': {'N': 3}}}}"
+        );
         Ok(())
     }
 

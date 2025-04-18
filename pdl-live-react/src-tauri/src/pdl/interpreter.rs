@@ -21,16 +21,21 @@ use serde_json::{Value, from_str, json, to_string};
 use serde_norway::{from_reader, from_str as from_yaml_str};
 
 use crate::pdl::ast::{
-    ArrayBlock, Block::*, CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock,
-    IfBlock, ImportBlock, IncludeBlock, ListOrString, MessageBlock, ModelBlock, ObjectBlock,
-    PdlBlock, PdlBlock::Advanced, PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock,
-    RepeatBlock, Role, Scope, SequencingBlock, StringOrBoolean, StringOrNull,
+    ArrayBlock, Block,
+    Body::{self, *},
+    CallBlock, Closure, DataBlock, EmptyBlock, EvalsTo, Expr, FunctionBlock, IfBlock, ImportBlock,
+    IncludeBlock, ListOrString, MessageBlock, Metadata, MetadataBuilder, ModelBlock, ObjectBlock,
+    PdlBlock,
+    PdlBlock::Advanced,
+    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
+    SequencingBlock, StringOrBoolean, StringOrNull, Timing,
 };
 
 type Messages = Vec<ChatMessage>;
 type ThreadSafeError = dyn Error + Send + Sync;
 type PdlError = Box<ThreadSafeError>;
 type Interpretation = Result<(PdlResult, Messages, PdlBlock), PdlError>;
+type BodyInterpretation = Result<(PdlResult, Messages, Body), PdlError>;
 type InterpretationSync = Result<(PdlResult, Messages, PdlBlock), Box<dyn Error>>;
 
 pub struct RunOptions<'a> {
@@ -56,6 +61,7 @@ struct State {
     scope: Scope,
     escaped_variables: Vec<String>,
     messages: Messages,
+    id_stack: Vec<String>,
 }
 
 impl State {
@@ -66,7 +72,12 @@ impl State {
             scope: initial_scope,
             escaped_variables: vec![],
             messages: vec![],
+            id_stack: vec![],
         }
+    }
+
+    fn id(&self) -> String {
+        self.id_stack.join(".")
     }
 
     fn with_cwd(&self, cwd: PathBuf) -> Self {
@@ -81,6 +92,19 @@ impl State {
         s
     }
 
+    fn with_iter(&self, iter: usize) -> Self {
+        let mut s = self.clone();
+        s.id_stack.push(format!("{iter}"));
+        s
+    }
+
+    fn incr_iter(&self, iter: usize) -> Self {
+        let mut s = self.clone();
+        s.id_stack.pop();
+        s.id_stack.push(format!("{iter}"));
+        s
+    }
+
     fn extend_scope(&self, scopes: Vec<Scope>) -> Self {
         let mut s = self.clone();
         scopes.into_iter().for_each(|m| s.scope.extend(m));
@@ -90,7 +114,6 @@ impl State {
 
 struct Interpreter<'a> {
     // batch: u32,
-    // id_stack: Vec<String>,
     options: RunOptions<'a>,
     jinja_env: Environment<'a>,
 }
@@ -120,7 +143,7 @@ impl<'a> Interpreter<'a> {
         state: &mut State,
         parent_scope: &mut Scope,
     ) -> Interpretation {
-        let (result, messages, trace) = match program {
+        let res = match program {
             PdlBlock::Bool(b) => Ok((
                 b.into(),
                 vec![ChatMessage::user(format!("{b}"))],
@@ -136,32 +159,10 @@ impl<'a> Interpreter<'a> {
                 vec![],
                 PdlBlock::Function(f.clone()),
             )),
+            PdlBlock::Empty(b) => self.run_empty(b, state).await,
             PdlBlock::String(s) => self.run_string(s, state).await,
-            PdlBlock::Empty(block) => self.run_empty(block, state).await,
-            Advanced(Call(block)) => self.run_call(block, state).await,
-            Advanced(If(block)) => self.run_if(block, state).await,
-            Advanced(Import(block)) => self.run_import(block, state).await,
-            Advanced(Include(block)) => self.run_include(block, state).await,
-            Advanced(Model(block)) => self.run_model(block, state).await,
-            Advanced(Data(block)) => self.run_data(block, state).await,
-            Advanced(Object(block)) => self.run_object(block, state).await,
-            Advanced(PythonCode(block)) => self.run_python_code(block, state).await,
-            Advanced(Read(block)) => self.run_read(block, state).await,
-            Advanced(Repeat(block)) => self.run_repeat(block, state).await,
-            Advanced(LastOf(block)) => self.run_sequence(block, state).await,
-            Advanced(Text(block)) => self.run_sequence(block, state).await,
-            Advanced(Array(block)) => self.run_array(block, state).await,
-            Advanced(Message(block)) => self.run_message(block, state).await,
+            Advanced(b) => self.run_advanced(b, state).await,
         }?;
-
-        if match program {
-            Advanced(Message(_)) | Advanced(Text(_)) | Advanced(Import(_))
-            | Advanced(Include(_)) | Advanced(LastOf(_)) | Advanced(Call(_))
-            | Advanced(Model(_)) => false,
-            _ => state.emit,
-        } {
-            println!("{}", pretty_print(&messages));
-        }
 
         // copy any escaped variable bindings to the parent scope
         parent_scope.extend(
@@ -171,7 +172,115 @@ impl<'a> Interpreter<'a> {
                 .filter_map(|variable| state.scope.remove_entry(&variable.clone())),
         );
 
-        Ok((result, messages, trace))
+        if match &program {
+            Advanced(Block {
+                body: Message(_), ..
+            })
+            | Advanced(Block { body: Text(_), .. })
+            | Advanced(Block {
+                body: Import(_), ..
+            })
+            | Advanced(Block {
+                body: Include(_), ..
+            })
+            | Advanced(Block {
+                body: LastOf(_), ..
+            })
+            | Advanced(Block { body: Call(_), .. })
+            | Advanced(Block { body: Model(_), .. }) => false,
+            _ => state.emit,
+        } {
+            println!("{}", pretty_print(&res.1));
+        }
+
+        Ok(res)
+    }
+
+    async fn run_advanced(&mut self, block: &Block, state: &mut State) -> Interpretation {
+        let mut timing = Timing::start()?;
+
+        // This is just so we can avoid Option<Metadata> in the run_*
+        // functions. We pass in an immutable reference, so no harm in
+        // the or_default() part.
+        let m = &block.metadata.clone().unwrap_or_default();
+
+        self.process_defs(&m.defs, state).await?;
+
+        let (result, messages, trace_body) = match &block.body {
+            Call(b) => {
+                state.id_stack.push("call".to_string());
+                self.run_call(b, m, state).await
+            }
+            Data(b) => {
+                state.id_stack.push("data".to_string());
+                self.run_data(b, m, state).await
+            }
+            If(b) => {
+                state.id_stack.push("if".to_string());
+                self.run_if(b, m, state).await
+            }
+            Import(b) => {
+                state.id_stack.push("import".to_string());
+                self.run_import(b, m, state).await
+            }
+            Include(b) => {
+                state.id_stack.push("include".to_string());
+                self.run_include(b, m, state).await
+            }
+            Model(b) => {
+                state.id_stack.push("model".to_string());
+                self.run_model(b, m, state).await
+            }
+            Object(b) => {
+                state.id_stack.push("object".to_string());
+                self.run_object(b, m, state).await
+            }
+            PythonCode(b) => {
+                state.id_stack.push("code".to_string());
+                self.run_python_code(b, m, state).await
+            }
+            Read(b) => {
+                state.id_stack.push("read".to_string());
+                self.run_read(b, m, state).await
+            }
+            Repeat(b) => {
+                state.id_stack.push("repeat".to_string());
+                self.run_repeat(b, m, state).await
+            }
+            LastOf(b) => {
+                state.id_stack.push("lastOf".to_string());
+                self.run_sequence(b, m, state).await
+            }
+            Text(b) => {
+                state.id_stack.push("text".to_string());
+                self.run_sequence(b, m, state).await
+            }
+            Array(b) => {
+                state.id_stack.push("array".to_string());
+                self.run_array(b, m, state).await
+            }
+            Message(b) => {
+                state.id_stack.push("message".to_string());
+                self.run_message(b, m, state).await
+            }
+        }?;
+
+        let mut trace = Block {
+            metadata: block.metadata.clone(),
+            body: trace_body,
+        };
+
+        timing.end()?;
+
+        let mut trace_metadata = m.clone();
+        trace_metadata.pdl_id = Some(state.id());
+        trace_metadata.pdl_timing = Some(timing);
+        trace_metadata.pdl_result = Some(Box::new(result.clone()));
+        trace.metadata = Some(trace_metadata);
+
+        state.id_stack.pop();
+
+        Ok((result, messages, Advanced(trace)))
     }
 
     #[async_recursion]
@@ -212,6 +321,18 @@ impl<'a> Interpreter<'a> {
         match expr {
             EvalsTo::Const(t) => Ok(*t.clone()),
             EvalsTo::Jinja(s) => self.eval(s, state),
+            EvalsTo::Expr(e) => self.eval(&e.pdl_expr, state),
+        }
+    }
+
+    // TODO how can we better cope with the expected String return?
+    fn eval_string_to_string(
+        &self,
+        expr: &EvalsTo<String, String>,
+        state: &State,
+    ) -> Result<PdlResult, PdlError> {
+        match expr {
+            EvalsTo::Const(s) | EvalsTo::Jinja(s) => self.eval(s, state),
             EvalsTo::Expr(e) => self.eval(&e.pdl_expr, state),
         }
     }
@@ -313,18 +434,27 @@ impl<'a> Interpreter<'a> {
 
     /// Run a PdlBlock::String
     async fn run_string(&self, msg: &String, state: &State) -> Interpretation {
-        let trace = self.eval(msg, state)?;
+        let result = self.eval(msg, state)?;
         if self.options.debug {
-            eprintln!("String {} -> {:?}", msg, trace);
+            eprintln!("String {} -> {:?}", msg, result);
         }
 
-        let result_string = match &trace {
+        let result_string = match &result {
             PdlResult::String(s) => s.clone(),
             x => to_string(&x)?,
         };
-        let messages = vec![ChatMessage::user(result_string)];
 
-        Ok((trace, messages, PdlBlock::String(msg.clone())))
+        let messages = vec![ChatMessage::user(result_string)];
+        let trace = Advanced(Block {
+            metadata: Some(MetadataBuilder::default().pdl_id(state.id()).build()?),
+            body: Data(DataBlock {
+                data: json!({ "pdl__expr": msg.clone(), "pdl__result": result.clone() }),
+                parser: None,
+                raw: None,
+            }),
+        });
+
+        Ok((result, messages, trace))
     }
 
     /// If `file_path` is not absolute, join it with state.cwd
@@ -376,7 +506,12 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Read
-    async fn run_read(&mut self, block: &ReadBlock, state: &mut State) -> Interpretation {
+    async fn run_read(
+        &mut self,
+        block: &ReadBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let trace = block.clone();
 
         match (&block.read, &block.message) {
@@ -410,22 +545,23 @@ impl<'a> Interpreter<'a> {
         };
 
         let result = self.def(
-            &block.metadata.as_ref().and_then(|m| m.def.clone()),
+            &metadata.def,
             &buffer.clone().into(),
             &block.parser,
             state,
             true,
         )?;
 
-        Ok((
-            result,
-            vec![ChatMessage::user(buffer)],
-            Advanced(Read(trace)),
-        ))
+        Ok((result, vec![ChatMessage::user(buffer)], Read(trace)))
     }
 
     /// Run a PdlBlock::Call
-    async fn run_call(&mut self, block: &CallBlock, state: &mut State) -> Interpretation {
+    async fn run_call(
+        &mut self,
+        block: &CallBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Call {:?}({:?})", block.call, block.args);
             eprintln!("Call scope {:?}", state.scope);
@@ -441,7 +577,11 @@ impl<'a> Interpreter<'a> {
                     },
                 }?;
 
-                self.run(&c.function.return_, &mut new_state).await
+                let (result, messages, call_trace) =
+                    self.run(&c.function.return_, &mut new_state).await?;
+                let mut trace = block.clone();
+                trace.pdl_trace = Some(Box::new(call_trace));
+                Ok((result, messages, Body::Call(trace)))
             }
             x => Err(Box::from(format!(
                 "call of non-function {:?}->{:?}",
@@ -467,27 +607,42 @@ impl<'a> Interpreter<'a> {
     }
 
     /// Run a PdlBlock::Call
-    async fn run_if(&mut self, block: &IfBlock, state: &mut State) -> Interpretation {
+    async fn run_if(
+        &mut self,
+        block: &IfBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("If {:?}({:?})", block.condition, block.then);
         }
 
-        if let Some(meta) = &block.metadata {
-            self.process_defs(&meta.defs, state).await?;
-        }
+        let mut trace = block.clone();
+        let if_result = self.eval_to_bool(&block.condition, state)?;
+        trace.if_result = Some(if_result);
 
-        if self.eval_to_bool(&block.condition, state)? {
-            self.run_quiet(&block.then, state).await
+        let (result, messages) = if if_result {
+            let (result, messages, then_trace) = self.run_quiet(&block.then, state).await?;
+            trace.then = Box::new(then_trace);
+            (result, messages)
+        } else if let Some(else_block) = &block.else_ {
+            let (result, messages, else_trace) = self.run_quiet(&else_block, state).await?;
+            trace.else_ = Some(Box::new(else_trace));
+            (result, messages)
         } else {
-            match &block.else_ {
-                Some(else_block) => self.run_quiet(&else_block, state).await,
-                None => Ok(("".into(), vec![], Advanced(If(block.clone())))),
-            }
-        }
+            ("".into(), vec![])
+        };
+
+        Ok((result, messages, If(trace)))
     }
 
     /// Run a PdlBlock::Include
-    async fn run_include(&mut self, block: &IncludeBlock, state: &mut State) -> Interpretation {
+    async fn run_include(
+        &mut self,
+        block: &IncludeBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Include {:?}", block.include);
         }
@@ -499,11 +654,22 @@ impl<'a> Interpreter<'a> {
             state.clone()
         };
 
-        self.run(&parse_file(&path)?, &mut new_state).await
+        let (result, messages, include_trace) =
+            self.run(&parse_file(&path)?, &mut new_state).await?;
+
+        let mut trace = block.clone();
+        trace.pdl_trace = Some(Box::new(include_trace));
+
+        Ok((result, messages, Include(trace)))
     }
 
     /// Run a PdlBlock::Import
-    async fn run_import(&mut self, block: &ImportBlock, state: &mut State) -> Interpretation {
+    async fn run_import(
+        &mut self,
+        block: &ImportBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Import {:?}", block.import);
         }
@@ -515,7 +681,13 @@ impl<'a> Interpreter<'a> {
             state.clone()
         };
 
-        self.run(&parse_file(&path)?, &mut new_state).await
+        let (result, messages, import_trace) =
+            self.run(&parse_file(&path)?, &mut new_state).await?;
+
+        let mut trace = block.clone();
+        trace.pdl_trace = Some(Box::new(import_trace));
+
+        Ok((result, messages, Import(trace)))
     }
 
     fn to_ollama_model_options(
@@ -583,30 +755,59 @@ impl<'a> Interpreter<'a> {
     async fn run_python_code(
         &mut self,
         block: &PythonCodeBlock,
+        _metadata: &Metadata,
         _state: &mut State,
-    ) -> Interpretation {
+    ) -> BodyInterpretation {
         use rustpython_vm as vm;
-        let interp = vm::Interpreter::with_init(vm::Settings::default(), |vm| {
+
+        let mut settings = rustpython_vm::Settings::default();
+
+        // add PYTHONPATH to sys.path
+        settings.path_list.extend(get_paths("PDLPYTHONPATH"));
+        settings.path_list.extend(get_paths("PYTHONPATH"));
+
+        if let Ok(venv) = ::std::env::var("VIRTUAL_ENV") {
+            let path = ::std::path::PathBuf::from(venv).join(if cfg!(windows) {
+                "lib/site-packages"
+            } else {
+                // TODO generalize this!
+                "lib/python3.12/site-packages"
+            });
+            settings = settings.with_path(path.display().to_string());
+        }
+
+        let interp = vm::Interpreter::with_init(settings, |vm| {
             vm.add_native_modules(rustpython_stdlib::get_module_inits());
+            vm.add_frozen(rustpython_pylib::FROZEN_STDLIB);
         });
-        interp.enter(|vm| -> Interpretation {
+        interp.enter(|vm| -> BodyInterpretation {
             let scope = vm.new_scope_with_builtins();
 
-            // TODO vm.new_syntax_error(&err, Some(block.code.as_str()))
-            let code_obj = match vm.compile(
-                block.code.as_str(),
-                vm::compiler::Mode::Exec,
+            // Sigh, this is copy-pasted from RustPython/src/lib.rs
+            // `run_rustpython` as of 20250416 commit hash
+            // a917da3b1. Without this (and also: importlib and
+            // encodings features on rustpython-vm crate), then
+            // pulling in venvs does not work.
+            match vm.run_code_string(
+                vm.new_scope_with_builtins(),
+                "import sys; sys.path.insert(0, '')",
                 "<embedded>".to_owned(),
             ) {
-                Ok(x) => Ok(x),
-                Err(exc) => Err(PdlError::from(format!(
-                    "Syntax error in Python code {:?}",
-                    exc
-                ))),
+                Ok(_) => Ok(()),
+                Err(exc) => {
+                    vm.print_exception(exc);
+                    Err(PdlError::from("Error setting up Python site path"))
+                }
             }?;
+            let site_result = vm.import("site", 0);
+            if site_result.is_err() {
+                println!(
+                    "Failed to import site, consider adding the Lib directory to your RUSTPYTHONPATH \
+                     environment variable",
+                );
+            }
 
-            // TODO vm.print_exception(exc);
-            match vm.run_code_obj(code_obj, scope.clone()) {
+            match vm.run_code_string(scope.clone(), block.code.as_str(), "<embedded>".to_owned()) {
                 Ok(_) => Ok(()),
                 Err(exc) => {
                     vm.print_exception(exc);
@@ -624,7 +825,7 @@ impl<'a> Interpreter<'a> {
                         }
                     }?;
                     let messages = vec![ChatMessage::user(result_string.as_str().to_string())];
-                    let trace = Advanced(PythonCode(block.clone()));
+                    let trace = PythonCode(block.clone());
                     Ok((messages[0].content.clone().into(), messages, trace))
                 }
                 Err(_) => Err(Box::from(
@@ -634,146 +835,219 @@ impl<'a> Interpreter<'a> {
         })
     }
 
-    /// Run a PdlBlock::Model
-    async fn run_model(&mut self, block: &ModelBlock, state: &mut State) -> Interpretation {
-        match &block.model {
-            pdl_model
-                if pdl_model.starts_with("ollama/") || pdl_model.starts_with("ollama_chat/") =>
-            {
-                let mut ollama = Ollama::default();
-                let model = if pdl_model.starts_with("ollama/") {
-                    &pdl_model[7..]
-                } else {
-                    &pdl_model[12..]
-                };
+    async fn run_ollama_model(
+        &mut self,
+        pdl_model: String,
+        block: &ModelBlock,
+        metadata: &Metadata,
+        state: &mut State,
+        input_messages: Vec<ChatMessage>,
+    ) -> Result<(String, Option<PdlUsage>), PdlError> {
+        let mut ollama = Ollama::default();
+        let model = if pdl_model.starts_with("ollama/") {
+            &pdl_model[7..]
+        } else {
+            &pdl_model[12..]
+        };
 
-                let (options, tools) = self.to_ollama_model_options(&block.parameters);
-                if self.options.debug {
-                    eprintln!("Model options {:?} {:?}", block.description(), options);
-                    eprintln!("Model tools {:?} {:?}", block.description(), tools);
-                }
-
-                // The input messages to the model is either:
-                // a) block.input, if given
-                // b) the current state's accumulated messages
-                let input_messages = match &block.input {
-                    Some(input) => {
-                        // TODO ignoring result, trace
-                        let (_result, messages, _trace) = self.run_quiet(&*input, state).await?;
-                        messages
-                    }
-                    None => state.messages.clone(),
-                };
-                let (prompt, history_slice): (&ChatMessage, &[ChatMessage]) =
-                    match input_messages.split_last() {
-                        Some(x) => x,
-                        None => (&ChatMessage::user("".into()), &[]),
-                    };
-                let mut history = Vec::from(history_slice);
-                if self.options.debug {
-                    eprintln!(
-                        "Ollama {:?} model={:?} prompt={:?} history={:?}",
-                        block.description(),
-                        block.model,
-                        prompt,
-                        history
-                    );
-                }
-
-                //if state.emit {
-                //println!("{}", pretty_print(&input_messages));
-                //}
-
-                let req = ChatMessageRequest::new(model.into(), vec![prompt.clone()])
-                    .options(options)
-                    .tools(tools);
-
-                let (last_res, response_string) = if !self.options.stream {
-                    let res = ollama
-                        .send_chat_messages_with_history(&mut history, req)
-                        .await?;
-                    let response_string = res.message.content.clone();
-                    print!("{}", response_string);
-                    (Some(res), response_string)
-                } else {
-                    let mut stream = ollama
-                        .send_chat_messages_with_history_stream(
-                            ::std::sync::Arc::new(::std::sync::Mutex::new(history)),
-                            req,
-                            //ollama.generate(GenerationRequest::new(model.into(), prompt),
-                        )
-                        .await?;
-                    // dbg!("Model result {:?}", &res);
-
-                    let emit = if let Some(_) = &block.model_response {
-                        false
-                    } else {
-                        true
-                    };
-
-                    let mut last_res: Option<ChatMessageResponse> = None;
-                    let mut response_string = String::new();
-                    let mut stdout = stdout();
-                    if emit {
-                        stdout.write_all(b"\x1b[1mAssistant: \x1b[0m").await?;
-                    }
-                    while let Some(Ok(res)) = stream.next().await {
-                        if emit {
-                            stdout.write_all(b"\x1b[32m").await?; // green
-                            stdout.write_all(res.message.content.as_bytes()).await?;
-                            stdout.flush().await?;
-                            stdout.write_all(b"\x1b[0m").await?; // reset color
-                        }
-                        response_string += res.message.content.as_str();
-                        last_res = Some(res);
-                    }
-                    if emit {
-                        stdout.write_all(b"\n").await?;
-                    }
-
-                    (last_res, response_string)
-                };
-
-                if let Some(_) = &block.model_response {
-                    if let Some(ref res) = last_res {
-                        self.def(
-                            &block.model_response,
-                            &resultify_as_litellm(&from_str(&to_string(&res)?)?),
-                            &None,
-                            state,
-                            true,
-                        )?;
-                    }
-                }
-
-                let mut trace = block.with_result(response_string.clone().into());
-                if let Some(res) = last_res {
-                    if let Some(usage) = res.final_data {
-                        trace.pdl_usage = Some(PdlUsage {
-                            prompt_tokens: usage.prompt_eval_count,
-                            prompt_nanos: usage.prompt_eval_duration,
-                            completion_tokens: usage.eval_count,
-                            completion_nanos: usage.eval_duration,
-                        });
-                    }
-                    let output_messages = vec![ChatMessage::assistant(response_string)];
-                    Ok((
-                        res.message.content.into(),
-                        output_messages,
-                        Advanced(Model(trace)),
-                    ))
-                } else {
-                    // nothing came out of the model
-                    Ok(("".into(), vec![], Advanced(Model(trace))))
-                }
-                // dbg!(history);
-            }
-            _ => Err(Box::from(format!("Unsupported model {}", block.model))),
+        let (options, tools) = self.to_ollama_model_options(&block.parameters);
+        if self.options.debug {
+            eprintln!("Model options {:?} {:?}", metadata.description, options);
+            eprintln!("Model tools {:?} {:?}", metadata.description, tools);
         }
+
+        let (prompt, history_slice): (&ChatMessage, &[ChatMessage]) =
+            match input_messages.split_last() {
+                Some(x) => x,
+                None => (&ChatMessage::user("".into()), &[]),
+            };
+        let mut history = Vec::from(history_slice);
+        if self.options.debug {
+            eprintln!(
+                "Ollama {:?} model={:?} prompt={:?} history={:?}",
+                metadata.description, block.model, prompt, history
+            );
+        }
+
+        let req = ChatMessageRequest::new(model.into(), vec![prompt.clone()])
+            .options(options)
+            .tools(tools);
+
+        let (last_res, response_string) = if !self.options.stream {
+            let res = ollama
+                .send_chat_messages_with_history(&mut history, req)
+                .await?;
+            let response_string = res.message.content.clone();
+            print!("{}", response_string);
+            (Some(res), response_string)
+        } else {
+            let mut stream = ollama
+                .send_chat_messages_with_history_stream(
+                    ::std::sync::Arc::new(::std::sync::Mutex::new(history)),
+                    req,
+                    //ollama.generate(GenerationRequest::new(model.into(), prompt),
+                )
+                .await?;
+            // dbg!("Model result {:?}", &res);
+
+            let emit = if let Some(_) = &block.model_response {
+                false
+            } else {
+                true
+            };
+
+            let mut last_res: Option<ChatMessageResponse> = None;
+            let mut response_string = String::new();
+            let mut stdout = stdout();
+            if emit {
+                stdout.write_all(b"\x1b[1mAssistant: \x1b[0m").await?;
+            }
+            while let Some(Ok(res)) = stream.next().await {
+                if emit {
+                    stdout.write_all(b"\x1b[32m").await?; // green
+                    stdout.write_all(res.message.content.as_bytes()).await?;
+                    stdout.flush().await?;
+                    stdout.write_all(b"\x1b[0m").await?; // reset color
+                }
+                response_string += res.message.content.as_str();
+                last_res = Some(res);
+            }
+            if emit {
+                stdout.write_all(b"\n").await?;
+            }
+
+            (last_res, response_string)
+        };
+
+        if let Some(_) = &block.model_response {
+            if let Some(ref res) = last_res {
+                self.def(
+                    &block.model_response,
+                    &resultify_as_litellm(&from_str(&to_string(&res)?)?),
+                    &None,
+                    state,
+                    true,
+                )?;
+            }
+        }
+
+        let usage = if let Some(res) = last_res {
+            if let Some(usage) = res.final_data {
+                Some(PdlUsage {
+                    prompt_tokens: usage.prompt_eval_count,
+                    prompt_nanos: Some(usage.prompt_eval_duration),
+                    completion_tokens: usage.eval_count,
+                    completion_nanos: Some(usage.eval_duration),
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        Ok((response_string, usage))
+    }
+
+    /// Run a PdlBlock::Model
+    async fn run_model(
+        &mut self,
+        block: &ModelBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
+        // The input messages to the model is either:
+        // a) block.input, if given
+        // b) the current state's accumulated messages
+        if let Some(c) = &block.context {
+            state.scope.insert(
+                "pdl_context".to_string(),
+                PdlResult::List(
+                    c.iter()
+                        .map(|m| {
+                            PdlResult::Block(PdlBlock::Advanced(Block {
+                                metadata: None,
+                                body: Body::Message(m.clone()),
+                            }))
+                        })
+                        .collect(),
+                ),
+            );
+        }
+
+        let input_messages = match &block.input {
+            Some(input) => {
+                // TODO ignoring result and trace
+                let (_result, messages, _trace) = self.run_quiet(&*input, state).await?;
+                messages
+            }
+            None => state.messages.clone(),
+        };
+
+        let mut trace = block.clone();
+
+        // TODO, does this belong in run_advanced(), and does
+        // trace.context belong in Metadata rather than ModelBlock
+        trace.context = Some(
+            state
+                .messages
+                .iter()
+                .map(|m| MessageBlock {
+                    role: self.from_ollama_role(&m.role),
+                    content: Box::new(PdlBlock::String(m.content.clone())),
+                    name: None,
+                    tool_call_id: None,
+                    defsite: None,
+                })
+                .collect(),
+        );
+        // TODO, what is the difference between context and pdl_model_input fields?
+        trace.pdl_model_input = Some(
+            input_messages
+                .iter()
+                .map(|m| MessageBlock {
+                    role: self.from_ollama_role(&m.role),
+                    content: Box::new(PdlBlock::String(m.content.clone())),
+                    name: None,
+                    tool_call_id: None,
+                    defsite: None,
+                })
+                .collect(),
+        );
+
+        let (response_string, usage) =
+            if let PdlResult::String(s) = self.eval_string_to_string(&block.model, state)? {
+                if s.starts_with("ollama/") || s.starts_with("ollama_chat/") {
+                    self.run_ollama_model(s, block, metadata, state, input_messages)
+                        .await
+                /*} else if s.starts_with("openai/") {
+                return self.run_openai_model(s, block, metadata, state, input_messages).await;*/
+                } else {
+                    Err(Box::from(format!("Unsupported model {:?}", block.model)))
+                }
+            } else {
+                Err(Box::from(format!(
+                    "Model expression evaluated to non-string {:?}",
+                    block.model
+                )))
+            }?;
+
+        trace.pdl_usage = usage;
+
+        Ok((
+            PdlResult::String(response_string.clone()),
+            vec![ChatMessage::assistant(response_string)],
+            Model(trace),
+        ))
     }
 
     /// Run a PdlBlock::Data
-    async fn run_data(&mut self, block: &DataBlock, state: &mut State) -> Interpretation {
+    async fn run_data(
+        &mut self,
+        block: &DataBlock,
+        metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Data raw={:?} {:?}", block.raw, block.data);
         }
@@ -781,27 +1055,48 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         if let Some(true) = block.raw {
             let result = self.def(
-                &block.metadata.as_ref().and_then(|m| m.def.clone()),
+                &metadata.def,
                 &resultify(&block.data),
                 &block.parser,
                 state,
                 true,
             )?;
-            Ok((result, vec![], Advanced(Data(trace))))
+            Ok((result, vec![], Data(trace)))
         } else {
             let result = self.def(
-                &block.metadata.as_ref().and_then(|m| m.def.clone()),
+                &metadata.def,
                 &self.eval_json(&block.data, state)?,
                 &block.parser,
                 state,
                 true,
             )?;
             trace.data = from_str(to_string(&result)?.as_str())?;
-            Ok((result, vec![], Advanced(Data(trace))))
+            let messages = match &trace.data {
+                Value::Object(m) => match m.get("pdl__result") {
+                    Some(Value::Array(a)) => a
+                        .iter()
+                        .filter_map(|m| match m {
+                            Value::Object(d) => match d.get("content") {
+                                Some(Value::String(s)) => Some(ChatMessage::user(s.clone())),
+                                _ => None,
+                            },
+                            _ => None,
+                        })
+                        .collect(),
+                    _ => vec![],
+                },
+                _ => vec![],
+            };
+            Ok((result, messages, Data(trace)))
         }
     }
 
-    async fn run_object(&mut self, block: &ObjectBlock, state: &mut State) -> Interpretation {
+    async fn run_object(
+        &mut self,
+        block: &ObjectBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         if self.options.debug {
             eprintln!("Object {:?}", block.object);
         }
@@ -821,16 +1116,17 @@ impl<'a> Interpreter<'a> {
         Ok((
             PdlResult::Dict(result_map),
             messages,
-            Advanced(Object(ObjectBlock { object: trace_map })),
+            Object(ObjectBlock { object: trace_map }),
         ))
     }
 
     /// Run a PdlBlock::Repeat
-    async fn run_repeat(&mut self, block: &RepeatBlock, state: &mut State) -> Interpretation {
-        // { i:[1,2,3], j: [4,5,6]} -> ([i,j], [[1,2,3],[4,5,6]])
-        //        let (variables, values): (Vec<_>, Vec<Vec<_>>) = block
-        //            .into_iter()
-        //            .unzip();
+    async fn run_repeat(
+        &mut self,
+        block: &RepeatBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let iter_scopes = block
             .for_
             .iter()
@@ -849,14 +1145,16 @@ impl<'a> Interpreter<'a> {
         let mut results = vec![];
         let mut messages = vec![];
         let mut trace = vec![];
-        let mut iter_state = state.clone();
+        let mut iter_state = state.with_iter(0);
         if let Some(n) = iter_scopes.iter().map(|(_, v)| v.len()).min() {
             for iter in 0..n {
                 let this_iter_scope = iter_scopes
                     .iter()
                     .map(|(k, v)| (k.clone(), v[iter].clone()))
                     .collect();
-                iter_state = iter_state.extend_scope(vec![this_iter_scope]);
+                iter_state = iter_state
+                    .incr_iter(iter)
+                    .extend_scope(vec![this_iter_scope]);
                 let (result, ms, t) = self.run_quiet(&block.repeat, &mut iter_state).await?;
                 results.push(result);
                 messages.extend(ms);
@@ -865,11 +1163,10 @@ impl<'a> Interpreter<'a> {
             }
         }
 
-        Ok((
-            PdlResult::List(results),
-            messages,
-            Advanced(Repeat(block.clone())),
-        ))
+        state.scope = iter_state.scope;
+        state.escaped_variables = iter_state.escaped_variables;
+
+        Ok((PdlResult::List(results), messages, Repeat(block.clone())))
     }
 
     fn to_ollama_role(&self, role: &Role) -> MessageRole {
@@ -878,6 +1175,15 @@ impl<'a> Interpreter<'a> {
             Role::Assistant => MessageRole::Assistant,
             Role::System => MessageRole::System,
             Role::Tool => MessageRole::Tool,
+        }
+    }
+
+    fn from_ollama_role(&self, role: &MessageRole) -> Role {
+        match role {
+            MessageRole::User => Role::User,
+            MessageRole::Assistant => Role::Assistant,
+            MessageRole::System => Role::System,
+            MessageRole::Tool => Role::Tool,
         }
     }
 
@@ -912,64 +1218,72 @@ impl<'a> Interpreter<'a> {
     async fn run_sequence(
         &mut self,
         block: &impl SequencingBlock,
+        metadata: &Metadata,
         state: &mut State,
-    ) -> Interpretation {
+    ) -> BodyInterpretation {
         if self.options.debug {
-            let description = block
-                .metadata()
-                .as_ref()
-                .and_then(|m| m.description.clone())
-                .or(Some("<no description>".to_string()));
-            eprintln!("{} {:?}", block.kind(), description);
+            eprintln!(
+                "{} {:?}",
+                block.kind(),
+                metadata.description.clone().unwrap_or_default()
+            );
         }
 
         let mut output_results = vec![];
         let mut output_messages = vec![];
         let mut output_blocks = vec![];
 
-        if let Some(meta) = block.metadata() {
-            self.process_defs(&meta.defs, state).await?;
-        }
-
         // here is where we iterate over the sequence items
         let mut iter = block.items().iter();
+        let mut idx = 0;
+        let mut iter_state = state.with_iter(idx);
         while let Some(block) = iter.next() {
-            // run each element of the Text block
-            let (this_result, this_messages, trace) = self.run(&block, state).await?;
+            idx += 1;
 
-            state.messages.extend(this_messages.iter().cloned());
+            // run each element of the Text block
+            let (this_result, this_messages, trace) = self.run(&block, &mut iter_state).await?;
+
+            iter_state = iter_state.incr_iter(idx);
+            iter_state.messages.extend(this_messages.iter().cloned());
 
             output_results.push(this_result);
             output_messages.extend(this_messages.iter().cloned());
             output_blocks.push(trace);
         }
 
-        // self.scope.pop();
-
         let trace = block.with_items(output_blocks);
         let result = self.def(
-            &block.metadata().as_ref().and_then(|m| m.def.clone()),
+            &metadata.def,
             &trace.result_for(output_results),
             trace.parser(),
-            state,
+            &mut iter_state,
             true,
         )?;
+
+        state.scope = iter_state.scope;
+        state.escaped_variables = iter_state.escaped_variables;
+
+        // We may be asked to overlay a role on to the messages (TODO,
+        // does this belong in common code, i.e. run_advanced()?)
         let result_messages = trace.messages_for::<ChatMessage>(&output_messages);
-        Ok((
-            result,
-            match block.role() {
-                Some(role) => result_messages
-                    .into_iter()
-                    .map(|m| ChatMessage::new(self.to_ollama_role(role), m.content))
-                    .collect(),
-                None => result_messages,
-            },
-            trace.to_block(),
-        ))
+        let messages = match block.role() {
+            Some(role) => result_messages
+                .into_iter()
+                .map(|m| ChatMessage::new(self.to_ollama_role(role), m.content))
+                .collect(),
+            None => result_messages,
+        };
+
+        Ok((result, messages, trace.to_block()))
     }
 
     /// Run a PdlBlock::Array
-    async fn run_array(&mut self, block: &ArrayBlock, state: &mut State) -> Interpretation {
+    async fn run_array(
+        &mut self,
+        block: &ArrayBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let mut result_items = vec![];
         let mut all_messages = vec![];
         let mut trace_items = vec![];
@@ -986,15 +1300,16 @@ impl<'a> Interpreter<'a> {
         let mut trace = block.clone();
         trace.array = trace_items;
 
-        Ok((
-            PdlResult::List(result_items),
-            all_messages,
-            Advanced(Array(trace)),
-        ))
+        Ok((PdlResult::List(result_items), all_messages, Array(trace)))
     }
 
     /// Run a PdlBlock::Message
-    async fn run_message(&mut self, block: &MessageBlock, state: &mut State) -> Interpretation {
+    async fn run_message(
+        &mut self,
+        block: &MessageBlock,
+        _metadata: &Metadata,
+        state: &mut State,
+    ) -> BodyInterpretation {
         let (content_result, content_messages, content_trace) =
             self.run(&block.content, state).await?;
         let name = if let Some(name) = &block.name {
@@ -1027,14 +1342,13 @@ impl<'a> Interpreter<'a> {
                 .into_iter()
                 .map(|m| ChatMessage::new(self.to_ollama_role(&block.role), m.content))
                 .collect(),
-            Advanced(Message(MessageBlock {
-                metadata: block.metadata.clone(),
+            Message(MessageBlock {
                 role: block.role.clone(),
                 content: Box::new(content_trace),
                 name: name,
                 defsite: None,
                 tool_call_id: tool_call_id,
-            })),
+            }),
         ))
     }
 }
@@ -1046,13 +1360,21 @@ pub async fn run<'a>(
     initial_scope: Scope,
 ) -> Interpretation {
     crate::pdl::pull::pull_if_needed(&program).await?;
-
+    let trace_file = options.trace.clone();
     let mut interpreter = Interpreter::new(options);
     let mut state = State::new(initial_scope);
     if let Some(cwd) = cwd {
         state.cwd = cwd
     }
-    interpreter.run(&program, &mut state).await
+
+    let res = interpreter.run(&program, &mut state).await?;
+    if let Some(trace_file) = trace_file {
+        let file = ::std::fs::File::create(trace_file)?;
+        let mut writer = ::std::io::BufWriter::new(file);
+        serde_json::to_writer(&mut writer, &res.2)?;
+    }
+
+    Ok(res)
 }
 
 #[allow(dead_code)]
@@ -1204,4 +1526,31 @@ pub fn load_scope(
     }
 
     Ok(scope)
+}
+
+/// Helper function to retrieve a sequence of paths from an environment variable.
+fn get_paths(env_variable_name: &str) -> impl Iterator<Item = String> + '_ {
+    ::std::env::var_os(env_variable_name)
+        .into_iter()
+        .flat_map(move |paths| {
+            split_paths(&paths)
+                .map(|path| {
+                    path.into_os_string()
+                        .into_string()
+                        .unwrap_or_else(|_| panic!("{env_variable_name} isn't valid unicode"))
+                })
+                .collect::<Vec<_>>()
+        })
+}
+
+#[cfg(not(target_os = "wasi"))]
+pub(crate) use ::std::env::split_paths;
+#[cfg(target_os = "wasi")]
+pub(crate) fn split_paths<T: AsRef<std::ffi::OsStr> + ?Sized>(
+    s: &T,
+) -> impl Iterator<Item = std::path::PathBuf> + '_ {
+    use std::os::wasi::ffi::OsStrExt;
+    let s = s.as_ref().as_bytes();
+    s.split(|b| *b == b':')
+        .map(|x| std::ffi::OsStr::from_bytes(x).to_owned().into())
 }

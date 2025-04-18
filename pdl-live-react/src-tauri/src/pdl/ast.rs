@@ -1,5 +1,6 @@
 use ::std::collections::HashMap;
-use ::std::time::{SystemTime, SystemTimeError};
+use ::std::error::Error;
+use ::std::time::SystemTime;
 
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
@@ -56,9 +57,31 @@ pub enum PdlType {
 /// Timing information
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Timing {
-    start_nanos: u128,
-    end_nanos: u128,
+    // TODO serde_json doesn't support u128, but (below) as_nanos() returns u128...
+    start_nanos: u64,
+    end_nanos: u64,
     timezone: String,
+}
+
+type TimingError = Box<dyn Error + Send + Sync>;
+impl Timing {
+    fn now() -> Result<u64, TimingError> {
+        Ok(::std::time::SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)?
+            .as_nanos() as u64)
+    }
+
+    pub fn start() -> Result<Timing, TimingError> {
+        let mut t = Timing::default();
+        t.start_nanos = Timing::now()?;
+        t.timezone = iana_time_zone::get_timezone()?;
+        Ok(t)
+    }
+
+    pub fn end(&mut self) -> Result<(), TimingError> {
+        self.end_nanos = Timing::now()?;
+        Ok(())
+    }
 }
 
 /// Common metadata of blocks
@@ -88,37 +111,18 @@ pub struct Metadata {
     pub pdl_timing: Option<Timing>,
 }
 
-impl Metadata {
-    fn start(&mut self) -> Result<(), SystemTimeError> {
-        let nanos = ::std::time::SystemTime::now()
-            .duration_since(SystemTime::UNIX_EPOCH)?
-            .as_nanos();
-        if let Some(t) = &mut self.pdl_timing {
-            t.start_nanos = nanos;
-        } else {
-            let mut t = Timing::default();
-            t.start_nanos = nanos;
-            self.pdl_timing = Some(t)
-        }
-
-        Ok(())
-    }
-}
-
 /// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "call")]
 pub struct CallBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
-    /// Function to call
     pub call: EvalsTo<String, Box<PdlResult>>,
 
     /// Arguments of the function with their values
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Value>,
+
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 impl CallBlock {
@@ -126,7 +130,7 @@ impl CallBlock {
         CallBlock {
             call: EvalsTo::Jinja(call),
             args: None,
-            metadata: None,
+            pdl_trace: None,
         }
     }
 }
@@ -134,11 +138,10 @@ impl CallBlock {
 pub trait SequencingBlock {
     fn kind(&self) -> &str;
     fn role(&self) -> &Option<Role>;
-    fn metadata(&self) -> &Option<Metadata>;
     fn items(&self) -> &Vec<PdlBlock>;
     fn with_items(&self, items: Vec<PdlBlock>) -> Self;
     fn parser(&self) -> &Option<PdlParser>;
-    fn to_block(&self) -> PdlBlock;
+    fn to_block(&self) -> Body;
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult;
     fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T>;
 }
@@ -147,10 +150,6 @@ pub trait SequencingBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "lastOf")]
 pub struct LastOfBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Sequence of blocks to execute
     #[serde(rename = "lastOf")]
     pub last_of: Vec<PdlBlock>,
@@ -168,9 +167,6 @@ impl SequencingBlock for LastOfBlock {
     fn role(&self) -> &Option<Role> {
         &self.role
     }
-    fn metadata(&self) -> &Option<Metadata> {
-        &self.metadata
-    }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.last_of
     }
@@ -182,8 +178,8 @@ impl SequencingBlock for LastOfBlock {
     fn parser(&self) -> &Option<PdlParser> {
         &self.parser
     }
-    fn to_block(&self) -> PdlBlock {
-        PdlBlock::Advanced(Block::LastOf(self.clone()))
+    fn to_block(&self) -> Body {
+        Body::LastOf(self.clone())
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         match output_results.last() {
@@ -205,10 +201,6 @@ impl SequencingBlock for LastOfBlock {
 #[serde(tag = "kind", rename = "text")]
 #[builder(setter(into, strip_option), default)]
 pub struct TextBlock {
-    #[serde(default, flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Body of the text
     // Note: do NOT apply #[serde(default)] here. This seems to give
     // permission for the deserializer to match everything to
@@ -228,9 +220,6 @@ impl SequencingBlock for TextBlock {
     fn role(&self) -> &Option<Role> {
         &self.role
     }
-    fn metadata(&self) -> &Option<Metadata> {
-        &self.metadata
-    }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.text
     }
@@ -242,14 +231,17 @@ impl SequencingBlock for TextBlock {
     fn parser(&self) -> &Option<PdlParser> {
         &self.parser
     }
-    fn to_block(&self) -> PdlBlock {
-        PdlBlock::Advanced(Block::Text(self.clone()))
+    fn to_block(&self) -> Body {
+        Body::Text(self.clone())
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         PdlResult::String(
             output_results
                 .into_iter()
-                .map(|m| m.to_string())
+                .map(|m| match m {
+                    PdlResult::String(s) => s,
+                    x => x.to_string(),
+                })
                 .collect::<Vec<_>>()
                 .join("\n"),
         )
@@ -269,53 +261,43 @@ pub struct FunctionBlock {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PdlUsage {
-    // Completion tokens consumed
+    /// Completion tokens consumed
     pub completion_tokens: u64,
-    // Prompt tokens consumed
+    /// Prompt tokens consumed
     pub prompt_tokens: u64,
-    // Completion nanos
-    pub completion_nanos: u64,
-    // Prompt nanos
-    pub prompt_nanos: u64,
+    /// Completion nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completion_nanos: Option<u64>,
+    /// Prompt nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prompt_nanos: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
 #[serde(tag = "kind", rename = "model")]
 #[builder(setter(into, strip_option), default)]
 pub struct ModelBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
-    pub model: String,
+    pub model: EvalsTo<String, String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<HashMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<Box<PdlBlock>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub platform: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "modelResponse")]
     pub model_response: Option<String>,
     #[serde(rename = "pdl__usage")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
-}
 
-impl ModelBlock {
-    pub fn with_result(&self, result: PdlResult) -> Self {
-        let mut c = self.clone();
-        let mut metadata = if let Some(meta) = c.metadata {
-            meta
-        } else {
-            Default::default()
-        };
-        metadata.pdl_result = Some(Box::from(result));
-        c.metadata = Some(metadata);
-        c
-    }
+    /// The result of evaluating the `input` field (if given)
+    #[serde(rename = "pdl__model_input", skip_serializing_if = "Option::is_none")]
+    pub pdl_model_input: Option<Vec<MessageBlock>>,
 
-    pub fn description(&self) -> Option<String> {
-        self.metadata.as_ref().and_then(|m| m.description.clone())
-    }
+    /// The actual input given to the model (whether via `input` or from the incoming messages)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context: Option<Vec<MessageBlock>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -338,10 +320,6 @@ pub enum ListOrString {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "repeat")]
 pub struct RepeatBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Arrays to iterate over
     #[serde(rename = "for")]
     pub for_: HashMap<String, EvalsTo<ListOrString, Vec<PdlResult>>>,
@@ -354,10 +332,6 @@ pub struct RepeatBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "message")]
 pub struct MessageBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Role of associated to the message, e.g. User or Assistant
     pub role: Role,
 
@@ -411,10 +385,6 @@ pub struct ObjectBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "data")]
 pub struct DataBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     pub data: Value,
 
     /// Do not evaluate expressions inside strings.
@@ -438,10 +408,6 @@ pub struct DataBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "code")]
 pub struct PythonCodeBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Programming language of the code
     pub lang: String,
 
@@ -472,10 +438,6 @@ pub enum StringOrNull {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "read")]
 pub struct ReadBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Name of the file to read. If `None`, read the standard input.
     pub read: StringOrNull,
 
@@ -513,6 +475,23 @@ pub enum EvalsTo<S, T> {
     Expr(Expr<S, T>),
 }
 
+impl Default for EvalsTo<String, String> {
+    fn default() -> Self {
+        EvalsTo::Const("".to_string())
+    }
+}
+
+impl From<&str> for EvalsTo<String, String> {
+    fn from(s: &str) -> Self {
+        EvalsTo::Const(s.to_string())
+    }
+}
+impl From<String> for EvalsTo<String, String> {
+    fn from(s: String) -> Self {
+        EvalsTo::Const(s)
+    }
+}
+
 /// Conditional control structure.
 ///
 /// Example:
@@ -527,10 +506,6 @@ pub enum EvalsTo<S, T> {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "if")]
 pub struct IfBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// The condition to check
     #[serde(rename = "if")]
     pub condition: EvalsTo<StringOrBoolean, bool>,
@@ -542,6 +517,9 @@ pub struct IfBlock {
     #[serde(rename = "else")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub else_: Option<Box<PdlBlock>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub if_result: Option<bool>,
 }
 
 /// Return the array of values computed by each block of the list of blocks
@@ -549,10 +527,6 @@ pub struct IfBlock {
 #[serde(tag = "kind", rename = "array")]
 #[builder(setter(into, strip_option), default)]
 pub struct ArrayBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Elements of the array
     pub array: Vec<PdlBlock>,
 }
@@ -561,24 +535,22 @@ pub struct ArrayBlock {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "include")]
 pub struct IncludeBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Name of the file to include.
     pub include: String,
+
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 /// Import a PDL file
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "kind", rename = "import")]
 pub struct ImportBlock {
-    #[serde(flatten)]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<Metadata>,
-
     /// Name of the file to include.
     pub import: String,
+
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 /// Block containing only defs
@@ -597,14 +569,26 @@ pub enum PdlBlock {
     String(String),
     Function(FunctionBlock),
     Advanced(Block),
-    // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
+
+    // Must be last to prevent serde from aggressively matching on it,
+    // since other block types also (may) have a `defs`.
     Empty(EmptyBlock),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Block {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
+    #[serde(flatten)]
+    pub body: Body,
 }
 
 /// A PDL block that has structure and metadata
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum Block {
+pub enum Body {
     If(IfBlock),
     Import(ImportBlock),
     Include(IncludeBlock),

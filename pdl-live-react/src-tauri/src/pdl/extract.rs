@@ -1,4 +1,6 @@
-use crate::pdl::ast::{Block::*, Metadata, PdlBlock, PdlBlock::Advanced};
+use crate::pdl::ast::{
+    Block, Body::*, EvalsTo, Expr, Metadata, ModelBlock, PdlBlock, PdlBlock::Advanced,
+};
 
 /// Extract models referenced by the programs
 pub fn extract_models(program: &PdlBlock) -> Vec<String> {
@@ -28,59 +30,80 @@ fn extract_values_iter(program: &PdlBlock, field: &str, values: &mut Vec<String>
         PdlBlock::Function(b) => {
             extract_values_iter(&b.return_, field, values);
         }
-        Advanced(Model(b)) => values.push(b.model.clone()),
-        Advanced(Repeat(b)) => {
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Const(m),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Jinja(m),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
+        Advanced(Block {
+            body:
+                Model(ModelBlock {
+                    model: EvalsTo::<String, String>::Expr(Expr { pdl_expr: m, .. }),
+                    ..
+                }),
+            ..
+        }) => values.push(m.clone()),
+        Advanced(Block {
+            body: Repeat(b), ..
+        }) => {
             extract_values_iter(&b.repeat, field, values);
         }
-        Advanced(Message(b)) => {
+        Advanced(Block {
+            body: Message(b), ..
+        }) => {
             extract_values_iter(&b.content, field, values);
         }
-        Advanced(Array(b)) => b
+        Advanced(Block { body: Array(b), .. }) => b
             .array
             .iter()
             .for_each(|p| extract_values_iter(p, field, values)),
-        Advanced(Text(b)) => {
+        Advanced(Block { body: Text(b), .. }) => {
             b.text
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
-            if let Some(Metadata {
-                defs: Some(defs), ..
-            }) = &b.metadata
-            {
-                defs.values()
-                    .for_each(|p| extract_values_iter(p, field, values));
-            }
         }
-        Advanced(LastOf(b)) => {
+        Advanced(Block {
+            body: LastOf(b), ..
+        }) => {
             b.last_of
                 .iter()
                 .for_each(|p| extract_values_iter(p, field, values));
-            if let Some(Metadata {
-                defs: Some(defs), ..
-            }) = &b.metadata
-            {
-                defs.values()
-                    .for_each(|p| extract_values_iter(p, field, values));
-            }
         }
-        Advanced(If(b)) => {
+        Advanced(Block { body: If(b), .. }) => {
             extract_values_iter(&b.then, field, values);
             if let Some(else_) = &b.else_ {
                 extract_values_iter(else_, field, values);
             }
-            if let Some(Metadata {
-                defs: Some(defs), ..
-            }) = &b.metadata
-            {
-                defs.values()
-                    .for_each(|p| extract_values_iter(p, field, values));
-            }
         }
-        Advanced(Object(b)) => b
+        Advanced(Block {
+            body: Object(b), ..
+        }) => b
             .object
             .values()
             .for_each(|p| extract_values_iter(p, field, values)),
 
         _ => {}
+    }
+
+    if let Advanced(Block {
+        metadata: Some(Metadata {
+            defs: Some(defs), ..
+        }),
+        ..
+    }) = program
+    {
+        defs.values()
+            .for_each(|p| extract_values_iter(p, field, values));
     }
 }

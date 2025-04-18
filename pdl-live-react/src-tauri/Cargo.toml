@@ -38,15 +38,17 @@ minijinja = { version = "2.9.0", features = ["custom_syntax"] }
 #ollama-rs = { version = "0.3.0", features = ["stream"] }
 ollama-rs = { git = "https://github.com/starpit/ollama-rs.git", branch = "tools-pub-7", features = ["stream"] }
 owo-colors = "4.2.0"
-rustpython-vm = "0.4.0"
+rustpython-vm = { git="https://github.com/RustPython/RustPython.git", features= ["importlib", "threading", "encodings"] } # "0.4.0"
 async-recursion = "1.1.1"
 tokio-stream = "0.1.17"
 tokio = { version = "1.44.1", features = ["io-std"] }
 indexmap = { version = "2.9.0", features = ["serde"] }
-rustpython-stdlib = { version = "0.4.0", features = ["zlib"] }
+rustpython-stdlib = { git="https://github.com/RustPython/RustPython.git", features = ["ssl-vendor"] } # 0.4.0
+rustpython-pylib = { git="https://github.com/RustPython/RustPython.git", features = ["freeze-stdlib"] } # 0.4.0
 schemars = "0.8.22"
 fs4 = "0.13.1"
 derive_builder = "0.20.2"
+iana-time-zone = "0.1.63"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-cli = "2"
