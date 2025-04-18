@@ -1189,8 +1189,14 @@ impl<'a> Interpreter<'a> {
 
     fn parse_result(&self, parser: &PdlParser, result: &String) -> Result<PdlResult, PdlError> {
         match parser {
-            PdlParser::Json => from_str(result).map_err(|e| Box::from(e)),
+            PdlParser::Json => from_str(result).map_err(|e| Box::from(e)), // .map_err(|e| PdlError::from(e))
+            PdlParser::Jsonl => Ok(PdlResult::List(
+                serde_json::Deserializer::from_str(result)
+                    .into_iter::<PdlResult>()
+                    .collect::<Result<_, _>>()?,
+            )),
             PdlParser::Yaml => from_yaml_str(result).map_err(|e| Box::from(e)),
+            PdlParser::Regex(_) => todo!(),
         }
     }
 
