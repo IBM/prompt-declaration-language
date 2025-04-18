@@ -716,7 +716,6 @@ impl<'a> Interpreter<'a> {
                     .into_iter()
                     .filter_map(|tool| tool.get("function"))
                     .filter_map(|tool| {
-                        //from_str(&to_string(tool)?)
                         match (
                             tool.get("name"),
                             tool.get("description"),
@@ -731,7 +730,7 @@ impl<'a> Interpreter<'a> {
                                 function: ToolFunctionInfo {
                                     name: name.to_string(),
                                     description: description.to_string(),
-                                    parameters: schemars::schema_for_value!(parameters),
+                                    parameters: from_str(&to_string(parameters).unwrap()).unwrap(),
                                 },
                             }),
                             _ => {
@@ -779,6 +778,12 @@ impl<'a> Interpreter<'a> {
         let interp = vm::Interpreter::with_init(settings, |vm| {
             vm.add_native_modules(rustpython_stdlib::get_module_inits());
             vm.add_frozen(rustpython_pylib::FROZEN_STDLIB);
+
+            vm.add_native_module("pydantic".to_owned(), Box::new(pydantic::make_module));
+            vm.add_native_module(
+                "pydantic_settings".to_owned(),
+                Box::new(pydantic_settings::make_module),
+            );
         });
         interp.enter(|vm| -> BodyInterpretation {
             let scope = vm.new_scope_with_builtins();
@@ -835,26 +840,60 @@ impl<'a> Interpreter<'a> {
         })
     }
 
+    /// Ollama Function call template, for models that don't support function calling directly
+    /// TODO query ollama API to determine if model supports tool calling
+    fn tool_call_prompt(
+        &self,
+        messages: &Messages,
+        tools: &Vec<ToolInfo>,
+    ) -> Result<Messages, PdlError> {
+        if tools.len() == 0 {
+            return Ok(messages.clone());
+        }
+
+        let mut function_prompt = format!(
+            "Produce JSON OUTPUT ONLY! Adhere to this format {{\"name\": \"function_name\", \"arguments\":{{\"argument_name\": \"argument_value\"}}}} The following functions are available to you:"
+        );
+        tools.into_iter().try_for_each(|f| {
+            function_prompt += format!("\n{:?}\n", to_string(&f)?).as_str();
+            Ok::<(), PdlError>(())
+        })?;
+
+        Ok(
+            match messages
+                .into_iter()
+                .position(|m| m.role == MessageRole::System)
+            {
+                Some(idx) => {
+                    let mut m = messages.clone();
+                    m[idx].content += function_prompt.as_str();
+                    m
+                }
+                None => messages
+                    .clone()
+                    .splice(0..0, vec![ChatMessage::system(function_prompt)])
+                    .collect(),
+            },
+        )
+    }
+
     async fn run_ollama_model(
         &mut self,
-        pdl_model: String,
+        model: &str,
         block: &ModelBlock,
         metadata: &Metadata,
         state: &mut State,
-        input_messages: Vec<ChatMessage>,
+        input_messages_0: Vec<ChatMessage>,
     ) -> Result<(String, Option<PdlUsage>), PdlError> {
         let mut ollama = Ollama::default();
-        let model = if pdl_model.starts_with("ollama/") {
-            &pdl_model[7..]
-        } else {
-            &pdl_model[12..]
-        };
 
         let (options, tools) = self.to_ollama_model_options(&block.parameters);
         if self.options.debug {
             eprintln!("Model options {:?} {:?}", metadata.description, options);
             eprintln!("Model tools {:?} {:?}", metadata.description, tools);
         }
+
+        let input_messages = self.tool_call_prompt(&input_messages_0, &tools)?;
 
         let (prompt, history_slice): (&ChatMessage, &[ChatMessage]) =
             match input_messages.split_last() {
@@ -871,6 +910,7 @@ impl<'a> Interpreter<'a> {
 
         let req = ChatMessageRequest::new(model.into(), vec![prompt.clone()])
             .options(options)
+            // .format(ollama_rs::generation::parameters::FormatType::Json)
             .tools(tools);
 
         let (last_res, response_string) = if !self.options.stream {
@@ -885,10 +925,8 @@ impl<'a> Interpreter<'a> {
                 .send_chat_messages_with_history_stream(
                     ::std::sync::Arc::new(::std::sync::Mutex::new(history)),
                     req,
-                    //ollama.generate(GenerationRequest::new(model.into(), prompt),
                 )
                 .await?;
-            // dbg!("Model result {:?}", &res);
 
             let emit = if let Some(_) = &block.model_response {
                 false
@@ -947,6 +985,52 @@ impl<'a> Interpreter<'a> {
         };
 
         Ok((response_string, usage))
+    }
+
+    async fn run_openai_model(
+        &mut self,
+        model: &str,
+        _block: &ModelBlock,
+        _metadata: &Metadata,
+        _state: &mut State,
+        _input_messages: Vec<ChatMessage>,
+    ) -> Result<(String, Option<PdlUsage>), PdlError> {
+        use async_openai::types::ChatCompletionRequestUserMessageArgs;
+        use async_openai::{Client, types::CreateChatCompletionRequestArgs};
+
+        let client = Client::new();
+
+        let request = CreateChatCompletionRequestArgs::default()
+            .model(model)
+            .max_tokens(512u32)
+            .messages([ChatCompletionRequestUserMessageArgs::default()
+                .content(
+                    "Write a marketing blog praising and introducing Rust library async-openai",
+                )
+                .build()?
+                .into()])
+            .build()?;
+
+        let mut stream = client.chat().create_stream(request).await?;
+        let mut stdout = stdout();
+        let mut response_string = String::new();
+        while let Some(result) = stream.next().await {
+            match result {
+                Ok(response) => {
+                    let mut iter = response.choices.iter();
+                    while let Some(chat_choice) = iter.next() {
+                        if let Some(ref content) = chat_choice.delta.content {
+                            stdout.write_all(content.as_bytes()).await?;
+                            stdout.flush().await?;
+                            response_string += content.as_str();
+                        }
+                    }
+                }
+                Err(e) => return Err(Box::from(e)),
+            }
+        }
+
+        Ok((response_string, None))
     }
 
     /// Run a PdlBlock::Model
@@ -1018,10 +1102,18 @@ impl<'a> Interpreter<'a> {
         let (response_string, usage) =
             if let PdlResult::String(s) = self.eval_string_to_string(&block.model, state)? {
                 if s.starts_with("ollama/") || s.starts_with("ollama_chat/") {
-                    self.run_ollama_model(s, block, metadata, state, input_messages)
+                    let model = if s.starts_with("ollama/") {
+                        &s[7..]
+                    } else {
+                        &s[12..]
+                    };
+
+                    self.run_ollama_model(model, block, metadata, state, input_messages)
                         .await
-                /*} else if s.starts_with("openai/") {
-                return self.run_openai_model(s, block, metadata, state, input_messages).await;*/
+                } else if s.starts_with("openai/") {
+                    let model = &s[7..];
+                    self.run_openai_model(model, block, metadata, state, input_messages)
+                        .await
                 } else {
                     Err(Box::from(format!("Unsupported model {:?}", block.model)))
                 }
@@ -1559,4 +1651,74 @@ pub(crate) fn split_paths<T: AsRef<std::ffi::OsStr> + ?Sized>(
     let s = s.as_ref().as_bytes();
     s.split(|b| *b == b':')
         .map(|x| std::ffi::OsStr::from_bytes(x).to_owned().into())
+}
+
+use rustpython_vm::pymodule;
+#[pymodule]
+mod pydantic {
+    // use super::*;
+    use rustpython_vm::{PyPayload, pyclass};
+
+    #[pyattr]
+    const __version__: u32 = 1;
+
+    #[pyattr]
+    #[pyclass(module = "pydantic", name = "BaseModel")]
+    #[derive(Debug, PyPayload)]
+    struct BaseModel {}
+
+    #[pyclass(flags(BASETYPE))]
+    impl BaseModel {}
+
+    #[pyattr]
+    #[pyclass(module = "pydantic", name = "Field")]
+    #[derive(Debug, PyPayload)]
+    struct Field {}
+
+    #[pyclass]
+    impl Field {}
+
+    #[pyattr]
+    #[pyclass(module = "pydantic", name = "ValidationError")]
+    #[derive(Debug, PyPayload)]
+    struct ValidationError {}
+
+    #[pyclass]
+    impl ValidationError {}
+
+    #[pyattr]
+    #[pyclass(module = "pydantic", name = "InstanceOf")]
+    #[derive(Debug, PyPayload)]
+    struct InstanceOf {}
+
+    #[pyclass]
+    impl InstanceOf {}
+
+    #[pyattr]
+    #[pyclass(module = "pydantic", name = "ConfigDict")]
+    #[derive(Debug, PyPayload)]
+    struct ConfigDict {}
+
+    #[pyclass]
+    impl ConfigDict {}
+}
+
+#[pymodule]
+mod pydantic_settings {
+    use rustpython_vm::{
+        PyPayload, PyResult, VirtualMachine, builtins::PyDict, function::FuncArgs, pyclass,
+    };
+
+    #[pyfunction]
+    fn SettingsConfigDict(_rest: FuncArgs, _vm: &VirtualMachine) -> PyResult<PyDict> {
+        Ok(PyDict::default())
+    }
+
+    #[pyattr]
+    #[pyclass(module = "pydantic_settings", name = "BaseSettings")]
+    #[derive(Debug, PyPayload)]
+    struct BaseSettings {}
+
+    #[pyclass(flags(BASETYPE))]
+    impl BaseSettings {}
 }
