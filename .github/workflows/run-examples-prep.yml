@@ -16,8 +16,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0
         ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        token: ${{ secrets.PDL_PAT }}
+        fetch-depth: 0
       
     - name: Push the new run-examples yaml config 
       shell: bash 
