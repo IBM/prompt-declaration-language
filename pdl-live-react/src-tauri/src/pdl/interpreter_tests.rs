@@ -206,6 +206,29 @@ mod tests {
     }
 
     #[test]
+    fn text_parser_jsonl() -> Result<(), Box<dyn Error>> {
+        let json = "{\"key\":\"value\"}
+{\"key2\":\"value2\"}";
+        let program = json!({
+            "text": [
+                { "def": "foo", "parser": "jsonl", "text": [json] },
+                "${ foo[0].key }",
+                "${ foo[1].key2 }"
+            ]
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 3);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, json);
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "value");
+        assert_eq!(messages[2].role, MessageRole::User);
+        assert_eq!(messages[2].content, "value2");
+        Ok(())
+    }
+
+    #[test]
     fn last_of_parser_json() -> Result<(), Box<dyn Error>> {
         let json = "{\"key\":\"value\"}";
         let program = json!({
