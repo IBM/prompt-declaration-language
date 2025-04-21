@@ -11,47 +11,24 @@ defs:
       Answer: Let's think step by step. ${ reasoning }
       The answer is ${ answer }
 
-  # Auto Chain of Thought Zhang et al. (2022)
-  # The idea is to use a _model_ to generate a reasoning path, even if not very accurate.
-  # It is best combined with some fewshot examples
-  auto_chain_of_thought:
-    function:
-      question: str
-      model: str
-      answer: str
-    return:
-      text:
-      - |-
-        Question: ${ question }
-      - "Answer: Let's think step by step. "
-      - model: ${ model }
-        parameters:
-          # decoding_method: "greedy"
-          max_tokens: 1024
-          temperature: 0
-          stop:
-            - "The answer is"
-          include_stop_sequence: false
-      - "The answer is ${ answer }"
-
   fewshot_cot:
     function:
       examples:
         { list: { obj: { question: str, reasoning: str, answer: str } } }
     return:
       text:
-      - for:
-          example: ${ examples }
-        repeat:
-          text:
-            - call: ${ cot_block }
-              args:
-                question: ${ example.question }
-                reasoning: ${ example.reasoning }
-                answer: ${ example.answer }
-            - "\n\n"
-        join:
-          with: ""
+        - for:
+            example: ${ examples }
+          repeat:
+            text:
+              - call: ${ cot_block }
+                args:
+                  question: ${ example.question }
+                  reasoning: ${ example.reasoning }
+                  answer: ${ example.answer }
+              - "\n\n"
+          join:
+            with: ""
 
   chain_of_thought:
     function:
@@ -60,68 +37,20 @@ defs:
       examples:
         { list: { obj: { question: str, reasoning: str, answer: str } } }
     return:
-      text:
-      - call: ${ fewshot_cot }
-        args:
-          examples: ${ examples }
-      - "Question: ${ question }\n"
-      - "Answer: Let's think step by step. "
-      - model: ${ model }
-        parameters:
-          max_tokens: 1024
-          temperature: 0
-          stop:
-            - "<|endoftext|>"
-            - "Question:"
-          include_stop_sequence: false
-
-  claim_cot:
-    function:
-      question: str
-      reasoning: str
-      answer: str
-    return: |-
-      Task: On June 2017, the following claim was made: ${ question }
-      Q: Was this claim true or false?
-      Thought: Let's think step by step. ${ reasoning|trim }
-      Answer: The claim is ${ answer }
-
-  fewshot_cot_claim:
-    function:
-      examples:
-        { list: { obj: { question: str, reasoning: str, answer: str } } }
-    return:
-      text:
-      - for:
-          example: ${ examples }
-        repeat:
-          text:
-            - call: ${ claim_cot }
-              args:
-                question: ${ example.question }
-                reasoning: ${ example.reasoning }
-                answer: ${ example.answer }
-            - "\n\n"
-        join:
-          with: ""
-
-  chain_of_thought_claim:
-    function:
-      question: str
-      model: str
-      examples:
-        { list: { obj: { question: str, reasoning: str, answer: str } } }
-    return:
-      text:
-      - call: ${ fewshot_cot_claim }
-        args:
-          examples: ${ examples }
-      - "${ question }\n"
-      - "Thought: Let's think step by step. "
-      - model: ${ model }
-        parameters:
-          temperature: 0
-          stop:
-            - "<|endoftext|>"
-          max_tokens: 1024
-          include_stop_sequence: false
+      lastOf:
+        - call: ${ fewshot_cot }
+          args:
+            examples: ${ examples }
+        - "Question: ${ question }\n"
+        - "Answer: Let's think step by step. "
+        - model: ${ model }
+          def: answer
+          parameters:
+            max_tokens: 1024
+            temperature: 0
+            stop:
+              - "<|endoftext|>"
+              - "Question:"
+            include_stop_sequence: false
+        - data:
+            answer: ${ answer|trim }

@@ -32,132 +32,29 @@ defs:
                 then: "${ type }: ${ trajectory[type]|trim }"
         - "\n"
 
-  react_code_block:
-    function:
-      trajectory: { list: obj }
-    return:
-      text:
-        - for:
-            trajectory: ${ trajectory }
-          repeat:
-            text:
-              - def: type
-                text: ${ trajectory.keys()|first }
-                contribute: []
-              - if: ${ type == 'task'}
-                then: |
-                  Task:
-                  ${ trajectory[type]|trim }
-              - if: ${ type == 'thought'}
-                then:
-                  text:
-                    - "\n"
-                    - |
-                      Assistant:
-                      <thought>${ trajectory[type]|trim }</thought>
-              - if: ${ type == 'action'}
-                then: |
-                  <execute>
-                  ${ trajectory[type]|trim }
-                  </execute>
-              - if: ${ type == 'observation'}
-                then:
-                  text:
-                    - "\n"
-                    - |
-                      Observation:
-                      ${ trajectory[type]|trim }
-              - if: ${ type == 'solution'}
-                then: |-
-                  <solution>
-                  ${ trajectory[type]|trim }
-                  </solution>
-              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation', 'solution'] }
-                then: "${ type }: ${ trajectory[type]|trim }"
-        - "\n"
-
-  finish_action:
-    data:
-      display_name: Finish
-      pdl_function:
-      description: Respond with the Answer
-      parameters:
-        - name: answer
-          type: string
-          description: The answer
-      examples: []
-
-  demonstrate_tools:
-    function:
-      tools: { list: obj }
-    return:
-      for:
-        tool: ${ tools }
-      repeat:
-        for:
-          example: ${ tool.examples }
-        repeat:
-          call: ${ react_block }
-          args:
-            trajectory: ${ example }
-
   react:
     function:
       task: str
       model: str
-      tools: { list: obj }
+      tool_schema: { list: obj }
+      tools: obj
       trajectories: { list: list }
-      system_prompt: str
     return:
       lastOf:
-        - if: ${ system_prompt == "llama3"}
-          then:
-            text:
-              - role: system
-                contribute: [context]
-                text:
-                  - "Cutting Knowledge Date: December 2023\nToday Date: "
-                  - lang: python
-                    code: |
-                      from datetime import datetime
-                      result = datetime.today().strftime('%d %B %Y\n\n')
-              - role: system
-                text: You are a helpful assistant with tool calling capabilities. When you receive a tool call response, use the output to format an answer to the orginal use question.
-                contribute: [context]
-              - role: user
-                text: |
-                  Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+        - role: system
+          text:
+            - "Today's Date: "
+            - lang: python
+              code: |
+                from datetime import datetime
+                result = datetime.today().strftime('%B %d, %Y.\n')
+            - |
+              You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
 
-                  Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+              Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
 
-                  ${ tools }
-                contribute: [context]
-        - if: ${ system_prompt  == "granite_llama" }
-          then:
-            text:
-              - role: system
-                text: |
-                  You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
-
-                  Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
-
-                  ${ tools }
-                contribute: [context]
-        - if: ${ system_prompt == "granite_tools" }
-          then:
-            text:
-              - role: system
-                contribute: [context]
-                text:
-                  - "Knowledge Cutoff Date: April 2024.\nToday's Date: "
-                  - lang: python
-                    code: |
-                      from datetime import datetime
-                      result = datetime.today().strftime('%B %d, %Y.\n')
-                  - |
-                    You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with a JSON object of the tool to use. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
-
-                    ${ tools }
+              ${ tool_schema }
+          contribute: [context]
         - "\n"
         - for:
             traj: ${ trajectories }
@@ -173,16 +70,21 @@ defs:
         - def: exit
           contribute: []
           data: False
+        - def: tool_names
+          contribute: []
+          text: ${ tool_schema|map(attribute='function.name')|list }
         - repeat:
             text:
               - "\nTho: "
               - def: thought
                 model: "${ model }"
+                contribute: []
                 parameters:
                   stop:
                     - "Act:"
                   max_tokens: 256
                   include_stop_sequence: false
+              - "${ thought|trim }"
               - "\nAct: "
               - def: action
                 model: "${ model }"
@@ -195,17 +97,17 @@ defs:
               - if: ${ action != prev_action }
                 then:
                   def: observation
-                  if: ${ action.name.lower() != 'finish' }
+                  if: ${ action.name.lower() != "finish" }
                   then:
                     text:
                       - "\nObs: "
-                      - if: ${ action.name.lower() in pdl_tools }
+                      - if: ${ action.name in tools }
                         then:
-                          call: ${ pdl_tools[action.name.lower()] }
+                          call: ${ tools[action.name] }
                           args:
                             arguments: ${ action.arguments }
-                        else: "Invalid action. Valid actions are ${ (pdl_tools.keys()|list)[:-1]|join(', ') }, and ${ (pdl_tools.keys()|list)[-1] }."
-                      - "\n"
+                        else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+                      # - "\n"
                 else:
                   def: exit
                   contribute: []
@@ -215,4 +117,4 @@ defs:
                 data: ${ action }
           until: ${ action.name.lower() == "finish" or exit }
         - data:
-            answer: ${ (action.arguments.answer|default("No answer found."))|trim } # Factor 5: answer argument name. some models really like putting answer in.
+            answer: ${ (action.arguments.answer|default("No answer found."))|trim }

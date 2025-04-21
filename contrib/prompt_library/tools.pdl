@@ -15,53 +15,28 @@ defs:
       tools: { list: obj }
       tool_names: { list: str }
     return:
-      data: ${ tools|selectattr('display_name', 'in', tool_names)|list }
+      data: ${ tools|selectattr('function.name', 'in', tool_names)|list }
 
-  list_tools:
-    function:
-      tools: { list: obj }
-    return:
-      lastOf:
-      - defs:
-          signatures:
-            for:
-              tool: ${ tools }
-            repeat: "${ tool.display_name }[<${ tool.parameters|join('>, <', attribute='name') }>]"
-            join:
-              as: array
-          typed_signatures:
-            for:
-              tool: ${ tools }
-            repeat:
-              lastOf:
-              - defs:
-                  params:
-                    for:
-                      param: ${ tool.parameters }
-                    repeat: "${ param.name}${ (': ' ~ param.type) if param.type else '' }"
-              - "${ tool.display_name }(${ params|join(', ') })"
-            join:
-              as: array
-          display_names: ${ tools|map(attribute='display_name')|list }
-          pdl_functions: ${ tools|map(attribute='pdl_function')|list }
-          name_map:
-            lang: python
-            code: |
-              result = dict(zip(display_names, pdl_functions, strict=True))
-      - data:
-          names: ${ tools|map(attribute='display_name')|list }
-          display_names: ${ tools|map(attribute='display_name')|list }
-          pdl_functions: ${ tools|map(attribute='pdl_function')|list }
-          name_map: ${ name_map }
-          signatures: ${ signatures }
-          typed_signatures: ${ typed_signatures }
-          descriptions: ${ tools|map(attribute='description')|list }
+  finish_action:
+    data:
+      type: function
+      function:
+        name: finish
+        description: Respond with the answer
+        parameters:
+          type: object
+          properties:
+            answer:
+              type: str
+              description: The answer
+            required:
+              - answer
 
-  tools:
+  tool_schema:
     data:
       - type: function
         function:
-          name: Calculator
+          name: calculator
           description: Calculator function
           parameters:
             type: object
@@ -71,21 +46,21 @@ defs:
                 description: Arithmetic expression to calculate
             required:
               - expr
-
       - type: function
         function:
-          name: finish
-          description: Respond with the answer
+          name: Search
+          description: Search Wikipedia for a summary
           parameters:
             type: object
             properties:
-              answer:
-                type: str
-                description: The answer
-              required:
-                - answer
+              topic:
+                type: string
+                description: The topic of interest
+            required:
+              - topic
+      - ${ finish_action }
 
-  pdl_tools:
+  tools:
     object:
       calculator:
         function:
@@ -115,21 +90,21 @@ defs:
           arguments: obj
         return:
           lastOf:
-          - def: result
-            lang: python
-            code: |
-              import warnings, wikipedia
-              warnings.simplefilter("ignore")
+            - def: result
+              lang: python
+              code: |
+                import warnings, wikipedia
+                warnings.simplefilter("ignore")
 
-              def main(topic: str, *args, **kwargs) -> str:
-                try:
-                  return wikipedia.summary(topic)
-                except wikipedia.DisambiguationError as d:
-                  return f"\"{topic}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
-                except wikipedia.WikipediaException as e:
-                  return str(e)
+                def main(topic: str, *args, **kwargs) -> str:
+                  try:
+                    return wikipedia.summary(topic)
+                  except wikipedia.DisambiguationError as d:
+                    return f"\"{topic}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
+                  except wikipedia.WikipediaException as e:
+                    return str(e)
 
-              result = main(**arguments)
-          - if: ${ wrap_document }
-            then: "[Document]\n${ result|trim }\n[End]"
-            else: ${ result }
+                result = main(**arguments)
+            - if: ${ wrap_document }
+              then: "[Document]\n${ result|trim }\n[End]"
+              else: ${ result }

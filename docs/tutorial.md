@@ -416,17 +416,19 @@ The `import` block means that the PDL code at that file is executed and its scop
 
 ## Prompt Library
 
-A prompt library is included in the `contrib/` directory. These modules define some common patterns such Chain-of-Thought, ReAct, and ReWOO.
+A prompt library is included in the `contrib/` directory. These modules define some common patterns such Chain-of-Thought, ReAct, and ReWOO. Example usage can be found in `examples/prompt_library`. Note that `import` blocks resolve file paths relative to the PDL file being executed.
 
-In the `GSM8K` example below, we import `CoT` and define our model, demonstrations (a list of dictionaries), and the question.
+### Chain-of-Thought
 
-``` yaml
+In the `GSM8K` example below, we import `CoT` [(Wei et al., 2022)](https://arxiv.org/abs/2201.11903) and define our model, demonstrations, and the question. Demonstrations are a list of dictionaries with `question`, `reasoning`, and `answer` keys. The `cot.chain_of_thought` function returns a dictionary with an `answer` key.
+
+``` yaml title="examples/prompt_library/gsm8k_cot.pdl"
 --8<-- "./examples/prompt_library/gsm8k_cot.pdl"
 ```
 
-Executing this example results in the following output (model response highlighted):
+Executing this example produces the following background context (model response highlighted):
 
-``` text linenums="1" hl_lines="27-31"
+``` text hl_lines="27-31"
 Answer the questions to the best of your abilities.
 
 Question: Noah charges $60 for a large painting and $30 for a small painting.
@@ -458,6 +460,228 @@ Answer: Let's think step by step.
 3. Jake works 8 hours a day, so he earns $18 * 8 = $144 per day.
 4. Jake works 5 days, so he earns $144 * 5 = $720 in 5 days.
 The answer is $720.
+```
+
+The final result is:
+
+``` text
+Answer the questions to the best of your abilities.
+
+Result: {'answer': '1. Jacob earns $6 per hour.\n2. Jake earns thrice what Jacob does, so Jake earns 3 * $6 = $18 per hour.\n3. Jake works 8 hours a day, so he earns $18 * 8 = $144 per day.\n4. Jake works 5 days, so he earns $144 * 5 = $720 in 5 days.\nThe answer is $720.'}
+```
+
+### ReAct
+
+In the ReAct [(Yao et al., 2022)](https://arxiv.org/abs/2210.03629) example below, we import the ReAct library and provide tools from `tools.pdl`. Demonstrations consist of agent trajectories represented as a list of lists with key names `question` or `task`, `thought`, `action`, and `observation`. Actions follow this pattern: `{"name": "tool_name", "arguments": {"arg1": "..."}}`. The function returns a dictionary with a `answer` key, containing the answer.
+
+``` yaml title="examples/prompt_library/gsm8k_react.pdl"
+--8<-- "./examples/prompt_library/gsm8k_react.pdl"
+```
+
+Produces background context (model responses highlighted):
+
+``` text hl_lines="22 23 25 26 28 29 31 32"
+Question: Noah charges $60 for a large painting and $30 for a small painting.  Last month he sold eight large paintings and four small paintings.  If he sold twice as much this month, how much is his sales for this month?
+Tho: He sold 8 large paintings and 4 small paintings last month.  He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+Act: {"name": "calculator", "arguments": {"expr": "8*60+4*30"}}
+Obs: 600
+Tho: He sold twice as many paintings this month, therefore I need to calculate 600*2.
+Act: {"name": "calculator", "arguments": {"expr": "600*2"}}
+Obs: 1200
+Tho: He sold $1200 this month.
+Act: {"name": "finish", "arguments": {"answer": "$1200"}}
+
+Question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+Tho: I need to calculate the difference in age between Teresa and Morio.
+Act: {"name": "calculator", "arguments": {"expr": "71-59"}}
+Obs: 12
+Tho: I need to calculate how old Teresa is when their daughter is born.
+Act: {"name": "calculator", "arguments": {"expr": "38-12"}}
+Obs: 26
+Tho: Teresa was 26 when she gave birth to Michiko.
+Act: {"name": "finish", "arguments": {"answer": "26"}}
+
+Question: Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?
+Tho: Jacob earns $6 per hour. Jake earns thrice as much.
+Act: {"name": "calculator", "arguments": {"expr": "6*3"}}
+Obs: 18
+Tho: Jake earns $18 per hour.
+Act: {"name": "calculator", "arguments": {"expr": "18*8"}}
+Obs: 144
+Tho: Jake earns $144 in a day.
+Act: {"name": "calculator", "arguments": {"expr": "144*5"}}
+Obs: 720
+Tho: Jake earns $720 in 5 days.
+Act: {"name": "finish", "arguments": {"answer": "$720"}}
+```
+
+The final result is:
+
+``` text
+Result: {'answer': '$720'}
+```
+
+#### Tools
+
+Tools allow the agentic patterns to call PDL functions. The tools are defined in two parts. The `tools` object is a dictionary of tool names to PDL functions. The `tool_schema` is a JSON schema, represented as a `data` block consisting of list of dictionaries, that describes the tools to the LLM. The `tools` library contains a calculator and a Wikipedia search tool by default. There are a few requirements to consider when using tools.
+
+1. You must have a `finish` tool in the _schema_. You do not need a PDL function for this, but the LLM needs to be aware of the `finish` tool so the `ReAct` loop can end.
+2. A PDL tool function must accept only `arguments: obj` as parameters.
+
+Here we define our tools in PDL, with an example using a `python` block. Note the use of `arguments: obj`.
+
+``` yaml
+tools:
+  object:
+    hello:
+      function:
+        arguments: obj
+      return:
+        lang: python
+        code: |
+          result = None
+          def main(name: str, *args, **kwargs) -> str:
+            return f"hello {name}"
+          result = main(**arguments)
+
+    another_function: ...
+```
+
+Once we have defined our PDL functions, we describe them in the `tool_schema`.
+
+``` yaml
+tool_schema:
+  data:
+    - type: function
+      function:
+        name: hello
+        description: Hello function, returns "hello <name>"
+        parameters:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name to greet
+          required:
+            - name
+
+    - type: function
+      function:
+        name: finish
+        description: Respond with the answer
+        parameters:
+          type: object
+          properties:
+            answer:
+              type: str
+              description: The answer
+            required:
+              - answer
+```
+
+Another useful thing to remember is that data blocks are templated in PDL. For example, this is valid:
+
+``` yaml
+finish_action:
+  data:
+    type: function
+    function:
+      name: finish
+      description: Respond with the answer
+      parameters:
+        type: object
+        properties:
+          answer:
+            type: str
+            description: The answer
+          required:
+            - answer
+
+tool_schema:
+  data:
+    - type: function
+      function:
+        name: calculator
+        description: Calculator function
+        parameters:
+          type: object
+          properties:
+            expr:
+              type: string
+              description: Arithmetic expression to calculate
+          required:
+            - expr
+    - ${ finish_action }
+```
+
+In fact, you can reuse the `finish_action` from `tools` in your own tool schemas:
+
+``` yaml
+defs:
+  tools:
+    import: ../../contrib/prompt_library/tools
+  my_tool_schema:
+    data:
+      - ${ tools.finish_action }
+      - ...
+```
+
+Additionally, there is a helper function `filter_tools_by_name` in `tools`, that given a JSON tools schema and a list of tool names, returns a schema with only those tools in it. This is useful if you have defined many tools, but don't need all of them for a particular task.
+
+``` yaml
+call: ${ tools.filter_tools_by_name }
+args:
+  tools: ${ tools.tool_schema }
+  tool_names: ['calculator', 'finish']
+```
+
+### ReWOO
+
+The tools can be reused for ReWOO [(Xu et al., 2023)](https://arxiv.org/abs/2305.18323). Demonstrations follow a similar pattern as for ReAct, except that ReWOO does not use a `finish` tool/action, nor does it include `observation`, and thus should be omitted from the demonstrations. The argument `show_plans` is used for displaying the extracted ReWOO plans in the background context for debugging purposes i.e. `--stream context`. The function returns a dictionary with a `answer` key, containing the answer.
+
+``` yaml title="examples/prompt_library/gsm8k_rewoo.pdl"
+--8<-- "./examples/prompt_library/gsm8k_rewoo.pdl"
+```
+
+This results in the following background context:
+
+``` text hl_lines="18 28-30"
+For the following task, make plans that can solve the problem step by step. For each plan, indicate which external tool together with tool input to retrieve evidence. You can store the evidence into a variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
+
+Tools can be one of the following:
+[{'type': 'function', 'function': {'name': 'calculator', 'description': 'Calculator function', 'parameters': {'type': 'object', 'properties': {'expr': {'type': 'string', 'description': 'Arithmetic expression to calculate'}}, 'required': ['expr']}}}]
+
+Task: Noah charges $60 for a large painting and $30 for a small painting. Last month he sold eight large paintings and four small paintings. If he sold twice as much this month, how much is his sales for this month?
+Plan: He sold 8 large paintings and 4 small paintings last month. He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30) #E1 = {"name": "calculator", "arguments": {"expr": "8*60+4*30"}}
+Plan: He sold twice as many paintings this month, therefore I need to calculate 600*2. #E2 = {"name": "calculator", "arguments": {"expr": "600*2"}}
+
+Task: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+Plan: I need to calculate the difference in age between Teresa and Morio. #E1 = {"name": "calculator", "arguments": {"expr": "71-59"}}
+Plan: I need to calculate how old Teresa is when their daughter is born. #E2 = {"name": "calculator", "arguments": {"expr": "38-12"}}
+
+Begin!
+Describe your plans with rich details. Each Plan should be followed by only one #E.
+
+Question: Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?
+[["First, I need to calculate Jake's hourly wage. Since Jake earns thrice what Jacob does, and Jacob earns $6 per hour, Jake earns 3 * $6 = $18 per hour.", "#E1", "{\"name\": \"calculator\", \"arguments\": {\"expr\": \"6*3\"}}"]]
+
+Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+
+Plan: First, I need to calculate Jake's hourly wage. Since Jake earns thrice what Jacob does, and Jacob earns $6 per hour, Jake earns 3 * $6 = $18 per hour.
+Evidence: 18
+
+Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+
+Question: Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?
+Response: Jake earns $18 per hour. In 5 days, working 8 hours a day, Jake works 5 * 8 = 40 hours. Therefore, Jake earns 40 * $18 = $720 in 5 days.
+
+Answer: $720
+```
+
+The final result of this example is
+
+``` text
+Result: {"answer": "Jake earns $18 per hour. In 5 days, working 8 hours a day, Jake works 5 * 8 = 40 hours. Therefore, Jake earns 40 * $18 = $720 in 5 days.\n\nAnswer: $720"}
 ```
 
 ## Conditionals and Loops

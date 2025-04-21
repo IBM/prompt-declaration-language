@@ -8,43 +8,44 @@ defs:
       trajectory: { list: obj }
     return:
       text:
-      - defs:
-          i:
-            data: 1
-      - for:
-          trajectory: ${ trajectory }
-        repeat:
-          text:
-          - defs:
-              type:
-                text: ${ trajectory.keys()|first }
-              content:
-                text: ${ trajectory.values()|first }
-          - if: ${ type in ['task', 'question'] }
-            then: |-
-              Task: ${ content|trim }
-          - if: ${ type == 'thought'}
-            then: |-
-
-              Plan: ${ content|trim }
-          - if: ${ type == 'action'}
-            then:
-              text:
-              - " #E${ i } = ${ content|trim }"
+        - defs:
+            i:
+              data: 1
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
               - defs:
-                  i:
-                    data: ${ i+1 }
-          - if: ${ type == 'observation'}
-            then: ""
-          - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
-            then: "${ type }: ${ content|trim }\n"
-      - "\n"
+                  type:
+                    text: ${ trajectory.keys()|first }
+                  content:
+                    text: ${ trajectory.values()|first }
+              - if: ${ type in ['task', 'question'] }
+                then: |-
+                  Task: ${ content|trim }
+              - if: ${ type == 'thought'}
+                then: |-
+
+                  Plan: ${ content|trim }
+              - if: ${ type == 'action'}
+                then:
+                  text:
+                    - " #E${ i } = ${ content|trim }"
+                    - defs:
+                        i:
+                          data: ${ i+1 }
+              - if: ${ type == 'observation'}
+                then: ""
+              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                then: "${ type }: ${ content|trim }\n"
+        - "\n"
 
   rewoo:
     function:
       task: str
       model: str
-      tools: { list: obj }
+      tool_schema: { list: obj }
+      tools: obj
       trajectories: { list: list }
       show_plans: bool
     return:
@@ -53,15 +54,16 @@ defs:
           For the following task, make plans that can solve the problem step by step. For each plan, indicate which external tool together with tool input to retrieve evidence. You can store the evidence into a variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
 
           Tools can be one of the following:
-          ${ tools }
+          ${ tool_schema }
+        - "\n"
         - for:
             traj: ${ trajectories }
           repeat:
             text:
-            - call: ${ rewoo_block }
-              args:
-                trajectory: ${ traj }
-            - "\n"
+              - call: ${ rewoo_block }
+                args:
+                  trajectory: ${ traj }
+              - "\n"
         - |
           Begin!
           Describe your plans with rich details. Each Plan should be followed by only one #E.
@@ -69,6 +71,7 @@ defs:
           ${ task }
         - def: PLANS
           model: ${ model }
+          contribute: []
           parser: # plan, step_name, tool, tool_input
             regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<act>\{.+\})'
             mode: findall
@@ -81,19 +84,22 @@ defs:
             include_stop_sequence: false
             max_tokens: 1024
         - if: ${ show_plans }
+          contribute: [result, context]
           then:
             text:
-            - "\n\n--- Raw plans ---\n"
-            - ${ PLANS }
-            - "\n\n--- Extracted Blueprint ---\n"
-            - for:
-                plan: ${ PLANS }
-              repeat:
-                text:
-                - "Plan: ${ plan[0] }\n"
-                - "${ plan[1] } = ${ plan[2] }\n"
-            - "----------------------------\n\n"
+              - "\n\n--- Raw plans ---\n"
+              - ${ PLANS }
+              - "\n\n--- Extracted Blueprint ---\n"
+              - for:
+                  plan: ${ PLANS }
+                repeat:
+                  text:
+                    - "Plan: ${ plan[0] }\n"
+                    - "${ plan[1] } = ${ plan[2] }\n"
+              - "----------------------------\n\n"
         - defs:
+            SOLUTION:
+              text: "No plans found."
             output:
               data: {}
             plans:
@@ -101,63 +107,56 @@ defs:
                 plan: ${ PLANS }
               repeat:
                 lastOf:
-                - defs:
-                    PLAN: ${ plan[0] }
-                    ID: ${ plan[1] }
-                    ACTION_RAW: ${ plan[2] }
-                    ACTION:
-                      parser: json
-                      lang: python
-                      code: |-
-                        for k,v in output.items():
-                          if k in ACTION_RAW:
-                            ACTION_RAW = ACTION_RAW.replace(k, v)
-                        result = ACTION_RAW
-                    tool_output:
-                      if: ${ ACTION.name.lower() in pdl_tools }
-                      then:
-                        call: ${ pdl_tools[ACTION.name.lower()] }
-                        args:
-                          arguments: ${ ACTION.arguments }
-                      else: "Invalid action. Valid actions are ${ pdl_tools.keys() }"
-                - def: output
-                  lang: python
-                  contribute: []
-                  code: |
-                    output[ID] = str(tool_output)
-                    result = output
-                - |
-                  Plan: ${ PLAN }
-                  Evidence: ${ tool_output }
+                  - defs:
+                      PLAN: ${ plan[0] }
+                      ID: ${ plan[1] }
+                      ACTION_RAW: ${ plan[2] }
+                      ACTION:
+                        parser: json
+                        lang: python
+                        code: |-
+                          for k,v in output.items():
+                            if k in ACTION_RAW:
+                              ACTION_RAW = ACTION_RAW.replace(k, v)
+                          result = ACTION_RAW
+                      tool_output:
+                        if: ${ ACTION.name in tools }
+                        then:
+                          call: ${ tools[ACTION.name] }
+                          args:
+                            arguments: ${ ACTION.arguments }
+                        else: "Invalid action. Valid actions are ${ tools.keys() }"
+                  - def: output
+                    lang: python
+                    contribute: []
+                    code: |
+                      output[ID] = str(tool_output)
+                      result = output
+                  - |
+                    Plan: ${ PLAN }
+                    Evidence: ${ tool_output }
         - if: ${ plans is not none and plans|length > 0 }
           then:
-            lastOf:
-            - def: solution_input
-              text: |-
-                Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+            text:
+              - "\n\n"
+              - def: solution_input
+                text: |-
+                  Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
 
-                ${ plans|join }
-                Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+                  ${ plans|join }
+                  Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
 
-                ${ task }
-                Response:
-            - def: SOLUTION
-              model: ${ model }
-              parameters:
-                timeout: 30
-                time_limit: 30000
-                temperature: 0
-                stop:
-                  - "<|endoftext|>"
-                include_stop_sequence: false
-                max_tokens: 1024
-              input:
-                text: ${ solution_input }
-            - data:
-                answer: ${ SOLUTION }
-          else:
-            lastOf:
-            - def: SOLUTION
-              text: "No plans found."
-            - data:
-                answer: ${ SOLUTION }
+                  ${ task }
+                  Response:
+              - def: SOLUTION
+                model: ${ model }
+                parameters:
+                  temperature: 0
+                  stop:
+                    - "<|endoftext|>"
+                  include_stop_sequence: false
+                  max_tokens: 1024
+                input:
+                  text: ${ solution_input }
+        - data:
+            answer: ${ SOLUTION|trim }
