@@ -1,4 +1,4 @@
-description: Demo of template
+description: Demo of CoT pattern
 defs:
   cot:
     import: ../../contrib/prompt_library/CoT
@@ -35,7 +35,10 @@ text:
   # CoT
   - "Answer the questions to the best of your abilities.\n\n"
   - call: ${ cot.chain_of_thought }
+    def: cot_result
+    contribute: []
     args:
       examples: "${ demonstrations }"
       question: "${ question }"
       model: "${ model }"
+  - "Result: ${ cot_result }"
