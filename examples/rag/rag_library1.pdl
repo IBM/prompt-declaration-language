@@ -10,7 +10,7 @@ text:
   return:
     lang: python
     code: |
-        import examples.rag.rag as rag
+        import rag
         result = rag.parse(filename, chunk_size, chunk_overlap)
 - def: rag_index
   function:
@@ -22,7 +22,7 @@ text:
   return:
     lang: python
     code: |
-        import examples.rag.rag as rag
+        import rag
         result = rag.rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
 - def: rag_retrieve
   function:
@@ -34,5 +34,5 @@ text:
   return:
     lang: python
     code: |
-        import examples.rag.rag as rag
+        import rag
         result = rag.rag_retrieve(inp, encoder_model, limit, database_name, collection_name)

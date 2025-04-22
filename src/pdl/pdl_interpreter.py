@@ -1543,7 +1543,7 @@ def process_call_code(
     match block.lang:
         case "python":
             try:
-                result = call_python(code_s, scope)
+                result = call_python(code_s, scope, state)
                 background = PdlList(
                     [PdlDict({"role": state.role, "content": lazy_apply(str, result), "defsite": block.pdl__id})]  # type: ignore
                 )
@@ -1621,12 +1621,14 @@ def process_call_code(
 __PDL_SESSION = types.SimpleNamespace()
 
 
-def call_python(code: str, scope: ScopeType) -> PdlLazy[Any]:
+def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy[Any]:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
+    sys.path.append(str(state.cwd))
     exec(code, my_namespace.__dict__)  # nosec B102
     # [B102:exec_used] Use of exec detected.
     # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
     result = my_namespace.result
+    sys.path.pop()
     return PdlConst(result)
 
 
