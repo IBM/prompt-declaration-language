@@ -19,13 +19,18 @@ pub enum Role {
     Tool,
 }
 
+/// Function used to parse to value (https://docs.python.org/3/library/re.html).
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(rename_all_fields(serialize = "lowercase"))]
 pub enum RegexMode {
+    #[serde(rename = "search")]
     Search,
+    #[serde(rename = "match")]
     Match,
+    #[serde(rename = "fullmatch")]
     Fullmatch,
+    #[serde(rename = "split")]
     Split,
+    #[serde(rename = "findall")]
     Findall,
 }
 
@@ -40,7 +45,7 @@ pub struct RegexParser {
 
     /// Expected type of the parsed value
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub spec: Option<Value>,
+    pub spec: Option<IndexMap<String, PdlType>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -742,5 +747,17 @@ impl From<&bool> for PdlResult {
 impl From<Number> for PdlResult {
     fn from(n: Number) -> Self {
         PdlResult::Number(n)
+    }
+}
+impl PartialEq for PdlResult {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (PdlResult::Number(a), PdlResult::Number(b)) => a == b,
+            (PdlResult::String(a), PdlResult::String(b)) => a == b,
+            (PdlResult::Bool(a), PdlResult::Bool(b)) => a == b,
+            (PdlResult::List(a), PdlResult::List(b)) => a == b,
+            (PdlResult::Dict(a), PdlResult::Dict(b)) => a == b,
+            _ => false,
+        }
     }
 }

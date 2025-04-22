@@ -27,8 +27,8 @@ use crate::pdl::ast::{
     IncludeBlock, ListOrString, MessageBlock, Metadata, MetadataBuilder, ModelBlock, ObjectBlock,
     PdlBlock,
     PdlBlock::Advanced,
-    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RepeatBlock, Role, Scope,
-    SequencingBlock, StringOrBoolean, StringOrNull, Timing,
+    PdlParser, PdlResult, PdlUsage, PythonCodeBlock, ReadBlock, RegexMode, RegexParser,
+    RepeatBlock, Role, Scope, SequencingBlock, StringOrBoolean, StringOrNull, Timing,
 };
 
 type Messages = Vec<ChatMessage>;
@@ -1172,12 +1172,13 @@ impl<'a> Interpreter<'a> {
                                 Some(Value::String(s)) => Some(ChatMessage::user(s.clone())),
                                 _ => None,
                             },
-                            _ => None,
+                            m => Some(ChatMessage::user(m.to_string())),
                         })
                         .collect(),
-                    _ => vec![],
+                    _ => vec![ChatMessage::user(to_string(m)?)],
                 },
-                _ => vec![],
+                Value::Array(a) => vec![ChatMessage::user(to_string(a)?)],
+                m => vec![ChatMessage::user(m.to_string())],
             };
             Ok((result, messages, Data(trace)))
         }
@@ -1288,7 +1289,38 @@ impl<'a> Interpreter<'a> {
                     .collect::<Result<_, _>>()?,
             )),
             PdlParser::Yaml => from_yaml_str(result).map_err(|e| Box::from(e)),
-            PdlParser::Regex(_) => todo!(),
+            PdlParser::Regex(RegexParser { regex, mode, spec }) => {
+                use regex::Regex;
+                let re = Regex::new(regex)?;
+                let expected_captures: Vec<&str> = if let Some(spec) = spec {
+                    spec.keys().map(|k| k.as_str()).collect()
+                } else {
+                    vec![]
+                };
+
+                match mode {
+                    Some(RegexMode::Findall) => Ok(PdlResult::List(
+                        re.captures_iter(result)
+                            .flat_map(|cap| {
+                                expected_captures.iter().filter_map(move |k| {
+                                    cap.name(k).and_then(|m| Some(m.as_str().into()))
+                                })
+                            })
+                            .collect(),
+                    )),
+                    Some(RegexMode::Split) => todo!(),
+                    _ => Ok(PdlResult::Dict(
+                        re.captures_iter(result)
+                            .flat_map(|cap| {
+                                expected_captures.iter().filter_map(move |k| {
+                                    cap.name(k)
+                                        .and_then(|m| Some((k.to_string(), m.as_str().into())))
+                                })
+                            })
+                            .collect(),
+                    )),
+                }
+            }
         }
     }
 
