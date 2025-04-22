@@ -1,0 +1,7 @@
+data: aaa999bbb888
+parser:
+  regex: '[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$'
+  mode: findall
+  spec:
+    answer1: str
+    answer2: str
