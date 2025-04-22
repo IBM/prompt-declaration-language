@@ -47,5 +47,22 @@ text:
     controls:
       hallucinations: true
       citations: true
-  modelResponse: outputs
-- ${ outputs }
+  modelResponse: output
+- "\nHallucinations:\n"
+- for:  
+    hallucination: ${ output.results[0].next_message.hallucinations }
+  repeat:
+    text: 
+    - "Hallucination Risk: ${ hallucination.risk }"
+    - "\nSentence: ${ hallucination.response_text }"
+  join: 
+    with: "\n"
+- "\n\nCitations:\n"
+- for:
+    citation: ${ output.results[0].next_message.citations }
+  repeat:
+    text: 
+    - "Citation: ${ citation.context_text }"
+    - "\nSentence: ${ citation.response_text }"
+  join:
+    with: "\n"
