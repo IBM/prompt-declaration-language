@@ -4,7 +4,7 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
+        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, PdlResult, Scope},
         interpreter::{RunOptions, load_scope, run_json_sync as run_json, run_sync as run},
     };
 
@@ -676,6 +676,67 @@ mod tests {
         assert_eq!(messages[0].content, "3yo");
         assert_eq!(messages[1].role, MessageRole::User);
         assert_eq!(messages[1].content, "mo");
+        Ok(())
+    }
+
+    #[test]
+    fn regex_findall() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "mode": "findall",
+                "spec": {
+                    "answer1": "str",
+                    "answer2": "str"
+                }
+            }
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "[\"999\",\"888\"]");
+        Ok(())
+    }
+
+    #[test]
+    fn regex_plain_1() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "spec": {
+                    "answer1": "str",
+                    "answer2": "str"
+                }
+            }
+        });
+
+        let (result, _, _) = run_json(program, streaming(), initial_scope())?;
+        let mut m = ::std::collections::HashMap::new();
+        m.insert("answer1".into(), "999".into());
+        m.insert("answer2".into(), "888".into());
+        assert_eq!(result, PdlResult::Dict(m));
+        Ok(())
+    }
+
+    #[test]
+    fn regex_plain_2() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "spec": {
+                    "answer1": "str",
+                }
+            }
+        });
+
+        let (result, _, _) = run_json(program, streaming(), initial_scope())?;
+        let mut m = ::std::collections::HashMap::new();
+        m.insert("answer1".into(), "999".into());
+        assert_eq!(result, PdlResult::Dict(m));
         Ok(())
     }
 
