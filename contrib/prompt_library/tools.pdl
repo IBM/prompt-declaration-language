@@ -1,0 +1,104 @@
+description: Toolbox of PDL functions for agents
+defs:
+  # Note: Although PDL functions can be properly typed,
+  # the input to a function via the LLM is fundamentally a string.
+  # Therefore, parsing the input is the responsibility of the
+  # function, not the caller. In the future, one could
+  # imagine the use of constrained decoding to force
+  # LLM to produce a type-compliant JSON as input.
+
+  wrap_document:
+    data: true
+
+  filter_tools_by_name:
+    function:
+      tools: { list: obj }
+      tool_names: { list: str }
+    return:
+      data: ${ tools|selectattr('name', 'in', tool_names)|list }
+
+  finish_action:
+    data:
+      name: finish
+      description: Respond with the answer
+      parameters:
+        type: object
+        properties:
+          answer:
+            type: str
+            description: The answer
+          required:
+            - answer
+
+  tool_schema:
+    data:
+      - name: calculator
+        description: Calculator function
+        parameters:
+          type: object
+          properties:
+            expr:
+              type: string
+              description: Arithmetic expression to calculate
+          required:
+            - expr
+      - name: Search
+        description: Search Wikipedia for a summary
+        parameters:
+          type: object
+          properties:
+            topic:
+              type: string
+              description: The topic of interest
+          required:
+            - topic
+      - ${ finish_action }
+
+  tools:
+    object:
+      calculator:
+        function:
+          arguments: obj
+        return:
+          lang: python
+          code: |
+            from sympy.parsing.sympy_parser import parse_expr
+            result = None
+
+            def main(expr: str, *args, **kwargs) -> str:
+              try:
+                exp = "${ arguments.expr|replace(",", "")|replace("$","")|replace("^","**")|replace("%","*0.01") }"
+
+                result = float(parse_expr(exp).evalf())
+                result = round(result, 2)
+                if result.is_integer():
+                  result = int(result)
+              except Exception as e:
+                  result = f"There was an error calculating: {e}. Please try again."
+
+              return result
+
+            result = main(**arguments)
+      search:
+        function:
+          arguments: obj
+        return:
+          lastOf:
+            - def: result
+              lang: python
+              code: |
+                import warnings, wikipedia
+                warnings.simplefilter("ignore")
+
+                def main(topic: str, *args, **kwargs) -> str:
+                  try:
+                    return wikipedia.summary(topic)
+                  except wikipedia.DisambiguationError as d:
+                    return f"\"{topic}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
+                  except wikipedia.WikipediaException as e:
+                    return str(e)
+
+                result = main(**arguments)
+            - if: ${ wrap_document }
+              then: "[Document]\n${ result|trim }\n[End]"
+              else: ${ result }

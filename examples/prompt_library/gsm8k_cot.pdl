@@ -1,0 +1,44 @@
+description: Demo of CoT pattern
+defs:
+  cot:
+    import: ../../contrib/prompt_library/CoT
+  model: watsonx_text/ibm/granite-3-8b-instruct
+  demonstrations:
+    data:
+      - question: |-
+          Noah charges $60 for a large painting and $30 for a small painting.
+          Last month he sold eight large paintings and four small paintings.
+          If he sold twice as much this month, how much is his sales for this month?
+        reasoning: |-
+          He sold 8 large paintings and 4 small paintings last month.
+          He sold twice as many this month.
+          8 large paintings x $60 = << 8*60= 480 >> 480
+          4 small paintings x $30 = << 4*30= 120 >> 120
+          So he sold << 480+120= 600 >> 600 paintings last month.
+          Therefore he sold << 600*2= 1200 >> this month.
+        answer: $1200
+      - question: |-
+          Noah charges $30 for a large vases and $10 for a small vases.
+          Last month he sold five large vases and three small vases.
+          If he sold three times as much this month, how much is his sales for this month?
+        reasoning: |-
+          He sold 5 large vases and 3 small vases last month.
+          He sold three times as many this month.
+          5 large vases x $30 = << 5*30= 150 >> 150
+          3 small vases x $10 = << 3*10= 30 >> 30
+          So he sold << 150+30= 180 >> 180 vases last month.
+          Therefore he sold << 180*3= 540 >> this month.
+        answer: $540
+  question: "Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+
+text:
+  # CoT
+  - "Answer the questions to the best of your abilities.\n\n"
+  - call: ${ cot.chain_of_thought }
+    def: cot_result
+    contribute: []
+    args:
+      examples: "${ demonstrations }"
+      question: "${ question }"
+      model: "${ model }"
+  - "Result: ${ cot_result }"

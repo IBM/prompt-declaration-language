@@ -1,0 +1,120 @@
+description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
+# See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
+defs:
+  react_block:
+    function:
+      trajectory: { list: obj }
+    return:
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
+              - def: type
+                text: ${ trajectory.keys()|first }
+                contribute: []
+              - if: ${ type == 'question'}
+                then: |
+                  Question: ${ trajectory[type]|trim }
+              - if: ${ type == 'task'}
+                then: |
+                  Task: ${ trajectory[type]|trim }
+              - if: ${ type == 'thought'}
+                then: |
+                  Tho: ${ trajectory[type]|trim }
+              - if: ${ type == 'action'}
+                then: |
+                  Act: ${ trajectory[type]|trim }
+              - if: ${ type == 'observation'}
+                then: |
+                  Obs: ${ trajectory[type]|trim }
+              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
+
+  react:
+    function:
+      task: str
+      model: str
+      tool_schema: { list: obj }
+      tools: obj
+      trajectories: { list: list }
+    return:
+      lastOf:
+        - role: system
+          text:
+            - "Today's Date: "
+            - lang: python
+              code: |
+                from datetime import datetime
+                result = datetime.today().strftime('%B %d, %Y.\n')
+            - |
+              You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+
+              Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+              ${ tool_schema }
+          contribute: [context]
+        - "\n"
+        - for:
+            traj: ${ trajectories }
+          repeat:
+            text:
+              call: ${ react_block }
+              args:
+                trajectory: ${ traj }
+        - ${ task }
+        - def: prev_action
+          contribute: []
+          data: none
+        - def: exit
+          contribute: []
+          data: False
+        - def: tool_names
+          contribute: []
+          text: ${ tool_schema|map(attribute='name')|list }
+        - repeat:
+            text:
+              - "\nTho: "
+              - def: thought
+                model: "${ model }"
+                contribute: []
+                parameters:
+                  stop:
+                    - "Act:"
+                  max_tokens: 256
+                  include_stop_sequence: false
+              - "${ thought|trim }"
+              - "\nAct: "
+              - def: action
+                model: "${ model }"
+                parser: json
+                parameters:
+                  temperature: 0
+                  stop: ["\n", "Obs:", "<|eom_id|>"]
+                  include_stop_sequence: false
+                spec: { name: str, arguments: obj }
+              - if: ${ action != prev_action }
+                then:
+                  def: observation
+                  if: ${ action.name.lower() != "finish" }
+                  then:
+                    text:
+                      - "\nObs: "
+                      - if: ${ action.name in tools }
+                        then:
+                          call: ${ tools[action.name] }
+                          args:
+                            arguments: ${ action.arguments }
+                        else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+                      # - "\n"
+                else:
+                  def: exit
+                  contribute: []
+                  data: True
+              - def: prev_action
+                contribute: []
+                data: ${ action }
+          until: ${ action.name.lower() == "finish" or exit }
+        - data:
+            answer: ${ (action.arguments.answer|default("No answer found."))|trim }
