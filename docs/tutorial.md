@@ -552,41 +552,18 @@ Once we have defined our PDL functions, we describe them in the `tool_schema`.
 ``` yaml
 tool_schema:
   data:
-    - type: function
-      function:
-        name: hello
-        description: Hello function, returns "hello <name>"
-        parameters:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Name to greet
-          required:
-            - name
+    - name: hello
+      description: Hello function, returns "hello <name>"
+      parameters:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name to greet
+        required:
+          - name
 
-    - type: function
-      function:
-        name: finish
-        description: Respond with the answer
-        parameters:
-          type: object
-          properties:
-            answer:
-              type: str
-              description: The answer
-            required:
-              - answer
-```
-
-Another useful thing to remember is that data blocks are templated in PDL. For example, this is valid:
-
-``` yaml
-finish_action:
-  data:
-    type: function
-    function:
-      name: finish
+    - name: finish
       description: Respond with the answer
       parameters:
         type: object
@@ -596,21 +573,36 @@ finish_action:
             description: The answer
           required:
             - answer
+```
+
+Another useful thing to remember is that data blocks are templated in PDL. For example, this is valid:
+
+``` yaml
+finish_action:
+  data:
+    name: finish
+    description: Respond with the answer
+    parameters:
+      type: object
+      properties:
+        answer:
+          type: str
+          description: The answer
+        required:
+          - answer
 
 tool_schema:
   data:
-    - type: function
-      function:
-        name: calculator
-        description: Calculator function
-        parameters:
-          type: object
-          properties:
-            expr:
-              type: string
-              description: Arithmetic expression to calculate
-          required:
-            - expr
+    - name: calculator
+      description: Calculator function
+      parameters:
+        type: object
+        properties:
+          expr:
+            type: string
+            description: Arithmetic expression to calculate
+        required:
+          - expr
     - ${ finish_action }
 ```
 
