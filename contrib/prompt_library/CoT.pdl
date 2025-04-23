@@ -1,0 +1,54 @@
+description: CoT pattern introduced by Wei et al. (2022)
+defs:
+  # Chain of Thought
+  cot_block:
+    function:
+      question: str
+      reasoning: str
+      answer: str
+    return: |-
+      Question: ${ question }
+      Answer: Let's think step by step. ${ reasoning }
+      The answer is ${ answer }
+
+  fewshot_cot:
+    function:
+      examples:
+        { list: { obj: { question: str, reasoning: str, answer: str } } }
+    return:
+      text:
+        - for:
+            example: ${ examples }
+          repeat:
+            call: ${ cot_block }
+            args:
+              question: ${ example.question }
+              reasoning: ${ example.reasoning }
+              answer: ${ example.answer }
+          join:
+            with: "\n\n"
+
+  chain_of_thought:
+    function:
+      question: str
+      model: str
+      examples:
+        { list: { obj: { question: str, reasoning: str, answer: str } } }
+    return:
+      lastOf:
+        - call: ${ fewshot_cot }
+          args:
+            examples: ${ examples }
+        - "Question: ${ question }\n"
+        - "Answer: Let's think step by step. "
+        - model: ${ model }
+          def: answer
+          parameters:
+            max_tokens: 1024
+            temperature: 0
+            stop:
+              - "<|endoftext|>"
+              - "Question:"
+            include_stop_sequence: false
+        - data:
+            answer: ${ answer|trim }

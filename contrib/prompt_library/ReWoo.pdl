@@ -1,0 +1,162 @@
+description: ReWOO (Reasoning without observation) pattern from Xu et al., (http://arxiv.org/abs/2305.18323)
+# Compared to ReAct, reduced token consumption (and thus execution time),
+# by generating full chain of tools in a single pass
+# see: https://github.com/langchain-ai/langgraph/blob/main/examples/rewoo/rewoo.ipynb
+defs:
+  rewoo_block:
+    function:
+      trajectory: { list: obj }
+    return:
+      text:
+        - defs:
+            i:
+              data: 1
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
+              - defs:
+                  type:
+                    text: ${ trajectory.keys()|first }
+                  content:
+                    text: ${ trajectory.values()|first }
+              - if: ${ type in ['task', 'question'] }
+                then: |-
+                  Task: ${ content|trim }
+              - if: ${ type == 'thought'}
+                then: |-
+
+                  Plan: ${ content|trim }
+              - if: ${ type == 'action'}
+                then:
+                  text:
+                    - " #E${ i } = ${ content|trim }"
+                    - defs:
+                        i:
+                          data: ${ i+1 }
+              - if: ${ type == 'observation'}
+                then: ""
+              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                then: "${ type }: ${ content|trim }\n"
+        - "\n"
+
+  rewoo:
+    function:
+      task: str
+      model: str
+      tool_schema: { list: obj }
+      tools: obj
+      trajectories: { list: list }
+      show_plans: bool
+    return:
+      lastOf:
+        - |
+          For the following task, make plans that can solve the problem step by step. For each plan, indicate which external tool together with tool input to retrieve evidence. You can store the evidence into a variable #E that can be called by later tools. (Plan, #E1, Plan, #E2, Plan, ...)
+
+          Tools can be one of the following:
+          ${ tool_schema }
+        - "\n"
+        - for:
+            traj: ${ trajectories }
+          repeat:
+            text:
+              - call: ${ rewoo_block }
+                args:
+                  trajectory: ${ traj }
+              - "\n"
+        - |
+          Begin!
+          Describe your plans with rich details. Each Plan should be followed by only one #E.
+
+          ${ task }
+        - def: PLANS
+          model: ${ model }
+          contribute: []
+          parser: # plan, step_name, tool, tool_input
+            regex: 'Plan:\s*(?P<plan>(?:.|\n)*?)\s*(?P<step_name>#E\d+)\s*=\s*(?P<act>\{.+\})'
+            mode: findall
+          parameters:
+            temperature: 0
+            stop:
+              - "<|endoftext|>"
+              - "\n\n"
+              - "Task:"
+            include_stop_sequence: false
+            max_tokens: 1024
+        - if: ${ show_plans }
+          contribute: [result, context]
+          then:
+            text:
+              - "\n\n--- Raw plans ---\n"
+              - ${ PLANS }
+              - "\n\n--- Extracted Blueprint ---\n"
+              - for:
+                  plan: ${ PLANS }
+                repeat:
+                  text:
+                    - "Plan: ${ plan[0] }\n"
+                    - "${ plan[1] } = ${ plan[2] }\n"
+              - "----------------------------\n\n"
+        - defs:
+            SOLUTION:
+              text: "No plans found."
+            output:
+              data: {}
+            plans:
+              for:
+                plan: ${ PLANS }
+              repeat:
+                lastOf:
+                  - defs:
+                      PLAN: ${ plan[0] }
+                      ID: ${ plan[1] }
+                      ACTION_RAW: ${ plan[2] }
+                      ACTION:
+                        parser: json
+                        lang: python
+                        code: |-
+                          for k,v in output.items():
+                            if k in ACTION_RAW:
+                              ACTION_RAW = ACTION_RAW.replace(k, v)
+                          result = ACTION_RAW
+                      tool_output:
+                        if: ${ ACTION.name in tools }
+                        then:
+                          call: ${ tools[ACTION.name] }
+                          args:
+                            arguments: ${ ACTION.arguments }
+                        else: "Invalid action. Valid actions are ${ tools.keys() }"
+                  - def: output
+                    lang: python
+                    contribute: []
+                    code: |
+                      output[ID] = str(tool_output)
+                      result = output
+                  - |
+                    Plan: ${ PLAN }
+                    Evidence: ${ tool_output }
+        - if: ${ plans is not none and plans|length > 0 }
+          then:
+            text:
+              - "\n\n"
+              - def: solution_input
+                text: |-
+                  Solve the following task or problem. To solve the problem, we have made step-by-step Plan and retrieved corresponding Evidence to each Plan. Use them with caution since long evidence might contain irrelevant information.
+
+                  ${ plans|join }
+                  Now solve the question or task according to provided Evidence above. Respond with the answer directly with no extra words.
+
+                  ${ task }
+                  Response:
+              - def: SOLUTION
+                model: ${ model }
+                parameters:
+                  temperature: 0
+                  stop:
+                    - "<|endoftext|>"
+                  include_stop_sequence: false
+                  max_tokens: 1024
+                input:
+                  text: ${ solution_input }
+        - data:
+            answer: ${ SOLUTION|trim }
