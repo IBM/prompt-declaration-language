@@ -1,0 +1,34 @@
+description: Demo of ReWOO pattern
+defs:
+  rewoo:
+    import: ../../contrib/prompt_library/ReWoo
+  tools:
+    import: ../../contrib/prompt_library/tools
+  model: watsonx_text/ibm/granite-3-8b-instruct
+  demonstrations:
+    data:
+      - - question: Noah charges $60 for a large painting and $30 for a small painting. Last month he sold eight large paintings and four small paintings. If he sold twice as much this month, how much is his sales for this month?
+        - thought: He sold 8 large paintings and 4 small paintings last month. He sold twice as many this month. I need to calculate (8 large paintings x $60 + 4 small paintings x $30)
+        - action: '{"name": "calculator", "arguments": {"expr": "8*60+4*30"}}'
+        - thought: He sold twice as many paintings this month, therefore I need to calculate 600*2.
+        - action: '{"name": "calculator", "arguments": {"expr": "600*2"}}'
+      - - question: Teresa is 59 and her husband Morio is 71 years old. Their daughter, Michiko was born when Morio was 38. How old was Teresa when she gave birth to Michiko?
+        - thought: I need to calculate the difference in age between Teresa and Morio.
+        - action: '{"name": "calculator", "arguments": {"expr": "71-59"}}'
+        - thought: I need to calculate how old Teresa is when their daughter is born.
+        - action: '{"name": "calculator", "arguments": {"expr": "38-12"}}'
+  question: "Question: Jake earns thrice what Jacob does. If Jacob earns $6 per hour, how much does Jake earn in 5 days working 8 hours a day?"
+
+text:
+  # ReWoo
+  - call: ${ rewoo.rewoo }
+    def: rewoo_result
+    contribute: []
+    args:
+        task: ${ question }
+        model: ${ model }
+        tool_schema: ${ tools.tool_schema }
+        tools: ${ tools.tools }
+        trajectories: ${ demonstrations }
+        show_plans: false
+  - "Result: ${ rewoo_result }"
