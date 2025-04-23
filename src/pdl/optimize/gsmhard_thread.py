@@ -81,6 +81,4 @@ class GsmHardTrialThread(PDLThread):
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         answerf = is_float(answer)
         truthf = is_float(truth)
-        return (
-            answer == truth or answerf == truthf or document.endswith(f" {truth}")
-        )
+        return answer == truth or answerf == truthf or document.endswith(f" {truth}")

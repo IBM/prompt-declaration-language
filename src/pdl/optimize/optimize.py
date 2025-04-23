@@ -1,14 +1,14 @@
 import argparse
+import traceback
 from enum import Enum
 from pathlib import Path
-import traceback
 
 import yaml
 from datasets import concatenate_datasets, load_dataset, load_from_disk
 
+from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.gsmhard_thread import GsmHardTrialThread
 from pdl.optimize.mbpp_dataset import MBPPDataset
-from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.mbpp_thread import MBPPTrialThread
 
 from .fever_thread import FEVERTrialThread

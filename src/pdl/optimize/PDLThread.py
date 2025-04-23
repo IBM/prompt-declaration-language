@@ -1,16 +1,15 @@
 # pylint: disable=too-many-instance-attributes
+import time
+from pathlib import Path
+from threading import Thread
+from typing import Any
+
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
 from pdl.pdl_ast import Program, ScopeType
 from pdl.pdl_interpreter import InterpreterState, PDLRuntimeError, process_prog
 from pdl.pdl_location_utils import get_loc_string
 from pdl.pdl_parser import PDLParseError
-
-
-import time
-from pathlib import Path
-from threading import Thread
-from typing import Any
 
 
 class PDLThread(Thread):
@@ -122,13 +121,13 @@ class PDLThread(Thread):
                 else:
                     message = get_loc_string(exc.loc) + exc.message
                 console.log(message)
-                retry = True # tries < RETRY_COUNT
+                retry = True  # tries < RETRY_COUNT
                 if tries >= RETRY_COUNT:
                     retry = False
                 console.log("Retrying: ", retry)
                 exception = exc
             except TimeoutError as exc:
-                retry = True # tries < RETRY_COUNT
+                retry = True  # tries < RETRY_COUNT
                 if tries >= RETRY_COUNT:
                     retry = False
                 exception = exc

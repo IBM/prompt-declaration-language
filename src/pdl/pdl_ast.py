@@ -250,7 +250,7 @@ class Block(BaseModel):
     """Current context
     """
     # Fields for internal use
-    pdl__id: Optional[str]  = Field(default="", exclude=True)
+    pdl__id: Optional[str] = Field(default="", exclude=True)
     """Unique identifier for this block
     """
     pdl__result: Optional[Any] = Field(default=None, exclude=True)
@@ -475,7 +475,8 @@ class CodeBlock(BaseCodeBlock):
     """
 
     lang: Annotated[
-        Literal["python", "command", "jinja", "pdl", "ipython"], BeforeValidator(_ensure_lower)
+        Literal["python", "command", "jinja", "pdl", "ipython"],
+        BeforeValidator(_ensure_lower),
     ]
     """Programming language of the code.
     """

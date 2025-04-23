@@ -20,12 +20,7 @@ from tqdm.rich import tqdm
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.PDLThread import PDLThread
-from pdl.optimize.util import (
-    CandidateResult,
-    TrialOutput,
-    console,
-    execute_threads,
-)
+from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
 from pdl.pdl_ast import DataBlock, Program
 from pdl.pdl_dumper import dump_yaml
 
@@ -58,9 +53,7 @@ rng = default_rng()
 
 
 def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
-    with (
-        input_path.open(encoding="utf-8") as pdl,
-    ):
+    with (input_path.open(encoding="utf-8") as pdl,):
         pdl_program = Program.model_validate(yaml.safe_load(pdl))
 
     for variable, value in state.items():
@@ -149,9 +142,7 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (
-            path.open(encoding="utf-8") as pdl,
-        ):
+        with (path.open(encoding="utf-8") as pdl,):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample_random_indices(self, dataset: list, size: int) -> list:
