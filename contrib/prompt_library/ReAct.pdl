@@ -72,7 +72,7 @@ defs:
           data: False
         - def: tool_names
           contribute: []
-          text: ${ tool_schema|map(attribute='function.name')|list }
+          text: ${ tool_schema|map(attribute='name')|list }
         - repeat:
             text:
               - "\nTho: "
