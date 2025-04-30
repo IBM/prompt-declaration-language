@@ -1,0 +1,14 @@
+How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.
+Thought: I need to find out who discovered the Hudson River and then calculate how many years ago their birthdate was.
+Action:
+[{"name": "Search", "arguments": {"topic": "Henry Hudson"}}]
+Observation: Henry Hudson (c. 1565 – disappeared 23 June 1611) was an English sea explorer and navigator during the early 17th century, best known for his explorations of present-day Canada and parts of the Northeastern United States.
+In 1607 and 1608, Hudson made two attempts on behalf of English merchants to find a rumoured Northeast Passage to Cathay via a route above the Arctic Circle. In 1609, he landed in North America on behalf of the Dutch East India Company and explored the region around the modern New York metropolitan area. Looking for a Northwest Passage to Asia on his ship Halve Maen ("Half Moon"), he sailed up the Hudson River, which was later named after him, and thereby laid the foundation for Dutch colonization of the region. His contributions to the exploration of the New World were significant and lasting. His voyages helped to establish European contact with the native peoples of North America and contributed to the development of trade and commerce. 
+On his final expedition, while still searching for the Northwest Passage, Hudson became the first European to see Hudson Strait and the immense Hudson Bay. In 1611, after wintering on the shore of James Bay, Hudson wanted to press on to the west, but most of his crew mutinied. The mutineers cast Hudson, his son, and six others adrift; what then happened to the Hudsons and their companions is unknown.
+Thought: Henry Hudson discovered the Hudson River in 1609. He was born around 1565.
+Action:
+[{"name": "Calc", "arguments": {"expr": "2025 - 1565"}}]
+Observation: 460
+Henry Hudson was born around 1565, so he was approximately 460 years ago.Action:
+[{"name": "Finish", "arguments": {"topic": "460"}}]
+Observation: 

@@ -1,0 +1,109 @@
+name: 'Ollama Setup'
+description: 'Composte action to set up Run Examples'
+inputs:
+  python-version:
+    description: 'Python version'
+    required: true
+    default: '3.11'
+  runner-os:
+    description: 'Runner OS'
+    required: true
+  repository:
+    description: 'Repository name this pull request is initiated from'
+    required: false
+  head-ref:
+    description: 'Head ref of the repo'
+    required: false
+    default: 'main'
+  token: 
+    description: 'Github token'
+    required: false 
+  update-results:
+    description: 'Whether to update the results for this run. Must be false for nightly runs'
+    required: true
+  check:
+    description: 'Files to patch tests/test_examples_run.yaml with. These are the PDL files that the test will run against. Defaults to all PDL files.'
+    required: false
+    default: '[]'
+runs:
+  using: 'composite'
+  steps:
+    # # Set up Ollama
+    - uses: ./.github/actions/ollama
+
+    # Configure Run Examples environment
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ inputs.token }}
+        ref: ${{ inputs.head-ref }}
+        repository: ${{ inputs.repository }}
+        fetch-depth: 0
+    
+    - name: Patch tests/test_examples_run.yaml check with modified files
+      shell: bash 
+      run: |
+        yq -i '.check = (${{ inputs.check }})' tests/test_examples_run.yaml
+        
+    - name: Print test Run Examples config
+      shell: bash
+      run: cat tests/test_examples_run.yaml
+
+    # Run tests
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        # This path is specific to Ubuntu
+        path: ${{ env.pythonLocation }}
+        # Look to see if there is a cache hit for the setup file
+        key: ${{ inputs.runner-os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        restore-keys: |
+          ${{ inputs.runner-os }}-pip-new3
+          ${{ inputs.runner-os }}-new3
+    - name: Install dependencies
+      shell: bash
+      run: pip install --upgrade --upgrade-strategy eager .[all]
+    - name: Pip list packages
+      shell: bash
+      run: pip list
+    - name: Run Pytest
+      shell: bash
+      run: |
+        cat tests/test_examples_run.yaml        
+        (
+          set +e
+          py.test -v --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-warnings
+          EXIT_CODE=$?
+
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "TEST_RESULT=PASSED" >> $GITHUB_ENV
+          else
+            echo "TEST_RESULT=FAILED" >> $GITHUB_ENV
+          fi
+        )
+    
+    # Commit the results if update results
+    - name: Push new results to branch
+      shell: bash
+      if: ${{ inputs.update-results == 'true' }}
+      run: |
+        git config --local user.name github-actions[bot]
+        git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git status
+        git pull origin ${{ inputs.head-ref }}
+        git add tests/results/
+        git diff --cached --quiet || git commit -s -m "github-actions[bot]: Run examples: updated result files on your behalf"
+        # git push origin ${{ inputs.head-ref }}
+        git push https://x-access-token:${{ inputs.token }}@github.com/${{ inputs.repository }} HEAD:${{ inputs.head-ref }}
+
+    - name: Check if pytest passed
+      shell: bash
+      run: |
+        if [ "$TEST_RESULT" == "PASSED" ]; then
+          exit 0
+        else
+            exit 1
+        fi
