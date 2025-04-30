@@ -101,6 +101,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -245,6 +248,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -471,6 +477,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -615,6 +624,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -792,6 +804,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -964,6 +979,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -1108,6 +1126,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -1310,6 +1331,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -1422,6 +1446,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -1568,6 +1595,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -1754,6 +1784,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -1902,6 +1935,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -2046,6 +2082,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -2270,6 +2309,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -2414,6 +2456,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -2616,6 +2661,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -2760,6 +2808,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -2940,6 +2991,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -3053,6 +3107,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -3199,6 +3256,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -3387,6 +3447,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -3500,6 +3563,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -3646,6 +3712,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -3856,6 +3925,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -4000,6 +4072,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -4186,6 +4261,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -4404,6 +4482,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -4548,6 +4629,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -4738,6 +4822,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -4820,6 +4907,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -4948,6 +5038,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -5094,6 +5187,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -5274,6 +5370,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -5386,6 +5485,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -5532,6 +5634,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -5712,6 +5817,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -5752,77 +5860,9 @@
       "title": "IncludeBlock",
       "type": "object"
     },
-    "JoinArray": {
+    "IndependentBlock": {
       "additionalProperties": false,
-      "properties": {
-        "as": {
-          "const": "array",
-          "description": "Return the result of each iteration as an array.\n    ",
-          "title": "As",
-          "type": "string"
-        }
-      },
-      "required": [
-        "as"
-      ],
-      "title": "JoinArray",
-      "type": "object"
-    },
-    "JoinLastOf": {
-      "additionalProperties": false,
-      "properties": {
-        "as": {
-          "const": "lastOf",
-          "description": "Return the result of the last iteration.\n    ",
-          "title": "As",
-          "type": "string"
-        }
-      },
-      "required": [
-        "as"
-      ],
-      "title": "JoinLastOf",
-      "type": "object"
-    },
-    "JoinObject": {
-      "additionalProperties": false,
-      "properties": {
-        "as": {
-          "const": "object",
-          "description": "Return the union of the objects created at each iteration.\n    ",
-          "title": "As",
-          "type": "string"
-        }
-      },
-      "required": [
-        "as"
-      ],
-      "title": "JoinObject",
-      "type": "object"
-    },
-    "JoinText": {
-      "additionalProperties": false,
-      "properties": {
-        "as": {
-          "const": "text",
-          "default": "text",
-          "description": "String concatenation of the result of each iteration.\n    ",
-          "title": "As",
-          "type": "string"
-        },
-        "with": {
-          "default": "",
-          "description": "String used to concatenate each iteration of the loop.\n    ",
-          "title": "With",
-          "type": "string"
-        }
-      },
-      "title": "JoinText",
-      "type": "object"
-    },
-    "LastOfBlock": {
-      "additionalProperties": false,
-      "description": "Return the value of the last block if the list of blocks.",
+      "description": "Create a context fork for each of the blocks in the list, concatenate the stringify version of the result of each block of the list of blocks.",
       "properties": {
         "description": {
           "anyOf": [
@@ -5892,6 +5932,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -6038,6 +6081,538 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "independent",
+          "default": "independent",
+          "title": "Kind",
+          "type": "string"
+        },
+        "independent": {
+          "description": "Body of the independent.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Independent",
+          "type": "array"
+        }
+      },
+      "required": [
+        "independent"
+      ],
+      "title": "IndependentBlock",
+      "type": "object"
+    },
+    "JoinArray": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "array",
+          "description": "Return the result of each iteration as an array.\n    ",
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as"
+      ],
+      "title": "JoinArray",
+      "type": "object"
+    },
+    "JoinIndependent": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "independent",
+          "description": "Return the result of the last iteration.\n    ",
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as"
+      ],
+      "title": "JoinIndependent",
+      "type": "object"
+    },
+    "JoinLastOf": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "lastOf",
+          "description": "Return the result of the last iteration.\n    ",
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as"
+      ],
+      "title": "JoinLastOf",
+      "type": "object"
+    },
+    "JoinObject": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "object",
+          "description": "Return the union of the objects created at each iteration.\n    ",
+          "title": "As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as"
+      ],
+      "title": "JoinObject",
+      "type": "object"
+    },
+    "JoinText": {
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "const": "text",
+          "default": "text",
+          "description": "String concatenation of the result of each iteration.\n    ",
+          "title": "As",
+          "type": "string"
+        },
+        "with": {
+          "default": "",
+          "description": "String used to concatenate each iteration of the loop.\n    ",
+          "title": "With",
+          "type": "string"
+        }
+      },
+      "title": "JoinText",
+      "type": "object"
+    },
+    "LastOfBlock": {
+      "additionalProperties": false,
+      "description": "Return the value of the last block if the list of blocks.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "default": null,
+          "description": "Type specification of the result of the block.\n    ",
+          "title": "Spec"
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -6215,6 +6790,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -6328,6 +6906,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -6474,6 +7055,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -6659,6 +7243,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -7283,6 +7870,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -7427,6 +8017,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -7686,6 +8279,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -7835,6 +8431,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -7979,6 +8578,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -8154,6 +8756,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -8300,6 +8905,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -8444,6 +9052,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -8622,6 +9233,9 @@
                     "$ref": "#/$defs/TextBlock"
                   },
                   {
+                    "$ref": "#/$defs/IndependentBlock"
+                  },
+                  {
                     "$ref": "#/$defs/LastOfBlock"
                   },
                   {
@@ -8705,6 +9319,9 @@
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IndependentBlock"
                   },
                   {
                     "$ref": "#/$defs/LastOfBlock"
@@ -8915,6 +9532,9 @@
           "$ref": "#/$defs/TextBlock"
         },
         {
+          "$ref": "#/$defs/IndependentBlock"
+        },
+        {
           "$ref": "#/$defs/LastOfBlock"
         },
         {
@@ -9055,6 +9675,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -9234,6 +9857,9 @@
           "$ref": "#/$defs/TextBlock"
         },
         {
+          "$ref": "#/$defs/IndependentBlock"
+        },
+        {
           "$ref": "#/$defs/LastOfBlock"
         },
         {
@@ -9339,6 +9965,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -9485,6 +10114,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -9776,6 +10408,9 @@
                 "$ref": "#/$defs/TextBlock"
               },
               {
+                "$ref": "#/$defs/IndependentBlock"
+              },
+              {
                 "$ref": "#/$defs/LastOfBlock"
               },
               {
@@ -9920,6 +10555,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -10138,6 +10776,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -10219,6 +10860,9 @@
             },
             {
               "$ref": "#/$defs/JoinLastOf"
+            },
+            {
+              "$ref": "#/$defs/JoinIndependent"
             }
           ],
           "default": {
@@ -10280,6 +10924,9 @@
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IndependentBlock"
                   },
                   {
                     "$ref": "#/$defs/LastOfBlock"
@@ -10401,6 +11048,9 @@
               },
               {
                 "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/IndependentBlock"
               },
               {
                 "$ref": "#/$defs/LastOfBlock"
@@ -10547,6 +11197,9 @@
             },
             {
               "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/IndependentBlock"
             },
             {
               "$ref": "#/$defs/LastOfBlock"
@@ -10722,6 +11375,9 @@
               "$ref": "#/$defs/TextBlock"
             },
             {
+              "$ref": "#/$defs/IndependentBlock"
+            },
+            {
               "$ref": "#/$defs/LastOfBlock"
             },
             {
@@ -10798,6 +11454,9 @@
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IndependentBlock"
                   },
                   {
                     "$ref": "#/$defs/LastOfBlock"

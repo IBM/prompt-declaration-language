@@ -26,6 +26,8 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.LASTOF:
             color = None
+        case BlockKind.INDEPENDENT:
+            color = None
         case BlockKind.ARRAY:
             color = None
         case BlockKind.OBJECT:

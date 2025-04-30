@@ -45,6 +45,7 @@ class BlockKind(StrEnum):
     CODE = "code"
     GET = "get"
     DATA = "data"
+    INDEPENDENT = "independent"
     TEXT = "text"
     LASTOF = "lastOf"
     ARRAY = "array"
@@ -548,6 +549,15 @@ class DataBlock(LeafBlock):
     """Do not evaluate expressions inside strings."""
 
 
+class IndependentBlock(StructuredBlock):
+    """Create a context fork for each of the blocks in the list, concatenate the stringify version of the result of each block of the list of blocks."""
+
+    kind: Literal[BlockKind.INDEPENDENT] = BlockKind.INDEPENDENT
+    independent: list["BlockType"]
+    """Body of the independent.
+    """
+
+
 class TextBlock(StructuredBlock):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
@@ -675,6 +685,7 @@ class IterationType(StrEnum):
     ARRAY = "array"
     OBJECT = "object"
     TEXT = "text"
+    INDEPENDENT = "independent"
 
 
 class JoinConfig(BaseModel):
@@ -711,7 +722,13 @@ class JoinLastOf(JoinConfig):
     """
 
 
-JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
+class JoinIndependent(JoinConfig):
+    as_: Literal[IterationType.INDEPENDENT] = Field(alias="as")
+    """Return the result of the last iteration.
+    """
+
+
+JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf | JoinIndependent
 
 
 class RepeatBlock(StructuredBlock):
@@ -832,6 +849,7 @@ AdvancedBlockType: TypeAlias = (
     | MatchBlock
     | RepeatBlock
     | TextBlock
+    | IndependentBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock

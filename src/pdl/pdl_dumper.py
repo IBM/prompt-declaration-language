@@ -25,6 +25,7 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    IndependentBlock,
     JoinText,
     JoinType,
     LastOfBlock,
@@ -161,6 +162,10 @@ def block_to_dict(  # noqa: C901
                 d["text"] = block_to_dict(block.text, json_compatible)
         case LastOfBlock():
             d["lastOf"] = [block_to_dict(b, json_compatible) for b in block.lastOf]
+        case IndependentBlock():
+            d["independent"] = [
+                block_to_dict(b, json_compatible) for b in block.independent
+            ]
         case ArrayBlock():
             d["array"] = [block_to_dict(b, json_compatible) for b in block.array]
         case ObjectBlock():

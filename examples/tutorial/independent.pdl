@@ -1,0 +1,12 @@
+description: Independent example
+text:
+  - hello
+  - independent:
+    - text:
+      - " in French!"
+      - model: ollama_chat/granite3.2:2b
+    - text:
+      - " en Espanol!"
+      - model: ollama_chat/granite3.2:2b
+  - "Goodbye!"
+  - model: ollama_chat/granite3.2:2b

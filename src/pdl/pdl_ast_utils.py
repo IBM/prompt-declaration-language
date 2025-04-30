@@ -16,6 +16,7 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    IndependentBlock,
     LastOfBlock,
     LitellmModelBlock,
     MatchBlock,
@@ -59,6 +60,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 f(block.text)
         case LastOfBlock():
             for b in block.lastOf:
+                f(b)
+        case IndependentBlock():
+            for b in block.independent:
                 f(b)
         case ArrayBlock():
             for b in block.array:
@@ -152,6 +156,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.text = f.f_block(block.text)
         case LastOfBlock():
             block.lastOf = [f.f_block(b) for b in block.lastOf]
+        case IndependentBlock():
+            block.independent = [f.f_block(b) for b in block.independent]
         case ArrayBlock():
             block.array = [f.f_block(b) for b in block.array]
         case ObjectBlock():

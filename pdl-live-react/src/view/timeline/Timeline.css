@@ -99,6 +99,7 @@
   }
   &[data-kind="repeat"],
   &[data-kind="lastOf"],
+  &[data-kind="independent"],
   &[data-kind="call"] {
     background-color: var(--pf-t--global--border--color--default);
     &:hover {
