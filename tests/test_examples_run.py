@@ -30,9 +30,14 @@ TO_SKIP = {
         pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",
         pathlib.Path("examples") / "gsm8k" / "gsm8k-plan.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-plan-few-shots.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-tot-few-shot.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-tot-multiplan.pdl",
+        pathlib.Path("examples") / "gsm8k" / "gsm8k-tot.pdl",
         # Requires installation dependencies
         pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
         pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
+        pathlib.Path("pdl-live-react") / "src-tauri" / "tests" / "cli" / "code-python.pdl"
         # Skip RAG examples
         pathlib.Path("examples") / "rag" / "pdf_index.pdl",
         pathlib.Path("examples") / "rag" / "pdf_query.pdl",
@@ -41,7 +46,7 @@ TO_SKIP = {
         / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
         # Skip structure decoding example (Jing doesn't have WATSONX API KEY)
         pathlib.Path("examples") / "tutorial" / "structured_decoding.pdl",
-        # OUtput result include trace (and thus timing) for some reason. Investigate why
+        # Output result include trace (and thus timing) for some reason. Investigate why
         pathlib.Path("examples") / "react" / "react_call.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
         pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
