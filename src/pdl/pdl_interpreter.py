@@ -1454,7 +1454,7 @@ def generate_client_response_streaming(
 
 
 def litellm_parameters_to_dict(
-    parameters: Optional[LitellmParameters | dict[str, Any]]
+    parameters: Optional[LitellmParameters | dict[str, Any]],
 ) -> dict[str, Any]:
     if isinstance(parameters, dict):
         return {k: v for k, v in parameters.items() if k != "stream"}
