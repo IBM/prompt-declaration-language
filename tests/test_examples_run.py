@@ -37,7 +37,11 @@ TO_SKIP = {
         # Requires installation dependencies
         pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
         pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
-        pathlib.Path("pdl-live-react") / "src-tauri" / "tests" / "cli" / "code-python.pdl"
+        pathlib.Path("pdl-live-react")
+        / "src-tauri"
+        / "tests"
+        / "cli"
+        / "code-python.pdl",
         # Skip RAG examples
         pathlib.Path("examples") / "rag" / "pdf_index.pdl",
         pathlib.Path("examples") / "rag" / "pdf_query.pdl",
