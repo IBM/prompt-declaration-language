@@ -24,7 +24,7 @@ class GraniteioModel:
         assert isinstance(model, str), f"The model should be a string: {model}"
         assert isinstance(
             backend, (dict, str)
-        ), f"The backend should be a string or a dictionnary: {backend}"
+        ), f"The backend should be a string or a dictionary: {backend}"
         match backend:
             case {"transformers": device}:
                 assert isinstance(backend, dict)
@@ -83,7 +83,7 @@ class GraniteioModel:
             assert parameters is None or isinstance(parameters, dict)
             io_processor = GraniteioModel.processor_of_block(block)
             inputs = GraniteioModel.build_message(messages, parameters)
-            result = io_processor.create_chat_completion(inputs)  # pyright: ignore
+            result = await io_processor.acreate_chat_completion(inputs)  # pyright: ignore
             try:  # TODO: update when new version of granite-io is released
                 message = result.next_message.model_dump()
             except AttributeError:
