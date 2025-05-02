@@ -83,7 +83,9 @@ class GraniteioModel:
             assert parameters is None or isinstance(parameters, dict)
             io_processor = GraniteioModel.processor_of_block(block)
             inputs = GraniteioModel.build_message(messages, parameters)
-            result = await io_processor.acreate_chat_completion(inputs)  # pyright: ignore
+            result = await io_processor.acreate_chat_completion(  # pyright: ignore
+                inputs
+            )
             try:  # TODO: update when new version of granite-io is released
                 message = result.next_message.model_dump()
             except AttributeError:
