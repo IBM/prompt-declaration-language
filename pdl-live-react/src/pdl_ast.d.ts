@@ -234,6 +234,11 @@ export type Fallback =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -312,6 +317,11 @@ export type Fallback1 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry1 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -423,6 +433,11 @@ export type Fallback2 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry2 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -528,6 +543,11 @@ export type Fallback3 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry3 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -635,6 +655,11 @@ export type Fallback4 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry4 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -724,6 +749,11 @@ export type Fallback5 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry5 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -836,6 +866,11 @@ export type Fallback6 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry6 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -968,6 +1003,11 @@ export type Fallback7 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry7 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1073,6 +1113,11 @@ export type Fallback8 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry8 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1177,6 +1222,11 @@ export type Fallback9 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry9 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -1309,6 +1359,11 @@ export type Fallback10 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry10 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -1496,6 +1551,11 @@ export type Fallback11 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry11 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1640,6 +1700,11 @@ export type Fallback12 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry12 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1781,6 +1846,11 @@ export type Fallback13 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry13 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1860,6 +1930,11 @@ export type Fallback14 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry14 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1938,6 +2013,11 @@ export type Fallback15 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry15 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2019,6 +2099,11 @@ export type Fallback16 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry16 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2129,6 +2214,11 @@ export type Fallback17 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry17 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2277,6 +2367,11 @@ export type Fallback18 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry18 = number | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2462,6 +2557,11 @@ export type Fallback19 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry19 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2563,6 +2663,11 @@ export type Fallback20 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry20 = number | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2659,6 +2764,7 @@ export interface FunctionBlock {
   contribute?: Contribute20
   parser?: Parser20
   fallback?: Fallback20
+  retry?: Retry20
   role?: Role20
   context?: Context20
   pdl__id?: PdlId20
@@ -2720,6 +2826,7 @@ export interface CallBlock {
   contribute?: Contribute19
   parser?: Parser19
   fallback?: Fallback19
+  retry?: Retry19
   role?: Role19
   context?: Context19
   pdl__id?: PdlId19
@@ -2789,6 +2896,7 @@ export interface LitellmModelBlock {
   contribute?: Contribute18
   parser?: Parser18
   fallback?: Fallback18
+  retry?: Retry18
   role?: Role18
   context?: Context18
   pdl__id?: PdlId18
@@ -2859,6 +2967,7 @@ export interface GraniteioModelBlock {
   contribute?: Contribute17
   parser?: Parser17
   fallback?: Fallback17
+  retry?: Retry17
   role?: Role17
   context?: Context17
   pdl__id?: PdlId17
@@ -2940,6 +3049,7 @@ export interface CodeBlock {
   contribute?: Contribute16
   parser?: Parser16
   fallback?: Fallback16
+  retry?: Retry16
   role?: Role16
   context?: Context16
   pdl__id?: PdlId16
@@ -3009,6 +3119,7 @@ export interface ArgsBlock {
   contribute?: Contribute15
   parser?: Parser15
   fallback?: Fallback15
+  retry?: Retry15
   role?: Role15
   context?: Context15
   pdl__id?: PdlId15
@@ -3072,6 +3183,7 @@ export interface GetBlock {
   contribute?: Contribute14
   parser?: Parser14
   fallback?: Fallback14
+  retry?: Retry14
   role?: Role14
   context?: Context14
   pdl__id?: PdlId14
@@ -3153,6 +3265,7 @@ export interface DataBlock {
   contribute?: Contribute13
   parser?: Parser13
   fallback?: Fallback13
+  retry?: Retry13
   role?: Role13
   context?: Context13
   pdl__id?: PdlId13
@@ -3224,6 +3337,7 @@ export interface IfBlock {
   contribute?: Contribute12
   parser?: Parser12
   fallback?: Fallback12
+  retry?: Retry12
   role?: Role12
   context?: Context12
   pdl__id?: PdlId12
@@ -3304,6 +3418,7 @@ export interface MatchBlock {
   contribute?: Contribute11
   parser?: Parser11
   fallback?: Fallback11
+  retry?: Retry11
   role?: Role11
   context?: Context11
   pdl__id?: PdlId11
@@ -3374,6 +3489,7 @@ export interface RepeatBlock {
   contribute?: Contribute10
   parser?: Parser10
   fallback?: Fallback10
+  retry?: Retry10
   role?: Role10
   context?: Context10
   pdl__id?: PdlId10
@@ -3440,6 +3556,7 @@ export interface TextBlock {
   contribute?: Contribute9
   parser?: Parser9
   fallback?: Fallback9
+  retry?: Retry9
   role?: Role9
   context?: Context9
   pdl__id?: PdlId9
@@ -3500,6 +3617,7 @@ export interface LastOfBlock {
   contribute?: Contribute8
   parser?: Parser8
   fallback?: Fallback8
+  retry?: Retry8
   role?: Role8
   context?: Context8
   pdl__id?: PdlId8
@@ -3560,6 +3678,7 @@ export interface ArrayBlock {
   contribute?: Contribute7
   parser?: Parser7
   fallback?: Fallback7
+  retry?: Retry7
   role?: Role7
   context?: Context7
   pdl__id?: PdlId7
@@ -3620,6 +3739,7 @@ export interface ObjectBlock {
   contribute?: Contribute6
   parser?: Parser6
   fallback?: Fallback6
+  retry?: Retry6
   role?: Role6
   context?: Context6
   pdl__id?: PdlId6
@@ -3680,6 +3800,7 @@ export interface MessageBlock {
   contribute?: Contribute5
   parser?: Parser5
   fallback?: Fallback5
+  retry?: Retry5
   role?: Role5
   context?: Context5
   pdl__id?: PdlId5
@@ -3754,6 +3875,7 @@ export interface ReadBlock {
   contribute?: Contribute4
   parser?: Parser4
   fallback?: Fallback4
+  retry?: Retry4
   role?: Role4
   context?: Context4
   pdl__id?: PdlId4
@@ -3816,6 +3938,7 @@ export interface IncludeBlock {
   contribute?: Contribute3
   parser?: Parser3
   fallback?: Fallback3
+  retry?: Retry3
   role?: Role3
   context?: Context3
   pdl__id?: PdlId3
@@ -3877,6 +4000,7 @@ export interface ImportBlock {
   contribute?: Contribute2
   parser?: Parser2
   fallback?: Fallback2
+  retry?: Retry2
   role?: Role2
   context?: Context2
   pdl__id?: PdlId2
@@ -3938,6 +4062,7 @@ export interface ErrorBlock {
   contribute?: Contribute1
   parser?: Parser1
   fallback?: Fallback1
+  retry?: Retry1
   role?: Role1
   context?: Context1
   pdl__id?: PdlId1
@@ -3999,6 +4124,7 @@ export interface EmptyBlock {
   contribute?: Contribute
   parser?: Parser
   fallback?: Fallback
+  retry?: Retry
   role?: Role
   context?: Context
   pdl__id?: PdlId

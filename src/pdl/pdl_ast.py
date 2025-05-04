@@ -240,6 +240,9 @@ class Block(BaseModel):
     fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
     """
+    retry: Optional[int] = None
+    """The maximum number of times to retry when an error occurs within a block.
+    """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     Typical roles are `system`, `user`, and `assistant`,
