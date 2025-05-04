@@ -94,7 +94,7 @@ def replace_contribute_value(
 
 
 def get_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None
+    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None,
 ):
     if contribute is None:
         return None

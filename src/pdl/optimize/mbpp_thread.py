@@ -4,18 +4,17 @@ from typing import Any
 
 from evalplus.evaluate import check_correctness
 
-from pdl.optimize.PDLThread import PDLThread
+from pdl.optimize.optimizer_thread import OptimizerEvaluator
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
-from pdl.pdl_lazy import PdlApply
 
 
-class MBPPTrialThread(PDLThread):
+class MBPPTrialThread(OptimizerEvaluator):
     def __init__(
         self,
         *args,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.answer_key = "canonical_solution"
 
@@ -61,8 +60,8 @@ class MBPPTrialThread(PDLThread):
 
         return empty_scope | scope
 
-    def extract_answer(self, document: PdlApply):
-        solution = document.result().split("Solution:\n")[-1]
+    def extract_answer(self, document: str) -> str:
+        solution = document.split("Solution:\n")[-1]
         if "```" in solution:
             solution = solution.replace("```python", "```")
             solution = solution.split("```")[1]
@@ -109,33 +108,7 @@ class MBPPTrialThread(PDLThread):
             gt_time_limit_factor=4.0,
         )
 
-        def get_failed_tests(stat, details, inputs, expected):
-            if stat == "pass" or not details:
-                return []
-
-            return [
-                {
-                    "inputs": inputs[i],
-                    "expected_outputs": expected[i],
-                }
-                for i in range(len(details))
-                if not details[i]
-            ]
-
-        base_stat, base_details = result["base"]
-        base_fail_tests = get_failed_tests(
-            base_stat,
-            base_details,
-            self.example["base_input"],
-            self.example["expected_output"].get("base"),
-        )
-
-        plus_stat, plus_details = result["plus"]
-        plus_fail_tests = get_failed_tests(
-            plus_stat,
-            plus_details,
-            self.example["plus_input"],
-            self.example["expected_output"].get("plus"),
-        )
+        base_stat, _ = result["base"]
+        plus_stat, _ = result["plus"]
 
         return base_stat == "pass" and plus_stat == "pass"

@@ -1,18 +1,17 @@
 from typing import Any
 
+from pdl.optimize.optimizer_thread import OptimizerEvaluator
 from pdl.optimize.parse_number import extract_math_answer
-from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
-from pdl.pdl_lazy import PdlApply
 
 
-class Gsm8kTrialThread(PDLThread):
+class Gsm8kTrialThread(OptimizerEvaluator):
     def __init__(
         self,
         *args,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(*args, **kwargs)
 
     def get_scope(self) -> ScopeType:
@@ -65,8 +64,8 @@ class Gsm8kTrialThread(PDLThread):
         scope["reasoning"] = self.example["reasoning"]
         return empty_scope | scope
 
-    def extract_answer(self, document: PdlApply) -> Any:
-        return extract_math_answer(document.result())
+    def extract_answer(self, document: str) -> Any:
+        return extract_math_answer(document)
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         return answer == truth or document.endswith(f" {truth}")

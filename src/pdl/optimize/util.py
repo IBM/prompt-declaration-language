@@ -18,14 +18,14 @@ RETRY_COUNT = 0
 @dataclass
 class TrialOutput:
     pdl_program: Program
+    scope: ScopeType
+    runtime: float
     correct: bool = False
-    exception: BaseException | None = None
-    scope: ScopeType | None = None
+    exception: BaseException | bool | None = None
     pdl_result: Any = None
     pdl_document: str = ""
     answer: str | None = None
     groundtruth: str | None = None
-    runtime: int | None = None
     example: Any = None
     total_tokens: int | None = None
     index: int | None = None
@@ -46,10 +46,10 @@ class TrialOutput:
 class CandidateResult:
     """Stores the result(s) of the evaluation of one candidate."""
 
-    candidate: dict | None
-    results: list[TrialOutput] | None
-    metric: float | int | None
-    runtime: float | None
+    candidate: dict
+    results: list[TrialOutput]
+    metric: float | int
+    runtime: float
 
     def to_dict(self) -> dict:
         return {

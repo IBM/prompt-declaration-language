@@ -57,15 +57,13 @@ def parse_number(text):
     return int(num_str)
 
 
-def extract_math_answer(result: str) -> float | int:
+def extract_math_answer(result: str) -> float | int | None:
     last_line = result.splitlines()[-1]
     match = re.findall(r"The answer is(?::?) (.+)", last_line)
 
     # Check if a match was found and print the captured group
     if match:
         return parse_number(match[-1])
-
-    # print("No match!", last_line)
 
     return old_extract(result)
 
@@ -77,10 +75,8 @@ def old_extract(result: str) -> float:
     except Exception:
         for r in reversed(result.split()):
             try:
-                ret = r.replace("$", "").replace(",", "")
-                if ret.endswith("."):
-                    ret = ret[:-1]
+                ret = r.replace("$", "").replace(",", "").removesuffix(".")
                 return float(ret)
-            except Exception:
-                continue
+            except Exception:  # nosec B110 # noqa: S110
+                pass
         return 0.0

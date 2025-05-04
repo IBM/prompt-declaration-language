@@ -14,7 +14,7 @@ class SelectableList(list):
 
 
 class MBPPDataset(dict):
-    def __init__(self):
+    def __init__(self) -> None:
         self.mbpp_plus = get_mbpp_plus()
         self.dataset_hash = get_mbpp_plus_hash()
 
@@ -25,7 +25,7 @@ class MBPPDataset(dict):
         )
 
         self.mbpp = load_from_disk(
-            "../prompt-declaration-language-merge/var/mbpp_trajectified"
+            "../prompt-declaration-language-merge/var/mbpp_trajectified",
         ).rename_column(
             "code",
             "canonical_solution",
@@ -33,7 +33,9 @@ class MBPPDataset(dict):
 
         self["train"] = self.mbpp["train"]
 
-        test_task_ids = [f"Mbpp/{t}" for t in self.mbpp["test"]["task_id"]]
+        test_task_ids = [
+            f"Mbpp/{t}" for t in self.mbpp["test"]["task_id"]  # pyright: ignore
+        ]
 
         for k in self.mbpp_plus:
             self.mbpp_plus[k]["react_prompt"] = (
@@ -51,7 +53,9 @@ class MBPPDataset(dict):
         for i, x in enumerate(self["test"]):
             self["test"][i]["expected_output"] = expected_outputs[x["task_id"]]
 
-        validation_task_ids = [f"Mbpp/{t}" for t in self.mbpp["validation"]["task_id"]]
+        validation_task_ids = [
+            f"Mbpp/{t}" for t in self.mbpp["validation"]["task_id"]  # pyright: ignore
+        ]
         for t in validation_task_ids:
             if t not in self.mbpp_plus:
                 print(f"Skipped validation {t} because not in dict")
@@ -74,10 +78,11 @@ class MBPPDataset(dict):
         for split in ["train", "validation", "test"]:
             if "canonical_solution" not in self[split][0]:
                 print(self[split][0])
-                raise ValueError(f"Canonical solution not found in {split}")
+                msg = f"Canonical solution not found in {split}"
+                raise ValueError(msg)
 
     def __getitem__(self, key):
         return dict.__getitem__(self, key)
 
-    def __setitem__(self, key, val):
+    def __setitem__(self, key, val) -> None:
         dict.__setitem__(self, key, val)

@@ -1,17 +1,16 @@
 from typing import Any
 
-from pdl.optimize.PDLThread import PDLThread
+from pdl.optimize.optimizer_thread import OptimizerEvaluator
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
-from pdl.pdl_lazy import PdlApply
 
 
-class FEVERTrialThread(PDLThread):
+class FEVERTrialThread(OptimizerEvaluator):
     def __init__(
         self,
         *args,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.answer_key = "label"
 
@@ -64,9 +63,9 @@ class FEVERTrialThread(PDLThread):
         scope["claim"] = self.example["claim"]
         return empty_scope | scope
 
-    def extract_answer(self, document: PdlApply) -> bool:
+    def extract_answer(self, document: str) -> bool | None:
         #  "SUPPORTS", and otherwise with "REFUTES"
-        response = document.result().splitlines()[-1].lower()
+        response = document.splitlines()[-1].lower()
         if "```" in response:
             response = response.split("```")[1]
         supports = "true" in response

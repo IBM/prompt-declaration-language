@@ -1,5 +1,4 @@
-"""PDL programs are represented by the Pydantic data structure defined in this file.
-"""
+"""PDL programs are represented by the Pydantic data structure defined in this file."""
 
 from enum import StrEnum
 from typing import (

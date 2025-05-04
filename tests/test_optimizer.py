@@ -34,8 +34,8 @@ def run_optimizer_gsm8k(pattern, num_demonstrations=0):
     )
 
     optim = PDLOptimizer(
-        pdl_path=Path("contrib/prompt_library/examples/gsm8k/general.pdl"),
-        dataset=load_from_disk(
+        pdl_path=Path("examples/prompt_library/gsm8k/general.pdl"),
+        dataset=load_from_disk(  # pyright: ignore
             "../prompt-declaration-language-merge/var/gsm8k_proc_json",
         ),
         trial_thread=Gsm8kTrialThread,
@@ -73,11 +73,13 @@ def run_optimizer_fever(pattern, num_demonstrations=0):
     fever = load_from_disk(
         "../prompt-declaration-language-merge/var/fever_augmented_nowikipages_json_val",
     )
-    fever["train"] = fever["train"].filter(lambda x: x["wiki_worked"])
+    fever["train"] = fever["train"].filter(  # pyright: ignore
+        lambda x: x["wiki_worked"]
+    )
 
     optim = PDLOptimizer(
-        pdl_path=Path("contrib/prompt_library/examples/fever/general.pdl"),
-        dataset=fever,
+        pdl_path=Path("examples/prompt_library/fever/general.pdl"),
+        dataset=fever,  # pyright: ignore
         trial_thread=FEVERTrialThread,
         yield_output=True,
         experiment_path=Path("test_experiments"),
@@ -114,7 +116,7 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
 
     optim = PDLOptimizer(
         pdl_path=Path("contrib/prompt_library/examples/evalplus/general.pdl"),
-        dataset=mbpp_dataset,
+        dataset=mbpp_dataset,  # pyright: ignore
         trial_thread=MBPPTrialThread,
         yield_output=True,
         experiment_path=Path("test_experiments"),
@@ -178,8 +180,8 @@ def test_valid_experiment_programs(capsys: CaptureFixture[str]) -> None:
         "examples/fever/general.pdl",
         "examples/gsm8k/general.pdl",
     ]
-    programs = [prompt_library / p for p in programs]
-    for yaml_file_name in programs:
+    program_paths = [prompt_library / p for p in programs]
+    for yaml_file_name in program_paths:
         try:
             _ = parse_file(yaml_file_name)
             captured = capsys.readouterr()

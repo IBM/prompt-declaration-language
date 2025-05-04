@@ -10,22 +10,20 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from collections.abc import Generator, Mapping, Sequence
 from os import getenv
+from pathlib import Path
+from typing import Any, Callable, TypeVar
 
-import multiprocess
+from multiprocess import Manager, Process  # pyright: ignore
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
-
-# from itertools import batched
-from collections.abc import Generator, Mapping, Sequence  # noqa: E402
-from pathlib import Path  # noqa: E402
-from typing import Any, TypeVar
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
 import yaml  # noqa: E402
-from IPython.core.interactiveshell import InteractiveShell
-from IPython.utils import io
+from IPython.core.interactiveshell import InteractiveShell  # noqa: E402
+from IPython.utils.capture import capture_output  # noqa: E402
 from jinja2 import (  # noqa: E402
     Environment,
     StrictUndefined,
@@ -169,6 +167,7 @@ def generate(
     """
     try:
         prog, loc = parse_file(pdl_file)
+
         if state is None:
             state = InterpreterState(cwd=Path(pdl_file).parent)
         future_result, _, _, trace = process_prog(state, initial_scope, prog, loc)
@@ -591,7 +590,7 @@ def process_block_body(
                     ) from exc
                 result = PdlDict(dict(zip(block.object.keys(), values, strict=False)))
                 object_trace = dict(
-                    zip(block.object.keys(), values_trace, strict=False)
+                    zip(block.object.keys(), values_trace, strict=False),
                 )
                 trace = block.model_copy(update={"object": object_trace})
             else:
@@ -1340,11 +1339,11 @@ def process_call_model(
 ]:
     # evaluate model name
     model_id, concrete_block = process_expr_of(
-        block,
+        block,  # pyright: ignore
         "model",
         scope,
-        loc,  # pyright: ignore
-    )  # pyright: ignore
+        loc,
+    )
     # evaluate model params
     match concrete_block:
         case LitellmModelBlock():
@@ -1426,8 +1425,8 @@ def process_call_model(
             model_input,
         )
         background: LazyMessages = PdlList(
-            [lazy_apply(lambda msg: msg | {"defsite": block.pdl__id}, msg)],
-        )  # type: ignore
+            [lazy_apply(lambda msg: msg | {"defsite": block.pdl__id}, msg)],  # type: ignore
+        )
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"],
             msg,
@@ -1436,7 +1435,7 @@ def process_call_model(
             scope = scope | {block.modelResponse: raw_result}
         trace: BlockTypeTVarProcessCallModel = concrete_block.model_copy(
             update={"pdl__result": result},
-        )  # pyright: ignore
+        )  # type: ignore
         return result, background, scope, trace
     except httpx.RequestError as exc:
         message = f"model '{model_id}' encountered {exc!r} trying to {exc.request.method} against {exc.request.url}"
@@ -1659,15 +1658,15 @@ def process_call_code(
                 result = call_python(code_s, scope, state)
                 background = PdlList(
                     [
-                        PdlDict(
+                        PdlDict(  # type: ignore
                             {
                                 "role": state.role,
                                 "content": lazy_apply(str, result),
                                 "defsite": block.pdl__id,
                             },
                         ),
-                    ],  # type: ignore
-                )
+                    ],
+                )  # type: ignore
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Python Code error: {traceback.format_exc()}",
@@ -1681,7 +1680,7 @@ def process_call_code(
                 result = call_ipython(code_s, scope)
                 background = PdlList(
                     [
-                        PdlDict(
+                        PdlDict(  # type: ignore
                             {
                                 "role": state.role,
                                 "content": lazy_apply(str, result),
@@ -1741,7 +1740,7 @@ def process_call_code(
                 result = call_pdl(code_s, scope)
                 background = PdlList(
                     [
-                        PdlDict(
+                        PdlDict(  # type: ignore
                             {
                                 "role": state.role,
                                 "content": result,
@@ -2092,7 +2091,7 @@ class PythonREPL:
 
     def __init__(
         self,
-        name_to_func_mapping: Mapping[str, callable],
+        name_to_func_mapping: Mapping[str, Callable],
         timeout: int = 30,
     ) -> None:
         super().__init__()
@@ -2107,7 +2106,7 @@ class PythonREPL:
             colors="NoColor",
         )
         # Disable certain functions for safety
-        _ = self.__call__(
+        self.__call__(  # pylint: disable=unnecessary-dunder-call
             "import sys; sys.setrecursionlimit = lambda *args, **kwargs: print('Setting recursion limit is disabled')",
         )
 
@@ -2120,7 +2119,7 @@ class PythonREPL:
         def target(return_dict):
             try:
                 shell = InteractiveShell.instance(user_ns=namespace, colors="NoColor")
-                with io.capture_output() as captured:
+                with capture_output() as captured:
                     _ = shell.run_cell(code, store_history=False, silent=True)
                 shell.cleanup()
                 output = captured.stdout or "[Executed Successfully with No Output]"
@@ -2138,10 +2137,10 @@ class PythonREPL:
                 return_dict["output"] = f"Error: {e!s}"
 
         # Shared dictionary to store the output
-        manager = multiprocess.Manager()
+        manager = Manager()
         return_dict = manager.dict()
 
-        process = multiprocess.Process(target=target, args=(return_dict,))
+        process = Process(target=target, args=(return_dict,))
         process.start()
         process.join(timeout)
 

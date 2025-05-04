@@ -1,10 +1,11 @@
 import argparse
+import sys
 import traceback
 from enum import Enum
 from pathlib import Path
 
 import yaml
-from datasets import concatenate_datasets, load_dataset, load_from_disk
+from datasets import load_from_disk
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.gsmhard_thread import GsmHardTrialThread
@@ -59,17 +60,23 @@ if __name__ == "__main__":
     try:
         config_dict = yaml.safe_load(config_text)
         config = OptimizationConfig(**config_dict)
-    except Exception as e:
+    except Exception:
         print("Couldn't load config:", args.config)
         traceback.print_last()
+        sys.exit()
 
     if args.dry:
-        exit()
+        sys.exit()
+
+    # TODO: move datasets to scripts in examples/optimizer
+    # TODO: blog/demo video to publish
+    # TODO: tutorial
+    # simplify tool. what can be made easier?
 
     if config.benchmark == "gsm8k":
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsm8k_proc_json"),
+            dataset=load_from_disk("var/gsm8k_proc_json"),  # pyright: ignore
             trial_thread=Gsm8kTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -78,7 +85,7 @@ if __name__ == "__main__":
     if config.benchmark == "gsmhard":
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsmhard_split"),
+            dataset=load_from_disk("var/gsmhard_split"),  # pyright: ignore
             trial_thread=GsmHardTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -87,7 +94,7 @@ if __name__ == "__main__":
     if config.benchmark == "gsmhard-bench":
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsmhard_split"),
+            dataset=load_from_disk("var/gsmhard_split"),  # pyright: ignore
             trial_thread=GsmHardTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -95,10 +102,12 @@ if __name__ == "__main__":
         ).benchmark(config.max_test_set_size, {"uuid": "9xfwqqxh"})
     if config.benchmark == "gsm8k-baseline":
         gsm8k = load_from_disk("var/gsm8k_proc")
-        gsm8k["train"] = load_from_disk("var/gsm8k_base_prompts")["pal"]
+        gsm8k["train"] = load_from_disk("var/gsm8k_base_prompts")[  # pyright: ignore
+            "pal"
+        ]
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=gsm8k,
+            dataset=gsm8k,  # pyright: ignore
             trial_thread=Gsm8kTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -107,7 +116,7 @@ if __name__ == "__main__":
     if config.benchmark == "gsm8k-bench":
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsm8k_proc_json"),
+            dataset=load_from_disk("var/gsm8k_proc_json"),  # pyright: ignore
             trial_thread=Gsm8kTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -115,10 +124,12 @@ if __name__ == "__main__":
         ).benchmark(config.max_test_set_size, {"uuid": "0qk01vfk"})
     elif config.benchmark == "fever":
         fever = load_from_disk("var/fever_augmented_nowikipages_json_val")
-        fever["train"] = fever["train"].filter(lambda x: x["wiki_worked"])
+        fever["train"] = fever["train"].filter(  # pyright: ignore
+            lambda x: x["wiki_worked"]
+        )
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=fever,
+            dataset=fever,  # pyright: ignore
             trial_thread=FEVERTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -126,10 +137,12 @@ if __name__ == "__main__":
         ).run()
     elif config.benchmark == "fever-bench":
         fever = load_from_disk("var/fever_augmented_nowikipages_json_val")
-        fever["train"] = fever["train"].filter(lambda x: x["wiki_worked"])
+        fever["train"] = fever["train"].filter(  # pyright: ignore
+            lambda x: x["wiki_worked"]
+        )
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=fever,
+            dataset=fever,  # pyright: ignore
             trial_thread=FEVERTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -140,7 +153,7 @@ if __name__ == "__main__":
 
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=mbpp_dataset,
+            dataset=mbpp_dataset,  # pyright: ignore
             trial_thread=MBPPTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),
@@ -151,7 +164,7 @@ if __name__ == "__main__":
 
         PDLOptimizer(
             pdl_path=args.pdl_file,
-            dataset=mbpp_dataset,
+            dataset=mbpp_dataset,  # pyright: ignore
             trial_thread=MBPPTrialThread,
             yield_output=args.yield_output,
             experiment_path=Path("experiments"),

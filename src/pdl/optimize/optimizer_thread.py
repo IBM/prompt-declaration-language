@@ -8,11 +8,12 @@ from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
 from pdl.pdl_ast import Program, ScopeType
 from pdl.pdl_interpreter import InterpreterState, PDLRuntimeError, process_prog
+from pdl.pdl_lazy import PdlDict
 from pdl.pdl_location_utils import get_loc_string
 from pdl.pdl_parser import PDLParseError
 
 
-class PDLThread(Thread):
+class OptimizerEvaluator(Thread):
     """Evaluates a candidate (configuration, i.e. fewshots, style) against **one** test example."""
 
     # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -27,13 +28,13 @@ class PDLThread(Thread):
         config: OptimizationConfig,
         cwd: Path,
         answer_key: str = "answer",
-    ):
+    ) -> None:
         super().__init__()
         self.pdl_program = pdl_program
         self.example = example
         self.candidate = candidate
         self.index = index
-        self.scope = None
+        self.scope: PdlDict = PdlDict({})
         self.timeout = timeout
         self.yield_output = yield_output
         self.answer_key = answer_key
@@ -49,15 +50,16 @@ class PDLThread(Thread):
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         raise NotImplementedError
 
-    def run(
+    def run(  # type: ignore # noqa: C901
         self,
-    ):
+    ) -> TrialOutput | Exception:
         document = ""
         answer = None
-        exception = None
+        exception: PDLParseError | PDLRuntimeError | Exception | bool | None = None
         result = None
         match = False
         truth = self.example[self.answer_key]
+        scope: PdlDict = PdlDict({})
 
         retry = True
         tries = 0
@@ -77,12 +79,17 @@ class PDLThread(Thread):
                 )
                 scope = self.get_scope()
 
-                result, messages, scope, _ = process_prog(
+                result, _, scope, _ = process_prog(
                     state,
                     scope,
                     self.pdl_program,
                     # timeout=self.timeout,
                 )
+
+                document = result.result()
+
+                if isinstance(document, str):
+                    document = document.strip()
 
                 self.scope = scope
                 end_time = time.time()
@@ -93,10 +100,10 @@ class PDLThread(Thread):
                 if errored:
                     console.log("PDL error occured.")
                 else:
-                    answer = self.extract_answer(result)
+                    answer = self.extract_answer(document)
 
                     if answer is None:
-                        last_line = result.result().splitlines()[-1]
+                        last_line = document.splitlines()[-1]
                         console.log("Couldn't extract answer: ", last_line)
 
                 if answer is None or errored:

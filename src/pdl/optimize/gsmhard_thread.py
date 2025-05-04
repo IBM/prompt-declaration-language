@@ -1,10 +1,9 @@
 from typing import Any
 
+from pdl.optimize.optimizer_thread import OptimizerEvaluator
 from pdl.optimize.parse_number import extract_math_answer
-from pdl.optimize.PDLThread import PDLThread
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
-from pdl.pdl_lazy import PdlApply
 
 
 def is_float(s: str) -> str:
@@ -15,12 +14,12 @@ def is_float(s: str) -> str:
         return s
 
 
-class GsmHardTrialThread(PDLThread):
+class GsmHardTrialThread(OptimizerEvaluator):
     def __init__(
         self,
         *args,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.answer_key = "target"
 
@@ -75,8 +74,8 @@ class GsmHardTrialThread(PDLThread):
         scope["question"] = self.example["input"]
         return empty_scope | scope
 
-    def extract_answer(self, document: PdlApply) -> Any:
-        return extract_math_answer(document.result())
+    def extract_answer(self, document: str) -> float | int | None:
+        return extract_math_answer(document)
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         answerf = is_float(answer)
