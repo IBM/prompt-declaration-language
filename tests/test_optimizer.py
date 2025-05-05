@@ -1,8 +1,8 @@
 from pathlib import Path
 from pprint import pprint
 
+import pytest
 from datasets import Dataset, DatasetDict
-from pytest import skip
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.fever_evaluator import FEVEREvaluator
@@ -751,35 +751,41 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
     pprint(result)
 
 
-@skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_zeroshot_cot():
     run_optimizer_gsm8k("cot")
 
 
-@skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_react():
     run_optimizer_gsm8k("react", num_demonstrations=5)
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_rewoo():
     run_optimizer_gsm8k("rewoo", num_demonstrations=5)
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_cot():
     run_optimizer_fever("cot")
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_fever_fiveshot_react():
     run_optimizer_fever("react", num_demonstrations=5)
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_rewoo():
     run_optimizer_fever("rewoo")
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_cot():
     run_optimizer_mbpp("cot")
 
 
+@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_react():
     run_optimizer_mbpp("react")
