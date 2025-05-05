@@ -1,59 +1,95 @@
 import argparse
 import sys
 import traceback
-from enum import Enum
 from pathlib import Path
+from typing import Any
 
 import yaml
 from datasets import load_from_disk
 
 from pdl.optimize.config_parser import OptimizationConfig
-from pdl.optimize.gsmhard_thread import GsmHardTrialThread
+from pdl.optimize.gsmhard_evaluator import GsmHardEvaluator
 from pdl.optimize.mbpp_dataset import MBPPDataset
-from pdl.optimize.mbpp_thread import MBPPTrialThread
+from pdl.optimize.mbpp_evaluator import MBPPEvaluator
 
-from .fever_thread import FEVERTrialThread
-from .gsm8k_thread import Gsm8kTrialThread
+from .fever_evaluator import FEVEREvaluator
+from .gsm8k_evaluator import Gsm8kEvaluator
 from .pdl_optimizer import PDLOptimizer
 
-
-class SamplingMethods(Enum):
-    IDENTITY = 1
-    REVERSED = 2
-    RANDOM_INDICES = 3
-    UNCERTAINTY = 4
-
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("")
-    parser.add_argument(
+    parser = argparse.ArgumentParser(
+        description="PDL optimization and benchmarking tool",
+    )
+    subparsers = parser.add_subparsers(
+        dest="command",
+        help="Command to execute",
+        required=True,
+    )
+
+    # Common arguments for both commands
+    common_parser = argparse.ArgumentParser(add_help=False)
+    common_parser.add_argument(
         "--config",
         "-c",
         help="Optimizer config file",
         type=Path,
+        required=True,
     )
-    parser.add_argument(
+    common_parser.add_argument(
+        "--dataset-path",
+        help="Path to the dataset directory",
+        type=Path,
+        required=True,
+    )
+    common_parser.add_argument(
+        "--experiments-path",
+        help="Path where experiment results will be saved",
+        type=Path,
+        default=Path("experiments"),
+    )
+    common_parser.add_argument(
         "--yield_output",
         action=argparse.BooleanOptionalAction,
         default=False,
     )
-    parser.add_argument(
+    common_parser.add_argument(
         "--dry",
         action=argparse.BooleanOptionalAction,
         default=False,
     )
-    parser.add_argument(
+    common_parser.add_argument(
         "pdl_file",
         type=Path,
         help="Path to a PDL file to optimize",
     )
 
+    # Optimize command
+    optimize_parser = subparsers.add_parser(
+        "optimize",
+        help="Run optimization",
+        parents=[common_parser],
+    )
+
+    # Benchmark command
+    benchmark_parser = subparsers.add_parser(
+        "benchmark",
+        help="Run benchmarking",
+        parents=[common_parser],
+    )
+    benchmark_parser.add_argument(
+        "uuid",
+        help="UUID for the benchmark run",
+        type=str,
+    )
+
     args = parser.parse_args()
     if not args.pdl_file.exists():
         print("PDL file doesn't exist:", args.pdl_file)
+        sys.exit(1)
 
     if not args.config.exists():
         print("Config file doesn't exist:", args.config)
+        sys.exit(1)
 
     config_text = args.config.read_text()
 
@@ -63,110 +99,46 @@ if __name__ == "__main__":
     except Exception:
         print("Couldn't load config:", args.config)
         traceback.print_last()
-        sys.exit()
+        sys.exit(1)
 
     if args.dry:
-        sys.exit()
+        sys.exit(0)
 
-    # TODO: move datasets to scripts in examples/optimizer
-    # TODO: blog/demo video to publish
-    # TODO: tutorial
-    # simplify tool. what can be made easier?
+    # Set up dataset and trial thread based on benchmark
+    dataset: Any
+    TrialThread: type[
+        Gsm8kEvaluator | GsmHardEvaluator | FEVEREvaluator | MBPPEvaluator
+    ]
 
     if config.benchmark == "gsm8k":
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsm8k_proc_json"),  # pyright: ignore
-            trial_thread=Gsm8kTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).run()
-    if config.benchmark == "gsmhard":
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsmhard_split"),  # pyright: ignore
-            trial_thread=GsmHardTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).run()
-    if config.benchmark == "gsmhard-bench":
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsmhard_split"),  # pyright: ignore
-            trial_thread=GsmHardTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).benchmark(config.max_test_set_size, {"uuid": "9xfwqqxh"})
-    if config.benchmark == "gsm8k-baseline":
-        gsm8k = load_from_disk("var/gsm8k_proc")
-        gsm8k["train"] = load_from_disk("var/gsm8k_base_prompts")[  # pyright: ignore
-            "pal"
-        ]
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=gsm8k,  # pyright: ignore
-            trial_thread=Gsm8kTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).benchmark(config.max_test_set_size)
-    if config.benchmark == "gsm8k-bench":
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=load_from_disk("var/gsm8k_proc_json"),  # pyright: ignore
-            trial_thread=Gsm8kTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).benchmark(config.max_test_set_size, {"uuid": "0qk01vfk"})
+        dataset = load_from_disk(args.dataset_path)
+        TrialThread = Gsm8kEvaluator
+    elif config.benchmark == "gsmhard":
+        dataset = load_from_disk(args.dataset_path)
+        TrialThread = GsmHardEvaluator
     elif config.benchmark == "fever":
-        fever = load_from_disk("var/fever_augmented_nowikipages_json_val")
-        fever["train"] = fever["train"].filter(  # pyright: ignore
-            lambda x: x["wiki_worked"]
-        )
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=fever,  # pyright: ignore
-            trial_thread=FEVERTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).run()
-    elif config.benchmark == "fever-bench":
-        fever = load_from_disk("var/fever_augmented_nowikipages_json_val")
-        fever["train"] = fever["train"].filter(  # pyright: ignore
-            lambda x: x["wiki_worked"]
-        )
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=fever,  # pyright: ignore
-            trial_thread=FEVERTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).benchmark(config.max_test_set_size, {"uuid": "eaxjfd74"})
+        fever = load_from_disk(args.dataset_path)
+        dataset = fever
+        TrialThread = FEVEREvaluator
     elif config.benchmark == "evalplus":
-        mbpp_dataset = MBPPDataset()
+        dataset = MBPPDataset()
+        TrialThread = MBPPEvaluator
+    else:
+        print(f"Unknown benchmark: {config.benchmark}")
+        sys.exit(1)
 
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=mbpp_dataset,  # pyright: ignore
-            trial_thread=MBPPTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).run()
-    elif config.benchmark == "evalplus-bench":
-        mbpp_dataset = MBPPDataset()
+    # Create optimizer instance
+    optimizer = PDLOptimizer(
+        pdl_path=args.pdl_file,
+        dataset=dataset,
+        trial_thread=TrialThread,
+        yield_output=args.yield_output,
+        experiment_path=args.experiments_path,
+        config=config,
+    )
 
-        PDLOptimizer(
-            pdl_path=args.pdl_file,
-            dataset=mbpp_dataset,  # pyright: ignore
-            trial_thread=MBPPTrialThread,
-            yield_output=args.yield_output,
-            experiment_path=Path("experiments"),
-            config=config,
-        ).benchmark(-1, {"uuid": "hk7eldp1"})
+    # Execute the appropriate command
+    if args.command == "optimize":
+        optimizer.run()
+    elif args.command == "benchmark":
+        optimizer.benchmark(config.max_test_set_size, {"uuid": args.uuid})

@@ -4,12 +4,12 @@ from typing import Any
 
 from evalplus.evaluate import check_correctness
 
-from pdl.optimize.optimizer_thread import OptimizerEvaluator
+from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
 
 
-class MBPPTrialThread(OptimizerEvaluator):
+class MBPPEvaluator(OptimizerEvaluator):
     def __init__(
         self,
         *args,

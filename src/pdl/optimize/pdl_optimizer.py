@@ -20,7 +20,7 @@ from tqdm import TqdmExperimentalWarning
 from tqdm.rich import tqdm
 
 from pdl.optimize.config_parser import OptimizationConfig
-from pdl.optimize.optimizer_thread import OptimizerEvaluator
+from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
 from pdl.pdl_dumper import dump_yaml
@@ -112,11 +112,7 @@ class PDLOptimizer:
         self.experiment_path = experiment_path
         self.experiment_uuid = config.experiment_prefix + self.random_uuid()
         self.experiment_log: dict[str, Any] = {"iterations": []}
-        self.pbar = tqdm(
-            colour="green",
-            smoothing=0.3,
-            options={"console": console},
-        )
+        self.pbar = None
         self.candidate_results: dict[str, dict] = {}
 
         # Load
@@ -369,6 +365,9 @@ class PDLOptimizer:
             options={"console": console},
         )
 
+        if self.pbar is None:
+            raise ValueError("Progress bar not initialized")
+
         if self.shuffle_validation:
             # We generate a set of random indices to avoid always using the same
             validation_set_indices = list(
@@ -581,6 +580,9 @@ class PDLOptimizer:
         candidate: dict,
         test_set: list[dict] | Dataset,
     ) -> CandidateResult:
+        if self.pbar is None:
+            raise ValueError("Progress bar not initialized")
+
         table = Table(title="Evaluation", show_header=False)
         table.add_row("Test set size", f"{len(test_set):,}")
         table.add_section()
@@ -721,6 +723,10 @@ class PDLOptimizer:
             smoothing=0.3,
             options={"console": console},
         )
+
+        if self.pbar is None:
+            raise ValueError("Progress bar not initialized")
+
         start_time = time.time()
         if candidate is None:
             candidate = self.sample_candidates(1, demo_indices=list(range(demo_size)))[

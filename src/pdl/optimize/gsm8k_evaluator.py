@@ -1,18 +1,18 @@
 from typing import Any
 
-from pdl.optimize.optimizer_thread import OptimizerEvaluator
+from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
+from pdl.optimize.parse_number import extract_math_answer
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
 
 
-class FEVERTrialThread(OptimizerEvaluator):
+class Gsm8kEvaluator(OptimizerEvaluator):
     def __init__(
         self,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
-        self.answer_key = "label"
 
     def get_scope(self) -> ScopeType:
         demo_var = self.config.demonstrations_variable_name
@@ -27,9 +27,9 @@ class FEVERTrialThread(OptimizerEvaluator):
             case "cot":
                 scope[demo_var] = [
                     {
-                        "question": q["claim"],
-                        "reasoning": q["cot"].strip(),
-                        "answer": str(q[self.answer_key]).lower(),
+                        "question": q["question"],
+                        "reasoning": q["reasoning"],
+                        "answer": str(q["answer"]),
                     }
                     for q in self.candidate[demo_var]
                 ]
@@ -60,27 +60,12 @@ class FEVERTrialThread(OptimizerEvaluator):
             case _:
                 pass
 
-        scope["claim"] = self.example["claim"]
+        scope["question"] = self.example["question"]
+        scope["reasoning"] = self.example["reasoning"]
         return empty_scope | scope
 
-    def extract_answer(self, document: str) -> bool | None:
-        #  "SUPPORTS", and otherwise with "REFUTES"
-        response = document.splitlines()[-1].lower()
-        if "```" in response:
-            response = response.split("```")[1]
-        supports = "true" in response
-        refutes = "false" in response
-
-        if (supports and refutes) or not (supports or refutes):
-            return None  # ""
-
-        if supports:
-            return True  # "true"
-
-        if refutes:
-            return False  # "false"
-
-        return None
+    def extract_answer(self, document: str) -> Any:
+        return extract_math_answer(document)
 
     def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
-        return answer == truth or document.lower().endswith(str(truth).lower())
+        return answer == truth or document.endswith(f" {truth}")

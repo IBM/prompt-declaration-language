@@ -83,7 +83,6 @@ class OptimizerEvaluator(Thread):
                     state,
                     scope,
                     self.pdl_program,
-                    # timeout=self.timeout,
                 )
 
                 document = result.result()
@@ -118,7 +117,7 @@ class OptimizerEvaluator(Thread):
                 console.print_exception(show_locals=False)
                 errored = True
                 exception = exc
-                print("\n".join(exc.message))
+                console.print("\n".join(exc.message))
             except PDLRuntimeError as exc:
                 console.log(exc)
 
