@@ -73,11 +73,7 @@ class OptimizerEvaluator(Thread):
                 console.log("RETRYING! ", tries)
             try:
                 tries += 1
-                # state = InterpreterState(
-                #     yield_result=self.yield_output,
-                #     yield_background=self.yield_output,
-                #     cwd=self.cwd,
-                # )
+
                 config = InterpreterConfig(
                     yield_result=self.yield_output,
                     yield_background=self.yield_output,
