@@ -2,6 +2,7 @@ from pathlib import Path
 from pprint import pprint
 
 from datasets import Dataset, DatasetDict
+from pytest import skip
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.fever_evaluator import FEVEREvaluator
@@ -731,7 +732,9 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
         },
     )
 
-    mbpp_dataset = MBPPDataset()
+    mbpp_dataset = MBPPDataset(
+        "../prompt-declaration-language-merge/var/mbpp_trajectified",
+    )
 
     optim = PDLOptimizer(
         pdl_path=Path("examples/optimizer/evalplus.pdl"),
@@ -748,15 +751,17 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
     pprint(result)
 
 
+@skip("API access not available in CI")
 def test_gsm8k_zeroshot_cot():
     run_optimizer_gsm8k("cot")
 
 
-def test_gsm8k_zeroshot_react():
+@skip("API access not available in CI")
+def test_gsm8k_fiveshot_react():
     run_optimizer_gsm8k("react", num_demonstrations=5)
 
 
-def test_gsm8k_zeroshot_rewoo():
+def test_gsm8k_fiveshot_rewoo():
     run_optimizer_gsm8k("rewoo", num_demonstrations=5)
 
 
@@ -764,7 +769,7 @@ def test_fever_zeroshot_cot():
     run_optimizer_fever("cot")
 
 
-def test_fever_zeroshot_react():
+def test_fever_fiveshot_react():
     run_optimizer_fever("react", num_demonstrations=5)
 
 
@@ -778,31 +783,3 @@ def test_mbpp_zeroshot_cot():
 
 def test_mbpp_zeroshot_react():
     run_optimizer_mbpp("react")
-
-
-# def test_valid_experiment_programs(capsys: CaptureFixture[str]) -> None:
-#     actual_invalid: set[str] = set()
-#     with_warnings: set[str] = set()
-#     prompt_library = Path("contrib/prompt_library")
-#     optimizer_examples = Path("contrib/prompt_library")
-#     programs = [
-#         "CoT.pdl",
-#         "ReAct.pdl",
-#         "ReWoo.pdl",
-#         "tools.pdl",
-#         "examples/evalplus/general.pdl",
-#         "examples/fever/general.pdl",
-#         "examples/gsm8k/general.pdl",
-#     ]
-#     program_paths = [prompt_library / p for p in programs]
-#     for yaml_file_name in program_paths:
-#         try:
-#             _ = parse_file(yaml_file_name)
-#             captured = capsys.readouterr()
-#             if len(captured.err) > 0:
-#                 with_warnings |= {str(yaml_file_name)}
-#         except PDLParseError:
-#             actual_invalid |= {str(yaml_file_name)}
-
-#     assert len(actual_invalid) == 0, actual_invalid
-#     assert len(with_warnings) == 0, with_warnings

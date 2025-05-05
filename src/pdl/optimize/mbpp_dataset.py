@@ -14,7 +14,7 @@ class SelectableList(list):
 
 
 class MBPPDataset(dict):
-    def __init__(self) -> None:
+    def __init__(self, dataset_path: str) -> None:
         self.mbpp_plus = get_mbpp_plus()
         self.dataset_hash = get_mbpp_plus_hash()
 
@@ -24,9 +24,7 @@ class MBPPDataset(dict):
             MBPP_OUTPUT_NOT_NONE_TASKS,
         )
 
-        self.mbpp = load_from_disk(
-            "../prompt-declaration-language-merge/var/mbpp_trajectified",
-        ).rename_column(
+        self.mbpp = load_from_disk(dataset_path).rename_column(
             "code",
             "canonical_solution",
         )

@@ -121,7 +121,7 @@ if __name__ == "__main__":
         dataset = fever
         TrialThread = FEVEREvaluator
     elif config.benchmark == "evalplus":
-        dataset = MBPPDataset()
+        dataset = MBPPDataset(args.dataset_path)
         TrialThread = MBPPEvaluator
     else:
         print(f"Unknown benchmark: {config.benchmark}")
