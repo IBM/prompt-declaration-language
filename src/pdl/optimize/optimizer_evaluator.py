@@ -6,8 +6,9 @@ from typing import Any
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
+from pdl.pdl import InterpreterConfig, exec_program
 from pdl.pdl_ast import Program, ScopeType
-from pdl.pdl_interpreter import InterpreterState, PDLRuntimeError, process_prog
+from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_lazy import PdlDict
 from pdl.pdl_location_utils import get_loc_string
 from pdl.pdl_parser import PDLParseError
@@ -72,23 +73,34 @@ class OptimizerEvaluator(Thread):
                 console.log("RETRYING! ", tries)
             try:
                 tries += 1
-                state = InterpreterState(
+                # state = InterpreterState(
+                #     yield_result=self.yield_output,
+                #     yield_background=self.yield_output,
+                #     cwd=self.cwd,
+                # )
+                config = InterpreterConfig(
                     yield_result=self.yield_output,
                     yield_background=self.yield_output,
                     cwd=self.cwd,
                 )
                 scope = self.get_scope()
 
-                result, _, scope, _ = process_prog(
-                    state,
-                    scope,
-                    self.pdl_program,
+                result = exec_program(
+                    prog=self.pdl_program,
+                    config=config,
+                    scope=scope,
+                    output="all",
                 )
 
-                document = result.result()
+                document = result["result"]
+                scope = result["scope"]
 
                 if isinstance(document, str):
                     document = document.strip()
+                else:
+                    raise TypeError(
+                        f"Expected document to be a string, got {type(document)}",
+                    )
 
                 self.scope = scope
                 end_time = time.time()

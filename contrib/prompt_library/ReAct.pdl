@@ -72,7 +72,7 @@ defs:
           data: False
         - def: tool_names
           contribute: []
-          text: ${ tool_schema|map(attribute='name')|list }
+          data: ${ tool_schema|map(attribute='name')|list }
         - repeat:
             text:
               - "\nTho: "
@@ -101,9 +101,9 @@ defs:
                   then:
                     text:
                       - "\nObs: "
-                      - if: ${ action.name in tools }
+                      - if: ${ action.name.lower() in tools }
                         then:
-                          call: ${ tools[action.name] }
+                          call: ${ tools[action.name.lower()] }
                           args:
                             arguments: ${ action.arguments }
                         else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."

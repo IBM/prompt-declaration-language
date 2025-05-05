@@ -1,44 +1,80 @@
 description: Demo of template
+defs:
+  cot:
+    import: ../../contrib/prompt_library/CoT
+  react:
+    import: ../../contrib/prompt_library/ReAct
+  rewoo:
+    import: ../../contrib/prompt_library/ReWoo
+  tools:
+    import: ../../contrib/prompt_library/tools
 text:
   # CoT
   - if: "${ prompt_pattern == 'cot' }"
     then:
       text:
-      - include: ../../CoT.pdl
       - "Answer the questions to the best of your abilities.\n\n"
-      - call: ${ chain_of_thought }
+      - call: ${ cot.chain_of_thought }
+        def: ANSWER
+        contribute: []
         args:
           examples: "${ demonstrations }"
           question: "${ question|trim }"
           model: "${ model }"
+      - "\nThe answer is ${ ANSWER.answer|trim }"
 
   # ReAct
-  - if: "${ prompt_pattern == 'react' }"
+  - if: ${ prompt_pattern == 'react' }
     then:
       text:
-      - include: ../../tools.pdl
-      - include: ../../ReAct.pdl
-      - call: ${ react }
-        def: ANSWER
+        call: ${ react.react }
         args:
           task: "Question: ${ question|trim }"
-          model: "${ model }"
-          tools: ${ tools }
+          model: ${ model }
+          tool_schema: ${ tools.tool_schema }
+          tools: ${ tools.tools }
           trajectories: ${ demonstrations }
-      - "\nThe answer is ${ ANSWER.answer|trim }"
 
   # ReWOO
-  - if: "${ prompt_pattern == 'rewoo' }"
+  - if: ${ prompt_pattern == 'rewoo' }
     then:
       text:
-      - include: ../../tools.pdl
-      - include: ../../ReWoo.pdl
-      - call: ${ rewoo }
-        def: ANSWER
+        call: ${ rewoo.rewoo }
         args:
-          task: "Task: ${ question }"
-          model: "${ model }"
-          tools: ${ tools }
+          task: ${ question|trim }
+          model: ${ model }
+          tool_schema: ${ tools.tool_schema }
+          tools: ${ tools.tools }
           trajectories: ${ demonstrations }
           show_plans: false
-      - "\nThe answer is ${ ANSWER.answer|trim }"
+
+  # # ReAct
+  # - if: "${ prompt_pattern == 'react' }"
+  #   then:
+  #     text:
+  #     - include: ../../tools.pdl
+  #     - include: ../../ReAct.pdl
+  #     - call: ${ react }
+  #       def: ANSWER
+  #       args:
+  #         task: "Question: ${ question|trim }"
+  #         model: "${ model }"
+  #         tools: ${ tools }
+  #         trajectories: ${ demonstrations }
+  #     - "\nThe answer is ${ ANSWER.answer|trim }"
+
+  # # ReWOO
+  # - if: "${ prompt_pattern == 'rewoo' }"
+  #   then:
+  #     text:
+  #     - include: ../../tools.pdl
+  #     - include: ../../ReWoo.pdl
+  #     - call: ${ rewoo }
+  #       def: ANSWER
+  #       args:
+  #         task: "Task: ${ question }"
+  #         model: "${ model }"
+  #         tools: ${ tools }
+  #         trajectories: ${ demonstrations }
+  #         show_plans: false
+  #     - "\nThe answer is ${ ANSWER.answer|trim }"

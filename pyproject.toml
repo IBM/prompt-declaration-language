@@ -23,6 +23,7 @@ dependencies = [
   "duration_parser>=1.0.1",
   "granite-io>=0.2,<0.4",
   "multiprocess>=0.70",
+  "granite-io>=0.2,<0.4",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -63,7 +64,13 @@ docs = [
   "mkdocs-material~=9.0",
   "pymdown-extensions~=10.0"
 ]
-all = [ "prompt-declaration-language[dev,examples,docs]" ]
+optimizer = [
+  "rich>=14.0.0",
+  "evalplus>=0.3.1",
+  "duration_parser>=1.0.1",
+  "multiprocess>=0.70",
+]
+all = [ "prompt-declaration-language[dev,examples,docs,optimizer]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"

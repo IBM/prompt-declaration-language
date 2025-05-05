@@ -120,9 +120,9 @@ defs:
                               ACTION_RAW = ACTION_RAW.replace(k, v)
                           result = ACTION_RAW
                       tool_output:
-                        if: ${ ACTION.name in tools }
+                        if: ${ ACTION.name.lower() in tools }
                         then:
-                          call: ${ tools[ACTION.name] }
+                          call: ${ tools[ACTION.name.lower()] }
                           args:
                             arguments: ${ ACTION.arguments }
                         else: "Invalid action. Valid actions are ${ tools.keys() }"
