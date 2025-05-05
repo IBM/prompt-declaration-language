@@ -154,7 +154,7 @@ class PDLOptimizer:
 
     def sample_random_indices(self, dataset: list, size: int) -> list[Any]:
         return list(
-            rng.choice( # pyright: ignore
+            rng.choice(  # pyright: ignore
                 len(dataset),
                 size=size,
                 replace=False,
