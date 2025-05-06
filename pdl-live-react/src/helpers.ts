@@ -38,8 +38,8 @@ export type WithTiming = Required<
 
 export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
-export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
-  context: { role: string; content: string; defsite?: string }[]
+export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "pdl__context"> & {
+  pdl__context: { role: string; content: string; defsite?: string }[]
 }
 
 /** Does the given block have a `pdl__result` field? */
@@ -206,8 +206,8 @@ export function hasContextInformation(
 ): block is PdlBlockWithContext {
   return (
     hasTimingInformation(block) &&
-    block.context !== null &&
-    Array.isArray(block.context)
+    block.pdl__context !== null &&
+    Array.isArray(block.pdl__context)
   )
 }
 

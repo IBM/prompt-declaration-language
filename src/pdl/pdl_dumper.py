@@ -45,6 +45,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    StructuredBlock,
     TextBlock,
 )
 from .pdl_lazy import PdlLazy
@@ -94,13 +95,13 @@ def block_to_dict(  # noqa: C901
     d["kind"] = str(block.kind)
     if block.pdl__id is not None:
         d["pdl__id"] = block.pdl__id
-    if block.context is not None:
-        if isinstance(block.context, PdlLazy):
-            context = block.context.result()
+    if block.pdl__context is not None:
+        if isinstance(block.pdl__context, PdlLazy):
+            context = block.pdl__context.result()
         else:
-            context = block.context
+            context = block.pdl__context
         if len(context) > 0:
-            d["context"] = context
+            d["pdl__context"] = context
     if block.description is not None:
         d["description"] = block.description
     if block.role is not None:
@@ -111,6 +112,9 @@ def block_to_dict(  # noqa: C901
         d["defs"] = {
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
         }
+    if isinstance(block, StructuredBlock):
+        d["context"] = block.context
+
     match block:
         case LitellmModelBlock():
             d["platform"] = str(block.platform)
@@ -263,6 +267,9 @@ def block_to_dict(  # noqa: C901
     if block.pdl__timing is not None:
         d["pdl__timing"] = timing_to_dict(block.pdl__timing)
     d["pdl__is_leaf"] = block.pdl__is_leaf
+
+    if isinstance(block, StructuredBlock):
+        d["context"] = str(block.context)
     return d
 
 
