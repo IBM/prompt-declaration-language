@@ -10,8 +10,7 @@ text:
     text:
     - ${ elem }
     - model: ollama_chat/granite3.2:2b
-  join:
-    as: independent
+  context: independent
 - "Goodbye!"
 - model: ollama_chat/granite3.2:2b
 

@@ -125,10 +125,6 @@ export function map_block_children(
       const lastOf = block.lastOf.map(f_block)
       return { ...block, lastOf: lastOf }
     })
-    .with({ kind: "independent" }, (block) => {
-      const independent = block.independent.map(f_block)
-      return { ...block, independent: independent }
-    })
     .with({ kind: "array" }, (block) => {
       const array = block.array.map(f_block)
       return { ...block, array: array }
@@ -240,9 +236,6 @@ export function iter_block_children(
     })
     .with({ kind: "lastOf" }, (block) => {
       block.lastOf.forEach(f)
-    })
-    .with({ kind: "independent" }, (block) => {
-      block.independent.forEach(f)
     })
     .with({ kind: "array" }, (block) => {
       block.array.forEach(f)

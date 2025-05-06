@@ -40,7 +40,6 @@
       --pdl-block-color-2: var(--pf-t--global--color--nonstatus--red--default);
     }
     &[data-detail="lastOf"],
-    &[data-detail="independent"],
     &[data-detail="text"],
     &[data-detail="array"] {
       --pdl-bb-color: var(--pf-t--global--icon--color--disabled);

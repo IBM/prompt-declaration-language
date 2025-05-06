@@ -1,7 +1,8 @@
 description: Independent example -- hello * ( ' in French' + ' en Espanol') * Goodbye! 
 text:
   - hello
-  - independent:
+  - context: independent
+    text:
     - text:
       - " in French!"
       - model: ollama_chat/granite3.2:2b

@@ -56,7 +56,7 @@ from .pdl_ast import (  # noqa: E402
     IfBlock,
     ImportBlock,
     IncludeBlock,
-    IndependentBlock,
+    IndependentEnum,
     IterationType,
     LastOfBlock,
     LazyMessage,
@@ -88,6 +88,7 @@ from .pdl_ast import (  # noqa: E402
     RepeatBlock,
     RoleType,
     ScopeType,
+    StructuredBlock,
     TextBlock,
     empty_block_location,
 )
@@ -324,7 +325,7 @@ def process_advanced_block_timed(
         case ModelBlock():
             trace = trace.model_copy(
                 update={
-                    "context": lazy_apply(lambda s: s["pdl_context"], scope),
+                    "pdl__context": lazy_apply(lambda s: s["pdl_context"], scope),
                 }
             )
     return result, background, scope, trace
@@ -498,15 +499,6 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             if state.yield_background:
                 yield_background(background)
-        case IndependentBlock():
-            result, background, scope, trace = process_blocks_of(
-                block,
-                "independent",
-                IterationType.INDEPENDENT,
-                state,
-                scope,
-                loc,
-            )
         case TextBlock():
             result, background, scope, trace = process_blocks_of(
                 block,
@@ -541,10 +533,15 @@ def process_block_body(
                 values = []
                 values_trace = []
                 try:
+                    pdl_context_init = scope_init.data["pdl_context"]
                     obj_loc = append(loc, "object")
                     for k, value_blocks in block.object.items():
+                        context = IndependentEnum.DEPENDENT
+                        if isinstance(value_blocks, StructuredBlock):
+                            context = value_blocks.context
                         value, value_background, scope, value_trace = process_blocks(
                             IterationType.LASTOF,
+                            context,
                             iteration_state,
                             scope,
                             value_blocks,
@@ -552,6 +549,10 @@ def process_block_body(
                             append(obj_loc, k),
                         )
                         background = lazy_messages_concat(background, value_background)
+                        if (
+                            block.context is IndependentEnum.INDEPENDENT
+                        ):  # reset pdl_context
+                            scope = scope | {"pdl_context": pdl_context_init}
                         values.append(value)
                         values_trace.append(value_trace)
                 except PDLRuntimeProcessBlocksError as exc:
@@ -728,8 +729,7 @@ def process_block_body(
                         fallback=[],
                     )
             iteration_state = state.with_yield_result(
-                state.yield_result
-                and block.join.as_ in (IterationType.TEXT, IterationType.INDEPENDENT)
+                state.yield_result and block.join.as_ == IterationType.TEXT
             )
             if block.max_iterations is None:
                 max_iterations = None
@@ -790,7 +790,7 @@ def process_block_body(
                     saved_background = lazy_messages_concat(
                         saved_background, iteration_background
                     )
-                    if block.join.as_ != IterationType.INDEPENDENT:
+                    if block.context is IndependentEnum.DEPENDENT:
                         background = saved_background
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
@@ -808,7 +808,7 @@ def process_block_body(
                     trace=trace,
                 ) from exc
             result = combine_results(block.join.as_, results)
-            if block.join.as_ == IterationType.INDEPENDENT:
+            if block.context is IndependentEnum.INDEPENDENT:
                 background = saved_background
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
@@ -967,8 +967,12 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
     field_alias: Optional[str] = None,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlocksOf]:
     try:
+        context: IndependentEnum = IndependentEnum.DEPENDENT
+        if isinstance(block, StructuredBlock):
+            context = block.context
         result, background, scope, blocks = process_blocks(
             iteration_type,
+            context,
             state,
             scope,
             getattr(block, field),
@@ -988,6 +992,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
 
 def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-arguments
     iteration_type: IterationType,
+    context: IndependentEnum,
     state: InterpreterState,
     scope: ScopeType,
     blocks: BlockType | list[BlockType],
@@ -1002,10 +1007,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         # Is a list of blocks
         iteration_state = state.with_yield_result(
             state.yield_result
-            and (
-                iteration_type
-                in (IterationType.LASTOF, IterationType.TEXT, IterationType.INDEPENDENT)
-            )
+            and (iteration_type in (IterationType.LASTOF, IterationType.TEXT))
         )
         new_loc = None
         background = PdlList([])
@@ -1031,11 +1033,11 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 saved_background = lazy_messages_concat(
                     saved_background, iteration_background
                 )
-                if iteration_type != IterationType.INDEPENDENT:
+                if context == IndependentEnum.DEPENDENT:
                     background = saved_background
                 trace.append(t)  # type: ignore
                 iteration_state = iteration_state.with_pop()
-            if iteration_type == IterationType.INDEPENDENT:
+            if context == IndependentEnum.INDEPENDENT:
                 background = saved_background
         except PDLRuntimeError as exc:
             trace.append(exc.pdl__trace)  # type: ignore
@@ -1071,11 +1073,6 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
             else:
                 result = None
         case IterationType.TEXT:
-            result = lazy_apply(
-                (lambda _: "".join([stringify(r.result()) for r in results])),
-                PdlConst(()),
-            )
-        case IterationType.INDEPENDENT:
             result = lazy_apply(
                 (lambda _: "".join([stringify(r.result()) for r in results])),
                 PdlConst(()),
