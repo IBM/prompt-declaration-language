@@ -294,7 +294,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -309,7 +309,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -664,7 +664,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -679,7 +679,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -732,6 +732,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "array",
@@ -1157,7 +1161,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -1172,7 +1176,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -1617,7 +1621,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -1632,7 +1636,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2095,7 +2099,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2110,7 +2114,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2463,7 +2467,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2478,7 +2482,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2809,7 +2813,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2824,7 +2828,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -3248,7 +3252,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -3263,7 +3267,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -3695,7 +3699,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -3710,7 +3714,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -4049,7 +4053,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -4064,7 +4068,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -4597,7 +4601,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -4612,7 +4616,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -4665,6 +4669,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "if",
@@ -5143,7 +5151,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -5158,7 +5166,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -5581,7 +5589,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -5596,7 +5604,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -5649,6 +5657,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "include",
@@ -5751,6 +5763,14 @@
       ],
       "title": "IncludeBlock",
       "type": "object"
+    },
+    "IndependentEnum": {
+      "enum": [
+        "independent",
+        "dependent"
+      ],
+      "title": "IndependentEnum",
+      "type": "string"
     },
     "JoinArray": {
       "additionalProperties": false,
@@ -6087,7 +6107,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -6102,7 +6122,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -6155,6 +6175,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "lastOf",
@@ -6523,7 +6547,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -6538,7 +6562,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -7476,7 +7500,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -7491,7 +7515,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -7544,6 +7568,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "match",
@@ -8028,7 +8056,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -8043,7 +8071,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -8493,7 +8521,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -8508,7 +8536,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -8561,6 +8589,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "object",
@@ -9534,7 +9566,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -9549,7 +9581,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -9969,7 +10001,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -9984,7 +10016,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -10037,6 +10069,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "repeat",
@@ -10596,7 +10632,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -10611,7 +10647,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -10664,6 +10700,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "text",

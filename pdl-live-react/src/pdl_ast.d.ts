@@ -243,7 +243,7 @@ export type Role = string | null
  * Current context
  *
  */
-export type Context =
+export type PdlContext =
   | {
       [k: string]: unknown
     }[]
@@ -322,7 +322,7 @@ export type Role1 = string | null
  * Current context
  *
  */
-export type Context1 =
+export type PdlContext1 =
   | {
       [k: string]: unknown
     }[]
@@ -432,7 +432,7 @@ export type Role2 = string | null
  * Current context
  *
  */
-export type Context2 =
+export type PdlContext2 =
   | {
       [k: string]: unknown
     }[]
@@ -538,7 +538,7 @@ export type Role3 = string | null
  * Current context
  *
  */
-export type Context3 =
+export type PdlContext3 =
   | {
       [k: string]: unknown
     }[]
@@ -549,6 +549,7 @@ export type Context3 =
  */
 export type PdlId3 = string | null
 export type PdlIsLeaf3 = false
+export type IndependentEnum = "independent" | "dependent"
 export type Kind3 = "include"
 /**
  * Name of the file to include.
@@ -644,7 +645,7 @@ export type Role4 = string | null
  * Current context
  *
  */
-export type Context4 =
+export type PdlContext4 =
   | {
       [k: string]: unknown
     }[]
@@ -734,7 +735,7 @@ export type Role5 = string | null
  * Current context
  *
  */
-export type Context5 =
+export type PdlContext5 =
   | {
       [k: string]: unknown
     }[]
@@ -846,7 +847,7 @@ export type Role6 = string | null
  * Current context
  *
  */
-export type Context6 =
+export type PdlContext6 =
   | {
       [k: string]: unknown
     }[]
@@ -857,6 +858,7 @@ export type Context6 =
  */
 export type PdlId6 = string | null
 export type PdlIsLeaf6 = false
+export type IndependentEnum1 = "independent" | "dependent"
 export type Kind6 = "object"
 export type Object =
   | {
@@ -977,7 +979,7 @@ export type Role7 = string | null
  * Current context
  *
  */
-export type Context7 =
+export type PdlContext7 =
   | {
       [k: string]: unknown
     }[]
@@ -988,6 +990,7 @@ export type Context7 =
  */
 export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
+export type IndependentEnum2 = "independent" | "dependent"
 export type Kind7 = "array"
 /**
  * Elements of the array.
@@ -1082,7 +1085,7 @@ export type Role8 = string | null
  * Current context
  *
  */
-export type Context8 =
+export type PdlContext8 =
   | {
       [k: string]: unknown
     }[]
@@ -1093,6 +1096,7 @@ export type Context8 =
  */
 export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
+export type IndependentEnum3 = "independent" | "dependent"
 export type Kind8 = "lastOf"
 /**
  * Sequence of blocks to execute.
@@ -1187,7 +1191,7 @@ export type Role9 = string | null
  * Current context
  *
  */
-export type Context9 =
+export type PdlContext9 =
   | {
       [k: string]: unknown
     }[]
@@ -1198,6 +1202,7 @@ export type Context9 =
  */
 export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
+export type IndependentEnum4 = "independent" | "dependent"
 export type Kind9 = "text"
 /**
  * Body of the text.
@@ -1319,7 +1324,7 @@ export type Role10 = string | null
  * Current context
  *
  */
-export type Context10 =
+export type PdlContext10 =
   | {
       [k: string]: unknown
     }[]
@@ -1330,6 +1335,7 @@ export type Context10 =
  */
 export type PdlId10 = string | null
 export type PdlIsLeaf10 = false
+export type IndependentEnum5 = "independent" | "dependent"
 export type Kind10 = "repeat"
 /**
  * Arrays to iterate over.
@@ -1505,7 +1511,7 @@ export type Role11 = string | null
  * Current context
  *
  */
-export type Context11 =
+export type PdlContext11 =
   | {
       [k: string]: unknown
     }[]
@@ -1516,6 +1522,7 @@ export type Context11 =
  */
 export type PdlId11 = string | null
 export type PdlIsLeaf11 = false
+export type IndependentEnum6 = "independent" | "dependent"
 export type Kind11 = "match"
 export type Case =
   | boolean
@@ -1649,7 +1656,7 @@ export type Role12 = string | null
  * Current context
  *
  */
-export type Context12 =
+export type PdlContext12 =
   | {
       [k: string]: unknown
     }[]
@@ -1660,6 +1667,7 @@ export type Context12 =
  */
 export type PdlId12 = string | null
 export type PdlIsLeaf12 = false
+export type IndependentEnum7 = "independent" | "dependent"
 export type Kind12 = "if"
 /**
  * Condition.
@@ -1790,7 +1798,7 @@ export type Role13 = string | null
  * Current context
  *
  */
-export type Context13 =
+export type PdlContext13 =
   | {
       [k: string]: unknown
     }[]
@@ -1869,7 +1877,7 @@ export type Role14 = string | null
  * Current context
  *
  */
-export type Context14 =
+export type PdlContext14 =
   | {
       [k: string]: unknown
     }[]
@@ -1948,7 +1956,7 @@ export type Role15 = string | null
  * Current context
  *
  */
-export type Context15 =
+export type PdlContext15 =
   | {
       [k: string]: unknown
     }[]
@@ -2029,7 +2037,7 @@ export type Role16 = string | null
  * Current context
  *
  */
-export type Context16 =
+export type PdlContext16 =
   | {
       [k: string]: unknown
     }[]
@@ -2139,7 +2147,7 @@ export type Role17 = string | null
  * Current context
  *
  */
-export type Context17 =
+export type PdlContext17 =
   | {
       [k: string]: unknown
     }[]
@@ -2287,7 +2295,7 @@ export type Role18 = string | null
  * Current context
  *
  */
-export type Context18 =
+export type PdlContext18 =
   | {
       [k: string]: unknown
     }[]
@@ -2471,7 +2479,7 @@ export type Role19 = string | null
  * Current context
  *
  */
-export type Context19 =
+export type PdlContext19 =
   | {
       [k: string]: unknown
     }[]
@@ -2572,7 +2580,7 @@ export type Role20 = string | null
  * Current context
  *
  */
-export type Context20 =
+export type PdlContext20 =
   | {
       [k: string]: unknown
     }[]
@@ -2660,7 +2668,7 @@ export interface FunctionBlock {
   parser?: Parser20
   fallback?: Fallback20
   role?: Role20
-  context?: Context20
+  pdl__context?: PdlContext20
   pdl__id?: PdlId20
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2721,7 +2729,7 @@ export interface CallBlock {
   parser?: Parser19
   fallback?: Fallback19
   role?: Role19
-  context?: Context19
+  pdl__context?: PdlContext19
   pdl__id?: PdlId19
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2790,7 +2798,7 @@ export interface LitellmModelBlock {
   parser?: Parser18
   fallback?: Fallback18
   role?: Role18
-  context?: Context18
+  pdl__context?: PdlContext18
   pdl__id?: PdlId18
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2860,7 +2868,7 @@ export interface GraniteioModelBlock {
   parser?: Parser17
   fallback?: Fallback17
   role?: Role17
-  context?: Context17
+  pdl__context?: PdlContext17
   pdl__id?: PdlId17
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2941,7 +2949,7 @@ export interface CodeBlock {
   parser?: Parser16
   fallback?: Fallback16
   role?: Role16
-  context?: Context16
+  pdl__context?: PdlContext16
   pdl__id?: PdlId16
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3010,7 +3018,7 @@ export interface ArgsBlock {
   parser?: Parser15
   fallback?: Fallback15
   role?: Role15
-  context?: Context15
+  pdl__context?: PdlContext15
   pdl__id?: PdlId15
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3073,7 +3081,7 @@ export interface GetBlock {
   parser?: Parser14
   fallback?: Fallback14
   role?: Role14
-  context?: Context14
+  pdl__context?: PdlContext14
   pdl__id?: PdlId14
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3154,7 +3162,7 @@ export interface DataBlock {
   parser?: Parser13
   fallback?: Fallback13
   role?: Role13
-  context?: Context13
+  pdl__context?: PdlContext13
   pdl__id?: PdlId13
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3225,12 +3233,13 @@ export interface IfBlock {
   parser?: Parser12
   fallback?: Fallback12
   role?: Role12
-  context?: Context12
+  pdl__context?: PdlContext12
   pdl__id?: PdlId12
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf12
+  context?: IndependentEnum7
   kind?: Kind12
   if: If1
   then: Then1
@@ -3305,12 +3314,13 @@ export interface MatchBlock {
   parser?: Parser11
   fallback?: Fallback11
   role?: Role11
-  context?: Context11
+  pdl__context?: PdlContext11
   pdl__id?: PdlId11
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf11
+  context?: IndependentEnum6
   kind?: Kind11
   match: unknown
   with: With1
@@ -3375,12 +3385,13 @@ export interface RepeatBlock {
   parser?: Parser10
   fallback?: Fallback10
   role?: Role10
-  context?: Context10
+  pdl__context?: PdlContext10
   pdl__id?: PdlId10
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf10
+  context?: IndependentEnum5
   kind?: Kind10
   for?: For
   while?: While
@@ -3441,12 +3452,13 @@ export interface TextBlock {
   parser?: Parser9
   fallback?: Fallback9
   role?: Role9
-  context?: Context9
+  pdl__context?: PdlContext9
   pdl__id?: PdlId9
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf9
+  context?: IndependentEnum4
   kind?: Kind9
   text: Text
 }
@@ -3501,12 +3513,13 @@ export interface LastOfBlock {
   parser?: Parser8
   fallback?: Fallback8
   role?: Role8
-  context?: Context8
+  pdl__context?: PdlContext8
   pdl__id?: PdlId8
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf8
+  context?: IndependentEnum3
   kind?: Kind8
   lastOf: Lastof
 }
@@ -3561,12 +3574,13 @@ export interface ArrayBlock {
   parser?: Parser7
   fallback?: Fallback7
   role?: Role7
-  context?: Context7
+  pdl__context?: PdlContext7
   pdl__id?: PdlId7
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf7
+  context?: IndependentEnum2
   kind?: Kind7
   array: Array
 }
@@ -3621,12 +3635,13 @@ export interface ObjectBlock {
   parser?: Parser6
   fallback?: Fallback6
   role?: Role6
-  context?: Context6
+  pdl__context?: PdlContext6
   pdl__id?: PdlId6
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf6
+  context?: IndependentEnum1
   kind?: Kind6
   object: Object
 }
@@ -3681,7 +3696,7 @@ export interface MessageBlock {
   parser?: Parser5
   fallback?: Fallback5
   role?: Role5
-  context?: Context5
+  pdl__context?: PdlContext5
   pdl__id?: PdlId5
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3755,7 +3770,7 @@ export interface ReadBlock {
   parser?: Parser4
   fallback?: Fallback4
   role?: Role4
-  context?: Context4
+  pdl__context?: PdlContext4
   pdl__id?: PdlId4
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3817,12 +3832,13 @@ export interface IncludeBlock {
   parser?: Parser3
   fallback?: Fallback3
   role?: Role3
-  context?: Context3
+  pdl__context?: PdlContext3
   pdl__id?: PdlId3
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf3
+  context?: IndependentEnum
   kind?: Kind3
   include: Include
   pdl__trace?: PdlTrace1
@@ -3878,7 +3894,7 @@ export interface ImportBlock {
   parser?: Parser2
   fallback?: Fallback2
   role?: Role2
-  context?: Context2
+  pdl__context?: PdlContext2
   pdl__id?: PdlId2
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3939,7 +3955,7 @@ export interface ErrorBlock {
   parser?: Parser1
   fallback?: Fallback1
   role?: Role1
-  context?: Context1
+  pdl__context?: PdlContext1
   pdl__id?: PdlId1
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -4000,7 +4016,7 @@ export interface EmptyBlock {
   parser?: Parser
   fallback?: Fallback
   role?: Role
-  context?: Context
+  pdl__context?: PdlContext
   pdl__id?: PdlId
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null

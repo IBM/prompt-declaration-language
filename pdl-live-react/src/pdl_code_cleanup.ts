@@ -48,10 +48,10 @@ export function block_code_cleanup(block: PdlBlock): PdlBlock {
 function clean_model_block(block: LitellmModelBlock | GraniteioModelBlock) {
   return {
     ...block,
-    context: !hasContextInformation(block)
+    pdl__context: !hasContextInformation(block)
       ? undefined
       : JSON.parse(
-          JSON.stringify(block.context, (k, v) =>
+          JSON.stringify(block.pdl__context, (k, v) =>
             k === "defsite" ? undefined : v,
           ),
         ),

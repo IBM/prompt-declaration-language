@@ -18,7 +18,7 @@ type Props = {
 export default function ContextTabContent({ block }: Props) {
   return (
     <DescriptionList>
-      {block.context.flatMap((c, idx, A) => [
+      {block.pdl__context.flatMap((c, idx, A) => [
         <DescriptionListGroup key={idx + ".value"}>
           <DescriptionListTerm>
             {c.role[0].toUpperCase() + c.role.slice(1)}

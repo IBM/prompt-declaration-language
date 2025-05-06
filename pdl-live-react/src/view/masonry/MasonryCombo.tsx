@@ -133,7 +133,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
 
       // We need to pass tothe re-execution the original input context
       const data = hasContextInformation(runThisBlock)
-        ? { pdl_context: runThisBlock.context }
+        ? { pdl_context: runThisBlock.pdl__context }
         : undefined
 
       return new Promise<void | typeof runThisBlock>((resolve) => {

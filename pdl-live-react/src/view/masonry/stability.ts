@@ -53,7 +53,7 @@ export async function runNTimes(
     pdl__id: _e,
     pdl__result: _b,
     pdl__timing: _c,
-    context: _d,
+    pdl__context: _d,
     ...restOfBlock
   } = block
 
@@ -61,7 +61,7 @@ export async function runNTimes(
     kind: "text" as const,
     pdl__id: block.pdl__id, // sigh, currently needed to satisfy isNonScalarPdlBlock()
     pdl__timing: block.pdl__timing, // sigh, currently needed to satisfy hasContextInformation() -> hasTimingInformation()
-    context: block.context,
+    pdl__context: block.pdl__context,
     text: temperatures.flatMap((temperature) =>
       Array(N)
         .fill(0)
