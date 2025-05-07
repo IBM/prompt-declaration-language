@@ -4,7 +4,7 @@ import threading
 from concurrent.futures import Future
 from os import environ
 from sys import stderr
-from typing import Any, Callable, Generator, TypeVar
+from typing import Any, Callable, Generator, Optional, TypeVar
 
 import httpx
 from dotenv import load_dotenv
@@ -15,9 +15,10 @@ from .pdl_ast import (
     LitellmModelBlock,
     ModelInput,
     PDLRuntimeError,
-    set_structured_decoding_parameters,
+    PdlTypeType,
 )
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
+from .pdl_schema_utils import pdltype_to_jsonschema
 from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
@@ -179,6 +180,33 @@ class LitellmModel:
                 msg.role = "assistant"
             yield remove_none_values_from_message(msg.model_dump())
         return result
+
+
+def set_structured_decoding_parameters(
+    spec: Optional[PdlTypeType],
+    parameters: Optional[dict[str, Any]],
+) -> dict[str, Any]:
+    if parameters is None:
+        parameters = {}
+
+    if (
+        spec is not None
+        and "response_format" not in parameters
+        and "guided_decoding_backend" not in parameters
+    ):
+        schema = pdltype_to_jsonschema(spec, True)
+
+        parameters["guided_decoding_backend"] = "lm-format-enforcer"
+        parameters["guided_json"] = schema
+        parameters["response_format"] = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "schema",
+                "schema": schema,
+                "strict": True,
+            },
+        }
+    return parameters
 
 
 MapInputT = TypeVar("MapInputT")

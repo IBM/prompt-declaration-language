@@ -1,7 +1,7 @@
 # pylint: disable=import-outside-toplevel
 from typing import Any, Optional
 
-from .pdl_ast import FunctionBlock
+from .pdl_ast import FunctionBlock, PdlTypeType
 from .pdl_location_utils import get_loc_string
 from .pdl_schema_error_analyzer import analyze_errors
 from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
@@ -35,7 +35,7 @@ def type_check_args(
     return type_check(args_copy, schema, loc)
 
 
-def type_check_spec(result: Any, spec: str | dict[str, Any] | list, loc) -> list[str]:
+def type_check_spec(result: Any, spec: Optional[PdlTypeType], loc) -> list[str]:
     schema = pdltype_to_jsonschema(spec, False)
     if schema is None:
         return ["Error obtaining a valid schema from spec"]

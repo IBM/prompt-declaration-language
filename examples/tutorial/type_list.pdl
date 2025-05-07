@@ -2,5 +2,3 @@
 description: test
 spec: {"list": {"minItems": 0, "maxItems": 0, "str": {}}}
 data: ["hello", "world"]
-  
-  
