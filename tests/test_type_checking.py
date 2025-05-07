@@ -3,6 +3,7 @@ import yaml
 
 from pdl.pdl import exec_dict
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_parser import PDLParseError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema
 
 _PDLTYPE_TO_JSONSCHEMA_TESTS = [
@@ -314,7 +315,7 @@ function_call8 = {
 
 
 def test_function_call8():
-    with pytest.raises(PDLRuntimeError):
+    with pytest.raises(PDLParseError):
         exec_dict(function_call8)
 
 

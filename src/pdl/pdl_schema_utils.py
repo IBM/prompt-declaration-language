@@ -73,15 +73,13 @@ def pdltype_to_jsonschema(
             else:
                 details = constraints.model_dump(exclude_defaults=True)
             schema = {"type": "integer", **details}
-        case ListPdlType(list=ListPdlTypeConstraints()):
-            items_type = PdlTypeParser.model_validate(
-                pdl_type.list.__pydantic_extra__
-            ).root
+        case ListPdlType(list=ListPdlTypeConstraints() as cstr):
+            items_type = PdlTypeParser.model_validate(cstr.__pydantic_extra__).root
             details = {}
-            if pdl_type.list.minItems is not None:
-                details["minItems"] = pdl_type.list.minItems
-            if pdl_type.list.maxItems is not None:
-                details["maxItems"] = pdl_type.list.maxItems
+            if cstr.minItems is not None:
+                details["minItems"] = cstr.minItems
+            if cstr.maxItems is not None:
+                details["maxItems"] = cstr.maxItems
             schema = {
                 "type": "array",
                 "items": pdltype_to_jsonschema(items_type, additional_properties),
