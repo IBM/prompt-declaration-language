@@ -1,0 +1,16 @@
+description: Independent For loop example
+defs:
+  list: 
+    data: ["in French", "en Espanol"]
+text:
+- "Hello "
+- for:
+    elem: ${list}
+  repeat:
+    text:
+    - ${ elem }
+    - model: ollama_chat/granite3.2:2b
+  context: independent
+- "Goodbye!"
+- model: ollama_chat/granite3.2:2b
+

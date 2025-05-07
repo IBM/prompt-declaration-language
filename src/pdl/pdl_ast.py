@@ -347,7 +347,7 @@ class Block(BaseModel):
     Typical roles are `system`, `user`, and `assistant`,
     but there may be other roles such as `available_tools`.
     """
-    context: Optional[ModelInput] = []
+    pdl__context: Optional[ModelInput] = []
     """Current context
     """
     # Fields for internal use
@@ -365,9 +365,15 @@ class LeafBlock(Block):
     pdl__is_leaf: Literal[True] = True
 
 
+class IndependentEnum(StrEnum):
+    INDEPENDENT = "independent"
+    DEPENDENT = "dependent"
+
+
 class StructuredBlock(Block):
     # Field for internal use
     pdl__is_leaf: Literal[False] = False
+    context: IndependentEnum = IndependentEnum.DEPENDENT
 
 
 class FunctionBlock(LeafBlock):
