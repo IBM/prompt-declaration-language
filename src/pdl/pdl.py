@@ -20,7 +20,7 @@ from .pdl_ast import (
 )
 from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_lazy import PdlDict
-from .pdl_parser import parse_file, parse_str
+from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import validate_scope
 
@@ -104,7 +104,7 @@ def exec_dict(
     Returns:
         Return the final result.
     """
-    program = Program.model_validate(prog)
+    program = parse_dict(prog)
     result = exec_program(program, config, scope, loc, output)
     return result
 
