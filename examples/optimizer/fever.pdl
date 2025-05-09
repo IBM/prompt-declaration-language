@@ -25,9 +25,10 @@ defs:
   task: |-
     Task: On June 2017, the following claim was made: ${ claim }
     Q: Was this claim true or false?
-text:
+match: ${ prompt_pattern }
+with:
   # CoT
-  - if: ${ prompt_pattern == 'cot' }
+  - case: cot
     then:
       call: ${ cot.chain_of_thought }
       args:
@@ -36,7 +37,7 @@ text:
         model: "${ model }"
 
   # ReAct
-  - if: ${ prompt_pattern == 'react' }
+  - case: react
     then:
       text:
         call: ${ react.react }
@@ -48,7 +49,7 @@ text:
           trajectories: ${ demonstrations }
 
   # ReWOO
-  - if: ${ prompt_pattern == 'rewoo' }
+  - case: rewoo
     then:
       text:
         call: ${ rewoo.rewoo }

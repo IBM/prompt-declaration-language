@@ -8,9 +8,10 @@ defs:
     import: ../../contrib/prompt_library/ReWoo
   tools:
     import: ../../contrib/prompt_library/tools
-text:
+match: ${ prompt_pattern }
+with:
   # CoT
-  - if: "${ prompt_pattern == 'cot' }"
+  - case: cot
     then:
       text:
         - "Answer the questions to the best of your abilities.\n\n"
@@ -24,7 +25,7 @@ text:
         - "\nThe answer is ${ ANSWER.answer|trim }"
 
   # ReAct
-  - if: ${ prompt_pattern == 'react' }
+  - case: react
     then:
       text:
         call: ${ react.react }
@@ -36,7 +37,7 @@ text:
           trajectories: ${ demonstrations }
 
   # ReWOO
-  - if: ${ prompt_pattern == 'rewoo' }
+  - case: rewoo
     then:
       text:
         call: ${ rewoo.rewoo }

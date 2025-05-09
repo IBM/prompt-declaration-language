@@ -30,9 +30,7 @@ class MBPPEvaluator(OptimizerEvaluator):
 
         match self.candidate.get("prompt_pattern", None):
             case "cot":
-                scope["prompt"] = self.example[
-                    "react_prompt"
-                ]  # .strip('"""').strip().strip('"""').strip()
+                scope["prompt"] = self.example["react_prompt"]
                 scope["demonstrations"] = [
                     {
                         "question": q["react_prompt"],

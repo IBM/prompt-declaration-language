@@ -9,39 +9,41 @@ defs:
             trajectory: ${ trajectory }
           repeat:
             text:
-              - def: type
-                text: ${ trajectory.keys()|first }
-                contribute: []
-              - if: ${ type == 'task'}
-                then: |
-                  Task:
-                  ${ trajectory[type]|trim }
-              - if: ${ type == 'thought'}
-                then:
-                  text:
-                    - "\n"
-                    - |
-                      Assistant:
-                      <thought>${ trajectory[type]|trim }</thought>
-              - if: ${ type == 'action'}
-                then: |
-                  <execute>
-                  ${ trajectory[type]|trim }
-                  </execute>
-              - if: ${ type == 'observation'}
-                then:
-                  text:
-                    - "\n"
-                    - |
-                      Observation:
-                      ${ trajectory[type]|trim }
-              - if: ${ type == 'solution'}
-                then: |-
-                  <solution>
-                  ${ trajectory[type]|trim }
-                  </solution>
-              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation', 'solution'] }
-                then: "${ type }: ${ trajectory[type]|trim }"
+              - defs:
+                  type:
+                    text: ${ trajectory.keys()|first }
+                match: ${ type }
+                with:
+                - case: task
+                  then: |
+                    Task:
+                    ${ trajectory[type]|trim }
+                - case: thought
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Assistant:
+                        <thought>${ trajectory[type]|trim }</thought>
+                - case: action
+                  then: |
+                    <execute>
+                    ${ trajectory[type]|trim }
+                    </execute>
+                - case: observation
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Observation:
+                        ${ trajectory[type]|trim }
+                - case: solution
+                  then: |-
+                    <solution>
+                    ${ trajectory[type]|trim }
+                    </solution>
+                - if: ${ type not in ['question'] }
+                  then: "${ type }: ${ trajectory[type]|trim }"
         - "\n"
   react_demos:
     data:
@@ -79,9 +81,10 @@ defs:
             def similar_elements(test_tup1, test_tup2):
               res = tuple(set(test_tup1) & set(test_tup2))
               return res
-text:
+match: ${ prompt_pattern }
+with:
   # CoT
-  - if: ${ prompt_pattern == 'cot' }
+  - case: cot
     then:
       text:
         - for:
@@ -104,7 +107,7 @@ text:
             temperature: 0
 
   # ReAct
-  - if: ${ prompt_pattern == 'react' }
+  - case: react
     then:
       text:
         # see https://github.com/xingyaoww/mint-bench/blob/main/mint/tasks/in_context_examples/mbpp/with_tool.txt for prompt
@@ -139,34 +142,32 @@ text:
         - repeat:
             text:
               - repeat:
+                  defs:
+                    iterations: ${ iterations+1 }
+                  def: THOUGHT
                   text:
+                    - model: ${ model }
+                      def: THOUGHT_inner
+                      parameters:
+                        temperature: ${ temperature }
+                        stop:
+                          - </execute>
+                          - </solution>
+                          - <|endoftext|>
+                        max_tokens: 1024
+                        include_stop_sequences: true
                     - defs:
-                        iterations: ${ iterations+1 }
-                    - def: THOUGHT
-                      text:
-                        - model: ${ model }
-                          def: THOUGHT_inner
-                          parameters:
-                            temperature: ${ temperature }
-                            stop:
-                              - </execute>
-                              - </solution>
-                              - <|endoftext|>
-                            max_tokens: 1024
-                            include_stop_sequences: true
-                        - def: thought_trim
-                          contribute: []
-                          text: ${ THOUGHT_inner|trim|trim('\n') }
-                until: ${ thought_trim.endswith('</solution>') or (thought_trim).endswith('</execute>') or iterations>max_iterations }
-              - if: ${ (thought_trim).endswith('</execute>') }
+                        thought_trim: ${ THOUGHT_inner|trim|trim('\n') }
+                until: ${ thought_trim.endswith('</solution>') or thought_trim.endswith('</execute>') or iterations>max_iterations }
+              - if: ${ thought_trim.endswith('</execute>') }
                 then:
                   text:
                     - "\n\nObservation:\n"
-                    - def: observation
-                      contribute: []
-                      lang: ipython
-                      code: |
-                        ${ thought_trim.split('<execute>')[-1].strip('</execute>\n\n').lstrip('```python').strip('`') or thought_trim }
+                    - defs:
+                        observation:
+                          lang: ipython
+                          code: |
+                            ${ thought_trim.split('<execute>')[-1].strip('</execute>\n\n').lstrip('```python').strip('`') or thought_trim }
                     - "${ (observation|trim|trim('\n')) if observation is not none else '[Executed Successfully with No Output]' }"
                     - |-
 
