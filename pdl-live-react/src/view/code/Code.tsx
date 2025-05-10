@@ -12,6 +12,7 @@ export type SupportedLanguage =
   | "javascript"
   | "python"
   | "plaintext"
+  | "ipython"
 
 type Props = {
   block: PdlBlock

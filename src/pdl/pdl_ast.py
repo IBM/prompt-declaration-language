@@ -249,13 +249,13 @@ class Block(BaseModel):
     """Current context
     """
     # Fields for internal use
-    pdl__id: Optional[str] = ""
+    pdl__id: Optional[str] = Field(default="", exclude=True)
     """Unique identifier for this block
     """
-    pdl__result: Optional[Any] = None
+    pdl__result: Optional[Any] = Field(default=None, exclude=True)
     """Result of the execution of the block"""
-    pdl__location: Optional[PdlLocationType] = None
-    pdl__timing: Optional[PdlTiming] = None
+    pdl__location: Optional[PdlLocationType] = Field(default=None, exclude=True)
+    pdl__timing: Optional[PdlTiming] = Field(default=None, exclude=True)
 
 
 class LeafBlock(Block):
@@ -480,7 +480,8 @@ class CodeBlock(BaseCodeBlock):
     """
 
     lang: Annotated[
-        Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
+        Literal["python", "command", "jinja", "pdl", "ipython"],
+        BeforeValidator(_ensure_lower),
     ]
     """Programming language of the code.
     """
