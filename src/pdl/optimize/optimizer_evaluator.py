@@ -135,13 +135,13 @@ class OptimizerEvaluator(Thread):
                 else:
                     message = get_loc_string(exc.loc) + exc.message
                 console.log(message)
-                retry = True  # tries < RETRY_COUNT
+                retry = True
                 if tries >= RETRY_COUNT:
                     retry = False
                 console.log("Retrying: ", retry)
                 exception = exc
             except TimeoutError as exc:
-                retry = True  # tries < RETRY_COUNT
+                retry = True
                 if tries >= RETRY_COUNT:
                     retry = False
                 exception = exc

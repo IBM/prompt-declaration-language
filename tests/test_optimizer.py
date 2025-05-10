@@ -5,10 +5,10 @@ import pytest
 from datasets import Dataset, DatasetDict
 
 from pdl.optimize.config_parser import OptimizationConfig
-from pdl.optimize.fever_evaluator import FEVEREvaluator
-from pdl.optimize.gsm8k_evaluator import Gsm8kEvaluator
-from pdl.optimize.mbpp_dataset import MBPPDataset
-from pdl.optimize.mbpp_evaluator import MBPPEvaluator
+from examples.optimizer.fever_evaluator import FEVEREvaluator
+from examples.optimizer.gsm8k_evaluator import Gsm8kEvaluator
+from examples.optimizer.mbpp_dataset import MBPPDataset
+from examples.optimizer.mbpp_evaluator import MBPPEvaluator
 from pdl.optimize.pdl_optimizer import PDLOptimizer
 
 
@@ -714,7 +714,7 @@ def run_optimizer_fever(pattern, num_demonstrations=0):
 
 def run_optimizer_mbpp(pattern, num_demonstrations=0):
     config = OptimizationConfig(
-        benchmark="evalplus",
+        benchmark="mbpp",
         initial_test_set_size=1,
         max_test_set_size=1,
         num_candidates=1,
@@ -737,7 +737,7 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
     )
 
     optim = PDLOptimizer(
-        pdl_path=Path("examples/optimizer/evalplus.pdl"),
+        pdl_path=Path("examples/optimizer/mbpp.pdl"),
         dataset=mbpp_dataset,  # pyright: ignore
         trial_thread=MBPPEvaluator,
         yield_output=True,
@@ -751,41 +751,41 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
     pprint(result)
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_zeroshot_cot():
     run_optimizer_gsm8k("cot")
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_react():
     run_optimizer_gsm8k("react", num_demonstrations=5)
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_rewoo():
     run_optimizer_gsm8k("rewoo", num_demonstrations=5)
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_cot():
     run_optimizer_fever("cot")
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_fever_fiveshot_react():
     run_optimizer_fever("react", num_demonstrations=5)
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_rewoo():
     run_optimizer_fever("rewoo")
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_cot():
     run_optimizer_mbpp("cot")
 
 
-@pytest.mark.skip("API access not available in CI")
+#@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_react():
     run_optimizer_mbpp("react")

@@ -10,26 +10,28 @@ defs:
             trajectory: ${ trajectory }
           repeat:
             text:
-              - def: type
-                text: ${ trajectory.keys()|first }
-                contribute: []
-              - if: ${ type == 'question'}
-                then: |
-                  Question: ${ trajectory[type]|trim }
-              - if: ${ type == 'task'}
-                then: |
-                  Task: ${ trajectory[type]|trim }
-              - if: ${ type == 'thought'}
-                then: |
-                  Tho: ${ trajectory[type]|trim }
-              - if: ${ type == 'action'}
-                then: |
-                  Act: ${ trajectory[type]|trim }
-              - if: ${ type == 'observation'}
-                then: |
-                  Obs: ${ trajectory[type]|trim }
-              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
-                then: "${ type }: ${ trajectory[type]|trim }"
+              - defs:
+                  type:
+                    text: ${ trajectory.keys()|first }
+              - match: ${ type }
+                with:
+                  - case: question
+                    then: |
+                      Question: ${ trajectory[type]|trim }
+                  - case: task
+                    then: |
+                      Task: ${ trajectory[type]|trim }
+                  - case: thought
+                    then: |
+                      Tho: ${ trajectory[type]|trim }
+                  - case: action
+                    then: |
+                      Act: ${ trajectory[type]|trim }
+                  - case: observation
+                    then: |
+                      Obs: ${ trajectory[type]|trim }
+                  - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                    then: "${ type }: ${ trajectory[type]|trim }"
         - "\n"
 
   react:
@@ -107,7 +109,6 @@ defs:
                           args:
                             arguments: ${ action.arguments }
                         else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
-                      # - "\n"
                 else:
                   def: exit
                   contribute: []

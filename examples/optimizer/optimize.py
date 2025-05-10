@@ -6,15 +6,14 @@ from typing import Any
 
 import yaml
 from datasets import load_from_disk
+from fever_evaluator import FEVEREvaluator
+from gsm8k_evaluator import Gsm8kEvaluator
+from gsmhard_evaluator import GsmHardEvaluator
+from mbpp_dataset import MBPPDataset
+from mbpp_evaluator import MBPPEvaluator
 
 from pdl.optimize.config_parser import OptimizationConfig
-from pdl.optimize.gsmhard_evaluator import GsmHardEvaluator
-from pdl.optimize.mbpp_dataset import MBPPDataset
-from pdl.optimize.mbpp_evaluator import MBPPEvaluator
-
-from .fever_evaluator import FEVEREvaluator
-from .gsm8k_evaluator import Gsm8kEvaluator
-from .pdl_optimizer import PDLOptimizer
+from pdl.optimize.pdl_optimizer import PDLOptimizer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -120,7 +119,7 @@ if __name__ == "__main__":
         fever = load_from_disk(args.dataset_path)
         dataset = fever
         TrialThread = FEVEREvaluator
-    elif config.benchmark == "evalplus":
+    elif config.benchmark == "mbpp":
         dataset = MBPPDataset(args.dataset_path)
         TrialThread = MBPPEvaluator
     else:

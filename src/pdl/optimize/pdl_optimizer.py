@@ -25,15 +25,8 @@ from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_thr
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
 from pdl.pdl_dumper import dump_yaml
 
-# from pdl.pdl_dumper import dump_program
-
-
 warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
 FORMAT = "%(message)s"
-# logging.basicConfig(
-#     level="INFO", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()],
-# )
-
 logger = logging.getLogger("rich")
 logger.setLevel("INFO")
 logger.addHandler(RichHandler())
@@ -54,7 +47,9 @@ rng = default_rng()
 
 
 def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
-    with (input_path.open(encoding="utf-8") as pdl,):
+    with (
+        input_path.open(encoding="utf-8") as pdl,
+    ):
         pdl_program = Program.model_validate(yaml.safe_load(pdl))
         if pdl_program.root is None or not isinstance(
             pdl_program.root,
@@ -149,7 +144,9 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (path.open(encoding="utf-8") as pdl,):
+        with (
+            path.open(encoding="utf-8") as pdl,
+        ):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample_random_indices(self, dataset: list, size: int) -> list[Any]:
@@ -158,7 +155,7 @@ class PDLOptimizer:
                 len(dataset),
                 size=size,
                 replace=False,
-            ).tolist()
+            ).tolist(),
         )
 
     def sample_random_index(self, items: list):
@@ -378,7 +375,7 @@ class PDLOptimizer:
                         ending_validation_set_size,
                     ),
                     replace=False,
-                )
+                ),
             )
         else:
             validation_set_indices = list(

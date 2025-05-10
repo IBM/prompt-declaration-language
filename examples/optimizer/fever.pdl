@@ -30,11 +30,12 @@ with:
   # CoT
   - case: cot
     then:
-      call: ${ cot.chain_of_thought }
-      args:
-        examples: "${ demonstrations }"
-        question: "${ task }"
-        model: "${ model }"
+      text:
+        call: ${ cot.chain_of_thought }
+        args:
+          examples: "${ demonstrations }"
+          question: "${ task }"
+          model: "${ model }"
 
   # ReAct
   - case: react

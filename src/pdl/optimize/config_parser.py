@@ -12,8 +12,8 @@ class OptimizationConfig(BaseModel):
         "gsmhard-bench",
         "fever",
         "fever-bench",
-        "evalplus",
-        "evalplus-bench",
+        "mbpp",
+        "mbpp-bench",
     ] = Field()
     num_candidates: int = Field(default=30)
     num_demonstrations: int = Field(default=5)
