@@ -36,7 +36,7 @@ text:
   - "Answer the questions to the best of your abilities.\n\n"
   - call: ${ cot.chain_of_thought }
     def: cot_result
-    # contribute: []
+    contribute: []
     args:
       examples: "${ demonstrations }"
       question: "${ question }"
