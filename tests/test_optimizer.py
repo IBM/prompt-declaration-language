@@ -4,11 +4,11 @@ from pprint import pprint
 import pytest
 from datasets import Dataset, DatasetDict
 
-from pdl.optimize.config_parser import OptimizationConfig
 from examples.optimizer.fever_evaluator import FEVEREvaluator
 from examples.optimizer.gsm8k_evaluator import Gsm8kEvaluator
 from examples.optimizer.mbpp_dataset import MBPPDataset
 from examples.optimizer.mbpp_evaluator import MBPPEvaluator
+from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.pdl_optimizer import PDLOptimizer
 
 
@@ -751,41 +751,41 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
     pprint(result)
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_zeroshot_cot():
     run_optimizer_gsm8k("cot")
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_react():
     run_optimizer_gsm8k("react", num_demonstrations=5)
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_gsm8k_fiveshot_rewoo():
     run_optimizer_gsm8k("rewoo", num_demonstrations=5)
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_cot():
     run_optimizer_fever("cot")
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_fever_fiveshot_react():
     run_optimizer_fever("react", num_demonstrations=5)
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_fever_zeroshot_rewoo():
     run_optimizer_fever("rewoo")
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_cot():
     run_optimizer_mbpp("cot")
 
 
-#@pytest.mark.skip("API access not available in CI")
+@pytest.mark.skip("API access not available in CI")
 def test_mbpp_zeroshot_react():
     run_optimizer_mbpp("react")
