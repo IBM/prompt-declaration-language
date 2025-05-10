@@ -22,10 +22,13 @@ class PythonREPL:
     ) -> None:
         super().__init__()
         try:
-            from multiprocess import (  # pyright: ignore pylint: disable=import-outside-toplevel
-                Manager,
-                Process,
+            # isort: off
+            from multiprocess import (  # pylint: disable=import-outside-toplevel
+                Manager,  # pyright: ignore
+                Process,  # pyright: ignore
             )
+
+            # isort: on
 
             self.manager = Manager
             self.process = Process

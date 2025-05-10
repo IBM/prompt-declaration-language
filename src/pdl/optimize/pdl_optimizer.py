@@ -47,9 +47,7 @@ rng = default_rng()
 
 
 def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
-    with (
-        input_path.open(encoding="utf-8") as pdl,
-    ):
+    with (input_path.open(encoding="utf-8") as pdl,):
         pdl_program = Program.model_validate(yaml.safe_load(pdl))
         if pdl_program.root is None or not isinstance(
             pdl_program.root,
@@ -144,9 +142,7 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (
-            path.open(encoding="utf-8") as pdl,
-        ):
+        with (path.open(encoding="utf-8") as pdl,):
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample_random_indices(self, dataset: list, size: int) -> list[Any]:
