@@ -1,6 +1,7 @@
 import pytest
 
 from pdl.pdl import exec_dict
+from pdl.pdl_context import SerializeMode
 from pdl.pdl_interpreter import PDLRuntimeError
 
 var_data = {
@@ -112,7 +113,7 @@ def test_code_var():
     result = exec_dict(code_var_data, output="all")
     text = result["result"]
     scope = result["scope"]
-    assert scope["pdl_context"] == [
+    assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {"role": "user", "content": text, "defsite": "text.0.code"}
     ]
     assert scope["I"] == 0

@@ -17,6 +17,7 @@ from typing import (
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, RootModel
 from pydantic.json_schema import SkipJsonSchema
 
+from .pdl_context import DependentContext
 from .pdl_lazy import PdlDict, PdlLazy
 from .pdl_schema_utils import pdltype_to_jsonschema
 
@@ -34,7 +35,7 @@ ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
 
 
 LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
-LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
+LazyMessages: TypeAlias = DependentContext
 
 
 class BlockKind(StrEnum):
