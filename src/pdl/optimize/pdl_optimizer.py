@@ -23,26 +23,13 @@ from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
-from pdl.pdl_dumper import dump_yaml
+from pdl.pdl_dumper import dump_program_exclude_internals
 
 warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
 FORMAT = "%(message)s"
 logger = logging.getLogger("rich")
 logger.setLevel("INFO")
 logger.addHandler(RichHandler())
-
-
-def dump_program(program):
-    return dump_yaml(
-        program.model_dump(
-            mode="json",
-            exclude_defaults=True,
-            exclude_none=True,
-            by_alias=True,
-        ),
-    )
-
-
 rng = default_rng()
 
 
@@ -64,7 +51,10 @@ def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
                 data=state[variable],
             )
 
-    return output_path.write_text(dump_program(pdl_program), encoding="utf-8")
+    return output_path.write_text(
+        dump_program_exclude_internals(pdl_program),
+        encoding="utf-8",
+    )
 
 
 class BudgetPolicy(Enum):
@@ -142,7 +132,7 @@ class PDLOptimizer:
                 self.time_budget = duration
 
     def load_pdl(self, path: Path) -> Program:
-        with (path.open(encoding="utf-8") as pdl,):
+        with path.open(encoding="utf-8") as pdl:
             return Program.model_validate(yaml.safe_load(pdl))
 
     def sample_random_indices(self, dataset: list, size: int) -> list[Any]:
@@ -239,7 +229,10 @@ class PDLOptimizer:
 
     def save_pdl_program(self, pdl_program: Program) -> int:
         output_file = Path(self.pdl_path.parent, "optimized_" + self.pdl_path.name)
-        return output_file.write_text(dump_program(pdl_program), encoding="utf-8")
+        return output_file.write_text(
+            dump_program_exclude_internals(pdl_program),
+            encoding="utf-8",
+        )
 
     def save_experiment(self):
         if not self.experiment_path.exists():

@@ -4,17 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class OptimizationConfig(BaseModel):
-    benchmark: Literal[
-        "gsm8k",
-        "gsm8k-baseline",
-        "gsm8k-bench",
-        "gsmhard",
-        "gsmhard-bench",
-        "fever",
-        "fever-bench",
-        "mbpp",
-        "mbpp-bench",
-    ] = Field()
+    benchmark: str = Field()
     num_candidates: int = Field(default=30)
     num_demonstrations: int = Field(default=5)
     initial_test_set_size: int = Field(default=10)

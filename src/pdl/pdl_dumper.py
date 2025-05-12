@@ -1,8 +1,10 @@
 import datetime
 import json
-from typing import Any, Iterable, Sequence, TypeAlias
+import re
+from typing import Any, Iterable, Mapping, Sequence, TypeAlias
 
 import yaml
+from pydantic.main import BaseModel, IncEx
 
 from . import pdl_ast
 from .pdl_ast import (
@@ -42,6 +44,7 @@ from .pdl_ast import (
     PdlParser,
     PdlTiming,
     PdlUsage,
+    Program,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -394,6 +397,63 @@ def contribute_to_list(
         elif isinstance(contrib, dict):
             acc.append({str(k): v.model_dump() for k, v in contrib.items()})
     return acc
+
+
+def build_exclude(obj: Any, regex: re.Pattern[str]) -> Any:
+    if isinstance(obj, BaseModel):
+        exclude: dict[str, Any] = {}
+        for name, value in obj.__dict__.items():
+            if regex.match(name):
+                exclude[name] = True
+            else:
+                nested = build_exclude(value, regex)
+                if nested:
+                    exclude[name] = nested
+        return exclude or None
+
+    if isinstance(obj, Mapping):
+        out: dict[Any, Any] = {}
+        for k, v in obj.items():
+            nested = build_exclude(v, regex)
+            if nested:
+                out[k] = nested
+                if k == "root":
+                    out |= out["root"]
+
+        return out or None
+
+    if isinstance(obj, Sequence) and not isinstance(obj, str):
+        nested_list = [build_exclude(item, regex) for item in obj]
+        nested_list = [item for item in nested_list if item is not None]
+        if nested_list:
+            return {"__all__": dict(kv for d in nested_list for kv in d.items())}
+        return None
+
+    return None
+
+
+def dump_program_exclude_internals(program: Program) -> str:
+    """
+    In some cases e.g. optimizer, we want to exclude internal fields such as `pdl__id` from the dump.
+    This function is used to dump a program with internal fields excluded.
+    """
+    # pattern for internal pdl__ fields
+    regex = re.compile(r"^pdl__.*")
+    exclude = build_exclude(program, regex)
+    return dump_program(program, exclude=exclude)
+
+
+def dump_program(program: Program, exclude: IncEx | None = None) -> str:
+    return dump_yaml(
+        program.model_dump(
+            mode="json",
+            exclude_defaults=True,
+            exclude_none=True,
+            exclude_unset=True,
+            by_alias=True,
+            exclude=exclude,
+        ),
+    )
 
 
 # def scope_to_dict(scope: ScopeType) -> dict[str, Any]:

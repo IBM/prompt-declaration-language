@@ -89,7 +89,7 @@ class OptimizerEvaluator(Thread):
                 )
 
                 document = result["result"]
-                scope = result["scope"]
+                self.scope = result["scope"]
 
                 if isinstance(document, str):
                     document = document.strip()
@@ -98,7 +98,6 @@ class OptimizerEvaluator(Thread):
                         f"Expected document to be a string, got {type(document)}",
                     )
 
-                self.scope = scope
                 end_time = time.time()
                 runtime = end_time - start_time
                 console.log(f"Runtime took seconds: {runtime:.2f}")
