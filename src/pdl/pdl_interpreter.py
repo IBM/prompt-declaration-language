@@ -262,16 +262,21 @@ def process_block(
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
                 ) from exc
             result = PdlConst(v)
-            background = DependentContext(PdlList([BaseMessage(
-                        {
-                            "role": state.role,
-                            "content": result,
-                            "defsite": ".".join(
-                                state.id_stack
-                            ),  # Warning: defsite for a literal value
-                        }
-                    )]
-             ))
+            background = DependentContext(
+                PdlList(
+                    [
+                        BaseMessage(
+                            {
+                                "role": state.role,
+                                "content": result,
+                                "defsite": ".".join(
+                                    state.id_stack
+                                ),  # Warning: defsite for a literal value
+                            }
+                        )
+                    ]
+                )
+            )
             trace = DataBlock(
                 data=expr,
                 pdl__result=result,
@@ -608,7 +613,9 @@ def process_block_body(
                             block.kind,
                             append(obj_loc, k),
                         )
-                        background = DependentContext(PdlList([background, value_background]))
+                        background = DependentContext(
+                            PdlList([background, value_background])
+                        )
                         if (
                             block.context is IndependentEnum.INDEPENDENT
                         ):  # reset pdl_context
@@ -829,9 +836,9 @@ def process_block_body(
                                 ]
                             )
                     scope = scope | {
-                        "pdl_context": DependentContext(PdlList([
-                            pdl_context_init, background
-                        ]))
+                        "pdl_context": DependentContext(
+                            PdlList([pdl_context_init, background])
+                        )
                     }
                     if items is not None:
                         for k in items.keys():
@@ -847,9 +854,9 @@ def process_block_body(
                         block.repeat,
                         repeat_loc,
                     )
-                    saved_background = DependentContext(PdlList([
-                        saved_background, iteration_background
-                    ]))
+                    saved_background = DependentContext(
+                        PdlList([saved_background, iteration_background])
+                    )
                     if block.context is IndependentEnum.DEPENDENT:
                         background = saved_background
                     results.append(iteration_result)
@@ -1090,7 +1097,9 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
             for i, block in enumerate(blocks):
                 iteration_state = iteration_state.with_iter(i)
                 scope = scope | {
-                    "pdl_context": DependentContext(PdlList([pdl_context_init, background]))
+                    "pdl_context": DependentContext(
+                        PdlList([pdl_context_init, background])
+                    )
                 }
                 new_loc = append(loc, "[" + str(i) + "]")
                 if iteration_type == IterationType.LASTOF and state.yield_result:
@@ -1102,9 +1111,9 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                     t,
                 ) = process_block(iteration_state, scope, block, new_loc)
                 results.append(iteration_result)
-                saved_background = DependentContext(PdlList([
-                    saved_background, iteration_background
-                ]))
+                saved_background = DependentContext(
+                    PdlList([saved_background, iteration_background])
+                )
                 if context == IndependentEnum.DEPENDENT:
                     background = saved_background
                 trace.append(t)  # type: ignore
@@ -1259,9 +1268,7 @@ def process_expr(  # pylint: disable=too-many-return-statements
             pdl__expr=expr, pdl__result=result, pdl__location=loc
         )
     if "pdl_context" in str(expr):  # need to deserialize pdl_context
-        scope = scope | {
-            "pdl_context": saved_context
-        }
+        scope = scope | {"pdl_context": saved_context}
     return (result, trace)
 
 
@@ -1687,12 +1694,17 @@ def process_call_code(
         case "command":
             try:
                 result = call_command(code_s, code_a)
-                background = DependentContext(PdlList([BaseMessage(
-                            {
-                                "role": state.role,
-                                "content": result,
-                                "defsite": block.pdl__id,
-                            })]
+                background = DependentContext(
+                    PdlList(
+                        [
+                            BaseMessage(
+                                {
+                                    "role": state.role,
+                                    "content": result,
+                                    "defsite": block.pdl__id,
+                                }
+                            )
+                        ]
                     )
                 )
             except Exception as exc:
@@ -1704,13 +1716,17 @@ def process_call_code(
         case "jinja":
             try:
                 result = call_jinja(code_s, scope)
-                background = DependentContext(PdlList([BaseMessage(
-                            {
-                                "role": state.role,
-                                "content": result,
-                                "defsite": block.pdl__id,
-                            }
-                        )]
+                background = DependentContext(
+                    PdlList(
+                        [
+                            BaseMessage(
+                                {
+                                    "role": state.role,
+                                    "content": result,
+                                    "defsite": block.pdl__id,
+                                }
+                            )
+                        ]
                     )
                 )
             except Exception as exc:
@@ -1722,9 +1738,15 @@ def process_call_code(
         case "pdl":
             try:
                 result = call_pdl(code_s, scope)
-                background = DependentContext(PdlList([BaseMessage(
-                    {"role": state.role, "content": result, "defsite": block.pdl__id}  # type: ignore
-                )]))
+                background = DependentContext(
+                    PdlList(
+                        [
+                            BaseMessage(
+                                {"role": state.role, "content": result, "defsite": block.pdl__id}  # type: ignore
+                            )
+                        ]
+                    )
+                )
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"PDL Code error: {repr(exc)}",
@@ -1903,8 +1925,11 @@ def process_input(
                 contents.append(line + "\n")
             s = "".join(contents)
     trace = block.model_copy(update={"pdl__result": s})
-    background: LazyMessages = DependentContext(PdlList(
-        [BaseMessage({"role": state.role, "content": s, "defsite": block.pdl__id})]))  # type: ignore
+    background: LazyMessages = DependentContext(
+        PdlList(
+            [BaseMessage({"role": state.role, "content": s, "defsite": block.pdl__id})]
+        )
+    )  # type: ignore
     return PdlConst(s), background, scope, trace
 
 

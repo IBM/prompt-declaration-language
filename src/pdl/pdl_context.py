@@ -12,7 +12,7 @@ class SerializeMode(StrEnum):
     GRANITEIO = "graniteio"
 
 
-class PDLContext():
+class PDLContext:
 
     def serialize(self, mode: SerializeMode) -> list[dict[str, Any]]:
         return []
@@ -60,7 +60,9 @@ class DependentContext(PDLContext):
         return [x for xs in contexts for x in xs]
 
 
-def deserialize(context: list[dict[str, Any]]) -> DependentContext:  # Only support dependent for now
+def deserialize(
+    context: list[dict[str, Any]],
+) -> DependentContext:  # Only support dependent for now
     ret: DependentContext = DependentContext(PdlList([]))
     for message in context:
         if isinstance(message, dict):
