@@ -335,7 +335,7 @@ def process_advanced_block_timed(
         case ModelBlock():
             trace = trace.model_copy(
                 update={
-                    "pdl__context": lazy_apply(lambda s: s["pdl_context"], scope),
+                    "pdl__context": lazy_apply(lambda s: s["pdl_context"].serialize(SerializeMode.LITELLM), scope),  #  !!!TODO
                 }
             )
     return result, background, scope, trace
