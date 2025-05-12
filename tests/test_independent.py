@@ -1,4 +1,5 @@
 from pdl.pdl import exec_dict
+from pdl.pdl_context import SerializeMode
 
 independent_data = {
     "text": [
@@ -105,7 +106,7 @@ def test_lastof_independent_data():
     assert result["scope"]["a_post"] == []
     assert result["scope"]["b_post"] == []
     assert result["scope"]["c_post"] == []
-    assert result["scope"]["pdl_context"] == [
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
             "defsite": "lastOf.0",
@@ -142,7 +143,7 @@ def test_array_independent_data():
     assert result["scope"]["a_post"] == []
     assert result["scope"]["b_post"] == []
     assert result["scope"]["c_post"] == []
-    assert result["scope"]["pdl_context"] == [
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
             "defsite": "array.0",
