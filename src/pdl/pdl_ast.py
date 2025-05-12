@@ -25,6 +25,7 @@ from pydantic import (
 from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import TypeAliasType
 
+from .pdl_context import DependentContext
 from .pdl_lazy import PdlDict, PdlLazy
 
 
@@ -41,7 +42,7 @@ ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
 
 
 LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
-LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
+LazyMessages: TypeAlias = DependentContext
 
 
 class BlockKind(StrEnum):
