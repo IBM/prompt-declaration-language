@@ -1,4 +1,9 @@
-from pdl.pdl_context import DependentContext, BaseMessage, IndependentContext, SerializeMode
+from pdl.pdl_context import (
+    BaseMessage,
+    DependentContext,
+    IndependentContext,
+    SerializeMode,
+)
 from pdl.pdl_lazy import PdlList
 
 a = BaseMessage({"role": "user", "content": "hello"})
@@ -17,6 +22,7 @@ i = IndependentContext(PdlList([e, f]))
 p = DependentContext(PdlList([d1, d2]))
 p1 = DependentContext(PdlList([d1, i]))
 
+
 def test_p():
     assert p.serialize(SerializeMode.LITELLM) == [{"role": "user", "content": "hello"},
                                                   {"role": "user", "content": "bye"},
@@ -27,11 +33,11 @@ def test_p():
 
 def test_p1():
     assert p1.serialize(SerializeMode.LITELLM) == [{"role": "user", "content": "hello"},
-                                                  {"role": "user", "content": "bye"},
-                                                  {"role": "user", "content": "hello2"},
-                                                  {"role": "user", "content": "bye2"}]
-    
+                                                   {"role": "user", "content": "bye"},
+                                                   {"role": "user", "content": "hello2"},
+                                                   {"role": "user", "content": "bye2"}]
+
     assert p1.serialize(SerializeMode.GRANITEIO) == [{"role": "user", "content": "hello"},
-                                                  {"role": "user", "content": "bye"},
-                                                  {"independent": [{"role": "user", "content": "hello2"},
-                                                  {"role": "user", "content": "bye2"}]}]
+                                                     {"role": "user", "content": "bye"},
+                                                     {"independent": [{"role": "user", "content": "hello2"},
+                                                                      {"role": "user", "content": "bye2"}]}]
