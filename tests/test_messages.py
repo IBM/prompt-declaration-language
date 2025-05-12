@@ -1,4 +1,5 @@
 from pdl.pdl import exec_str
+from pdl.pdl_context import SerializeMode
 
 
 def test_message1():
@@ -24,7 +25,7 @@ array:
             "defsite": "array.1.message",
         },
     ]
-    assert context == [
+    assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
@@ -54,7 +55,7 @@ content:
         "content": ["Hello", "Bye"],
         "defsite": "message",
     }
-    assert context == [
+    assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": ["Hello", "Bye"],
@@ -76,7 +77,7 @@ content:
         "content": {"a": 1},
         "defsite": "message",
     }
-    assert context == [
+    assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": {"a": 1},
@@ -99,7 +100,7 @@ content:
         "content": '{"a": 1}',
         "defsite": "message",
     }
-    assert context == [
+    assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": '{"a": 1}',
@@ -128,7 +129,7 @@ array:
             "defsite": "array.0.message",
         },
     ]
-    assert context == [
+    assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "tool",
             "content": 42,
