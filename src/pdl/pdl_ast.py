@@ -186,54 +186,75 @@ class FloatPdlTypeConstraints(BaseModel):
 
 
 class FloatPdlType(PdlType):
+    """Float type."""
+
     float: Optional[FloatPdlTypeConstraints]
 
 
 class IntPdlTypeConstraints(BaseModel):
+    """Constraints on integer type."""
+
     model_config = ConfigDict(extra="forbid")
+    minimum: Optional[float] = None
+    exclusiveMinimum: Optional[float] = None
+    maximum: Optional[float] = None
+    exclusiveMaximum: Optional[float] = None
 
 
 class IntPdlType(PdlType):
+    """Integer type."""
+
     int: Optional[IntPdlTypeConstraints]
 
 
 class ListPdlTypeConstraints(BaseModel):
+    """Constraints on list type."""
+
     model_config = ConfigDict(extra="allow")
     minItems: Optional[int] = None
     maxItems: Optional[int] = None
 
 
 class ListPdlType(PdlType):
+    """List type."""
+
     list: Union["PdlTypeType", ListPdlTypeConstraints]
 
 
 class OptionalPdlType(PdlType):
+    """Optional type."""
+
     optional: "PdlTypeType"
 
 
 class ObjPdlType(PdlType):
+    """Optional type."""
+
     obj: Optional[dict[str, "PdlTypeType"]]
 
 
 PdlTypeType = TypeAliasType(
     "PdlTypeType",
-    "Union[BasePdlType,"  # pyright: ignore
-    "      EnumPdlType,"
-    "      StrPdlType,"
-    "      FloatPdlType,"
-    "      IntPdlType,"
-    "      ListPdlType,"
-    "      list[PdlTypeType],"
-    "      OptionalPdlType,"
-    "      ObjPdlType,"
-    "      dict[str, PdlTypeType]]",
+    Annotated[
+        "Union[BasePdlType,"  # pyright: ignore
+        "      EnumPdlType,"
+        "      StrPdlType,"
+        "      FloatPdlType,"
+        "      IntPdlType,"
+        "      ListPdlType,"
+        "      list['PdlTypeType'],"
+        "      OptionalPdlType,"
+        "      ObjPdlType,"
+        "      dict[str, 'PdlTypeType']]",
+        Field(union_mode="left_to_right"),
+    ],
 )
 
 
 class PdlTypeParser(RootModel):
     """Entry point to parse a PDL program using Pydantic."""
 
-    root: PdlTypeType = Field(union_mode="left_to_right")
+    root: PdlTypeType
 
 
 class Parser(BaseModel):

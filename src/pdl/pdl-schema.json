@@ -3052,6 +3052,7 @@
     },
     "FloatPdlType": {
       "additionalProperties": false,
+      "description": "Float type.",
       "properties": {
         "float": {
           "anyOf": [
@@ -5971,6 +5972,7 @@
     },
     "IntPdlType": {
       "additionalProperties": false,
+      "description": "Integer type.",
       "properties": {
         "int": {
           "anyOf": [
@@ -5991,7 +5993,57 @@
     },
     "IntPdlTypeConstraints": {
       "additionalProperties": false,
-      "properties": {},
+      "description": "Constraints on integer type.",
+      "properties": {
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "exclusiveMinimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusiveminimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "exclusiveMaximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusivemaximum"
+        }
+      },
       "title": "IntPdlTypeConstraints",
       "type": "object"
     },
@@ -6512,6 +6564,7 @@
     },
     "ListPdlType": {
       "additionalProperties": false,
+      "description": "List type.",
       "properties": {
         "list": {
           "anyOf": [
@@ -6533,6 +6586,7 @@
     },
     "ListPdlTypeConstraints": {
       "additionalProperties": true,
+      "description": "Constraints on list type.",
       "properties": {
         "minItems": {
           "anyOf": [
@@ -8559,6 +8613,7 @@
     },
     "ObjPdlType": {
       "additionalProperties": false,
+      "description": "Optional type.",
       "properties": {
         "obj": {
           "anyOf": [
@@ -9175,6 +9230,7 @@
     },
     "OptionalPdlType": {
       "additionalProperties": false,
+      "description": "Optional type.",
       "properties": {
         "optional": {
           "$ref": "#/$defs/PdlTypeType"
