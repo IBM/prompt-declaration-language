@@ -9,9 +9,9 @@ from .pdl_ast import (
     ListPdlTypeConstraints,
     ObjPdlType,
     OptionalPdlType,
-    PdlTypeParser,
     PdlTypeType,
     StrPdlType,
+    pdl_type_adapter,
 )
 
 json_types_convert = {
@@ -74,7 +74,7 @@ def pdltype_to_jsonschema(
                 details = constraints.model_dump(exclude_defaults=True)
             schema = {"type": "integer", **details}
         case ListPdlType(list=ListPdlTypeConstraints() as cstr):
-            items_type = PdlTypeParser.model_validate(cstr.__pydantic_extra__).root
+            items_type = pdl_type_adapter.validate_python(cstr.__pydantic_extra__)
             details = {}
             if cstr.minItems is not None:
                 details["minItems"] = cstr.minItems

@@ -20,6 +20,7 @@ from pydantic import (
     ConfigDict,
     Field,
     RootModel,
+    TypeAdapter,
 )
 from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import TypeAliasType
@@ -250,11 +251,7 @@ PdlTypeType = TypeAliasType(
     ],
 )
 
-
-class PdlTypeParser(RootModel):
-    """Entry point to parse a PDL program using Pydantic."""
-
-    root: PdlTypeType
+pdl_type_adapter = TypeAdapter(PdlTypeType)
 
 
 class Parser(BaseModel):

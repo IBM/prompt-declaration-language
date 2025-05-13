@@ -2,7 +2,7 @@ import pytest
 import yaml
 
 from pdl.pdl import exec_dict
-from pdl.pdl_ast import PdlTypeParser
+from pdl.pdl_ast import pdl_type_adapter
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema
@@ -149,7 +149,7 @@ def test_pdltype_to_jsonschema():
         if t_data is None:
             pdl_type = None
         else:
-            pdl_type = PdlTypeParser.model_validate(t_data).root
+            pdl_type = pdl_type_adapter.validate_python(t_data)
         json_schema = pdltype_to_jsonschema(pdl_type, False)
         assert json_schema == t["json_schema"]
 
