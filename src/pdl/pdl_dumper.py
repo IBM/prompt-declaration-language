@@ -257,7 +257,10 @@ def block_to_dict(  # noqa: C901
             d["msg"] = block.msg
     if block.def_ is not None:
         d["def"] = block.def_
-    if not (block.contribute == [ContributeTarget.RESULT, ContributeTarget.CONTEXT] or block.contribute == [ContributeTarget.CONTEXT, ContributeTarget.RESULT]):
+    if block.contribute not in [
+        [ContributeTarget.RESULT, ContributeTarget.CONTEXT],
+        [ContributeTarget.CONTEXT, ContributeTarget.RESULT],
+    ]:
         d["contribute"] = contribute_to_list(block.contribute)
     if block.pdl__result is not None:
         if isinstance(block.pdl__result, FunctionBlock):
