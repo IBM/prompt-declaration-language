@@ -798,10 +798,10 @@ def process_block_body(
                 )
             repeat_loc = append(loc, "repeat")
             iidx = 0
-            first = True
-            saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
-            while True:
-                try:
+            try:
+                first = True
+                saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
+                while True:
                     if max_iterations is not None and iidx >= max_iterations:
                         break
                     if lengths is not None and iidx >= lengths[0]:
