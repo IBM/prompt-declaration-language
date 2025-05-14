@@ -40,6 +40,38 @@ export type Program =
  *
  */
 export type Description = string | null
+export type PdlTypeType =
+  | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+  | EnumPdlType
+  | StrPdlType
+  | FloatPdlType
+  | IntPdlType
+  | ListPdlType
+  | PdlTypeType[]
+  | OptionalPdlType
+  | ObjPdlType
+  | {
+      [k: string]: PdlTypeType
+    }
+export type Enum = unknown[]
+export type Minlength = number | null
+export type Maxlength = number | null
+export type Pattern = string | null
+export type Multipleof = number | null
+export type Minimum = number | null
+export type Exclusiveminimum = number | null
+export type Maximum = number | null
+export type Exclusivemaximum = number | null
+export type Minimum1 = number | null
+export type Exclusiveminimum1 = number | null
+export type Maximum1 = number | null
+export type Exclusivemaximum1 = number | null
+export type List = PdlTypeType | ListPdlTypeConstraints
+export type Minitems = number | null
+export type Maxitems = number | null
+export type Obj = {
+  [k: string]: PdlTypeType
+} | null
 /**
  * Documentation associated to the block.
  *
@@ -168,9 +200,6 @@ export type Parser =
   | RegexParser
   | null
 export type Description21 = string | null
-export type Spec21 = {
-  [k: string]: unknown
-} | null
 export type Pdl =
   | boolean
   | number
@@ -198,9 +227,6 @@ export type Pdl =
   | EmptyBlock
   | null
 export type Description22 = string | null
-export type Spec22 = {
-  [k: string]: unknown
-} | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
@@ -2589,7 +2615,7 @@ export type Kind20 = "function"
  *
  */
 export type Function = {
-  [k: string]: unknown
+  [k: string]: PdlTypeType
 } | null
 /**
  * Body of the function
@@ -2653,7 +2679,11 @@ export type PdlBlock =
  */
 export interface FunctionBlock {
   description?: Description
-  spec?: Spec
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs
   def?: Def24
   contribute?: Contribute20
@@ -2671,11 +2701,81 @@ export interface FunctionBlock {
   return: Return
 }
 /**
- * Type specification of the result of the block.
- *
+ * Enumerated type.
  */
-export interface Spec {
+export interface EnumPdlType {
+  enum: Enum
+}
+/**
+ * String type.
+ */
+export interface StrPdlType {
+  str: StrPdlTypeConstraints | null
+}
+/**
+ * Constraints on string type.
+ */
+export interface StrPdlTypeConstraints {
+  minLength?: Minlength
+  maxLength?: Maxlength
+  pattern?: Pattern
+}
+/**
+ * Float type.
+ */
+export interface FloatPdlType {
+  float: FloatPdlTypeConstraints | null
+}
+/**
+ * Constraints on float type.
+ */
+export interface FloatPdlTypeConstraints {
+  multipleOf?: Multipleof
+  minimum?: Minimum
+  exclusiveMinimum?: Exclusiveminimum
+  maximum?: Maximum
+  exclusiveMaximum?: Exclusivemaximum
+}
+/**
+ * Integer type.
+ */
+export interface IntPdlType {
+  int: IntPdlTypeConstraints | null
+}
+/**
+ * Constraints on integer type.
+ */
+export interface IntPdlTypeConstraints {
+  minimum?: Minimum1
+  exclusiveMinimum?: Exclusiveminimum1
+  maximum?: Maximum1
+  exclusiveMaximum?: Exclusivemaximum1
+}
+/**
+ * List type.
+ */
+export interface ListPdlType {
+  list: List
+}
+/**
+ * Constraints on list type.
+ */
+export interface ListPdlTypeConstraints {
+  minItems?: Minitems
+  maxItems?: Maxitems
   [k: string]: unknown
+}
+/**
+ * Optional type.
+ */
+export interface OptionalPdlType {
+  optional: PdlTypeType
+}
+/**
+ * Optional type.
+ */
+export interface ObjPdlType {
+  obj: Obj
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2714,7 +2814,11 @@ export interface Defs {
  */
 export interface CallBlock {
   description?: Description1
-  spec?: Spec1
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs1
   def?: Def23
   contribute?: Contribute19
@@ -2731,13 +2835,6 @@ export interface CallBlock {
   call: unknown
   args?: unknown
   pdl__trace?: PdlTrace3
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec1 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2783,7 +2880,11 @@ export interface Defs1 {
  */
 export interface LitellmModelBlock {
   description?: Description2
-  spec?: Spec2
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs2
   def?: Def22
   contribute?: Contribute18
@@ -2808,13 +2909,6 @@ export interface LitellmModelBlock {
   pdl__model_input?: PdlModelInput1
   platform?: Platform1
   parameters?: Parameters1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec2 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2853,7 +2947,11 @@ export interface Defs2 {
  */
 export interface GraniteioModelBlock {
   description?: Description3
-  spec?: Spec3
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs3
   def?: Def21
   contribute?: Contribute17
@@ -2880,13 +2978,6 @@ export interface GraniteioModelBlock {
   backend: Backend
   processor?: Processor
   parameters?: Parameters
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec3 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2934,7 +3025,11 @@ export interface Defs3 {
  */
 export interface CodeBlock {
   description?: Description4
-  spec?: Spec4
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs4
   def?: Def20
   contribute?: Contribute16
@@ -2950,13 +3045,6 @@ export interface CodeBlock {
   kind?: Kind16
   lang: Lang1
   code: Code
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec4 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3003,7 +3091,11 @@ export interface Defs4 {
  */
 export interface ArgsBlock {
   description?: Description5
-  spec?: Spec5
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs5
   def?: Def19
   contribute?: Contribute15
@@ -3019,13 +3111,6 @@ export interface ArgsBlock {
   kind?: Kind15
   lang?: Lang
   args: Args
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec5 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3066,7 +3151,11 @@ export interface Defs5 {
  */
 export interface GetBlock {
   description?: Description6
-  spec?: Spec6
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs6
   def?: Def18
   contribute?: Contribute14
@@ -3081,13 +3170,6 @@ export interface GetBlock {
   pdl__is_leaf?: PdlIsLeaf14
   kind?: Kind14
   get: Get
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec6 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3147,7 +3229,11 @@ export interface Defs6 {
  */
 export interface DataBlock {
   description?: Description7
-  spec?: Spec7
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs7
   def?: Def17
   contribute?: Contribute13
@@ -3163,13 +3249,6 @@ export interface DataBlock {
   kind?: Kind13
   data: unknown
   raw?: Raw
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec7 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3218,7 +3297,11 @@ export interface Defs7 {
  */
 export interface IfBlock {
   description?: Description8
-  spec?: Spec8
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs8
   def?: Def16
   contribute?: Contribute12
@@ -3236,13 +3319,6 @@ export interface IfBlock {
   then: Then1
   else?: Else
   if_result?: IfResult
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec8 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3298,7 +3374,11 @@ export interface Defs8 {
  */
 export interface MatchBlock {
   description?: Description9
-  spec?: Spec9
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs9
   def?: Def11
   contribute?: Contribute11
@@ -3314,13 +3394,6 @@ export interface MatchBlock {
   kind?: Kind11
   match: unknown
   with: With1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec9 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3368,7 +3441,11 @@ export interface Defs9 {
  */
 export interface RepeatBlock {
   description?: Description10
-  spec?: Spec10
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs10
   def?: Def10
   contribute?: Contribute10
@@ -3389,13 +3466,6 @@ export interface RepeatBlock {
   max_iterations?: MaxIterations
   join?: Join
   pdl__trace?: PdlTrace2
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec10 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3434,7 +3504,11 @@ export interface Defs10 {
  */
 export interface TextBlock {
   description?: Description11
-  spec?: Spec11
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs11
   def?: Def9
   contribute?: Contribute9
@@ -3449,13 +3523,6 @@ export interface TextBlock {
   pdl__is_leaf?: PdlIsLeaf9
   kind?: Kind9
   text: Text
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec11 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3494,7 +3561,11 @@ export interface Defs11 {
  */
 export interface LastOfBlock {
   description?: Description12
-  spec?: Spec12
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs12
   def?: Def8
   contribute?: Contribute8
@@ -3509,13 +3580,6 @@ export interface LastOfBlock {
   pdl__is_leaf?: PdlIsLeaf8
   kind?: Kind8
   lastOf: Lastof
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec12 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3554,7 +3618,11 @@ export interface Defs12 {
  */
 export interface ArrayBlock {
   description?: Description13
-  spec?: Spec13
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs13
   def?: Def7
   contribute?: Contribute7
@@ -3569,13 +3637,6 @@ export interface ArrayBlock {
   pdl__is_leaf?: PdlIsLeaf7
   kind?: Kind7
   array: Array
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec13 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3614,7 +3675,11 @@ export interface Defs13 {
  */
 export interface ObjectBlock {
   description?: Description14
-  spec?: Spec14
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs14
   def?: Def6
   contribute?: Contribute6
@@ -3629,13 +3694,6 @@ export interface ObjectBlock {
   pdl__is_leaf?: PdlIsLeaf6
   kind?: Kind6
   object: Object
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec14 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3674,7 +3732,11 @@ export interface Defs14 {
  */
 export interface MessageBlock {
   description?: Description15
-  spec?: Spec15
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs15
   def?: Def5
   contribute?: Contribute5
@@ -3691,13 +3753,6 @@ export interface MessageBlock {
   content: Content
   name?: Name
   tool_call_id?: ToolCallId
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec15 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3748,7 +3803,11 @@ export interface Defs15 {
  */
 export interface ReadBlock {
   description?: Description16
-  spec?: Spec16
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs16
   def?: Def4
   contribute?: Contribute4
@@ -3765,13 +3824,6 @@ export interface ReadBlock {
   read: Read
   message?: Message
   multiline?: Multiline
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec16 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3810,7 +3862,11 @@ export interface Defs16 {
  */
 export interface IncludeBlock {
   description?: Description17
-  spec?: Spec17
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs17
   def?: Def3
   contribute?: Contribute3
@@ -3826,13 +3882,6 @@ export interface IncludeBlock {
   kind?: Kind3
   include: Include
   pdl__trace?: PdlTrace1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec17 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3871,7 +3920,11 @@ export interface Defs17 {
  */
 export interface ImportBlock {
   description?: Description18
-  spec?: Spec18
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs18
   def?: Def2
   contribute?: Contribute2
@@ -3887,13 +3940,6 @@ export interface ImportBlock {
   kind?: Kind2
   import: Import
   pdl__trace?: PdlTrace
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec18 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3932,7 +3978,11 @@ export interface Defs18 {
  */
 export interface ErrorBlock {
   description?: Description19
-  spec?: Spec19
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs19
   def?: Def1
   contribute?: Contribute1
@@ -3948,13 +3998,6 @@ export interface ErrorBlock {
   kind?: Kind1
   msg: Msg
   program: Program1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec19 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3993,7 +4036,11 @@ export interface Defs19 {
  */
 export interface EmptyBlock {
   description?: Description20
-  spec?: Spec20
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?: PdlTypeType | null
   defs?: Defs20
   def?: Def
   contribute?: Contribute
@@ -4007,13 +4054,6 @@ export interface EmptyBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf
   kind?: Kind
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec20 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4071,7 +4111,7 @@ export interface Table {
 }
 export interface PdlParser {
   description?: Description21
-  spec?: Spec21
+  spec?: PdlTypeType | null
   pdl: Pdl
 }
 /**
@@ -4079,7 +4119,7 @@ export interface PdlParser {
  */
 export interface RegexParser {
   description?: Description22
-  spec?: Spec22
+  spec?: PdlTypeType | null
   regex: Regex
   mode?: Mode
 }

@@ -69,6 +69,7 @@ from .pdl_ast import (  # noqa: E402
     ModelInput,
     ObjectBlock,
     ObjectPattern,
+    ObjPdlType,
     OrPattern,
     ParserType,
     Pattern,
@@ -1893,19 +1894,20 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise PDLRuntimeParserError(msg) from exc
             if m is None:
                 return None
-            if parser.spec is None:
-                result = list(m.groups())
-            else:
-                current_group_name = ""
-                try:
-                    result = {}
-                    for x in parser.spec.keys():
-                        current_group_name = x
-                        result[x] = m.group(x)
-                    return result
-                except IndexError as exc:
-                    msg = f"No group named {current_group_name} found by {regex} in {text}"
-                    raise PDLRuntimeParserError(msg) from exc
+            match parser.spec:
+                case ObjPdlType(obj=dict() as spec) | (dict() as spec):
+                    current_group_name = ""
+                    try:
+                        result = {}
+                        for x in spec.keys():
+                            current_group_name = x
+                            result[x] = m.group(x)
+                        return result
+                    except IndexError as exc:
+                        msg = f"No group named {current_group_name} found by {regex} in {text}"
+                        raise PDLRuntimeParserError(msg) from exc
+                case _:
+                    result = list(m.groups())
         case RegexParser(mode="split" | "findall"):
             regex = parser.regex
             match parser.mode:
