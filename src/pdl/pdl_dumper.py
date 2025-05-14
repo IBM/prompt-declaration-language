@@ -17,17 +17,22 @@ from .pdl_ast import (
     ContributeValue,
     DataBlock,
     EmptyBlock,
+    EnumPdlType,
     ErrorBlock,
     ExpressionType,
+    FloatPdlType,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    IntPdlType,
     JoinText,
     JoinType,
     LastOfBlock,
+    ListPdlType,
+    ListPdlTypeConstraints,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -35,16 +40,20 @@ from .pdl_ast import (
     MessageBlock,
     ObjectBlock,
     ObjectPattern,
+    ObjPdlType,
+    OptionalPdlType,
     OrPattern,
     ParserType,
     PatternType,
     PdlLocationType,
     PdlParser,
     PdlTiming,
+    PdlTypeType,
     PdlUsage,
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    StrPdlType,
     StructuredBlock,
     TextBlock,
 )
@@ -107,7 +116,7 @@ def block_to_dict(  # noqa: C901
     if block.role is not None:
         d["role"] = block.role
     if block.spec is not None:
-        d["spec"] = block.spec
+        d["spec"] = type_to_dict(block.spec)
     if block.defs is not None:
         d["defs"] = {
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
@@ -227,7 +236,10 @@ def block_to_dict(  # noqa: C901
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
                 ]
         case FunctionBlock():
-            d["function"] = block.function
+            if block.function is None:
+                d["function"] = None
+            else:
+                d["function"] = {x: type_to_dict(t) for x, t in block.function.items()}
             d["return"] = block_to_dict(block.returns, json_compatible)
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope, json_compatible)
@@ -245,7 +257,10 @@ def block_to_dict(  # noqa: C901
             d["msg"] = block.msg
     if block.def_ is not None:
         d["def"] = block.def_
-    if set(block.contribute) != {ContributeTarget.RESULT, ContributeTarget.CONTEXT}:
+    if block.contribute not in [
+        [ContributeTarget.RESULT, ContributeTarget.CONTEXT],
+        [ContributeTarget.CONTEXT, ContributeTarget.RESULT],
+    ]:
         d["contribute"] = contribute_to_list(block.contribute)
     if block.pdl__result is not None:
         if isinstance(block.pdl__result, FunctionBlock):
@@ -288,6 +303,86 @@ def expr_to_dict(expr: ExpressionType, json_compatible: bool):
             d["pdl__result"] = data_to_dict(expr.pdl__result, json_compatible)
     else:
         d = data_to_dict(expr, json_compatible)
+    return d
+
+
+def type_to_dict(t: PdlTypeType):
+    d: str | list | dict
+    match t:
+        case "null" | "bool" | "str" | "float" | "int" | "list" | "obj":
+            d = t
+        case EnumPdlType():
+            d = {"enum": t.enum}
+        case StrPdlType():
+            if t.str is None:
+                d = "str"
+            else:
+                cstr: dict = {}
+                if t.str.minLength is not None:
+                    cstr["minLength"] = t.str.minLength
+                if t.str.maxLength is not None:
+                    cstr["maxLength"] = t.str.maxLength
+                if t.str.pattern is not None:
+                    cstr["pattern"] = t.str.pattern
+                d = {"str": cstr}
+        case FloatPdlType():
+            if t.float is None:
+                d = "float"
+            else:
+                cstr = {}
+                if t.float.multipleOf is not None:
+                    cstr["multipleOf"] = t.float.multipleOf
+                if t.float.minimum is not None:
+                    cstr["minimum"] = t.float.minimum
+                if t.float.exclusiveMinimum is not None:
+                    cstr["exclusiveMinimum"] = t.float.exclusiveMinimum
+                if t.float.maximum is not None:
+                    cstr["maximum"] = t.float.maximum
+                if t.float.exclusiveMaximum is not None:
+                    cstr["exclusiveMaximum"] = t.float.exclusiveMaximum
+                d = {"float": cstr}
+        case IntPdlType():
+            if t.int is None:
+                d = "int"
+            else:
+                cstr = {}
+                if t.int.minimum is not None:
+                    cstr["minimum"] = t.int.minimum
+                if t.int.exclusiveMinimum is not None:
+                    cstr["exclusiveMinimum"] = t.int.exclusiveMinimum
+                if t.int.maximum is not None:
+                    cstr["maximum"] = t.int.maximum
+                if t.int.exclusiveMaximum is not None:
+                    cstr["exclusiveMaximum"] = t.int.exclusiveMaximum
+                d = {"int": cstr}
+        case ListPdlType():
+            if t.list is None:
+                d = "list"
+            else:
+                if isinstance(t.list, ListPdlTypeConstraints):
+                    cstr = type_to_dict(t.list.__pydantic_extra__)
+                    if t.list.minItems is not None:
+                        cstr["minItems"] = t.list.minItems
+                    if t.list.maxItems is not None:
+                        cstr["maxItems"] = t.list.maxItems
+                    d = {"list": cstr}
+                else:
+                    d = {"list": type_to_dict(t.list)}
+        case [elem]:
+            d = [type_to_dict(elem)]  # type:ignore
+        case list():
+            assert False, "list must have only one element"
+        case OptionalPdlType():
+            d = {"optional": type_to_dict(t.optional)}
+        case ObjPdlType():
+            if t.obj is None:
+                d = "obj"
+            else:
+                d = {"obj": {x: type_to_dict(t_x) for x, t_x in t.obj.items()}}
+        case dict():
+            d = {x: type_to_dict(t_x) for x, t_x in t.items()}
+        case _:
+            assert False
     return d
 
 
@@ -369,11 +464,13 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
         case "json" | "yaml" | "jsonl":
             p = parser
         case RegexParser():
-            p = parser.model_dump()
+            p = parser.model_dump(exclude_unset=True)
         case PdlParser():
             p = {}
-            p["description"] = parser.description
-            p["spec"] = parser.spec
+            if parser.description is not None:
+                p["description"] = parser.description
+            if parser.spec is not None:
+                p["spec"] = type_to_dict(parser.spec)
             p["pdl"] = block_to_dict(parser.pdl, False)
         case _:
             assert False

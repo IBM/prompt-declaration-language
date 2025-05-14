@@ -45,9 +45,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -415,9 +422,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -912,9 +926,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -1372,9 +1393,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -1850,9 +1878,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2218,9 +2253,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2546,6 +2588,22 @@
       "title": "EmptyBlock",
       "type": "object"
     },
+    "EnumPdlType": {
+      "additionalProperties": false,
+      "description": "Enumerated type.",
+      "properties": {
+        "enum": {
+          "items": {},
+          "title": "Enum",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enum"
+      ],
+      "title": "EnumPdlType",
+      "type": "object"
+    },
     "ErrorBlock": {
       "additionalProperties": false,
       "description": "Block representing an error generated at runtime.",
@@ -2564,9 +2622,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2985,6 +3050,95 @@
       "title": "ErrorBlock",
       "type": "object"
     },
+    "FloatPdlType": {
+      "additionalProperties": false,
+      "description": "Float type.",
+      "properties": {
+        "float": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FloatPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "float"
+      ],
+      "title": "FloatPdlType",
+      "type": "object"
+    },
+    "FloatPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on float type.",
+      "properties": {
+        "multipleOf": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Multipleof"
+        },
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "exclusiveMinimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusiveminimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "exclusiveMaximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusivemaximum"
+        }
+      },
+      "title": "FloatPdlTypeConstraints",
+      "type": "object"
+    },
     "FunctionBlock": {
       "additionalProperties": false,
       "description": "Function declaration.",
@@ -3003,9 +3157,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -3330,7 +3491,9 @@
         "function": {
           "anyOf": [
             {
-              "additionalProperties": true,
+              "additionalProperties": {
+                "$ref": "#/$defs/PdlTypeType"
+              },
               "type": "object"
             },
             {
@@ -3450,9 +3613,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -3804,9 +3974,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -4352,9 +4529,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -4902,9 +5086,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -5340,9 +5531,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -5772,6 +5970,83 @@
       "title": "IndependentEnum",
       "type": "string"
     },
+    "IntPdlType": {
+      "additionalProperties": false,
+      "description": "Integer type.",
+      "properties": {
+        "int": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IntPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "int"
+      ],
+      "title": "IntPdlType",
+      "type": "object"
+    },
+    "IntPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on integer type.",
+      "properties": {
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "exclusiveMinimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusiveminimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "exclusiveMaximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusivemaximum"
+        }
+      },
+      "title": "IntPdlTypeConstraints",
+      "type": "object"
+    },
     "JoinArray": {
       "additionalProperties": false,
       "properties": {
@@ -5858,9 +6133,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -6280,6 +6562,60 @@
       "title": "LastOfBlock",
       "type": "object"
     },
+    "ListPdlType": {
+      "additionalProperties": false,
+      "description": "List type.",
+      "properties": {
+        "list": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "$ref": "#/$defs/ListPdlTypeConstraints"
+            }
+          ],
+          "title": "List"
+        }
+      },
+      "required": [
+        "list"
+      ],
+      "title": "ListPdlType",
+      "type": "object"
+    },
+    "ListPdlTypeConstraints": {
+      "additionalProperties": true,
+      "description": "Constraints on list type.",
+      "properties": {
+        "minItems": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minitems"
+        },
+        "maxItems": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxitems"
+        }
+      },
+      "title": "ListPdlTypeConstraints",
+      "type": "object"
+    },
     "LitellmModelBlock": {
       "additionalProperties": false,
       "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\n- model: ollama/granite-code:8b\n  parameters:\n    stop: ['!']\n```",
@@ -6298,9 +6634,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -7251,9 +7594,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -7807,9 +8157,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -8254,6 +8611,31 @@
       "title": "MessageBlock",
       "type": "object"
     },
+    "ObjPdlType": {
+      "additionalProperties": false,
+      "description": "Optional type.",
+      "properties": {
+        "obj": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PdlTypeType"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Obj"
+        }
+      },
+      "required": [
+        "obj"
+      ],
+      "title": "ObjPdlType",
+      "type": "object"
+    },
     "ObjectBlock": {
       "additionalProperties": false,
       "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
@@ -8272,9 +8654,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -8839,6 +9228,20 @@
       "title": "ObjectPattern",
       "type": "object"
     },
+    "OptionalPdlType": {
+      "additionalProperties": false,
+      "description": "Optional type.",
+      "properties": {
+        "optional": {
+          "$ref": "#/$defs/PdlTypeType"
+        }
+      },
+      "required": [
+        "optional"
+      ],
+      "title": "OptionalPdlType",
+      "type": "object"
+    },
     "OrPattern": {
       "additionalProperties": false,
       "properties": {
@@ -9028,15 +9431,13 @@
         "spec": {
           "anyOf": [
             {
-              "additionalProperties": true,
-              "type": "object"
+              "$ref": "#/$defs/PdlTypeType"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Spec"
+          "default": null
         },
         "pdl": {
           "anyOf": [
@@ -9184,6 +9585,55 @@
       "title": "PdlTiming",
       "type": "object"
     },
+    "PdlTypeType": {
+      "anyOf": [
+        {
+          "enum": [
+            "null",
+            "bool",
+            "str",
+            "float",
+            "int",
+            "list",
+            "obj"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/EnumPdlType"
+        },
+        {
+          "$ref": "#/$defs/StrPdlType"
+        },
+        {
+          "$ref": "#/$defs/FloatPdlType"
+        },
+        {
+          "$ref": "#/$defs/IntPdlType"
+        },
+        {
+          "$ref": "#/$defs/ListPdlType"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/PdlTypeType"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/OptionalPdlType"
+        },
+        {
+          "$ref": "#/$defs/ObjPdlType"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/PdlTypeType"
+          },
+          "type": "object"
+        }
+      ]
+    },
     "PdlUsage": {
       "description": "Internal data structure to record token consumption usage information.",
       "properties": {
@@ -9317,9 +9767,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -9701,15 +10158,13 @@
         "spec": {
           "anyOf": [
             {
-              "additionalProperties": true,
-              "type": "object"
+              "$ref": "#/$defs/PdlTypeType"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Spec"
+          "default": null
         },
         "regex": {
           "title": "Regex",
@@ -9752,9 +10207,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -10365,6 +10827,71 @@
       "title": "RepeatBlock",
       "type": "object"
     },
+    "StrPdlType": {
+      "additionalProperties": false,
+      "description": "String type.",
+      "properties": {
+        "str": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StrPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "str"
+      ],
+      "title": "StrPdlType",
+      "type": "object"
+    },
+    "StrPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on string type.",
+      "properties": {
+        "minLength": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minlength"
+        },
+        "maxLength": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxlength"
+        },
+        "pattern": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pattern"
+        }
+      },
+      "title": "StrPdlTypeConstraints",
+      "type": "object"
+    },
     "TextBlock": {
       "additionalProperties": false,
       "description": "Create the concatenation of the stringify version of the result of each block of the list of blocks.",
@@ -10383,9 +10910,16 @@
           "title": "Description"
         },
         "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
