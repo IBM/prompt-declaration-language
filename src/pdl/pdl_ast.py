@@ -14,11 +14,18 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, RootModel
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    RootModel,
+    TypeAdapter,
+)
 from pydantic.json_schema import SkipJsonSchema
+from typing_extensions import TypeAliasType
 
 from .pdl_lazy import PdlDict, PdlLazy
-from .pdl_schema_utils import pdltype_to_jsonschema
 
 
 def _ensure_lower(value):
@@ -134,6 +141,119 @@ PatternType: TypeAlias = (
 )
 
 
+BasePdlType: TypeAlias = Literal["null", "bool", "str", "float", "int", "list", "obj"]
+
+
+class PdlType(BaseModel):
+    """Common fields for PDL types."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class EnumPdlType(PdlType):
+    """Enumerated type."""
+
+    enum: list[Any]
+    """List of allowed values in the type."""
+
+
+class StrPdlTypeConstraints(BaseModel):
+    """Constraints on string type."""
+
+    model_config = ConfigDict(extra="forbid")
+    minLength: Optional[int] = None
+    """Minimal length of the string."""
+    maxLength: Optional[int] = None
+    """Maximal length of the string."""
+    pattern: Optional[str] = None
+    """Regular expression that values of the type must match."""
+
+
+class StrPdlType(PdlType):
+    """String type."""
+
+    str: Optional[StrPdlTypeConstraints]
+
+
+class FloatPdlTypeConstraints(BaseModel):
+    """Constraints on float type."""
+
+    model_config = ConfigDict(extra="forbid")
+    multipleOf: Optional[float] = None
+    minimum: Optional[float] = None
+    exclusiveMinimum: Optional[float] = None
+    maximum: Optional[float] = None
+    exclusiveMaximum: Optional[float] = None
+
+
+class FloatPdlType(PdlType):
+    """Float type."""
+
+    float: Optional[FloatPdlTypeConstraints]
+
+
+class IntPdlTypeConstraints(BaseModel):
+    """Constraints on integer type."""
+
+    model_config = ConfigDict(extra="forbid")
+    minimum: Optional[float] = None
+    exclusiveMinimum: Optional[float] = None
+    maximum: Optional[float] = None
+    exclusiveMaximum: Optional[float] = None
+
+
+class IntPdlType(PdlType):
+    """Integer type."""
+
+    int: Optional[IntPdlTypeConstraints]
+
+
+class ListPdlTypeConstraints(BaseModel):
+    """Constraints on list type."""
+
+    model_config = ConfigDict(extra="allow")
+    minItems: Optional[int] = None
+    maxItems: Optional[int] = None
+
+
+class ListPdlType(PdlType):
+    """List type."""
+
+    list: Union["PdlTypeType", ListPdlTypeConstraints]
+
+
+class OptionalPdlType(PdlType):
+    """Optional type."""
+
+    optional: "PdlTypeType"
+
+
+class ObjPdlType(PdlType):
+    """Optional type."""
+
+    obj: Optional[dict[str, "PdlTypeType"]]
+
+
+PdlTypeType = TypeAliasType(
+    "PdlTypeType",
+    Annotated[
+        "Union[BasePdlType,"  # pyright: ignore
+        "      EnumPdlType,"
+        "      StrPdlType,"
+        "      FloatPdlType,"
+        "      IntPdlType,"
+        "      ListPdlType,"
+        "      list['PdlTypeType'],"
+        "      OptionalPdlType,"
+        "      ObjPdlType,"
+        "      dict[str, 'PdlTypeType']]",
+        Field(union_mode="left_to_right"),
+    ],
+)
+
+pdl_type_adapter = TypeAdapter(PdlTypeType)
+
+
 class Parser(BaseModel):
     """Common fields for all parsers (`parser` field)."""
 
@@ -141,7 +261,7 @@ class Parser(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the parser.
     """
-    spec: Optional[dict[str, Any]] = None
+    spec: Optional[PdlTypeType] = None
     """Expected type of the parsed value.
     """
 
@@ -220,7 +340,7 @@ class Block(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the block.
     """
-    spec: Any = None
+    spec: Optional[PdlTypeType] = None
     """Type specification of the result of the block.
     """
     defs: dict[str, "BlockType"] = {}
@@ -272,7 +392,7 @@ class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
-    function: Optional[dict[str, Any]]
+    function: Optional[dict[str, PdlTypeType]]
     """Functions parameters with their types.
     """
     returns: "BlockType" = Field(..., alias="return")
@@ -917,33 +1037,6 @@ TEMPERATURE_SAMPLING = 0.7
 TOP_P_SAMPLING = 0.85
 TOP_K_SAMPLING = 50
 DECODING_METHOD = "greedy"
-
-
-def set_structured_decoding_parameters(
-    spec: Any,
-    parameters: Optional[dict[str, Any]],
-) -> dict[str, Any]:
-    if parameters is None:
-        parameters = {}
-
-    if (
-        spec is not None
-        and "response_format" not in parameters
-        and "guided_decoding_backend" not in parameters
-    ):
-        schema = pdltype_to_jsonschema(spec, True)
-
-        parameters["guided_decoding_backend"] = "lm-format-enforcer"
-        parameters["guided_json"] = schema
-        parameters["response_format"] = {
-            "type": "json_schema",
-            "json_schema": {
-                "name": "schema",
-                "schema": schema,
-                "strict": True,
-            },
-        }
-    return parameters
 
 
 def get_default_model_parameters() -> list[dict[str, Any]]:
