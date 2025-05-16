@@ -91,3 +91,24 @@ variables: # define discrete options to sample from
 ```python title="examples/optimizer/gsm8k_evaluator.py" linenums="1"
 --8<-- "./examples/optimizer/gsm8k_evaluator.py"
 ```
+
+We can see an example of a script to run the optimization process in `examples/optimizer/optimize.py`.
+Usage:
+
+```
+python optimize.py optimize -h
+usage: optimize.py optimize [-h] --config CONFIG --dataset-path DATASET_PATH [--experiments-path EXPERIMENTS_PATH]
+                            [--yield_output | --no-yield_output] [--dry | --no-dry]
+                            pdl_file
+```
+
+We also need a dataset to optimize against, with `train`, `test`, and `validation` splits. To produce such a dataset, we can use HuggingFace Datasets `load_dataset` and `save_to_disk`. This example requires the dataset to have columns `question`, `reasoning`, and `answer`, which can be created from the original `openai/gsm8k` dataset. Processing scripts are under development and will follow shortly.
+
+We can run an example like so:
+
+```
+cd examples/optimizer
+python optimize.py optimize --config config.yml --dataset-path datasets/gsm8k gsm8k.pdl
+```
+
+Once the process is complete, a file `optimized_gsm8k.pdl` is written. This file contains the optimal configuration and is directly executable by the standard PDL interpreter.

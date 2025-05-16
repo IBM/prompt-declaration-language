@@ -47,7 +47,7 @@ nav:
   - API Reference: api_reference.md
   - Contribute: contrib.md
   - Viewer: viewer.md
-  - AutoPDL: autopdl.md
+  # - AutoPDL: autopdl.md # Hide documentation for now
 
 # Define some IBM colors
 extra_css:
