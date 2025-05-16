@@ -1,0 +1,18 @@
+benchmark: "gsm8k"
+initial_test_set_size: 1
+max_test_set_size: 1
+num_candidates: 5
+num_demonstrations: 3
+parallelism: 1
+shuffle_test: false
+test_set_name: "test"
+train_set_name: "train"
+timeout: 120
+experiment_prefix: "granite_3_8b_instruct_gsm8k_3_shot_"
+variables:
+  model:
+  - "watsonx_text/ibm/granite-3-8b-instruct"
+  prompt_pattern:
+  - "cot"
+  num_demonstrations:
+  - 3

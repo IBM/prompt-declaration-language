@@ -65,6 +65,10 @@ TO_SKIP = {
         pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
         pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
+        # Not executable without optimizer
+        pathlib.Path("examples") / "optimizer" / "mbpp.pdl",
+        pathlib.Path("examples") / "optimizer" / "fever.pdl",
+        pathlib.Path("examples") / "optimizer" / "gsm8k.pdl",
     ]
 }
 

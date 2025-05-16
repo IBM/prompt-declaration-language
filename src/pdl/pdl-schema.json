@@ -1730,7 +1730,8 @@
             "python",
             "command",
             "jinja",
-            "pdl"
+            "pdl",
+            "ipython"
           ],
           "title": "Lang",
           "type": "string"

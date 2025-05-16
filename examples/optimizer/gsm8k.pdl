@@ -1,0 +1,50 @@
+description: Demo of template
+defs:
+  cot:
+    import: ../../contrib/prompt_library/CoT
+  react:
+    import: ../../contrib/prompt_library/ReAct
+  rewoo:
+    import: ../../contrib/prompt_library/ReWoo
+  tools:
+    import: ../../contrib/prompt_library/tools
+match: ${ prompt_pattern }
+with:
+  # CoT
+  - case: cot
+    then:
+      text:
+        - "Answer the questions to the best of your abilities.\n\n"
+        - call: ${ cot.chain_of_thought }
+          def: ANSWER
+          contribute: []
+          args:
+            examples: "${ demonstrations }"
+            question: "${ question|trim }"
+            model: "${ model }"
+        - "\nThe answer is ${ ANSWER.answer|trim }"
+
+  # ReAct
+  - case: react
+    then:
+      text:
+        call: ${ react.react }
+        args:
+          task: "Question: ${ question|trim }"
+          model: ${ model }
+          tool_schema: ${ tools.tool_schema }
+          tools: ${ tools.tools }
+          trajectories: ${ demonstrations }
+
+  # ReWOO
+  - case: rewoo
+    then:
+      text:
+        call: ${ rewoo.rewoo }
+        args:
+          task: ${ question|trim }
+          model: ${ model }
+          tool_schema: ${ tools.tool_schema }
+          tools: ${ tools.tools }
+          trajectories: ${ demonstrations }
+          show_plans: false

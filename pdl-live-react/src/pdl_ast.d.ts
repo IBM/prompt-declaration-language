@@ -2079,7 +2079,7 @@ export type Kind16 = "code"
  * Programming language of the code.
  *
  */
-export type Lang1 = "python" | "command" | "jinja" | "pdl"
+export type Lang1 = "python" | "command" | "jinja" | "pdl" | "ipython"
 /**
  * Code to execute.
  *

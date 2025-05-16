@@ -29,6 +29,7 @@ export default function PreviewLight({
     SyntaxHighlighter.registerLanguage("json", json)
     SyntaxHighlighter.registerLanguage("yaml", yaml)
     SyntaxHighlighter.registerLanguage("python", python)
+    SyntaxHighlighter.registerLanguage("ipython", python)
     SyntaxHighlighter.registerLanguage("javascript", js)
   }, [])
 
