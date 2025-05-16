@@ -161,7 +161,8 @@ class PDLOptimizer:
 
         if (
             "prompt_pattern" in self.config.variables
-            and "cot" in self.config.variables["prompt_pattern"]
+            and "cot" in self.config.variables.get("prompt_pattern", [])
+            and 0 in self.config.variables.get("num_demonstrations", [])
         ):
             cot_candidate = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
@@ -183,9 +184,8 @@ class PDLOptimizer:
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
             }
             if (
-                "num_demonstrations" in variable_instance
-                and variable_instance["num_demonstrations"] == 0
-                and variable_instance["prompt_pattern"] == "cot"
+                variable_instance.get("num_demonstrations") == 0
+                and variable_instance.get("prompt_pattern") == "cot"
             ):
                 if variable_instance["prompt_pattern"] in zero_shots_seen:
                     continue

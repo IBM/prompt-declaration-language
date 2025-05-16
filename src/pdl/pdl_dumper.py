@@ -416,9 +416,7 @@ def build_exclude(obj: Any, regex: re.Pattern[str]) -> Any:
         for k, v in obj.items():
             nested = build_exclude(v, regex)
             if nested:
-                out[k] = nested
-                if k == "root":
-                    out |= out["root"]
+                out[k] = {**nested, "__all__": nested}
 
         return out or None
 
@@ -440,6 +438,7 @@ def dump_program_exclude_internals(program: Program) -> str:
     # pattern for internal pdl__ fields
     regex = re.compile(r"^pdl__.*")
     exclude = build_exclude(program, regex)
+    exclude |= exclude.get("root", {})
     return dump_program(program, exclude=exclude)
 
 
