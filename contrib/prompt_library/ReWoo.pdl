@@ -20,24 +20,29 @@ defs:
                     text: ${ trajectory.keys()|first }
                   content:
                     text: ${ trajectory.values()|first }
-              - if: ${ type in ['task', 'question'] }
-                then: |-
-                  Task: ${ content|trim }
-              - if: ${ type == 'thought'}
-                then: |-
+              - match: ${ type }
+                with:
+                  - case: task
+                    then: |-
+                      Task: ${ content|trim }
+                  - case: question
+                    then: |-
+                      Task: ${ content|trim }
+                  - case: thought
+                    then: |-
 
-                  Plan: ${ content|trim }
-              - if: ${ type == 'action'}
-                then:
-                  text:
-                    - " #E${ i } = ${ content|trim }"
-                    - defs:
-                        i:
-                          data: ${ i+1 }
-              - if: ${ type == 'observation'}
-                then: ""
-              - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
-                then: "${ type }: ${ content|trim }\n"
+                      Plan: ${ content|trim }
+                  - case: action
+                    then:
+                      text:
+                        - " #E${ i } = ${ content|trim }"
+                        - defs:
+                            i:
+                              data: ${ i+1 }
+                  - case: observation
+                    then: ""
+                  - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
+                    then: "${ type }: ${ content|trim }\n"
         - "\n"
 
   rewoo:
@@ -120,9 +125,9 @@ defs:
                               ACTION_RAW = ACTION_RAW.replace(k, v)
                           result = ACTION_RAW
                       tool_output:
-                        if: ${ ACTION.name in tools }
+                        if: ${ ACTION.name.lower() in tools }
                         then:
-                          call: ${ tools[ACTION.name] }
+                          call: ${ tools[ACTION.name.lower()] }
                           args:
                             arguments: ${ ACTION.arguments }
                         else: "Invalid action. Valid actions are ${ tools.keys() }"

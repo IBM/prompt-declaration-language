@@ -14,7 +14,6 @@ from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-# from itertools import batched
 from pathlib import Path  # noqa: E402
 from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
@@ -98,6 +97,7 @@ from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E
 from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
+from .pdl_python_repl import PythonREPL  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
@@ -1586,6 +1586,26 @@ def process_call_code(
                         update={"code": code_s, "defsite": block.pdl__id}
                     ),
                 ) from exc
+        case "ipython":
+            try:
+                result = call_ipython(code_s, scope)
+                background = PdlList(
+                    [
+                        PdlDict(  # type: ignore
+                            {
+                                "role": state.role,
+                                "content": lazy_apply(str, result),
+                                "defsite": block.pdl__id,
+                            },
+                        ),
+                    ],  # type: ignore
+                )
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Code error: {exc!r}",
+                    loc=loc,
+                    trace=block.model_copy(update={"code": code_s}),
+                ) from exc
         case "command":
             try:
                 result = call_command(code_s, code_a)
@@ -1661,6 +1681,15 @@ def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy
     result = my_namespace.result
     sys.path.pop()
     return PdlConst(result)
+
+
+def call_ipython(code: str, scope: ScopeType) -> Any:
+    my_namespace = types.SimpleNamespace(**scope)
+    shell = PythonREPL(
+        name_to_func_mapping=my_namespace.__dict__,
+        timeout=5,
+    )
+    return PdlConst(shell(code))
 
 
 def call_command(code: str, code_a: list[str] | None) -> PdlLazy[str]:
