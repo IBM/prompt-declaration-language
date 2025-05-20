@@ -1,26 +1,26 @@
 from pdl.pdl_context import (
-    BaseMessage,
     DependentContext,
     IndependentContext,
     SerializeMode,
+    SingletonContext,
 )
-from pdl.pdl_lazy import PdlList
+from pdl.pdl_lazy import PdlDict
 
-a = BaseMessage({"role": "user", "content": "hello"})
-b = BaseMessage({"role": "user", "content": "bye"})
+a = SingletonContext(PdlDict({"role": "user", "content": "hello"}))
+b = SingletonContext(PdlDict({"role": "user", "content": "bye"}))
 
-c = BaseMessage({"role": "user", "content": "hello1"})
-d = BaseMessage({"role": "user", "content": "bye1"})
+c = SingletonContext(PdlDict({"role": "user", "content": "hello1"}))
+d = SingletonContext(PdlDict({"role": "user", "content": "bye1"}))
 
-e = BaseMessage({"role": "user", "content": "hello2"})
-f = BaseMessage({"role": "user", "content": "bye2"})
+e = SingletonContext(PdlDict({"role": "user", "content": "hello2"}))
+f = SingletonContext(PdlDict({"role": "user", "content": "bye2"}))
 
-d1 = DependentContext(PdlList([a, b]))
-d2 = DependentContext(PdlList([c, d]))
-i = IndependentContext(PdlList([e, f]))
+d1 = DependentContext([a, b])
+d2 = DependentContext([c, d])
+i = IndependentContext([e, f])
 
-p = DependentContext(PdlList([d1, d2]))
-p1 = DependentContext(PdlList([d1, i]))
+p = DependentContext([d1, d2])
+p1 = DependentContext([d1, i])
 
 
 def test_p():

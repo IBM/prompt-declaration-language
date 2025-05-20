@@ -13,18 +13,21 @@ array:
 """
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
-    assert result["result"] == [
+    assert result["result"][0].serialize(SerializeMode.LITELLM) == [
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
             "defsite": "array.0.message",
-        },
+        }
+    ]
+    assert result["result"][1].serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": "Write a Python function that implement merge sort.",
             "defsite": "array.1.message",
-        },
+        }
     ]
+
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "system",
@@ -50,11 +53,13 @@ content:
 """
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
-    assert result["result"] == {
-        "role": "user",
-        "content": ["Hello", "Bye"],
-        "defsite": "message",
-    }
+    assert result["result"].serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": ["Hello", "Bye"],
+            "defsite": "message",
+        }
+    ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
@@ -72,11 +77,13 @@ content:
 """
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
-    assert result["result"] == {
-        "role": "user",
-        "content": {"a": 1},
-        "defsite": "message",
-    }
+    assert result["result"].serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": {"a": 1},
+            "defsite": "message",
+        }
+    ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
@@ -95,11 +102,13 @@ content:
 """
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
-    assert result["result"] == {
-        "role": "user",
-        "content": '{"a": 1}',
-        "defsite": "message",
-    }
+    assert result["result"].serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": '{"a": 1}',
+            "defsite": "message",
+        }
+    ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
@@ -120,7 +129,7 @@ array:
 """
     result = exec_str(prog_str, output="all")
     context = result["scope"]["pdl_context"]
-    assert result["result"] == [
+    assert result["result"][0].serialize(SerializeMode.LITELLM) == [
         {
             "role": "tool",
             "content": 42,
