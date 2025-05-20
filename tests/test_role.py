@@ -25,8 +25,8 @@ role: Top
         {"role": "Top", "content": "Hi", "defsite": "text.1"},
         {"role": "B", "content": "B", "defsite": "text.2.text"},
     ]
-    assert scope["ctx1"] == []
-    assert scope["ctx2"] == [
+    assert scope["ctx1"].serialize(SerializeMode.LITELLM) == []
+    assert scope["ctx2"].serialize(SerializeMode.LITELLM) == [
         {"role": "A", "content": "A", "defsite": "text.0.text"},
         {"role": "Top", "content": "Hi", "defsite": "text.1"},
     ]

@@ -21,13 +21,13 @@ independent_data = {
 
 def test_independent_data():
     result = exec_dict(independent_data, output="all")
-    assert result["scope"]["a_post"] == [
+    assert result["scope"]["a_post"].serialize(SerializeMode.LITELLM) == [
         {"role": "user", "content": "pre", "defsite": "text.0"}
     ]
-    assert result["scope"]["b_post"] == [
+    assert result["scope"]["b_post"].serialize(SerializeMode.LITELLM) == [
         {"role": "user", "content": "pre", "defsite": "text.0"}
     ]
-    assert result["scope"]["post_post"] == [
+    assert result["scope"]["post_post"].serialize(SerializeMode.LITELLM) == [
         {"role": "user", "content": "pre", "defsite": "text.0"},
         {"role": "user", "content": "a", "defsite": "text.1.text.0"},
         {"role": "user", "content": "b", "defsite": "text.1.text.2"},
@@ -50,7 +50,7 @@ for_data = {
 
 def test_for_data():
     result = exec_dict(for_data, output="all")
-    assert result["scope"]["context"] == [
+    assert result["scope"]["context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "b",
             "defsite": "repeat.1.text.0",
@@ -74,7 +74,7 @@ for_dependent_data = {
 
 def test_for_dependent_data():
     result = exec_dict(for_dependent_data, output="all")
-    assert result["scope"]["context"] == [
+    assert result["scope"]["context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
             "defsite": "repeat.0.text.0",
@@ -103,9 +103,9 @@ lastof_independent_data = {
 
 def test_lastof_independent_data():
     result = exec_dict(lastof_independent_data, output="all")
-    assert result["scope"]["a_post"] == []
-    assert result["scope"]["b_post"] == []
-    assert result["scope"]["c_post"] == []
+    assert result["scope"]["a_post"].serialize(SerializeMode.LITELLM) == []
+    assert result["scope"]["b_post"].serialize(SerializeMode.LITELLM) == []
+    assert result["scope"]["c_post"].serialize(SerializeMode.LITELLM) == []
     assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
@@ -140,9 +140,9 @@ array_independent_data = {
 
 def test_array_independent_data():
     result = exec_dict(array_independent_data, output="all")
-    assert result["scope"]["a_post"] == []
-    assert result["scope"]["b_post"] == []
-    assert result["scope"]["c_post"] == []
+    assert result["scope"]["a_post"].serialize(SerializeMode.LITELLM) == []
+    assert result["scope"]["b_post"].serialize(SerializeMode.LITELLM) == []
+    assert result["scope"]["c_post"].serialize(SerializeMode.LITELLM) == []
     assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
@@ -170,4 +170,6 @@ object_independent_data = {
 
 def test_object_independent_data():
     result = exec_dict(object_independent_data)
-    assert result == {"a": "hello", "b": []}
+    print(type(result["b"]))
+    assert result["a"] == "hello"
+    assert result["b"].serialize(SerializeMode.LITELLM) == []
