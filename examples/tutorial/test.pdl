@@ -1,0 +1,14 @@
+defs:
+  m1: 
+    content: Hello
+  m2: 
+    content: Bye
+  m3:
+    content: Hello again
+  
+  mycontext: ${ (m1 + m2) * m3 }
+
+text:
+- model: ollama_chat/granite3.2:2b
+  input: ${ mycontext }
+- ${ mycontext }
