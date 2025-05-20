@@ -4,6 +4,17 @@ from typing import Any, Callable
 
 from .pdl_lazy import PdlApply, PdlDict, PdlLazy, PdlList
 
+# def _default(self, obj):
+#    return getattr(obj.__class__, "to_json", _default.default)(obj) # pyright: ignore
+
+# _default.default = JSONEncoder().default  # pyright: ignore
+# JSONEncoder.default = _default   # pyright: ignore
+
+# TODO:
+# We could make only DependentContext implement Sequence, IndependentContext could implement Set instead. Review how getItem should be implemented.
+# Should single message (result of a block) be flattened in the interpreter?
+# Serialization
+
 
 class SerializeMode(StrEnum):
     LITELLM = "litellm"
@@ -26,6 +37,9 @@ class PDLContext(Sequence):
 
     def __getitem__(self, index: int | slice):  # pyright: ignore
         return []
+
+    # def to_json(self):
+    #    return json.dumps(self.serialize(SerializeMode.LITELLM))
 
 
 class SingletonContext(PDLContext):
