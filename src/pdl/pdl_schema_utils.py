@@ -112,7 +112,7 @@ def pdltype_to_jsonschema(
         case OptionalPdlType(optional=t):
             t_schema = pdltype_to_jsonschema(t, additional_properties)
             schema = {"anyOf": [t_schema, "null"]}
-        case JsonSchemaTypePdlType(type=t) as s:
+        case JsonSchemaTypePdlType(type=t):
             if pdl_type.__pydantic_extra__ is None:
                 extra = {}
             else:
