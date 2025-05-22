@@ -439,8 +439,9 @@ def process_advanced_block(
                 raise exc from exc
             if do_retry:
                 error = f"An error occurred in a PDL block. Error details: {err_msg}"
-                print(f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n")
-                scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
+                print(f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n", file=sys.stderr)
+                if block.trace_error_on_retry:
+                    scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
                 continue
             (
                 result,

@@ -126,6 +126,8 @@ def block_to_dict(  # noqa: C901
         }
     if block.retry is not None:
         d["retry"] = expr_to_dict(block.retry, json_compatible)
+    if block.trace_error_on_retry is not None:
+        d["trace_error_on_retry"] = expr_to_dict(block.trace_error_on_retry, json_compatible)
     if isinstance(block, StructuredBlock):
         d["context"] = block.context
 

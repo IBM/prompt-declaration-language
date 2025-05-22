@@ -265,6 +265,11 @@ export type Fallback =
  */
 export type Retry = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -348,6 +353,11 @@ export type Fallback1 =
  *
  */
 export type Retry1 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry1 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -464,6 +474,11 @@ export type Fallback2 =
  */
 export type Retry2 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry2 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -574,6 +589,11 @@ export type Fallback3 =
  *
  */
 export type Retry3 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry3 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -687,6 +707,11 @@ export type Fallback4 =
  */
 export type Retry4 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry4 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -781,6 +806,11 @@ export type Fallback5 =
  *
  */
 export type Retry5 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry5 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -898,6 +928,11 @@ export type Fallback6 =
  *
  */
 export type Retry6 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry6 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -1036,6 +1071,11 @@ export type Fallback7 =
  */
 export type Retry7 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry7 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1147,6 +1187,11 @@ export type Fallback8 =
  */
 export type Retry8 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry8 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1257,6 +1302,11 @@ export type Fallback9 =
  *
  */
 export type Retry9 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry9 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -1395,6 +1445,11 @@ export type Fallback10 =
  *
  */
 export type Retry10 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry10 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -1588,6 +1643,11 @@ export type Fallback11 =
  */
 export type Retry11 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry11 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1738,6 +1798,11 @@ export type Fallback12 =
  */
 export type Retry12 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry12 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1885,6 +1950,11 @@ export type Fallback13 =
  */
 export type Retry13 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry13 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1969,6 +2039,11 @@ export type Fallback14 =
  */
 export type Retry14 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry14 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2052,6 +2127,11 @@ export type Fallback15 =
  *
  */
 export type Retry15 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry15 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2138,6 +2218,11 @@ export type Fallback16 =
  *
  */
 export type Retry16 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry16 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2253,6 +2338,11 @@ export type Fallback17 =
  *
  */
 export type Retry17 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry17 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2406,6 +2496,11 @@ export type Fallback18 =
  *
  */
 export type Retry18 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry18 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
@@ -2596,6 +2691,11 @@ export type Fallback19 =
  */
 export type Retry19 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry19 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2702,6 +2802,11 @@ export type Fallback20 =
  */
 export type Retry20 = number | null
 /**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry20 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2803,6 +2908,7 @@ export interface FunctionBlock {
   parser?: Parser20
   fallback?: Fallback20
   retry?: Retry20
+  trace_error_on_retry?: TraceErrorOnRetry20
   role?: Role20
   pdl__context?: PdlContext20
   pdl__id?: PdlId20
@@ -2939,6 +3045,7 @@ export interface CallBlock {
   parser?: Parser19
   fallback?: Fallback19
   retry?: Retry19
+  trace_error_on_retry?: TraceErrorOnRetry19
   role?: Role19
   pdl__context?: PdlContext19
   pdl__id?: PdlId19
@@ -3006,6 +3113,7 @@ export interface LitellmModelBlock {
   parser?: Parser18
   fallback?: Fallback18
   retry?: Retry18
+  trace_error_on_retry?: TraceErrorOnRetry18
   role?: Role18
   pdl__context?: PdlContext18
   pdl__id?: PdlId18
@@ -3074,6 +3182,7 @@ export interface GraniteioModelBlock {
   parser?: Parser17
   fallback?: Fallback17
   retry?: Retry17
+  trace_error_on_retry?: TraceErrorOnRetry17
   role?: Role17
   pdl__context?: PdlContext17
   pdl__id?: PdlId17
@@ -3153,6 +3262,7 @@ export interface CodeBlock {
   parser?: Parser16
   fallback?: Fallback16
   retry?: Retry16
+  trace_error_on_retry?: TraceErrorOnRetry16
   role?: Role16
   pdl__context?: PdlContext16
   pdl__id?: PdlId16
@@ -3220,6 +3330,7 @@ export interface ArgsBlock {
   parser?: Parser15
   fallback?: Fallback15
   retry?: Retry15
+  trace_error_on_retry?: TraceErrorOnRetry15
   role?: Role15
   pdl__context?: PdlContext15
   pdl__id?: PdlId15
@@ -3281,6 +3392,7 @@ export interface GetBlock {
   parser?: Parser14
   fallback?: Fallback14
   retry?: Retry14
+  trace_error_on_retry?: TraceErrorOnRetry14
   role?: Role14
   pdl__context?: PdlContext14
   pdl__id?: PdlId14
@@ -3360,6 +3472,7 @@ export interface DataBlock {
   parser?: Parser13
   fallback?: Fallback13
   retry?: Retry13
+  trace_error_on_retry?: TraceErrorOnRetry13
   role?: Role13
   pdl__context?: PdlContext13
   pdl__id?: PdlId13
@@ -3429,6 +3542,7 @@ export interface IfBlock {
   parser?: Parser12
   fallback?: Fallback12
   retry?: Retry12
+  trace_error_on_retry?: TraceErrorOnRetry12
   role?: Role12
   pdl__context?: PdlContext12
   pdl__id?: PdlId12
@@ -3508,6 +3622,7 @@ export interface MatchBlock {
   parser?: Parser11
   fallback?: Fallback11
   retry?: Retry11
+  trace_error_on_retry?: TraceErrorOnRetry11
   role?: Role11
   pdl__context?: PdlContext11
   pdl__id?: PdlId11
@@ -3577,6 +3692,7 @@ export interface RepeatBlock {
   parser?: Parser10
   fallback?: Fallback10
   retry?: Retry10
+  trace_error_on_retry?: TraceErrorOnRetry10
   role?: Role10
   pdl__context?: PdlContext10
   pdl__id?: PdlId10
@@ -3642,6 +3758,7 @@ export interface TextBlock {
   parser?: Parser9
   fallback?: Fallback9
   retry?: Retry9
+  trace_error_on_retry?: TraceErrorOnRetry9
   role?: Role9
   pdl__context?: PdlContext9
   pdl__id?: PdlId9
@@ -3701,6 +3818,7 @@ export interface LastOfBlock {
   parser?: Parser8
   fallback?: Fallback8
   retry?: Retry8
+  trace_error_on_retry?: TraceErrorOnRetry8
   role?: Role8
   pdl__context?: PdlContext8
   pdl__id?: PdlId8
@@ -3760,6 +3878,7 @@ export interface ArrayBlock {
   parser?: Parser7
   fallback?: Fallback7
   retry?: Retry7
+  trace_error_on_retry?: TraceErrorOnRetry7
   role?: Role7
   pdl__context?: PdlContext7
   pdl__id?: PdlId7
@@ -3819,6 +3938,7 @@ export interface ObjectBlock {
   parser?: Parser6
   fallback?: Fallback6
   retry?: Retry6
+  trace_error_on_retry?: TraceErrorOnRetry6
   role?: Role6
   pdl__context?: PdlContext6
   pdl__id?: PdlId6
@@ -3878,6 +3998,7 @@ export interface MessageBlock {
   parser?: Parser5
   fallback?: Fallback5
   retry?: Retry5
+  trace_error_on_retry?: TraceErrorOnRetry5
   role?: Role5
   pdl__context?: PdlContext5
   pdl__id?: PdlId5
@@ -3950,6 +4071,7 @@ export interface ReadBlock {
   parser?: Parser4
   fallback?: Fallback4
   retry?: Retry4
+  trace_error_on_retry?: TraceErrorOnRetry4
   role?: Role4
   pdl__context?: PdlContext4
   pdl__id?: PdlId4
@@ -4010,6 +4132,7 @@ export interface IncludeBlock {
   parser?: Parser3
   fallback?: Fallback3
   retry?: Retry3
+  trace_error_on_retry?: TraceErrorOnRetry3
   role?: Role3
   pdl__context?: PdlContext3
   pdl__id?: PdlId3
@@ -4070,6 +4193,7 @@ export interface ImportBlock {
   parser?: Parser2
   fallback?: Fallback2
   retry?: Retry2
+  trace_error_on_retry?: TraceErrorOnRetry2
   role?: Role2
   pdl__context?: PdlContext2
   pdl__id?: PdlId2
@@ -4129,6 +4253,7 @@ export interface ErrorBlock {
   parser?: Parser1
   fallback?: Fallback1
   retry?: Retry1
+  trace_error_on_retry?: TraceErrorOnRetry1
   role?: Role1
   pdl__context?: PdlContext1
   pdl__id?: PdlId1
@@ -4188,6 +4313,7 @@ export interface EmptyBlock {
   parser?: Parser
   fallback?: Fallback
   retry?: Retry
+  trace_error_on_retry?: TraceErrorOnRetry
   role?: Role
   pdl__context?: PdlContext
   pdl__id?: PdlId

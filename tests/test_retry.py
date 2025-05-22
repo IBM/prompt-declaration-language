@@ -1,5 +1,5 @@
 import io
-from contextlib import redirect_stdout
+from contextlib import redirect_stdout, redirect_stderr
 
 from pdl.pdl import exec_dict
 
@@ -30,7 +30,7 @@ def repeat_retry_data(n: int):
 def repeat_retry(n: int, should_be_no_error: bool = False):
     err_msg = ""
     # catch stdout string
-    with io.StringIO() as buf, redirect_stdout(buf):
+    with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
         try:
             _ = exec_dict(repeat_retry_data(n))
         except Exception:
@@ -84,7 +84,7 @@ def code_retry_data(n: int):
 def code_retry(n: int, should_be_no_error: bool = False):
     err_msg = ""
     # catch stdout string
-    with io.StringIO() as buf, redirect_stdout(buf):
+    with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
         try:
             _ = exec_dict(code_retry_data(n))
         except Exception:

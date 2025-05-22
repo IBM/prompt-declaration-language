@@ -363,6 +363,9 @@ class Block(BaseModel):
     retry: Optional[int] = None
     """The maximum number of times to retry when an error occurs within a block.
     """
+    trace_error_on_retry: Optional[bool] | str = None
+    """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+    """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     Typical roles are `system`, `user`, and `assistant`,
