@@ -49,6 +49,7 @@ export type PdlTypeType =
   | ListPdlType
   | PdlTypeType[]
   | OptionalPdlType
+  | JsonSchemaTypePdlType
   | ObjPdlType
   | {
       [k: string]: PdlTypeType
@@ -69,6 +70,7 @@ export type Exclusivemaximum1 = number | null
 export type List = PdlTypeType | ListPdlTypeConstraints
 export type Minitems = number | null
 export type Maxitems = number | null
+export type Type = string | string[]
 export type Obj = {
   [k: string]: PdlTypeType
 } | null
@@ -2778,6 +2780,13 @@ export interface ListPdlTypeConstraints {
  */
 export interface OptionalPdlType {
   optional: PdlTypeType
+}
+/**
+ * Json Schema type
+ */
+export interface JsonSchemaTypePdlType {
+  type: Type
+  [k: string]: unknown
 }
 /**
  * Optional type.

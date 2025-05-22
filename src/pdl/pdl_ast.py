@@ -228,6 +228,13 @@ class OptionalPdlType(PdlType):
     optional: "PdlTypeType"
 
 
+class JsonSchemaTypePdlType(PdlType):
+    """Json Schema type"""
+
+    model_config = ConfigDict(extra="allow")
+    type: str | list[str]
+
+
 class ObjPdlType(PdlType):
     """Optional type."""
 
@@ -245,6 +252,7 @@ PdlTypeType = TypeAliasType(
         "      ListPdlType,"
         "      list['PdlTypeType'],"
         "      OptionalPdlType,"
+        "      JsonSchemaTypePdlType,"
         "      ObjPdlType,"
         "      dict[str, 'PdlTypeType']]",
         Field(union_mode="left_to_right"),

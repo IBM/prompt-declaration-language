@@ -6116,6 +6116,31 @@
       "title": "JoinText",
       "type": "object"
     },
+    "JsonSchemaTypePdlType": {
+      "additionalProperties": true,
+      "description": "Json Schema type",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Type"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "JsonSchemaTypePdlType",
+      "type": "object"
+    },
     "LastOfBlock": {
       "additionalProperties": false,
       "description": "Return the value of the last block if the list of blocks.",
@@ -9623,6 +9648,9 @@
         },
         {
           "$ref": "#/$defs/OptionalPdlType"
+        },
+        {
+          "$ref": "#/$defs/JsonSchemaTypePdlType"
         },
         {
           "$ref": "#/$defs/ObjPdlType"

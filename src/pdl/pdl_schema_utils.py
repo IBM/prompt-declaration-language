@@ -5,6 +5,7 @@ from .pdl_ast import (
     EnumPdlType,
     FloatPdlType,
     IntPdlType,
+    JsonSchemaTypePdlType,
     ListPdlType,
     ListPdlTypeConstraints,
     ObjPdlType,
@@ -111,6 +112,12 @@ def pdltype_to_jsonschema(
         case OptionalPdlType(optional=t):
             t_schema = pdltype_to_jsonschema(t, additional_properties)
             schema = {"anyOf": [t_schema, "null"]}
+        case JsonSchemaTypePdlType(type=t) as s:
+            if pdl_type.__pydantic_extra__ is None:
+                extra = {}
+            else:
+                extra = pdl_type.__pydantic_extra__
+            schema = {"type": t, **extra}
         case ObjPdlType(obj=pdl_props):
             if pdl_props is None:
                 schema = {"type": "object"}
