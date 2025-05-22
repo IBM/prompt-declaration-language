@@ -301,22 +301,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -334,6 +318,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -415,7 +400,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+                "$ref": "#/$defs/LocalizedExpression_TypeVar_"
               },
               {
                 "type": "string"
@@ -706,22 +691,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -739,6 +708,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1238,22 +1208,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -1271,6 +1225,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1344,7 +1299,7 @@
         "call": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -1357,7 +1312,7 @@
         "args": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -1733,22 +1688,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -1766,6 +1705,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -1954,7 +1894,7 @@
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "items": {},
@@ -2247,22 +2187,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -2280,6 +2204,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -2353,7 +2278,7 @@
         "data": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -2650,22 +2575,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -2683,6 +2592,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3047,22 +2957,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -3080,6 +2974,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3610,22 +3505,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -3643,6 +3522,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -3716,9 +3596,7 @@
         "function": {
           "anyOf": [
             {
-              "additionalProperties": {
-                "$ref": "#/$defs/PdlTypeType"
-              },
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -4094,22 +3972,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -4127,6 +3989,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4483,22 +4346,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -4516,6 +4363,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4589,7 +4437,7 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -4713,6 +4561,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -4734,12 +4583,13 @@
         "backend": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             }
           ],
@@ -4749,7 +4599,7 @@
         "processor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -4765,9 +4615,10 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -5063,22 +4914,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -5096,6 +4931,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -5173,7 +5009,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "boolean"
@@ -5648,22 +5484,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -5681,6 +5501,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6121,22 +5942,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -6154,6 +5959,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -6751,22 +6557,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -6784,6 +6574,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7280,22 +7071,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -7313,6 +7088,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7386,7 +7162,7 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -7509,6 +7285,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -7533,9 +7310,10 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7686,6 +7464,7 @@
         "logit_bias": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7713,6 +7492,7 @@
         "response_format": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7762,6 +7542,7 @@
               "type": "string"
             },
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7819,6 +7600,7 @@
         "extra_headers": {
           "anyOf": [
             {
+              "additionalProperties": true,
               "type": "object"
             },
             {
@@ -7954,7 +7736,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression__ExpressionTypeT_": {
+    "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
@@ -8262,22 +8044,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -8295,6 +8061,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -8372,7 +8139,7 @@
         "match": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -8438,7 +8205,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "boolean"
@@ -8853,22 +8620,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -8886,6 +8637,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -9043,7 +8795,7 @@
         "name": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -9059,7 +8811,7 @@
         "tool_call_id": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -9378,22 +9130,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -9411,6 +9147,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -9927,7 +9664,8 @@
         "spec": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PdlTypeType"
+              "additionalProperties": true,
+              "type": "object"
             },
             {
               "type": "null"
@@ -10519,22 +10257,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -10552,6 +10274,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -10625,7 +10348,7 @@
         "read": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -10682,7 +10405,8 @@
         "spec": {
           "anyOf": [
             {
-              "$ref": "#/$defs/PdlTypeType"
+              "additionalProperties": true,
+              "type": "object"
             },
             {
               "type": "null"
@@ -10987,22 +10711,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -11020,6 +10728,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
@@ -11100,7 +10809,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   },
                   {
                     "items": {},
@@ -11124,7 +10833,7 @@
         "while": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "boolean"
@@ -11224,7 +10933,7 @@
         "until": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "boolean"
@@ -11240,7 +10949,7 @@
         "max_iterations": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "integer"
@@ -11718,22 +11427,6 @@
           "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
           "title": "Retry"
         },
-        "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
-        },
         "role": {
           "anyOf": [
             {
@@ -11751,6 +11444,7 @@
           "anyOf": [
             {
               "items": {
+                "additionalProperties": true,
                 "type": "object"
               },
               "type": "array"
