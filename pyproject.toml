@@ -20,10 +20,6 @@ dependencies = [
   "granite-io>=0.2,<0.4",
 ]
 authors = [
-  { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
-  { name="Louis Mandel", email="lmandel@us.ibm.com"},
-  { name="Claudio Spiess", email="claudiosv@users.noreply.github.com" },
-  { name="Martin Hirzel", email="hirzel@us.ibm.com" }
 ]
 description = "Prompt Declaration Language"
 readme = "README.md"
