@@ -288,6 +288,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -664,6 +693,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -1169,6 +1227,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -1635,6 +1722,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -2122,6 +2238,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2497,6 +2642,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2865,6 +3039,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -3401,6 +3604,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -3857,6 +4089,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -4217,6 +4478,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -4772,6 +5062,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -5330,6 +5649,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -5774,6 +6122,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -6402,6 +6779,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -6902,6 +7308,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -7863,6 +8298,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8426,6 +8890,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8922,6 +9415,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -10039,6 +10561,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -10478,6 +11029,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -11181,6 +11761,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
