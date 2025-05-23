@@ -317,8 +317,10 @@ def expr_to_dict(expr: ExpressionType, json_compatible: bool):
 
 
 def type_to_dict(t: PdlTypeType):
-    d: str | list | dict
+    d: None | str | list | dict
     match t:
+        case None:
+            d = None
         case "null" | "bool" | "str" | "float" | "int" | "list" | "obj":
             d = t
         case EnumPdlType():
