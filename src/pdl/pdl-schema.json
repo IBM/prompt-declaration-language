@@ -45,14 +45,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -287,6 +280,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -422,14 +444,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -664,6 +679,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -926,14 +970,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -1168,6 +1205,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -1393,14 +1459,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -1635,6 +1694,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -1879,14 +1967,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -2121,6 +2202,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -2254,14 +2364,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -2496,6 +2599,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -2623,14 +2755,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -2865,6 +2990,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -3158,14 +3312,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -3400,6 +3547,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -3585,8 +3761,23 @@
               "type": "null"
             }
           ],
-          "description": "Body of the function\n    ",
+          "description": "Body of the function.\n    ",
           "title": "Return"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "contentMediaType": "application/json",
+              "contentSchema": {},
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Function signature computed from the function definition.\n    ",
+          "title": "Signature"
         }
       },
       "required": [
@@ -3614,14 +3805,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -3856,6 +4040,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -3975,14 +4188,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -4217,6 +4423,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -4530,14 +4765,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -4772,6 +5000,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -5087,14 +5344,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -5329,6 +5579,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -5532,14 +5811,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -5774,6 +6046,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -6116,6 +6417,31 @@
       "title": "JoinText",
       "type": "object"
     },
+    "JsonSchemaTypePdlType": {
+      "additionalProperties": true,
+      "description": "Json Schema type",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Type"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "JsonSchemaTypePdlType",
+      "type": "object"
+    },
     "LastOfBlock": {
       "additionalProperties": false,
       "description": "Return the value of the last block if the list of blocks.",
@@ -6134,14 +6460,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -6376,6 +6695,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -6635,14 +6983,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -6877,6 +7218,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -7595,14 +7965,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -7837,6 +8200,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -8158,14 +8550,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -8400,6 +8785,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -8614,7 +9028,7 @@
     },
     "ObjPdlType": {
       "additionalProperties": false,
-      "description": "Optional type.",
+      "description": "Object type.",
       "properties": {
         "obj": {
           "anyOf": [
@@ -8655,14 +9069,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -8897,6 +9304,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -9430,14 +9866,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null
         },
         "pdl": {
@@ -9625,6 +10054,9 @@
           "$ref": "#/$defs/OptionalPdlType"
         },
         {
+          "$ref": "#/$defs/JsonSchemaTypePdlType"
+        },
+        {
           "$ref": "#/$defs/ObjPdlType"
         },
         {
@@ -9632,6 +10064,9 @@
             "$ref": "#/$defs/PdlTypeType"
           },
           "type": "object"
+        },
+        {
+          "type": "null"
         }
       ]
     },
@@ -9768,14 +10203,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -10010,6 +10438,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -10157,14 +10614,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null
         },
         "regex": {
@@ -10208,14 +10658,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -10450,6 +10893,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -10911,14 +11383,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -11153,6 +11618,35 @@
           "default": null,
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [

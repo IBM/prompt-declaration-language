@@ -19,6 +19,7 @@ from pydantic import (
     BeforeValidator,
     ConfigDict,
     Field,
+    Json,
     RootModel,
     TypeAdapter,
 )
@@ -228,8 +229,15 @@ class OptionalPdlType(PdlType):
     optional: "PdlTypeType"
 
 
+class JsonSchemaTypePdlType(PdlType):
+    """Json Schema type"""
+
+    model_config = ConfigDict(extra="allow")
+    type: str | list[str]
+
+
 class ObjPdlType(PdlType):
-    """Optional type."""
+    """Object type."""
 
     obj: Optional[dict[str, "PdlTypeType"]]
 
@@ -237,7 +245,8 @@ class ObjPdlType(PdlType):
 PdlTypeType = TypeAliasType(
     "PdlTypeType",
     Annotated[
-        "Union[BasePdlType,"  # pyright: ignore
+        "Union[None,"  # pyright: ignore
+        "      BasePdlType,"
         "      EnumPdlType,"
         "      StrPdlType,"
         "      FloatPdlType,"
@@ -245,6 +254,7 @@ PdlTypeType = TypeAliasType(
         "      ListPdlType,"
         "      list['PdlTypeType'],"
         "      OptionalPdlType,"
+        "      JsonSchemaTypePdlType,"
         "      ObjPdlType,"
         "      dict[str, 'PdlTypeType']]",
         Field(union_mode="left_to_right"),
@@ -261,7 +271,7 @@ class Parser(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the parser.
     """
-    spec: Optional[PdlTypeType] = None
+    spec: PdlTypeType = None
     """Expected type of the parsed value.
     """
 
@@ -340,7 +350,7 @@ class Block(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the block.
     """
-    spec: Optional[PdlTypeType] = None
+    spec: PdlTypeType = None
     """Type specification of the result of the block.
     """
     defs: dict[str, "BlockType"] = {}
@@ -359,6 +369,12 @@ class Block(BaseModel):
     """Parser to use to construct a value out of a string result."""
     fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
+    """
+    retry: Optional[int] = None
+    """The maximum number of times to retry when an error occurs within a block.
+    """
+    trace_error_on_retry: Optional[bool] | str = None
+    """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
@@ -402,8 +418,12 @@ class FunctionBlock(LeafBlock):
     """Functions parameters with their types.
     """
     returns: "BlockType" = Field(..., alias="return")
-    """Body of the function
+    """Body of the function.
     """
+    signature: Optional[Json] = None
+    """Function signature computed from the function definition.
+    """
+
     # Field for internal use
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 

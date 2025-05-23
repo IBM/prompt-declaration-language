@@ -140,6 +140,26 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         "pdl_type": "{enum: [red, green, blue]}",
         "json_schema": {"enum": ["red", "green", "blue"]},
     },
+    {
+        "pdl_type": "{ type: string }",
+        "json_schema": {"type": "string"},
+    },
+    {
+        "pdl_type": "{ type: [number, string] }",
+        "json_schema": {"type": ["number", "string"]},
+    },
+    {
+        "pdl_type": "{ type: array,  prefixItems: [ { type: number }, { type: string }, { enum: [Street, Avenue, Boulevard] }, { enum: [NW, NE, SW, SE] } ]}",
+        "json_schema": {
+            "type": "array",
+            "prefixItems": [
+                {"type": "number"},
+                {"type": "string"},
+                {"enum": ["Street", "Avenue", "Boulevard"]},
+                {"enum": ["NW", "NE", "SW", "SE"]},
+            ],
+        },
+    },
 ]
 
 

@@ -10,6 +10,7 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from functools import partial
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
@@ -99,6 +100,7 @@ from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_python_repl import PythonREPL  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
+from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
@@ -341,6 +343,34 @@ def id_with_set_first_use_nanos(timing):
     return identity
 
 
+def set_error_to_scope_for_retry(
+    scope: ScopeType, error, block_id: Optional[str] = ""
+) -> ScopeType:
+    repeating_same_error = False
+    pdl_context: Optional[LazyMessages] = scope.get("pdl_context")
+    if pdl_context is None:
+        return scope
+    if pdl_context and isinstance(pdl_context, list):
+        last_msg = pdl_context[-1]
+        last_error = last_msg["content"]
+        if last_error.endswith(error):
+            repeating_same_error = True
+    if repeating_same_error:
+        error = "The previous error occurs multiple times."
+    err_msg = {
+        "role": "assistant",
+        "content": error,
+        "defsite": block_id,
+    }
+    scope = scope | {
+        "pdl_context": lazy_messages_concat(
+            pdl_context,
+            PdlList([err_msg]),
+        )
+    }
+    return scope
+
+
 def process_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
@@ -361,52 +391,85 @@ def process_advanced_block(
     state = state.with_yield_background(
         state.yield_background and context_in_contribute(block)
     )
-    try:
-        result, background, new_scope, trace = process_block_body(
-            state, scope, block, loc
-        )
-        result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
-        background = lazy_apply(
-            id_with_set_first_use_nanos(block.pdl__timing), background
-        )
-        trace = trace.model_copy(update={"pdl__result": result})
-        if block.parser is not None:
-            parser = block.parser
-            result = lazy_apply(lambda r: parse_result(parser, r), result)
-            if init_state.yield_result and ContributeTarget.RESULT:
-                yield_result(result, block.kind)
-        if block.spec is not None and not isinstance(block, FunctionBlock):
-            result = lazy_apply(
-                lambda r: result_with_type_checking(
-                    r, block.spec, "Type errors during spec checking:", loc, trace
-                ),
-                result,
+
+    # Bind result variables here with empty values
+    result: PdlLazy[Any] = PdlConst(None)
+    background: LazyMessages = PdlList([{}])
+    new_scope: ScopeType = PdlDict({})
+    trace: AdvancedBlockType = EmptyBlock()
+
+    max_retry = block.retry if block.retry else 0
+    trial_total = max_retry + 1
+    for trial_idx in range(trial_total):
+        try:
+            result, background, new_scope, trace = process_block_body(
+                state, scope, block, loc
             )
-        if block.fallback is not None:
-            result.result()
-    except Exception as exc:
-        if block.fallback is None:
-            raise exc from exc
-        (
-            result,
-            background,
-            new_scope,
-            trace,
-        ) = process_block_of(
-            block,
-            "fallback",
-            state,
-            scope,
-            loc=loc,
-        )
-        if block.spec is not None and not isinstance(block, FunctionBlock):
-            loc = append(loc, "fallback")
-            result = lazy_apply(
-                lambda r: result_with_type_checking(
-                    r, block.spec, "Type errors during spec checking:", loc, trace
-                ),
-                result,
+            result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
+            background = lazy_apply(
+                id_with_set_first_use_nanos(block.pdl__timing), background
             )
+            trace = trace.model_copy(update={"pdl__result": result})
+            if block.parser is not None:
+                # Use partial to create a function with fixed arguments
+                parser_func = partial(parse_result, block.parser)
+                result = lazy_apply(parser_func, result)
+                if init_state.yield_result and ContributeTarget.RESULT:
+                    yield_result(result, block.kind)
+            if block.spec is not None and not isinstance(block, FunctionBlock):
+                # Use partial to create a function with fixed arguments
+                checker = partial(
+                    result_with_type_checking,
+                    spec=block.spec,
+                    msg="Type errors during spec checking:",
+                    loc=loc,
+                    trace=trace,
+                )
+                result = lazy_apply(checker, result)
+            if block.fallback is not None:
+                result.result()
+            break
+        except Exception as exc:
+            err_msg = exc.args[0]
+            do_retry = (
+                block.retry
+                and trial_idx + 1 < trial_total
+                and "Keyboard Interrupt" not in err_msg
+            )
+            if block.fallback is None and not do_retry:
+                raise exc from exc
+            if do_retry:
+                error = f"An error occurred in a PDL block. Error details: {err_msg}"
+                print(
+                    f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n",
+                    file=sys.stderr,
+                )
+                if block.trace_error_on_retry:
+                    scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
+                continue
+            (
+                result,
+                background,
+                new_scope,
+                trace,
+            ) = process_block_of(
+                block,
+                "fallback",
+                state,
+                scope,
+                loc=loc,
+            )
+            if block.spec is not None and not isinstance(block, FunctionBlock):
+                loc = append(loc, "fallback")
+                # Use partial to create a function with fixed arguments
+                checker = partial(
+                    result_with_type_checking,
+                    spec=block.spec,
+                    msg="Type errors during spec checking:",
+                    loc=loc,
+                    trace=trace,
+                )
+                result = lazy_apply(checker, result)
     if block.def_ is not None:
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
@@ -832,6 +895,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
+            signature: dict[str, Any] = {"type": "function"}
+            if block.def_ is not None:
+                signature["name"] = block.def_
+            if block.description is not None:
+                signature["description"] = block.description
+            if block.function is not None:
+                signature["parameters"] = get_json_schema(block.function, False) or {}
+            else:
+                signature["parameters"] = {}
+            closure.signature = signature
             result = PdlConst(closure)
             background = PdlList([])
             trace = closure.model_copy(update={})
@@ -914,6 +987,8 @@ def process_defs(
         state = state.with_iter(idx)
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
+        if isinstance(block, FunctionBlock) and block.def_ is None:
+            block = block.model_copy(update={"def_": x})
         result, _, _, block_trace = process_block(state, scope, block, newloc)
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace

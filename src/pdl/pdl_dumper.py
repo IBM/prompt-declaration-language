@@ -32,6 +32,7 @@ from .pdl_ast import (
     IntPdlType,
     JoinText,
     JoinType,
+    JsonSchemaTypePdlType,
     LastOfBlock,
     ListPdlType,
     ListPdlTypeConstraints,
@@ -124,6 +125,12 @@ def block_to_dict(  # noqa: C901
         d["defs"] = {
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
         }
+    if block.retry is not None:
+        d["retry"] = expr_to_dict(block.retry, json_compatible)
+    if block.trace_error_on_retry is not None:
+        d["trace_error_on_retry"] = expr_to_dict(
+            block.trace_error_on_retry, json_compatible
+        )
     if isinstance(block, StructuredBlock):
         d["context"] = block.context
 
@@ -310,8 +317,10 @@ def expr_to_dict(expr: ExpressionType, json_compatible: bool):
 
 
 def type_to_dict(t: PdlTypeType):
-    d: str | list | dict
+    d: None | str | list | dict
     match t:
+        case None:
+            d = None
         case "null" | "bool" | "str" | "float" | "int" | "list" | "obj":
             d = t
         case EnumPdlType():
@@ -377,6 +386,8 @@ def type_to_dict(t: PdlTypeType):
             assert False, "list must have only one element"
         case OptionalPdlType():
             d = {"optional": type_to_dict(t.optional)}
+        case JsonSchemaTypePdlType():
+            d = t.model_dump()
         case ObjPdlType():
             if t.obj is None:
                 d = "obj"

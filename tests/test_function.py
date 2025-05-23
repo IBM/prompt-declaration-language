@@ -20,6 +20,17 @@ def test_function_call():
     assert text == "Hello world!"
 
 
+def test_hello_signature():
+    result = exec_dict(hello_def, output="all")
+    closure = result["scope"]["hello"]
+    assert closure.signature == {
+        "name": hello_def["def"],
+        "description": hello_def["description"],
+        "type": "function",
+        "parameters": {},
+    }
+
+
 hello_params = {
     "description": "Call hello",
     "text": [
@@ -37,6 +48,22 @@ hello_params = {
 def test_function_params():
     text = exec_dict(hello_params)
     assert text == "Hello World!"
+
+
+def test_hello_params_signature():
+    result = exec_dict(hello_params, output="all")
+    closure = result["scope"]["hello"]
+    assert closure.signature == {
+        "name": hello_params["text"][0]["def"],
+        "description": hello_params["text"][0]["description"],
+        "type": "function",
+        "parameters": {
+            "type": "object",
+            "properties": {"name": {"type": "string"}},
+            "required": ["name"],
+            "additionalProperties": False,
+        },
+    }
 
 
 hello_stutter = {
