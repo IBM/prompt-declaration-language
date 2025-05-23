@@ -3764,7 +3764,7 @@
           "description": "Body of the function.\n    ",
           "title": "Return"
         },
-        "json_schema": {
+        "signature": {
           "anyOf": [
             {
               "contentMediaType": "application/json",
@@ -3776,8 +3776,8 @@
             }
           ],
           "default": null,
-          "description": "Function schema computed from the function definition.\n    ",
-          "title": "Json Schema"
+          "description": "Function signature computed from the function definition.\n    ",
+          "title": "Signature"
         }
       },
       "required": [

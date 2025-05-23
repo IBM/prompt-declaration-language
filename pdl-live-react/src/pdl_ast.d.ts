@@ -2869,10 +2869,10 @@ export type Return =
   | EmptyBlock
   | null
 /**
- * Function schema computed from the function definition.
+ * Function signature computed from the function definition.
  *
  */
-export type JsonSchema = string | null
+export type Signature = string | null
 export type PdlBlock =
   | boolean
   | number
@@ -2941,7 +2941,7 @@ export interface FunctionBlock {
   kind?: Kind20
   function: Function
   return: Return
-  json_schema?: JsonSchema
+  signature?: Signature
 }
 /**
  * Enumerated type.

@@ -895,16 +895,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
-            json_schema: dict[str, Any] = {}
+            signature: dict[str, Any] = {"type": "function"}
             if block.def_ is not None:
-                json_schema |= {"name": block.def_}
+                signature["name"] = block.def_
             if block.description is not None:
-                json_schema |= {"description": block.description}
+                signature["description"] = block.description
             if block.function is not None:
-                json_schema |= get_json_schema(block.function, False) or {}
+                signature["parameters"] = get_json_schema(block.function, False) or {}
             else:
-                json_schema |= {"type": "object"}
-            closure.json_schema = json_schema
+                signature["parameters"] = {}
+            closure.signature = signature
             result = PdlConst(closure)
             background = PdlList([])
             trace = closure.model_copy(update={})

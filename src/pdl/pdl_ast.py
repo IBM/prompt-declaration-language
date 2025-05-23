@@ -420,8 +420,8 @@ class FunctionBlock(LeafBlock):
     returns: "BlockType" = Field(..., alias="return")
     """Body of the function.
     """
-    json_schema: Optional[Json] = None
-    """Function schema computed from the function definition.
+    signature: Optional[Json] = None
+    """Function signature computed from the function definition.
     """
 
     # Field for internal use
