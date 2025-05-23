@@ -32,6 +32,7 @@ from .pdl_ast import (
     IntPdlType,
     JoinText,
     JoinType,
+    JsonSchemaTypePdlType,
     LastOfBlock,
     ListPdlType,
     ListPdlTypeConstraints,
@@ -383,6 +384,8 @@ def type_to_dict(t: PdlTypeType):
             assert False, "list must have only one element"
         case OptionalPdlType():
             d = {"optional": type_to_dict(t.optional)}
+        case JsonSchemaTypePdlType():
+            d = t.model_dump()
         case ObjPdlType():
             if t.obj is None:
                 d = "obj"
