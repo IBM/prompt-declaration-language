@@ -19,6 +19,7 @@ from pydantic import (
     BeforeValidator,
     ConfigDict,
     Field,
+    Json,
     RootModel,
     TypeAdapter,
 )
@@ -236,7 +237,7 @@ class JsonSchemaTypePdlType(PdlType):
 
 
 class ObjPdlType(PdlType):
-    """Optional type."""
+    """Object type."""
 
     obj: Optional[dict[str, "PdlTypeType"]]
 
@@ -244,7 +245,8 @@ class ObjPdlType(PdlType):
 PdlTypeType = TypeAliasType(
     "PdlTypeType",
     Annotated[
-        "Union[BasePdlType,"  # pyright: ignore
+        "Union[None,"  # pyright: ignore
+        "      BasePdlType,"
         "      EnumPdlType,"
         "      StrPdlType,"
         "      FloatPdlType,"
@@ -269,7 +271,7 @@ class Parser(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the parser.
     """
-    spec: Optional[PdlTypeType] = None
+    spec: PdlTypeType = None
     """Expected type of the parsed value.
     """
 
@@ -348,7 +350,7 @@ class Block(BaseModel):
     description: Optional[str] = None
     """Documentation associated to the block.
     """
-    spec: Optional[PdlTypeType] = None
+    spec: PdlTypeType = None
     """Type specification of the result of the block.
     """
     defs: dict[str, "BlockType"] = {}
@@ -416,8 +418,12 @@ class FunctionBlock(LeafBlock):
     """Functions parameters with their types.
     """
     returns: "BlockType" = Field(..., alias="return")
-    """Body of the function
+    """Body of the function.
     """
+    signature: Optional[Json] = None
+    """Function signature computed from the function definition.
+    """
+
     # Field for internal use
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 

@@ -183,7 +183,7 @@ class LitellmModel:
 
 
 def set_structured_decoding_parameters(
-    spec: Optional[PdlTypeType],
+    spec: PdlTypeType,
     parameters: Optional[dict[str, Any]],
 ) -> dict[str, Any]:
     if parameters is None:

@@ -45,14 +45,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -451,14 +444,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -984,14 +970,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -1480,14 +1459,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -1995,14 +1967,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -2399,14 +2364,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -2797,14 +2755,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -3361,14 +3312,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -3817,8 +3761,23 @@
               "type": "null"
             }
           ],
-          "description": "Body of the function\n    ",
+          "description": "Body of the function.\n    ",
           "title": "Return"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "contentMediaType": "application/json",
+              "contentSchema": {},
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Function signature computed from the function definition.\n    ",
+          "title": "Signature"
         }
       },
       "required": [
@@ -3846,14 +3805,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -4236,14 +4188,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -4820,14 +4765,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -5406,14 +5344,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -5880,14 +5811,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -6536,14 +6460,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -7066,14 +6983,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -8055,14 +7965,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -8647,14 +8550,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -9132,7 +9028,7 @@
     },
     "ObjPdlType": {
       "additionalProperties": false,
-      "description": "Optional type.",
+      "description": "Object type.",
       "properties": {
         "obj": {
           "anyOf": [
@@ -9173,14 +9069,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -9977,14 +9866,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null
         },
         "pdl": {
@@ -10182,6 +10064,9 @@
             "$ref": "#/$defs/PdlTypeType"
           },
           "type": "object"
+        },
+        {
+          "type": "null"
         }
       ]
     },
@@ -10318,14 +10203,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -10736,14 +10614,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null
         },
         "regex": {
@@ -10787,14 +10658,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },
@@ -11519,14 +11383,7 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
           "description": "Type specification of the result of the block.\n    "
         },

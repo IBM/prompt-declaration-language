@@ -100,6 +100,7 @@ from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_python_repl import PythonREPL  # noqa: E402
 from .pdl_scheduler import yield_background, yield_result  # noqa: E402
+from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
@@ -894,6 +895,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
+            signature: dict[str, Any] = {"type": "function"}
+            if block.def_ is not None:
+                signature["name"] = block.def_
+            if block.description is not None:
+                signature["description"] = block.description
+            if block.function is not None:
+                signature["parameters"] = get_json_schema(block.function, False) or {}
+            else:
+                signature["parameters"] = {}
+            closure.signature = signature
             result = PdlConst(closure)
             background = PdlList([])
             trace = closure.model_copy(update={})
@@ -976,6 +987,8 @@ def process_defs(
         state = state.with_iter(idx)
         state = state.with_yield_result(False)
         state = state.with_yield_background(False)
+        if isinstance(block, FunctionBlock) and block.def_ is None:
+            block = block.model_copy(update={"def_": x})
         result, _, _, block_trace = process_block(state, scope, block, newloc)
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace

@@ -40,20 +40,6 @@ export type Program =
  *
  */
 export type Description = string | null
-export type PdlTypeType =
-  | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
-  | EnumPdlType
-  | StrPdlType
-  | FloatPdlType
-  | IntPdlType
-  | ListPdlType
-  | PdlTypeType[]
-  | OptionalPdlType
-  | JsonSchemaTypePdlType
-  | ObjPdlType
-  | {
-      [k: string]: PdlTypeType
-    }
 export type Enum = unknown[]
 export type Minlength = number | null
 export type Maxlength = number | null
@@ -68,12 +54,27 @@ export type Exclusiveminimum1 = number | null
 export type Maximum1 = number | null
 export type Exclusivemaximum1 = number | null
 export type List = PdlTypeType | ListPdlTypeConstraints
-export type Minitems = number | null
-export type Maxitems = number | null
+export type PdlTypeType =
+  | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+  | EnumPdlType
+  | StrPdlType
+  | FloatPdlType
+  | IntPdlType
+  | ListPdlType
+  | PdlTypeType[]
+  | OptionalPdlType
+  | JsonSchemaTypePdlType
+  | ObjPdlType
+  | {
+      [k: string]: PdlTypeType
+    }
+  | null
 export type Type = string | string[]
 export type Obj = {
   [k: string]: PdlTypeType
 } | null
+export type Minitems = number | null
+export type Maxitems = number | null
 /**
  * Documentation associated to the block.
  *
@@ -2838,7 +2839,7 @@ export type Function = {
   [k: string]: PdlTypeType
 } | null
 /**
- * Body of the function
+ * Body of the function.
  *
  */
 export type Return =
@@ -2867,6 +2868,11 @@ export type Return =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Function signature computed from the function definition.
+ *
+ */
+export type Signature = string | null
 export type PdlBlock =
   | boolean
   | number
@@ -2903,7 +2909,21 @@ export interface FunctionBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs
   def?: Def24
   contribute?: Contribute20
@@ -2921,6 +2941,7 @@ export interface FunctionBlock {
   kind?: Kind20
   function: Function
   return: Return
+  signature?: Signature
 }
 /**
  * Enumerated type.
@@ -2980,14 +3001,6 @@ export interface ListPdlType {
   list: List
 }
 /**
- * Constraints on list type.
- */
-export interface ListPdlTypeConstraints {
-  minItems?: Minitems
-  maxItems?: Maxitems
-  [k: string]: unknown
-}
-/**
  * Optional type.
  */
 export interface OptionalPdlType {
@@ -3001,10 +3014,18 @@ export interface JsonSchemaTypePdlType {
   [k: string]: unknown
 }
 /**
- * Optional type.
+ * Object type.
  */
 export interface ObjPdlType {
   obj: Obj
+}
+/**
+ * Constraints on list type.
+ */
+export interface ListPdlTypeConstraints {
+  minItems?: Minitems
+  maxItems?: Maxitems
+  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3047,7 +3068,21 @@ export interface CallBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs1
   def?: Def23
   contribute?: Contribute19
@@ -3115,7 +3150,21 @@ export interface LitellmModelBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs2
   def?: Def22
   contribute?: Contribute18
@@ -3184,7 +3233,21 @@ export interface GraniteioModelBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs3
   def?: Def21
   contribute?: Contribute17
@@ -3264,7 +3327,21 @@ export interface CodeBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs4
   def?: Def20
   contribute?: Contribute16
@@ -3332,7 +3409,21 @@ export interface ArgsBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs5
   def?: Def19
   contribute?: Contribute15
@@ -3394,7 +3485,21 @@ export interface GetBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs6
   def?: Def18
   contribute?: Contribute14
@@ -3474,7 +3579,21 @@ export interface DataBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs7
   def?: Def17
   contribute?: Contribute13
@@ -3544,7 +3663,21 @@ export interface IfBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs8
   def?: Def16
   contribute?: Contribute12
@@ -3624,7 +3757,21 @@ export interface MatchBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs9
   def?: Def11
   contribute?: Contribute11
@@ -3694,7 +3841,21 @@ export interface RepeatBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs10
   def?: Def10
   contribute?: Contribute10
@@ -3760,7 +3921,21 @@ export interface TextBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs11
   def?: Def9
   contribute?: Contribute9
@@ -3820,7 +3995,21 @@ export interface LastOfBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs12
   def?: Def8
   contribute?: Contribute8
@@ -3880,7 +4069,21 @@ export interface ArrayBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs13
   def?: Def7
   contribute?: Contribute7
@@ -3940,7 +4143,21 @@ export interface ObjectBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs14
   def?: Def6
   contribute?: Contribute6
@@ -4000,7 +4217,21 @@ export interface MessageBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs15
   def?: Def5
   contribute?: Contribute5
@@ -4073,7 +4304,21 @@ export interface ReadBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs16
   def?: Def4
   contribute?: Contribute4
@@ -4134,7 +4379,21 @@ export interface IncludeBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs17
   def?: Def3
   contribute?: Contribute3
@@ -4195,7 +4454,21 @@ export interface ImportBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs18
   def?: Def2
   contribute?: Contribute2
@@ -4255,7 +4528,21 @@ export interface ErrorBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs19
   def?: Def1
   contribute?: Contribute1
@@ -4315,7 +4602,21 @@ export interface EmptyBlock {
    * Type specification of the result of the block.
    *
    */
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs20
   def?: Def
   contribute?: Contribute
@@ -4388,7 +4689,21 @@ export interface Table {
 }
 export interface PdlParser {
   description?: Description21
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   pdl: Pdl
 }
 /**
@@ -4396,7 +4711,21 @@ export interface PdlParser {
  */
 export interface RegexParser {
   description?: Description22
-  spec?: PdlTypeType | null
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   regex: Regex
   mode?: Mode
 }

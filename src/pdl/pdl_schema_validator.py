@@ -8,7 +8,9 @@ from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
 
 
 def type_check_args(
-    args: Optional[dict[str, Any]], params: Optional[dict[str, Any]], loc
+    args: Optional[dict[str, Any]],
+    params: Optional[dict[str, PdlTypeType]],
+    loc,
 ) -> list[str]:
     if (args == {} or args is None) and (params is None or params == {}):
         return []
@@ -35,7 +37,7 @@ def type_check_args(
     return type_check(args_copy, schema, loc)
 
 
-def type_check_spec(result: Any, spec: Optional[PdlTypeType], loc) -> list[str]:
+def type_check_spec(result: Any, spec: PdlTypeType, loc) -> list[str]:
     schema = pdltype_to_jsonschema(spec, False)
     if schema is None:
         return ["Error obtaining a valid schema from spec"]

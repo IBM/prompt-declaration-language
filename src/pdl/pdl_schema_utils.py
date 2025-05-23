@@ -44,7 +44,7 @@ _PDLTYPE_TO_JSONSCHEMA_NAME = {
 
 
 def pdltype_to_jsonschema(
-    pdl_type: Optional[PdlTypeType], additional_properties: bool
+    pdl_type: PdlTypeType, additional_properties: bool
 ) -> dict[str, Any]:
     schema: dict[str, Any]
     match pdl_type:
