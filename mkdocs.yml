@@ -6,10 +6,10 @@
 #    In the future, a GitHub action should do this.
 
 site_name: Prompt Declaration Language
-repo_url: https://github.com/IBM/prompt-declaration-language
-repo_name: IBM/prompt-declaration-language
+repo_url: https://github.com/anonymous/prompt-declaration-language
+repo_name: anonymous/prompt-declaration-language
 edit_uri: edit/main/docs/
-site_url: https://ibm.github.io/prompt-declaration-language/
+site_url: https://anonymous.github.io/prompt-declaration-language/
 
 # This unusual configuration of docs/site directories
 # is due to GitHub not presenting /site/ as an option
@@ -17,7 +17,7 @@ site_url: https://ibm.github.io/prompt-declaration-language/
 docs_dir: docs
 site_dir: _site
 
-copyright: Copyright &copy; 2024 IBM
+copyright: Copyright &copy; 2024 anonymous
 
 theme:
   name: material
@@ -49,7 +49,7 @@ nav:
   - Viewer: viewer.md
   # - AutoPDL: autopdl.md # Hide documentation for now
 
-# Define some IBM colors
+# Define some colors
 extra_css:
   - stylesheets/extra.css
 

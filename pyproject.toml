@@ -63,11 +63,11 @@ optimizer = [
 all = [ "prompt-declaration-language[dev,examples,docs,optimizer]" ]
 
 [project.urls]
-Homepage = "https://ibm.github.io/prompt-declaration-language/"
-Documentation = "https://ibm.github.io/prompt-declaration-language/tutorial/"
-Source = "https://github.com/IBM/prompt-declaration-language"
-Repository = "https://github.com/IBM/prompt-declaration-language"
-Issues = "https://github.com/IBM/prompt-declaration-language/issues"
+Homepage = "https://anonymous.github.io/prompt-declaration-language/"
+Documentation = "https://anonymous.github.io/prompt-declaration-language/tutorial/"
+Source = "https://github.com/anonymous/prompt-declaration-language"
+Repository = "https://github.com/anonymous/prompt-declaration-language"
+Issues = "https://github.com/anonymous/prompt-declaration-language/issues"
 
 [project.scripts]
 pdl = "pdl.pdl:main"

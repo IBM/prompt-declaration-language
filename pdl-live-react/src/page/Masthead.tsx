@@ -58,7 +58,7 @@ function Brand() {
   return (
     <MastheadBrand>
       <MastheadLogo
-        href="https://ibm.github.io/prompt-declaration-language/"
+        href="https://anonymous.github.io/prompt-declaration-language/"
         target="_blank"
       >
         <Flex alignItems={alignCenter}>

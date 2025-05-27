@@ -2,7 +2,7 @@ description: Chatbot, control structures, roles, contribute
 text:
 - role: system
   contribute: [context]
-  text: You are Granite, an AI language model developed by IBM in 2024.
+  text: You are Granite, an AI language model developed in 2024.
 - "Type `quit` to exit this chatbot.\n"
 - repeat:
     text:

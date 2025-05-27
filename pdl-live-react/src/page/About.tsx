@@ -18,7 +18,7 @@ export default function Welcome() {
 
       <Content component="ul">
         <Content component="li">
-          LLM Integration: Compatible with any LLM, including IBM watsonx
+          LLM Integration: Compatible with any LLM
         </Content>
         <Content component="li">Prompt Engineering:</Content>
         <Content component="li">

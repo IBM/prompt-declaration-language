@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "identifier": "com.ibm.prompt-declaration-language.app",
+  "identifier": "com.anonymous.prompt-declaration-language.app",
   "productName": "PDL",
   "mainBinaryName": "pdl",
   "build": {

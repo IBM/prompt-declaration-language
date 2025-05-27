@@ -11,7 +11,7 @@ PDL is based on the premise that interactions with an LLM are mainly for the pur
 
 PDL provides the following features:
 
-- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/), including [IBM's watsonx](https://www.ibm.com/watsonx), as well as the [Granite IO Processor](https://github.com/ibm-granite/granite-io) framework
+- Ability to use any LLM locally or remotely via [LiteLLM](https://www.litellm.ai/)
 - Ability to templatize not only prompts for one LLM call, but also composition of LLMs with tools (code and APIs). Templates can encompass tasks of larger granularity than a single LLM call
 - Control structures: variable definitions and use, conditionals, loops, functions
 - Ability to read from files and stdin, including JSON data
@@ -23,14 +23,14 @@ PDL provides the following features:
 
 The PDL interpreter takes a PDL program as input and generates data by executing its instructions (calling out to models, code, etc...).
 
-See below for a quick reference, followed by [installation notes](#interpreter_installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+See below for a quick reference, followed by [installation notes](#interpreter_installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](./tutorial.md).
 
 
 ## Quick Reference
 
-<img src="https://ibm.github.io/prompt-declaration-language/assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
+<img src="./assets/pdl_quick_reference.png" alt="PDL Quick Reference"/>
 
-(See also [PDF version](https://github.com/IBM/prompt-declaration-language/blob/main/docs/assets/pdl_quick_reference.pdf).)
+(See also [PDF version](./assets/pdl_quick_reference.pdf).)
 
 
 ## Interpreter Installation
@@ -56,7 +56,7 @@ brew install pdl
 For other platforms, see installation notes.
 
 You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
-See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+See [here](./tutorial.md#using-ollama-models) for 
 instructions on how to install an Ollama model locally.
 
 Most examples in this repository use IBM Granite models on [Ollama](https://ollama.com) and some are on [Replicate](https://replicate.com/). In order to run these examples, you need to create a free account
@@ -80,13 +80,13 @@ pdl <path/to/example.pdl>
 
 The folder `examples` contains many examples of PDL programs. They cover a variety of prompting patterns such as CoT, RAG, ReAct, and tool use.
 
-We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion.
-The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema (see [settings](https://github.com/IBM/prompt-declaration-language/blob/main/.vscode/settings.json)).  You can set up your own VSCode PDL projects similarly using the following `.vscode/settings.json` file:
+We highly recommend to edit PDL programs using an editor that support YAML with JSON Schema validation. For example, you can use VSCode with the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) and configure it to use the [PDL schema](https://github.com/anonymous/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json). This enables the editor to display error messages when the yaml deviates from the PDL syntax and grammar. It also provides code completion.
+The PDL repository has been configured so that every `*.pdl` file is associated with the PDL grammar JSONSchema.  You can set up your own VSCode PDL projects similarly using the following `.vscode/settings.json` file:
 
 ```
 {
     "yaml.schemas": {
-        "https://ibm.github.io/prompt-declaration-language/dist/pdl-schema.json": "*.pdl"
+        ./src/pdl/pdl-schema.json": "*.pdl"
     },
     "files.associations": {
         "*.pdl": "yaml",
@@ -106,7 +106,7 @@ We can pass initial data to the interpreter to populate variables used in a PDL 
 pdl --data <JSON-or-YAML-data> <my-example>
 ```
 
-For an example, see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/free_variables.pdl).
+For an example, see [file](../examples/tutorial/free_variables.pdl).
 
 This can also be done by passing a JSON or YAML file:
 
@@ -209,13 +209,13 @@ The PDL interpreter can also stream the background conversation instead of the r
 pdl --stream context examples/hello/hello.pdl
 ```
 
-See the [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial) for more information about the conversational background context and how to use roles and chat templates.
+See the [tutorial](./tutorial.md) for more information about the conversational background context and how to use roles and chat templates.
 
 
 Consider now an example from AI for code, where we want to build a prompt template for code explanation. We have a JSON file as input
 containing the source code and some information regarding the repository where it came from.
 
-For example, given the data in this JSON [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/data.yaml):
+For example, given the data in this JSON [file](../examples/code/data.yaml):
 ```yaml
 source_code:
   |
@@ -259,7 +259,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 }
 ```
 
-In PDL, this would be expressed as follows (see [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code.pdl)):
+In PDL, this would be expressed as follows (see [file](../examples/code/code.pdl)):
 
 ```yaml
 description: Code explanation example
@@ -310,7 +310,7 @@ public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) 
 The code is a Java method that takes a string `lastSourceOffset` as input and returns a `Map<String, String>`. The method uses the Jackson library to deserialize the JSON-formatted string into a map. If the input string is null or empty, an empty HashMap is returned. Otherwise, the string is deserialized into a Map using the `JSON_MAPPER.readValue()` method.
 ```
 
-Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/ground_truth.txt). See [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/code/code-eval.pdl):
+Notice that in PDL variables are used to templatize any entity in the document, not just textual prompts to LLMs. We can add a block to this document to evaluate the quality of the output using a similarity metric with respect to our [ground truth](../examples/code/ground_truth.txt). See [file](../examples/code/code-eval.pdl):
 
 ```yaml
 description: Code explanation example
@@ -438,7 +438,7 @@ The output of this program is the corresponding serialized JSON object, with the
 
 ## PDL Language Tutorial
 
-See [PDL Language Tutorial](https://ibm.github.io/prompt-declaration-language/tutorial)
+See [PDL Language Tutorial](./tutorial.md)
 
 ## Debugging Tools
 
@@ -451,7 +451,7 @@ To produce an execution trace consumable by the Live Explorer, you can run the i
 pdl <my-example> --trace <my-example_trace.json>
 ```
 
-This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Explorer](https://ibm.github.io/prompt-declaration-language/viewer/) visualizer tool. The Live Explorer shows a timeline of execution and a tile for every block. By clicking on a tile, the user can discover more information such as input/context/output for LLM calls. It also provides the ability to re-run a block for eventual live programming.
+This produces an additional file named `my-example_trace.json` that can be uploaded to the [Live Explorer](./viewer.md) visualizer tool. The Live Explorer shows a timeline of execution and a tile for every block. By clicking on a tile, the user can discover more information such as input/context/output for LLM calls. It also provides the ability to re-run a block for eventual live programming.
 
 This is similar to a spreadsheet for tabular data, where data is in the forefront and the user can inspect the formula that generates the data in each cell. In the Live Explorer, cells are not uniform but can take arbitrary extents. Clicking on them similarly reveals the part of the code that produced them.
 
@@ -460,9 +460,9 @@ This is similar to a spreadsheet for tabular data, where data is in the forefron
 PDL includes experimental support for gathering trace telemetry.  This can
 be used for debugging or performance analysis, and to see the shape of prompts sent by LiteLLM to models.
 
-For more information see [here](https://github.com/IBM/prompt-declaration-language/blob/main/docs/telemetry.md).
+For more information see [here](./telemetry.md).
 
-<img src="https://ibm.github.io/prompt-declaration-language/assets/telemetry.png" alt="Trace Telemetry"/>
+<img src="./telemetry.png" alt="Trace Telemetry"/>
 
 ## Best Practices
 
@@ -504,10 +504,3 @@ When using Granite models, we use the following defaults for model parameters:
   - `temperature`: 0.7
   - `top_p`: 0.85
   - `top_k`: 50
-
-For a complete list of issues see [here](https://github.com/IBM/prompt-declaration-language/issues).
-
-
-## Contributing to the Project
-
-See [Contributing to PDL](https://ibm.github.io/prompt-declaration-language/contrib).

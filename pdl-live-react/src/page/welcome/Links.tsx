@@ -13,7 +13,7 @@ export default function Links() {
       >
         <a
           target="_blank"
-          href="https://ibm.github.io/prompt-declaration-language"
+          href="https://anonymous.github.io/prompt-declaration-language"
         >
           Home Page
         </a>
@@ -25,7 +25,7 @@ export default function Links() {
       >
         <a
           target="_blank"
-          href="https://github.com/IBM/prompt-declaration-language"
+          href="https://github.com/anonymous/prompt-declaration-language"
         >
           GitHub
         </a>

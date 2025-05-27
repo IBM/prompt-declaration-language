@@ -2,4 +2,3 @@ description: Simple LLM interaction
 text:
 - "write a hello world example, and explain to me how to run it"
 - model: ollama_chat/granite3.2:2b
-# - model: openai/ibm-granite_granite-3.2-2b-instruct
