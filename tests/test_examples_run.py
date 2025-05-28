@@ -109,10 +109,10 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "free_variables.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
         pathlib.Path("tests")
         / "data"
-        / "optimizer_gsmk8.pdl": InputsType(
+        / "optimizer_gsm8k.pdl": InputsType(
             scope=PdlDict(
                 {
-                    "model": "ollama_chat/granite3.2:8b",
+                    "model": "watsonx_text/ibm/granite-3-8b-instruct",
                     "prompt_pattern": "cot",
                     "num_demonstrations": 0,
                     "demonstrations": [],
