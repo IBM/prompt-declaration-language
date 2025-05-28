@@ -112,7 +112,7 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         / "optimizer_gsmk8.pdl": InputsType(
             scope=PdlDict(
                 {
-                    "model": "watsonx_text/ibm/granite-3-8b-instruct",
+                    "model": "ollama_chat/granite3.2:8b",
                     "prompt_pattern": "cot",
                     "num_demonstrations": 0,
                     "demonstrations": [],
