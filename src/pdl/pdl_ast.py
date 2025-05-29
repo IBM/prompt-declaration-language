@@ -872,11 +872,24 @@ class RepeatBlock(StructuredBlock):
     repeat:
         "${ name }'s number is ${ number }\\n"
     ```
+
+    Bounded loop:
+    ```PDL
+    index: i
+    max_iterations: 5
+    repeat:
+        ${ i }
+    join:
+      as: array
+    ```
     """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
+    """
+    index: Optional[str] = None
+    """Name of the variable containing the loop iteration.
     """
     while_: ExpressionType[bool] = Field(default=True, alias="while")
     """Condition to stay at the beginning of the loop.

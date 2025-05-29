@@ -123,6 +123,9 @@ function clean_repeat_block(block: RepeatBlock) {
   if (block.for === null) {
     delete block.for
   }
+  if (block.index === null) {
+    delete block.index
+  }
   if (block.while === true) {
     delete block.while
   }

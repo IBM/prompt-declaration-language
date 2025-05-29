@@ -807,6 +807,8 @@ def process_block_body(
                 first = True
                 saved_background: PdlLazy[list[dict[str, Any]]] = PdlList([])
                 while True:
+                    if block.index is not None:
+                        scope = scope | {block.index: iidx}
                     if max_iterations is not None and iidx >= max_iterations:
                         break
                     if lengths is not None and iidx >= lengths[0]:
@@ -859,8 +861,8 @@ def process_block_body(
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
                     iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
                     stop, _ = process_condition_of(block, "until", scope, loc)
+                    iidx = iidx + 1
                     if stop:
                         break
             except PDLRuntimeError as exc:

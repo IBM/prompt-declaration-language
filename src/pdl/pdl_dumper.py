@@ -231,6 +231,8 @@ def block_to_dict(  # noqa: C901
         case RepeatBlock():
             if block.for_ is not None:
                 d["for"] = expr_to_dict(block.for_, json_compatible)
+            if block.index is not None:
+                d["index"] = block.index
             if block.while_ is not None:
                 d["while"] = expr_to_dict(block.while_, json_compatible)
             d["repeat"] = block_to_dict(block.repeat, json_compatible)

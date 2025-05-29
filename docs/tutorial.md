@@ -794,7 +794,7 @@ This results in the following output:
 {"Bob": 1, "Carol": 2, "David": 3, "Ernest": 4}
 ```
 
-### While Loop
+### Other loops
 
 The following example shows a while loop in PDL:
 
@@ -804,8 +804,14 @@ The following example shows a while loop in PDL:
 
 The `while` field indicates the looping condition and `repeat` contains the body of the loop.
 
-Notice that `for`, `while`, `until`, and `maxIterations` can all be combined in the same `repeat` block. The loop exits
-as soon as one of the exit conditions is satisfied:
+This loop can be rewritten using `max_iterations` to bound the number of iterations and `index` to name the iteration number.
+
+```yaml
+--8<-- "./examples/tutorial/loop_index.pdl"
+```
+
+
+Notice that `for`, `while`, `until`, and `max_iterations` can all be combined in the same `repeat` block. The loop exits as soon as one of the exit conditions is satisfied:
 
 ```yaml
 --8<-- "./examples/tutorial/repeat.pdl"
