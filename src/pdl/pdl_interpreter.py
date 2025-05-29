@@ -95,8 +95,8 @@ from .pdl_ast import (  # noqa: E402
     empty_block_location,
 )
 from .pdl_context import (  # noqa: E402
-    PDLContext,
     DependentContext,
+    PDLContext,
     SerializeMode,
     SingletonContext,
     add_done_callback,
@@ -367,7 +367,7 @@ def set_error_to_scope_for_retry(
         return scope
     if pdl_context:
         last_msg = pdl_context[-1]
-        last_error = last_msg["content"] # type: ignore
+        last_error = last_msg["content"]  # type: ignore
         if last_error.endswith(error):
             repeating_same_error = True
     if repeating_same_error:
@@ -377,9 +377,7 @@ def set_error_to_scope_for_retry(
         "content": error,
         "defsite": block_id,
     }
-    scope = scope | {
-        "pdl_context": pdl_context * SingletonContext(PdlDict(err_msg))
-    }
+    scope = scope | {"pdl_context": pdl_context * SingletonContext(PdlDict(err_msg))}
     return scope
 
 
@@ -418,7 +416,9 @@ def process_advanced_block(
                 state, scope, block, loc
             )
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
-            add_done_callback(id_with_set_first_use_nanos(block.pdl__timing), background)
+            add_done_callback(
+                id_with_set_first_use_nanos(block.pdl__timing), background
+            )
             trace = trace.model_copy(update={"pdl__result": result})
             if block.parser is not None:
                 # Use partial to create a function with fixed arguments
