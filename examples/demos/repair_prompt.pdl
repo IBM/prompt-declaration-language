@@ -1,0 +1,27 @@
+lastOf:
+- |
+  Given the following code:
+  ```python
+  ${code_line}
+  ```
+  and the following error:
+  ${error_msg}
+  Please repair the code!
+
+- def: raw_output
+  model: ollama_chat/granite3.2:2b
+  parameters:
+    temperature: 0
+
+- lang: python
+  def: parsed_output
+  spec: {thought: str, code_line: str}
+  code: |
+    import repair_main
+    # (In PDL, set `result` to the output you wish for your code block.)
+    result = repair_main.parse_output(raw_output)
+
+- spec: {before: str, after: str}
+  object:
+    before: ${code_line}
+    after: ${parsed_output.code_line}
