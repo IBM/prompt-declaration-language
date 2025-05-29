@@ -56,9 +56,8 @@ class SingletonContext(PDLContext):
         return 1
 
     def __getitem__(self, index: int | slice):  # pyright: ignore
-        if index == 0:
+        if index == 0 or index == -1:
             return self.message.result()
-        print(index)
         assert False
 
     def __repr__(self):  # pyright: ignore

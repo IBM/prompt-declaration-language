@@ -95,6 +95,7 @@ from .pdl_ast import (  # noqa: E402
     empty_block_location,
 )
 from .pdl_context import (  # noqa: E402
+    PDLContext,
     DependentContext,
     SerializeMode,
     SingletonContext,
@@ -361,12 +362,12 @@ def set_error_to_scope_for_retry(
     scope: ScopeType, error, block_id: Optional[str] = ""
 ) -> ScopeType:
     repeating_same_error = False
-    pdl_context: Optional[LazyMessages] = scope.get("pdl_context")
+    pdl_context: Optional[PDLContext] = scope.get("pdl_context")
     if pdl_context is None:
         return scope
-    if pdl_context and isinstance(pdl_context, list):
+    if pdl_context:
         last_msg = pdl_context[-1]
-        last_error = last_msg["content"]
+        last_error = last_msg["content"] # type: ignore
         if last_error.endswith(error):
             repeating_same_error = True
     if repeating_same_error:
@@ -377,10 +378,7 @@ def set_error_to_scope_for_retry(
         "defsite": block_id,
     }
     scope = scope | {
-        "pdl_context": lazy_messages_concat(
-            pdl_context,
-            PdlList([err_msg]),
-        )
+        "pdl_context": pdl_context * SingletonContext(PdlDict(err_msg))
     }
     return scope
 
@@ -408,7 +406,7 @@ def process_advanced_block(
 
     # Bind result variables here with empty values
     result: PdlLazy[Any] = PdlConst(None)
-    background: LazyMessages = PdlList([{}])
+    background: LazyMessages = DependentContext([])
     new_scope: ScopeType = PdlDict({})
     trace: AdvancedBlockType = EmptyBlock()
 
