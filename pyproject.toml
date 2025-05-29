@@ -17,7 +17,7 @@ dependencies = [
   "termcolor~=2.0",
   "ipython>=8,<10",
   "json-repair~=0.35",
-  "granite-io>=0.2,<0.4",
+  "granite-io>=0.2,<0.5",
 ]
 authors = [
 ]
@@ -46,7 +46,7 @@ examples = [
   "datasets>2,<4",
   "sympy~=1.0",
   "scikit-learn~=1.6.1",
-  "faiss-cpu~=1.10.0"
+  "faiss-cpu>=1.10,<1.12"
 ]
 docs = [
   "mkdocs~=1.0",
