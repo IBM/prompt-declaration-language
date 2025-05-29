@@ -107,6 +107,19 @@ TESTS_WITH_INPUT: dict[str, InputsType] = {
         pathlib.Path("examples")
         / "tutorial"
         / "free_variables.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
+        pathlib.Path("tests")
+        / "data"
+        / "optimizer_gsm8k.pdl": InputsType(
+            scope=PdlDict(
+                {
+                    "model": "watsonx_text/ibm/granite-3-8b-instruct",
+                    "prompt_pattern": "cot",
+                    "num_demonstrations": 0,
+                    "demonstrations": [],
+                    "question": "The sky currently has 4 times as many cirrus clouds as cumulus clouds, and 12 times as many cumulus clouds as cumulonimbus clouds. If the sky currently has 3 cumulonimbus clouds, how many cirrus clouds are in the sky at this moment?",
+                }
+            )
+        ),
     }.items()
 }
 
