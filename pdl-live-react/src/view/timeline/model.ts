@@ -105,8 +105,7 @@ function computeModelIter(
     .flatMap((child) => computeModelIter(child, root))
 
   // Correct for anomalies in the trace where a child may have an
-  // earlier end timestamp than its children. See
-  // https://github.com/IBM/prompt-declaration-language/pull/683
+  // earlier end timestamp than its children.
   if (root) {
     const maxEnd = childrenModel.reduce(
       (maxEnd, child) => Math.max(maxEnd, child.block.pdl__timing.end_nanos),
