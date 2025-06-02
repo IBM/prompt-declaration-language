@@ -73,7 +73,7 @@ parser:
 def test_type_result():
     prog_str = """
 text: "Hello"
-spec: int
+spec: integer
 """
     with pytest.raises(PDLRuntimeError) as exc:
         exec_str(prog_str)
@@ -126,7 +126,7 @@ def test_call_bad_args():
 defs:
     f:
       function:
-        x: int
+        x: integer
       return: Hello
 call: ${ f }
 args:

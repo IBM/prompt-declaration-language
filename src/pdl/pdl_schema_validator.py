@@ -27,7 +27,7 @@ def type_check_args(
     # if "pdl_context" not in params_copy:
     if "pdl_context" in args_copy:
         # params_copy["pdl_context"] = [{"role": "str?", "content": "str"}]
-        params_copy["pdl_context"] = ["obj"]
+        params_copy["pdl_context"] = ["object"]
     for k, v in args_copy.items():
         if isinstance(v, FunctionBlock):
             args_copy[k] = v.model_dump()

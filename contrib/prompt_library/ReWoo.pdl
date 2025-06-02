@@ -5,7 +5,7 @@ description: ReWOO (Reasoning without observation) pattern from Xu et al., (http
 defs:
   rewoo_block:
     function:
-      trajectory: { list: obj }
+      trajectory: [ object ]
     return:
       text:
         - defs:
@@ -47,12 +47,12 @@ defs:
 
   rewoo:
     function:
-      task: str
-      model: str
-      tool_schema: { list: obj }
-      tools: obj
-      trajectories: { list: list }
-      show_plans: bool
+      task: string
+      model: string
+      tool_schema: [object]
+      tools: object
+      trajectories: array
+      show_plans: boolean
     return:
       lastOf:
         - |

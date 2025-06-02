@@ -2,7 +2,7 @@ description: Hello function
 defs:
   hello:
     function:
-      name: str
+      name: string
     return: Hello ${ name }!
   alias: ${ hello }
 text:

@@ -12,8 +12,8 @@ defs:
 
   filter_tools_by_name:
     function:
-      tools: { list: obj }
-      tool_names: { list: str }
+      tools: [object]
+      tool_names: [string]
     return:
       data: ${ tools|selectattr('name', 'in', tool_names)|list }
 
@@ -58,7 +58,7 @@ defs:
     object:
       calculator:
         function:
-          arguments: obj
+          arguments: object
         return:
           lang: python
           code: |
@@ -81,7 +81,7 @@ defs:
             result = main(**arguments)
       search:
         function:
-          arguments: obj
+          arguments: object
         return:
           lastOf:
             - def: result

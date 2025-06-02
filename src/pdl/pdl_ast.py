@@ -142,7 +142,9 @@ PatternType: TypeAlias = (
 )
 
 
-BasePdlType: TypeAlias = Literal["null", "bool", "str", "float", "int", "list", "obj"]
+BasePdlType: TypeAlias = Literal[
+    "null", "boolean", "string", "number", "integer", "array", "object"
+]
 
 
 class PdlType(BaseModel):
@@ -151,95 +153,36 @@ class PdlType(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class OptionalPdlType(PdlType):
+    """Optional type."""
+
+    optional: "PdlTypeType"
+    """"""
+
+
+class JsonSchemaTypePdlType(PdlType):
+    """Json Schema with a type field."""
+
+    model_config = ConfigDict(extra="allow")
+
+    type: str | list[str]
+    """Data type that a schema should expect."""
+
+
 class EnumPdlType(PdlType):
-    """Enumerated type."""
+    """Json Schema with an `enum` field."""
+
+    model_config = ConfigDict(extra="allow")
 
     enum: list[Any]
     """List of allowed values in the type."""
 
 
-class StrPdlTypeConstraints(BaseModel):
-    """Constraints on string type."""
-
-    model_config = ConfigDict(extra="forbid")
-    minLength: Optional[int] = None
-    """Minimal length of the string."""
-    maxLength: Optional[int] = None
-    """Maximal length of the string."""
-    pattern: Optional[str] = None
-    """Regular expression that values of the type must match."""
-
-
-class StrPdlType(PdlType):
-    """String type."""
-
-    str: Optional[StrPdlTypeConstraints]
-
-
-class FloatPdlTypeConstraints(BaseModel):
-    """Constraints on float type."""
-
-    model_config = ConfigDict(extra="forbid")
-    multipleOf: Optional[float] = None
-    minimum: Optional[float] = None
-    exclusiveMinimum: Optional[float] = None
-    maximum: Optional[float] = None
-    exclusiveMaximum: Optional[float] = None
-
-
-class FloatPdlType(PdlType):
-    """Float type."""
-
-    float: Optional[FloatPdlTypeConstraints]
-
-
-class IntPdlTypeConstraints(BaseModel):
-    """Constraints on integer type."""
-
-    model_config = ConfigDict(extra="forbid")
-    minimum: Optional[float] = None
-    exclusiveMinimum: Optional[float] = None
-    maximum: Optional[float] = None
-    exclusiveMaximum: Optional[float] = None
-
-
-class IntPdlType(PdlType):
-    """Integer type."""
-
-    int: Optional[IntPdlTypeConstraints]
-
-
-class ListPdlTypeConstraints(BaseModel):
-    """Constraints on list type."""
-
-    model_config = ConfigDict(extra="allow")
-    minItems: Optional[int] = None
-    maxItems: Optional[int] = None
-
-
-class ListPdlType(PdlType):
-    """List type."""
-
-    list: Union["PdlTypeType", ListPdlTypeConstraints]
-
-
-class OptionalPdlType(PdlType):
-    """Optional type."""
-
-    optional: "PdlTypeType"
-
-
-class JsonSchemaTypePdlType(PdlType):
-    """Json Schema type"""
-
-    model_config = ConfigDict(extra="allow")
-    type: str | list[str]
-
-
-class ObjPdlType(PdlType):
+class ObjectPdlType(PdlType):
     """Object type."""
 
-    obj: Optional[dict[str, "PdlTypeType"]]
+    object: dict[str, "PdlTypeType"]
+    """Fields of the objects with their types."""
 
 
 PdlTypeType = TypeAliasType(
@@ -248,14 +191,10 @@ PdlTypeType = TypeAliasType(
         "Union[None,"  # pyright: ignore
         "      BasePdlType,"
         "      EnumPdlType,"
-        "      StrPdlType,"
-        "      FloatPdlType,"
-        "      IntPdlType,"
-        "      ListPdlType,"
         "      list['PdlTypeType'],"
         "      OptionalPdlType,"
         "      JsonSchemaTypePdlType,"
-        "      ObjPdlType,"
+        "      ObjectPdlType,"
         "      dict[str, 'PdlTypeType']]",
         Field(union_mode="left_to_right"),
     ],
@@ -682,7 +621,7 @@ class DataBlock(LeafBlock):
       parser:
         regex: "(.|\\n)*#### (?P<answer>([0-9])*)\\n*"
         spec:
-          answer: str
+          answer: string
       def: EXTRACTED_GROUND_TRUTH
     ```
     """

@@ -535,7 +535,7 @@ tools:
   object:
     hello:
       function:
-        arguments: obj
+        arguments: object
       return:
         lang: python
         code: |

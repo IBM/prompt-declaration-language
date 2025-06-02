@@ -2,8 +2,8 @@ description: Function def and call
 text:
 - def: translate
   function:
-    sentence: str
-    language: str
+    sentence: string
+    language: string
   return:
     lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"

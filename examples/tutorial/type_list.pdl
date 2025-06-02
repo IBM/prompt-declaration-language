@@ -1,4 +1,4 @@
 # Expected not to type check
 description: test
-spec: {"list": {"minItems": 0, "maxItems": 0, "str": {}}}
+spec: {type: array, minItems: 0, maxItems: 0, items: { type: string }}
 data: ["hello", "world"]

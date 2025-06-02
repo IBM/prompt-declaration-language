@@ -2,9 +2,9 @@ description: Function definition for react
 defs:
   react_inner:
     function:
-      examples: [str]
-      question: str
-      model: str
+      examples: [string]
+      question: string
+      model: string
     return:
       text:
       - defs:
@@ -102,8 +102,8 @@ defs:
 
   react:
     function:
-      question: str
-      model: str
+      question: string
+      model: string
     return:
         defs:
           examples:

@@ -4,7 +4,7 @@ defs:
 text:
 - Hello,
 - model: ${ models }
-  spec: int
+  spec: integer
   parameters:
     decoding_method: greedy
     stop:

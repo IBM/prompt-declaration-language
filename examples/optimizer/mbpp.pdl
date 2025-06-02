@@ -2,7 +2,7 @@ description: MBPP agent
 defs:
   react_code_block:
     function:
-      trajectory: { list: obj }
+      trajectory: [object]
     return:
       text:
         - for:

@@ -5,8 +5,8 @@ text:
   parameters:
     # Tell the LLM to stop after generating an exclamation point.
     stop: ['!']
-  spec: {"name": str}
+  spec: {"name": string}
   parser:
     spec:
-      name: str
+      name: string
     regex: '\s*(?P<name>.*)\s*'

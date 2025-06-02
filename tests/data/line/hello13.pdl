@@ -9,6 +9,6 @@ text:
     - def: I
       lang: python
       code: result = ${ I } + 1
-      spec: str
+      spec: string
     - "\n"
   until: '${ I == 5 }'

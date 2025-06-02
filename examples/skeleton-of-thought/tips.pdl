@@ -7,8 +7,8 @@ defs:
   
   expand_tip:
     function:
-      topic: str
-      tip: str
+      topic: string
+      tip: string
     return:
       lastOf: 
         - |
@@ -37,8 +37,8 @@ defs:
   
   suggest_tips:
     function: 
-      topic: str
-      number: int
+      topic: string
+      number: integer
     return:
       lastOf:
         - "Please act as a helpful assistant. Your job is to provide users with useful tips on a specific topic.\n"

@@ -1,7 +1,7 @@
 defs:
   foo:
     function:
-      x: int
+      x: integer
     return:
       description: nullary function
       text:

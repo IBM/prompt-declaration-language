@@ -3,7 +3,7 @@ description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/f
 defs:
   react_block:
     function:
-      trajectory: { list: obj }
+      trajectory: [ object ]
     return:
       text:
         - for:
@@ -36,11 +36,11 @@ defs:
 
   react:
     function:
-      task: str
-      model: str
-      tool_schema: { list: obj }
-      tools: obj
-      trajectories: { list: list }
+      task: string
+      model: string
+      tool_schema: [ object ]
+      tools: object
+      trajectories: [ array ]
     return:
       lastOf:
         - role: system
@@ -95,7 +95,7 @@ defs:
                   temperature: 0
                   stop: ["\n", "Obs:", "<|eom_id|>"]
                   include_stop_sequence: false
-                spec: { name: str, arguments: obj }
+                spec: { name: string, arguments: object }
               - if: ${ action != prev_action }
                 then:
                   def: observation

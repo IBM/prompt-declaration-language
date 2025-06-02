@@ -8,4 +8,4 @@ text:
   contribute: []
 - if: '${ QUESTION }'
   then: How are you?
-  spec: bool
+  spec: boolean

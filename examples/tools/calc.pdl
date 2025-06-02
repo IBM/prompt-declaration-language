@@ -20,7 +20,7 @@ text:
 - def: actions
   model: ollama_chat/granite3.2:8b
   parser: json
-  spec: [{ name: str, arguments: { expr: str }}]
+  spec: [{ name: string, arguments: { expr: string }}]
   parameters:
     drop_params: true  # This is needed because the model does not support structured decoding. It directs LiteLLM to ignore parameters sent for structured decoding.
 - "\n"
