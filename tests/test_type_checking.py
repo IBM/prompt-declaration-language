@@ -574,7 +574,12 @@ def test_hello1():
 
 hello2 = {
     "description": "Hello world!",
-    "spec": {"type": "array", "minItems": 0, "maxItems": 0, "items": {"type":"string"}},
+    "spec": {
+        "type": "array",
+        "minItems": 0,
+        "maxItems": 0,
+        "items": {"type": "string"},
+    },
     "data": ["Hello", "World"],
 }
 
