@@ -174,6 +174,20 @@ def test_for_max_iterations2():
     assert result == "012"
 
 
+def _for_max_iterations_index_prog(n):
+    return f"""
+    index: i
+    repeat: {'${i}'}
+    max_iterations: {'${'}{n}{'}'}
+    """
+
+
+def test_for_max_iterations_index1():
+    prog = _for_max_iterations_index_prog(10)
+    result = exec_str(prog)
+    assert result == "0123456789"
+
+
 def _for_until_prog(n):
     return f"""
     for:
