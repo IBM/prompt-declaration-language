@@ -2063,5 +2063,3 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     v, _ = process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
     return v
-
-
