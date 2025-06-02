@@ -1412,6 +1412,8 @@ def process_call_model(
             "pdl__model_input": model_input,
         }
     )
+
+    model_input = [{"role": m["role"], "content": m["content"]} for m in model_input]
     # Execute model call
     try:
         litellm_params = {}
@@ -2061,3 +2063,5 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     v, _ = process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
     return v
+
+
