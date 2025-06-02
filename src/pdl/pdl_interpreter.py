@@ -1412,6 +1412,8 @@ def process_call_model(
             "pdl__model_input": model_input,
         }
     )
+
+    model_input = [{"role": m["role"], "content": m["content"]} for m in model_input]
     # Execute model call
     try:
         litellm_params = {}
