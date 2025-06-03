@@ -41,40 +41,18 @@ export type Program =
  */
 export type Description = string | null
 export type Enum = unknown[]
-export type Minlength = number | null
-export type Maxlength = number | null
-export type Pattern = string | null
-export type Multipleof = number | null
-export type Minimum = number | null
-export type Exclusiveminimum = number | null
-export type Maximum = number | null
-export type Exclusivemaximum = number | null
-export type Minimum1 = number | null
-export type Exclusiveminimum1 = number | null
-export type Maximum1 = number | null
-export type Exclusivemaximum1 = number | null
-export type List = PdlTypeType | ListPdlTypeConstraints
 export type PdlTypeType =
-  | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+  | ("null" | "boolean" | "string" | "number" | "integer" | "array" | "object")
   | EnumPdlType
-  | StrPdlType
-  | FloatPdlType
-  | IntPdlType
-  | ListPdlType
   | PdlTypeType[]
   | OptionalPdlType
   | JsonSchemaTypePdlType
-  | ObjPdlType
+  | ObjectPdlType
   | {
       [k: string]: PdlTypeType
     }
   | null
 export type Type = string | string[]
-export type Obj = {
-  [k: string]: PdlTypeType
-} | null
-export type Minitems = number | null
-export type Maxitems = number | null
 /**
  * Documentation associated to the block.
  *
@@ -959,7 +937,7 @@ export type PdlId6 = string | null
 export type PdlIsLeaf6 = false
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind6 = "object"
-export type Object =
+export type Object1 =
   | {
       [k: string]:
         | boolean
@@ -2915,16 +2893,20 @@ export interface FunctionBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -2949,61 +2931,11 @@ export interface FunctionBlock {
   signature?: Signature
 }
 /**
- * Enumerated type.
+ * Json Schema with an `enum` field.
  */
 export interface EnumPdlType {
   enum: Enum
-}
-/**
- * String type.
- */
-export interface StrPdlType {
-  str: StrPdlTypeConstraints | null
-}
-/**
- * Constraints on string type.
- */
-export interface StrPdlTypeConstraints {
-  minLength?: Minlength
-  maxLength?: Maxlength
-  pattern?: Pattern
-}
-/**
- * Float type.
- */
-export interface FloatPdlType {
-  float: FloatPdlTypeConstraints | null
-}
-/**
- * Constraints on float type.
- */
-export interface FloatPdlTypeConstraints {
-  multipleOf?: Multipleof
-  minimum?: Minimum
-  exclusiveMinimum?: Exclusiveminimum
-  maximum?: Maximum
-  exclusiveMaximum?: Exclusivemaximum
-}
-/**
- * Integer type.
- */
-export interface IntPdlType {
-  int: IntPdlTypeConstraints | null
-}
-/**
- * Constraints on integer type.
- */
-export interface IntPdlTypeConstraints {
-  minimum?: Minimum1
-  exclusiveMinimum?: Exclusiveminimum1
-  maximum?: Maximum1
-  exclusiveMaximum?: Exclusivemaximum1
-}
-/**
- * List type.
- */
-export interface ListPdlType {
-  list: List
+  [k: string]: unknown
 }
 /**
  * Optional type.
@@ -3012,7 +2944,7 @@ export interface OptionalPdlType {
   optional: PdlTypeType
 }
 /**
- * Json Schema type
+ * Json Schema with a type field.
  */
 export interface JsonSchemaTypePdlType {
   type: Type
@@ -3021,16 +2953,11 @@ export interface JsonSchemaTypePdlType {
 /**
  * Object type.
  */
-export interface ObjPdlType {
-  obj: Obj
+export interface ObjectPdlType {
+  object: Object
 }
-/**
- * Constraints on list type.
- */
-export interface ListPdlTypeConstraints {
-  minItems?: Minitems
-  maxItems?: Maxitems
-  [k: string]: unknown
+export interface Object {
+  [k: string]: PdlTypeType
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3074,16 +3001,20 @@ export interface CallBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3156,16 +3087,20 @@ export interface LitellmModelBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3239,16 +3174,20 @@ export interface GraniteioModelBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3333,16 +3272,20 @@ export interface CodeBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3415,16 +3358,20 @@ export interface ArgsBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3491,16 +3438,20 @@ export interface GetBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3574,7 +3525,7 @@ export interface Defs6 {
  *   parser:
  *     regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
  *     spec:
- *       answer: str
+ *       answer: string
  *   def: EXTRACTED_GROUND_TRUTH
  * ```
  */
@@ -3585,16 +3536,20 @@ export interface DataBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3669,16 +3624,20 @@ export interface IfBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3763,16 +3722,20 @@ export interface MatchBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3857,16 +3820,20 @@ export interface RepeatBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -3938,16 +3905,20 @@ export interface TextBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4012,16 +3983,20 @@ export interface LastOfBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4086,16 +4061,20 @@ export interface ArrayBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4160,16 +4139,20 @@ export interface ObjectBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4190,7 +4173,7 @@ export interface ObjectBlock {
   pdl__is_leaf?: PdlIsLeaf6
   context?: IndependentEnum1
   kind?: Kind6
-  object: Object
+  object: Object1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4234,16 +4217,20 @@ export interface MessageBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4321,16 +4308,20 @@ export interface ReadBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4396,16 +4387,20 @@ export interface IncludeBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4471,16 +4466,20 @@ export interface ImportBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4545,16 +4544,20 @@ export interface ErrorBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4619,16 +4622,20 @@ export interface EmptyBlock {
    *
    */
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4706,16 +4713,20 @@ export interface Table {
 export interface PdlParser {
   description?: Description21
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4728,16 +4739,20 @@ export interface PdlParser {
 export interface RegexParser {
   description?: Description22
   spec?:
-    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+      )
     | EnumPdlType
-    | StrPdlType
-    | FloatPdlType
-    | IntPdlType
-    | ListPdlType
     | PdlTypeType[]
     | OptionalPdlType
     | JsonSchemaTypePdlType
-    | ObjPdlType
+    | ObjectPdlType
     | {
         [k: string]: PdlTypeType
       }
@@ -4788,9 +4803,9 @@ export interface ArrayPattern {
 }
 export interface ObjectPattern {
   def?: Def14
-  object: Object1
+  object: Object2
 }
-export interface Object1 {
+export interface Object2 {
   [k: string]:
     | boolean
     | number
