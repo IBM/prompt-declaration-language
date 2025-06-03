@@ -48,7 +48,7 @@ Follow the following instructions to set up a dev environment to get started wit
 4. Test that you can run an editable version of PDL
 
     ```
-    pdl examples/hello/hello.pdl
+    pdl examples/demo/1-hello.pdl
 
     Hello
     Hello! How can I help you today?
@@ -74,12 +74,12 @@ You are all set!
 
 ### Run examples
 
-PDL executes nightly runs for Run Examples, which searches for all the `.pdl` programs in the repo and runs the interpreter against each file. The [config file for Run Examples](../tests/test_examples_run.yaml) describes how to handle with each file. There are four conditions:
+PDL executes nightly runs for Run Examples, which searches for all the `.pdl` programs in the repo and runs the interpreter against each file. The [config file for Run Examples](../tests/test_examples_run.yaml) describes how to handle each file. There are four conditions:
 
 1. `skip`: a list of PDL files that are skipped in Run Examples
 2. `with_inputs`: PDL files that require user input. Each file name is mapped to two fields that describe how inputs are patched
-   1. `stdin`: separated by a newline, each line represents the user input
-   2. `scope`: scope for the PDL program
+   1. `stdin`: separated by a newline, each line represents the user input (string)
+   2. `scope`: scope for the PDL program (a dictionary of key-value pairs)
 3. `expected_parse_error`: a list of PDL files that expect parse errors 
 4. `expected_runtime_error`: a list of PDL files that expect runtime errors
    
@@ -99,18 +99,11 @@ pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-war
 
 #### Opening a pull request
 
-A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs. You can utilize the `update_results` when opening a PR to capture the expected results in the GH Actions environment. 
+A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
 
-When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the files you have added and modified. 
+When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the files you have added and modified. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences, as the CI does an exact string matching. 
 
-- If in the PR, `update_results: false`, 
-  - If Pytest fails, you can manually examine the failures and add the results to your PR
-- If in the PR, `update_results: true`,
-  - If Pytest fails, a GH-Actions bot will push a commit with the new results produced in the GH environment to your PR
-  - Additionally, another commit will push `update_results: false`. This is to ensure that for the nightly test, different results are not committed
-  - If you need to make other changes to your PR, make sure to pull the new changes first
-
-Your PR should always set `update_results: false` before merging. 
+Note: Your PR should always set `update_results: false` before merging, though the CI pipeline will not attempt to write the results to your PR even if you forget to set this field to `false`. 
 
 Here's a preview of the current configuration file for Run Examples:
 
