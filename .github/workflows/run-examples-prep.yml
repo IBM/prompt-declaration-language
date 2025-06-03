@@ -47,7 +47,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         runner-os: ${{ runner.os }}
         repository: ${{ github.repository }}
-        head-ref: ${{ github.head_ref }}
+        head-ref: ${{ github.event.pull_request.head.ref }}
         token: ${{ github.token }}
         update-results: 'false'
         check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
