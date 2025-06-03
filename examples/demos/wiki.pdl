@@ -25,7 +25,7 @@ text:
 - def: actions
   model: ollama_chat/granite3.3:8b
   parser: json
-  spec: [{ name: str, arguments: { topic: str }}]
+  spec: [{ name: string, arguments: { topic: string }}]
 - "\n"
 - if: ${ actions[0].name == "search" }
   then:
