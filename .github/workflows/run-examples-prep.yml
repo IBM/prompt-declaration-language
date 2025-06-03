@@ -15,6 +15,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref }}
+        repository: ${{ github.repository }}
         fetch-depth: 0
         
     # Detect modified PDL files, includes Add, Modified, but not Deleted
