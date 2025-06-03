@@ -317,7 +317,7 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
             "============================================================================"
         )
         print(f"File that produced wrong result: {file}")
-        print(f"Actual:\n{actual}\n")
+        print(f"Actual (copy everything below this line):✂️----------------------------------\n{actual}\n-----------------------------------")
 
     assert (
         len(background.failed_results.unexpected_parse_error) == 0

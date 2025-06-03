@@ -45,9 +45,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -281,6 +281,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -294,7 +323,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -309,7 +338,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -415,9 +444,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -651,6 +680,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -664,7 +722,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -679,7 +737,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -732,6 +790,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "array",
@@ -908,9 +970,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -1144,6 +1206,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -1157,7 +1248,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -1172,7 +1263,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -1368,9 +1459,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -1604,6 +1695,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -1617,7 +1737,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -1632,7 +1752,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -1698,7 +1818,8 @@
             "python",
             "command",
             "jinja",
-            "pdl"
+            "pdl",
+            "ipython"
           ],
           "title": "Lang",
           "type": "string"
@@ -1846,9 +1967,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2082,6 +2203,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2095,7 +2245,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2110,7 +2260,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2214,9 +2364,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2450,6 +2600,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2463,7 +2642,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2478,7 +2657,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2542,6 +2721,22 @@
       "title": "EmptyBlock",
       "type": "object"
     },
+    "EnumPdlType": {
+      "additionalProperties": false,
+      "description": "Enumerated type.",
+      "properties": {
+        "enum": {
+          "items": {},
+          "title": "Enum",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enum"
+      ],
+      "title": "EnumPdlType",
+      "type": "object"
+    },
     "ErrorBlock": {
       "additionalProperties": false,
       "description": "Block representing an error generated at runtime.",
@@ -2560,9 +2755,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -2796,6 +2991,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -2809,7 +3033,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -2824,7 +3048,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -2981,6 +3205,95 @@
       "title": "ErrorBlock",
       "type": "object"
     },
+    "FloatPdlType": {
+      "additionalProperties": false,
+      "description": "Float type.",
+      "properties": {
+        "float": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FloatPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "float"
+      ],
+      "title": "FloatPdlType",
+      "type": "object"
+    },
+    "FloatPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on float type.",
+      "properties": {
+        "multipleOf": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Multipleof"
+        },
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "exclusiveMinimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusiveminimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "exclusiveMaximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusivemaximum"
+        }
+      },
+      "title": "FloatPdlTypeConstraints",
+      "type": "object"
+    },
     "FunctionBlock": {
       "additionalProperties": false,
       "description": "Function declaration.",
@@ -2999,9 +3312,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -3235,6 +3548,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -3248,7 +3590,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -3263,7 +3605,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -3326,7 +3668,9 @@
         "function": {
           "anyOf": [
             {
-              "additionalProperties": true,
+              "additionalProperties": {
+                "$ref": "#/$defs/PdlTypeType"
+              },
               "type": "object"
             },
             {
@@ -3417,8 +3761,23 @@
               "type": "null"
             }
           ],
-          "description": "Body of the function\n    ",
+          "description": "Body of the function.\n    ",
           "title": "Return"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "contentMediaType": "application/json",
+              "contentSchema": {},
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Function signature computed from the function definition.\n    ",
+          "title": "Signature"
         }
       },
       "required": [
@@ -3446,9 +3805,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -3682,6 +4041,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -3695,7 +4083,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -3710,7 +4098,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -3800,9 +4188,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -4036,6 +4424,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -4049,7 +4466,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -4064,7 +4481,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -4348,9 +4765,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -4584,6 +5001,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -4597,7 +5043,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -4612,7 +5058,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -4665,6 +5111,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "if",
@@ -4894,9 +5344,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -5130,6 +5580,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -5143,7 +5622,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -5158,7 +5637,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -5332,9 +5811,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -5568,6 +6047,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -5581,7 +6089,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -5596,7 +6104,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -5649,6 +6157,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "include",
@@ -5752,6 +6264,91 @@
       "title": "IncludeBlock",
       "type": "object"
     },
+    "IndependentEnum": {
+      "enum": [
+        "independent",
+        "dependent"
+      ],
+      "title": "IndependentEnum",
+      "type": "string"
+    },
+    "IntPdlType": {
+      "additionalProperties": false,
+      "description": "Integer type.",
+      "properties": {
+        "int": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IntPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "int"
+      ],
+      "title": "IntPdlType",
+      "type": "object"
+    },
+    "IntPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on integer type.",
+      "properties": {
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "exclusiveMinimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusiveminimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "exclusiveMaximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exclusivemaximum"
+        }
+      },
+      "title": "IntPdlTypeConstraints",
+      "type": "object"
+    },
     "JoinArray": {
       "additionalProperties": false,
       "properties": {
@@ -5820,6 +6417,31 @@
       "title": "JoinText",
       "type": "object"
     },
+    "JsonSchemaTypePdlType": {
+      "additionalProperties": true,
+      "description": "Json Schema type",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Type"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "JsonSchemaTypePdlType",
+      "type": "object"
+    },
     "LastOfBlock": {
       "additionalProperties": false,
       "description": "Return the value of the last block if the list of blocks.",
@@ -5838,9 +6460,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -6074,6 +6696,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -6087,7 +6738,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -6102,7 +6753,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -6155,6 +6806,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "lastOf",
@@ -6256,6 +6911,60 @@
       "title": "LastOfBlock",
       "type": "object"
     },
+    "ListPdlType": {
+      "additionalProperties": false,
+      "description": "List type.",
+      "properties": {
+        "list": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTypeType"
+            },
+            {
+              "$ref": "#/$defs/ListPdlTypeConstraints"
+            }
+          ],
+          "title": "List"
+        }
+      },
+      "required": [
+        "list"
+      ],
+      "title": "ListPdlType",
+      "type": "object"
+    },
+    "ListPdlTypeConstraints": {
+      "additionalProperties": true,
+      "description": "Constraints on list type.",
+      "properties": {
+        "minItems": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minitems"
+        },
+        "maxItems": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxitems"
+        }
+      },
+      "title": "ListPdlTypeConstraints",
+      "type": "object"
+    },
     "LitellmModelBlock": {
       "additionalProperties": false,
       "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\n- model: ollama/granite-code:8b\n  parameters:\n    stop: ['!']\n```",
@@ -6274,9 +6983,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -6510,6 +7219,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -6523,7 +7261,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -6538,7 +7276,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -7227,9 +7965,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -7463,6 +8201,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -7476,7 +8243,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -7491,7 +8258,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -7544,6 +8311,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "match",
@@ -7779,9 +8550,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -8015,6 +8786,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8028,7 +8828,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -8043,7 +8843,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -8226,6 +9026,31 @@
       "title": "MessageBlock",
       "type": "object"
     },
+    "ObjPdlType": {
+      "additionalProperties": false,
+      "description": "Object type.",
+      "properties": {
+        "obj": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PdlTypeType"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Obj"
+        }
+      },
+      "required": [
+        "obj"
+      ],
+      "title": "ObjPdlType",
+      "type": "object"
+    },
     "ObjectBlock": {
       "additionalProperties": false,
       "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
@@ -8244,9 +9069,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -8480,6 +9305,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -8493,7 +9347,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -8508,7 +9362,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -8561,6 +9415,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "object",
@@ -8807,6 +9665,20 @@
       "title": "ObjectPattern",
       "type": "object"
     },
+    "OptionalPdlType": {
+      "additionalProperties": false,
+      "description": "Optional type.",
+      "properties": {
+        "optional": {
+          "$ref": "#/$defs/PdlTypeType"
+        }
+      },
+      "required": [
+        "optional"
+      ],
+      "title": "OptionalPdlType",
+      "type": "object"
+    },
     "OrPattern": {
       "additionalProperties": false,
       "properties": {
@@ -8994,17 +9866,8 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Spec"
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null
         },
         "pdl": {
           "anyOf": [
@@ -9152,6 +10015,61 @@
       "title": "PdlTiming",
       "type": "object"
     },
+    "PdlTypeType": {
+      "anyOf": [
+        {
+          "enum": [
+            "null",
+            "bool",
+            "str",
+            "float",
+            "int",
+            "list",
+            "obj"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/EnumPdlType"
+        },
+        {
+          "$ref": "#/$defs/StrPdlType"
+        },
+        {
+          "$ref": "#/$defs/FloatPdlType"
+        },
+        {
+          "$ref": "#/$defs/IntPdlType"
+        },
+        {
+          "$ref": "#/$defs/ListPdlType"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/PdlTypeType"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/OptionalPdlType"
+        },
+        {
+          "$ref": "#/$defs/JsonSchemaTypePdlType"
+        },
+        {
+          "$ref": "#/$defs/ObjPdlType"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/PdlTypeType"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "PdlUsage": {
       "description": "Internal data structure to record token consumption usage information.",
       "properties": {
@@ -9285,9 +10203,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -9521,6 +10439,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -9534,7 +10481,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -9549,7 +10496,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -9667,17 +10614,8 @@
           "title": "Description"
         },
         "spec": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Spec"
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null
         },
         "regex": {
           "title": "Regex",
@@ -9704,7 +10642,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```",
+      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmax_iterations: 5\nrepeat:\n    ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -9720,9 +10658,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -9956,6 +10894,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -9969,7 +10936,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -9984,7 +10951,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -10038,6 +11005,10 @@
           "title": "Pdl  Is Leaf",
           "type": "boolean"
         },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
+        },
         "kind": {
           "const": "repeat",
           "default": "repeat",
@@ -10070,6 +11041,19 @@
           "default": null,
           "description": "Arrays to iterate over.\n    ",
           "title": "For"
+        },
+        "index": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable containing the loop iteration.\n    ",
+          "title": "Index"
         },
         "while": {
           "anyOf": [
@@ -10329,6 +11313,71 @@
       "title": "RepeatBlock",
       "type": "object"
     },
+    "StrPdlType": {
+      "additionalProperties": false,
+      "description": "String type.",
+      "properties": {
+        "str": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StrPdlTypeConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "str"
+      ],
+      "title": "StrPdlType",
+      "type": "object"
+    },
+    "StrPdlTypeConstraints": {
+      "additionalProperties": false,
+      "description": "Constraints on string type.",
+      "properties": {
+        "minLength": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minlength"
+        },
+        "maxLength": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxlength"
+        },
+        "pattern": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pattern"
+        }
+      },
+      "title": "StrPdlTypeConstraints",
+      "type": "object"
+    },
     "TextBlock": {
       "additionalProperties": false,
       "description": "Create the concatenation of the stringify version of the result of each block of the list of blocks.",
@@ -10347,9 +11396,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -10583,6 +11632,35 @@
           "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
         "role": {
           "anyOf": [
             {
@@ -10596,7 +11674,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -10611,7 +11689,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [
@@ -10664,6 +11742,10 @@
           "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "text",

@@ -48,10 +48,10 @@ export function block_code_cleanup(block: PdlBlock): PdlBlock {
 function clean_model_block(block: LitellmModelBlock | GraniteioModelBlock) {
   return {
     ...block,
-    context: !hasContextInformation(block)
+    pdl__context: !hasContextInformation(block)
       ? undefined
       : JSON.parse(
-          JSON.stringify(block.context, (k, v) =>
+          JSON.stringify(block.pdl__context, (k, v) =>
             k === "defsite" ? undefined : v,
           ),
         ),
@@ -122,6 +122,9 @@ function remove_block_default_values(
 function clean_repeat_block(block: RepeatBlock) {
   if (block.for === null) {
     delete block.for
+  }
+  if (block.index === null) {
+    delete block.index
   }
   if (block.while === true) {
     delete block.while

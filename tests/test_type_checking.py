@@ -2,12 +2,18 @@ import pytest
 import yaml
 
 from pdl.pdl import exec_dict
+from pdl.pdl_ast import pdl_type_adapter
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_parser import PDLParseError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema
 
 _PDLTYPE_TO_JSONSCHEMA_TESTS = [
     {
         "pdl_type": "null",
+        "json_schema": {},
+    },
+    {
+        "pdl_type": '"null"',
         "json_schema": {"type": "null"},
     },
     {
@@ -134,12 +140,36 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         "pdl_type": "{enum: [red, green, blue]}",
         "json_schema": {"enum": ["red", "green", "blue"]},
     },
+    {
+        "pdl_type": "{ type: string }",
+        "json_schema": {"type": "string"},
+    },
+    {
+        "pdl_type": "{ type: [number, string] }",
+        "json_schema": {"type": ["number", "string"]},
+    },
+    {
+        "pdl_type": "{ type: array,  prefixItems: [ { type: number }, { type: string }, { enum: [Street, Avenue, Boulevard] }, { enum: [NW, NE, SW, SE] } ]}",
+        "json_schema": {
+            "type": "array",
+            "prefixItems": [
+                {"type": "number"},
+                {"type": "string"},
+                {"enum": ["Street", "Avenue", "Boulevard"]},
+                {"enum": ["NW", "NE", "SW", "SE"]},
+            ],
+        },
+    },
 ]
 
 
 def test_pdltype_to_jsonschema():
     for t in _PDLTYPE_TO_JSONSCHEMA_TESTS:
-        pdl_type = yaml.safe_load(t["pdl_type"])
+        t_data = yaml.safe_load(t["pdl_type"])
+        if t_data is None:
+            pdl_type = None
+        else:
+            pdl_type = pdl_type_adapter.validate_python(t_data)
         json_schema = pdltype_to_jsonschema(pdl_type, False)
         assert json_schema == t["json_schema"]
 
@@ -314,7 +344,7 @@ function_call8 = {
 
 
 def test_function_call8():
-    with pytest.raises(PDLRuntimeError):
+    with pytest.raises(PDLParseError):
         exec_dict(function_call8)
 
 

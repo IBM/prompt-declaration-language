@@ -40,6 +40,41 @@ export type Program =
  *
  */
 export type Description = string | null
+export type Enum = unknown[]
+export type Minlength = number | null
+export type Maxlength = number | null
+export type Pattern = string | null
+export type Multipleof = number | null
+export type Minimum = number | null
+export type Exclusiveminimum = number | null
+export type Maximum = number | null
+export type Exclusivemaximum = number | null
+export type Minimum1 = number | null
+export type Exclusiveminimum1 = number | null
+export type Maximum1 = number | null
+export type Exclusivemaximum1 = number | null
+export type List = PdlTypeType | ListPdlTypeConstraints
+export type PdlTypeType =
+  | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+  | EnumPdlType
+  | StrPdlType
+  | FloatPdlType
+  | IntPdlType
+  | ListPdlType
+  | PdlTypeType[]
+  | OptionalPdlType
+  | JsonSchemaTypePdlType
+  | ObjPdlType
+  | {
+      [k: string]: PdlTypeType
+    }
+  | null
+export type Type = string | string[]
+export type Obj = {
+  [k: string]: PdlTypeType
+} | null
+export type Minitems = number | null
+export type Maxitems = number | null
 /**
  * Documentation associated to the block.
  *
@@ -168,9 +203,6 @@ export type Parser =
   | RegexParser
   | null
 export type Description21 = string | null
-export type Spec21 = {
-  [k: string]: unknown
-} | null
 export type Pdl =
   | boolean
   | number
@@ -198,9 +230,6 @@ export type Pdl =
   | EmptyBlock
   | null
 export type Description22 = string | null
-export type Spec22 = {
-  [k: string]: unknown
-} | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
@@ -234,6 +263,16 @@ export type Fallback =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -243,7 +282,7 @@ export type Role = string | null
  * Current context
  *
  */
-export type Context =
+export type PdlContext =
   | {
       [k: string]: unknown
     }[]
@@ -313,6 +352,16 @@ export type Fallback1 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry1 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry1 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -322,7 +371,7 @@ export type Role1 = string | null
  * Current context
  *
  */
-export type Context1 =
+export type PdlContext1 =
   | {
       [k: string]: unknown
     }[]
@@ -423,6 +472,16 @@ export type Fallback2 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry2 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry2 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -432,7 +491,7 @@ export type Role2 = string | null
  * Current context
  *
  */
-export type Context2 =
+export type PdlContext2 =
   | {
       [k: string]: unknown
     }[]
@@ -529,6 +588,16 @@ export type Fallback3 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry3 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry3 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -538,7 +607,7 @@ export type Role3 = string | null
  * Current context
  *
  */
-export type Context3 =
+export type PdlContext3 =
   | {
       [k: string]: unknown
     }[]
@@ -549,6 +618,7 @@ export type Context3 =
  */
 export type PdlId3 = string | null
 export type PdlIsLeaf3 = false
+export type IndependentEnum = "independent" | "dependent"
 export type Kind3 = "include"
 /**
  * Name of the file to include.
@@ -635,6 +705,16 @@ export type Fallback4 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry4 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry4 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -644,7 +724,7 @@ export type Role4 = string | null
  * Current context
  *
  */
-export type Context4 =
+export type PdlContext4 =
   | {
       [k: string]: unknown
     }[]
@@ -725,6 +805,16 @@ export type Fallback5 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry5 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry5 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -734,7 +824,7 @@ export type Role5 = string | null
  * Current context
  *
  */
-export type Context5 =
+export type PdlContext5 =
   | {
       [k: string]: unknown
     }[]
@@ -837,6 +927,16 @@ export type Fallback6 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry6 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry6 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -846,7 +946,7 @@ export type Role6 = string | null
  * Current context
  *
  */
-export type Context6 =
+export type PdlContext6 =
   | {
       [k: string]: unknown
     }[]
@@ -857,6 +957,7 @@ export type Context6 =
  */
 export type PdlId6 = string | null
 export type PdlIsLeaf6 = false
+export type IndependentEnum1 = "independent" | "dependent"
 export type Kind6 = "object"
 export type Object =
   | {
@@ -968,6 +1069,16 @@ export type Fallback7 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry7 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry7 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -977,7 +1088,7 @@ export type Role7 = string | null
  * Current context
  *
  */
-export type Context7 =
+export type PdlContext7 =
   | {
       [k: string]: unknown
     }[]
@@ -988,6 +1099,7 @@ export type Context7 =
  */
 export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
+export type IndependentEnum2 = "independent" | "dependent"
 export type Kind7 = "array"
 /**
  * Elements of the array.
@@ -1073,6 +1185,16 @@ export type Fallback8 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry8 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry8 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1082,7 +1204,7 @@ export type Role8 = string | null
  * Current context
  *
  */
-export type Context8 =
+export type PdlContext8 =
   | {
       [k: string]: unknown
     }[]
@@ -1093,6 +1215,7 @@ export type Context8 =
  */
 export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
+export type IndependentEnum3 = "independent" | "dependent"
 export type Kind8 = "lastOf"
 /**
  * Sequence of blocks to execute.
@@ -1178,6 +1301,16 @@ export type Fallback9 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry9 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry9 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1187,7 +1320,7 @@ export type Role9 = string | null
  * Current context
  *
  */
-export type Context9 =
+export type PdlContext9 =
   | {
       [k: string]: unknown
     }[]
@@ -1198,6 +1331,7 @@ export type Context9 =
  */
 export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
+export type IndependentEnum4 = "independent" | "dependent"
 export type Kind9 = "text"
 /**
  * Body of the text.
@@ -1310,6 +1444,16 @@ export type Fallback10 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry10 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry10 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1319,7 +1463,7 @@ export type Role10 = string | null
  * Current context
  *
  */
-export type Context10 =
+export type PdlContext10 =
   | {
       [k: string]: unknown
     }[]
@@ -1330,6 +1474,7 @@ export type Context10 =
  */
 export type PdlId10 = string | null
 export type PdlIsLeaf10 = false
+export type IndependentEnum5 = "independent" | "dependent"
 export type Kind10 = "repeat"
 /**
  * Arrays to iterate over.
@@ -1338,6 +1483,11 @@ export type Kind10 = "repeat"
 export type For = {
   [k: string]: LocalizedExpression | unknown[] | string
 } | null
+/**
+ * Name of the variable containing the loop iteration.
+ *
+ */
+export type Index = string | null
 /**
  * Condition to stay at the beginning of the loop.
  *
@@ -1496,6 +1646,16 @@ export type Fallback11 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry11 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry11 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1505,7 +1665,7 @@ export type Role11 = string | null
  * Current context
  *
  */
-export type Context11 =
+export type PdlContext11 =
   | {
       [k: string]: unknown
     }[]
@@ -1516,6 +1676,7 @@ export type Context11 =
  */
 export type PdlId11 = string | null
 export type PdlIsLeaf11 = false
+export type IndependentEnum6 = "independent" | "dependent"
 export type Kind11 = "match"
 export type Case =
   | boolean
@@ -1640,6 +1801,16 @@ export type Fallback12 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry12 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry12 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1649,7 +1820,7 @@ export type Role12 = string | null
  * Current context
  *
  */
-export type Context12 =
+export type PdlContext12 =
   | {
       [k: string]: unknown
     }[]
@@ -1660,6 +1831,7 @@ export type Context12 =
  */
 export type PdlId12 = string | null
 export type PdlIsLeaf12 = false
+export type IndependentEnum7 = "independent" | "dependent"
 export type Kind12 = "if"
 /**
  * Condition.
@@ -1781,6 +1953,16 @@ export type Fallback13 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry13 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry13 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1790,7 +1972,7 @@ export type Role13 = string | null
  * Current context
  *
  */
-export type Context13 =
+export type PdlContext13 =
   | {
       [k: string]: unknown
     }[]
@@ -1860,6 +2042,16 @@ export type Fallback14 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry14 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry14 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1869,7 +2061,7 @@ export type Role14 = string | null
  * Current context
  *
  */
-export type Context14 =
+export type PdlContext14 =
   | {
       [k: string]: unknown
     }[]
@@ -1939,6 +2131,16 @@ export type Fallback15 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry15 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry15 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -1948,7 +2150,7 @@ export type Role15 = string | null
  * Current context
  *
  */
-export type Context15 =
+export type PdlContext15 =
   | {
       [k: string]: unknown
     }[]
@@ -2020,6 +2222,16 @@ export type Fallback16 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry16 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry16 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2029,7 +2241,7 @@ export type Role16 = string | null
  * Current context
  *
  */
-export type Context16 =
+export type PdlContext16 =
   | {
       [k: string]: unknown
     }[]
@@ -2045,7 +2257,7 @@ export type Kind16 = "code"
  * Programming language of the code.
  *
  */
-export type Lang1 = "python" | "command" | "jinja" | "pdl"
+export type Lang1 = "python" | "command" | "jinja" | "pdl" | "ipython"
 /**
  * Code to execute.
  *
@@ -2130,6 +2342,16 @@ export type Fallback17 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry17 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry17 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2139,7 +2361,7 @@ export type Role17 = string | null
  * Current context
  *
  */
-export type Context17 =
+export type PdlContext17 =
   | {
       [k: string]: unknown
     }[]
@@ -2278,6 +2500,16 @@ export type Fallback18 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry18 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry18 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2287,7 +2519,7 @@ export type Role18 = string | null
  * Current context
  *
  */
-export type Context18 =
+export type PdlContext18 =
   | {
       [k: string]: unknown
     }[]
@@ -2462,6 +2694,16 @@ export type Fallback19 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry19 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry19 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2471,7 +2713,7 @@ export type Role19 = string | null
  * Current context
  *
  */
-export type Context19 =
+export type PdlContext19 =
   | {
       [k: string]: unknown
     }[]
@@ -2563,6 +2805,16 @@ export type Fallback20 =
   | EmptyBlock
   | null
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry20 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry20 = boolean | string | null
+/**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
@@ -2572,7 +2824,7 @@ export type Role20 = string | null
  * Current context
  *
  */
-export type Context20 =
+export type PdlContext20 =
   | {
       [k: string]: unknown
     }[]
@@ -2589,10 +2841,10 @@ export type Kind20 = "function"
  *
  */
 export type Function = {
-  [k: string]: unknown
+  [k: string]: PdlTypeType
 } | null
 /**
- * Body of the function
+ * Body of the function.
  *
  */
 export type Return =
@@ -2621,6 +2873,11 @@ export type Return =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Function signature computed from the function definition.
+ *
+ */
+export type Signature = string | null
 export type PdlBlock =
   | boolean
   | number
@@ -2653,14 +2910,34 @@ export type PdlBlock =
  */
 export interface FunctionBlock {
   description?: Description
-  spec?: Spec
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs
   def?: Def24
   contribute?: Contribute20
   parser?: Parser20
   fallback?: Fallback20
+  retry?: Retry20
+  trace_error_on_retry?: TraceErrorOnRetry20
   role?: Role20
-  context?: Context20
+  pdl__context?: PdlContext20
   pdl__id?: PdlId20
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2669,12 +2946,90 @@ export interface FunctionBlock {
   kind?: Kind20
   function: Function
   return: Return
+  signature?: Signature
 }
 /**
- * Type specification of the result of the block.
- *
+ * Enumerated type.
  */
-export interface Spec {
+export interface EnumPdlType {
+  enum: Enum
+}
+/**
+ * String type.
+ */
+export interface StrPdlType {
+  str: StrPdlTypeConstraints | null
+}
+/**
+ * Constraints on string type.
+ */
+export interface StrPdlTypeConstraints {
+  minLength?: Minlength
+  maxLength?: Maxlength
+  pattern?: Pattern
+}
+/**
+ * Float type.
+ */
+export interface FloatPdlType {
+  float: FloatPdlTypeConstraints | null
+}
+/**
+ * Constraints on float type.
+ */
+export interface FloatPdlTypeConstraints {
+  multipleOf?: Multipleof
+  minimum?: Minimum
+  exclusiveMinimum?: Exclusiveminimum
+  maximum?: Maximum
+  exclusiveMaximum?: Exclusivemaximum
+}
+/**
+ * Integer type.
+ */
+export interface IntPdlType {
+  int: IntPdlTypeConstraints | null
+}
+/**
+ * Constraints on integer type.
+ */
+export interface IntPdlTypeConstraints {
+  minimum?: Minimum1
+  exclusiveMinimum?: Exclusiveminimum1
+  maximum?: Maximum1
+  exclusiveMaximum?: Exclusivemaximum1
+}
+/**
+ * List type.
+ */
+export interface ListPdlType {
+  list: List
+}
+/**
+ * Optional type.
+ */
+export interface OptionalPdlType {
+  optional: PdlTypeType
+}
+/**
+ * Json Schema type
+ */
+export interface JsonSchemaTypePdlType {
+  type: Type
+  [k: string]: unknown
+}
+/**
+ * Object type.
+ */
+export interface ObjPdlType {
+  obj: Obj
+}
+/**
+ * Constraints on list type.
+ */
+export interface ListPdlTypeConstraints {
+  minItems?: Minitems
+  maxItems?: Maxitems
   [k: string]: unknown
 }
 /**
@@ -2714,14 +3069,34 @@ export interface Defs {
  */
 export interface CallBlock {
   description?: Description1
-  spec?: Spec1
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs1
   def?: Def23
   contribute?: Contribute19
   parser?: Parser19
   fallback?: Fallback19
+  retry?: Retry19
+  trace_error_on_retry?: TraceErrorOnRetry19
   role?: Role19
-  context?: Context19
+  pdl__context?: PdlContext19
   pdl__id?: PdlId19
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2731,13 +3106,6 @@ export interface CallBlock {
   call: unknown
   args?: unknown
   pdl__trace?: PdlTrace3
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec1 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2783,14 +3151,34 @@ export interface Defs1 {
  */
 export interface LitellmModelBlock {
   description?: Description2
-  spec?: Spec2
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs2
   def?: Def22
   contribute?: Contribute18
   parser?: Parser18
   fallback?: Fallback18
+  retry?: Retry18
+  trace_error_on_retry?: TraceErrorOnRetry18
   role?: Role18
-  context?: Context18
+  pdl__context?: PdlContext18
   pdl__id?: PdlId18
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2808,13 +3196,6 @@ export interface LitellmModelBlock {
   pdl__model_input?: PdlModelInput1
   platform?: Platform1
   parameters?: Parameters1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec2 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2853,14 +3234,34 @@ export interface Defs2 {
  */
 export interface GraniteioModelBlock {
   description?: Description3
-  spec?: Spec3
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs3
   def?: Def21
   contribute?: Contribute17
   parser?: Parser17
   fallback?: Fallback17
+  retry?: Retry17
+  trace_error_on_retry?: TraceErrorOnRetry17
   role?: Role17
-  context?: Context17
+  pdl__context?: PdlContext17
   pdl__id?: PdlId17
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2880,13 +3281,6 @@ export interface GraniteioModelBlock {
   backend: Backend
   processor?: Processor
   parameters?: Parameters
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec3 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2934,14 +3328,34 @@ export interface Defs3 {
  */
 export interface CodeBlock {
   description?: Description4
-  spec?: Spec4
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs4
   def?: Def20
   contribute?: Contribute16
   parser?: Parser16
   fallback?: Fallback16
+  retry?: Retry16
+  trace_error_on_retry?: TraceErrorOnRetry16
   role?: Role16
-  context?: Context16
+  pdl__context?: PdlContext16
   pdl__id?: PdlId16
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -2950,13 +3364,6 @@ export interface CodeBlock {
   kind?: Kind16
   lang: Lang1
   code: Code
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec4 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3003,14 +3410,34 @@ export interface Defs4 {
  */
 export interface ArgsBlock {
   description?: Description5
-  spec?: Spec5
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs5
   def?: Def19
   contribute?: Contribute15
   parser?: Parser15
   fallback?: Fallback15
+  retry?: Retry15
+  trace_error_on_retry?: TraceErrorOnRetry15
   role?: Role15
-  context?: Context15
+  pdl__context?: PdlContext15
   pdl__id?: PdlId15
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3019,13 +3446,6 @@ export interface ArgsBlock {
   kind?: Kind15
   lang?: Lang
   args: Args
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec5 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3066,14 +3486,34 @@ export interface Defs5 {
  */
 export interface GetBlock {
   description?: Description6
-  spec?: Spec6
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs6
   def?: Def18
   contribute?: Contribute14
   parser?: Parser14
   fallback?: Fallback14
+  retry?: Retry14
+  trace_error_on_retry?: TraceErrorOnRetry14
   role?: Role14
-  context?: Context14
+  pdl__context?: PdlContext14
   pdl__id?: PdlId14
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3081,13 +3521,6 @@ export interface GetBlock {
   pdl__is_leaf?: PdlIsLeaf14
   kind?: Kind14
   get: Get
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec6 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3147,14 +3580,34 @@ export interface Defs6 {
  */
 export interface DataBlock {
   description?: Description7
-  spec?: Spec7
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs7
   def?: Def17
   contribute?: Contribute13
   parser?: Parser13
   fallback?: Fallback13
+  retry?: Retry13
+  trace_error_on_retry?: TraceErrorOnRetry13
   role?: Role13
-  context?: Context13
+  pdl__context?: PdlContext13
   pdl__id?: PdlId13
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3163,13 +3616,6 @@ export interface DataBlock {
   kind?: Kind13
   data: unknown
   raw?: Raw
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec7 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3218,31 +3664,45 @@ export interface Defs7 {
  */
 export interface IfBlock {
   description?: Description8
-  spec?: Spec8
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs8
   def?: Def16
   contribute?: Contribute12
   parser?: Parser12
   fallback?: Fallback12
+  retry?: Retry12
+  trace_error_on_retry?: TraceErrorOnRetry12
   role?: Role12
-  context?: Context12
+  pdl__context?: PdlContext12
   pdl__id?: PdlId12
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf12
+  context?: IndependentEnum7
   kind?: Kind12
   if: If1
   then: Then1
   else?: Else
   if_result?: IfResult
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec8 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3298,29 +3758,43 @@ export interface Defs8 {
  */
 export interface MatchBlock {
   description?: Description9
-  spec?: Spec9
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs9
   def?: Def11
   contribute?: Contribute11
   parser?: Parser11
   fallback?: Fallback11
+  retry?: Retry11
+  trace_error_on_retry?: TraceErrorOnRetry11
   role?: Role11
-  context?: Context11
+  pdl__context?: PdlContext11
   pdl__id?: PdlId11
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf11
+  context?: IndependentEnum6
   kind?: Kind11
   match: unknown
   with: With1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec9 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3365,37 +3839,62 @@ export interface Defs9 {
  * repeat:
  *     "${ name }'s number is ${ number }\n"
  * ```
+ *
+ * Bounded loop:
+ * ```PDL
+ * index: i
+ * max_iterations: 5
+ * repeat:
+ *     ${ i }
+ * join:
+ *   as: array
+ * ```
  */
 export interface RepeatBlock {
   description?: Description10
-  spec?: Spec10
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs10
   def?: Def10
   contribute?: Contribute10
   parser?: Parser10
   fallback?: Fallback10
+  retry?: Retry10
+  trace_error_on_retry?: TraceErrorOnRetry10
   role?: Role10
-  context?: Context10
+  pdl__context?: PdlContext10
   pdl__id?: PdlId10
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf10
+  context?: IndependentEnum5
   kind?: Kind10
   for?: For
+  index?: Index
   while?: While
   repeat: Repeat
   until?: Until
   max_iterations?: MaxIterations
   join?: Join
   pdl__trace?: PdlTrace2
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec10 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3434,28 +3933,42 @@ export interface Defs10 {
  */
 export interface TextBlock {
   description?: Description11
-  spec?: Spec11
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs11
   def?: Def9
   contribute?: Contribute9
   parser?: Parser9
   fallback?: Fallback9
+  retry?: Retry9
+  trace_error_on_retry?: TraceErrorOnRetry9
   role?: Role9
-  context?: Context9
+  pdl__context?: PdlContext9
   pdl__id?: PdlId9
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf9
+  context?: IndependentEnum4
   kind?: Kind9
   text: Text
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec11 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3494,28 +4007,42 @@ export interface Defs11 {
  */
 export interface LastOfBlock {
   description?: Description12
-  spec?: Spec12
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs12
   def?: Def8
   contribute?: Contribute8
   parser?: Parser8
   fallback?: Fallback8
+  retry?: Retry8
+  trace_error_on_retry?: TraceErrorOnRetry8
   role?: Role8
-  context?: Context8
+  pdl__context?: PdlContext8
   pdl__id?: PdlId8
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf8
+  context?: IndependentEnum3
   kind?: Kind8
   lastOf: Lastof
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec12 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3554,28 +4081,42 @@ export interface Defs12 {
  */
 export interface ArrayBlock {
   description?: Description13
-  spec?: Spec13
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs13
   def?: Def7
   contribute?: Contribute7
   parser?: Parser7
   fallback?: Fallback7
+  retry?: Retry7
+  trace_error_on_retry?: TraceErrorOnRetry7
   role?: Role7
-  context?: Context7
+  pdl__context?: PdlContext7
   pdl__id?: PdlId7
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf7
+  context?: IndependentEnum2
   kind?: Kind7
   array: Array
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec13 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3614,28 +4155,42 @@ export interface Defs13 {
  */
 export interface ObjectBlock {
   description?: Description14
-  spec?: Spec14
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs14
   def?: Def6
   contribute?: Contribute6
   parser?: Parser6
   fallback?: Fallback6
+  retry?: Retry6
+  trace_error_on_retry?: TraceErrorOnRetry6
   role?: Role6
-  context?: Context6
+  pdl__context?: PdlContext6
   pdl__id?: PdlId6
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf6
+  context?: IndependentEnum1
   kind?: Kind6
   object: Object
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec14 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3674,14 +4229,34 @@ export interface Defs14 {
  */
 export interface MessageBlock {
   description?: Description15
-  spec?: Spec15
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs15
   def?: Def5
   contribute?: Contribute5
   parser?: Parser5
   fallback?: Fallback5
+  retry?: Retry5
+  trace_error_on_retry?: TraceErrorOnRetry5
   role?: Role5
-  context?: Context5
+  pdl__context?: PdlContext5
   pdl__id?: PdlId5
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3691,13 +4266,6 @@ export interface MessageBlock {
   content: Content
   name?: Name
   tool_call_id?: ToolCallId
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec15 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3748,14 +4316,34 @@ export interface Defs15 {
  */
 export interface ReadBlock {
   description?: Description16
-  spec?: Spec16
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs16
   def?: Def4
   contribute?: Contribute4
   parser?: Parser4
   fallback?: Fallback4
+  retry?: Retry4
+  trace_error_on_retry?: TraceErrorOnRetry4
   role?: Role4
-  context?: Context4
+  pdl__context?: PdlContext4
   pdl__id?: PdlId4
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3765,13 +4353,6 @@ export interface ReadBlock {
   read: Read
   message?: Message
   multiline?: Multiline
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec16 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3810,29 +4391,43 @@ export interface Defs16 {
  */
 export interface IncludeBlock {
   description?: Description17
-  spec?: Spec17
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs17
   def?: Def3
   contribute?: Contribute3
   parser?: Parser3
   fallback?: Fallback3
+  retry?: Retry3
+  trace_error_on_retry?: TraceErrorOnRetry3
   role?: Role3
-  context?: Context3
+  pdl__context?: PdlContext3
   pdl__id?: PdlId3
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf3
+  context?: IndependentEnum
   kind?: Kind3
   include: Include
   pdl__trace?: PdlTrace1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec17 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3871,14 +4466,34 @@ export interface Defs17 {
  */
 export interface ImportBlock {
   description?: Description18
-  spec?: Spec18
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs18
   def?: Def2
   contribute?: Contribute2
   parser?: Parser2
   fallback?: Fallback2
+  retry?: Retry2
+  trace_error_on_retry?: TraceErrorOnRetry2
   role?: Role2
-  context?: Context2
+  pdl__context?: PdlContext2
   pdl__id?: PdlId2
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3887,13 +4502,6 @@ export interface ImportBlock {
   kind?: Kind2
   import: Import
   pdl__trace?: PdlTrace
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec18 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3932,14 +4540,34 @@ export interface Defs18 {
  */
 export interface ErrorBlock {
   description?: Description19
-  spec?: Spec19
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs19
   def?: Def1
   contribute?: Contribute1
   parser?: Parser1
   fallback?: Fallback1
+  retry?: Retry1
+  trace_error_on_retry?: TraceErrorOnRetry1
   role?: Role1
-  context?: Context1
+  pdl__context?: PdlContext1
   pdl__id?: PdlId1
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
@@ -3948,13 +4576,6 @@ export interface ErrorBlock {
   kind?: Kind1
   msg: Msg
   program: Program1
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec19 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3993,27 +4614,40 @@ export interface Defs19 {
  */
 export interface EmptyBlock {
   description?: Description20
-  spec?: Spec20
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   defs?: Defs20
   def?: Def
   contribute?: Contribute
   parser?: Parser
   fallback?: Fallback
+  retry?: Retry
+  trace_error_on_retry?: TraceErrorOnRetry
   role?: Role
-  context?: Context
+  pdl__context?: PdlContext
   pdl__id?: PdlId
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf
   kind?: Kind
-}
-/**
- * Type specification of the result of the block.
- *
- */
-export interface Spec20 {
-  [k: string]: unknown
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4071,7 +4705,21 @@ export interface Table {
 }
 export interface PdlParser {
   description?: Description21
-  spec?: Spec21
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   pdl: Pdl
 }
 /**
@@ -4079,7 +4727,21 @@ export interface PdlParser {
  */
 export interface RegexParser {
   description?: Description22
-  spec?: Spec22
+  spec?:
+    | ("null" | "bool" | "str" | "float" | "int" | "list" | "obj")
+    | EnumPdlType
+    | StrPdlType
+    | FloatPdlType
+    | IntPdlType
+    | ListPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
   regex: Regex
   mode?: Mode
 }

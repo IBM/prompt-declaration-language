@@ -270,6 +270,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
         body: Repeat(RepeatBlock {
             for_: for_,
             repeat: Box::new(repeat),
+            join: None,
         }),
     })
 }

@@ -19,14 +19,45 @@ pub enum Role {
     Tool,
 }
 
+/// Function used to parse to value (https://docs.python.org/3/library/re.html).
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum RegexMode {
+    #[serde(rename = "search")]
+    Search,
+    #[serde(rename = "match")]
+    Match,
+    #[serde(rename = "fullmatch")]
+    Fullmatch,
+    #[serde(rename = "split")]
+    Split,
+    #[serde(rename = "findall")]
+    Findall,
+}
+
+/// A regular expression parser
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct RegexParser {
+    /// Regular expression to parse the value
+    pub regex: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<RegexMode>,
+
+    /// Expected type of the parsed value
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spec: Option<IndexMap<String, PdlType>>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum PdlParser {
     #[serde(rename = "json")]
     Json,
-    /*#[serde(rename = "jsonl")]
-    Jsonl,*/
+    #[serde(rename = "jsonl")]
+    Jsonl,
     #[serde(rename = "yaml")]
     Yaml,
+    #[serde(untagged)]
+    Regex(RegexParser),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -89,14 +120,25 @@ impl Timing {
 #[serde(default)]
 #[builder(setter(into, strip_option), default)]
 pub struct Metadata {
+    /// Documentation associated to the block
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
+    /// Set of definitions executed before the execution of the block
     #[serde(skip_serializing_if = "Option::is_none")]
     pub defs: Option<IndexMap<String, PdlBlock>>,
 
+    /// Name of the variable used to store the result of the execution of the block
     #[serde(skip_serializing_if = "Option::is_none")]
     pub def: Option<String>,
+
+    /// Indicate if the block contributes to the result and background context
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contribute: Option<Vec<String>>, // TODO
+
+    /// Type specification of the result of the block
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spec: Option<Value>,
 
     #[serde(rename = "pdl__id", skip_serializing_if = "Option::is_none")]
     pub pdl_id: Option<String>,
@@ -284,11 +326,9 @@ pub struct ModelBlock {
     pub input: Option<Box<PdlBlock>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "modelResponse")]
+    #[serde(rename = "modelResponse", skip_serializing_if = "Option::is_none")]
     pub model_response: Option<String>,
-    #[serde(rename = "pdl__usage")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "pdl__usage", skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
 
     /// The result of evaluating the `input` field (if given)
@@ -305,6 +345,37 @@ pub struct ModelBlock {
 pub enum ListOrString {
     String(String),
     List(Vec<Value>),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum IterationType {
+    #[serde(rename = "lastOf")]
+    LastOf,
+    #[serde(rename = "array")]
+    Array,
+    #[serde(rename = "object")]
+    Object,
+    #[serde(rename = "text")]
+    Text,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct JoinAs {
+    #[serde(rename = "as")]
+    as_: IterationType,
+}
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct JoinAsWith {
+    #[serde(rename = "as")]
+    as_: IterationType,
+    with: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum JoinType {
+    AsWith(JoinAsWith),
+    As(JoinAs),
 }
 
 /// Repeat the execution of a block.
@@ -326,6 +397,10 @@ pub struct RepeatBlock {
 
     /// Body of the loop
     pub repeat: Box<PdlBlock>,
+
+    /// Define how to combine the result of each iteration
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub join: Option<JoinType>,
 }
 
 /// Create a message
@@ -672,5 +747,17 @@ impl From<&bool> for PdlResult {
 impl From<Number> for PdlResult {
     fn from(n: Number) -> Self {
         PdlResult::Number(n)
+    }
+}
+impl PartialEq for PdlResult {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (PdlResult::Number(a), PdlResult::Number(b)) => a == b,
+            (PdlResult::String(a), PdlResult::String(b)) => a == b,
+            (PdlResult::Bool(a), PdlResult::Bool(b)) => a == b,
+            (PdlResult::List(a), PdlResult::List(b)) => a == b,
+            (PdlResult::Dict(a), PdlResult::Dict(b)) => a == b,
+            _ => false,
+        }
     }
 }

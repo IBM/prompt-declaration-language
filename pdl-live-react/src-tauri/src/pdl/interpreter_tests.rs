@@ -4,7 +4,7 @@ mod tests {
     use serde_json::json;
 
     use crate::pdl::{
-        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, Scope},
+        ast::{Block, Body::*, ModelBlockBuilder, PdlBlock, PdlBlock::Advanced, PdlResult, Scope},
         interpreter::{RunOptions, load_scope, run_json_sync as run_json, run_sync as run},
     };
 
@@ -18,11 +18,11 @@ mod tests {
         o
     }
 
-    fn non_streaming<'a>() -> RunOptions<'a> {
+    /* fn non_streaming<'a>() -> RunOptions<'a> {
         let mut o: RunOptions = Default::default();
         o.stream = false;
         o
-    }
+    } */
 
     fn initial_scope() -> Scope {
         Default::default()
@@ -202,6 +202,29 @@ mod tests {
         assert_eq!(messages[0].content, json);
         assert_eq!(messages[1].role, MessageRole::User);
         assert_eq!(messages[1].content, "value");
+        Ok(())
+    }
+
+    #[test]
+    fn text_parser_jsonl() -> Result<(), Box<dyn Error>> {
+        let json = "{\"key\":\"value\"}
+{\"key2\":\"value2\"}";
+        let program = json!({
+            "text": [
+                { "def": "foo", "parser": "jsonl", "text": [json] },
+                "${ foo[0].key }",
+                "${ foo[1].key2 }"
+            ]
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 3);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, json);
+        assert_eq!(messages[1].role, MessageRole::User);
+        assert_eq!(messages[1].content, "value");
+        assert_eq!(messages[2].role, MessageRole::User);
+        assert_eq!(messages[2].content, "value2");
         Ok(())
     }
 
@@ -657,9 +680,71 @@ mod tests {
     }
 
     #[test]
+    fn regex_findall() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "mode": "findall",
+                "spec": {
+                    "answer1": "str",
+                    "answer2": "str"
+                }
+            }
+        });
+
+        let (_, messages, _) = run_json(program, streaming(), initial_scope())?;
+        assert_eq!(messages.len(), 1);
+        assert_eq!(messages[0].role, MessageRole::User);
+        assert_eq!(messages[0].content, "[\"999\",\"888\"]");
+        Ok(())
+    }
+
+    #[test]
+    fn regex_plain_1() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "spec": {
+                    "answer1": "str",
+                    "answer2": "str"
+                }
+            }
+        });
+
+        let (result, _, _) = run_json(program, streaming(), initial_scope())?;
+        let mut m = ::std::collections::HashMap::new();
+        m.insert("answer1".into(), "999".into());
+        m.insert("answer2".into(), "888".into());
+        assert_eq!(result, PdlResult::Dict(m));
+        Ok(())
+    }
+
+    #[test]
+    fn regex_plain_2() -> Result<(), Box<dyn Error>> {
+        let program = json!({
+            "data": "aaa999bbb888",
+            "parser": {
+                "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
+                "spec": {
+                    "answer1": "str",
+                }
+            }
+        });
+
+        let (result, _, _) = run_json(program, streaming(), initial_scope())?;
+        let mut m = ::std::collections::HashMap::new();
+        m.insert("answer1".into(), "999".into());
+        assert_eq!(result, PdlResult::Dict(m));
+        Ok(())
+    }
+
+    #[test]
     fn bee_1() -> Result<(), Box<dyn Error>> {
         let program = crate::compile::beeai::compile("./tests/data/bee_1.py", false)?;
-        let (_, messages, _) = run(&program, None, non_streaming(), initial_scope())?;
+        // non-streaming currently broken due to issues invoking beeai_framework python tools via RustPython
+        let (_, messages, _) = run(&program, None, /*non_*/ streaming(), initial_scope())?;
         assert_eq!(messages.len(), 9);
         assert!(
             messages.iter().any(|m| m.role == MessageRole::User
