@@ -1427,7 +1427,7 @@ def process_call_model(
         }
     )
 
-    model_input = [{"role": m["role"], "content": m["content"]} for m in model_input]
+    model_input = [{k: v for k, v in m.items() if k != "defsite"} for m in model_input]
     # Execute model call
     try:
         litellm_params = {}
