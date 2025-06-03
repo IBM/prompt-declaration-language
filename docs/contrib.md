@@ -51,7 +51,7 @@ Follow the following instructions to set up a dev environment to get started wit
     pdl examples/demo/1-hello.pdl
 
     Hello
-    Hello! How can I help you today?
+    Hello
     ```
 
 ### Documentation updates

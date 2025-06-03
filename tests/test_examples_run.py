@@ -146,8 +146,11 @@ class ExamplesRun:
             self.expected_runtime_error = content["expected_runtime_error"]
 
             for filename, inputs_type in content["with_inputs"].items():
-                stdin = inputs_type["stdin"]
-                scope = inputs_type["scope"]
+                stdin, scope = None, None 
+                if "stdin" in inputs_type:
+                    stdin = inputs_type["stdin"]
+                if "scope" in inputs_type:
+                    scope = inputs_type["scope"]
                 self.with_inputs[filename] = InputsType(
                     stdin=stdin, scope=PdlDict(scope) if scope is not None else None
                 )
@@ -314,10 +317,10 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     # Print the actual results for wrong results
     for file, actual in background.failed_results.wrong_results.items():
         print(
-            "============================================================================"
+            "\n============================================================================"
         )
         print(f"File that produced wrong result: {file}")
-        print(f"Actual (copy everything below this line):✂️----------------------------------\n{actual}\n-----------------------------------")
+        print(f"Actual result (copy everything below this line):\n✂️ ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------")
 
     assert (
         len(background.failed_results.unexpected_parse_error) == 0
