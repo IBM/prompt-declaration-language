@@ -46,7 +46,7 @@ jobs:
       with: 
         python-version: ${{ matrix.python-version }}
         runner-os: ${{ runner.os }}
-        repository: ${{ github.repository }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
         head-ref: ${{ github.event.pull_request.head.ref }}
         token: ${{ github.token }}
         update-results: 'false'
