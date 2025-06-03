@@ -37,7 +37,7 @@ hello_params = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "str"},
+            "function": {"name": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": "World"}},
@@ -106,7 +106,7 @@ hello_call_template = {
         {
             "description": "Define hello",
             "def": "f",
-            "function": {"name": "str"},
+            "function": {"name": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"lang": "python", "code": "result = alias['hello'] = f"},

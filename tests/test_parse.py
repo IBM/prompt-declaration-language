@@ -4,7 +4,7 @@ regex_data = {
     "description": "Parsing using regex",
     "text": "Malcolm Reynolds",
     "parser": {
-        "spec": {"first_name": "str", "last_name": "str"},
+        "spec": {"first_name": "string", "last_name": "string"},
         "regex": "(?P<first_name>\\w+) (?P<last_name>\\w+)",
     },
 }
