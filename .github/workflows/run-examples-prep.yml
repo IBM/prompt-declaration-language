@@ -1,0 +1,47 @@
+---
+name: Run examples on modified PDL files
+on: [pull_request]
+jobs:
+  tests:
+    name: Execution tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+        
+    steps:
+    # Detect modified PDL files, includes Add, Modified, but not Deleted
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Detect all PDL files that were changed or added
+      id: changed-pdl-files
+      uses: tj-actions/changed-files@6cb76d07bee4c9772c6882c06c37837bf82a04d3 # v46
+      with:
+        files: |
+          **.pdl
+        json: "true"
+        escape_json: "false"
+    - name: List PDL files that were modified or added and append to test_examples_run.yaml
+      run: |
+        echo ${{ steps.changed-pdl-files.outputs.all_changed_files }}
+        if [ ${{ steps.changed-pdl-files.outputs.all_changed_files_count }} -gt 0 ]; then
+          echo "early-stop=false" >> $GITHUB_ENV
+        else
+          echo "No file need to be checked, skipping all subsequent tests."
+          echo "early-stop=true" >> $GITHUB_ENV
+        fi
+
+    - name: Run examples 
+      uses:  ./.github/actions/run-examples
+      # Only run if there are modified PDL files
+      if:  env.early-stop == 'false'
+      with: 
+        python-version: ${{ matrix.python-version }}
+        runner-os: ${{ runner.os }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        head-ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ github.token }}
+        update-results: 'false'
+        check: ${{ steps.changed-pdl-files.outputs.all_changed_files }}
