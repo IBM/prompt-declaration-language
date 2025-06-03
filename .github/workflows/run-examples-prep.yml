@@ -7,16 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         python-version: ['3.11', '3.12', '3.13']
         
     steps:
-    # - uses: actions/checkout@v4
-    #   with:
-    #     repository: ${{ github.event.pull_request.head.repo.full_name }}
-    #     ref: ${{ github.event.pull_request.head.ref }}
-        
     # Detect modified PDL files, includes Add, Modified, but not Deleted
     - uses: actions/checkout@v4
       with:
