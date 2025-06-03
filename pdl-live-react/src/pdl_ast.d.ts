@@ -1484,6 +1484,11 @@ export type For = {
   [k: string]: LocalizedExpression | unknown[] | string
 } | null
 /**
+ * Name of the variable containing the loop iteration.
+ *
+ */
+export type Index = string | null
+/**
  * Condition to stay at the beginning of the loop.
  *
  */
@@ -3834,6 +3839,16 @@ export interface Defs9 {
  * repeat:
  *     "${ name }'s number is ${ number }\n"
  * ```
+ *
+ * Bounded loop:
+ * ```PDL
+ * index: i
+ * max_iterations: 5
+ * repeat:
+ *     ${ i }
+ * join:
+ *   as: array
+ * ```
  */
 export interface RepeatBlock {
   description?: Description10
@@ -3873,6 +3888,7 @@ export interface RepeatBlock {
   context?: IndependentEnum5
   kind?: Kind10
   for?: For
+  index?: Index
   while?: While
   repeat: Repeat
   until?: Until

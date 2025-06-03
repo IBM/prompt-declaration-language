@@ -7,11 +7,9 @@ from .pdl_ast import (
     ContributeValue,
     ExpressionType,
     FunctionBlock,
-    LazyMessages,
     LocalizedExpression,
     get_sampling_defaults,
 )
-from .pdl_lazy import lazy_apply2
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -104,22 +102,6 @@ def get_contribute_value(
         ):
             return item[ContributeTarget.CONTEXT].value
     return None
-
-
-def _messages_concat(
-    messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    return messages1 + messages2
-
-
-def lazy_messages_concat(
-    messages1: LazyMessages, messages2: LazyMessages
-) -> LazyMessages:
-    return lazy_apply2(_messages_concat, messages1, messages2)
-
-
-def messages_to_str(messages: LazyMessages) -> str:
-    return "\n".join([str(msg) for msg in messages.result()])
 
 
 def remove_none_values_from_message(message: dict) -> dict[str, Any]:

@@ -7,7 +7,7 @@ text:
   parameters: 
     thinking: true
   modelResponse: outputs
-- |
-
+- "\n"
+- | 
   >> Thoughts:
   ${ outputs.results[0].next_message.reasoning_content }

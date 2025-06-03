@@ -26,6 +26,7 @@ from pydantic import (
 from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import TypeAliasType
 
+from .pdl_context import PDLContext
 from .pdl_lazy import PdlDict, PdlLazy
 
 
@@ -42,7 +43,7 @@ ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
 
 
 LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
-LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
+LazyMessages: TypeAlias = PDLContext
 
 
 class BlockKind(StrEnum):
@@ -811,11 +812,24 @@ class RepeatBlock(StructuredBlock):
     repeat:
         "${ name }'s number is ${ number }\\n"
     ```
+
+    Bounded loop:
+    ```PDL
+    index: i
+    max_iterations: 5
+    repeat:
+        ${ i }
+    join:
+      as: array
+    ```
     """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
+    """
+    index: Optional[str] = None
+    """Name of the variable containing the loop iteration.
     """
     while_: ExpressionType[bool] = Field(default=True, alias="while")
     """Condition to stay at the beginning of the loop.

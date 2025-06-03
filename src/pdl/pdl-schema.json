@@ -10403,7 +10403,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```",
+      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmax_iterations: 5\nrepeat:\n    ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -10802,6 +10802,19 @@
           "default": null,
           "description": "Arrays to iterate over.\n    ",
           "title": "For"
+        },
+        "index": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable containing the loop iteration.\n    ",
+          "title": "Index"
         },
         "while": {
           "anyOf": [
