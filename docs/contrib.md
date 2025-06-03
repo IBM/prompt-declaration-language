@@ -101,7 +101,34 @@ pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-war
 
 A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
 
-When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the files you have added and modified. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences, as the CI does an exact string matching. 
+When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
+
+Below is what the CI might look like if the results differ. If the results look reasonable, you should
+1. copy and paste the result for that file 
+2. create a new file in `tests/results` in the format of `tests/results/<path/to/file>.<i>.result` where `<i>` should be incremented from the highest number of `<i>.result` in the folder
+
+If the test fails, look for something similar like the following:
+```
+tests/test_examples_run.py 
+============================================================================
+File that produced wrong result: examples/demo/1-hello.pdl
+Actual result (copy everything below this line):
+✂️ ------------------------------------------------------------
+Hello
+Hello
+-------------------------------------------------------------
+
+============================================================================
+File that produced wrong result: examples/demo/2-model-chaining.pdl
+Actual result (copy everything below this line):
+✂️ ------------------------------------------------------------
+Hello
+Hello
+Did you just say Hello?
+Yes, I did. It's a common greeting, similar to how humans might respond when they first interact with an artificial intelligence like me. How can I assist you today?
+-------------------------------------------------------------
+F
+```
 
 Note: Your PR should always set `update_results: false` before merging, though the CI pipeline will not attempt to write the results to your PR even if you forget to set this field to `false`. 
 
