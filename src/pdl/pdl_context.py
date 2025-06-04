@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from enum import StrEnum
 from typing import Any, Callable
 
-from .pdl_lazy import PdlApply, PdlDict, PdlLazy, PdlList
+from .pdl_lazy import PdlApply, PdlConst, PdlDict, PdlLazy, PdlList
 
 # def _default(self, obj):
 #    return getattr(obj.__class__, "to_json", _default.default)(obj) # pyright: ignore
@@ -134,6 +134,20 @@ class DependentContext(PDLContext):
         ret = "["
         ret += ",".join([i.__repr__() for i in self.context.result()])
         return ret + "]"
+
+
+def ensure_context(context: dict | list | PDLContext) -> PDLContext:
+    ctx: PDLContext
+    match context:
+        case dict():
+            ctx = SingletonContext(PdlConst(context))
+        case list():
+            ctx = DependentContext([ensure_context(c) for c in context])
+        case PDLContext():
+            ctx = context
+        case _:
+            raise TypeError(f"'{type(context)}' object is not a valid context")
+    return ctx
 
 
 def deserialize(
