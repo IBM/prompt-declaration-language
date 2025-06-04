@@ -137,6 +137,7 @@ class DependentContext(PDLContext):
 
 
 def ensure_context(context: dict | list | PDLContext) -> PDLContext:
+    ctx: PDLContext
     match context:
         case dict():
             ctx = SingletonContext(PdlConst(context))
