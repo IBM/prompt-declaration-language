@@ -135,6 +135,7 @@ class DependentContext(PDLContext):
         ret += ",".join([i.__repr__() for i in self.context.result()])
         return ret + "]"
 
+
 def ensure_context(context: dict | list | PDLContext) -> PDLContext:
     match context:
         case dict():
@@ -146,6 +147,7 @@ def ensure_context(context: dict | list | PDLContext) -> PDLContext:
         case _:
             raise TypeError(f"'{type(context)}' object is not a valid context")
     return ctx
+
 
 def deserialize(
     context: list[dict[str, Any]],

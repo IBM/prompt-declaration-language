@@ -1429,7 +1429,9 @@ def process_call_model(
                 "pdl__model_input": model_input,
             }
         )
-        model_input = [{k: v for k, v in m.items() if k != "defsite"} for m in model_input]
+        model_input = [
+            {k: v for k, v in m.items() if k != "defsite"} for m in model_input
+        ]
 
         # Execute model call
         litellm_params = {}
