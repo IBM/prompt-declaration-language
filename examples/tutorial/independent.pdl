@@ -1,4 +1,4 @@
-description: Independent example -- hello * ( (' in French'*g) + (' en Espanol'*g)) * Goodbye! * g 
+description: Independent example --- hello * ( (' in French'*g) + (' en Espanol'*g)) * Goodbye! * g 
 text:
   - hello
   - context: independent

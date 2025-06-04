@@ -1,3 +1,4 @@
+description: Nesting inputs to model calls
 text:
   - role: user
     content: answer as if you live in europe

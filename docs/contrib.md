@@ -135,5 +135,5 @@ Note: Your PR should always set `update_results: false` before merging, though t
 Here's a preview of the current configuration file for Run Examples:
 
 ```yaml
---8<-- "../tests/test_examples_run.yaml"
+--8<-- "tests/test_examples_run.yaml"
 ```
