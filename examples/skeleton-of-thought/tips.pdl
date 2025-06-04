@@ -1,6 +1,6 @@
 description: Tip suggestion program illustration skeleton-of-thought
 defs:
-  MAX_ITERATIONS: 50
+  MAX_ITERATIONS: 2
   topics:
     read: topic.jsonl
     parser: jsonl 
