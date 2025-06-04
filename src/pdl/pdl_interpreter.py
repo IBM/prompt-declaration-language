@@ -1416,6 +1416,8 @@ def process_call_model(
     )
     try:
         model_input_result = model_input_future.result()
+        if isinstance(model_input_result, str):
+            model_input_result = [{"role": state.role, "content": model_input_result}]
         model_input_context = ensure_context(model_input_result)
         match block:
             case LitellmModelBlock():
