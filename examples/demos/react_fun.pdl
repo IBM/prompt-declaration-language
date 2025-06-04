@@ -1,4 +1,4 @@
-description: Function definition for react
+description: Function definition for react pattern
 defs:
   react_inner:
     function:

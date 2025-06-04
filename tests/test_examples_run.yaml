@@ -20,6 +20,7 @@ skip:
   - pdl-live-react/demos/demo1.pdl
   - pdl-live-react/demos/demo2.pdl
   - pdl-live-react/src-tauri/tests/cli/read-stdin.pdl
+  - examples/demos/granite_io_hallucinations.pdl
   - examples/granite-io/granite_io_hallucinations.pdl
   - examples/granite-io/granite_io_openai.pdl
   - examples/granite-io/granite_io_thinking.pdl
