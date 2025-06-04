@@ -101,6 +101,7 @@ from .pdl_context import (  # noqa: E402
     SingletonContext,
     add_done_callback,
     deserialize,
+    ensure_context,
 )
 from .pdl_dumper import as_json, block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
@@ -1413,23 +1414,24 @@ def process_call_model(
         scope,
         loc,
     )
-    model_input_result = model_input_future.result()
-    if isinstance(model_input_result, str):
-        model_input = [{"role": state.role, "content": model_input_result}]
-    else:
-        if isinstance(block, LitellmModelBlock):
-            model_input = model_input_result.serialize(SerializeMode.LITELLM)
-        else:
-            model_input = model_input_result.serialize(SerializeMode.GRANITEIO)
-    concrete_block = concrete_block.model_copy(
-        update={
-            "pdl__model_input": model_input,
-        }
-    )
-
-    model_input = [{k: v for k, v in m.items() if k != "defsite"} for m in model_input]
-    # Execute model call
     try:
+        model_input_result = model_input_future.result()
+        model_input_context = ensure_context(model_input_result)
+        match block:
+            case LitellmModelBlock():
+                model_input = model_input_context.serialize(SerializeMode.LITELLM)
+            case GraniteioModelBlock():
+                model_input = model_input_context.serialize(SerializeMode.GRANITEIO)
+            case _:
+                assert False
+        concrete_block = concrete_block.model_copy(
+            update={
+                "pdl__model_input": model_input,
+            }
+        )
+        model_input = [{k: v for k, v in m.items() if k != "defsite"} for m in model_input]
+
+        # Execute model call
         litellm_params = {}
 
         def get_transformed_inputs(kwargs):
