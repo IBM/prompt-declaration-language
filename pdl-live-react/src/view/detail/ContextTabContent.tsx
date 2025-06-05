@@ -32,13 +32,13 @@ export default function ContextTabContent({ block }: Props) {
           </DescriptionListDescription>
         </DescriptionListGroup>,
 
-        <DescriptionListGroup key={idx + ".defsite"}>
+        <DescriptionListGroup key={idx + ".pdl__defsite"}>
           <DescriptionListTerm>
             Where was this value defined?
           </DescriptionListTerm>
           <DescriptionListDescription>
-            {c.defsite ? (
-              <BreadcrumbBarForBlockId id={c.defsite} />
+            {c.pdl__defsite ? (
+              <BreadcrumbBarForBlockId id={c.pdl__defsite} />
             ) : (
               "The origin of this data is not known"
             )}

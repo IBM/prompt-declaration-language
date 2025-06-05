@@ -52,7 +52,7 @@ function clean_model_block(block: LitellmModelBlock | GraniteioModelBlock) {
       ? undefined
       : JSON.parse(
           JSON.stringify(block.pdl__context, (k, v) =>
-            k === "defsite" ? undefined : v,
+            k === "pdl__defsite" ? undefined : v,
           ),
         ),
   }

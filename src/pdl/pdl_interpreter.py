@@ -271,9 +271,9 @@ def process_block(
                     {
                         "role": state.role,
                         "content": result,
-                        "defsite": ".".join(
+                        "pdl__defsite": ".".join(
                             state.id_stack
-                        ),  # Warning: defsite for a literal value
+                        ),  # Warning: pdl__defsite for a literal value
                     }
                 )
             )
@@ -376,7 +376,7 @@ def set_error_to_scope_for_retry(
     err_msg = {
         "role": "assistant",
         "content": error,
-        "defsite": block_id,
+        "pdl__defsite": block_id,
     }
     scope = scope | {"pdl_context": pdl_context * SingletonContext(PdlDict(err_msg))}
     return scope
@@ -666,7 +666,7 @@ def process_block_body(
             message = {
                 "role": state.role,
                 "content": content,
-                "defsite": block.pdl__id,
+                "pdl__defsite": block.pdl__id,
             }
             if block.name is not None:
                 name, block = process_expr_of(block, "name", scope, loc)
@@ -844,7 +844,7 @@ def process_block_body(
                                     {
                                         "role": block.role,
                                         "content": join_string,
-                                        "defsite": block.pdl__id,
+                                        "pdl__defsite": block.pdl__id,
                                     }
                                 ]
                             )
@@ -1432,7 +1432,7 @@ def process_call_model(
             }
         )
         model_input = [
-            {k: v for k, v in m.items() if k != "defsite"} for m in model_input
+            {k: v for k, v in m.items() if k != "pdl__defsite"} for m in model_input
         ]
 
         # Execute model call
@@ -1457,8 +1457,8 @@ def process_call_model(
             state, scope, concrete_block, str(model_id), model_input
         )
 
-        # PdlList([lazy_apply(lambda msg: msg | {"defsite": block.pdl__id}, msg)])
-        background: LazyMessages = SingletonContext(lazy_apply(lambda msg: msg | {"defsite": block.pdl__id}, msg))  # type: ignore
+        # PdlList([lazy_apply(lambda msg: msg | {"pdl__defsite": block.pdl__id}, msg)])
+        background: LazyMessages = SingletonContext(lazy_apply(lambda msg: msg | {"pdl__defsite": block.pdl__id}, msg))  # type: ignore
         result = lazy_apply(
             lambda msg: "" if msg["content"] is None else msg["content"], msg
         )
@@ -1679,7 +1679,7 @@ def process_call_code(
                         {
                             "role": state.role,
                             "content": lazy_apply(str, result),
-                            "defsite": block.pdl__id,
+                            "pdl__defsite": block.pdl__id,
                         }
                     )
                 )
@@ -1688,7 +1688,7 @@ def process_call_code(
                     f"Python Code error: {traceback.format_exc()}",
                     loc=loc,
                     trace=block.model_copy(
-                        update={"code": code_s, "defsite": block.pdl__id}
+                        update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
                 ) from exc
         case "ipython":
@@ -1700,7 +1700,7 @@ def process_call_code(
                             {
                                 "role": state.role,
                                 "content": lazy_apply(str, result),
-                                "defsite": block.pdl__id,
+                                "pdl__defsite": block.pdl__id,
                             },
                         ),
                     ],  # type: ignore
@@ -1719,7 +1719,7 @@ def process_call_code(
                         {
                             "role": state.role,
                             "content": result,
-                            "defsite": block.pdl__id,
+                            "pdl__defsite": block.pdl__id,
                         }
                     )
                 )
@@ -1737,7 +1737,7 @@ def process_call_code(
                         {
                             "role": state.role,
                             "content": result,
-                            "defsite": block.pdl__id,
+                            "pdl__defsite": block.pdl__id,
                         }
                     )
                 )
@@ -1754,7 +1754,7 @@ def process_call_code(
                     PdlList(
                         [
                             SingletonContext(
-                                {"role": state.role, "content": result, "defsite": block.pdl__id}  # type: ignore
+                                {"role": state.role, "content": result, "pdl__defsite": block.pdl__id}  # type: ignore
                             )
                         ]
                     )
@@ -1938,7 +1938,7 @@ def process_input(
             s = "".join(contents)
     trace = block.model_copy(update={"pdl__result": s})
     background: LazyMessages = SingletonContext(
-        PdlDict({"role": state.role, "content": s, "defsite": block.pdl__id})
+        PdlDict({"role": state.role, "content": s, "pdl__defsite": block.pdl__id})
     )
     return PdlConst(s), background, scope, trace
 
