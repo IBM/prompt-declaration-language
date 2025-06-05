@@ -1,6 +1,7 @@
 """PDL programs are represented by the Pydantic data structure defined in this file."""
 
 from enum import StrEnum
+from os import environ
 from typing import (
     Annotated,
     Any,
@@ -449,7 +450,7 @@ class LitellmParameters(BaseModel):
     """The name of the function to call within the conversation (default is an empty string)
     """
     # set api_base, api_version, api_key
-    base_url: Optional[str] | str = None
+    base_url: Optional[str] | str = environ.get("OPENAI_BASE_URL")
     """Base URL for the API (default is None).
     """
     api_version: Optional[str] | str = None
