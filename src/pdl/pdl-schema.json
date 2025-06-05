@@ -10403,7 +10403,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmax_iterations: 5\nrepeat:\n    ${ i }\njoin:\n  as: array\n```",
+      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nrepeat:\n    ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -10932,7 +10932,7 @@
           "description": "Condition to exit at the end of the loop.\n    ",
           "title": "Until"
         },
-        "max_iterations": {
+        "maxIterations": {
           "anyOf": [
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
@@ -10949,7 +10949,7 @@
           ],
           "default": null,
           "description": "Maximal number of iterations to perform.\n    ",
-          "title": "Max Iterations"
+          "title": "Maxiterations"
         },
         "join": {
           "anyOf": [

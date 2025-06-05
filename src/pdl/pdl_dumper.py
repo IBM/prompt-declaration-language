@@ -233,10 +233,8 @@ def block_to_dict(  # noqa: C901
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             if block.until is not None:
                 d["until"] = expr_to_dict(block.until, json_compatible)
-            if block.max_iterations is not None:
-                d["max_iterations"] = expr_to_dict(
-                    block.max_iterations, json_compatible
-                )
+            if block.maxIterations is not None:
+                d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
             d["join"] = join_to_dict(block.join)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [

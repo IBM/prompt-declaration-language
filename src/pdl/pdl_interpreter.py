@@ -809,11 +809,11 @@ def process_block_body(
             iteration_state = state.with_yield_result(
                 state.yield_result and block.join.as_ == IterationType.TEXT
             )
-            if block.max_iterations is None:
+            if block.maxIterations is None:
                 max_iterations = None
             else:
                 max_iterations, block = process_expr_of(
-                    block, "max_iterations", scope, loc
+                    block, "maxIterations", scope, loc
                 )
             repeat_loc = append(loc, "repeat")
             iidx = 0

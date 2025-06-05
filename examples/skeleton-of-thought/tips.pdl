@@ -58,7 +58,7 @@ text:
       pdl_context: []
   join:
     as: array
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: skeletons
 - "\n\n"
 - for:

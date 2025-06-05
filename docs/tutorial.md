@@ -695,7 +695,7 @@ can also contain either a string, or a block, or a list (and similarly for `else
 The chatbot keeps looping by making a call to a model, asking the user if the generated text is a good answer,
 and asking `why not?` if the answer (stored in variable `eval`) is `no`. The loop ends when `eval` becomes `yes`. This is specified with a Jinja expression on line 18.
 
-Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together, then we need the keyword `text` to precede a list. The number of iterations of a loop can be bounded by adding a `max_iterations` field.
+Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together, then we need the keyword `text` to precede a list. The number of iterations of a loop can be bounded by adding a `maxIterations` field.
 
 The way that the result of each iteration is collated with other iterations can be customized in PDL using
 the `join` feature (see the following section).
@@ -804,14 +804,14 @@ The following example shows a while loop in PDL:
 
 The `while` field indicates the looping condition and `repeat` contains the body of the loop.
 
-This loop can be rewritten using `max_iterations` to bound the number of iterations and `index` to name the iteration number.
+This loop can be rewritten using `maxIterations` to bound the number of iterations and `index` to name the iteration number.
 
 ```yaml
 --8<-- "./examples/tutorial/loop_index.pdl"
 ```
 
 
-Notice that `for`, `while`, `until`, and `max_iterations` can all be combined in the same `repeat` block. The loop exits as soon as one of the exit conditions is satisfied:
+Notice that `for`, `while`, `until`, and `maxIterations` can all be combined in the same `repeat` block. The loop exits as soon as one of the exit conditions is satisfied:
 
 ```yaml
 --8<-- "./examples/tutorial/repeat.pdl"

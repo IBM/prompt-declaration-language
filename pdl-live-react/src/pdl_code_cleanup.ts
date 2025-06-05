@@ -132,8 +132,8 @@ function clean_repeat_block(block: RepeatBlock) {
   if (block.until === false) {
     delete block.until
   }
-  if (block.max_iterations === null) {
-    delete block.max_iterations
+  if (block.maxIterations === null) {
+    delete block.maxIterations
   }
   return block
 }
